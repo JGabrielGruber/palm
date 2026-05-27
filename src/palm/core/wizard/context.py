@@ -6,11 +6,31 @@ This is the primary contract between the engine and any UI layer (CLI, TUI, WebS
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from palm.models.common import SessionStatus, StepType
+from palm.models.step import StepDefinition  # for type hints in builder
+
+
+@runtime_checkable
+class ContextBuilder(Protocol):
+    """
+    0.2.0 Dynamic Context Builder.
+
+    A callable (or class implementing __call__) that can dynamically compute
+    or override parts of the RichContext at runtime based on the current
+    collected_data.
+
+    Return a dict of fields to merge/override, e.g.:
+        {"guidelines": "...", "choices": [...], "suggested_input": "yes"}
+    """
+
+    def __call__(
+        self, collected_data: dict[str, Any], step: StepDefinition
+    ) -> dict[str, Any]: ...
+
 
 
 class RichContext(BaseModel):
@@ -83,6 +103,12 @@ class RichContext(BaseModel):
     available_actions: list[str] = Field(
         default_factory=list,
         description="Human-readable list of actions the user can take right now",
+    )
+
+    # 0.2.0 Hierarchical support
+    current_path: list[str] = Field(
+        default_factory=list,
+        description="Full path in the wizard tree for this context (e.g. ['section', 'field'])",
     )
 
     def to_display_dict(self) -> dict[str, Any]:

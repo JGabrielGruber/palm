@@ -89,14 +89,57 @@ palm> exit
 
 ---
 
-## Creating Your Own Wizard
+## Creating Your Own Wizard (0.2.0+)
 
-See [wizards/examples/create_ape_profile.py](wizards/examples/create_ape_profile.py) for a complete reference implementation.
+See the greatly enhanced [wizards/examples/create_ape_profile.py](wizards/examples/create_ape_profile.py) for a complete reference showing **hierarchical steps**, **dynamic ContextBuilders**, and **CONDITION** nodes.
 
-1. Define `StepDefinition`s
-2. Assemble them into a `WizardDefinition` (first step **must** be `introduction`)
-3. Register it with the engine: `engine.register(my_wizard())`
-4. Optionally register a commit handler
+Basic pattern:
+
+```python
+from palm.core.wizard.definition import WizardDefinition
+from palm.models.step import StepDefinition
+from palm.models.common import StepType
+
+def build_wizard():
+    children = [
+        StepDefinition(slug="child1", type=StepType.USER_INPUT, title="Child 1", prompt="..."),
+    ]
+    steps = [
+        StepDefinition(slug="introduction", type=StepType.INTRODUCTION, ...),
+        StepDefinition(
+            slug="section",
+            type=StepType.SEQUENCE,
+            title="Section",
+            children=children,
+        ),
+        StepDefinition(slug="commit", type=StepType.COMMIT, ...),
+    ]
+    return WizardDefinition(id=..., steps=steps)
+```
+
+### Dynamic Context Builders (0.2.0)
+
+```python
+def my_builder(data, step):
+    age = data.get("ask_age", 0)
+    return {
+        "guidelines": "Special message for age " + str(age),
+        "suggested_input": "confirm" if age > 30 else "ok",
+    }
+
+step.context_builder = my_builder
+```
+
+### CONDITION Steps
+
+```python
+cond = StepDefinition(
+    slug="is_adult",
+    type=StepType.CONDITION,
+    condition=lambda d: d.get("ask_age", 0) >= 18,
+    children=[adult_step, minor_step],
+)
+```
 
 ---
 

@@ -22,6 +22,10 @@ class StepType(StrEnum):
     COMMIT = "commit"               # Terminal transactional step (idempotent & durable)
     ACTION = "action"               # Non-interactive side-effect (logging, API call, etc.)
 
+    # 0.2.0 Hierarchical / Behavior Tree foundations
+    SEQUENCE = "sequence"           # Composite: executes children in order (default for steps with children)
+    CONDITION = "condition"         # Composite: evaluates a condition and chooses a branch (If/Else)
+
 
 class SessionStatus(StrEnum):
     """Lifecycle states for a wizard session."""

@@ -31,15 +31,27 @@ class WizardSession(BaseModel):
     status: SessionStatus = SessionStatus.CREATED
     current_step_slug: str | None = None
 
+    # 0.2.0 Hierarchical support
+    current_path: list[str] = Field(
+        default_factory=list,
+        description="Full path to the current step in the tree (e.g. ['personal_info', 'ask_name'])",
+    )
+
     # Execution state
     collected_data: dict[str, Any] = Field(default_factory=dict)
     step_history: list[str] = Field(
         default_factory=list,
-        description="Ordered list of step slugs visited (including current)",
+        description="Ordered list of step slugs visited (leaf steps). For full tree history see execution_path_history.",
     )
     back_stack: list[str] = Field(
         default_factory=list,
-        description="Stack of step slugs the user can legally backtrack to",
+        description="Stack of step slugs (or qualified paths) the user can legally backtrack to",
+    )
+
+    # 0.2.0: More accurate tree-shaped execution history for proper hierarchical backtracking
+    execution_path_history: list[list[str]] = Field(
+        default_factory=list,
+        description="History of full paths visited (supports true hierarchical navigation and backtracking)",
     )
 
     # Timing & TTL
@@ -70,21 +82,52 @@ class WizardSession(BaseModel):
         return is_expired(self.expires_at)
 
     def record_step(self, slug: str, *, add_to_back_stack: bool = True) -> None:
-        """Append step to history and optionally to back stack."""
+        """Legacy flat recording. Prefer record_path for hierarchical wizards (0.2.0+)."""
         self.step_history.append(slug)
         self.current_step_slug = slug
         if add_to_back_stack and slug not in self.back_stack:
             self.back_stack.append(slug)
 
-    def pop_back_stack_to(self, target_slug: str) -> list[str]:
+    def record_path(
+        self,
+        path: list[str],
+        *,
+        add_to_back_stack: bool = True,
+        leaf_slug: str | None = None,
+    ) -> None:
         """
-        Remove steps from back_stack after target_slug.
-        Returns the popped steps (for auditing).
+        Record a full hierarchical path (preferred in 0.2.0+).
+
+        path example: ["personal_info", "ask_name"]
         """
-        if target_slug not in self.back_stack:
+        if not path:
+            return
+
+        leaf = leaf_slug or path[-1]
+        self.execution_path_history.append(list(path))
+        self.current_path = list(path)
+        self.current_step_slug = leaf
+        self.step_history.append(leaf)
+
+        if add_to_back_stack:
+            # Store the full path as a string for back_stack (supports qualified backtracking)
+            path_key = ".".join(path)
+            if path_key not in self.back_stack:
+                self.back_stack.append(path_key)
+
+    def pop_back_stack_to(self, target: str) -> list[str]:
+        """
+        Remove steps from back_stack after target (supports both slug and 'parent.child' paths).
+        """
+        if target not in self.back_stack:
             return []
 
-        idx = self.back_stack.index(target_slug)
+        idx = self.back_stack.index(target)
         popped = self.back_stack[idx + 1 :]
         self.back_stack = self.back_stack[: idx + 1]
         return popped
+
+    @property
+    def current_step_path(self) -> list[str]:
+        """Convenience accessor (0.2.0)."""
+        return self.current_path or ([self.current_step_slug] if self.current_step_slug else [])

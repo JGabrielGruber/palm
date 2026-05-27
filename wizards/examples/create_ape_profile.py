@@ -1,101 +1,144 @@
 """
-Example Wizard: Create APE Profile
+Enhanced Example Wizard for Palm 0.2.0
 
-Demonstrates the full Palm wizard lifecycle:
-  Introduction (explicit confirm) → ask_name → ask_age → summary → commit
+Demonstrates:
+- Hierarchical / nested steps (personal_info as a container with children)
+- Dynamic ContextBuilder (changes guidelines + suggested actions based on data)
+- Basic CONDITION step (over_18 branch)
+- Proper use of SEQUENCE (implicit) and backtracking across levels
 
-This wizard is intentionally simple yet complete enough to exercise:
-- RichContext generation
-- Validation rules
-- Custom validators
-- Backtracking by slug
-- Final transactional commit step
+All previous flat behavior is preserved for backward compatibility.
 """
 
 from __future__ import annotations
 
+from typing import Any
+
 from palm.core.wizard.definition import WizardDefinition
-from palm.models.common import ValidationRule
+from palm.models.common import StepType
 from palm.models.step import StepDefinition
 
 
 def create_ape_profile_wizard() -> WizardDefinition:
-    """Factory that returns a fully configured APE Profile wizard."""
+    """Factory returning a 0.2.0 hierarchical wizard."""
 
-    steps = [
-        # ------------------------------------------------------------------
-        # 1. INTRODUCTION - Always first, never backtrackable
-        # ------------------------------------------------------------------
-        StepDefinition(
-            slug="introduction",
-            type="introduction",
-            title="Welcome to APE Profile Creator",
-            prompt="This wizard will help you create a new APE (Ape Profile Entity) profile.",
-            guidelines=(
-                "You will be asked for your name and age. "
-                "All information is stored only for the duration of this session.\n\n"
-                "Type 'confirm' or 'yes' to begin."
-            ),
-            is_backtrackable=False,  # Enforced by engine anyway
-            validation_rules=[],
-        ),
-        # ------------------------------------------------------------------
-        # 2. NAME
-        # ------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Child steps inside "personal_info" composite
+    # ------------------------------------------------------------------
+    personal_children = [
         StepDefinition(
             slug="ask_name",
-            type="user_input",
-            title="What is your name?",
-            prompt="Please enter your full name:",
-            guidelines="Use your real name or a handle you want associated with this profile.",
+            type=StepType.USER_INPUT,
+            title="Full Name",
+            prompt="What is your full name?",
+            guidelines="Use your legal name or the name you want on your APE profile.",
             validation_rules=[
-                ValidationRule(type="required"),
-                ValidationRule(type="min_length", params={"value": 2}),
-                ValidationRule(type="max_length", params={"value": 60}),
+                {"type": "required"},
+                {"type": "min_length", "params": {"value": 2}},
             ],
-            input_schema={"type": "string"},
         ),
-        # ------------------------------------------------------------------
-        # 3. AGE (uses the registered custom validator "min_age_13")
-        # ------------------------------------------------------------------
         StepDefinition(
             slug="ask_age",
-            type="user_input",
-            title="How old are you?",
-            prompt="Enter your age in years:",
-            guidelines="You must be at least 13 years old to create a profile.",
+            type=StepType.USER_INPUT,
+            title="Age",
+            prompt="How old are you?",
+            guidelines="Must be at least 13 years old.",
             validation_rules=[
-                ValidationRule(type="required"),
-                ValidationRule(type="min_value", params={"value": 0}),
-                ValidationRule(type="max_value", params={"value": 150}),
-                ValidationRule(
-                    type="custom",
-                    params={"name": "min_age_13"},
-                    error_message="You must be at least 13 years old.",
-                ),
+                {"type": "required"},
+                {"type": "min_value", "params": {"value": 0}},
+                {"type": "max_value", "params": {"value": 150}},
             ],
             input_schema={"type": "integer"},
         ),
-        # ------------------------------------------------------------------
-        # 4. SUMMARY - Review before commit
-        # ------------------------------------------------------------------
+    ]
+
+    # Dynamic builder example: changes message depending on age
+    def age_based_guidelines(data: dict[str, Any], step: StepDefinition) -> dict[str, Any]:
+        age = data.get("ask_age")
+        if isinstance(age, int) and age >= 65:
+            return {
+                "guidelines": "Thank you for your wisdom! We have special senior APE benefits.",
+                "suggested_input": "confirm",
+                "available_actions": ["Type 'confirm' to continue with senior benefits"],
+            }
+        if isinstance(age, int) and age < 18:
+            return {
+                "guidelines": "Note: Some features require parental consent.",
+                "suggested_input": "ok",
+            }
+        return {"guidelines": "Standard adult profile flow."}
+
+    ask_age_step = personal_children[1]
+    ask_age_step.context_builder = age_based_guidelines
+
+    # ------------------------------------------------------------------
+    # Conditional branch example (over_18)
+    # ------------------------------------------------------------------
+    over_18_true = StepDefinition(
+        slug="ask_id_number",
+        type=StepType.USER_INPUT,
+        title="Government ID",
+        prompt="Please enter your ID number:",
+        guidelines="Required for adults.",
+        validation_rules=[{"type": "required"}, {"type": "min_length", "params": {"value": 5}}],
+    )
+
+    over_18_false = StepDefinition(
+        slug="ask_guardian",
+        type=StepType.USER_INPUT,
+        title="Guardian Name",
+        prompt="Please provide a parent's or guardian's name:",
+        guidelines="Required for profiles under 18.",
+        validation_rules=[{"type": "required"}],
+    )
+
+    over_18_condition = StepDefinition(
+        slug="over_18_check",
+        type=StepType.CONDITION,
+        title="Age Verification",
+        prompt="Checking age...",
+        condition=lambda data: (data.get("ask_age") or 0) >= 18,
+        children=[over_18_true, over_18_false],
+    )
+
+    # ------------------------------------------------------------------
+    # Main top-level steps
+    # ------------------------------------------------------------------
+    steps = [
+        # Introduction (unchanged behavior)
+        StepDefinition(
+            slug="introduction",
+            type=StepType.INTRODUCTION,
+            title="Welcome to APE Profile Creator",
+            prompt="This wizard will help you create a new APE profile.",
+            guidelines="You will provide personal details. Type 'confirm' to begin.",
+            is_backtrackable=False,
+        ),
+        # Hierarchical container (0.2.0 feature)
+        StepDefinition(
+            slug="personal_info",
+            type=StepType.SEQUENCE,
+            title="Personal Information",
+            prompt="Let's collect your basic details.",
+            guidelines="This section contains nested steps.",
+            children=personal_children,
+        ),
+        # The conditional branch (auto-evaluated)
+        over_18_condition,
+        # Summary + Commit (classic)
         StepDefinition(
             slug="summary",
-            type="summary",
+            type=StepType.SUMMARY,
             title="Review Your Profile",
-            prompt="Please review the information below before we create your profile.",
-            guidelines="If anything looks wrong, use the 'back' command to correct it.",
-            # No validation rules — the engine will present collected_data nicely
+            prompt="Please review everything before we create your APE profile.",
+            guidelines="Use 'back personal_info.ask_name' or 'back ask_age' to edit previous answers.",
         ),
-        # ------------------------------------------------------------------
-        # 5. COMMIT - The transactional boundary
-        # ------------------------------------------------------------------
         StepDefinition(
             slug="commit",
-            type="commit",
+            type=StepType.COMMIT,
             title="Create Profile",
             prompt="Ready to create your APE profile?",
-            guidelines="This is the final step. Once committed, the profile will be recorded.",
+            guidelines="This is the final transactional step.",
             is_backtrackable=False,
         ),
     ]
@@ -103,48 +146,36 @@ def create_ape_profile_wizard() -> WizardDefinition:
     return WizardDefinition(
         id="create_ape_profile",
         name="Create APE Profile",
-        description="Interactive wizard that collects basic information and performs a transactional commit.",
-        version="1.0.0",
+        description="0.2.0 Hierarchical wizard with dynamic builders and conditional branching.",
+        version="2.0.0",
         steps=steps,
         on_commit_hook="create_ape_profile_commit",
-        metadata={
-            "category": "examples",
-            "tags": ["profile", "onboarding"],
-            "author": "Palm Team",
-        },
+        metadata={"category": "examples", "tags": ["hierarchical", "dynamic", "0.2.0"]},
     )
 
 
 # ----------------------------------------------------------------------
-# Commit handler (registered with the engine at runtime or via registry)
+# Commit handler (unchanged)
 # ----------------------------------------------------------------------
 
 def ape_profile_commit_handler(session: Any) -> dict[str, Any]:
-    """
-    Example transactional commit handler.
-
-    In a real application this would:
-    - Write to an external system (DB, API)
-    - Be idempotent
-    - Return durable result
-    """
     data = session.collected_data
     name = data.get("ask_name", "Unknown")
     age = data.get("ask_age", "?")
+    id_or_guardian = data.get("ask_id_number") or data.get("ask_guardian", "N/A")
 
-    # Simulate real work
     profile_id = f"ape_{name.lower().replace(' ', '_')[:20]}_{age}"
 
     return {
         "profile_id": profile_id,
         "name": name,
         "age": age,
+        "id_or_guardian": id_or_guardian,
         "status": "created",
-        "message": f"APE Profile '{profile_id}' has been successfully created. Welcome, {name}!",
+        "message": f"Welcome to the APE family, {name}!",
     }
 
 
-# Convenience: allow the CLI to discover and pre-register the handler if desired
 COMMIT_HANDLERS = {
     "create_ape_profile_commit": ape_profile_commit_handler,
 }

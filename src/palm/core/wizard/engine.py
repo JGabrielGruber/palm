@@ -19,7 +19,7 @@ from datetime import timedelta
 from typing import Any, Callable
 
 from palm.config.settings import settings
-from palm.core.wizard.context import RichContext
+from palm.core.wizard.context import ContextBuilder, RichContext
 from palm.core.wizard.definition import WizardDefinition
 from palm.core.wizard.validators import validate_input
 from palm.exceptions import (
@@ -141,13 +141,14 @@ class WizardEngine:
             collected_data=initial_data or {},
         )
 
-        # Always start at introduction
+        # Always start at introduction (0.2.0 uses full path)
         intro = definition.introduction_step
-        session.record_step(intro.slug, add_to_back_stack=False)  # never backtrack to intro
+        intro_path = [intro.slug]
+        session.record_path(intro_path, add_to_back_stack=False)
 
         self.store.save(session)
 
-        context = self._build_rich_context(session, definition, intro)
+        context = self._build_rich_context(session, definition, intro, current_path=intro_path)
         context.is_first_step = True
 
         session.last_rich_context = context.model_dump(mode="json")
@@ -191,7 +192,10 @@ class WizardEngine:
         """
         session = self.get_session(session_id)
         definition = self.get_definition(session.wizard_id)
-        current_step = definition.get_step(session.current_step_slug or "")
+
+        # 0.2.0: Prefer current_path, fall back to legacy current_step_slug for compatibility
+        current_path = session.current_path or ([session.current_step_slug] if session.current_step_slug else [])
+        current_step = definition.get_step_by_path(current_path) or definition.get_step(session.current_step_slug or "")
 
         if not current_step:
             raise InvalidStepError(f"Current step '{session.current_step_slug}' not found in definition")
@@ -205,8 +209,8 @@ class WizardEngine:
                 return ctx
             # Introduction accepted - never add to back stack
 
-        else:
-            # Normal validation for all other input steps
+        elif value is not None or not current_step.is_composite():
+            # Normal validation only for real user input (skip when auto-advancing composites)
             errors = validate_input(value, current_step, session.collected_data)
             if errors:
                 raise ValidationError(
@@ -215,94 +219,130 @@ class WizardEngine:
                     errors=errors,
                 )
 
-        # Store the answer
-        field_name = current_step.slug
-        session.collected_data[field_name] = self._normalize_value(value, current_step)
+        # Store the answer only for real user-provided values
+        if value is not None:
+            field_name = current_step.slug
+            session.collected_data[field_name] = self._normalize_value(value, current_step)
 
-        # Advance
-        next_slug = definition.get_next_step_slug(current_step.slug, session.collected_data)
+        # 0.2.0: Use tree-aware next path resolution
+        next_path = definition.get_next_path(current_path, session.collected_data)
 
-        if next_slug is None:
-            # We have reached terminal state without an explicit COMMIT step
+        if next_path is None:
+            # Terminal
             return self._finalize_session(session, definition, commit_result={"status": "completed_without_commit"})
 
-        next_step = definition.get_step(next_slug)
+        next_step = definition.get_step_by_path(next_path)
         if not next_step:
-            raise InvalidStepError(f"Next step '{next_slug}' declared but not present in definition")
+            # Fallback for legacy flat wizards
+            next_slug = next_path[-1] if next_path else None
+            next_step = definition.get_step(next_slug) if next_slug else None
 
-        # Record navigation
-        # A step is added to the back stack if *it* declares itself backtrackable.
-        # We intentionally ignore the previous step's flag (so we can back from steps after introduction).
+        if not next_step:
+            raise InvalidStepError(f"Could not resolve next step from path {next_path}")
+
+        # Record using full path (this enables proper hierarchical backtracking)
         add_to_back = next_step.is_backtrackable
-        session.record_step(next_step.slug, add_to_back_stack=add_to_back)
+        session.record_path(next_path, add_to_back_stack=add_to_back)
 
-        # Special step types that may immediately pause or auto-advance
+        # Auto-advance for composite control nodes (no user input)
+        if next_step.is_composite() and next_step.type in (StepType.SEQUENCE, StepType.CONDITION):
+            # These composites auto-descend; recurse until we hit a pausing step
+            self.store.save(session)
+            return self.process_input(session_id, value=None)
+
+        # Special step types
         if next_step.type == StepType.COMMIT:
             session.status = SessionStatus.AWAITING_COMMIT
             self.store.save(session)
-            # Return a special context that tells the UI "ready to commit"
-            return self._build_rich_context(session, definition, next_step)
+            return self._build_rich_context(session, definition, next_step, current_path=next_path)
 
         if next_step.type == StepType.ACTION:
-            # Execute side effect immediately (no user input)
             self._execute_action_step(session, next_step)
-            # Recurse to next step (tail call style)
-            return self.process_input(session_id, value=None)  # value ignored for action
+            self.store.save(session)
+            return self.process_input(session_id, value=None)
 
-        # Normal case: pause and emit RichContext for the new step
+        # Normal pausing step
         session.status = SessionStatus.PAUSED_FOR_INPUT
         self.store.save(session)
 
-        context = self._build_rich_context(session, definition, next_step)
+        context = self._build_rich_context(session, definition, next_step, current_path=next_path)
         session.last_rich_context = context.model_dump(mode="json")
         self.store.save(session)
 
-        logger.debug(f"Session {session_id} advanced to step '{next_step.slug}'")
+        logger.debug(f"Session {session_id} advanced to path {next_path}")
         return context
 
-    def backtrack(self, session_id: str, target_slug: str) -> RichContext:
+    def backtrack(self, session_id: str, target: str) -> RichContext:
         """
-        Backtrack the session to a previous step by slug.
+        Backtrack to a previous step.
 
-        Rules:
-        - Cannot backtrack to or before the introduction step
-        - Target must be in the current back_stack
-        - All data collected after the target step is discarded
+        In 0.2.0 `target` can be:
+        - A simple slug (finds most recent occurrence)
+        - A qualified path string "parent.child.grandchild"
+
+        Supports full hierarchical backtracking.
         """
         session = self.get_session(session_id)
         definition = self.get_definition(session.wizard_id)
 
-        if target_slug not in session.back_stack:
-            raise BacktrackNotAllowedError(f"Cannot backtrack to '{target_slug}' - not in back stack")
+        if target not in session.back_stack:
+            raise BacktrackNotAllowedError(f"Cannot backtrack to '{target}' - not in back stack")
 
-        target_step = definition.get_step(target_slug)
+        # Resolve target step (support both slug and dotted path)
+        target_path: list[str]
+        if "." in target:
+            target_path = target.split(".")
+        else:
+            # Find the last path in history that ends with this slug
+            target_path = None
+            for p in reversed(session.execution_path_history):
+                if p and p[-1] == target:
+                    target_path = p
+                    break
+            if target_path is None:
+                target_path = [target]
+
+        target_step = definition.get_step_by_path(target_path) or definition.get_step(target)
         if not target_step or not target_step.is_backtrackable:
-            raise BacktrackNotAllowedError(f"Step '{target_slug}' is not backtrackable")
+            raise BacktrackNotAllowedError(f"Step '{target}' is not backtrackable")
 
-        # Remove future history
+        # Truncate history to the target
         try:
-            idx = session.step_history.index(target_slug)
-            session.step_history = session.step_history[: idx + 1]
+            if "." in target:
+                # Match full path
+                for i in range(len(session.execution_path_history) - 1, -1, -1):
+                    if session.execution_path_history[i] == target_path:
+                        session.execution_path_history = session.execution_path_history[: i + 1]
+                        break
+            else:
+                # Legacy slug truncation
+                idx = session.step_history.index(target)
+                session.step_history = session.step_history[: idx + 1]
+                # Also truncate path history reasonably
+                session.execution_path_history = [
+                    p for p in session.execution_path_history if p and p[-1] != target
+                ][: len(session.step_history)]  # best effort
         except ValueError:
             pass
 
-        # Clean collected data for steps after target
-        popped = session.pop_back_stack_to(target_slug)
+        popped = session.pop_back_stack_to(target)
 
-        # Remove any data keys that were collected in the popped steps
-        for slug in popped:
-            session.collected_data.pop(slug, None)
+        for key in popped:
+            # key may be "parent.child" or "slug"
+            leaf = key.split(".")[-1]
+            session.collected_data.pop(leaf, None)
 
-        session.current_step_slug = target_slug
+        session.current_path = list(target_path)
+        session.current_step_slug = target_path[-1]
         session.status = SessionStatus.PAUSED_FOR_INPUT
 
         self.store.save(session)
 
-        context = self._build_rich_context(session, definition, target_step)
+        context = self._build_rich_context(session, definition, target_step, current_path=target_path)
         session.last_rich_context = context.model_dump(mode="json")
         self.store.save(session)
 
-        logger.info(f"Session {session_id} backtracked to step '{target_slug}'")
+        logger.info(f"Session {session_id} backtracked to '{target}'")
         return context
 
     # ------------------------------------------------------------------
@@ -358,7 +398,17 @@ class WizardEngine:
         session: WizardSession,
         definition: WizardDefinition,
         step: StepDefinition,
+        *,
+        current_path: list[str] | None = None,
     ) -> RichContext:
+        """
+        Build a RichContext, optionally applying a dynamic ContextBuilder (0.2.0).
+
+        The builder can override any renderable field at runtime based on collected data.
+        """
+        path_to_use = current_path or session.current_path or ([step.slug] if step else [])
+        breadcrumb = definition.get_breadcrumb(path_to_use)
+
         allowed_back = [
             s for s in session.back_stack if s != definition.introduction_step.slug
         ]
@@ -372,8 +422,10 @@ class WizardEngine:
             input_type = "summary"
         elif step.type in (StepType.DISPLAY, StepType.ACTION, StepType.COMMIT):
             input_type = "none"
+        elif step.is_composite():
+            input_type = "none"  # composites usually auto-advance
 
-        # Build contextual help (new in 0.1.1)
+        # Base contextual help (0.1.1 + 0.2.0)
         suggested: str | None = None
         actions: list[str] = []
 
@@ -384,18 +436,58 @@ class WizardEngine:
             suggested = "confirm"
             actions = [
                 "Type 'confirm', 'yes', or 'commit' to proceed",
-                "Use 'back <step-slug>' to change a previous answer",
+                "Use 'back <step-slug>' (or dotted path) to change a previous answer",
             ]
         elif step.type == StepType.CONFIRM:
             suggested = "yes"
             actions = ["Type 'yes' / 'no' or 'confirm' / 'cancel'"]
         elif step.type == StepType.CHOICE and step.choices:
             actions = [f"Choose one of: {', '.join(c.get('value', str(c)) for c in step.choices)}"]
+        elif step.is_composite() and step.type == StepType.CONDITION:
+            actions = ["Evaluating condition... (auto-advancing)"]
         else:
             if allowed_back:
                 actions.append("Use 'back <slug>' to return to a previous step")
 
         if allowed_back:
+            actions.append(f"Backtrackable: {', '.join(allowed_back)}")
+
+        # Start with static values from the step definition
+        guidelines = step.guidelines
+        choices = step.choices
+        validation_rules = [r.model_dump() for r in step.validation_rules]
+        metadata = dict(step.metadata)
+        step_title = step.title
+        prompt = step.prompt or step.title
+
+        # === 0.2.0 Dynamic Context Builder (the powerful new feature) ===
+        builder = step.context_builder
+        if builder is not None:
+            try:
+                overrides = builder(session.collected_data, step)
+                if isinstance(overrides, dict):
+                    if "guidelines" in overrides:
+                        guidelines = overrides["guidelines"]
+                    if "choices" in overrides:
+                        choices = overrides["choices"]
+                    if "validation_rules" in overrides:
+                        validation_rules = overrides["validation_rules"]
+                    if "suggested_input" in overrides:
+                        suggested = overrides["suggested_input"]
+                    if "available_actions" in overrides:
+                        actions = overrides["available_actions"]
+                    if "prompt" in overrides:
+                        prompt = overrides["prompt"]
+                    if "title" in overrides or "step_title" in overrides:
+                        step_title = overrides.get("title") or overrides.get("step_title")
+                    # Allow full metadata merge
+                    if "metadata" in overrides and isinstance(overrides["metadata"], dict):
+                        metadata.update(overrides["metadata"])
+            except Exception as exc:
+                logger.warning(f"ContextBuilder for step '{step.slug}' failed: {exc}")
+
+        # Merge dynamic actions if builder didn't fully replace them
+        if allowed_back and "back" not in str(actions).lower():
             actions.append(f"Backtrackable steps: {', '.join(allowed_back)}")
 
         return RichContext(
@@ -404,22 +496,25 @@ class WizardEngine:
             wizard_name=definition.name,
             current_step_slug=step.slug,
             current_step_type=step.type,
-            step_title=step.title,
-            prompt=step.prompt or step.title,
-            guidelines=step.guidelines,
+            step_title=step_title,
+            prompt=prompt,
+            guidelines=guidelines,
             description=step.description,
             input_type=input_type,
-            choices=step.choices,
-            validation_rules=[r.model_dump() for r in step.validation_rules],
+            choices=choices,
+            validation_rules=validation_rules,
             required=step.required,
             allowed_back_steps=allowed_back,
             can_backtrack=len(allowed_back) > 0,
             path=list(session.step_history),
             collected_data=dict(session.collected_data),
             status=session.status,
-            metadata=step.metadata,
+            metadata=metadata,
             suggested_input=suggested,
             available_actions=actions,
+            # 0.2.0: expose the full current path for rich UIs
+            formatted_summary=breadcrumb or None,
+            current_path=list(path_to_use),
         )
 
     def _is_positive_confirmation(self, value: Any) -> bool:

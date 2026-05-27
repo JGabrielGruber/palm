@@ -458,9 +458,14 @@ class PalmREPL:
 
     def _render_context(self, ctx: Any) -> None:
         """
-        0.1.1: Significantly improved rendering with explicit action guidance.
+        0.2.0: Significantly improved rendering with explicit action guidance + hierarchy breadcrumbs.
         """
-        title = f"[bold]{ctx.wizard_name}[/] — [cyan]{ctx.current_step_slug}[/] ({ctx.current_step_type})"
+        # Show nice breadcrumb for hierarchical wizards
+        if getattr(ctx, "current_path", None) and len(ctx.current_path) > 1:
+            crumb = " / ".join(ctx.current_path)
+            title = f"[bold]{ctx.wizard_name}[/] — [cyan]{crumb}[/] ({ctx.current_step_type})"
+        else:
+            title = f"[bold]{ctx.wizard_name}[/] — [cyan]{ctx.current_step_slug}[/] ({ctx.current_step_type})"
 
         body = f"[bold]{ctx.prompt}[/]\n"
         if ctx.guidelines:
