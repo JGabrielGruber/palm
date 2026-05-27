@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from palm.models.common import StepType
 from palm.models.step import StepDefinition
+from palm.utils.logging import logger
 
 
 class WizardDefinition(BaseModel):
@@ -132,52 +133,65 @@ class WizardDefinition(BaseModel):
 
     def get_next_path(self, current_path: list[str], data: dict[str, Any]) -> list[str] | None:
         """
-        Core 0.2.0 tree navigation.
+        Core 0.2.1 stabilized tree navigation.
 
-        Given the current full path in the tree, returns the next path to visit,
-        respecting:
-        - explicit next_step (on leaves)
-        - children traversal (depth-first for SEQUENCE)
-        - CONDITION evaluation
-        - fallback to next sibling / parent
+        Given the current full path, returns the next path to visit (or None for terminal).
+        Handles explicit next_step, descending into SEQUENCE/CONDITION composites,
+        CONDITION predicate evaluation, and sibling/parent ascent.
         """
         if not current_path:
+            logger.debug("get_next_path: empty current_path")
             return None
 
         current_step = self.get_step_by_path(current_path)
         if not current_step:
+            logger.warning(f"get_next_path: could not resolve step for path {current_path}")
             return None
 
-        # 1. Explicit next_step (highest priority, can point to any slug)
+        logger.debug(f"get_next_path: at {current_path} (type={current_step.type}, has_children={bool(current_step.children)})")
+
+        # 1. Explicit next_step wins (can jump anywhere)
         if current_step.next_step:
             target = self.get_step(current_step.next_step)
             if target:
-                # Try to resolve a reasonable path to the target
-                return self._resolve_path_to_step(target.slug) or [current_step.next_step]
+                resolved = self._resolve_path_to_step(target.slug) or [current_step.next_step]
+                logger.debug(f"  -> explicit next_step '{current_step.next_step}' resolved to {resolved}")
+                return resolved
 
-        # 2. If this step has children, descend into first child (unless it's a CONDITION that decides)
+        # 2. Composite handling: descend
         if current_step.children:
             if current_step.type == StepType.CONDITION:
-                # Evaluate condition and pick branch
                 cond = current_step.condition
+                branch_idx = 0
                 if cond is not None:
                     try:
-                        result = cond(data)
-                    except Exception:
-                        result = False
-                    branch_idx = 0 if result else 1
-                    if current_step.children and branch_idx < len(current_step.children):
-                        child = current_step.children[branch_idx]
-                        return current_path + [child.slug]
-                # Fallback: first child
-                if current_step.children:
-                    return current_path + [current_step.children[0].slug]
+                        result = bool(cond(data))
+                        branch_idx = 0 if result else 1
+                        logger.debug(f"  -> CONDITION evaluated to {result} -> branch {branch_idx}")
+                    except Exception as exc:
+                        logger.warning(f"  CONDITION predicate failed for {current_path}: {exc}. Defaulting to branch 0.")
+                        branch_idx = 0
 
-            # Default: SEQUENCE - enter first child
-            return current_path + [current_step.children[0].slug]
+                if branch_idx < len(current_step.children):
+                    child = current_step.children[branch_idx]
+                    next_path = current_path + [child.slug]
+                    logger.debug(f"  -> descending CONDITION to {next_path}")
+                    return next_path
 
-        # 3. No children - try to find next sibling or ascend to parent and continue
-        return self._find_next_sibling_or_ascend(current_path)
+                # Fallback to first child
+                next_path = current_path + [current_step.children[0].slug]
+                logger.debug(f"  -> CONDITION fallback to first child {next_path}")
+                return next_path
+
+            # Default for any composite with children (SEQUENCE or untyped container): descend to first child
+            next_path = current_path + [current_step.children[0].slug]
+            logger.debug(f"  -> descending composite {current_step.type} to first child {next_path}")
+            return next_path
+
+        # 3. Leaf: find next sibling or ascend
+        next_path = self._find_next_sibling_or_ascend(current_path)
+        logger.debug(f"  -> leaf, next sibling/ascend resolved to {next_path}")
+        return next_path
 
     def _resolve_path_to_step(self, target_slug: str) -> list[str] | None:
         """Attempt to build a path that reaches the given slug."""
@@ -195,9 +209,11 @@ class WizardDefinition(BaseModel):
         return search(self.steps, [])
 
     def _find_next_sibling_or_ascend(self, path: list[str]) -> list[str] | None:
-        """Find the next sibling after the last element in path, or ascend."""
+        """Find the next sibling after the last element in path, or ascend and continue."""
+        logger.debug(f"    _find_next_sibling_or_ascend from {path}")
+
         if len(path) <= 1:
-            # Top level - use old flat logic as fallback
+            # Top-level leaf
             top_slug = path[0]
             top_step = self.get_step(top_slug)
             if top_step and top_step.next_step:
@@ -205,24 +221,27 @@ class WizardDefinition(BaseModel):
             idx = self._get_top_level_index(top_slug)
             if idx is not None and idx + 1 < len(self.steps):
                 return [self.steps[idx + 1].slug]
+            logger.debug("    -> no more top-level siblings, terminal")
             return None
 
         parent_path = path[:-1]
         parent = self.get_step_by_path(parent_path)
         if not parent or not parent.children:
-            return None
+            return self._find_next_sibling_or_ascend(parent_path)
 
         current_slug = path[-1]
         try:
             child_idx = [c.slug for c in parent.children].index(current_slug)
         except ValueError:
-            return None
+            return self._find_next_sibling_or_ascend(parent_path)
 
-        # Next sibling?
         if child_idx + 1 < len(parent.children):
-            return parent_path + [parent.children[child_idx + 1].slug]
+            nextp = parent_path + [parent.children[child_idx + 1].slug]
+            logger.debug(f"    -> next sibling {nextp}")
+            return nextp
 
-        # No more siblings - ascend and continue from parent
+        # Ascend
+        logger.debug(f"    -> no more siblings under {parent_path}, ascending")
         return self._find_next_sibling_or_ascend(parent_path)
 
     def _get_top_level_index(self, slug: str) -> int | None:

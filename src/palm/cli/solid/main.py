@@ -48,19 +48,29 @@ def main() -> None:
 
 
 def _auto_register_example_wizards(engine: WizardEngine, console: Console) -> None:
-    """Try to load the built-in example wizard(s) + their commit handlers."""
+    """Load the basic flat example + the rich 0.2.1 hierarchical demo."""
     try:
         from wizards.examples.create_ape_profile import (
-            COMMIT_HANDLERS,
+            COMMIT_HANDLERS as BASIC_HANDLERS,
             create_ape_profile_wizard,
         )
-
-        wizard_def = create_ape_profile_wizard()
-        engine.register(wizard_def, commit_handlers=COMMIT_HANDLERS)
-        console.print("[dim]Loaded example wizard: create_ape_profile (with commit handler)[/]")
+        basic = create_ape_profile_wizard()
+        engine.register(basic, commit_handlers=BASIC_HANDLERS)
+        console.print("[dim]Loaded example: create_ape_profile (basic/flat)[/]")
     except Exception as exc:
-        console.print(f"[dim yellow]Could not auto-load example wizards: {exc}[/]")
-        logger.debug(f"Wizard auto-load failed: {exc}")
+        logger.debug(f"Could not load basic example: {exc}")
+
+    try:
+        from wizards.examples.onboard_new_ape import (
+            COMMIT_HANDLERS as HIERARCHICAL_HANDLERS,
+            onboard_new_ape_wizard,
+        )
+        hier = onboard_new_ape_wizard()
+        engine.register(hier, commit_handlers=HIERARCHICAL_HANDLERS)
+        console.print("[dim]Loaded example: onboard_new_ape (hierarchical demo)[/]")
+    except Exception as exc:
+        console.print(f"[dim yellow]Could not load hierarchical example: {exc}[/]")
+        logger.debug(f"Hierarchical example load failed: {exc}")
 
 
 if __name__ == "__main__":

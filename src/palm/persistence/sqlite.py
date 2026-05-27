@@ -44,6 +44,10 @@ class DBSession(Base):
     status: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     current_step_slug: Mapped[str | None] = mapped_column(String(64))
 
+    # 0.2.1 Hierarchical path support (persisted)
+    current_path: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
+    execution_path_history: Mapped[list[list[str]]] = mapped_column(JSON, nullable=False, default=list)
+
     collected_data: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
     step_history: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
     back_stack: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
@@ -107,6 +111,8 @@ class SQLiteSessionStore:
             wizard_id=session.wizard_id,
             status=session.status.value,
             current_step_slug=session.current_step_slug,
+            current_path=session.current_path or [],
+            execution_path_history=session.execution_path_history or [],
             collected_data=session.collected_data,
             step_history=session.step_history,
             back_stack=session.back_stack,
@@ -125,6 +131,8 @@ class SQLiteSessionStore:
             wizard_id=row.wizard_id,
             status=row.status,  # type: ignore[arg-type]
             current_step_slug=row.current_step_slug,
+            current_path=row.current_path or [],
+            execution_path_history=row.execution_path_history or [],
             collected_data=row.collected_data or {},
             step_history=row.step_history or [],
             back_stack=row.back_stack or [],
@@ -146,6 +154,8 @@ class SQLiteSessionStore:
                 # Update fields
                 existing.status = session.status.value
                 existing.current_step_slug = session.current_step_slug
+                existing.current_path = session.current_path or []
+                existing.execution_path_history = session.execution_path_history or []
                 existing.collected_data = session.collected_data
                 existing.step_history = session.step_history
                 existing.back_stack = session.back_stack

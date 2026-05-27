@@ -110,10 +110,13 @@ class WizardSession(BaseModel):
         self.step_history.append(leaf)
 
         if add_to_back_stack:
-            # Store the full path as a string for back_stack (supports qualified backtracking)
+            # Store both the dotted path (for precision) and the leaf slug (for convenience)
             path_key = ".".join(path)
             if path_key not in self.back_stack:
                 self.back_stack.append(path_key)
+            leaf = path[-1]
+            if leaf not in self.back_stack:
+                self.back_stack.append(leaf)
 
     def pop_back_stack_to(self, target: str) -> list[str]:
         """
@@ -129,5 +132,22 @@ class WizardSession(BaseModel):
 
     @property
     def current_step_path(self) -> list[str]:
-        """Convenience accessor (0.2.0)."""
-        return self.current_path or ([self.current_step_slug] if self.current_step_slug else [])
+        """Convenience accessor (0.2.1). Always prefers execution history."""
+        if self.current_path:
+            return self.current_path
+        if self.execution_path_history:
+            last = self.execution_path_history[-1]
+            if last:
+                return last
+        if self.current_step_slug:
+            return [self.current_step_slug]
+        return []
+
+    def ensure_path_consistency(self) -> None:
+        """0.2.1 defensive method: reconstruct current_path from history if needed."""
+        if not self.current_path and self.execution_path_history:
+            last = self.execution_path_history[-1]
+            if last:
+                self.current_path = list(last)
+                if not self.current_step_slug:
+                    self.current_step_slug = last[-1]

@@ -167,6 +167,9 @@ class WizardEngine:
             self.store.save(session)
             raise SessionExpiredError(f"Session {session_id} has expired")
 
+        # 0.2.1: Ensure hierarchical path state is consistent after load
+        session.ensure_path_consistency()
+
         if touch:
             session.touch()
             self.store.save(session)
@@ -204,7 +207,7 @@ class WizardEngine:
         if current_step.type == StepType.INTRODUCTION:
             if not self._is_positive_confirmation(value):
                 # Re-emit same context with a gentle message
-                ctx = self._build_rich_context(session, definition, current_step)
+                ctx = self._build_rich_context(session, definition, current_step, current_path=current_path)
                 ctx.metadata["last_error"] = "Please type 'confirm', 'yes', or 'y' to continue."
                 return ctx
             # Introduction accepted - never add to back stack
@@ -224,53 +227,56 @@ class WizardEngine:
             field_name = current_step.slug
             session.collected_data[field_name] = self._normalize_value(value, current_step)
 
-        # 0.2.0: Use tree-aware next path resolution
+        # 0.2.1 Stabilized: Use a loop for auto-descent instead of recursion.
+        # This keeps a single consistent session object for the entire "tick".
         next_path = definition.get_next_path(current_path, session.collected_data)
 
-        if next_path is None:
-            # Terminal
-            return self._finalize_session(session, definition, commit_result={"status": "completed_without_commit"})
+        while next_path is not None:
+            next_step = definition.get_step_by_path(next_path)
+            if not next_step:
+                next_slug = next_path[-1] if next_path else None
+                next_step = definition.get_step(next_slug) if next_slug else None
 
-        next_step = definition.get_step_by_path(next_path)
-        if not next_step:
-            # Fallback for legacy flat wizards
-            next_slug = next_path[-1] if next_path else None
-            next_step = definition.get_step(next_slug) if next_slug else None
+            if not next_step:
+                raise InvalidStepError(f"Could not resolve next step from path {next_path}")
 
-        if not next_step:
-            raise InvalidStepError(f"Could not resolve next step from path {next_path}")
+            # Record (this is the authoritative write for this step in the path)
+            add_to_back = next_step.is_backtrackable
+            session.record_path(next_path, add_to_back_stack=add_to_back)
 
-        # Record using full path (this enables proper hierarchical backtracking)
-        add_to_back = next_step.is_backtrackable
-        session.record_path(next_path, add_to_back_stack=add_to_back)
+            # Pure control composites (SEQUENCE / CONDITION) never pause for the user.
+            # Immediately compute the following step inside the same tick.
+            if next_step.is_composite() and next_step.type in (StepType.SEQUENCE, StepType.CONDITION):
+                logger.debug(f"Auto-descending composite {next_path} (type={next_step.type})")
+                self.store.save(session)  # persist progress into the composite
+                current_path = next_path  # for the next iteration of get_next_path
+                next_path = definition.get_next_path(current_path, session.collected_data)
+                continue  # loop to next without user input
 
-        # Auto-advance for composite control nodes (no user input)
-        if next_step.is_composite() and next_step.type in (StepType.SEQUENCE, StepType.CONDITION):
-            # These composites auto-descend; recurse until we hit a pausing step
+            # Special non-pausing types
+            if next_step.type == StepType.ACTION:
+                self._execute_action_step(session, next_step)
+                self.store.save(session)
+                current_path = next_path
+                next_path = definition.get_next_path(current_path, session.collected_data)
+                continue
+
+            # Pausing step reached (or COMMIT)
+            if next_step.type == StepType.COMMIT:
+                session.status = SessionStatus.AWAITING_COMMIT
+            else:
+                session.status = SessionStatus.PAUSED_FOR_INPUT
+
             self.store.save(session)
-            return self.process_input(session_id, value=None)
-
-        # Special step types
-        if next_step.type == StepType.COMMIT:
-            session.status = SessionStatus.AWAITING_COMMIT
+            context = self._build_rich_context(session, definition, next_step, current_path=next_path)
+            session.last_rich_context = context.model_dump(mode="json")
             self.store.save(session)
-            return self._build_rich_context(session, definition, next_step, current_path=next_path)
 
-        if next_step.type == StepType.ACTION:
-            self._execute_action_step(session, next_step)
-            self.store.save(session)
-            return self.process_input(session_id, value=None)
+            logger.debug(f"Session {session_id} paused at path {next_path}")
+            return context
 
-        # Normal pausing step
-        session.status = SessionStatus.PAUSED_FOR_INPUT
-        self.store.save(session)
-
-        context = self._build_rich_context(session, definition, next_step, current_path=next_path)
-        session.last_rich_context = context.model_dump(mode="json")
-        self.store.save(session)
-
-        logger.debug(f"Session {session_id} advanced to path {next_path}")
-        return context
+        # No more steps
+        return self._finalize_session(session, definition, commit_result={"status": "completed_without_commit"})
 
     def backtrack(self, session_id: str, target: str) -> RichContext:
         """
@@ -288,16 +294,18 @@ class WizardEngine:
         if target not in session.back_stack:
             raise BacktrackNotAllowedError(f"Cannot backtrack to '{target}' - not in back stack")
 
+        logger.info(f"backtrack requested to '{target}' for session {session_id}")
+
         # Resolve target step (support both slug and dotted path)
         target_path: list[str]
         if "." in target:
             target_path = target.split(".")
         else:
-            # Find the last path in history that ends with this slug
+            # Find the last matching path that ends with the slug
             target_path = None
             for p in reversed(session.execution_path_history):
                 if p and p[-1] == target:
-                    target_path = p
+                    target_path = list(p)
                     break
             if target_path is None:
                 target_path = [target]
@@ -306,31 +314,36 @@ class WizardEngine:
         if not target_step or not target_step.is_backtrackable:
             raise BacktrackNotAllowedError(f"Step '{target}' is not backtrackable")
 
-        # Truncate history to the target
+        # Robustly truncate execution_path_history to the target (or last occurrence of the path)
         try:
             if "." in target:
-                # Match full path
+                match_path = target_path
                 for i in range(len(session.execution_path_history) - 1, -1, -1):
-                    if session.execution_path_history[i] == target_path:
-                        session.execution_path_history = session.execution_path_history[: i + 1]
+                    if session.execution_path_history[i] == match_path:
+                        session.execution_path_history = session.execution_path_history[:i+1]
                         break
             else:
-                # Legacy slug truncation
-                idx = session.step_history.index(target)
-                session.step_history = session.step_history[: idx + 1]
-                # Also truncate path history reasonably
-                session.execution_path_history = [
-                    p for p in session.execution_path_history if p and p[-1] != target
-                ][: len(session.step_history)]  # best effort
-        except ValueError:
-            pass
+                # Slug-based: truncate both histories at the last occurrence of the leaf
+                for i in range(len(session.execution_path_history) - 1, -1, -1):
+                    if session.execution_path_history[i] and session.execution_path_history[i][-1] == target:
+                        session.execution_path_history = session.execution_path_history[:i+1]
+                        break
+
+                # Also keep step_history consistent (best effort)
+                if target in session.step_history:
+                    idx = session.step_history.index(target)
+                    session.step_history = session.step_history[:idx + 1]
+        except Exception as exc:
+            logger.warning(f"History truncation encountered issue during backtrack: {exc}")
 
         popped = session.pop_back_stack_to(target)
 
+        # Clear data collected in the popped subtree(s)
         for key in popped:
-            # key may be "parent.child" or "slug"
             leaf = key.split(".")[-1]
-            session.collected_data.pop(leaf, None)
+            if leaf in session.collected_data:
+                logger.debug(f"  clearing collected data for '{leaf}' (from backtrack)")
+                session.collected_data.pop(leaf, None)
 
         session.current_path = list(target_path)
         session.current_step_slug = target_path[-1]
@@ -342,7 +355,7 @@ class WizardEngine:
         session.last_rich_context = context.model_dump(mode="json")
         self.store.save(session)
 
-        logger.info(f"Session {session_id} backtracked to '{target}'")
+        logger.info(f"Session {session_id} successfully backtracked to path {target_path}")
         return context
 
     # ------------------------------------------------------------------

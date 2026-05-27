@@ -91,7 +91,9 @@ palm> exit
 
 ## Creating Your Own Wizard (0.2.0+)
 
-See the greatly enhanced [wizards/examples/create_ape_profile.py](wizards/examples/create_ape_profile.py) for a complete reference showing **hierarchical steps**, **dynamic ContextBuilders**, and **CONDITION** nodes.
+See:
+- [wizards/examples/create_ape_profile.py](wizards/examples/create_ape_profile.py) — the clean, recommended **basic/flat** example.
+- [wizards/examples/onboard_new_ape.py](wizards/examples/onboard_new_ape.py) — the **rich 0.2.1 hierarchical demo** (SEQUENCE + ContextBuilder + CONDITION + dotted backtracking).
 
 Basic pattern:
 
