@@ -14,15 +14,22 @@ import sys
 from rich.console import Console
 
 from palm.cli.solid.repl import PalmREPL
+from palm.config.settings import settings
 from palm.core.orchestrator import Orchestrator
 from palm.core.wizard.engine import WizardEngine
+from palm.utils.logging import configure_logging, logger
 
 
 def main() -> None:
     console = Console()
 
-    console.print("[bold green]🌴 Palm Orchestration Engine[/] - Solid Admin CLI")
+    # Set up beautiful logging early
+    configure_logging(level=settings.log_level, console=console)
+
+    console.print("[bold green]🌴 Palm Orchestration Engine[/] - Solid Admin CLI v0.1.1")
     console.print("Type [bold]help[/] for available commands. [dim]Ctrl+D or 'exit' to quit.[/]\n")
+
+    logger.info("Starting Palm Solid Admin CLI")
 
     # Create a fresh orchestrator + engine for this CLI session
     orchestrator = Orchestrator()
@@ -36,18 +43,24 @@ def main() -> None:
         repl.run()
     except KeyboardInterrupt:
         console.print("\n[yellow]Interrupted. Goodbye.[/]")
+        logger.info("CLI interrupted by user")
         sys.exit(0)
 
 
 def _auto_register_example_wizards(engine: WizardEngine, console: Console) -> None:
-    """Try to load the built-in example wizard(s)."""
+    """Try to load the built-in example wizard(s) + their commit handlers."""
     try:
-        from wizards.examples.create_ape_profile import create_ape_profile_wizard
+        from wizards.examples.create_ape_profile import (
+            COMMIT_HANDLERS,
+            create_ape_profile_wizard,
+        )
 
-        engine.register(create_ape_profile_wizard())
-        console.print("[dim]Loaded example wizard: create_ape_profile[/]")
+        wizard_def = create_ape_profile_wizard()
+        engine.register(wizard_def, commit_handlers=COMMIT_HANDLERS)
+        console.print("[dim]Loaded example wizard: create_ape_profile (with commit handler)[/]")
     except Exception as exc:
         console.print(f"[dim yellow]Could not auto-load example wizards: {exc}[/]")
+        logger.debug(f"Wizard auto-load failed: {exc}")
 
 
 if __name__ == "__main__":

@@ -100,6 +100,98 @@ See [wizards/examples/create_ape_profile.py](wizards/examples/create_ape_profile
 
 ---
 
+## Development Guide (0.1.1)
+
+### How to Create and Register a New Wizard
+
+```python
+from palm.core.wizard.definition import WizardDefinition
+from palm.models.step import StepDefinition
+from palm.models.common import StepType
+
+def my_wizard() -> WizardDefinition:
+    steps = [
+        StepDefinition(
+            slug="introduction",
+            type=StepType.INTRODUCTION,
+            title="Welcome",
+            prompt="Type 'confirm' to begin",
+            is_backtrackable=False,
+        ),
+        StepDefinition(
+            slug="ask_email",
+            type=StepType.USER_INPUT,
+            title="Email",
+            prompt="What is your email?",
+            validation_rules=[{"type": "required"}, {"type": "email"}],
+        ),
+        # ... more steps ...
+        StepDefinition(slug="commit", type=StepType.COMMIT, title="Finish"),
+    ]
+    return WizardDefinition(
+        id="my_wizard",
+        name="My Wizard",
+        description="Does something useful",
+        steps=steps,
+        on_commit_hook="my_commit_handler",   # optional
+    )
+```
+
+### Registering Wizards + Commit Handlers (Recommended Pattern)
+
+```python
+from palm.core.wizard.engine import WizardEngine
+
+def my_commit_handler(session):
+    # ... perform durable transaction ...
+    return {"status": "ok", "profile_id": "..."}
+
+engine = WizardEngine()
+wiz = my_wizard()
+
+engine.register(
+    wiz,
+    commit_handlers={"my_commit_handler": my_commit_handler}
+)
+```
+
+The Solid CLI will automatically pick up wizards placed in `wizards/examples/` that follow the `create_*_wizard` + `COMMIT_HANDLERS` convention.
+
+### Adding Custom Validators
+
+```python
+from palm.core.wizard.validators import register_validator
+
+def validate_not_taken(value, params):
+    if value in get_existing_usernames():
+        return "Username already taken"
+    return None
+
+register_validator("unique_username", validate_not_taken)
+```
+
+Then reference it from a step:
+
+```python
+ValidationRule(type="custom", params={"name": "unique_username"})
+```
+
+### Core vs CLI Architecture
+
+- **Core** (`palm/core`, `palm/models`, `palm/persistence`): Pure logic. No Rich, no prompt_toolkit.
+- **RichContext** is the *only* data structure that should flow from engine → UI.
+- The CLI (`palm/cli/solid`) is allowed to be opinionated and user-experience focused.
+
+### Key Contracts
+
+- `WizardEngine.register()` + `process_input()` + `backtrack()` + `commit()`
+- Every pause point returns a `RichContext` (0.1.1 has `suggested_input` + `available_actions`)
+- Sessions are persisted automatically; the engine is stateless between calls.
+
+---
+
+
+
 ## Tech Stack
 
 - **Python 3.11+**
@@ -113,6 +205,9 @@ See [wizards/examples/create_ape_profile.py](wizards/examples/create_ape_profile
 ## Development
 
 ```bash
+# Install in editable mode with dev tools
+pip install -e ".[dev]"
+
 # Format + lint
 ruff check .
 ruff format .
@@ -120,8 +215,13 @@ ruff format .
 # Type check
 mypy src
 
-# Tests (once written)
-pytest
+# Run tests
+pytest -q
+
+# Launch the polished Solid Admin CLI
+python main.py
+# or
+palm
 ```
 
 ---

@@ -86,3 +86,54 @@ def test_backtracking(engine: WizardEngine) -> None:
     assert ctx.collected_data.get("ask_name") == "Alan Turing"
     # But later steps' data must have been cleared
     assert "ask_age" not in ctx.collected_data
+
+
+# ----------------------------------------------------------------------
+# 0.1.1 Feature Tests
+# ----------------------------------------------------------------------
+
+def test_rich_context_has_guidance_fields(engine: WizardEngine) -> None:
+    """New 0.1.1 fields on RichContext for better UX guidance."""
+    session, ctx = engine.start_session("create_ape_profile")
+
+    # Introduction step should suggest confirmation
+    assert ctx.suggested_input == "confirm"
+    assert any("confirm" in a.lower() for a in ctx.available_actions)
+
+    # Advance to a later step
+    engine.process_input(session.id, "confirm")
+    engine.process_input(session.id, "Grace Hopper")
+    ctx2 = engine.process_input(session.id, "42")
+
+    # Summary or commit steps should also have strong guidance
+    if ctx2.current_step_type in ("summary", "commit"):
+        assert ctx2.suggested_input == "confirm"
+        assert len(ctx2.available_actions) > 0
+
+
+def test_commit_handler_registration(engine: WizardEngine) -> None:
+    """Commit handlers can be registered together with the wizard (0.1.1)."""
+    from wizards.examples.create_ape_profile import ape_profile_commit_handler
+
+    fresh = WizardEngine()
+    wiz = create_ape_profile_wizard()
+
+    fresh.register(wiz, commit_handlers={"create_ape_profile_commit": ape_profile_commit_handler})
+
+    assert "create_ape_profile_commit" in fresh._commit_handlers  # type: ignore[attr-defined]
+
+
+def test_active_session_and_back_defaults(engine: WizardEngine) -> None:
+    """
+    The engine itself doesn't have 'active session' concept — that lives in the REPL.
+    We test that backtracking still works cleanly after the 0.1.1 logic changes.
+    """
+    session, _ = engine.start_session("create_ape_profile")
+    engine.process_input(session.id, "confirm")
+    engine.process_input(session.id, "Margaret Hamilton")
+    engine.process_input(session.id, "85")
+
+    # Should be able to back using the session's own back_stack
+    ctx = engine.backtrack(session.id, "ask_name")
+    assert ctx.current_step_slug == "ask_name"
+    assert "Margaret Hamilton" in str(ctx.collected_data.get("ask_name"))

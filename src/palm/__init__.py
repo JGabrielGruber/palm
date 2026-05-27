@@ -15,16 +15,16 @@ Key principles:
 - First step is always a non-backtrackable Introduction
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from palm.exceptions import (
-    PalmError,
-    WizardNotFoundError,
-    SessionNotFoundError,
-    InvalidStepError,
-    ValidationError,
     BacktrackNotAllowedError,
+    InvalidStepError,
+    PalmError,
     SessionExpiredError,
+    SessionNotFoundError,
+    ValidationError,
+    WizardNotFoundError,
 )
 
 __all__ = [

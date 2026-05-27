@@ -12,13 +12,17 @@ This is the primary object a daemon, TUI, or API server would hold.
 
 from __future__ import annotations
 
+import threading
+import time
 from typing import Any
 
+from palm.config.settings import settings
 from palm.core.events import EventBus
 from palm.core.process_manager import ProcessManager
 from palm.core.wizard.engine import WizardEngine
 from palm.core.workflow.registry import WorkflowRegistry
 from palm.persistence.sqlite import SQLiteSessionStore
+from palm.utils.logging import logger
 
 
 class Orchestrator:
@@ -41,8 +45,15 @@ class Orchestrator:
         self.wizard_engine = WizardEngine(store=self.store)
         self.workflow_registry = WorkflowRegistry()
 
+        self._cleanup_thread: threading.Thread | None = None
+        self._stop_cleanup = threading.Event()
+
+        # Start background session cleanup
+        self._start_session_cleanup()
+
         # Emit a startup event
         self.event_bus.publish_named("orchestrator.started", {})
+        logger.info("Orchestrator initialized (with background cleanup)")
 
     def register_wizard(self, definition: Any) -> None:
         """Convenience passthrough."""
@@ -56,6 +67,41 @@ class Orchestrator:
         )
         return session, ctx
 
+    def _start_session_cleanup(self) -> None:
+        """Start a daemon thread that periodically removes expired sessions."""
+        interval = settings.session_cleanup_interval_seconds
+
+        def _cleanup_loop() -> None:
+            logger.info(f"Session cleanup thread started (interval={interval}s)")
+            while not self._stop_cleanup.is_set():
+                try:
+                    deleted = self.store.cleanup_expired()
+                    if deleted > 0:
+                        logger.info(f"Cleaned up {deleted} expired session(s)")
+                except Exception as exc:
+                    logger.warning(f"Session cleanup error: {exc}")
+
+                # Sleep in small increments so we can exit promptly
+                for _ in range(interval):
+                    if self._stop_cleanup.is_set():
+                        break
+                    time.sleep(1)
+
+            logger.info("Session cleanup thread stopped")
+
+        self._cleanup_thread = threading.Thread(
+            target=_cleanup_loop,
+            name="palm-session-cleanup",
+            daemon=True,
+        )
+        self._cleanup_thread.start()
+
     def shutdown(self) -> None:
+        """Gracefully stop background workers and the orchestrator."""
+        self._stop_cleanup.set()
+        if self._cleanup_thread and self._cleanup_thread.is_alive():
+            self._cleanup_thread.join(timeout=2.0)
+
         self.process_manager.shutdown_all()
         self.event_bus.publish_named("orchestrator.shutdown", {})
+        logger.info("Orchestrator shutdown complete")

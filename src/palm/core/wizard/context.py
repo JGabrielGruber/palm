@@ -15,11 +15,16 @@ from palm.models.common import SessionStatus, StepType
 
 class RichContext(BaseModel):
     """
-    Complete situational awareness for the current pause point in a wizard.
+    Complete situational awareness for the current pause point in a wizard (0.1.1).
 
-    Every time the engine needs the user to provide input (or confirm),
-    it emits one of these. The client renders the prompt + guidelines,
-    collects input according to the rules, and calls back with the value.
+    This is the **primary contract** between the Palm Core engine and any UI layer
+    (CLI, Textual TUI, WebSocket clients, etc.).
+
+    Key 0.1.1 additions:
+    - `suggested_input`: Recommended value the user should type (especially for confirm steps)
+    - `available_actions`: Explicit list of what the user can/should do right now
+
+    The engine always emits a fresh RichContext before pausing for user input.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -69,6 +74,16 @@ class RichContext(BaseModel):
 
     # Optional: pre-rendered nice display (CLI can use this)
     formatted_summary: str | None = None
+
+    # New in 0.1.1: explicit guidance for the user
+    suggested_input: str | None = Field(
+        default=None,
+        description="Example or recommended input for the current step (e.g. 'confirm', 'yes')",
+    )
+    available_actions: list[str] = Field(
+        default_factory=list,
+        description="Human-readable list of actions the user can take right now",
+    )
 
     def to_display_dict(self) -> dict[str, Any]:
         """Compact representation suitable for CLI rendering."""

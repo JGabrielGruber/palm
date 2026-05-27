@@ -8,7 +8,7 @@ Uses Rich for beautiful output.
 from __future__ import annotations
 
 import shlex
-from typing import Any
+from typing import Any, Callable
 
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import Completer, Completion
@@ -22,12 +22,21 @@ from palm.config.settings import settings
 from palm.core.orchestrator import Orchestrator
 from palm.core.wizard.engine import WizardEngine
 from palm.exceptions import PalmError
+from palm.utils.logging import logger
 
 
 class PalmCommandCompleter(Completer):
-    """Basic command completion."""
+    """
+    Context-aware dynamic completer for the Palm REPL (0.1.1).
 
-    COMMANDS = [
+    Supports:
+    - Top-level commands
+    - Wizard IDs after "wizard start"
+    - Session IDs for status/input/back when active sessions exist
+    - Step slugs for "back <session> <slug>" using the session's allowed back steps
+    """
+
+    BASE_COMMANDS = [
         "help",
         "wizard list",
         "wizard start",
@@ -41,15 +50,113 @@ class PalmCommandCompleter(Completer):
         "quit",
     ]
 
+    def __init__(
+        self,
+        engine: WizardEngine,
+        get_active_session_id: Callable[[], str | None],
+    ) -> None:
+        self.engine = engine
+        self.get_active_session_id = get_active_session_id
+
     def get_completions(self, document, complete_event):
-        text = document.text_before_cursor.lower()
-        for cmd in self.COMMANDS:
-            if cmd.startswith(text):
-                yield Completion(cmd, start_position=-len(text))
+        text = document.text_before_cursor
+        text_lower = text.lower().strip()
+        words = text_lower.split()
+
+        # Top-level command completion
+        if len(words) <= 1:
+            prefix = text_lower
+            for cmd in self.BASE_COMMANDS:
+                if cmd.startswith(prefix):
+                    yield Completion(cmd, start_position=-len(prefix))
+            return
+
+        first = words[0]
+        second = words[1] if len(words) > 1 else ""
+
+        # wizard start <wizard_id>
+        if first == "wizard" and second == "start":
+            prefix = words[2] if len(words) > 2 else ""
+            for wiz in self.engine.list_wizards():
+                wid = wiz["id"]
+                if wid.lower().startswith(prefix):
+                    yield Completion(wid, start_position=-len(prefix))
+            return
+
+        # Commands that accept session_id as next argument
+        if first in ("wizard", "back") and second in ("status", "input", "back"):
+            # "wizard status", "wizard input", "back"
+            prefix = words[2] if len(words) > 2 else ""
+            active = self.get_active_session_id()
+            candidates: list[str] = []
+
+            # Prefer active session first
+            if active:
+                candidates.append(active)
+
+            # Add other active sessions
+            for s in self.engine.store.list_active():
+                if s.id not in candidates:
+                    candidates.append(s.id)
+
+            for sid in candidates:
+                if sid.lower().startswith(prefix):
+                    yield Completion(sid, start_position=-len(prefix))
+            return
+
+        # back <session_id> <step_slug>
+        if first == "back" and len(words) >= 2:
+            # words[1] is the session id (or being typed)
+            if len(words) == 2:
+                # still completing session id
+                prefix = words[1]
+                for s in self.engine.store.list_active():
+                    if s.id.lower().startswith(prefix):
+                        yield Completion(s.id, start_position=-len(prefix))
+                return
+
+            # Completing step slug for a specific session
+            session_id = words[1]
+            prefix = words[2] if len(words) > 2 else ""
+
+            try:
+                sess = self.engine.store.get(session_id)
+                if sess and sess.back_stack:
+                    for slug in sess.back_stack:
+                        if slug.lower().startswith(prefix):
+                            yield Completion(slug, start_position=-len(prefix))
+            except Exception:
+                pass
+            return
+
+        # wizard input <session> <value>  -> we don't complete the value, but we can help with session
+        if first == "wizard" and second == "input" and len(words) <= 3:
+            prefix = words[2] if len(words) > 2 else ""
+            active = self.get_active_session_id()
+            for s in self.engine.store.list_active():
+                sid = s.id
+                if sid == active:
+                    sid = f"{sid}  # active"
+                if sid.lower().startswith(prefix):
+                    yield Completion(s.id, start_position=-len(prefix))
+            return
+
+        # Fallback: still offer base commands
+        for cmd in self.BASE_COMMANDS:
+            if cmd.startswith(text_lower):
+                yield Completion(cmd, start_position=-len(text_lower))
 
 
 class PalmREPL:
-    """Main REPL loop."""
+    """
+    Interactive Solid Admin REPL for Palm (major UX improvements in 0.1.1).
+
+    Features:
+    - Context-aware tab completion (wizards, sessions, backtrackable steps)
+    - Active session memory (most commands default to the last started session)
+    - Beautiful Rich rendering with explicit "Available Actions" guidance
+    - Smart argument parsing for `wizard input` and `back`
+    """
 
     def __init__(
         self,
@@ -61,9 +168,17 @@ class PalmREPL:
         self.engine = engine
         self.console = console
 
+        self.active_session_id: str | None = None  # convenience for quick input + autocomplete
+
+        # Create context-aware completer (0.1.1)
+        completer = PalmCommandCompleter(
+            engine=engine,
+            get_active_session_id=lambda: self.active_session_id,
+        )
+
         self.session: PromptSession[str] = PromptSession(
             history=FileHistory(str(settings.resolved_history_file)),
-            completer=PalmCommandCompleter(),
+            completer=completer,
             style=Style.from_dict(
                 {
                     "prompt": "ansicyan bold",
@@ -71,8 +186,6 @@ class PalmREPL:
             ),
             multiline=False,
         )
-
-        self.active_session_id: str | None = None  # convenience for quick input
 
         self.commands: dict[str, Any] = {
             "help": self.cmd_help,
@@ -102,14 +215,20 @@ class PalmREPL:
                 self.console.print("^C")
                 continue
             except PalmError as e:
-                self.console.print(f"[red]Error:[/] {e}")
+                # 0.1.1: clearer, actionable error messages
+                if "validation" in str(e).lower():
+                    self.console.print(f"[red]Validation failed:[/] {e}")
+                    self.console.print("[dim]Hint: Use 'back <slug>' to correct previous answers.[/]")
+                else:
+                    self.console.print(f"[red]Error:[/] {e}")
             except Exception as e:
                 self.console.print(f"[red bold]Unexpected error:[/] {e}")
+                logger.exception("Unexpected REPL error")
 
     def _get_prompt(self) -> str:
         if self.active_session_id:
             short = self.active_session_id[:8]
-            return f"[palm:{short}]> "
+            return f"[palm:{short} ●]> "
         return settings.cli_prompt
 
     def _dispatch(self, line: str) -> None:
@@ -156,10 +275,14 @@ class PalmREPL:
   help                            This message
   exit / quit                     Leave the REPL
 
-[bold]Tips[/]
-  • After starting a wizard, the session ID becomes "active".
-  • You can then use short forms in many contexts (future enhancement).
-  • Use Tab for command completion.
+[bold]Tips (0.1.1)[/]
+  • After starting a wizard, the session becomes [bold]active[/] (shown in prompt as [cyan]palm:xxxxxx ●[/]).
+  • Many commands now default to the active session:
+      wizard input <value>
+      wizard status
+      back <step-slug>
+  • Tab completion is now dynamic (wizards, sessions, step slugs).
+  • On summary/commit steps you can usually just type [green]confirm[/] or [green]yes[/].
 """
         self.console.print(Panel(help_text.strip(), title="Help", border_style="cyan"))
 
@@ -201,6 +324,7 @@ class PalmREPL:
             self.console.print(f"[red]Failed to start wizard:[/] {e}")
 
     def cmd_wizard_status(self, args: list[str]) -> None:
+        # 0.1.1: defaults to active session
         sid = args[0] if args else self.active_session_id
         if not sid:
             self.console.print("[red]No session id provided and no active session.[/]")
@@ -215,22 +339,35 @@ class PalmREPL:
             self.console.print(f"[red]{e}[/]")
 
     def cmd_wizard_input(self, args: list[str]) -> None:
-        if len(args) < 2:
-            self.console.print("[red]Usage:[/] wizard input <session_id> <value>")
+        """
+        0.1.1: Supports:
+          wizard input <value...>          (uses active session)
+          wizard input <session_id> <value...>
+        """
+        if not args:
+            self.console.print("[red]Usage:[/] wizard input [<session_id>] <value>")
             return
 
-        sid = args[0]
-        # Join the rest in case value contains spaces
-        value = " ".join(args[1:])
+        # Smart default to active session
+        if len(args) == 1 and self.active_session_id:
+            sid = self.active_session_id
+            value = args[0]
+        elif len(args) >= 2:
+            sid = args[0]
+            value = " ".join(args[1:])
+        else:
+            self.console.print("[red]Usage:[/] wizard input [<session_id>] <value>")
+            return
 
         try:
             ctx = self.engine.process_input(sid, value)
             self._render_context(ctx)
             if ctx.status.value == "committed":
                 self.active_session_id = None
+                logger.info(f"Session {sid[:8]} committed via CLI")
         except PalmError as e:
             self.console.print(f"[red]Input error:[/] {e}")
-            # Re-show last context if possible
+            # Try to re-show context for the session the user was talking to
             try:
                 status = self.engine.get_status(sid)
                 self.console.print(f"[dim]Current step: {status.get('current_step')}[/]")
@@ -238,11 +375,24 @@ class PalmREPL:
                 pass
 
     def cmd_back(self, args: list[str]) -> None:
-        if len(args) < 2:
-            self.console.print("[red]Usage:[/] back <session_id> <step_slug>")
+        """
+        0.1.1 UX improvement:
+          back <step_slug>                 (uses active session)
+          back <session_id> <step_slug>
+        """
+        if not args:
+            self.console.print("[red]Usage:[/] back [<session_id>] <step_slug>")
             return
 
-        sid, target = args[0], args[1]
+        if len(args) == 1 and self.active_session_id:
+            sid = self.active_session_id
+            target = args[0]
+        elif len(args) >= 2:
+            sid, target = args[0], args[1]
+        else:
+            self.console.print("[red]Usage:[/] back [<session_id>] <step_slug>")
+            return
+
         try:
             ctx = self.engine.backtrack(sid, target)
             self._render_context(ctx)
@@ -307,12 +457,18 @@ class PalmREPL:
     # ------------------------------------------------------------------
 
     def _render_context(self, ctx: Any) -> None:
-        """Beautifully render a RichContext using Rich panels."""
+        """
+        0.1.1: Significantly improved rendering with explicit action guidance.
+        """
         title = f"[bold]{ctx.wizard_name}[/] — [cyan]{ctx.current_step_slug}[/] ({ctx.current_step_type})"
 
         body = f"[bold]{ctx.prompt}[/]\n"
         if ctx.guidelines:
             body += f"\n[dim]{ctx.guidelines}[/]\n"
+
+        # Show suggested input prominently for confirmation-style steps
+        if ctx.suggested_input:
+            body += f"\n[yellow]→ Suggested:[/] [bold]{ctx.suggested_input}[/]\n"
 
         if ctx.choices:
             body += "\n[bold]Choices:[/]\n"
@@ -321,8 +477,14 @@ class PalmREPL:
                 label = c.get("label", val)
                 body += f"  • [green]{val}[/]: {label}\n"
 
+        # New prominent "Available Actions" section (the key 0.1.1 UX win)
+        if ctx.available_actions:
+            body += "\n[bold cyan]Available Actions:[/]\n"
+            for action in ctx.available_actions:
+                body += f"  • {action}\n"
+
         if ctx.allowed_back_steps:
-            body += f"\n[dim]Back: {' | '.join(ctx.allowed_back_steps)}[/]"
+            body += f"\n[dim]Back steps: {' | '.join(ctx.allowed_back_steps)}[/]"
 
         if ctx.collected_data:
             body += "\n\n[dim]Collected so far:[/]\n"
@@ -337,6 +499,12 @@ class PalmREPL:
             subtitle=f"Session: {ctx.session_id[:8]}  |  Status: {ctx.status}",
         )
         self.console.print(panel)
+
+        # Extra emphasis on terminal steps
+        if ctx.current_step_type in ("summary", "commit"):
+            self.console.print(
+                "[bold yellow]Type[/] [bold green]confirm[/] [bold yellow]or[/] [bold green]yes[/] [bold yellow]to continue.[/]"
+            )
 
         if ctx.status.value == "committed":
             self.console.print(

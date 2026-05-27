@@ -33,6 +33,7 @@ from palm.exceptions import (
 from palm.models.common import SessionStatus, StepType
 from palm.models.session import WizardSession
 from palm.persistence.sqlite import SQLiteSessionStore
+from palm.utils.logging import logger
 from palm.utils.time import add_seconds, utc_now
 
 
@@ -54,12 +55,44 @@ class WizardEngine:
         self._commit_handlers: dict[str, Callable[[WizardSession], dict[str, Any]]] = commit_handlers or {}
 
     # ------------------------------------------------------------------
+    # Commit handler management
+    # ------------------------------------------------------------------
+
+    def register_commit_handler(
+        self,
+        name: str,
+        handler: Callable[[WizardSession], dict[str, Any]],
+    ) -> None:
+        """Register (or overwrite) a named commit handler."""
+        self._commit_handlers[name] = handler
+        logger.debug(f"Registered commit handler: {name}")
+
+    # ------------------------------------------------------------------
     # Registration
     # ------------------------------------------------------------------
 
-    def register(self, definition: WizardDefinition) -> None:
-        """Register (or overwrite) a wizard definition."""
+    def register(
+        self,
+        definition: WizardDefinition,
+        *,
+        commit_handlers: dict[str, Callable[[WizardSession], dict[str, Any]]] | None = None,
+    ) -> None:
+        """
+        Register (or overwrite) a wizard definition.
+
+        Optionally pass commit_handlers that will be registered together with
+        the wizard. This is the recommended way for wizard authors to bundle
+        their transactional commit logic.
+        """
         self._definitions[definition.id] = definition
+        logger.info(f"Registered wizard: {definition.id} v{definition.version}")
+
+        if commit_handlers:
+            for name, handler in commit_handlers.items():
+                self.register_commit_handler(name, handler)
+            logger.debug(
+                f"Registered {len(commit_handlers)} commit handler(s) for wizard '{definition.id}'"
+            )
 
     def get_definition(self, wizard_id: str) -> WizardDefinition:
         if wizard_id not in self._definitions:
@@ -120,6 +153,7 @@ class WizardEngine:
         session.last_rich_context = context.model_dump(mode="json")
         self.store.save(session)
 
+        logger.info(f"Started new session {session.id} for wizard '{wizard_id}'")
         return session, context
 
     def get_session(self, session_id: str, *, touch: bool = True) -> WizardSession:
@@ -223,6 +257,7 @@ class WizardEngine:
         session.last_rich_context = context.model_dump(mode="json")
         self.store.save(session)
 
+        logger.debug(f"Session {session_id} advanced to step '{next_step.slug}'")
         return context
 
     def backtrack(self, session_id: str, target_slug: str) -> RichContext:
@@ -267,6 +302,7 @@ class WizardEngine:
         session.last_rich_context = context.model_dump(mode="json")
         self.store.save(session)
 
+        logger.info(f"Session {session_id} backtracked to step '{target_slug}'")
         return context
 
     # ------------------------------------------------------------------
@@ -284,8 +320,8 @@ class WizardEngine:
         definition = self.get_definition(session.wizard_id)
 
         # Find commit handler
-        handler_name = definition.on_commit_hook
-        handler = self._commit_handlers.get(handler_name or "default")
+        handler_name = definition.on_commit_hook or "default"
+        handler = self._commit_handlers.get(handler_name)
 
         if handler is None:
             # Default no-op handler (useful for development)
@@ -301,9 +337,12 @@ class WizardEngine:
             handler = default_handler
 
         try:
+            logger.info(f"Executing commit for session {session_id} using handler '{handler_name}'")
             result = handler(session)
+            logger.info(f"Commit succeeded for session {session_id}")
             return self._finalize_session(session, definition, commit_result=result)
         except Exception as exc:
+            logger.exception(f"Commit failed for session {session_id}: {exc}")
             session.status = SessionStatus.FAILED
             session.error = str(exc)
             session.error_step = session.current_step_slug
@@ -334,6 +373,31 @@ class WizardEngine:
         elif step.type in (StepType.DISPLAY, StepType.ACTION, StepType.COMMIT):
             input_type = "none"
 
+        # Build contextual help (new in 0.1.1)
+        suggested: str | None = None
+        actions: list[str] = []
+
+        if step.type == StepType.INTRODUCTION:
+            suggested = "confirm"
+            actions = ["Type 'confirm', 'yes', or 'y' to begin the wizard"]
+        elif step.type in (StepType.SUMMARY, StepType.COMMIT):
+            suggested = "confirm"
+            actions = [
+                "Type 'confirm', 'yes', or 'commit' to proceed",
+                "Use 'back <step-slug>' to change a previous answer",
+            ]
+        elif step.type == StepType.CONFIRM:
+            suggested = "yes"
+            actions = ["Type 'yes' / 'no' or 'confirm' / 'cancel'"]
+        elif step.type == StepType.CHOICE and step.choices:
+            actions = [f"Choose one of: {', '.join(c.get('value', str(c)) for c in step.choices)}"]
+        else:
+            if allowed_back:
+                actions.append("Use 'back <slug>' to return to a previous step")
+
+        if allowed_back:
+            actions.append(f"Backtrackable steps: {', '.join(allowed_back)}")
+
         return RichContext(
             session_id=session.id,
             wizard_id=definition.id,
@@ -354,6 +418,8 @@ class WizardEngine:
             collected_data=dict(session.collected_data),
             status=session.status,
             metadata=step.metadata,
+            suggested_input=suggested,
+            available_actions=actions,
         )
 
     def _is_positive_confirmation(self, value: Any) -> bool:
@@ -390,6 +456,7 @@ class WizardEngine:
         session.commit_result = commit_result
         session.current_step_slug = None
         self.store.save(session)
+        logger.info(f"Session {session.id} committed successfully")
 
         # Return a terminal RichContext
         return RichContext(
