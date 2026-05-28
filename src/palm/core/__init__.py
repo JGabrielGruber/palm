@@ -1,16 +1,18 @@
-"""Palm Core - pure orchestration logic (no UI)."""
+"""
+Palm Core — pure, general-purpose orchestration primitives only.
+
+As of the 0.3.0-dev clean-core migration, `palm.core` contains **only**
+the Behavior Tree Engine and other future reusable, domain-agnostic engines.
+
+All legacy wizard, orchestration, models, and persistence code has been
+relocated to `palm.cli.solid.legacy` as a deprecated reference implementation.
+"""
+
+from __future__ import annotations
 
 from palm.core.behavior_tree import BehaviorTree, Blackboard, NodeStatus
-from palm.core.events import Event, EventBus
-from palm.core.orchestrator import Orchestrator
-from palm.core.process_manager import ProcessManager
 
 __all__ = [
-    "Event",
-    "EventBus",
-    "Orchestrator",
-    "ProcessManager",
-    # Behavior Tree Engine (new in 0.2.0)
     "BehaviorTree",
     "Blackboard",
     "NodeStatus",

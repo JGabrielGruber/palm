@@ -8,6 +8,18 @@ It wires together:
 - Persistence
 
 This is the primary object a daemon, TUI, or API server would hold.
+
+DEPRECATION NOTICE
+------------------
+This module is part of Palm's legacy reference implementation.
+It was moved from palm/core/ into cli/solid/legacy/ during the 0.3.0-dev
+clean-core migration.
+
+This code is preserved ONLY as a working historical snapshot.
+New code MUST NOT import from palm.cli.solid.legacy.* (except inside this package).
+Future orchestration will be rebuilt on top of palm.core.behavior_tree.
+
+Last updated: 0.3.0-dev migration
 """
 
 from __future__ import annotations
@@ -16,12 +28,12 @@ import threading
 import time
 from typing import Any
 
+from palm.cli.solid.legacy.events import EventBus
+from palm.cli.solid.legacy.persistence.sqlite import SQLiteSessionStore
+from palm.cli.solid.legacy.process_manager import ProcessManager
+from palm.cli.solid.legacy.wizard.engine import WizardEngine
+from palm.cli.solid.legacy.workflow.registry import WorkflowRegistry
 from palm.config.settings import settings
-from palm.core.events import EventBus
-from palm.core.process_manager import ProcessManager
-from palm.core.wizard.engine import WizardEngine
-from palm.core.workflow.registry import WorkflowRegistry
-from palm.persistence.sqlite import SQLiteSessionStore
 from palm.utils.logging import logger
 
 

@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import pytest
 
-from palm.core.wizard.engine import WizardEngine
-from palm.exceptions import ValidationError
+from palm.cli.solid.legacy.exceptions import ValidationError
+from palm.cli.solid.legacy.wizard.engine import WizardEngine
 from wizards.examples.create_ape_profile import create_ape_profile_wizard
 
 
@@ -91,6 +91,7 @@ def test_backtracking(engine: WizardEngine) -> None:
 # ----------------------------------------------------------------------
 # 0.1.1 Feature Tests
 # ----------------------------------------------------------------------
+
 
 def test_rich_context_has_guidance_fields(engine: WizardEngine) -> None:
     """New 0.1.1 fields on RichContext for better UX guidance."""

@@ -4,13 +4,13 @@ WizardSession - the persistent runtime state of a single wizard execution.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from palm.models.common import SessionStatus
+from .common import SessionStatus
 
 
 class WizardSession(BaseModel):
@@ -24,7 +24,9 @@ class WizardSession(BaseModel):
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
     # Identity
-    id: str = Field(default_factory=lambda: str(uuid4()), description="Unique session identifier (UUID4)")
+    id: str = Field(
+        default_factory=lambda: str(uuid4()), description="Unique session identifier (UUID4)"
+    )
     wizard_id: str = Field(description="References WizardDefinition.id")
 
     # Lifecycle
@@ -43,8 +45,8 @@ class WizardSession(BaseModel):
     )
 
     # Timing & TTL
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    last_activity_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    last_activity_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     expires_at: datetime | None = None
 
     # Outcome
@@ -60,12 +62,12 @@ class WizardSession(BaseModel):
 
     def touch(self) -> None:
         """Update last_activity_at to now (UTC)."""
-        from palm.utils.time import utc_now
+        from palm.cli.solid.legacy.utils.time import utc_now
 
         self.last_activity_at = utc_now()
 
     def is_expired(self) -> bool:
-        from palm.utils.time import is_expired
+        from palm.cli.solid.legacy.utils.time import is_expired
 
         return is_expired(self.expires_at)
 

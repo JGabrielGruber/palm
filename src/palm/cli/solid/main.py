@@ -13,21 +13,33 @@ import sys
 
 from rich.console import Console
 
+from palm.cli.solid.legacy.orchestrator import Orchestrator
+from palm.cli.solid.legacy.wizard.engine import WizardEngine
 from palm.cli.solid.repl import PalmREPL
 from palm.config.settings import settings
-from palm.core.orchestrator import Orchestrator
-from palm.core.wizard.engine import WizardEngine
 from palm.utils.logging import configure_logging, logger
 
 
 def main() -> None:
+    legacy_mode = "--legacy" in sys.argv
+    if legacy_mode:
+        sys.argv.remove("--legacy")
+
     console = Console()
 
     # Set up beautiful logging early
     configure_logging(level=settings.log_level, console=console)
 
-    console.print("[bold green]🌴 Palm Orchestration Engine[/] - Solid Admin CLI v0.1.1")
+    banner = "[bold green]🌴 Palm Orchestration Engine[/] - Solid Admin CLI v0.3.0-dev"
+    if legacy_mode:
+        banner += " [yellow](legacy mode)[/]"
+    console.print(banner)
     console.print("Type [bold]help[/] for available commands. [dim]Ctrl+D or 'exit' to quit.[/]\n")
+
+    if legacy_mode:
+        console.print(
+            "[yellow]⚠️  Running on the legacy (pre-clean-core) implementation. This path will change in a future release.[/]\n"
+        )
 
     logger.info("Starting Palm Solid Admin CLI")
 

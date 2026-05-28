@@ -7,12 +7,11 @@ Supports declarative rules + pluggable custom validators.
 from __future__ import annotations
 
 import re
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
-from palm.exceptions import ValidationError
-from palm.models.common import ValidationRule
-from palm.models.step import StepDefinition
-
+from palm.cli.solid.legacy.models.common import ValidationRule
+from palm.cli.solid.legacy.models.step import StepDefinition
 
 # Registry of custom validator functions
 _custom_validators: dict[str, Callable[[Any, dict[str, Any]], str | None]] = {}

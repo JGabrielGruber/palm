@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.core.workflow.dag import DAG
+from .dag import DAG
 
 
 class WorkflowExecutor:

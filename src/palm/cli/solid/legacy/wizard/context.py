@@ -10,7 +10,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from palm.models.common import SessionStatus, StepType
+from palm.cli.solid.legacy.models.common import SessionStatus, StepType
 
 
 class RichContext(BaseModel):

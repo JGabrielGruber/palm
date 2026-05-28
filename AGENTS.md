@@ -14,17 +14,21 @@ All generated or modified code must comply with the rules stated here.
 - **Testability**: All core logic must be unit-testable without side effects.
 - **Explicit over Implicit**: Prefer clear, readable, and self-documenting code over clever shortcuts.
 
-## Architecture Rules
+## Architecture Rules (updated 0.3.0-dev)
 
 1. **Behavior Tree Engine** (`palm/core/behavior_tree/`)
-   - Must remain **general-purpose** and independent of the Wizard domain.
-   - No knowledge of RichContext, sessions, or user interaction.
-   - All nodes must inherit from the proper abstract base (`BaseNode`, `LeafNode`, `CompositeNode`, or `DecoratorNode`).
+   - `palm/core/` may contain **only** general-purpose, reusable engines (currently just the BT engine).
+   - Must remain completely independent of wizards, RichContext, sessions, persistence, and CLI.
+   - No imports from `palm.cli.*` or legacy code allowed.
 
-2. **Wizard Layer** (`palm/core/wizard/`)
-   - Responsible for user interaction semantics.
-   - Must build on top of the Behavior Tree Engine.
-   - Must not leak UI concerns into the core BT engine.
+2. **Legacy Reference Code** (`palm/cli/solid/legacy/`)
+   - Contains the old wizard implementation, models, persistence, orchestrator, etc.
+   - This is a **deprecated historical snapshot**. It exists only to keep the Solid CLI working during the transition.
+   - **Strict rule**: New code must never import anything from `palm.cli.solid.legacy.*` (except inside the legacy package itself for its own maintenance).
+
+3. **Future Domain Layers**
+   - New wizard (and other domain) functionality must be built on top of `palm.core.behavior_tree`.
+   - They will live outside `palm/core/` (typically under `palm/` or a new clean package) and must follow the same independence rules as the BT engine.
 
 3. **Folder Structure Discipline**
    - One primary class per file for all Behavior Tree nodes.

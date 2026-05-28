@@ -7,13 +7,11 @@ and registered at runtime (not persisted).
 
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from typing import Any
 
 from sqlalchemy import (
     JSON,
-    Column,
     DateTime,
     Integer,
     String,
@@ -24,9 +22,9 @@ from sqlalchemy import (
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
+from palm.cli.solid.legacy.models.session import WizardSession
+from palm.cli.solid.legacy.utils.time import utc_now
 from palm.config.settings import settings
-from palm.models.session import WizardSession
-from palm.utils.time import utc_now
 
 
 class Base(DeclarativeBase):
@@ -49,7 +47,9 @@ class DBSession(Base):
     back_stack: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    last_activity_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    last_activity_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     commit_result: Mapped[dict[str, Any] | None] = mapped_column(JSON)
@@ -74,7 +74,9 @@ def get_engine(db_path: str | None = None) -> Engine:
         _engine = create_engine(
             f"sqlite:///{path}",
             echo=False,
-            connect_args={"check_same_thread": False},  # safe for multiprocessing + single writer pattern
+            connect_args={
+                "check_same_thread": False
+            },  # safe for multiprocessing + single writer pattern
             pool_pre_ping=True,
         )
         Base.metadata.create_all(_engine)

@@ -1,39 +1,19 @@
 """
 Palm Orchestration Engine (🌴)
 
-A lightweight but powerful orchestration engine for running multi-step transactional
-workflows that feature rich interactive wizards.
+As of v0.3.0-dev this package has a clean core:
+- `palm.core` contains only general-purpose engines (currently the Behavior Tree Engine).
+- All previous wizard/orchestration implementation lives in `palm.cli.solid.legacy`
+  as a deprecated reference implementation.
 
-Wizards are stateful, concurrent, hierarchical DAGs that behave like lightweight
-Behavior Trees. They support user interaction, validation, backtracking,
-rich context, and transactional commit steps.
-
-Key principles:
-- Core is pure logic (no UI)
-- Sessions are persistent with TTL
-- Wizards only advance on explicit user "ticks" (input)
-- First step is always a non-backtrackable Introduction
+The public API will evolve as clean domain layers are rebuilt on top of the BT engine.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0-dev"
 
-from palm.exceptions import (
-    BacktrackNotAllowedError,
-    InvalidStepError,
-    PalmError,
-    SessionExpiredError,
-    SessionNotFoundError,
-    ValidationError,
-    WizardNotFoundError,
-)
+from palm.exceptions import PalmError
 
 __all__ = [
     "__version__",
     "PalmError",
-    "WizardNotFoundError",
-    "SessionNotFoundError",
-    "InvalidStepError",
-    "ValidationError",
-    "BacktrackNotAllowedError",
-    "SessionExpiredError",
 ]

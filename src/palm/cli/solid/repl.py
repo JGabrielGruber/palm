@@ -8,7 +8,8 @@ Uses Rich for beautiful output.
 from __future__ import annotations
 
 import shlex
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import Completer, Completion
@@ -18,9 +19,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from palm.cli.solid.legacy.orchestrator import Orchestrator
+from palm.cli.solid.legacy.wizard.engine import WizardEngine
 from palm.config.settings import settings
-from palm.core.orchestrator import Orchestrator
-from palm.core.wizard.engine import WizardEngine
 from palm.exceptions import PalmError
 from palm.utils.logging import logger
 
@@ -218,7 +219,9 @@ class PalmREPL:
                 # 0.1.1: clearer, actionable error messages
                 if "validation" in str(e).lower():
                     self.console.print(f"[red]Validation failed:[/] {e}")
-                    self.console.print("[dim]Hint: Use 'back <slug>' to correct previous answers.[/]")
+                    self.console.print(
+                        "[dim]Hint: Use 'back <slug>' to correct previous answers.[/]"
+                    )
                 else:
                     self.console.print(f"[red]Error:[/] {e}")
             except Exception as e:

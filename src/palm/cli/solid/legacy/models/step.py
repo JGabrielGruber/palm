@@ -2,6 +2,10 @@
 StepDefinition - the atomic unit of a wizard.
 
 Steps are declarative. The WizardEngine interprets them at runtime.
+
+DEPRECATION NOTICE
+------------------
+Legacy model (moved 0.3.0-dev from palm/models/). Part of the deprecated reference implementation only.
 """
 
 from __future__ import annotations
@@ -10,7 +14,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from palm.models.common import StepType, ValidationRule
+from .common import StepType, ValidationRule
 
 
 class StepDefinition(BaseModel):
@@ -24,7 +28,9 @@ class StepDefinition(BaseModel):
     model_config = ConfigDict(extra="forbid", validate_default=True)
 
     # Identity & navigation
-    slug: str = Field(min_length=1, max_length=64, description="Unique identifier within the wizard")
+    slug: str = Field(
+        min_length=1, max_length=64, description="Unique identifier within the wizard"
+    )
     type: StepType
 
     # Human presentation

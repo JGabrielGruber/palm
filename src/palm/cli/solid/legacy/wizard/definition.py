@@ -7,11 +7,11 @@ a complete interactive workflow. It is registered with the engine once.
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from palm.models.step import StepDefinition
+from palm.cli.solid.legacy.models.step import StepDefinition
 
 
 class WizardDefinition(BaseModel):

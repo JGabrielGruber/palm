@@ -11,18 +11,26 @@ Responsibilities:
 - Execute commit step (transactional boundary)
 
 The engine is deliberately UI-agnostic. All interaction goes through RichContext.
+
+DEPRECATION NOTICE
+------------------
+This module is part of Palm's legacy reference implementation.
+It was moved from palm/core/wizard/ into cli/solid/legacy/ during the 0.3.0-dev
+clean-core migration.
+
+This code is preserved ONLY as a working historical snapshot.
+New code MUST NOT import from palm.cli.solid.legacy.* (except inside this package).
+Future wizard implementations will be built cleanly on top of palm.core.behavior_tree.
+
+Last updated: 0.3.0-dev migration
 """
 
 from __future__ import annotations
 
-from datetime import timedelta
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
-from palm.config.settings import settings
-from palm.core.wizard.context import RichContext
-from palm.core.wizard.definition import WizardDefinition
-from palm.core.wizard.validators import validate_input
-from palm.exceptions import (
+from palm.cli.solid.legacy.exceptions import (
     BacktrackNotAllowedError,
     InvalidStepError,
     SessionExpiredError,
@@ -30,11 +38,15 @@ from palm.exceptions import (
     ValidationError,
     WizardNotFoundError,
 )
-from palm.models.common import SessionStatus, StepType
-from palm.models.session import WizardSession
-from palm.persistence.sqlite import SQLiteSessionStore
+from palm.cli.solid.legacy.models.common import SessionStatus, StepType
+from palm.cli.solid.legacy.models.session import WizardSession
+from palm.cli.solid.legacy.persistence.sqlite import SQLiteSessionStore
+from palm.cli.solid.legacy.utils.time import add_seconds, utc_now
+from palm.cli.solid.legacy.wizard.context import RichContext
+from palm.cli.solid.legacy.wizard.definition import WizardDefinition
+from palm.cli.solid.legacy.wizard.validators import validate_input
+from palm.config.settings import settings
 from palm.utils.logging import logger
-from palm.utils.time import add_seconds, utc_now
 
 
 class WizardEngine:
@@ -52,7 +64,9 @@ class WizardEngine:
     ) -> None:
         self.store = store or SQLiteSessionStore()
         self._definitions: dict[str, WizardDefinition] = {}
-        self._commit_handlers: dict[str, Callable[[WizardSession], dict[str, Any]]] = commit_handlers or {}
+        self._commit_handlers: dict[str, Callable[[WizardSession], dict[str, Any]]] = (
+            commit_handlers or {}
+        )
 
     # ------------------------------------------------------------------
     # Commit handler management
@@ -194,7 +208,9 @@ class WizardEngine:
         current_step = definition.get_step(session.current_step_slug or "")
 
         if not current_step:
-            raise InvalidStepError(f"Current step '{session.current_step_slug}' not found in definition")
+            raise InvalidStepError(
+                f"Current step '{session.current_step_slug}' not found in definition"
+            )
 
         # Special handling for introduction (must be explicit confirmation)
         if current_step.type == StepType.INTRODUCTION:
@@ -224,11 +240,15 @@ class WizardEngine:
 
         if next_slug is None:
             # We have reached terminal state without an explicit COMMIT step
-            return self._finalize_session(session, definition, commit_result={"status": "completed_without_commit"})
+            return self._finalize_session(
+                session, definition, commit_result={"status": "completed_without_commit"}
+            )
 
         next_step = definition.get_step(next_slug)
         if not next_step:
-            raise InvalidStepError(f"Next step '{next_slug}' declared but not present in definition")
+            raise InvalidStepError(
+                f"Next step '{next_slug}' declared but not present in definition"
+            )
 
         # Record navigation
         # A step is added to the back stack if *it* declares itself backtrackable.
@@ -273,7 +293,9 @@ class WizardEngine:
         definition = self.get_definition(session.wizard_id)
 
         if target_slug not in session.back_stack:
-            raise BacktrackNotAllowedError(f"Cannot backtrack to '{target_slug}' - not in back stack")
+            raise BacktrackNotAllowedError(
+                f"Cannot backtrack to '{target_slug}' - not in back stack"
+            )
 
         target_step = definition.get_step(target_slug)
         if not target_step or not target_step.is_backtrackable:
@@ -359,9 +381,7 @@ class WizardEngine:
         definition: WizardDefinition,
         step: StepDefinition,
     ) -> RichContext:
-        allowed_back = [
-            s for s in session.back_stack if s != definition.introduction_step.slug
-        ]
+        allowed_back = [s for s in session.back_stack if s != definition.introduction_step.slug]
 
         input_type = "text"
         if step.type == StepType.CHOICE:

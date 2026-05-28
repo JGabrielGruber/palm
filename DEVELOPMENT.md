@@ -39,14 +39,22 @@ pip install -e ".[dev]"
 - Prefer explicit code over clever code.
 - One class per file for Behavior Tree nodes.
 
+## Legacy Code & Deprecation (0.3.0-dev+)
+
+All pre-clean-core wizard, models, persistence, orchestrator, and workflow code now lives in `src/palm/cli/solid/legacy/`.
+
+- This is a **reference implementation only**.
+- Never add new features or import from `palm.cli.solid.legacy.*` in new code (except inside the legacy package for its own maintenance).
+
 ## Pull Request / Agent Review Requirements
 
-- Must not violate architecture layers.
+- Must not violate architecture layers (core = only general-purpose BT engine and future reusable engines).
 - Must respect Single Responsibility Principle.
 - Must include tests.
 - Must update documentation if behavior changes.
+- New code must never depend on anything under `palm.cli.solid.legacy`.
 
 ---
 
-Last updated: May 2026
+Last updated: May 2026 (0.3.0-dev clean-core migration)
 ```

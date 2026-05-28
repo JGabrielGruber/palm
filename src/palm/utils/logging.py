@@ -7,7 +7,6 @@ Uses Python's logging + Rich for beautiful console output when running the CLI.
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from rich.console import Console
 from rich.logging import RichHandler

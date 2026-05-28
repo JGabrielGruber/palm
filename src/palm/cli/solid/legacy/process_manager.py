@@ -13,11 +13,12 @@ For the initial skeleton this is a pragmatic implementation that:
 from __future__ import annotations
 
 import multiprocessing as mp
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any
 
+from palm.cli.solid.legacy.exceptions import ProcessManagerError
 from palm.config.settings import settings
-from palm.exceptions import ProcessManagerError
 
 
 @dataclass

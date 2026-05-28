@@ -7,8 +7,9 @@ WizardEngine can evolve into or coexist with.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any
 
 
 @dataclass

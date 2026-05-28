@@ -14,9 +14,11 @@ This wizard is intentionally simple yet complete enough to exercise:
 
 from __future__ import annotations
 
-from palm.core.wizard.definition import WizardDefinition
-from palm.models.common import ValidationRule
-from palm.models.step import StepDefinition
+from typing import Any
+
+from palm.cli.solid.legacy.models.common import ValidationRule
+from palm.cli.solid.legacy.models.step import StepDefinition
+from palm.cli.solid.legacy.wizard.definition import WizardDefinition
 
 
 def create_ape_profile_wizard() -> WizardDefinition:
@@ -118,6 +120,7 @@ def create_ape_profile_wizard() -> WizardDefinition:
 # ----------------------------------------------------------------------
 # Commit handler (registered with the engine at runtime or via registry)
 # ----------------------------------------------------------------------
+
 
 def ape_profile_commit_handler(session: Any) -> dict[str, Any]:
     """

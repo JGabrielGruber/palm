@@ -13,14 +13,14 @@ from pydantic import BaseModel, ConfigDict, Field
 class StepType(StrEnum):
     """Types of steps a wizard can contain."""
 
-    INTRODUCTION = "introduction"   # Always first, explicit confirmation, never backtrackable
-    DISPLAY = "display"             # Informational, user presses enter/confirm to continue
-    USER_INPUT = "user_input"       # Free text or structured input with validation
-    CHOICE = "choice"               # Multiple choice / select one
-    CONFIRM = "confirm"             # Yes/no confirmation (often before commit)
-    SUMMARY = "summary"             # Review collected data before final commit
-    COMMIT = "commit"               # Terminal transactional step (idempotent & durable)
-    ACTION = "action"               # Non-interactive side-effect (logging, API call, etc.)
+    INTRODUCTION = "introduction"  # Always first, explicit confirmation, never backtrackable
+    DISPLAY = "display"  # Informational, user presses enter/confirm to continue
+    USER_INPUT = "user_input"  # Free text or structured input with validation
+    CHOICE = "choice"  # Multiple choice / select one
+    CONFIRM = "confirm"  # Yes/no confirmation (often before commit)
+    SUMMARY = "summary"  # Review collected data before final commit
+    COMMIT = "commit"  # Terminal transactional step (idempotent & durable)
+    ACTION = "action"  # Non-interactive side-effect (logging, API call, etc.)
 
 
 class SessionStatus(StrEnum):

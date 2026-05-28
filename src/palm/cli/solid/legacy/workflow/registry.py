@@ -4,9 +4,7 @@ WorkflowRegistry - central registry for non-interactive workflows (future).
 
 from __future__ import annotations
 
-from typing import Any
-
-from palm.core.workflow.dag import DAG
+from .dag import DAG
 
 
 class WorkflowRegistry:

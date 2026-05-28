@@ -7,7 +7,6 @@ Used by workflow and wizard engines for step ordering and path analysis.
 from __future__ import annotations
 
 from collections import defaultdict, deque
-from typing import Any
 
 
 def topological_sort(nodes: list[str], edges: list[tuple[str, str]]) -> list[str]:

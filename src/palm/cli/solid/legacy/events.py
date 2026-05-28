@@ -7,9 +7,10 @@ Useful for observability, metrics, and future distributed coordination.
 from __future__ import annotations
 
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Callable
+from typing import Any
 
 
 @dataclass
@@ -18,7 +19,11 @@ class Event:
 
     name: str
     payload: dict[str, Any]
-    timestamp: datetime = field(default_factory=lambda: __import__("datetime").datetime.now(__import__("datetime").timezone.utc))
+    timestamp: datetime = field(
+        default_factory=lambda: __import__("datetime").datetime.now(
+            __import__("datetime").timezone.utc
+        )
+    )
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
 
 
