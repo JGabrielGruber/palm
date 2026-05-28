@@ -16,8 +16,7 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-from palm.core.behavior_tree import Blackboard
-
+from .blackboard import Blackboard
 from .exceptions import InvalidJobTransitionError
 
 
@@ -54,8 +53,8 @@ class Job:
     - Remain completely agnostic about *how* the work is performed.
 
     The `executable` field is deliberately opaque (`Any`). Different
-    ExecutionBackend implementations interpret it (TestBackend uses simple
-    descriptors; BehaviorTreeBackend expects a BehaviorTree, etc.).
+    ExecutionBackend implementations (TestBackend inside core, BehaviorTreeBackend
+    in `palm/backends/`, future others) interpret it as they see fit.
 
     Mutation of status and result fields is intentionally restricted to
     internal helpers called only by the owning Orchestrator / active Mode / Backend.

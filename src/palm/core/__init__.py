@@ -23,7 +23,7 @@ from palm.core.events import Event, EventBus
 
 # Orchestration Engine (second general-purpose engine)
 from palm.core.orchestration import (
-    BehaviorTreeBackend,
+    Blackboard,  # independent data carrier (no BT dep)
     ExecutionBackend,
     Job,
     JobStatus,
@@ -41,7 +41,7 @@ __all__ = [
     # Shared events
     "Event",
     "EventBus",
-    # Orchestration Engine
+    # Orchestration Engine (pure — only TestBackend + independent Blackboard)
     "Orchestrator",
     "Job",
     "JobStatus",
@@ -49,5 +49,5 @@ __all__ = [
     "TestMode",
     "ExecutionBackend",
     "TestBackend",
-    "BehaviorTreeBackend",
+    "Blackboard",
 ]

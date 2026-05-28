@@ -19,11 +19,11 @@ Palm follows a **layered architecture** with strict separation of concerns.
 
 3. **Orchestration Engine** (`palm/core/orchestration/`)
    - The second general-purpose engine in `palm/core/`.
-   - Introduces `Orchestrator`, `Job` (with strict status machine), `OrchestrationMode` (Strategy), and `ExecutionBackend` (nested Strategy).
-   - **Primary concrete backend**: `TestBackend` — fully synthetic, deterministic, zero I/O/threads/BT for fast unit tests.
-   - Optional `BehaviorTreeBackend` exists only for composition proofs (isolated).
-   - Uses the shared EventBus for all observability.
-   - Completely independent of wizards, CLI, persistence, and (mostly) the BT engine.
+   - Introduces `Orchestrator`, `Job` (with strict status machine + its own independent `Blackboard`), `OrchestrationMode` (Strategy), and the abstract `ExecutionBackend`.
+   - **Only** `TestBackend` (pure, deterministic, zero external deps) is allowed as a concrete backend inside this package.
+   - All other concrete backends live outside `palm/core/` under `palm/backends/` (e.g. `BehaviorTreeBackend` for composition with the BT engine).
+   - Uses the shared EventBus for observability.
+   - **Strict rule**: Zero imports from `palm/core/behavior_tree/` (or any domain code) inside `palm/core/orchestration/`.
 
 4. **Legacy Reference Implementation** (`palm/cli/solid/legacy/`)
    - Contains the complete pre-0.3.0 wizard engine, models, persistence, orchestrator, workflow scaffolding, etc.

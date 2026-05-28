@@ -1,16 +1,15 @@
 """
 Execution backends — pluggable strategies for advancing Job executables.
 
-TestBackend is the primary concrete implementation and the one used by
-the vast majority of tests. BehaviorTreeBackend is optional and isolated.
+Only the abstract `ExecutionBackend` and the pure `TestBackend` (for testing
+and the default `TestMode`) live inside `palm/core/orchestration/`.
+
+All other concrete backends live outside core (see `palm/backends/`).
 """
 
 from __future__ import annotations
 
-from .backend import (
-    BehaviorTreeBackend,
-    ExecutionBackend,
-    TestBackend,
-)
+from .backend import ExecutionBackend
+from .test_backend import TestBackend
 
-__all__ = ["ExecutionBackend", "TestBackend", "BehaviorTreeBackend"]
+__all__ = ["ExecutionBackend", "TestBackend"]

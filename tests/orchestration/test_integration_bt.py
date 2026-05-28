@@ -3,13 +3,16 @@ Optional integration test proving that the Orchestration Engine composes cleanly
 with the Behavior Tree Engine via BehaviorTreeBackend.
 
 THIS IS THE ONLY TEST FILE IN THE ORCHESTRATION SUITE ALLOWED TO IMPORT
-FROM palm.core.behavior_tree.
+FROM palm.core.behavior_tree (for the tree construction itself).
+
+The BehaviorTreeBackend is imported from its proper home: `palm.backends.behavior_tree`.
 
 All other tests must stay 100% independent and use only TestBackend.
 """
 
 from __future__ import annotations
 
+from palm.backends.behavior_tree import BehaviorTreeBackend
 from palm.core.behavior_tree import (
     ActionNode,
     BehaviorTree,
@@ -17,7 +20,6 @@ from palm.core.behavior_tree import (
     RootNode,
 )
 from palm.core.orchestration import (
-    BehaviorTreeBackend,
     JobStatus,
     Orchestrator,
     TestMode,

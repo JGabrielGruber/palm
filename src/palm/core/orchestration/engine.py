@@ -106,7 +106,7 @@ class Orchestrator:
         Create and register a new Job, then hand it to the current mode for execution.
 
         The executable is opaque — the active mode + its ExecutionBackend decide
-        what to do with it (TestBackend descriptors, BehaviorTree instances, etc.).
+        what to do with it (TestBackend descriptors, BehaviorTree instances via external backends, etc.).
         """
         if not self.is_running():
             self.start()

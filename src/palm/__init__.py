@@ -9,7 +9,7 @@ As of v0.3.0-dev this package has a clean core:
 The public API will evolve as clean domain layers are rebuilt on top of the BT engine.
 """
 
-__version__ = "0.3.0-dev"
+__version__ = "0.3.1"
 
 from palm.exceptions import PalmError
 

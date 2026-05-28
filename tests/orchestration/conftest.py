@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import pytest
 
-from palm.core.behavior_tree import Blackboard  # still useful for data passing
 from palm.core.events import Event, EventBus
 from palm.core.orchestration import (
+    Blackboard,  # independent data carrier (tests may still use BT objects in the single integration test)
     Orchestrator,
     TestMode,
 )

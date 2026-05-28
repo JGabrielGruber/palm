@@ -24,10 +24,11 @@ All generated or modified code must comply with the rules stated here.
 2. **Orchestration Engine** (`palm/core/orchestration/`)
    - The second general-purpose engine in `palm/core/`.
    - Uses the Strategy pattern (`OrchestrationMode` + nested `ExecutionBackend`).
-   - Primary test backend is `TestBackend` (fast, deterministic, zero I/O/threads/BT dependency).
-   - Introduces `Job`, `Orchestrator`, and shared `palm/core/events.py` (Event + EventBus).
-   - Must remain completely independent of wizards, RichContext, sessions, persistence, and CLI.
-   - **Only** the optional `BehaviorTreeBackend` + one integration test file may import from the BT engine.
+   - **Only** `TestBackend` (in `execution/test_backend.py`) may exist as a concrete backend inside this package. It is fast, deterministic, and has zero dependencies on the Behavior Tree Engine or any domain code.
+   - All other concrete execution backends (including `BehaviorTreeBackend`) live outside `palm/core/` (under `palm/backends/` or domain packages).
+   - Introduces `Job` (with its own independent `Blackboard`), `Orchestrator`, and shared `palm/core/events.py`.
+   - Must remain **completely** independent of the Behavior Tree Engine: zero imports from `palm/core/behavior_tree/` anywhere in `palm/core/orchestration/`.
+   - Must remain independent of wizards, RichContext, sessions, persistence, and CLI.
    - No imports from `palm.cli.*` or legacy code allowed.
 
 3. **Legacy Reference Code** (`palm/cli/solid/legacy/`)

@@ -9,8 +9,7 @@ Core concepts:
 - `Orchestrator`: central coordinator that owns jobs and an EventBus.
 - `OrchestrationMode` (Strategy): pluggable runtime behavior
   (TestMode today, EmbeddedMode / ProcessMode tomorrow).
-- `ExecutionBackend` (nested Strategy): how any given executable is advanced.
-  `TestBackend` is the primary implementation used by all contract tests.
+- `ExecutionBackend` (nested Strategy) + `TestBackend`: the only concrete backend allowed inside the core package. All other backends live outside `palm/core/`.
 - `Event` + `EventBus` (re-exported from `palm.core.events`): shared observability.
 
 Design invariants (per AGENTS.md):
@@ -26,6 +25,7 @@ from __future__ import annotations
 # Re-export the shared core event system (preferred location)
 from palm.core.events import Event, EventBus
 
+from .blackboard import Blackboard
 from .engine import Orchestrator
 from .exceptions import (
     InvalidJobTransitionError,
@@ -35,11 +35,8 @@ from .exceptions import (
     OrchestrationError,
     OrchestratorError,
 )
-from .execution.backend import (
-    BehaviorTreeBackend,
-    ExecutionBackend,
-    TestBackend,
-)
+from .execution.backend import ExecutionBackend
+from .execution.test_backend import TestBackend
 from .job import Job, JobStatus
 from .mode.base import OrchestrationMode
 from .mode.test_mode import TestMode
@@ -53,10 +50,10 @@ __all__ = [
     # Strategy: modes
     "OrchestrationMode",
     "TestMode",
-    # Strategy: execution backends
+    # Execution backends (only TestBackend is allowed inside core)
     "ExecutionBackend",
     "TestBackend",
-    "BehaviorTreeBackend",
+    "Blackboard",  # independent data carrier (no BT dependency)
     # Observability (from core)
     "Event",
     "EventBus",

@@ -71,7 +71,7 @@ class OrchestrationMode(ABC):
         Default implementation does nothing (useful for purely passive modes
         that only react to explicit drive calls from tests).
         """
-        pass  # noqa: B027 - intentional no-op extension point
+        pass  # - intentional no-op extension point
 
     def resume_job(self, orchestrator: Orchestrator, job: Job) -> None:
         """
@@ -79,7 +79,7 @@ class OrchestrationMode(ABC):
 
         Default: no-op.
         """
-        pass  # noqa: B027 - intentional no-op extension point
+        pass  # - intentional no-op extension point
 
     def cancel_job(self, orchestrator: Orchestrator, job: Job) -> None:
         """
@@ -100,4 +100,4 @@ class OrchestrationMode(ABC):
 
         Use for last-chance cleanup specific to this mode.
         """
-        pass  # noqa: B027 - intentional no-op extension point
+        pass  # - intentional no-op extension point

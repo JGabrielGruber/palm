@@ -56,11 +56,11 @@ class TestMode(OrchestrationMode):
         name: str = "TestMode",
     ) -> None:
         super().__init__(name=name)
-        from ..execution.backend import (
+        from ..execution.test_backend import (
             TestBackend,  # local import to avoid circularity at module load
         )
 
-        self._backend: ExecutionBackend = backend or TestBackend()
+        self._backend: ExecutionBackend = backend or TestBackend()  # type: ignore[assignment]
         self._running = False
 
         # Test-only instrumentation
