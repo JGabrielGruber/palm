@@ -11,7 +11,7 @@ class NeonrootApp(ProviderApp):
     palm_layers = ("core.resource",)
     actions = (
         "health",
-        "spawn",  # 0.53.2 — listed early; invoke fails honestly until implemented
+        "spawn",  # 0.53.2 — git-archive | path seed + command
         "list_images",  # later
     )
     registry_hooks = ("provider_registry",)

@@ -1,7 +1,8 @@
-"""NeonRoot provider scaffold (0.53.1) — health + honest optional CLI."""
+"""NeonRoot provider (0.53.1 health · 0.53.2 spawn) — honest optional CLI."""
 
 from __future__ import annotations
 
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -9,6 +10,11 @@ import pytest
 from palm.core.registry import provider_registry
 from palm.providers.neonroot.cli import NeonrootProbe, probe_neonroot
 from palm.providers.neonroot.provider import NeonrootProvider
+from palm.providers.neonroot.spawn import (
+    build_spawn_argv,
+    parse_spawn_params,
+    run_spawn,
+)
 
 
 @pytest.fixture
@@ -46,13 +52,6 @@ def test_describe_lists_health_and_spawn(neonroot_provider: NeonrootProvider) ->
     assert "spawn" in names
 
 
-def test_spawn_not_yet_implemented(neonroot_provider: NeonrootProvider) -> None:
-    result = neonroot_provider.invoke("spawn", params={"command": ["true"]})
-    assert result.success is False
-    assert result.error is not None
-    assert "not implemented" in result.error.lower()
-
-
 def test_health_invoke_when_missing(neonroot_provider: NeonrootProvider) -> None:
     missing = NeonrootProbe(available=False, error="neonroot not found on PATH")
     with patch("palm.providers.neonroot.provider.probe_neonroot", return_value=missing):
@@ -86,3 +85,107 @@ def test_probe_neonroot_live_smoke() -> None:
         assert probe.path
     else:
         assert probe.error
+
+
+def test_parse_spawn_params_requires_image() -> None:
+    with pytest.raises(ValueError, match="image"):
+        parse_spawn_params({"command": ["true"]})
+
+
+def test_parse_spawn_params_command_list() -> None:
+    req = parse_spawn_params(
+        {
+            "image": "palm-ci",
+            "command": ["just", "ci"],
+            "vault": "palm-ci",
+            "seed": "git-archive",
+        }
+    )
+    assert req.image == "palm-ci"
+    assert req.command == ("just", "ci")
+    assert req.vault == "palm-ci"
+    assert req.sandbox is True
+
+
+def test_build_spawn_argv_sandbox_and_seed() -> None:
+    req = parse_spawn_params(
+        {
+            "image": "palm-ci",
+            "command": ["uv", "run", "python", "-c", "print(1)"],
+            "vault": "palm-ci",
+            "name": "palm-docs-build",
+        }
+    )
+    argv = build_spawn_argv("/usr/bin/neonroot", req, seed_path="/tmp/seed")
+    assert argv[:2] == ["/usr/bin/neonroot", "spawn"]
+    assert "palm-docs-build" in argv
+    assert "--image" in argv and "palm-ci" in argv
+    assert "--vault" in argv and "palm-ci" in argv
+    assert "--sandbox" in argv
+    assert "--seed" in argv and "/tmp/seed" in argv
+    assert "--" in argv
+    assert argv[argv.index("--") + 1 :] == ["uv", "run", "python", "-c", "print(1)"]
+
+
+def test_build_spawn_argv_isolated_skips_sandbox_flag() -> None:
+    req = parse_spawn_params(
+        {
+            "image": "ci",
+            "command": ["true"],
+            "isolated": True,
+        }
+    )
+    argv = build_spawn_argv("neonroot", req, seed_path=None)
+    assert "--isolated" in argv
+    assert "--sandbox" not in argv
+
+
+def test_spawn_missing_image(neonroot_provider: NeonrootProvider) -> None:
+    result = neonroot_provider.invoke("spawn", params={"command": ["true"]})
+    assert result.success is False
+    assert "image" in (result.error or "").lower()
+
+
+def test_spawn_success_via_mock(neonroot_provider: NeonrootProvider) -> None:
+    payload = {
+        "exit_code": 0,
+        "duration_s": 0.1,
+        "argv": ["neonroot", "spawn", "--image", "palm-ci", "--", "true"],
+        "image": "palm-ci",
+        "command": ["true"],
+        "stdout_tail": "",
+        "stderr_tail": "",
+    }
+    with patch("palm.providers.neonroot.provider.run_spawn", return_value=payload):
+        result = neonroot_provider.invoke(
+            "spawn",
+            params={"image": "palm-ci", "command": ["true"]},
+        )
+    assert result.success is True
+    assert result.data["exit_code"] == 0
+
+
+def test_spawn_nonzero_exit_is_fail(neonroot_provider: NeonrootProvider) -> None:
+    payload = {
+        "exit_code": 2,
+        "duration_s": 0.2,
+        "argv": ["neonroot", "spawn", "--image", "palm-ci", "--", "false"],
+        "image": "palm-ci",
+        "command": ["false"],
+        "stdout_tail": "",
+        "stderr_tail": "boom",
+    }
+    with patch("palm.providers.neonroot.provider.run_spawn", return_value=payload):
+        result = neonroot_provider.invoke(
+            "spawn",
+            params={"image": "palm-ci", "command": ["false"]},
+        )
+    assert result.success is False
+    assert "exited 2" in (result.error or "")
+
+
+def test_run_spawn_unavailable_raises() -> None:
+    missing = NeonrootProbe(available=False, error="neonroot not found on PATH")
+    with patch("palm.providers.neonroot.spawn.probe_neonroot", return_value=missing):
+        with pytest.raises(RuntimeError, match="not found"):
+            run_spawn({"image": "x", "command": ["true"]}, repo_root=Path.cwd())

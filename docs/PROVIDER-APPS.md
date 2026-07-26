@@ -96,7 +96,7 @@ providers/<name>/
 | **file** | resource, design | params | provider_registry, design_contributor |
 | **graphql** | — (stub) | — | provider_registry |
 | **postgres** | — (stub) | — | provider_registry |
-| **neonroot** | scaffold (0.53.1) — `health`; `spawn` later | — | provider_registry · optional host CLI |
+| **neonroot** | 0.53.2 — `health` + `spawn` (git-archive/path seed) | — | provider_registry · optional host CLI |
 
 ---
 

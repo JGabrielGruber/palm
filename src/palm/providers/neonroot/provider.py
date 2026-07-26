@@ -12,6 +12,7 @@ from palm.core.resource.result import (
     ProviderResult,
 )
 from palm.providers.neonroot.cli import probe_neonroot
+from palm.providers.neonroot.spawn import resolve_repo_root, run_spawn
 
 
 class NeonrootProvider(BaseProvider):
@@ -56,10 +57,37 @@ class NeonrootProvider(BaseProvider):
                 **meta,
             )
 
-        if action in ("spawn", "list_images", "image.ensure", "image.build"):
+        if action == "spawn":
+            try:
+                payload = run_spawn(merged, repo_root=resolve_repo_root())
+            except (ValueError, RuntimeError) as exc:
+                return ProviderResult.fail(str(exc), action=action, provider=self.name)
+            except Exception as exc:
+                return ProviderResult.fail(
+                    f"spawn failed: {exc}",
+                    action=action,
+                    provider=self.name,
+                )
+            exit_code = payload.get("exit_code")
+            if payload.get("timed_out") or exit_code is None:
+                return ProviderResult.fail(
+                    str(payload.get("error") or "spawn timed out or produced no exit code"),
+                    action=action,
+                    provider=self.name,
+                    **{k: v for k, v in payload.items() if k != "error" and v is not None},
+                )
+            if exit_code != 0:
+                return ProviderResult.fail(
+                    f"spawn command exited {exit_code}",
+                    action=action,
+                    provider=self.name,
+                    **payload,
+                )
+            return ProviderResult.ok(payload, action=action, provider=self.name)
+
+        if action in ("list_images", "image.ensure", "image.build"):
             return ProviderResult.fail(
-                f"action {action!r} not implemented until a later 0.53 slice "
-                f"(scaffold 0.53.1 provides health only)",
+                f"action {action!r} not implemented until a later 0.53 slice",
                 action=action,
                 provider=self.name,
             )
@@ -81,7 +109,8 @@ class NeonrootProvider(BaseProvider):
                 ProviderActionDescriptor("health", "Probe neonroot CLI availability/version"),
                 ProviderActionDescriptor(
                     "spawn",
-                    "Run a command in a NeonRoot sandbox (0.53.2+)",
+                    "Run a command in a NeonRoot sandbox "
+                    "(params: image, command[], seed=git-archive|path, vault?, sandbox?)",
                 ),
                 ProviderActionDescriptor(
                     "list_images",
