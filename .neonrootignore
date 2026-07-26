@@ -1,0 +1,17 @@
+# NeonRoot seed exclude (when --seed is this repo root). See ci/README.md.
+# Always skipped by NeonRoot as well: .git
+
+data/
+.venv/
+.neonroot/
+docs/node_modules/
+docs/_build/
+**/__pycache__/
+*.sock
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+*.egg-info/

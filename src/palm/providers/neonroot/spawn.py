@@ -1,19 +1,23 @@
-"""NeonRoot ``spawn`` action — hermetic command run (0.53.2).
+"""NeonRoot ``spawn`` action — hermetic command run (0.53.2+).
 
 Maps to::
 
     neonroot spawn [name] --image <img> [--vault …] [--sandbox] [--isolated]
-        [--seed <dir>] -- <command…>
+        [--seed <dir>] [--seed-exclude …] [--output host:container …]
+        -- <command…>
 
 ``seed`` policy (ADR-022):
 
 - ``git-archive`` (default for hermetic claims) — ``git archive HEAD`` into a
-  temp directory, seed that path, delete after spawn. Prefer over full ``$PWD``:
-  host ``data/`` may be root-owned and break NeonRoot's seed walk.
-- absolute/relative path — seed that host directory; **prefer a narrow path**
-  (e.g. ``docs/`` for CSS), never a whole Palm checkout with unreadable trees
-  unless NeonRoot gains seed-ignore.
-- omit / empty with ``seed_mode: none`` — no ``--seed`` flag.
+  temp directory, seed that path, delete after spawn.
+- absolute/relative path — seed that host directory; prefer narrow paths
+  (e.g. ``docs/``) or repo root **with** ``seed_exclude`` / ``.neonrootignore``.
+- omit / empty with seed ``none`` — no ``--seed`` flag.
+
+``outputs`` (NeonRoot  — export after **successful** exit only)::
+
+    [{"host": "docs/styles/output.css", "container": "styles/output.css"}]
+    # or strings "host:container"
 """
 
 from __future__ import annotations
@@ -47,23 +51,62 @@ class SpawnRequest:
     keep: bool = False
     timeout: float = _DEFAULT_TIMEOUT
     cwd: str | None = None  # git-archive root; default: process cwd / repo
+    seed_exclude: tuple[str, ...] = ()
+    outputs: tuple[str, ...] = ()  # each "host:container"
 
 
-def _as_str_list(value: Any, *, field: str) -> list[str]:
+def _as_str_list(value: Any, *, field_name: str, allow_empty: bool = False) -> list[str]:
     if value is None:
         return []
     if isinstance(value, str):
-        # Allow shell-ish single string only if non-empty; prefer argv lists.
         parts = value.strip().split()
-        if not parts:
-            raise ValueError(f"{field} must be a non-empty command list or string")
+        if not parts and not allow_empty:
+            raise ValueError(f"{field_name} must be a non-empty command list or string")
         return parts
     if isinstance(value, list | tuple):
         out = [str(x) for x in value]
-        if not out:
-            raise ValueError(f"{field} must be a non-empty list")
+        if not out and not allow_empty:
+            raise ValueError(f"{field_name} must be a non-empty list")
         return out
-    raise ValueError(f"{field} must be a list of strings (got {type(value).__name__})")
+    raise ValueError(f"{field_name} must be a list of strings (got {type(value).__name__})")
+
+
+def _normalize_outputs(value: Any) -> tuple[str, ...]:
+    """Accept list of 'host:container' strings or {host, container} maps."""
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        value = [value]
+    if not isinstance(value, list | tuple):
+        raise ValueError("outputs must be a list of 'host:container' or {host, container}")
+    out: list[str] = []
+    for item in value:
+        if isinstance(item, str):
+            if ":" not in item:
+                raise ValueError(
+                    f"output map must be host:container (got {item!r})"
+                )
+            host, _, container = item.partition(":")
+            if not host.strip() or not container.strip():
+                raise ValueError(f"invalid output map {item!r}")
+            if container.strip().startswith("/") or ".." in Path(container).parts:
+                raise ValueError(
+                    f"container path must be relative and not escape (got {container!r})"
+                )
+            out.append(f"{host.strip()}:{container.strip()}")
+        elif isinstance(item, dict):
+            host = str(item.get("host") or "").strip()
+            container = str(item.get("container") or item.get("guest") or "").strip()
+            if not host or not container:
+                raise ValueError("output dict needs host and container keys")
+            if container.startswith("/") or ".." in Path(container).parts:
+                raise ValueError(
+                    f"container path must be relative and not escape (got {container!r})"
+                )
+            out.append(f"{host}:{container}")
+        else:
+            raise ValueError(f"unsupported output entry type {type(item).__name__}")
+    return tuple(out)
 
 
 def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
@@ -72,7 +115,7 @@ def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
     if not image or not str(image).strip():
         raise ValueError("spawn requires params.image (NeonRoot image name)")
 
-    command = _as_str_list(params.get("command"), field="command")
+    command = _as_str_list(params.get("command"), field_name="command")
     vault = params.get("vault")
     name = params.get("name")
     seed = params.get("seed", "git-archive")
@@ -87,6 +130,15 @@ def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
     if timeout <= 0:
         raise ValueError("timeout must be positive")
 
+    seed_exclude = tuple(
+        _as_str_list(
+            params.get("seed_exclude") or params.get("seed_excludes"),
+            field_name="seed_exclude",
+            allow_empty=True,
+        )
+    )
+    outputs = _normalize_outputs(params.get("outputs") or params.get("output"))
+
     cwd = params.get("cwd") or params.get("repo_root")
     return SpawnRequest(
         image=str(image).strip(),
@@ -99,6 +151,8 @@ def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
         keep=keep,
         timeout=timeout,
         cwd=str(cwd) if cwd else None,
+        seed_exclude=seed_exclude,
+        outputs=outputs,
     )
 
 
@@ -154,6 +208,7 @@ def build_spawn_argv(
     req: SpawnRequest,
     *,
     seed_path: str | None,
+    repo_root: Path | None = None,
 ) -> list[str]:
     """Construct the ``neonroot spawn …`` argv (no shell)."""
     argv: list[str] = [neonroot_bin, "spawn"]
@@ -170,6 +225,15 @@ def build_spawn_argv(
         argv.append("--keep")
     if seed_path:
         argv.extend(["--seed", seed_path])
+    for excl in req.seed_exclude:
+        argv.extend(["--seed-exclude", excl])
+    root = repo_root or Path.cwd()
+    for mapping in req.outputs:
+        host, _, container = mapping.partition(":")
+        host_path = Path(host)
+        if not host_path.is_absolute():
+            host_path = (root / host_path).resolve()
+        argv.extend(["--output", f"{host_path}:{container}"])
     argv.append("--")
     argv.extend(req.command)
     return argv
@@ -190,7 +254,7 @@ def run_spawn(
     root = root.resolve()
 
     seed_path, cleanup = _prepare_seed(req.seed, repo_root=root)
-    argv = build_spawn_argv(probe.path, req, seed_path=seed_path)
+    argv = build_spawn_argv(probe.path, req, seed_path=seed_path, repo_root=root)
     started = time.monotonic()
     try:
         proc = subprocess.run(
@@ -212,6 +276,8 @@ def run_spawn(
             "vault": req.vault,
             "seed": req.seed,
             "seed_path": seed_path,
+            "seed_exclude": list(req.seed_exclude),
+            "outputs": list(req.outputs),
             "sandbox": req.sandbox,
             "isolated": req.isolated,
             "command": list(req.command),
@@ -232,6 +298,8 @@ def run_spawn(
             "vault": req.vault,
             "seed": req.seed,
             "seed_path": seed_path,
+            "seed_exclude": list(req.seed_exclude),
+            "outputs": list(req.outputs),
             "command": list(req.command),
             "stdout_tail": _tail(stdout),
             "stderr_tail": _tail(stderr or f"timeout after {req.timeout}s"),
@@ -245,13 +313,10 @@ def run_spawn(
 
 def resolve_repo_root() -> Path:
     """Best-effort package / checkout root (for git-archive)."""
-    # providers/neonroot/spawn.py → parents[3] = src, [4] = repo if src layout
     here = Path(__file__).resolve()
-    # …/src/palm/providers/neonroot/spawn.py → repo root is parents[4]
     candidate = here.parents[4]
     if (candidate / "pyproject.toml").is_file():
         return candidate
-    # editable / odd layouts
     binary = find_neonroot_binary()
     _ = binary
     return Path.cwd()

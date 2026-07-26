@@ -127,6 +127,42 @@ def test_build_spawn_argv_sandbox_and_seed() -> None:
     assert argv[argv.index("--") + 1 :] == ["uv", "run", "python", "-c", "print(1)"]
 
 
+def test_build_spawn_argv_exclude_and_output() -> None:
+    req = parse_spawn_params(
+        {
+            "image": "palm-docs",
+            "command": ["tailwindcss", "-i", "styles/input.css", "-o", "styles/output.css"],
+            "seed_exclude": ["data/", ".venv/"],
+            "outputs": [
+                {"host": "docs/styles/output.css", "container": "styles/output.css"},
+            ],
+        }
+    )
+    root = Path("/repo")
+    argv = build_spawn_argv(
+        "neonroot",
+        req,
+        seed_path="/repo/docs",
+        repo_root=root,
+    )
+    assert argv.count("--seed-exclude") == 2
+    assert "data/" in argv and ".venv/" in argv
+    assert "--output" in argv
+    out_idx = argv.index("--output")
+    assert argv[out_idx + 1].endswith("docs/styles/output.css:styles/output.css")
+
+
+def test_parse_outputs_rejects_escape() -> None:
+    with pytest.raises(ValueError, match="escape|relative"):
+        parse_spawn_params(
+            {
+                "image": "x",
+                "command": ["true"],
+                "outputs": ["out.css:../etc/passwd"],
+            }
+        )
+
+
 def test_build_spawn_argv_isolated_skips_sandbox_flag() -> None:
     req = parse_spawn_params(
         {

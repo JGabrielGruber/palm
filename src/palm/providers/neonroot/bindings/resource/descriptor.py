@@ -20,7 +20,8 @@ def describe(*, name: str) -> ProviderDescriptor:
             ProviderActionDescriptor(
                 "spawn",
                 "Run a command in a NeonRoot sandbox "
-                "(params: image, command[], seed=git-archive|path, vault?, sandbox?)",
+                "(params: image, command[], seed=git-archive|path, "
+                "seed_exclude[], outputs[{host,container}|host:container], vault?, sandbox?)",
             ),
             ProviderActionDescriptor(
                 "list_images",

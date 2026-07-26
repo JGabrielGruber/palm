@@ -256,11 +256,7 @@ docs-image:
     echo "✅ palm-docs image built — now: just docs-css-sandbox | docs-build-sandbox"
 
 # Tailwind via palm-docs image (no host node_modules required).
-#
-# Careful seed: only `docs/` — never the full repo. Host `data/` (and similar)
-# may be root-owned or unreadable; seeding $PWD fails with permission denied
-# (NeonRoot walks the tree; a seed-ignore would help for full-repo seeds later).
-# Command runs with workspace root = docs content (styles/input.css at top level).
+# Seeds docs/ only; --output pulls styles/output.css back to the host after success.
 docs-css-sandbox:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -268,23 +264,27 @@ docs-css-sandbox:
     test -f "$docs_dir/styles/input.css" || { echo "error: missing docs/styles/input.css" >&2; exit 1; }
     neonroot spawn palm-docs-css \
         --image palm-docs --vault palm-docs --sandbox \
-        --seed "$docs_dir" -- \
-        sh -c 'tailwindcss -i styles/input.css -o styles/output.css && echo "✅ styles/output.css rebuilt (seed=docs/)"'
-    echo "✅ docs-css via palm-docs (seeded docs/ only — not full palm tree)"
+        --seed "$docs_dir" \
+        --output "$docs_dir/styles/output.css:styles/output.css" \
+        -- \
+        sh -c 'tailwindcss -i styles/input.css -o styles/output.css'
+    echo "✅ docs/styles/output.css rebuilt via palm-docs (--output after success)"
 
-# Library build in NeonRoot palm-docs — git-archive seed (tracked files only; no data/).
-# Hermetic *verify*; does not write _build back to the host.
+# Library build in NeonRoot palm-docs — git-archive seed + export deploy canopy.
 docs-build-sandbox:
     #!/usr/bin/env bash
     set -euo pipefail
     seed="$(mktemp -d)"
     trap 'rm -rf "$seed"' EXIT
     git archive HEAD | tar -x -C "$seed"
+    mkdir -p "$PWD/docs/_build"
     neonroot spawn palm-docs-build \
         --image palm-docs --vault palm-docs --sandbox \
-        --seed "$seed" -- \
+        --seed "$seed" \
+        --output "$PWD/docs/_build:docs/_build" \
+        -- \
         uv run python scripts/docs_build.py
-    echo "✅ hermetic docs-build passed in palm-docs (git-archive seed; no host data/)"
+    echo "✅ docs/_build exported from palm-docs (git-archive seed + --output)"
 
 release-prep:
     @echo "📋 Release prep for {{package}}"

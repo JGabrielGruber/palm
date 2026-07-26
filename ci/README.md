@@ -41,10 +41,12 @@ just docs-image    # palm-docs
 
 | Primitive | Copy? | Persist changes? | Palm use |
 |-----------|-------|------------------|----------|
-| **`spawn --seed`** | Yes — seed tree copied into a throwaway workspace | **No** (reaped unless `--keep`) | Hermetic *verify*: `ci-sandbox`, `docs-build-sandbox`, CSS smoke |
-| **workspace** (`load` / `run` / `commit`) | Yes — into vault workspace | **Yes** — commit back to vault | Authoring that must survive (future CSS write-back, longer edits) |
+| **`spawn --seed`** | Yes — into throwaway workspace | **No** whole-tree | Hermetic run |
+| **`spawn --output host:container`** | — | **Yes** — explicit files/dirs **after success** | CSS / `_build` export to host |
+| **`spawn --seed-exclude` / `.neonrootignore`** | Skips paths while seeding | — | Safe if seeding repo root (`data/`, `.venv`) |
+| **workspace** (`load` / `run` / `commit`) | Yes — vault workspace | **Yes** — commit back to **vault** | Long-lived edit in NeonRoot (not host tree) |
 
-So: **seed is not for “edit Palm and get files back.”** For durable edits, use a NeonRoot **workspace** and commit to the vault (or keep authoring on the host). Recipes today prefer **spawn + narrow seed** for honesty and simplicity; workspace-based write-back can land later if we want `output.css` produced only inside NeonRoot.
+**Seed is not whole-tree write-back.** For host artifacts use **`--output`**. For vault durability use **workspaces**. Repo root may use [`.neonrootignore`](../.neonrootignore) when seeding `$PWD`.
 
 ## Workspace profiles (developer desk)
 
@@ -63,10 +65,8 @@ NeonRoot `--seed <dir>` **walks and copies** that directory. It is **not** “mo
 
 | Seed | Used by | Notes |
 |------|---------|--------|
-| **`docs/` only** | `just docs-css-sandbox` | Enough for Tailwind; avoids host `data/`, `.venv`, secrets |
-| **git-archive HEAD** | `just docs-build-sandbox`, `ci-sandbox` | Tracked files only — no gitignored `data/` |
-| **Full `$PWD`** | **Avoid** for Palm checkouts | Host `data/palm/…` is often root-owned → `permission denied` mid-seed |
+| **`docs/` only** | `just docs-css-sandbox` | + `--output …/output.css:styles/output.css` |
+| **git-archive HEAD** | `just docs-build-sandbox`, `ci-sandbox` | + optional `--output docs/_build:docs/_build` |
+| **Full `$PWD`** | Only with `.neonrootignore` / `--seed-exclude` | Skips `data/`, `.venv`, … |
 
-**NeonRoot seed-ignore** (e.g. exclude `data/`, `.venv`) would help full-tree seeds — a NeonRoot enhancement if you want it; Palm recipes stay narrow either way.
-
-See ADR-022 and the neonroot provider `spawn` action (`seed: git-archive` | path).
+See ADR-022; provider `spawn` params: `seed`, `seed_exclude`, `outputs`.
