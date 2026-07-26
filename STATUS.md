@@ -77,9 +77,10 @@ Living Library **docs dogfood domain** deferred further (was interim 0.55).
 
 ## Horizon
 
-- Session service / watches / storage projection (0.55)  
-- Docs dogfood domain (post session plane)  
-- Adapter runners (postgres/mongo) via neonroot (PD-022)  
+- **0.55** Session plane — watches / subscriptions / optional SessionService ([VISION-0.55](docs/VISION-0.55.md))  
+- **0.56** Workload plane — WorkloadEngine + CQRS service + runtimes + events→pipelines ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
+- Docs dogfood domain (post session + workload foundations)  
+- Adapter runners via workloads (PD-022)  
 - Payload/artifact registry for registered modules
 
 See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md).

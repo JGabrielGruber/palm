@@ -1,6 +1,7 @@
 # VISION 0.55 — Session plane (lifecycle + subscriptions)
 
 **Status:** 📋 **Queued** — after [VISION-0.54](VISION-0.54.md) hermetic jobs dogfood.  
+**Sequel:** [VISION-0.56](VISION-0.56.md) Workload plane (WorkloadEngine + runtimes) — session plane should land first for watches; late overlap OK.  
 **Theme:** Treat the **session** as a first-class subject: lifecycle, multi-event subscriptions, optional storage projection — shared by Assist, dashboard, and composition.
 
 > *Hermetic run-code proved the loop. Operators and dashboards both need to watch a session live — without each surface inventing wait/poll hacks.*
