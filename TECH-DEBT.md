@@ -235,10 +235,12 @@ tracker** — flip items as they close. Order follows the dependency roots above
 | **0.49** | **Naming** — profile vocabulary for the composition/deployment split | ✅ done · [MIGRATION-0.49](MIGRATION-0.49.md) | `HostProfile → DeploymentProfile`, `PalmApp → PalmKernel`; anchored `CompositionProfile` |
 | **0.50** | **Composition Profiles** — declare the app's shape; profile-driven services + surfaces | 🟢 landed (0.50.0–0.50.5f) · [VISION-0.50](docs/VISION-0.50.md) · [ADR-019](docs/adr/019-composition-profiles.md) | services (5e: both roots build via one `core_service_registry()`) + surfaces profile-driven; embedded/lean shapes real. **Reframed (0.50.5f):** `ServerContext` **retained** (surface-facing context + lean phenotype), not dissolved — the fold-in needs projections-as-capability first (→ 0.51) |
 | **0.51** | **Living Capabilities** — the profile's third axis comes alive; projections-as-capability | ✅ landed (0.51.0–0.51.6) · [VISION-0.51](docs/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md) | `composition.capabilities` now authoritative (resolver-derived, pinned; settings/deployment refine). Lean `ApplicationHost` is real — projection-less, submit + read complete. Scout ([SCOUT-0.51.6](docs/SCOUT-0.51.6-serverctx-foldin.md)) confirmed `ServerContext` stays (fold-in = churn, not simplification) |
+| **0.52** | **T6 — The Living Library** (docs-as-code) | 🟡 open (0.52.0) · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md) | SOURCE/BUILD/SURFACE; root declutter; gates; thin `just docs-build` (no heavy frameworks). PD-019…021, PD-031 |
+| **0.53** | **Palm builds the library** (pipeline dogfood) | queued | Replace/augment thin BUILD with a **Palm pipeline** that *is* the docs build — capability pressure, not `just` in a step |
 | next | T5 — observability unification | queued | Likely breaks API → `MIGRATION` doc |
 | later | T4 — assist/MCP complexity + coverage | queued | |
 | later | T7 — adapters & placeholders | queued | |
-| later | T6 / T8 / T9 — docs, conventions, security hygiene | queued | Fold quick-wins (e.g. PD-028) opportunistically |
+| later | T8 / T9 — conventions, security hygiene | queued | Fold quick-wins opportunistically |
 
 Exact minor numbers beyond 0.46 are assigned when each theme starts. Security / one-line quick-wins may land
 early regardless of theme.

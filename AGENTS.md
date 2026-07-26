@@ -6,7 +6,7 @@ For AI coding agents and human developers
 *“Palm grows where the sun meets the sea.”*  
 Orchestration should feel alive, truthful, and humane. Structure must serve clarity and longevity, never become a cage.
 
-**Last updated:** July 2026 (0.46.0 — debt-paydown line opens with **T1 · Safety Net**; see [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-0.46.md](docs/VISION-0.46.md), [TECH-DEBT.md](TECH-DEBT.md))
+**Last updated:** July 2026 (0.52.0 — **The Living Library** opens T6 docs-as-code; see [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-0.52.md](docs/VISION-0.52.md), [docs/adr/021-living-library.md](docs/adr/021-living-library.md), [TECH-DEBT.md](TECH-DEBT.md))
 
 ---
 

@@ -1,8 +1,8 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.51.6`
-**Last Updated:** July 15, 2026
-**Maturity:** Wizard · MCP · Assist remote · Portal/WS · **Analytics + dashboards** · **WorkIntent / journal foundations · **0.41 durable dashboards + schedules · **0.42 event stream foundation****** · Palm provider system inspect · **Debt paydown 0.46–0.48: T1 CI safety net, T3 import-cycle cleanup (upward 35→3, PD-012), T2 `ApplicationHost` decomposed 1164→629 LOC (PD-009/010/013/018)**.
+**Current Version:** `0.51.6` · **Theme open:** `0.52.0` The Living Library  
+**Last Updated:** July 26, 2026  
+**Maturity:** Wizard · MCP · Assist remote · Portal/WS · Analytics + dashboards · WorkIntent / journal · event stream · composition profiles (0.49–0.51) · **0.52 The Living Library (docs-as-code / T6) opened** · Debt paydown 0.46–0.48 (T1 CI, T3 imports, T2 host split).
 
 ## Quick Overview
 
@@ -24,6 +24,18 @@ Palm follows a **layered, registry-driven** model with a strictly pure core:
 - `palm/runtimes/` — Thin surfaces over the common runtime layer.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full details and rules.
+
+## 0.52 — The Living Library (open)
+
+**Vision:** [docs/VISION-0.52.md](docs/VISION-0.52.md) · **ADR:** [docs/adr/021-living-library.md](docs/adr/021-living-library.md)  
+**Theme:** One knowledge genome (SOURCE) → thin build (`just docs-build`) → many surfaces (Cloudflare, later SSR/MCP). Closes TECH-DEBT **T6** (PD-019…021, PD-031).  
+**Builder bar:** simple — stdlib/scripts, no heavy doc frameworks.  
+**Sequel (not this minor):** **0.53** — build the library *with Palm* (pipeline dogfood), not a wrapper around `just`.
+
+| Patch | Status |
+|-------|--------|
+| 0.52.0 Plan + ADR-021 | ✅ |
+| 0.52.1+ gates, declutter, shelves, thin builder, assemble… | pending |
 
 ## Key Capabilities (Mature)
 
