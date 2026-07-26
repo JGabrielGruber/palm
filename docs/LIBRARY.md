@@ -18,9 +18,10 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 
 | Path | Role |
 |------|------|
-| `docs/_build/` | Artifact tree — **gitignored**. Produced by `just docs-build` (0.52.6+). |
+| `docs/_build/` | Artifact tree — **gitignored**. Produced by `just docs-build` / `scripts/docs_build.py` (0.52.6+). |
+| `docs/_build/deploy/` | **Assembled canopy** for static hosts (landing + wiki + reference + inventory). Point Cloudflare assets here after build. |
 
-Do not hand-edit under `_build/`. Do not commit generated inventories here once the builder exists.
+Do not hand-edit under `_build/`. Do not commit generated inventories (gitignore). Edge deploy is not coupled to “copy raw `docs/`” — adjust the host; the genome stays SOURCE.
 
 ## MIRRORS (derived; `docs-check` enforces)
 

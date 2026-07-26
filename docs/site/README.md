@@ -1,12 +1,11 @@
 # Site — landing soul
 
-**Today (0.52.3):** the public landing page and static assets still live at the **`docs/` root** so Cloudflare Pages (`wrangler.jsonc` → `"assets": { "directory": "." }`) keeps working without an assemble step:
+**SOURCE (edit these):** still at the **`docs/` root** until a later move into this folder:
 
-- `docs/index.html`
-- `docs/styles/`
-- `docs/images/`
-- `docs/robots.txt`, `docs/sitemap.xml`
+- `docs/index.html`, `docs/styles/`, `docs/images/`, `docs/robots.txt`, `docs/sitemap.xml`
 
-**Intended home (after 0.52.7 assemble):** `docs/site/` as SOURCE for the brand page, with `just docs-build` copying them into `docs/_build/site/` (or a deploy root) alongside wiki + reference.
+**BUILD (0.52.6+):** `just docs-build` copies those assets into **`docs/_build/deploy/`** together with wiki + generated reference. That deploy tree is the **edge canopy** — not a limit of Cloudflare; Workers/Pages can point `assets.directory` at `_build/deploy` and run the builder on each push (see `docs/wrangler.jsonc`).
 
-Do **not** hand-move `index.html` here until the builder owns the deploy tree — that would break the edge phenotype mid-theme.
+**Hermetic:** `just docs-build-sandbox` runs the same builder in NeonRoot (git-seeded), same spirit as `just ci-sandbox`.
+
+Do **not** hand-edit anything under `docs/_build/`.

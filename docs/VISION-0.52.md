@@ -182,8 +182,8 @@ CompositionProfile
 | **0.52.3** ✅ | **Shelf tree** — `docs/wiki/` (+ stubs), `LIBRARY.md`, static vs `_build`; `docs/site/` reserved (landing stays at docs root until assemble) | Structure |
 | **0.52.4** ✅ | **Stamp completeness** — SYNC ARCHITECTURE / DEVELOPMENT / SCOPE (PD-019) | Docs-as-code |
 | **0.52.5** ✅ | **ADR hygiene** — index, 013 reserved, ADR-or-waive (PD-020) | Discipline |
-| **0.52.6** | **Builder v0** — `just docs-build`: copy wiki + one inventory into `_build/` (stdlib/scripts only) | Thin metabolism |
-| **0.52.7** | **Assemble & edge** — deploy bundle for Cloudflare from assembled tree | Surface: CDN |
+| **0.52.6** ✅ | **Builder v0 + assemble** — `scripts/docs_build.py` / `just docs-build`: wiki copy + inventory JSON + reference HTML + **`_build/deploy`** canopy; wrangler assets → `_build/deploy`; optional `docs-build-sandbox` (NeonRoot) | Thin metabolism + edge |
+| **0.52.7** | *(folded into 0.52.6 — assemble shipped with builder)* | — |
 | **0.52.8** | **In-process stub** *(optional)* — composition-gated list/get of artifacts | Docs-as-service bud |
 | **0.52.9** | **Agent map** *(optional)* — deeper llms / `palm://docs` over same SOURCE | Progressive disclosure |
 | **0.52.10** | **History policy** *(optional)* — DEVELOPMENT note on AI trailers; rewrite runbook only if maintainer opts in | Hygiene |

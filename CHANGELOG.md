@@ -11,6 +11,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - **0.52.3** — Shelf tree: `docs/wiki/` (guides + concept stubs), `docs/LIBRARY.md` (SOURCE/BUILD/SURFACE contract), `docs/site/` reserved; Explorer wizard guide moved to `docs/wiki/guides/explorer-wizard.md`. Landing page stays at `docs/index.html` until assemble.
 - **0.52.4** — Stamp completeness (PD-019): `ARCHITECTURE.md` / `DEVELOPMENT.md` / `SCOPE.md` header versions in `SYNC_TARGETS` and `docs-check` surfaces; no more silent multi-minor drift on those docs.
 - **0.52.5** — ADR hygiene (PD-020): [`docs/adr/README.md`](docs/adr/README.md) living index; [013 reserved](docs/adr/013-number-reserved.md) (no renumber); AGENTS **ADR or explicit waive** + review checklist.
+- **0.52.6** — Living Library builder v0: `scripts/docs_build.py` / `just docs-build` (stdlib) → `docs/_build/` with wiki copy, `inventory/library.json`, reference HTML, and **`deploy/`** canopy for the edge; `docs-css` is the Tailwind recipe; wrangler assets → `_build/deploy`; optional `just docs-build-sandbox` (NeonRoot).
 
 ## [0.51.6] — 2026-07-16
 

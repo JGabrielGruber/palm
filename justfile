@@ -230,9 +230,30 @@ publish: build
     uv publish --token "${PYPI_TOKEN}"
     @echo '✅ Published to PyPI. Users can: pip install palmengine[cli]'
 
-docs-build:
+# Tailwind for the handcrafted landing page (SOURCE styles, not library BUILD).
+docs-css:
     cd docs && npx @tailwindcss/cli -i styles/input.css -o styles/output.css
     @echo "✅ docs/styles/output.css rebuilt"
+
+# Living Library builder v0 (0.52.6) — stdlib only → docs/_build/ (+ deploy canopy).
+docs-build:
+    @echo "📚 Building Living Library → docs/_build/…"
+    uv run python scripts/docs_build.py
+    @echo "✅ docs/_build/deploy is the edge-ready canopy (point Cloudflare assets there)"
+
+# Optional: rebuild landing CSS then the library (local polish before publish).
+docs-build-all: docs-css docs-build
+
+# Hermetic library build in NeonRoot (git-seeded; no Node required).
+docs-build-sandbox:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    seed="$(mktemp -d)"
+    trap 'rm -rf "$seed"' EXIT
+    git archive HEAD | tar -x -C "$seed"
+    neonroot spawn palm-docs-build --image palm-ci --vault palm-ci --sandbox --seed "$seed" -- \
+        just docs-build
+    echo "✅ hermetic docs-build passed in NeonRoot"
 
 release-prep:
     @echo "📋 Release prep for {{package}}"
@@ -306,7 +327,10 @@ help:
     @echo "   just publish          → Build + PyPI (5s warning)"
     @echo "   just guard-common     → palm.common pattern boundary tests"
     @echo "   just docs-check       → Version + documentation surface consistency"
-    @echo "   just docs-build       → Rebuild docs site Tailwind CSS"
+    @echo "   just docs-css         → Rebuild docs site Tailwind CSS"
+    @echo "   just docs-build       → Living Library → docs/_build (+ deploy canopy)"
+    @echo "   just docs-build-all   → docs-css + docs-build"
+    @echo "   just docs-build-sandbox → hermetic docs-build via NeonRoot"
     @echo "   just release-prep     → docs-check + full-check + build"
     @echo "   just demo-full        → examples/full_demo.py"
     @echo "   just mcp-inspector    → MCP Inspector UI for palm-mcp"
