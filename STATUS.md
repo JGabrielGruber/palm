@@ -1,6 +1,6 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.51.6` · **Theme closed:** **`0.54` Hermetic Jobs** · **Next:** **`0.55` Session plane (queued)**  
+**Current Version:** `0.54.10` · **Theme closed:** **`0.54` Hermetic Jobs** · **Next:** **`0.55` Session plane (queued)**  
 **Last Updated:** July 26, 2026  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
 **Maturity:** Wizard · MCP · Assist · composition profiles · **0.52 Living Library tooling** · **0.53 Sovereign Runners** · **0.54 Hermetic Jobs** · **0.55 Session plane (queued)** · docs dogfood domain deferred.

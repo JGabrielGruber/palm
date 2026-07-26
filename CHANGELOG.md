@@ -4,39 +4,37 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### 0.54 — Hermetic Jobs ([VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-hermetic-jobs.md))
-- **0.54.0 (replan)** — Purpose-test theme: definition graphs + neonroot jobs; real DAG growth. **Discard** interim library product stack (`common.library`, `providers/library`, `services/docs`). Docs domain dogfood → [VISION-0.55](docs/VISION-0.55.md).
-- **0.54.1** — Hermetic job contract: `palm.providers.neonroot.contract`, [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md).
-- **0.54.2** — Dogfood flow `hermetic-job-smoke`: neonroot preflight → spawn `true` (definitions only; no domain provider).
-- **0.54.3** — DAG pattern v0: `nodes` with `resource_ref` / `depends_on` (implicit linear chain); `hermetic-job-dag` example flow.
-- **0.54.4** — DAG fan-out dogfood `hermetic-job-fanout` (preflight → two jobs → join); horizon note for Assist “run code”.
-- **0.54.5** — NeonRoot 0.2 `seed_mode` (`copy`\|`bind`) on hermetic job contract; [HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md); `just docs-css-bind`.
-- **0.54.6** — Non-docs dogfood DAG `hermetic-ci-slice`: preflight → hermetic ruff → guard_core.
-- **0.54.7** — DEVELOPMENT / AGENTS purpose-test notes; Living Library product domain deferred to 0.55.
-- **0.54.8** — DAG `drain_ready` (run ready-set per tick); `create_run_dir` / payload helpers; Assist discover starters for hermetic flows.
-- **0.54.9** — Assist run-code: `neonroot.run_script` + persisted wizard `hermetic-run-code` (image choice, paste Python, allowlist).
-- **0.54.10** — Run-code complete loop + Portal ergonomics: `uv run` entrypoint, textbook wizard (image → code → resource → memory → display), resource non-interactive schema, Portal auto-resume, longer session idle wait. **0.54 closed** (dogfood proven). Next: [VISION-0.55](docs/VISION-0.55.md) session plane.
+## [0.54.10] — 2026-07-26
 
-### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
-- **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.
-- **0.53.1** — `palm.providers.neonroot` scaffold: ProviderApp + registry, `health` / `describe`, honest failure when CLI missing; `spawn` listed but not yet implemented.
-- **0.53.2** — `spawn`: `image` + `command[]`, seed `git-archive` (default) or host path, optional vault/sandbox/isolated; returns exit code + stdout/stderr tails.
-- **0.53.3** — Resource bindings (`bindings/resource/descriptor`) + example resources `neonroot-health`, `neonroot-spawn-true`, `neonroot-spawn-docs-build`.
-- **0.53.4** — `palm-docs` NeonRoot image (`ci/Containerfile.docs`: uv + pinned Tailwind CLI); `just docs-image`, `docs-css-sandbox`, `docs-build-sandbox` on palm-docs; host `docs/node_modules` optional.
-- **0.53.5** — NeonRoot spawn upgrades: recipes use `--output` (CSS + `_build` export) and repo `.neonrootignore`; provider `spawn` accepts `seed_exclude` + `outputs`.
-- **0.53.6** — Doctor report / CLI: `neonroot` section (registered, CLI probe, soft issue if composition declares runners but binary missing).
-- **0.53.7** — Assist discover starters + `palm_providers_invoke` examples for `neonroot-health` / spawn resources.
-- **0.53.8** — Composition capability `neonroot` + `PalmSettings.enable_neonroot_runners` (default on); does not install CLI.
-- **0.53 closed** — Sovereign Runners ready; sequel [VISION-0.54](docs/VISION-0.54.md).
+Embedded release of the **0.54 Hermetic Jobs** theme (0.54.0–0.54.10).  
+Vision: [VISION-0.54](docs/VISION-0.54.md) · ADR: [023-hermetic-jobs](docs/adr/023-hermetic-jobs.md) · notes: [RELEASE-0.54.10](docs/releases/RELEASE-0.54.10.md)
 
-### 0.52 — The Living Library (docs-as-code · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md))
-- **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; thin `just docs-build`. Sequelae: 0.53 runners → 0.54 pipeline.
-- **0.52.1** — Docs gates green (PD-031): `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy `docs/llms.txt`, `docs/mcp.txt`, and `docs/skills/palm` into MCP data + `.grok` mirrors so bumps no longer re-break `docs-check`.
-- **0.52.2** — Root declutter (PD-021): `git mv` `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; link rewrite + folder READMEs. Root keeps constitution-scale markdown only.
-- **0.52.3** — Shelf tree: `docs/wiki/` (guides + concept stubs), `docs/LIBRARY.md` (SOURCE/BUILD/SURFACE contract), `docs/site/` reserved; Explorer wizard guide moved to `docs/wiki/guides/explorer-wizard.md`. Landing page stays at `docs/index.html` until assemble.
-- **0.52.4** — Stamp completeness (PD-019): `ARCHITECTURE.md` / `DEVELOPMENT.md` / `SCOPE.md` header versions in `SYNC_TARGETS` and `docs-check` surfaces; no more silent multi-minor drift on those docs.
-- **0.52.5** — ADR hygiene (PD-020): [`docs/adr/README.md`](docs/adr/README.md) living index; [013 reserved](docs/adr/013-number-reserved.md) (no renumber); AGENTS **ADR or explicit waive** + review checklist.
-- **0.52.6** — Living Library builder v0: `scripts/docs_build.py` / `just docs-build` (stdlib) → `docs/_build/` with wiki copy, `inventory/library.json`, reference HTML, and **`deploy/`** canopy for the edge; `docs-css` is the Tailwind recipe; wrangler assets → `_build/deploy`; optional `just docs-build-sandbox` (NeonRoot).
+### Added
+- Hermetic job contract (`neonroot` spawn / seed / allowlist) and [HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md) / [HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md)
+- **DAG pattern v0** — resource nodes, `depends_on`, `drain_ready`
+- Dogfood flows: `hermetic-job-smoke`, `hermetic-job-dag`, `hermetic-job-fanout`, `hermetic-ci-slice`
+- **Assist run-code:** `neonroot.run_script` + wizard `hermetic-run-code` (image → code → resource → state → display)
+- NeonRoot `seed_mode` bind/copy; run-dir staging helpers
+
+### Fixed
+- **0.54.10** Portal/resource ergonomics: palm-ci `uv run` entrypoint (no bare `python`), resource steps non-interactive + Portal auto-resume, longer session idle wait for long spawns, clearer stdout feedback
+
+### Changed
+- Discarded interim 0.54 library product stack (`common.library`, `providers/library`, `services/docs`)
+- Next theme: [VISION-0.55](docs/VISION-0.55.md) **Session plane** (lifecycle + multi-event subscriptions); Living Library docs dogfood deferred further
+
+### Slice log
+- **0.54.0** — Replan + discard product stack  
+- **0.54.1** — Hermetic job contract  
+- **0.54.2** — `hermetic-job-smoke`  
+- **0.54.3** — DAG pattern v0  
+- **0.54.4** — `hermetic-job-fanout`  
+- **0.54.5** — `seed_mode` + run-dir docs  
+- **0.54.6** — `hermetic-ci-slice`  
+- **0.54.7** — Purpose-test notes  
+- **0.54.8** — `drain_ready`, run_dir, Assist discover  
+- **0.54.9** — `hermetic-run-code` + `run_script`  
+- **0.54.10** — Dogfood complete + Portal auto-advance (**theme closed**)
 
 ## [0.51.6] — 2026-07-16
 
