@@ -2,7 +2,7 @@
 
 **Theme:** Bundled 0.21.10–0.21.12 — unified `palm_assist` flows, edit shortcuts, conversation replay.
 
-**Builds on:** [0.21.9](RELEASE-0.21.9.md) · **Plan:** [docs/superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md](docs/superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md)
+**Builds on:** [0.21.9](RELEASE-0.21.9.md) · **Plan:** [docs/superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md](../superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md)
 
 ## Pre-ship (0.21.7–0.21.12)
 

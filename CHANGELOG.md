@@ -7,6 +7,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 ### 0.52 — The Living Library (docs-as-code · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md))
 - **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; root declutter and T6 gates next; thin `just docs-build` (no heavy doc frameworks). **0.53** reserved for building the library *with Palm* (pipeline dogfood).
 - **0.52.1** — Docs gates green (PD-031): `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy `docs/llms.txt`, `docs/mcp.txt`, and `docs/skills/palm` into MCP data + `.grok` mirrors so bumps no longer re-break `docs-check`.
+- **0.52.2** — Root declutter (PD-021): `git mv` `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; link rewrite + folder READMEs. Root keeps constitution-scale markdown only.
 
 ## [0.51.6] — 2026-07-16
 
@@ -17,7 +18,7 @@ not a bespoke class**. Both composition roots now build services through one reg
 axis is authoritative (scattered `enable_*` flags unified); and a **lean, projection-less
 `ApplicationHost` is real** (submit + read complete). Renames: `PalmApp → PalmKernel`,
 `HostProfile → DeploymentProfile`. Public API stable (rename shims + one internal import move — see
-[MIGRATION-0.49.md](MIGRATION-0.49.md)); behaviour-preserving throughout, hermetic CI green at each
+[MIGRATION-0.49.md](docs/migrations/MIGRATION-0.49.md)); behaviour-preserving throughout, hermetic CI green at each
 theme's close. New: [PHILOSOPHY.md](PHILOSOPHY.md).
 
 ### 0.51 — Living Capabilities (the composition profile's third axis comes alive · [VISION-0.51](docs/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md))
@@ -37,7 +38,7 @@ theme's close. New: [PHILOSOPHY.md](PHILOSOPHY.md).
 - **0.50.5a–e** — **Convergence**: both composition roots (`ApplicationHost` + host-less `ServerContext`) now build services through **one** `core_service_registry()` — `_RuntimeKernelView` presents the runtime as the kernel shape; `HostServiceContext.event` made optional.
 - **0.50.5f** — **Reframe** (evidence over sketch): `ServerContext` is **retained** — the surface-facing context + lean phenotype, not redundant logic — not dissolved. Docs corrected so no future contributor does the rip-out.
 
-### 0.49 — Naming (vocabulary for the composition/deployment split · [MIGRATION-0.49](MIGRATION-0.49.md))
+### 0.49 — Naming (vocabulary for the composition/deployment split · [MIGRATION-0.49](docs/migrations/MIGRATION-0.49.md))
 - **0.49.1** — `HostProfile → DeploymentProfile` (+ `HostProfilePreset`/`HostRoleName`/`host_profile_from_settings`) — names the deployment axis.
 - **0.49.2** — `PalmApp → PalmKernel`, `palm.app.app → palm.app.kernel` — the infrastructure *substrate*, not "the app".
 - Anchored the `CompositionProfile × DeploymentProfile` vocabulary; grounded the mechanism in palm's existing extensibles (convergence, not invention).
@@ -51,7 +52,7 @@ theme's close. New: [PHILOSOPHY.md](PHILOSOPHY.md).
 **Bundled release since 0.47.4** — completes **T3** (import-cycle cleanup, 0.47) and delivers **T2**
 (`ApplicationHost` decomposition, 0.48). Headline: upward cycle-forcing imports **35 → 3**;
 `ApplicationHost` **1164 → 629 LOC**; **PD-012, PD-013 closed** (+ PD-009/010/018 addressed). Two clean
-debt themes; public API stable (one internal import-path move — see [MIGRATION-0.48.md](MIGRATION-0.48.md)).
+debt themes; public API stable (one internal import-path move — see [MIGRATION-0.48.md](docs/migrations/MIGRATION-0.48.md)).
 
 ### T2 — Decompose `ApplicationHost` (0.48 · PD-009/010/013/018)
 - **0.48.0** — Plan: [VISION-0.48](docs/VISION-0.48.md) + [ADR-018](docs/adr/018-application-host-decomposition.md) + characterization tests freezing the 3 status reports' JSON contract.
@@ -183,7 +184,7 @@ Fixed all **22** pre-existing failures on master (the suite was red and undetect
 
 **Bundled release since 0.34.5** — **Analytics data plane** (0.35–0.36) · **WorkIntent / triggers / journal** (0.37–0.38) · **Dashboards** (0.39) · **Palm provider system inspect** + ops datasets.
 
-**Checklist:** [RELEASE-0.39.0.md](RELEASE-0.39.0.md) · **Vision:** [VISION-0.35](docs/VISION-0.35.md) · [VISION-0.36](docs/VISION-0.36.md)
+**Checklist:** [RELEASE-0.39.0.md](docs/releases/RELEASE-0.39.0.md) · **Vision:** [VISION-0.35](docs/VISION-0.35.md) · [VISION-0.36](docs/VISION-0.36.md)
 
 ### Added — Analytics data plane (0.35–0.36)
 
@@ -212,7 +213,7 @@ Fixed all **22** pre-existing failures on master (the suite was red and undetect
 
 **Bundled release since 0.32.10** — **Assist modularity** (0.33) + **operator remote** menu/open/chat L0 (0.34). No Bot; Assist is the navigation remote; Portal/MCP are clients.
 
-**Checklist:** [RELEASE-0.34.5.md](RELEASE-0.34.5.md) · **Vision:** [VISION-0.33](docs/VISION-0.33.md) · [VISION-0.34](docs/VISION-0.34.md)
+**Checklist:** [RELEASE-0.34.5.md](docs/releases/RELEASE-0.34.5.md) · **Vision:** [VISION-0.33](docs/VISION-0.33.md) · [VISION-0.34](docs/VISION-0.34.md)
 
 ### Added — Assist modularity (0.33)
 
@@ -248,7 +249,7 @@ just palm-server
 
 **Bundled release since 0.31.5** — **WebSocket Assist** transport + **Portal dogfood chat** (0.32.0–0.32.10). Same Assist meta-dispatch brain as MCP; human real-time channel for floating UI / future PWA.
 
-**Checklist:** [RELEASE-0.32.10.md](RELEASE-0.32.10.md) · **Vision:** [VISION-0.32.md](docs/VISION-0.32.md)
+**Checklist:** [RELEASE-0.32.10.md](docs/releases/RELEASE-0.32.10.md) · **Vision:** [VISION-0.32.md](docs/VISION-0.32.md)
 
 ### Added — WebSocket Assist (0.32.0–0.32.3)
 
@@ -283,9 +284,9 @@ just palm-server   # or: uv run palm server
 
 ## [0.31.5] — 2026-07-08
 
-**Bundled release since 0.30.7** — terminal assistant polish (0.30.8) and **MCP meta-surface / progressive disclosure** (0.31.0–0.31.4). Upgrade notes: [MIGRATION-0.30.md](MIGRATION-0.30.md) (§ 0.31.1 surface, 0.31.2 aliases).
+**Bundled release since 0.30.7** — terminal assistant polish (0.30.8) and **MCP meta-surface / progressive disclosure** (0.31.0–0.31.4). Upgrade notes: [MIGRATION-0.30.md](docs/migrations/MIGRATION-0.30.md) (§ 0.31.1 surface, 0.31.2 aliases).
 
-**Checklist:** [RELEASE-0.31.5.md](RELEASE-0.31.5.md)
+**Checklist:** [RELEASE-0.31.5.md](docs/releases/RELEASE-0.31.5.md)
 
 ### Added — MCP meta-surface (0.31)
 
@@ -306,16 +307,16 @@ just palm-server   # or: uv run palm server
 
 ## [0.30.7] — 2026-07-08
 
-**Bundled release since 0.26.0** — compositional design parity (0.27), local document/KV resources (0.28–0.29), and Assist design-entry + weak-LLM operator UX (0.30.0–0.30.6). Upgrade from 0.26.0: read [MIGRATION-0.30.md](MIGRATION-0.30.md) (and 0.24/0.25 if jumping from older cuts).
+**Bundled release since 0.26.0** — compositional design parity (0.27), local document/KV resources (0.28–0.29), and Assist design-entry + weak-LLM operator UX (0.30.0–0.30.6). Upgrade from 0.26.0: read [MIGRATION-0.30.md](docs/migrations/MIGRATION-0.30.md) (and 0.24/0.25 if jumping from older cuts).
 
-**Checklist:** [RELEASE-0.30.7.md](RELEASE-0.30.7.md)
+**Checklist:** [RELEASE-0.30.7.md](docs/releases/RELEASE-0.30.7.md)
 
 ### Added — Assist design entry & weak-LLM MCP (0.30)
 
 - **0.30 foundation** — [VISION-0.30.md](docs/VISION-0.30.md); design [spec](docs/superpowers/specs/2026-07-08-assist-design-entry-design.md) + [plan](docs/superpowers/plans/2026-07-08-assist-design-entry-0.30.md).
 - **0.30.1 design discovery CTAs** — operator-entry intents `create-flow` / `improve-flow`; assistant action merge + `OperatorViewContext.intent`; `inspect_catalog` propose CTA; metadata `handoff_none_hints`.
 - **0.30.2 design-entry scenario** — `design-entry` / `design-entry/start`; Design tool CTAs only (no catalog writes on start).
-- **0.30.3 design handoff** — `kind: design` with `design_action` / `base_flow_id` / `suggested_name`; post-terminal re-entry CTAs; [MIGRATION-0.30.md](MIGRATION-0.30.md).
+- **0.30.3 design handoff** — `kind: design` with `design_action` / `base_flow_id` / `suggested_name`; post-terminal re-entry CTAs; [MIGRATION-0.30.md](docs/migrations/MIGRATION-0.30.md).
 - **0.30.4 one-shot design publish** — `palm_design_publish_flow` / `palm_design_publish_resource` (propose→impact→commit); compact design CTAs and hints.
 - **0.30.5 design path shortening** — operator-entry design intents skip summary confirm; design-entry drops summary; `palm_assist(params={body})` → `design/publish`.
 - **0.30.6 assist flow + resource ergonomics** — `palm_assist` defaults assistant on flows create/session; `params={flow_id}` starts a flow; create re-inspects first turn; operator-entry adds `coconut-npc` + `propose-resource`; resource failures surface resume/doctor/publish-resource CTAs.
@@ -379,7 +380,7 @@ just palm-server   # or: uv run palm server
 
 ## [0.25.0] — 2026-07-07
 
-**Definition revisioning, instance migration, and Design Service** — one PyPI release bundling the full 0.24 stack and complete 0.25 design orchestration. Jump from 0.23.1: read [MIGRATION-0.24.md](MIGRATION-0.24.md) and [MIGRATION-0.25.md](MIGRATION-0.25.md).
+**Definition revisioning, instance migration, and Design Service** — one PyPI release bundling the full 0.24 stack and complete 0.25 design orchestration. Jump from 0.23.1: read [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) and [MIGRATION-0.25.md](docs/migrations/MIGRATION-0.25.md).
 
 ### Added — Design Service (0.25)
 
@@ -390,7 +391,7 @@ just palm-server   # or: uv run palm server
 - **Agent safety** — `commit_token` on validate/impact; `PALM_MCP_REQUIRE_INPUT_TOKEN` applies to `palm_design_commit`.
 - **`palm_assist` design paths** — `design/*` aliases, dispatch, assistant views on validate/impact.
 - **Wizard design contributor** — step slug uniqueness, collection `item_fields`, resource/transform checks.
-- **Docs** — [ADR-008](docs/adr/008-design-service.md), [MIGRATION-0.25.md](MIGRATION-0.25.md), `examples/definitions/design_proposal_demo.py`.
+- **Docs** — [ADR-008](docs/adr/008-design-service.md), [MIGRATION-0.25.md](docs/migrations/MIGRATION-0.25.md), `examples/definitions/design_proposal_demo.py`.
 
 ### Added — Definition revisioning & migration (0.24, bundled)
 
@@ -400,7 +401,7 @@ just palm-server   # or: uv run palm server
 - **Impact query** — instances behind target revision with compatibility flags.
 - **Instance migration** — `POST …/instances/{id}/migrate`; `migration_*` metadata preserved on job sync.
 - **MCP** — `palm_definitions_analyze_impact`, `palm_definitions_migrate_instance`.
-- **Docs** — [MIGRATION-0.24.md](MIGRATION-0.24.md), [ADR-007](docs/adr/007-definition-revisioning.md).
+- **Docs** — [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md), [ADR-007](docs/adr/007-definition-revisioning.md).
 
 ### Changed
 
@@ -789,7 +790,7 @@ just palm-server   # or: uv run palm server
 
 **Stable MCP proxy** — single `palm_assist` dispatch tool for agent config stability.
 
-Migration: [MIGRATION-0.19.md](MIGRATION-0.19.md) · Vision: [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
+Migration: [MIGRATION-0.19.md](docs/migrations/MIGRATION-0.19.md) · Vision: [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
 
 ### Added
 
@@ -808,7 +809,7 @@ Migration: [MIGRATION-0.19.md](MIGRATION-0.19.md) · Vision: [docs/VISION-0.18-A
 
 **Assist domain MVP** — fifth service for conversational operator guidance and handoff.
 
-Migration: [MIGRATION-0.18.md](MIGRATION-0.18.md) · Vision: [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
+Migration: [MIGRATION-0.18.md](docs/migrations/MIGRATION-0.18.md) · Vision: [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
 
 ### Added
 
@@ -835,7 +836,7 @@ Migration: [MIGRATION-0.18.md](MIGRATION-0.18.md) · Vision: [docs/VISION-0.18-A
 
 **OpenAPI from service registries** — `/v1/openapi.json` and `/v1/docs` document the full `/v1/api/…` surface.
 
-Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md) · Plan: [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](docs/superpowers/plans/2026-07-01-0.17-service-completion.md)
+Migration: [MIGRATION-0.17.md](docs/migrations/MIGRATION-0.17.md) · Plan: [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](docs/superpowers/plans/2026-07-01-0.17-service-completion.md)
 
 ### Added
 
@@ -856,7 +857,7 @@ Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md) · Plan: [docs/superpowers/pla
 
 **Palm provider remote alignment** — compositional remote client uses `/v1/api/…` only.
 
-Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md)
+Migration: [MIGRATION-0.17.md](docs/migrations/MIGRATION-0.17.md)
 
 ### Changed
 
@@ -873,7 +874,7 @@ Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md)
 
 **Process execution service** — multi-flow runs under `/v1/api/processes/…`; legacy `/v1/plans` removed.
 
-Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md)
+Migration: [MIGRATION-0.17.md](docs/migrations/MIGRATION-0.17.md)
 
 ### Added
 
@@ -894,7 +895,7 @@ Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md)
 
 **System REST parity** — observe/lifecycle HTTP under `/v1/api/system/…`; legacy monolith job/instance/snapshot routes removed.
 
-Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md) · Plan: [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](docs/superpowers/plans/2026-07-01-0.17-service-completion.md)
+Migration: [MIGRATION-0.17.md](docs/migrations/MIGRATION-0.17.md) · Plan: [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](docs/superpowers/plans/2026-07-01-0.17-service-completion.md)
 
 ### Added
 
@@ -917,7 +918,7 @@ Migration: [MIGRATION-0.17.md](MIGRATION-0.17.md) · Plan: [docs/superpowers/pla
 
 **Services are the API** — domain services in `palm/services/`, per-service REST under `/v1/api/…`, MCP remounted by service domain. Breaking release for integrators on legacy `/v1/wizards` and monolithic MCP tool names.
 
-Vision: [docs/VISION-0.16.md](docs/VISION-0.16.md) · ADR: [docs/adr/005-service-domain-api.md](docs/adr/005-service-domain-api.md) · Migration: [MIGRATION-0.16.md](MIGRATION-0.16.md) · MCP: [docs/MCP.md](docs/MCP.md)
+Vision: [docs/VISION-0.16.md](docs/VISION-0.16.md) · ADR: [docs/adr/005-service-domain-api.md](docs/adr/005-service-domain-api.md) · Migration: [MIGRATION-0.16.md](docs/migrations/MIGRATION-0.16.md) · MCP: [docs/MCP.md](docs/MCP.md)
 
 ### Added
 
@@ -1078,7 +1079,7 @@ Vision: [docs/VISION-0.13.md](docs/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md
 
 **Compositional Power release** — Resources as first-class, declarative citizens; Palm calling Palm via the `palm` provider; Explorer resource hub.
 
-Vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
+Vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
 
 ### Added (Phase 1)
 
@@ -1126,7 +1127,7 @@ Vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12
 - **`promote_binding_keys()`** — shared wizard answer promotion for param binding
 - **Events** — `resource.completed` / `resource.failed` include correlation payload; dropped `wizard.resource.invoked`
 
-See [MIGRATION-0.12.md](MIGRATION-0.12.md).
+See [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md).
 
 ### Added (Phase C — future-proofing)
 
@@ -1198,7 +1199,7 @@ See [MIGRATION-0.12.md](MIGRATION-0.12.md).
 - **`HostEventRecorder`** — ring buffer of recent host bus events for dashboards
 - **CLI consolidation** — unified diagnostics routing (`status` / `doctor`), shared `instance resume`, backward-compatible aliases documented in help
 - **Test performance** — `PalmSettings.for_tests()`, shared fixtures, `--fast` pytest mode, collapsed-runtime worker-ready fix (~33× faster suite)
-- **Migration guide** — [MIGRATION-0.10.md](MIGRATION-0.10.md)
+- **Migration guide** — [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md)
 
 ### Changed
 
@@ -1234,7 +1235,7 @@ See [MIGRATION-0.12.md](MIGRATION-0.12.md).
 | `app.list_instances()` in CLI | `host.list_instance_views()` / query bus |
 | `status --full` = doctor | `status --full` = detailed dashboard; `doctor` = health report |
 
-See [MIGRATION-0.10.md](MIGRATION-0.10.md) for full migration steps.
+See [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) for full migration steps.
 
 ## [0.9.7] — 2026-06-15
 
@@ -1406,7 +1407,7 @@ Major orchestration maturation release: authoritative lifecycle, layered runtime
 - **Runtimes** — `RuntimeHost` protocol, `BaseRuntime` shared wiring, `DaemonRuntime`, `ServerRuntime` (stdlib HTTP API)
 - **Auth** — `AuthEngine` wired on runtimes; `auth_enforce`, per-request `X-Palm-Subject` on server
 - **Server API** — `POST /v1/plans/prepare`, `POST /v1/plans/submit`, job input/status endpoints
-- **Migration guide** — [MIGRATION-0.6.md](MIGRATION-0.6.md)
+- **Migration guide** — [MIGRATION-0.6.md](docs/migrations/MIGRATION-0.6.md)
 
 ### Changed
 

@@ -2,7 +2,7 @@
 
 **Theme:** CSRF-style `input_token` on wizard mutations; opt-in strict enforcement via `PALM_MCP_REQUIRE_INPUT_TOKEN`.
 
-**Builds on:** [0.22.1](RELEASE-0.22.1.md) · **Plan:** [docs/superpowers/plans/2026-07-03-0.22.1-mutation-guard.md](docs/superpowers/plans/2026-07-03-0.22.1-mutation-guard.md)
+**Builds on:** [0.22.1](RELEASE-0.22.1.md) · **Plan:** [docs/superpowers/plans/2026-07-03-0.22.1-mutation-guard.md](../superpowers/plans/2026-07-03-0.22.1-mutation-guard.md)
 
 ## Pre-ship
 

@@ -130,4 +130,4 @@ OpenAPI paths match mounted service REST. Legacy monolith paths (`/v1/jobs`, `/v
 | **0.17.2** | ✅ Palm provider remote alignment |
 | **0.17.3** | ✅ OpenAPI from per-service registries |
 
-Next cycle: Assist domain (0.18). See [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](docs/superpowers/plans/2026-07-01-0.17-service-completion.md).
+Next cycle: Assist domain (0.18). See [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](../superpowers/plans/2026-07-01-0.17-service-completion.md).

@@ -2,7 +2,7 @@
 
 **Status:** Approved (July 1, 2026)  
 **Version target:** 0.21.7–0.21.12 (micro-releases)  
-**Builds on:** [0.21.6 shipped](../../MIGRATION-0.21.md) · [Assistant expansion](2026-07-01-assistant-expansion-design.md)  
+**Builds on:** [0.21.6 shipped](../../migrations/MIGRATION-0.21.md) · [Assistant expansion](2026-07-01-assistant-expansion-design.md)  
 **Evidence:** [Conversation replay](../../conversations/019f1e9c-43b6-76d1-92dd-54b56ca73ee5/) — `grok-composer-2.5-fast` via Palm MCP HTTP
 
 ---
@@ -297,6 +297,6 @@ just guard-common
 ## Related documents
 
 - [Assistant expansion (0.21.0–0.21.6)](2026-07-01-assistant-expansion-design.md)
-- [MIGRATION-0.21.md](../../MIGRATION-0.21.md)
+- [MIGRATION-0.21.md](../../migrations/MIGRATION-0.21.md)
 - [docs/MCP.md](../../MCP.md)
 - [Conversation export](../../conversations/019f1e9c-43b6-76d1-92dd-54b56ca73ee5/)

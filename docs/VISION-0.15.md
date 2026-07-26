@@ -129,7 +129,7 @@ Master spec: [docs/superpowers/specs/2026-06-30-0.15-cleanup-track-design.md](su
 - Delete legacy REST handlers; break REST (`/v1/api/…`) and MCP (per-service tools) intentionally
 - Runtimes mirror services — handlers per domain, not per resource file
 - `execution/flows` vs `execution/providers` — distinct behavior
-- Migration: [MIGRATION-0.16.md](../MIGRATION-0.16.md)
+- Migration: [MIGRATION-0.16.md](migrations/MIGRATION-0.16.md)
 
 **Deferred and redone on new API (not separate 0.16 milestones):**
 

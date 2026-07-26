@@ -37,7 +37,7 @@ uv run --extra mcp python scripts/mcp_catalog_inventory.py --surface assist --js
 
 Vision: [VISION-0.31.md](VISION-0.31.md).
 
-Migration from 0.15 tool names: [MIGRATION-0.16.md](../MIGRATION-0.16.md)
+Migration from 0.15 tool names: [MIGRATION-0.16.md](migrations/MIGRATION-0.16.md)
 
 | Doc | Audience |
 |-----|----------|
@@ -190,7 +190,7 @@ MCP tool docstrings should lead with `call_connected_tool(tool_name="palm___…"
 | `params={session_id, flow_id, edit: {item_index: 0, …}}` | **0.21.11** — collection field edit shortcut |
 | `alias="flows/session-input"` | **0.21.10** — registered flows input alias (`flow_id` + `session_id` in `params`) |
 
-Read `palm://assist/routes` for the full command-path catalog and aliases. Per-domain tools (`palm_flows_*`, …) remain valid. See [MIGRATION-0.21.md](../MIGRATION-0.21.md) · [MIGRATION-0.20.md](../MIGRATION-0.20.md) · [MIGRATION-0.19.md](../MIGRATION-0.19.md).
+Read `palm://assist/routes` for the full command-path catalog and aliases. Per-domain tools (`palm_flows_*`, …) remain valid. See [MIGRATION-0.21.md](migrations/MIGRATION-0.21.md) · [MIGRATION-0.20.md](migrations/MIGRATION-0.20.md) · [MIGRATION-0.19.md](migrations/MIGRATION-0.19.md).
 
 | Assist REST | Purpose |
 |-------------|---------|
@@ -262,7 +262,7 @@ Use prompt `debug-wizard-block` for a structured checklist.
 
 #### Upgrading live instances (0.24+)
 
-After publishing a new flow revision (`update_flow` appends; see [MIGRATION-0.24.md](../MIGRATION-0.24.md)):
+After publishing a new flow revision (`update_flow` appends; see [MIGRATION-0.24.md](migrations/MIGRATION-0.24.md)):
 
 ```
 1. palm_definitions_analyze_impact(flow_id, target_revision=N)
@@ -325,7 +325,7 @@ Install: `pip install "palmengine[mcp]"` · CLI: `palm-mcp`
 
 ## Phase history (0.14–0.15 — superseded by 0.16 tool names)
 
-> Historical reference. Use [MIGRATION-0.16.md](../MIGRATION-0.16.md) for the mapping to current tools.
+> Historical reference. Use [MIGRATION-0.16.md](migrations/MIGRATION-0.16.md) for the mapping to current tools.
 
 ### Phase 1 — Shipped
 

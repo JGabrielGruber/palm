@@ -1,7 +1,7 @@
 # Migration Guide — Palm 0.30 (Assist design entry)
 
 **Scope:** Assist discovery of Design Service (0.30.0–0.30.3).  
-**Vision:** [docs/VISION-0.30.md](docs/VISION-0.30.md)
+**Vision:** [docs/VISION-0.30.md](../VISION-0.30.md)
 
 ---
 

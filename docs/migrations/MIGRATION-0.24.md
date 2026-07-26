@@ -2,7 +2,7 @@
 
 **Releases:** 0.24.1 (revisions) · 0.24.2 (rules + impact) · 0.24.3 (execution) · 0.24.4 (docs cleanup)  
 **Prior:** [MIGRATION-0.23.md](MIGRATION-0.23.md)  
-**Vision:** [docs/VISION-0.24.md](docs/VISION-0.24.md) · **ADR:** [docs/adr/007-definition-revisioning.md](docs/adr/007-definition-revisioning.md)
+**Vision:** [docs/VISION-0.24.md](../VISION-0.24.md) · **ADR:** [docs/adr/007-definition-revisioning.md](../adr/007-definition-revisioning.md)
 
 ---
 

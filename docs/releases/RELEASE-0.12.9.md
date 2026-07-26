@@ -84,4 +84,4 @@ Create GitHub release from tag `v0.12.9`:
 | `WizardActionLeaf` | `WizardResourceLeaf` / `ResourceLeaf` |
 | `wizard.resource.invoked` event | `resource.*` events from `ResourceEngine` |
 
-Full guide: [MIGRATION-0.12.md](MIGRATION-0.12.md)
+Full guide: [MIGRATION-0.12.md](../migrations/MIGRATION-0.12.md)

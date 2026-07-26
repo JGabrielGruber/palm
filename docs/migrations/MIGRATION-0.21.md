@@ -2,7 +2,7 @@
 
 **Experimental policy:** 0.21 adds **human-native surfaces** (CLI, Explorer) and deepens the assistant envelope. Powertool defaults on `palm_flows_*` and flows REST are **unchanged** unless you opt in.
 
-**Builds on:** [MIGRATION-0.20.md](MIGRATION-0.20.md) · **Design:** [docs/superpowers/specs/2026-07-01-assistant-expansion-design.md](docs/superpowers/specs/2026-07-01-assistant-expansion-design.md)
+**Builds on:** [MIGRATION-0.20.md](MIGRATION-0.20.md) · **Design:** [docs/superpowers/specs/2026-07-01-assistant-expansion-design.md](../superpowers/specs/2026-07-01-assistant-expansion-design.md)
 
 ---
 
@@ -176,7 +176,7 @@ Powertool default unchanged when `format` is omitted.
 
 ## 0.21.10–0.21.12 — Weak-LLM MCP playbook
 
-Bundled micro-releases for coding agents with sparse tool arguments. Reference trace: [docs/conversations/019f1e9c-43b6-76d1-92dd-54b56ca73ee5](docs/conversations/019f1e9c-43b6-76d1-92dd-54b56ca73ee5/).
+Bundled micro-releases for coding agents with sparse tool arguments. Reference trace: [docs/conversations/019f1e9c-43b6-76d1-92dd-54b56ca73ee5](../conversations/019f1e9c-43b6-76d1-92dd-54b56ca73ee5/).
 
 | Goal | `palm_assist` call |
 |------|-------------------|

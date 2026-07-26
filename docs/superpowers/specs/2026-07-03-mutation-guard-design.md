@@ -2,7 +2,7 @@
 
 **Status:** Approved (July 3, 2026)  
 **Version target:** 0.22.1 (protocol) · 0.23.0 (input_token) · 0.23.1 (inspect-only product fix)  
-**Builds on:** [0.22.0 shipped](../../RELEASE-0.22.0.md) · agent skill + `docs/mcp.txt`  
+**Builds on:** [0.22.0 shipped](../../releases/RELEASE-0.22.0.md) · agent skill + `docs/mcp.txt`  
 **Evidence:** [archive/conversation_export.xml](../../archive/conversation_export.xml) — agent sent unsolicited `yes` at summary, completing operator-entry
 
 ---

@@ -102,4 +102,4 @@ External feedback described a Design Service. Palm adapts it as a **sixth user-f
 - [ADR-007](007-definition-revisioning.md) — revisioning and migration foundation
 - [ADR-006](006-assist-domain.md) — assist as fifth domain
 - [ADR-005](005-service-domain-api.md) — service domain layout
-- [MIGRATION-0.24.md](../../MIGRATION-0.24.md)
+- [MIGRATION-0.24.md](../migrations/MIGRATION-0.24.md)

@@ -120,7 +120,7 @@ Step definitions stay focused on **user-facing intent** (prompt, validation, res
 
 **Theme:** Resources as first-class, declarative citizens — compositional orchestration at scale.
 
-Full vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
+Full vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
 
 | Pillar | Shipped |
 |--------|---------|

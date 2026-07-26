@@ -67,7 +67,7 @@ Behavior Trees are the control-flow foundation. Steps are nodes. Cross-cutting c
 | **Palm Explorer** | SSR hub at `/explorer` — flows, jobs, instances, **wizard workspace** (HTMX + collection editor), **resources**; `/` redirects here |
 | **Flow REST (0.16)** | `/v1/api/flows/{flow_id}/session/{session_id}/…` — create, inspect, input, backtrack |
 | **Definitions REST (0.16)** | `/v1/api/definitions/…` — catalog reads + CRUD writes |
-| **Definition revisions (0.24)** | Append-only flow revisions, `flow_revision` pin, impact query, instance migrate — [MIGRATION-0.24.md](MIGRATION-0.24.md) |
+| **Definition revisions (0.24)** | Append-only flow revisions, `flow_revision` pin, impact query, instance migrate — [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) |
 | **Design Service (0.25+)** | Propose → impact → commit · **one-shot** `palm_design_publish_*` / `palm_assist(params={body})` — [VISION-0.25.md](docs/VISION-0.25.md) |
 | **Local resources (0.28–0.29)** | `kv` / `file` / tiered backends; coconut-npc cross-session profile |
 | **MCP (0.16–0.31)** | `palm-mcp` · **`palm_assist` meta-tool** · `PALM_MCP_SURFACE=assist` slim catalog · `palm://agent/card` progressive docs — [docs/MCP.md](docs/MCP.md) · [VISION-0.31.md](docs/VISION-0.31.md) |
@@ -408,7 +408,8 @@ src/palm/
 examples/           # definitions/ + full_demo.py (ApplicationHost)
 SCOPE.md            # vision, scope, roadmap
 ARCHITECTURE.md     # layers, ApplicationHost, CQRS, reliability
-MIGRATION-0.10.md   # upgrade guide from 0.9.x bootstrap paths
+docs/migrations/    # upgrade guides (MIGRATION-0.X.md)
+docs/releases/      # point-release checklists (RELEASE-0.X.Y.md)
 archive/            # legacy + experimental (not imported)
 ```
 
@@ -429,7 +430,7 @@ palm resource describe fetch-customer
 palm resource invoke fetch-customer customer_id=42
 ```
 
-Full guide: [docs/VISION-0.12.md](docs/VISION-0.12.md) · [MIGRATION-0.12.md](MIGRATION-0.12.md)
+Full guide: [docs/VISION-0.12.md](docs/VISION-0.12.md) · [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md)
 
 ---
 
@@ -495,9 +496,9 @@ For the spirit beneath the surface — what Palm *is*, not just what it does —
 
 ## Migration
 
-- **0.11.x → 0.12 Compositional Power** — see [MIGRATION-0.12.md](MIGRATION-0.12.md) for wizard `step_kind: resource` and removed `action` steps
-- **0.9.x → 0.10 architecture** — see [MIGRATION-0.10.md](MIGRATION-0.10.md) for `ApplicationHost`, CQRS, and removed `bootstrap_cli` / `cli/pkg` paths
-- **0.5.x → 0.6.0** — see [MIGRATION-0.6.md](MIGRATION-0.6.md) for removed aliases (`ExecutionBackend`, `EmbeddedMode`, etc.)
+- **0.11.x → 0.12 Compositional Power** — see [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md) for wizard `step_kind: resource` and removed `action` steps
+- **0.9.x → 0.10 architecture** — see [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) for `ApplicationHost`, CQRS, and removed `bootstrap_cli` / `cli/pkg` paths
+- **0.5.x → 0.6.0** — see [MIGRATION-0.6.md](docs/migrations/MIGRATION-0.6.md) for removed aliases (`ExecutionBackend`, `EmbeddedMode`, etc.)
 - **0.3.x legacy** — code under **`archive/`** is reference-only; never import from `archive/` in new work
 
 ---

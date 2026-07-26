@@ -2,7 +2,7 @@
 
 **Theme:** Portable agent skill as MCP resources, operator guide split (`docs/mcp.txt`), Docker documentation, weak-LLM tool descriptions.
 
-**Builds on:** [0.21.12](RELEASE-0.21.12.md) · **Migration:** [MIGRATION-0.22.md](MIGRATION-0.22.md)
+**Builds on:** [0.21.12](RELEASE-0.21.12.md) · **Migration:** [MIGRATION-0.22.md](../migrations/MIGRATION-0.22.md)
 
 ## Pre-ship
 

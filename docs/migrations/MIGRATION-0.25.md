@@ -2,7 +2,7 @@
 
 **Releases:** 0.25.0 MVP · 0.25.2–0.25.4 completion (durable proposals, auto-migrate, agent safety)  
 **Prior:** [MIGRATION-0.24.md](MIGRATION-0.24.md)  
-**Vision:** [docs/VISION-0.25.md](docs/VISION-0.25.md) · **ADR:** [docs/adr/008-design-service.md](docs/adr/008-design-service.md)
+**Vision:** [docs/VISION-0.25.md](../VISION-0.25.md) · **ADR:** [docs/adr/008-design-service.md](../adr/008-design-service.md)
 
 ---
 
@@ -94,5 +94,5 @@ Retry failed migrations manually: `palm_definitions_migrate_instance` (0.24.3).
 
 ## References
 
-- [docs/MCP.md](docs/MCP.md) — Design tools table
-- [docs/superpowers/plans/2026-07-07-design-service-plus.md](docs/superpowers/plans/2026-07-07-design-service-plus.md)
+- [docs/MCP.md](../MCP.md) — Design tools table
+- [docs/superpowers/plans/2026-07-07-design-service-plus.md](../superpowers/plans/2026-07-07-design-service-plus.md)

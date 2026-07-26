@@ -106,7 +106,7 @@ None for 0.17 integrators. Assist is additive.
 
 ## References
 
-- [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
-- [docs/superpowers/specs/2026-07-01-assist-domain-design.md](docs/superpowers/specs/2026-07-01-assist-domain-design.md)
-- [docs/adr/006-assist-domain.md](docs/adr/006-assist-domain.md)
-- [RELEASE-0.18.0.md](RELEASE-0.18.0.md)
+- [docs/VISION-0.18-ASSIST.md](../VISION-0.18-ASSIST.md)
+- [docs/superpowers/specs/2026-07-01-assist-domain-design.md](../superpowers/specs/2026-07-01-assist-domain-design.md)
+- [docs/adr/006-assist-domain.md](../adr/006-assist-domain.md)
+- [RELEASE-0.18.0.md](../releases/RELEASE-0.18.0.md)

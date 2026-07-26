@@ -2,7 +2,7 @@
 
 **Experimental policy:** 0.20 changes **response shapes** on assist surfaces. Per-domain MCP tools (`palm_flows_*`, …) keep powertool semantics.
 
-**Builds on:** [MIGRATION-0.19.md](MIGRATION-0.19.md) · **Design:** [docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md](docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md)
+**Builds on:** [MIGRATION-0.19.md](MIGRATION-0.19.md) · **Design:** [docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md](../superpowers/specs/2026-07-01-assistant-powertool-views-design.md)
 
 ---
 

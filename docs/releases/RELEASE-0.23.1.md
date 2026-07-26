@@ -2,7 +2,7 @@
 
 **Theme:** Non-terminal `inspect-only` path on operator-entry; read alias `operator-entry/inspect`.
 
-**Builds on:** [0.23.0](RELEASE-0.23.0.md) · **Plan:** [docs/superpowers/plans/2026-07-03-0.22.1-mutation-guard.md](docs/superpowers/plans/2026-07-03-0.22.1-mutation-guard.md)
+**Builds on:** [0.23.0](RELEASE-0.23.0.md) · **Plan:** [docs/superpowers/plans/2026-07-03-0.22.1-mutation-guard.md](../superpowers/plans/2026-07-03-0.22.1-mutation-guard.md)
 
 ## Pre-ship
 

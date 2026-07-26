@@ -2,7 +2,7 @@
 
 **Status:** Approved (July 1, 2026)  
 **Version target:** 0.21.0 (spec) · 0.21.1–0.21.6 (implementation)  
-**Builds on:** [0.20.5 shipped](../../MIGRATION-0.20.md) · [Assistant vs Powertool views](2026-07-01-assistant-powertool-views-design.md)  
+**Builds on:** [0.20.5 shipped](../../migrations/MIGRATION-0.20.md) · [Assistant vs Powertool views](2026-07-01-assistant-powertool-views-design.md)  
 **Vision:** [docs/VISION-0.18-ASSIST.md](../../VISION-0.18-ASSIST.md)
 
 ---
@@ -420,7 +420,7 @@ just guard-common
 
 - [Assistant vs Powertool views (0.20)](2026-07-01-assistant-powertool-views-design.md)
 - [Assist domain design](2026-07-01-assist-domain-design.md)
-- [MIGRATION-0.20.md](../../MIGRATION-0.20.md)
+- [MIGRATION-0.20.md](../../migrations/MIGRATION-0.20.md)
 - [EXPLORER-WIZARD.md](../../../EXPLORER-WIZARD.md)
 - [docs/MCP.md](../../MCP.md)
 - [STATUS.md](../../STATUS.md)

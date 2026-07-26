@@ -93,9 +93,9 @@ flowchart LR
 | **0.24.1** | Append-only revisions, `flow_revision` pin, `?revision=` on get flow |
 | **0.24.2** | Migration rules registry, impact query |
 | **0.24.3** | Instance migration execution, demo wizard, metadata preservation |
-| **0.24.4** | [MIGRATION-0.24.md](../../MIGRATION-0.24.md), MCP tools, operator doc sync |
+| **0.24.4** | [MIGRATION-0.24.md](migrations/MIGRATION-0.24.md), MCP tools, operator doc sync |
 
-Operator guide: [MIGRATION-0.24.md](../../MIGRATION-0.24.md) · Example: `migrate-instance-demo`
+Operator guide: [MIGRATION-0.24.md](migrations/MIGRATION-0.24.md) · Example: `migrate-instance-demo`
 
 ---
 
@@ -152,4 +152,4 @@ See the [implementation plan](superpowers/plans/2026-07-03-definition-revisionin
 - Design Service (deferred): [design-service-design.md](superpowers/specs/2026-07-03-design-service-design.md)
 - Plan: [definition-revisioning.md](superpowers/plans/2026-07-03-definition-revisioning.md)
 - ADR: [007-definition-revisioning.md](adr/007-definition-revisioning.md)
-- Prerequisite context: [0.23 mutation guard](MIGRATION-0.23.md)
+- Prerequisite context: [0.23 mutation guard](migrations/MIGRATION-0.23.md)

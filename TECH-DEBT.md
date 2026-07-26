@@ -70,7 +70,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 | PD-009 | `ApplicationHost` god-object (1170 LOC / 89 methods) | T2 | architecture | S1 | systemic | XL | 4 | confirmed |
 | PD-012 | ~~~35 upward import cycles~~ **closed 0.47** — upward 35→5 via dependency inversion; 5 sanctioned seams ([ADR-017](docs/adr/017-import-seams.md)) | T3 | architecture | S2 | systemic | M | 5 | ✅ done |
 | PD-010 | `cqrs_wiring` composition-root coupling | T2 | architecture | S2 | layer | L | 3 | confirmed |
-| PD-013 | ~~Dual `server/` trees~~ **closed 0.48.7** — relocated the misplaced `ServerContext`/`ServerApp` composition roots common→runtimes; infra stays in common ([MIGRATION-0.48](MIGRATION-0.48.md)) | T3→T2 | architecture | S3 | layer | M | 3 | ✅ done |
+| PD-013 | ~~Dual `server/` trees~~ **closed 0.48.7** — relocated the misplaced `ServerContext`/`ServerApp` composition roots common→runtimes; infra stays in common ([MIGRATION-0.48](docs/migrations/MIGRATION-0.48.md)) | T3→T2 | architecture | S3 | layer | M | 3 | ✅ done |
 | PD-014 | assist/MCP + CLI complexity hotspots (CC≤112) | T4 | complexity | S2 | layer | L | 3 | confirmed |
 | PD-022 | DB adapters untested (postgres/mongo/graphql) | T7 | test-coverage | S2 | layer | L | 3 | confirmed |
 | PD-024 | 163 broad `except Exception`, several swallow errors | T8 | convention | S3 | layer | M | 3 | confirmed |
@@ -90,7 +90,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 | PD-011 | `inbound_service.py` 725 LOC mixed responsibilities | T2 | complexity | S3 | module | L | 1 | confirmed |
 | PD-026 | Magic numbers (24) + hardcoded hosts/ports (15) | T8 | convention | S4 | layer | S | 1 | confirmed |
 | PD-027 | Inconsistent leading-underscore module naming | T8 | convention | S4 | layer | S | 1 | confirmed |
-| PD-021 | Root markdown sprawl (28 RELEASE + 14 MIGRATION) | T6 | doc-drift | S4 | layer | M | 0.7 | confirmed |
+| PD-021 | ~~~Root markdown sprawl (28 RELEASE + 14 MIGRATION)~~~ **closed 0.52.2** — under `docs/releases/` + `docs/migrations/` | T6 | doc-drift | S4 | layer | M | 0.7 | ✅ done |
 | PD-025 | Pervasive filename reuse hurts navigability | T8 | convention | S4 | systemic | M | 0.7 | confirmed |
 
 ---
@@ -174,7 +174,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 
 **PD-020 — ADR discipline broken.** `S3 · layer · Effort M` — `docs/adr/` runs 001–012 then 014; **013 missing**; most post-0.25 features (through 0.45) have no ADR despite the "every significant decision needs an ADR" rule (08-docs.txt).
 
-**PD-021 — Root markdown sprawl.** `S4 · layer · Effort M` — 28 `RELEASE-*.md` + 14 `MIGRATION-*.md` (50 root `.md` total) overlap the 82 KB `CHANGELOG.md` (08-docs.txt). Direction: move point-release notes under `docs/releases/`.
+**PD-021 — Root markdown sprawl.** `S4 · layer · Effort M` — **✅ closed 0.52.2** — `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; links rewritten. Root is constitution-scale.
 
 **PD-031 — `docs-check` gate RED on master.** `S3 · module · Effort S · Docs-as-Code, ci-tooling` *(found while opening 0.46.0)* — **✅ closed 0.52.1**
 - Was: skill/MCP mirrors drifted from `docs/`; bump stamped `docs/llms.txt`/`mcp.txt` without copying into `mcp/data/`.
@@ -231,7 +231,7 @@ tracker** — flip items as they close. Order follows the dependency roots above
 | **0.46** | **T1 — Safety net (green suite + CI)** | ✅ done · [VISION-0.46](docs/VISION-0.46.md) | Dependency root, landed 0.46.0–0.46.5. Green suite + lint + hermetic CI + coverage floor |
 | **0.47** | T3 — import-cycle cleanup (upward 35→5) | ✅ done · [VISION-0.47](docs/VISION-0.47.md) · [ADR-017](docs/adr/017-import-seams.md) | PD-012 closed via dependency inversion (registries register downward); 5 remaining edges sanctioned as composition-root/lazy seams. PD-013 (`ServerContext` relocation) deferred to 0.48 |
 | **0.48** | T2 — ApplicationHost decomposition (6 seams → host <350 LOC) | 🚧 in progress · [VISION-0.48](docs/VISION-0.48.md) · [ADR-018](docs/adr/018-application-host-decomposition.md) | 8 slices landed (1164→662 LOC); **PD-013 closed** (0.48.7). Remaining: facades + dead-accessor shrink |
-| **0.49** | **Naming** — profile vocabulary for the composition/deployment split | ✅ done · [MIGRATION-0.49](MIGRATION-0.49.md) | `HostProfile → DeploymentProfile`, `PalmApp → PalmKernel`; anchored `CompositionProfile` |
+| **0.49** | **Naming** — profile vocabulary for the composition/deployment split | ✅ done · [MIGRATION-0.49](docs/migrations/MIGRATION-0.49.md) | `HostProfile → DeploymentProfile`, `PalmApp → PalmKernel`; anchored `CompositionProfile` |
 | **0.50** | **Composition Profiles** — declare the app's shape; profile-driven services + surfaces | 🟢 landed (0.50.0–0.50.5f) · [VISION-0.50](docs/VISION-0.50.md) · [ADR-019](docs/adr/019-composition-profiles.md) | services (5e: both roots build via one `core_service_registry()`) + surfaces profile-driven; embedded/lean shapes real. **Reframed (0.50.5f):** `ServerContext` **retained** (surface-facing context + lean phenotype), not dissolved — the fold-in needs projections-as-capability first (→ 0.51) |
 | **0.51** | **Living Capabilities** — the profile's third axis comes alive; projections-as-capability | ✅ landed (0.51.0–0.51.6) · [VISION-0.51](docs/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md) | `composition.capabilities` now authoritative (resolver-derived, pinned; settings/deployment refine). Lean `ApplicationHost` is real — projection-less, submit + read complete. Scout ([SCOUT-0.51.6](docs/SCOUT-0.51.6-serverctx-foldin.md)) confirmed `ServerContext` stays (fold-in = churn, not simplification) |
 | **0.52** | **T6 — The Living Library** (docs-as-code) | 🟡 open (0.52.0) · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md) | SOURCE/BUILD/SURFACE; root declutter; gates; thin `just docs-build` (no heavy frameworks). PD-019…021, PD-031 |

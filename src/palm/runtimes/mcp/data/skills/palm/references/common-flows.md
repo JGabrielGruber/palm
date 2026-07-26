@@ -52,7 +52,7 @@ When the user asks to **create or improve** a flow (not run a built-in one):
 - **Prerequisite**: session on `migrate-demo-source` (revision 1) — `palm flow start migrate-demo-source`
 - **Operator wizard**: `palm flow start migrate-instance-demo` — confirm → dry-run → apply
 - **API**: `palm_definitions_analyze_impact` → `palm_definitions_migrate_instance(dry_run=True)` → apply
-- See [MIGRATION-0.24.md](../../../../MIGRATION-0.24.md)
+- See [MIGRATION-0.24.md](../../../migrations/MIGRATION-0.24.md)
 
 ## General pattern (running any flow)
 

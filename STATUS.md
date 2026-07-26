@@ -36,7 +36,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 |-------|--------|
 | 0.52.0 Plan + ADR-021 | ✅ |
 | 0.52.1 Gates green — doc mirrors + `sync_version` copies them (PD-031) | ✅ |
-| 0.52.2+ declutter, shelves, thin builder, assemble… | pending |
+| 0.52.2 Root declutter — RELEASE → `docs/releases/`, MIGRATION → `docs/migrations/` (PD-021) | ✅ |
+| 0.52.3+ shelves, stamps, thin builder, assemble… | pending |
 
 ## Key Capabilities (Mature)
 
@@ -61,7 +62,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 **Vision document:** [docs/VISION-0.13.md](docs/VISION-0.13.md)  
 **Operator guide:** [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md)  
 **Phase refactor:** [src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md)  
-**Release checklist:** [RELEASE-0.13.0.md](RELEASE-0.13.0.md)
+**Release checklist:** [RELEASE-0.13.0.md](docs/releases/RELEASE-0.13.0.md)
 
 | Component | Status |
 |-----------|--------|
@@ -75,7 +76,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 ## 0.12 — Compositional Power (Shipped)
 
 **Vision document:** [docs/VISION-0.12.md](docs/VISION-0.12.md)  
-**Migration:** [MIGRATION-0.12.md](MIGRATION-0.12.md)  
+**Migration:** [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md)  
 **ADR:** [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
 
 ## Pattern app alignment (June 2026)
@@ -195,8 +196,8 @@ just mcp-inspector                       # MCP Inspector UI
 
 **Vision:** [docs/VISION-0.16.md](docs/VISION-0.16.md)  
 **ADR:** [docs/adr/005-service-domain-api.md](docs/adr/005-service-domain-api.md)  
-**Migration:** [MIGRATION-0.16.md](MIGRATION-0.16.md)  
-**Release checklist:** [RELEASE-0.16.5.md](RELEASE-0.16.5.md)
+**Migration:** [MIGRATION-0.16.md](docs/migrations/MIGRATION-0.16.md)  
+**Release checklist:** [RELEASE-0.16.5.md](docs/releases/RELEASE-0.16.5.md)
 
 | Component | Status |
 |-----------|--------|
@@ -213,7 +214,7 @@ just mcp-inspector                       # MCP Inspector UI
 
 **Design:** [docs/superpowers/specs/2026-07-01-0.17-service-completion-design.md](docs/superpowers/specs/2026-07-01-0.17-service-completion-design.md)  
 **Plan:** [docs/superpowers/plans/2026-07-01-0.17-service-completion.md](docs/superpowers/plans/2026-07-01-0.17-service-completion.md)  
-**Migration:** [MIGRATION-0.17.md](MIGRATION-0.17.md)
+**Migration:** [MIGRATION-0.17.md](docs/migrations/MIGRATION-0.17.md)
 
 | Phase | Theme | Status |
 |-------|-------|--------|
@@ -228,7 +229,7 @@ just mcp-inspector                       # MCP Inspector UI
 **Design:** [docs/superpowers/specs/2026-07-01-assist-domain-design.md](docs/superpowers/specs/2026-07-01-assist-domain-design.md)  
 **Plan:** [docs/superpowers/plans/2026-07-01-assist-domain.md](docs/superpowers/plans/2026-07-01-assist-domain.md)  
 **ADR:** [docs/adr/006-assist-domain.md](docs/adr/006-assist-domain.md)  
-**Migration:** [MIGRATION-0.18.md](MIGRATION-0.18.md) · **Release:** [RELEASE-0.18.0.md](RELEASE-0.18.0.md)
+**Migration:** [MIGRATION-0.18.md](docs/migrations/MIGRATION-0.18.md) · **Release:** [RELEASE-0.18.0.md](docs/releases/RELEASE-0.18.0.md)
 
 | Phase | Theme | Status |
 |-------|-------|--------|
@@ -236,7 +237,7 @@ just mcp-inspector                       # MCP Inspector UI
 
 ## 0.19 — Stable MCP proxy (Shipped)
 
-**Migration:** [MIGRATION-0.19.md](MIGRATION-0.19.md) · **Release:** [RELEASE-0.19.0.md](RELEASE-0.19.0.md)
+**Migration:** [MIGRATION-0.19.md](docs/migrations/MIGRATION-0.19.md) · **Release:** [RELEASE-0.19.0.md](docs/releases/RELEASE-0.19.0.md)
 
 | Phase | Theme | Status |
 |-------|-------|--------|
@@ -245,7 +246,7 @@ just mcp-inspector                       # MCP Inspector UI
 
 ## 0.20 — Assistant vs Powertool Views (Shipped)
 
-**Migration:** [MIGRATION-0.20.md](MIGRATION-0.20.md) · **Design:** [docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md](docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md)
+**Migration:** [MIGRATION-0.20.md](docs/migrations/MIGRATION-0.20.md) · **Design:** [docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md](docs/superpowers/specs/2026-07-01-assistant-powertool-views-design.md)
 
 | Release | Theme | Status |
 |---------|-------|--------|
@@ -310,7 +311,7 @@ just mcp-inspector                       # MCP Inspector UI
 | Documentation + MCP surface cleanup | ✅ 0.24.4 (0.25.0) |
 | **Design Service** | ✅ 0.25.0 — propose/validate/impact/commit + auto-migrate |
 
-**Release:** [RELEASE-0.25.0.md](RELEASE-0.25.0.md) · **Migration:** [MIGRATION-0.24.md](MIGRATION-0.24.md) · [MIGRATION-0.25.md](MIGRATION-0.25.md)
+**Release:** [RELEASE-0.25.0.md](docs/releases/RELEASE-0.25.0.md) · **Migration:** [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) · [MIGRATION-0.25.md](docs/migrations/MIGRATION-0.25.md)
 
 ### 0.25.1–0.26.0 (shipped locally)
 
@@ -472,7 +473,7 @@ just mcp-inspector                       # MCP Inspector UI
 ### 0.36–0.39 — Reactive platform foundations (shipped in 0.39.0)
 
 **Vision:** [docs/VISION-0.36.md](docs/VISION-0.36.md) (§12a landed vs open)  
-**Release:** [RELEASE-0.39.0.md](../RELEASE-0.39.0.md)
+**Release:** [RELEASE-0.39.0.md](docs/releases/RELEASE-0.39.0.md)
 
 | Train | Focus | Status |
 |-------|--------|--------|
@@ -516,11 +517,11 @@ just mcp-inspector                       # MCP Inspector UI
 - [AGENTS.md](AGENTS.md)
 - [DEVELOPMENT.md](DEVELOPMENT.md)
 - [docs/MCP.md](docs/MCP.md) — agent development with Palm MCP
-- [RELEASE-0.16.5.md](RELEASE-0.16.5.md) — release checklist
-- [MIGRATION-0.16.md](MIGRATION-0.16.md) — upgrade from 0.15.x
-- [MIGRATION-0.24.md](MIGRATION-0.24.md) — definition revisioning & instance migration (0.24+)
-- [MIGRATION-0.25.md](MIGRATION-0.25.md) — Design Service operator workflow (0.25+)
-- [RELEASE-0.25.0.md](RELEASE-0.25.0.md) — 0.25.0 release checklist
+- [RELEASE-0.16.5.md](docs/releases/RELEASE-0.16.5.md) — release checklist
+- [MIGRATION-0.16.md](docs/migrations/MIGRATION-0.16.md) — upgrade from 0.15.x
+- [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) — definition revisioning & instance migration (0.24+)
+- [MIGRATION-0.25.md](docs/migrations/MIGRATION-0.25.md) — Design Service operator workflow (0.25+)
+- [RELEASE-0.25.0.md](docs/releases/RELEASE-0.25.0.md) — 0.25.0 release checklist
 - Examples: `examples/README.md`
 
 ## How to Contribute

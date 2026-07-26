@@ -4,9 +4,9 @@
 
 **Bundles:** 0.25.1–0.25.13 (post-0.25.0 hardening)
 
-**Vision:** [docs/VISION-0.25.md](docs/VISION-0.25.md)  
-**ADRs:** [008](docs/adr/008-design-service.md) · [009](docs/adr/009-service-cqrs-contributors.md)  
-**Migration:** [MIGRATION-0.25.md](MIGRATION-0.25.md) (no breaking changes vs 0.25.0)
+**Vision:** [docs/VISION-0.25.md](../VISION-0.25.md)  
+**ADRs:** [008](../adr/008-design-service.md) · [009](../adr/009-service-cqrs-contributors.md)  
+**Migration:** [MIGRATION-0.25.md](../migrations/MIGRATION-0.25.md) (no breaking changes vs 0.25.0)
 
 ## Pre-ship
 

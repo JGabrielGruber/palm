@@ -34,7 +34,7 @@ palm_assist(alias="design-entry/start") → intent → name_or_base → complete
 
 ### Handoff `kind: design` (0.30.3+)
 
-`design_action` is typically `publish_flow` / `publish_resource`. Always read `operator_hint`. See [MIGRATION-0.30.md](../../../../MIGRATION-0.30.md).
+`design_action` is typically `publish_flow` / `publish_resource`. Always read `operator_hint`. See [MIGRATION-0.30.md](../../../migrations/MIGRATION-0.30.md).
 
 ---
 

@@ -165,7 +165,7 @@ with ApplicationHost(profile=DeploymentProfile.all_in_one()) as host:
 
 **Extensible plugins** stay in `palm.patterns`, `palm.providers`, and `palm.storages` — each is a Django-style app subpackage with its own `registry.py`. Add the app name to `INSTALLED_PATTERNS` / `INSTALLED_PROVIDERS` / `INSTALLED_STORAGES`; never modify core to add a plugin.
 
-See [ApplicationHost, CQRS, and reliability](#applicationhost-cqrs-and-reliability-010) and [MIGRATION-0.10.md](MIGRATION-0.10.md).
+See [ApplicationHost, CQRS, and reliability](#applicationhost-cqrs-and-reliability-010) and [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md).
 
 ---
 
@@ -959,6 +959,6 @@ New production code must not import from `archive/`.
 - [SCOPE.md](SCOPE.md) — vision, in/out of scope, roadmap
 - [docs/VISION-0.12.md](docs/VISION-0.12.md) — 0.12 Resource System vision
 - [README.md](README.md) — quick start and CLI
-- [MIGRATION-0.10.md](MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
+- [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
 - [DEVELOPMENT.md](DEVELOPMENT.md) — contributor guide
 - [AGENTS.md](AGENTS.md) — contribution rules

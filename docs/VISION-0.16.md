@@ -76,4 +76,4 @@ palm/core/
 - Spec: [docs/superpowers/specs/2026-06-30-service-registry-dynamic-rest-design.md](superpowers/specs/2026-06-30-service-registry-dynamic-rest-design.md)
 - Plan: [docs/superpowers/plans/2026-06-30-service-registry-dynamic-rest.md](superpowers/plans/2026-06-30-service-registry-dynamic-rest.md)
 - ADR: [docs/adr/005-service-domain-api.md](adr/005-service-domain-api.md) (0.16); [ADR 004](adr/004-cqrs-schemas-service-layer.md) (0.15 foundation)
-- Migration: [MIGRATION-0.16.md](../MIGRATION-0.16.md)
+- Migration: [MIGRATION-0.16.md](migrations/MIGRATION-0.16.md)

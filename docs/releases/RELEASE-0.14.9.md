@@ -94,7 +94,7 @@ Create GitHub release from tag `v0.14.9`:
 
 ## Agent onboarding (communicate in release notes)
 
-Coding agents should read [docs/MCP.md](docs/MCP.md) and load `palm://agent/guide` at session start.
+Coding agents should read [docs/MCP.md](../MCP.md) and load `palm://agent/guide` at session start.
 
 **Operator loop:** definitions → submit → inspect → input → wait on children → resume
 

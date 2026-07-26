@@ -2,7 +2,7 @@
 
 **Theme:** MCP boot fix, null param coercion, human-first `palm_assist` defaults.
 
-**Builds on:** [0.21.6](RELEASE-0.21.6.md) · **Plan:** [docs/superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md](docs/superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md)
+**Builds on:** [0.21.6](RELEASE-0.21.6.md) · **Plan:** [docs/superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md](../superpowers/plans/2026-07-01-0.21.7-weak-llm-mcp.md)
 
 ## Pre-ship
 

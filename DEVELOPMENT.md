@@ -112,7 +112,7 @@ palm_definitions_migrate_instance(instance_id, target_revision=N, dry_run=True)
 palm_definitions_migrate_instance(instance_id, target_revision=N)
 ```
 
-See [MIGRATION-0.24.md](MIGRATION-0.24.md) and example `migrate-instance-demo` in `examples/README.md`.
+See [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) and example `migrate-instance-demo` in `examples/README.md`.
 
 ### Developing MCP itself
 
@@ -596,7 +596,7 @@ Host tests: `tests/test_application_host_cqrs.py`, `tests/test_cqrs_phase4.py`, 
 
 - [SCOPE.md](SCOPE.md) — vision, scope, and roadmap
 - [ARCHITECTURE.md](ARCHITECTURE.md) — ApplicationHost, CQRS, reliability
-- [MIGRATION-0.10.md](MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
+- [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
 - [README.md](README.md) — quick start and CLI
 - [CHANGELOG.md](CHANGELOG.md) — release history
 

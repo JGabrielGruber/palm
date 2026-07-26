@@ -41,7 +41,7 @@ PALM_MCP_REQUIRE_INPUT_TOKEN=0                  # set to 1 for agent hardening
 
 ## Docker
 
-Add to `.env` or `docker-compose.yml` environment block. See [docs/DOCKER.md](docs/DOCKER.md).
+Add to `.env` or `docker-compose.yml` environment block. See [docs/DOCKER.md](../DOCKER.md).
 
 ## Breaking changes
 

@@ -60,7 +60,7 @@ Transactional wizard with validation, auto-generated **summary**, and **commit**
 palm flow start onboard
 ```
 
-**Compensation (optional):** register an undo handler for `persist_profile` on `default_compensation_registry()` if your commit performs partial external writes. See [MIGRATION-0.10.md](../MIGRATION-0.10.md).
+**Compensation (optional):** register an undo handler for `persist_profile` on `default_compensation_registry()` if your commit performs partial external writes. See [MIGRATION-0.10.md](../docs/migrations/MIGRATION-0.10.md).
 
 ## Data ingestion (`data-ingestion`)
 
@@ -248,4 +248,4 @@ palm version --full
 
 - [README.md](../README.md) — installation and CLI reference
 - [ARCHITECTURE.md](../ARCHITECTURE.md) — ApplicationHost, CQRS, reliability
-- [MIGRATION-0.10.md](../MIGRATION-0.10.md) — upgrade from older bootstrap paths
+- [MIGRATION-0.10.md](../docs/migrations/MIGRATION-0.10.md) — upgrade from older bootstrap paths

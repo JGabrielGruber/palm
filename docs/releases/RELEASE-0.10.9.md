@@ -82,4 +82,4 @@ Create GitHub release from tag `v0.10.9`:
 | `status --full` = doctor | `status --full` = detailed **dashboard**; use `doctor` for health |
 | Direct `app.list_instances()` in CLI paths | `host.list_instance_views()` via query bus |
 
-Full guide: [MIGRATION-0.10.md](MIGRATION-0.10.md)
+Full guide: [MIGRATION-0.10.md](../migrations/MIGRATION-0.10.md)

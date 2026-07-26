@@ -279,7 +279,7 @@ Catalog flows are **append-only revisions**. Running instances pin `flow_revisio
 
 **Operator loop:** impact → dry-run → apply. Example wizard: `migrate-instance-demo` (see `examples/README.md`).
 
-`GET flow` accepts `?revision=N`. `update_flow` publishes `latest+1` (no overwrite). See [MIGRATION-0.24.md](../MIGRATION-0.24.md).
+`GET flow` accepts `?revision=N`. `update_flow` publishes `latest+1` (no overwrite). See [MIGRATION-0.24.md](migrations/MIGRATION-0.24.md).
 
 ---
 

@@ -74,7 +74,7 @@ lands as a modular `app/host/<concern>/` subpackage (see Layout). Host LOC track
 | **0.48.4** | Seam 5 — `app/host/lifecycle/` — `RuntimeSpawner` (spawn runtimes) + `RecoveryCoordinator` (worker readiness, compensation, outbox/webhook, projection rebuild) (816→671) | ✅ | no |
 | **0.48.5** | Seam 2a — `app/host/wiring/` — projection build+register extracted to root-agnostic `build_host_projections`/`register_host_projections` (671→663) | ✅ | no |
 | **0.48.6** | Seam 2b — **broke the latent cycle** (below): lazy composition-root exports in `common/runtimes/server/__init__` (PEP 562), then folded `cqrs_wiring.py` into `app/host/wiring/cqrs.py`. Wiring package now complete + order-independent | ✅ | no |
-| **0.48.7** | Seam 6 — **relocated `ServerContext` + `ServerApp`** out of `common` → `runtimes/server/` (**PD-013 closed**). Kills the 2 `context→services` upward edges (`MAX_UPWARD` 5→3); reusable server infra stays in `common`. [MIGRATION-0.48.md](../MIGRATION-0.48.md) | ✅ | **yes** (import path) |
+| **0.48.7** | Seam 6 — **relocated `ServerContext` + `ServerApp`** out of `common` → `runtimes/server/` (**PD-013 closed**). Kills the 2 `context→services` upward edges (`MAX_UPWARD` 5→3); reusable server infra stays in `common`. [MIGRATION-0.48.md](migrations/MIGRATION-0.48.md) | ✅ | **yes** (import path) |
 | **0.48.8** | **Dead-accessor removal** — dropped 8 `@property` accessors with zero repo-wide consumers (whole-repo sweep verified) (662→629 LOC) | ✅ | **yes** (accessors) |
 
 **T2 re-scoped (0.48.8):** the *structural* decomposition is **complete** — 6 seams extracted into modular
