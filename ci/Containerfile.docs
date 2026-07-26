@@ -16,10 +16,18 @@ ENV UV_PYTHON=3.12
 
 # Pin Tailwind 4.x CLI (same family as docs/package.json). Global install =
 # no npm install step on every hermetic spawn.
+#
+# @import "tailwindcss" in input.css resolves the package via Node from the CSS
+# file's directory — without NODE_PATH that fails in a bare /workspace seed
+# ("Can't resolve 'tailwindcss' in '/workspace/styles'").
 RUN npm install -g \
         "@tailwindcss/cli@4.3.0" \
         "tailwindcss@4.3.0" \
-    && npm cache clean --force
+    && npm cache clean --force \
+    && npm root -g > /etc/npm-global-root
+
+# Point Node module resolution at the global store (path from `npm root -g`).
+ENV NODE_PATH=/usr/lib/node_modules
 
 WORKDIR /workspace
 CMD ["/bin/bash"]

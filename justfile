@@ -262,12 +262,14 @@ docs-css-sandbox:
     set -euo pipefail
     docs_dir="$PWD/docs"
     test -f "$docs_dir/styles/input.css" || { echo "error: missing docs/styles/input.css" >&2; exit 1; }
+    # NODE_PATH so @import "tailwindcss" resolves from the global image install
+    # (seed is bare docs/ — no local node_modules).
     neonroot spawn palm-docs-css \
         --image palm-docs --vault palm-docs --sandbox \
         --seed "$docs_dir" \
         --output "$docs_dir/styles/output.css:styles/output.css" \
         -- \
-        sh -c 'tailwindcss -i styles/input.css -o styles/output.css'
+        sh -c 'export NODE_PATH="$(npm root -g)${NODE_PATH:+:$NODE_PATH}"; tailwindcss -i styles/input.css -o styles/output.css'
     echo "✅ docs/styles/output.css rebuilt via palm-docs (--output after success)"
 
 # Library build in NeonRoot palm-docs — git-archive seed + export deploy canopy.
