@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.51.6` · **Themes:** `0.52` Living Library (in progress) · **`0.53.0` Sovereign Runners opened**  
+**Current Version:** `0.51.6` · **Theme open:** **`0.54.0` Library Pipeline**  
 **Last Updated:** July 26, 2026  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist remote · Portal/WS · Analytics + dashboards · WorkIntent / journal · event stream · composition profiles (0.49–0.51) · **0.52 Living Library** · **0.53 NeonRoot provider (plan)** · Debt paydown 0.46–0.48 (T1/T3/T2).
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52 Living Library** · **0.53 Sovereign Runners (landed)** · **0.54 Library Pipeline (plan)** · Debt paydown 0.46–0.48.
 
 ## Quick Overview
 
@@ -44,24 +44,26 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.52.6 Builder v0 — `just docs-build` → `_build/` + deploy canopy; wrangler → `_build/deploy` | ✅ |
 | 0.52.7+ optional stubs (DocsService / agent map / history policy) | pending |
 
-## 0.53 — Sovereign Runners (open)
+## 0.53 — Sovereign Runners (landed)
 
 **Vision:** [docs/VISION-0.53.md](docs/VISION-0.53.md) · **ADR:** [docs/adr/022-neonroot-provider.md](docs/adr/022-neonroot-provider.md)  
-**Theme:** NeonRoot as a Palm **provider** — hermetic `spawn` / tool images (`palm-ci`, `palm-docs`) as resources. Enables thin workspaces and honest 0.54 dogfood.  
-**Not this minor:** Palm docs pipeline (→ 0.54).
+**Theme:** NeonRoot as a Palm **provider** — hermetic `spawn` / tool images (`palm-ci`, `palm-docs`), doctor, Assist, composition capability `neonroot`.  
+**Unlocks:** orchestrate work *beyond* Palm (docs canopy now; **Postgres/Mongo adapter tests later** — see 0.54 horizon).
 
 | Patch | Status |
 |-------|--------|
-| 0.53.0 Plan + ADR-022 | ✅ |
-| 0.53.1 Provider scaffold + honest `health` | ✅ |
-| 0.53.2 `spawn` — git-archive seed + command | ✅ |
-| 0.53.3 Resource bindings + example definitions | ✅ |
-| 0.53.4 palm-docs image + docs-css-sandbox | ✅ |
-| 0.53.5 NeonRoot `--output` / seed-exclude in recipes + provider | ✅ |
-| 0.53.6 Doctor neonroot section | ✅ |
-| 0.53.7 Assist discover + MCP neonroot examples | ✅ |
-| 0.53.8 Composition capability `neonroot` + settings flag | ✅ |
-| **0.53 theme** | ✅ closed — next [0.54 Library Pipeline](docs/VISION-0.54.md) |
+| 0.53.0–0.53.8 | ✅ closed |
+
+## 0.54 — Library Pipeline (open)
+
+**Vision:** [docs/VISION-0.54.md](docs/VISION-0.54.md) · **ADR:** [docs/adr/023-library-pipeline.md](docs/adr/023-library-pipeline.md)  
+**Theme:** Palm **pipeline definition** rebuilds the Living Library via neonroot resources (not `just` in a step).  
+**Horizon (not this minor):** real postgres/mongodb/graphql tests in NeonRoot images, same grammar (PD-022).
+
+| Patch | Status |
+|-------|--------|
+| 0.54.0 Plan + ADR-023 | ✅ |
+| 0.54.1+ flow definition, e2e, Assist, failure semantics, docs | pending |
 
 ## Key Capabilities (Mature)
 

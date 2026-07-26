@@ -96,7 +96,8 @@ providers/<name>/
 | **file** | resource, design | params | provider_registry, design_contributor |
 | **graphql** | — (stub) | — | provider_registry |
 | **postgres** | — (stub) | — | provider_registry |
-| **neonroot** | 0.53.3 — `health` + `spawn`; `bindings/resource` | — | provider_registry · optional host CLI |
+| **neonroot** | 0.53 — `health` + `spawn` (+ exclude/output); doctor section | — | provider_registry · composition capability `neonroot` |
+| **postgres** / **mongodb** | stubs / untested (PD-022) | — | **Future:** real round-trips via NeonRoot test images + Palm flows ([VISION-0.54](VISION-0.54.md) horizon) |
 
 ---
 

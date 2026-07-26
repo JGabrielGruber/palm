@@ -4,6 +4,9 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.54 — Library Pipeline ([VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-library-pipeline.md))
+- **0.54.0** — Plan + ADR-023. Palm pipeline owns Living Library rebuild graph via neonroot resources. Horizon: postgres/mongodb adapter runners (PD-022) using the same grammar.
+
 ### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
 - **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.
 - **0.53.1** — `palm.providers.neonroot` scaffold: ProviderApp + registry, `health` / `describe`, honest failure when CLI missing; `spawn` listed but not yet implemented.
