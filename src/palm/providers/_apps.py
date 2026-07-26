@@ -14,7 +14,6 @@ INSTALLED_PROVIDERS: tuple[str, ...] = (
     "kv",
     "file",
     "neonroot",  # 0.53 — optional host CLI; health is honest when missing
-    "library",  # 0.54.4 — Living Library corpus publish into storage
 )
 
 

@@ -96,9 +96,8 @@ providers/<name>/
 | **file** | resource, design | params | provider_registry, design_contributor |
 | **graphql** | — (stub) | — | provider_registry |
 | **postgres** | — (stub) | — | provider_registry |
-| **neonroot** | 0.53 — `health` + `spawn` (+ exclude/output); doctor section | — | provider_registry · composition capability `neonroot` |
-| **library** | 0.54.4 — publish_wiki / status / get into LibraryStore | — | provider_registry · Living Library product |
-| **postgres** / **mongodb** | stubs / untested (PD-022) | — | **Future:** real round-trips via NeonRoot test images + Palm flows ([VISION-0.54](VISION-0.54.md) horizon) |
+| **neonroot** | 0.53 — `health` + `spawn` (+ exclude/output); doctor section | — | provider_registry · composition capability `neonroot` · hermetic jobs (0.54) |
+| **postgres** / **mongodb** | stubs / untested (PD-022) | — | **Future:** NeonRoot test images + Palm DAG/resource graphs |
 
 ---
 

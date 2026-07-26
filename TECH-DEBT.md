@@ -187,7 +187,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 ### T7 — Placeholders & untested adapters
 
 **PD-022 — DB adapters untested.** `S2 · layer · Effort L · Testability` — `providers/postgres`, `providers/graphql`, `storages/postgres`, `storages/mongodb` have only registry-presence assertions; no behavioral round-trips (05-adapter-gaps.txt). Ties to PD-030.
-- **Future direction (post-0.53 runners):** implement real round-trips **inside NeonRoot tool images** (e.g. `palm-postgres-test`), orchestrated by Palm resource steps / flows — same grammar as the Living Library pipeline ([VISION-0.54](docs/VISION-0.54.md) horizon). Host stays thin; drivers pin via extras when honest (PD-030).
+- **Future direction:** real round-trips **inside NeonRoot images**, orchestrated by Palm resource/DAG graphs ([VISION-0.54](docs/VISION-0.54.md) hermetic jobs). Host thin; pin extras when honest (PD-030).
 
 **PD-023 — Placeholder features registered as installed.** `S3 · module · Effort M · Truth-Seeking` — `common/transforms/rules/parquet_load.py` raises "not implemented yet"; `providers/graphql`/`providers/postgres` docstrings say "(placeholder)"; `patterns/dag`/`patterns/etl` are single-pass scaffolds (04-placeholders.txt). *Note:* dag/etl are STATUS-documented "honest placeholders" (partially accepted); the sharper concern is advertised-but-empty providers. Direction: gate placeholders behind an explicit "experimental" flag or don't register them.
 
@@ -241,7 +241,8 @@ tracker** — flip items as they close. Order follows the dependency roots above
 | **0.51** | **Living Capabilities** — the profile's third axis comes alive; projections-as-capability | ✅ landed (0.51.0–0.51.6) · [VISION-0.51](docs/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md) | `composition.capabilities` now authoritative (resolver-derived, pinned; settings/deployment refine). Lean `ApplicationHost` is real — projection-less, submit + read complete. Scout ([SCOUT-0.51.6](docs/SCOUT-0.51.6-serverctx-foldin.md)) confirmed `ServerContext` stays (fold-in = churn, not simplification) |
 | **0.52** | **T6 — The Living Library** (docs-as-code) | 🟡 open · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md) | SOURCE/BUILD/SURFACE; T6 PDs closed through 0.52.5; builder+deploy 0.52.6 |
 | **0.53** | **Sovereign Runners** — NeonRoot as provider | ✅ landed (0.53.0–0.53.8) · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md) | provider + palm-ci/docs images + doctor/assist + composition flag |
-| **0.54** | **Library Pipeline** — docs as storage dataset | 🟡 open (0.54.0) · [VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-library-pipeline.md) | Corpora → storage pin → DocsService; multi-resource produce; DB adapters later |
+| **0.54** | **Hermetic Jobs** — definition graphs + neonroot; DAG v0 | 🟡 open (0.54.0 replan) · [VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-hermetic-jobs.md) | Purpose test; docs product deferred |
+| **0.55** | **Docs dogfood domain** (optional) | queued · [VISION-0.55](docs/VISION-0.55.md) | Living Library as business process on hermetic jobs |
 | later | **Adapter runners** (T7 / PD-022) | queued | Postgres/Mongo/GraphQL real tests in NeonRoot images; pin extras; gate placeholders |
 | next | T5 — observability unification | queued | Likely breaks API → `MIGRATION` doc |
 | later | T4 — assist/MCP complexity + coverage | queued | |

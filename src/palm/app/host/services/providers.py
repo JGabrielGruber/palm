@@ -7,7 +7,7 @@ The six core services and their construction, declared as dependency-ordered
 ``HostServiceRegistry.build_all(ctx)``.
 
 Construction order encoded by ``depends_on``:
-``system``/``definitions`` → ``execution`` → ``assist``/``design``/``analytics``/``docs``.
+``system``/``definitions`` → ``execution`` → ``assist``/``design``/``analytics``.
 The ``assist.bind_analytics(analytics)`` cross-wire stays an explicit host
 post-build step (a mutual link, not a construction dependency).
 """
@@ -16,14 +16,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm import __version__
 from palm.app.host.services.registry import HostServiceContext, HostServiceRegistry, ServiceProvider
 from palm.services.analytics import AnalyticsService
 from palm.services.assist import AssistService
 from palm.services.definitions import DefinitionService
 from palm.services.design import DesignService
 from palm.services.design.factory import create_proposal_repository
-from palm.services.docs import DocsService
 from palm.services.execution import ExecutionService
 from palm.services.execution.flows import FlowExecutionService
 from palm.services.execution.processes import ProcessExecutionService
@@ -96,21 +94,6 @@ def _build_analytics(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
     )
 
 
-def _build_docs(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
-    """Living Library DocsService (0.54.3) — storage-backed list/get/status/rebuild."""
-
-    def _storage() -> Any:
-        return ctx.app.storage
-
-    return DocsService(
-        commands=ctx.command_bus,
-        queries=ctx.query_bus,
-        schemas=ctx.schemas,
-        storage_resolver=_storage,
-        palm_version=__version__,
-    )
-
-
 CORE_SERVICE_PROVIDERS: tuple[ServiceProvider, ...] = (
     ServiceProvider("system", _build_system),
     ServiceProvider("definitions", _build_definitions),
@@ -118,7 +101,6 @@ CORE_SERVICE_PROVIDERS: tuple[ServiceProvider, ...] = (
     ServiceProvider("assist", _build_assist, depends_on=("definitions", "execution", "system")),
     ServiceProvider("design", _build_design, depends_on=("definitions",)),
     ServiceProvider("analytics", _build_analytics, depends_on=("definitions", "execution")),
-    ServiceProvider("docs", _build_docs),
 )
 
 

@@ -1,133 +1,84 @@
-# VISION 0.54 — The Library Pipeline (docs as a Palm dataset)
+# VISION 0.54 — Hermetic Jobs (definition-driven work)
 
-**Status:** 🟢 **Open (0.54.0)** — plan refined: storage-backed library + DocsService + multi-corpus resources.  
-**ADR:** [023-library-pipeline.md](adr/023-library-pipeline.md)  
-**Depends on:** [VISION-0.52](VISION-0.52.md) (SOURCE / BUILD / SURFACE) · [VISION-0.53](VISION-0.53.md) (neonroot · **landed**) · [ADR-011](adr/011-local-document-resources.md) (tiered hot/cold KV)  
-**Not:** `subprocess(["just", …])` dogfood · DocsService that only `open()`s local `_build` · one god image / god resource
+**Status:** 🟢 **Open (0.54.0 replan)** — purpose-test theme. Prior 0.54 “library product in common / DocsService” **discarded**.  
+**ADR:** [023-hermetic-jobs.md](adr/023-hermetic-jobs.md) (supersedes library-pipeline framing).  
+**Depends on:** [VISION-0.53](VISION-0.53.md) Sovereign Runners (**landed**).  
+**Sequel:** [VISION-0.55](VISION-0.55.md) — optional **docs dogfood domain** (Living Library as a Palm business process).
 
-> *0.52 named the library. 0.53 gave it hermetic hands. 0.54 publishes the canopy into Palm’s own storage and serves it as a living product.*
-
----
-
-## True intent
-
-The Living Library is **not a folder we serve**. It is a **revisioned product** Palm:
-
-1. **Produces** hermetically (resources — often `neonroot`, sometimes pure `kv`/`file` copy),  
-2. **Publishes** into **Palm storage** (hot/cold KV — same durability stack as the rest of the engine),  
-3. **Queries** via **DocsService** (API / Assist / MCP / later SSR),  
-4. **Optionally exports** a pin to disk or Cloudflare (`_build` / edge = phenotype, not source of truth).
-
-Disk `docs/` remains **SOURCE** (humans edit markdown, hand landing page).  
-Storage holds **published corpora** (the live docs).  
-Rebuild cleanly = new revision + pin, not mutate a magically shared directory.
+> *Does Palm fulfill its purpose?*  
+> Business graphs are **definitions**. Foreign code and toolchains run in **NeonRoot** (tmpfs workspaces).  
+> Palm does not `import` customer generators. Docs is a **later optional pack**, not the theme center.
 
 ---
 
-## Three planes
+## Why replan
+
+The first 0.54 pass grew `common.library`, a domain `library` provider, and DocsService too early. That:
+
+- thickened **common** with product DNA  
+- mixed **platform** with **dogfood domain**  
+- under-tested the real gap: **DAG / multi-step resource graphs** and **payload → runner**  
+
+0.53 already gave honest hands (`neonroot` spawn, seed/exclude/output, images).  
+0.54 must prove Palm can **orchestrate work** with those hands — not invent a docs CMS.
+
+---
+
+## True intent (purpose test)
+
+| Claim | Proof in 0.54 |
+|-------|----------------|
+| Rules are definitions | At least one multi-step **flow/process** (resource graph) for hermetic work |
+| No arbitrary code in engine | Heavy steps = **neonroot** only |
+| Simple steps stay light | Pure Palm resources/transforms without isolation |
+| Core stays general | No Living Library product in `common` |
+| Optional domains later | DocsService / corpora → **0.55** |
+
+Living Library **SOURCE/BUILD** from 0.52 (`docs/wiki`, `just docs-build`, palm-docs CSS) remains tooling.  
+It is **not** the 0.54 platform feature set.
+
+---
+
+## Concepts
+
+### A. Palm graph (business process)
+
+Wizard resource chains today; **real `dag` pattern** is the growth target (currently a placeholder).
+
+Nodes = resource invokes. Edges = order/deps. State = instance/job.
+
+### B. Hermetic job (NeonRoot)
+
+| NeonRoot | Role |
+|----------|------|
+| **Image** | Toolchain |
+| **Workspace (tmpfs)** | Fast disposable work tree (seed → RAM → run → reap) |
+| **Vault** | Images + optional committed workspaces |
+| **spawn** | One-shot job; `--output` promotes artifacts |
+| **bind** (planned) | Palm-owned host dir as live work tree — less copy when needed |
+
+Palm stores **handles + status** in job state; not workspace trees in the engine.
+
+### C. Two produce modes
+
+| Mode | When |
+|------|------|
+| **In-process Palm** | kv, file, transforms, rest — no foreign runtime |
+| **Hermetic** | Python/Node/DB tools — **only** via neonroot |
+
+### D. Payload (later slices; don’t overbuild 0.54.0)
+
+“Run this module/project” = payload **reference** (git-archive, path policy, later artifact id) → materialize/seed → neonroot.  
+Security: allowlists, no free `eval`. Not the first slice.
+
+### E. Palm-owned run layout (optional, when bind exists)
 
 ```text
-                    ┌─────────────────────────────────────┐
-   SERVE            │  DocsService · REST · MCP · Assist   │
-   (query/present)  │  list / get / status / rebuild()     │
-                    └──────────────────▲──────────────────┘
-                                       │ read pin + blobs
-                    ┌──────────────────┴──────────────────┐
-   STORE            │  Palm storage — namespace library/*   │
-   (durable truth)  │  tiered KV hot/cold · revisions      │
-                    └──────────────────▲──────────────────┘
-                                       │ publish (write)
-                    ┌──────────────────┴──────────────────┐
-   PRODUCE          │  Resources per corpus (not one god)  │
-   (hermetic build) │  neonroot · kv · file · …            │
-                    └─────────────────────────────────────┘
+{data_dir}/palm/hermetic/runs/{run_id}/
+  payload/ | input/ | output/ | meta.json
 ```
 
-| Plane | Owns | Does not own |
-|-------|------|----------------|
-| **PRODUCE** | Generators in runners; resource defs | Serving HTTP |
-| **STORE** | Blobs + manifests + current pin | Tailwind / Node |
-| **SERVE** | Catalog, get page, trigger rebuild flow | Hand-editing SOURCE |
-
----
-
-## Corpora (distinct resources, few images)
-
-**Images** = tooling phenotypes (`palm-docs`, later slim inventory image).  
-**Resources** = products you publish.
-
-| Corpus id | Producer (sketch) | Stored product |
-|-----------|-------------------|----------------|
-| `wiki` | Normalize/copy SOURCE wiki (light; may skip container) | pages + index |
-| `api` | Public packages / signatures inventory | tree JSON (+ optional HTML later) |
-| `sdk` | Services, composition vocabulary, registries | structured JSON |
-| `mcp` | MCP tool catalog (assist/full surfaces) | tool rows |
-| `adr` | ADR index + bodies | pages + index |
-| `site` | Landing + CSS (palm-docs + Tailwind) | static assets / hashed blobs |
-
-Each corpus → **ResourceDefinition**(s) e.g. `docs-corpus-wiki-publish`, `docs-corpus-mcp-publish`.  
-Pipeline/wizard: rebuild **one** or **all** — composition of resources.
-
-No god resource that “builds the entire internet.”
-
----
-
-## Storage layout (sketch — lock in 0.54.x)
-
-Namespace **`library`** (tiered KV when durable host storage):
-
-```text
-library/meta/current                 → { revision, corpora: { wiki: r1, api: r1, … }, built_at }
-library/revisions/{rev}/manifest     → full build record (generators, palm version)
-library/{corpus}/{rev}/{path…}       → blob + content metadata
-library/{corpus}/latest              → optional alias → rev (or only global current pin)
-```
-
-- **Append-friendly:** new rev, then flip `meta/current` (definition-revision spirit, 0.24).  
-- **Hot:** indexes and current pin.  
-- **Cold:** full bodies and older revs.  
-- **Clean rebuild:** produce into new rev; pin only on success of the graph (or pin partial corpus revs if we allow per-corpus pins — prefer global pin v0 for simplicity).
-
----
-
-## DocsService (domain API)
-
-Composition: `services` includes **`"docs"`** (extend `ServiceName` when implemented).
-
-| Method / concern | Behavior |
-|------------------|----------|
-| `list_corpora` / `list(corpus, rev?)` | Catalog from storage pin |
-| `get(corpus, path, rev?)` | Blob + metadata |
-| `status` | Current revision, per-corpus health, last build |
-| `rebuild(corpus \| all)` | Submit pipeline / resource graph — **does not** shell `just` |
-| Present | Assist views, MCP `palm://docs/…` progressive cards |
-
-**Out of scope for DocsService:** multi-author CMS, editing SOURCE markdown, owning NeonRoot CLI details (resource engine does).
-
-`GET /v1/docs` OpenAPI hub today is **unrelated** — keep name collision in mind (`/v1/library` or `/v1/api/docs/library` when REST lands).
-
----
-
-## Pipeline shape (ADR-023)
-
-| Decision | Choice |
-|----------|--------|
-| Pattern | **Pipeline** v0 (linear publish graph) |
-| Steps | Resources: health → per-corpus publish → pin current |
-| Work units | Generators inside images / stdlib scripts; Palm orchestrates |
-| Host `_build` / Cloudflare | **Optional export phenotype** after pin (`--output` or export resource) |
-| `just docs-*` | Peer metabolism for humans; not the product truth |
-
-### Graph (v0)
-
-```text
-neonroot-health?
-  → publish wiki      → storage
-  → publish mcp/api   → storage   (can parallel later)
-  → publish site/css  → storage
-  → pin meta/current
-  → (optional) export pin → docs/_build/deploy for edge
-```
+Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare commits.
 
 ---
 
@@ -135,68 +86,52 @@ neonroot-health?
 
 | Patch | Scope |
 |-------|--------|
-| **0.54.0** | Plan (this doc) + ADR-023 refined ✅ |
-| **0.54.1** ✅ | Storage schema + publish helpers (`palm.common.library`, pin) |
-| **0.54.2** ✅ | Wiki corpus publish SOURCE → storage (`publish_wiki_corpus`, `just library-publish-wiki`) |
-| **0.54.3** ✅ | **DocsService** stub: list/get/status/rebuild(`wiki`) over pin |
-| **0.54.4** ✅ | Library provider + `rebuild-living-library` resource graph (wizard steps) |
-| **0.54.5** | Characterization tests (mock neonroot / memory KV) |
-| **0.54.6** | Assist / MCP progressive `palm://docs/…` or discover |
-| **0.54.7** | Optional edge export phenotype; LIBRARY/DEVELOPMENT dual metabolism docs |
-| **0.54.8** | Second corpus (mcp or api) — proves multi-resource model |
-
----
-
-## Horizon (not this minor)
-
-### Postgres / Mongo / GraphQL (T7 / PD-022)
-
-Same grammar: **produce under isolation, result is Palm-truth or green tests** — not “hope the laptop has Docker.”
-
-```text
-Palm flow
-  → neonroot.spawn(palm-postgres-test, pytest adapter suite)
-  → pin extras when honest; gate placeholders (PD-023)
-```
-
-Library Pipeline is the **template** for adapter runners.
-
-### Later library growth
-
-Search, full API HTML, SSR surface `docs_ssr`, multi-rev browse UI, analytics *about* the library (page counts) as a true analytics dataset.
+| **0.54.0** | This replan + ADR-023 rewrite; discard library/DocsService implementation |
+| **0.54.1** | Spec + tests: hermetic job resource contract (neonroot params: image, seed, command, outputs, excludes) — tighten docs/examples only if needed |
+| **0.54.2** | Dogfood **definition**: multi-step resource graph using **only** general providers (e.g. neonroot-health → neonroot spawn docs_build or true) — **no** library provider |
+| **0.54.3** | **DAG pattern v0** — nodes = resource invokes, linear deps first (or honest subset); replace placeholder tick |
+| **0.54.4** | DAG + neonroot: fan-out or multi-node hermetic example |
+| **0.54.5** | Run-dir contract / bind-mode notes when NeonRoot supports bind; GC policy |
+| **0.54.6** | Second dogfood process (e.g. “hermetic ci slice”) proving non-docs reuse |
+| **0.54.7** | Docs: DEVELOPMENT / AGENTS — purpose test; point Living Library product to 0.55 |
 
 ---
 
 ## Explicit non-goals (0.54)
 
-- Full CMS / multi-author wiki in storage as SOURCE  
-- Replacing git SOURCE with only KV  
-- Implementing real DB adapters  
-- One container that builds every corpus forever  
-- Deleting `just docs-build`  
+- DocsService / `services/docs`  
+- `common.library` product store  
+- `library` provider  
+- Multi-corpus docs CMS  
+- Whole-tree sync as product default  
+- Implementing postgres adapters (horizon only)
+
+---
+
+## Horizon
+
+| Theme | Content |
+|-------|---------|
+| **0.55** | Optional **docs dogfood domain** — Living Library as business process on hermetic jobs + kv; DocsService optional composition |
+| **Later** | Payload artifact registry; DAG advanced scheduling; adapter runners (PD-022) via neonroot |
 
 ---
 
 ## Exit criteria
 
-- At least one corpus is **published into Palm storage** and readable via **DocsService**  
-- Rebuild path is a **Palm definition / resource graph**, not `just` inside a step  
-- Pin/revision story is explicit and testable  
-- Multi-corpus *shape* is proven (second corpus or clear extension point)  
-- Edge/`_build` is documented as export, not live truth  
-- Horizon for DB adapters recorded in TECH-DEBT / PROVIDER-APPS  
-- Suite green  
+- Prior docs-product 0.54 code **gone**; suite green  
+- Written contract for hermetic job nodes  
+- At least one **definition-only** multi-step hermetic flow (general providers)  
+- DAG pattern **meaningfully less placeholder** than today  
+- Second non-docs example or clear path  
+- 0.55 vision named for docs domain  
 
 ---
 
-## Spirit check
+## Spirit
 
-- **Register downward** — corpora and DocsService at the edges  
-- **Storage is memory** — hot/cold, not ad-hoc files for live serve  
-- **Hermetic produce** — runners build; Palm stores and serves  
-- **Dataset, not folder** — revisioned product with clean rebuild  
-- **Unlock** — same hands hold docs today and databases tomorrow  
+Palm orchestrates. NeonRoot isolates (tmpfs-fast, disposable).  
+Definitions are the business process.  
+Docs inspires later — it does not own the engine.
 
----
-
-*The canopy is published, not merely rendered. Palm remembers what it published.* 🌴📚
+*Purpose first. Dogfood second. Domain last.* 🌴

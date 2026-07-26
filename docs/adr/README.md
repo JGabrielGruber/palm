@@ -37,11 +37,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [020](020-living-capabilities.md) | Living capabilities — third axis (0.51) | Accepted |
 | [021](021-living-library.md) | The Living Library — SOURCE / BUILD / SURFACE (0.52) | Accepted |
 | [022](022-neonroot-provider.md) | NeonRoot as a Palm provider — Sovereign Runners (0.53) | Accepted |
-| [023](023-library-pipeline.md) | Library Pipeline — Palm owns the docs build graph (0.54) | Accepted |
+| [023](023-hermetic-jobs.md) | Hermetic jobs — NeonRoot as job runner, Palm as graph (0.54 replan) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
-**Next free number:** 024.
+**Next free number:** 024.  
+**Note:** Earlier 0.54 “library pipeline / DocsService” draft was **replanned**; docs product domain → [VISION-0.55](../VISION-0.55.md).
 
 ## How to add an ADR
 

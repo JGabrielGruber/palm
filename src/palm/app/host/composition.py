@@ -20,9 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal, Self
 
-ServiceName = Literal[
-    "system", "definitions", "execution", "assist", "design", "analytics", "docs"
-]
+ServiceName = Literal["system", "definitions", "execution", "assist", "design", "analytics"]
 SurfaceName = Literal["rest", "websocket", "mcp", "explorer", "studio"]
 Capability = Literal[
     "work_drain",
@@ -43,7 +41,6 @@ ALL_SERVICES: tuple[ServiceName, ...] = (
     "assist",
     "design",
     "analytics",
-    "docs",  # 0.54.3 — Living Library DocsService
 )
 #: Minimal services for an embedded/library shape — no assist/design/analytics chrome.
 CORE_SERVICES: tuple[ServiceName, ...] = ("system", "definitions", "execution")

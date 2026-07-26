@@ -34,11 +34,11 @@ Sync: `just docs-sync-mirrors` or `just bump-version` ([PD-031](../TECH-DEBT.md)
 ## SURFACES (consume artifacts / SOURCE, do not invent a second truth)
 
 - **Cloudflare** — assembled canopy `docs/_build/deploy` after `just docs-build` (wrangler assets; adjust host build command as needed).
-- **SSR / DocsService** — late 0.52 stub or later; list/get over the same tree.
 - **MCP / agents** — `palm://…` and skill mirrors over the same genome.
-- **Hermetic rebuild (0.53+)** — NeonRoot provider + **palm-docs** / **palm-ci** ([VISION-0.53](VISION-0.53.md), [ci/README.md](../ci/README.md)). Tailwind: `just docs-css-sandbox`.  
-- **Palm library product (0.54+)** — hermetic **corpus** resources publish into **Palm storage** (`LibraryStore`); wiki: `just library-publish-wiki` / `publish_wiki_corpus`. **DocsService** serves the pin ([VISION-0.54](VISION-0.54.md)). `just docs-build` / `_build` = edge **export**, not live truth.  
-- **Horizon:** API/SDK/MCP corpora; DB adapters (postgres/mongo) in NeonRoot images (PD-022).
+- **Hermetic rebuild (0.53+)** — NeonRoot + palm-docs / palm-ci ([VISION-0.53](VISION-0.53.md), [ci/README.md](../ci/README.md)).
+- **Hermetic jobs / DAG (0.54)** — definition-driven work; tools only via neonroot ([VISION-0.54](VISION-0.54.md)).
+- **Docs dogfood domain (0.55)** — optional Living Library business process + DocsService ([VISION-0.55](VISION-0.55.md)).
+- **Horizon:** DB adapters in NeonRoot images (PD-022).
 
 ## Wiki map
 
