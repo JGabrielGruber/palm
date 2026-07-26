@@ -235,4 +235,6 @@ data/*
 
 # NeonRoot local CI vault — hot/cold storage + built image tarballs.
 # The tracked source of the image is ci/Containerfile; the vault itself is local.
+# NeonRoot local vault (images, workspaces) — rebuild via `just ci-image` / `docs-image`.
+# Do not commit vault contents; track ci/Containerfile* + recipes instead. See ci/README.md.
 .neonroot/

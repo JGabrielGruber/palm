@@ -28,7 +28,8 @@ the T2 complexity debt (PD-009). Blocking CI on mypy would block on the refactor
    from **`git archive HEAD`** (git-tracked files only — no stale `data/`/`.venv`) and runs `just ci`
    inside it (`neonroot spawn --sandbox`). Hermetic, local, offline, reproducible.
 2. **Image as tracked source.** [`ci/Containerfile`](../../ci/Containerfile) (Arch + git + just + uv;
-   `UV_PYTHON=3.12`) is committed; the built image + vault live in a git-ignored `.neonroot/`.
+   `UV_PYTHON=3.12`) is committed; the built image + vault live in a git-ignored `.neonroot/`
+   (local vault path for this repo — same class as `data/`; see [ci/README.md](../../ci/README.md)).
    Build/refresh with `just ci-image`.
 3. **`just ci` = the gate:** ruff check + `guard_core.py` + the **full** suite (`pytest -q` with
    `--extra cli --extra mcp --group dev`, matching the green baseline incl. MCP tests) — all blocking —
