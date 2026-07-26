@@ -7,6 +7,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 ### 0.54 — Library Pipeline ([VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-library-pipeline.md))
 - **0.54.0** — Plan + ADR-023 **refined**: live docs = **storage-backed corpora** (hot/cold KV); multi-resource publish (not god build); **DocsService** read/rebuild API; `_build`/edge optional export. Horizon: DB adapter runners (PD-022).
 - **0.54.1** — `palm.common.library`: key layout, pin/manifest/blob models, `LibraryStore` publish + pin (StorageEngine-backed).
+- **0.54.2** — Wiki corpus: `publish_wiki_corpus` from `docs/wiki` SOURCE into storage + pin; `scripts/library_publish_wiki.py` / `just library-publish-wiki`.
 
 ### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
 - **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.

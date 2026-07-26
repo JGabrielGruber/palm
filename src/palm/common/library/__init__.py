@@ -4,6 +4,11 @@ Live docs truth is published products under ``palm:library:…`` keys, not host
 ``docs/_build``. See VISION-0.54 / ADR-023.
 """
 
+from palm.common.library.corpora.wiki import (
+    CORPUS_WIKI,
+    collect_wiki_blobs,
+    publish_wiki_corpus,
+)
 from palm.common.library.keys import (
     LIBRARY_PREFIX,
     key_blob,
@@ -21,16 +26,19 @@ from palm.common.library.models import (
 from palm.common.library.store import LibraryStore, new_revision_id
 
 __all__ = [
+    "CORPUS_WIKI",
     "LIBRARY_PREFIX",
     "LibraryBlobRecord",
     "LibraryCorpusPin",
     "LibraryManifest",
     "LibraryPin",
     "LibraryStore",
+    "collect_wiki_blobs",
     "key_blob",
     "key_corpus_index",
     "key_current_pin",
     "key_manifest",
     "new_revision_id",
     "normalize_blob_path",
+    "publish_wiki_corpus",
 ]

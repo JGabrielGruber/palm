@@ -235,6 +235,12 @@ publish: build
 docs-css:
     bash scripts/docs_css.sh
 
+# Publish docs/wiki SOURCE into Palm library storage (0.54.2) — live pin, not _build.
+library-publish-wiki:
+    @echo "📚 Publishing wiki corpus → Palm library storage…"
+    uv run python scripts/library_publish_wiki.py
+    @echo "✅ library pin updated (wiki corpus)"
+
 # Living Library builder v0 (0.52.6) — stdlib only → docs/_build/ (+ deploy canopy).
 docs-build:
     @echo "📚 Building Living Library → docs/_build/…"
@@ -363,6 +369,7 @@ help:
     @echo "   just docs-css         → Rebuild docs site Tailwind CSS (host Node)"
     @echo "   just docs-image       → Build NeonRoot palm-docs image (Tailwind + uv)"
     @echo "   just docs-css-sandbox → Tailwind via palm-docs (no host node_modules)"
+    @echo "   just library-publish-wiki → Publish docs/wiki → Palm storage pin"
     @echo "   just docs-build       → Living Library → docs/_build (+ deploy canopy)"
     @echo "   just docs-build-all   → docs-css + docs-build"
     @echo "   just docs-build-sandbox → hermetic docs-build via palm-docs image"
