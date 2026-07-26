@@ -96,6 +96,37 @@ HERMETIC_JOB_SMOKE_PROCESS = ProcessDefinition(
     },
 )
 
+# 0.54.3 — same graph as a real DAG pattern (resource nodes, implicit linear chain)
+HERMETIC_JOB_DAG_FLOW = FlowDefinition(
+    id="flow-hermetic-job-dag",
+    name="hermetic-job-dag",
+    pattern="dag",
+    options={
+        "nodes": [
+            {
+                "id": "preflight",
+                "resource_ref": "hermetic-preflight",
+                "output_key": "hermetic_preflight",
+            },
+            {
+                "id": "run_true",
+                "resource_ref": "hermetic-true-job",
+                "output_key": "hermetic_true_job",
+            },
+        ],
+    },
+)
+
+HERMETIC_JOB_DAG_PROCESS = ProcessDefinition(
+    id="proc-hermetic-job-dag",
+    name="hermetic-job-dag",
+    flows=[HERMETIC_JOB_DAG_FLOW],
+    metadata={
+        "example": True,
+        "description": "0.54.3 DAG pattern dogfood: same neonroot nodes as hermetic-job-smoke",
+    },
+)
+
 
 def register_definitions(repository: object) -> None:
     save_resource = getattr(repository, "save_resource", None)
@@ -106,5 +137,7 @@ def register_definitions(repository: object) -> None:
         save_resource(HERMETIC_TRUE_JOB)
     if callable(save_flow):
         save_flow(HERMETIC_JOB_SMOKE_FLOW)
+        save_flow(HERMETIC_JOB_DAG_FLOW)
     if callable(save_process):
         save_process(HERMETIC_JOB_SMOKE_PROCESS)
+        save_process(HERMETIC_JOB_DAG_PROCESS)

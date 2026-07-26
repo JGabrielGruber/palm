@@ -36,13 +36,29 @@ NeonRoot workspaces run on **tmpfs** (fast, disposable). Promote results with
 | Plain Palm | `kv`, `file`, transforms, `rest` |
 | Hermetic job | `neonroot` + `spawn` |
 
-## Dogfood flow (0.54.2)
+## Dogfood flows
 
 ```bash
-palm flow start hermetic-job-smoke
+palm flow start hermetic-job-smoke   # wizard of resource steps (0.54.2)
+palm flow start hermetic-job-dag     # same graph as DAG pattern (0.54.3)
 ```
 
-Steps: `neonroot-health` → `neonroot-spawn-true` (needs `just ci-image` for spawn).
+Needs NeonRoot CLI; spawn step needs `just ci-image`.
+
+### DAG definition shape (v0)
+
+```yaml
+pattern: dag
+options:
+  nodes:
+    - id: preflight
+      resource_ref: hermetic-preflight
+    - id: run_true
+      resource_ref: hermetic-true-job
+      # depends_on: [preflight]  # optional; list order chains if all empty
+```
+
+One ready node per tick; state under `dag.*`.
 
 ## Docs product domain
 

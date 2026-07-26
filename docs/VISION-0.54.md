@@ -89,7 +89,7 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 | **0.54.0** ✅ | Replan + ADR-023 rewrite; discard library/DocsService implementation |
 | **0.54.1** ✅ | Hermetic job contract (`neonroot.contract`, [HERMETIC-JOBS.md](HERMETIC-JOBS.md)) + tests |
 | **0.54.2** ✅ | Dogfood flow `hermetic-job-smoke` (neonroot only: preflight → spawn true) |
-| **0.54.3** | **DAG pattern v0** — nodes = resource invokes, linear deps first (or honest subset); replace placeholder tick |
+| **0.54.3** ✅ | **DAG pattern v0** — resource nodes, depends_on / implicit chain, one node per tick |
 | **0.54.4** | DAG + neonroot: fan-out or multi-node hermetic example |
 | **0.54.5** | Run-dir contract / bind-mode notes when NeonRoot supports bind; GC policy |
 | **0.54.6** | Second dogfood process (e.g. “hermetic ci slice”) proving non-docs reuse |

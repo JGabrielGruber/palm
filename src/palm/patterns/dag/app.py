@@ -1,7 +1,5 @@
 """
-DAG pattern app manifest — declares Palm layer dependencies and registry hooks.
-
-Execution logic is still a placeholder; ``flow/`` is reserved for graph scheduling.
+DAG pattern app manifest — resource-node graphs with dependencies (0.54.3).
 """
 
 from __future__ import annotations
@@ -11,10 +9,11 @@ from palm.common.patterns.app import PatternApp
 
 class DagApp(PatternApp):
     name = "dag"
-    label = "Directed acyclic graph"
+    label = "Directed acyclic graph of resource nodes"
     palm_layers = (
         "core.behavior_tree",
         "core.context",
+        "core.resource",
         "common.patterns",
         "definitions.flow",
     )

@@ -76,13 +76,14 @@ palm flow start ingest-wizard
 palm process submit data-ingestion
 ```
 
-## Hermetic job smoke (`hermetic-job-smoke`, 0.54)
+## Hermetic jobs (0.54)
 
-Purpose-test flow — multi-step resources using **only** `neonroot`::
+Purpose-test flows — **only** `neonroot` resources::
 
-    palm flow start hermetic-job-smoke
+    palm flow start hermetic-job-smoke   # wizard resource chain
+    palm flow start hermetic-job-dag     # DAG pattern v0
 
-See [docs/HERMETIC-JOBS.md](../docs/HERMETIC-JOBS.md). Spawn step needs `just ci-image`.
+See [docs/HERMETIC-JOBS.md](../docs/HERMETIC-JOBS.md). Spawn needs `just ci-image`.
 
 ## NeonRoot runners (`neonroot-*` resources, 0.53)
 
