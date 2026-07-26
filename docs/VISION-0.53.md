@@ -126,7 +126,7 @@ params:
 | **0.53.1** ✅ | Provider scaffold — `ProviderApp` + registry + `health` (honest fail if CLI missing) | Edge registration |
 | **0.53.2** ✅ | `spawn` — git-archive seed + command; characterization tests (mock or neonroot-if-present) | Core verb |
 | **0.53.3** ✅ | Resource bindings + example definitions (`neonroot_runners`) | ResourceEngine path |
-| **0.53.4** | `palm-docs` image (or extend palm-ci) + Tailwind-in-image path; `just docs-css-sandbox` | Thin workspace option |
+| **0.53.4** ✅ | `palm-docs` image + Tailwind-in-image; `just docs-image` / `docs-css-sandbox` / `docs-build-sandbox` | Thin workspace option |
 | **0.53.5** | Wire just recipes through provider-friendly entrypoints (`docs-build-sandbox` stays; optional Palm CLI/resource) | Operator UX |
 | **0.53.6** | Events + doctor surface (spawn lifecycle; neonroot section) | Observability |
 | **0.53.7** | Assist / MCP path *(optional)* — “run hermetic check/build” via resource or thin assist alias | Operator loop |

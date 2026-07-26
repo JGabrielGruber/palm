@@ -1,0 +1,25 @@
+# palm-docs image (NeonRoot) — Living Library + landing CSS tooling (0.53.4).
+#
+# Arch base + git + just + uv + Node, with pinned Tailwind CLI installed
+# globally so host `docs/node_modules` is optional.
+#
+# Source of truth: this file. `just docs-image` copies it into the local
+# `.neonroot` vault and builds `palm-docs`. Rebuild after pin bumps.
+FROM docker.io/library/archlinux:latest
+
+RUN pacman -Syu --noconfirm --needed \
+        git just uv ca-certificates nodejs npm \
+    && pacman -Scc --noconfirm
+
+# Match palm-ci: uv provisions Python at run time.
+ENV UV_PYTHON=3.12
+
+# Pin Tailwind 4.x CLI (same family as docs/package.json). Global install =
+# no npm install step on every hermetic spawn.
+RUN npm install -g \
+        "@tailwindcss/cli@4.3.0" \
+        "tailwindcss@4.3.0" \
+    && npm cache clean --force
+
+WORKDIR /workspace
+CMD ["/bin/bash"]

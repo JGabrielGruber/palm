@@ -62,8 +62,8 @@ NEONROOT_SPAWN_DOCS_BUILD = ResourceDefinition(
     provider="neonroot",
     action="spawn",
     params={
-        "image": "palm-ci",
-        "vault": "palm-ci",
+        "image": "palm-docs",
+        "vault": "palm-docs",
         "seed": "git-archive",
         "command": ["uv", "run", "python", "scripts/docs_build.py"],
         "sandbox": True,
@@ -72,8 +72,8 @@ NEONROOT_SPAWN_DOCS_BUILD = ResourceDefinition(
     metadata={
         "example": True,
         "description": (
-            "Living Library builder inside NeonRoot (0.52 work unit + 0.53 runner). "
-            "Needs uv+python in the image; palm-docs image is 0.53.4+."
+            "Living Library builder inside NeonRoot palm-docs (0.52 work unit + 0.53.4 image). "
+            "Build once with `just docs-image`."
         ),
         "tags": ["neonroot", "spawn", "docs", "living-library"],
         "theme": "0.53",

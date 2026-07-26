@@ -231,9 +231,9 @@ publish: build
     @echo '✅ Published to PyPI. Users can: pip install palmengine[cli]'
 
 # Tailwind for the handcrafted landing page (SOURCE styles, not library BUILD).
+# Host path: needs Node (docs/node_modules or npx). Prefer `just docs-css-sandbox` for thin desks.
 docs-css:
-    cd docs && npx @tailwindcss/cli -i styles/input.css -o styles/output.css
-    @echo "✅ docs/styles/output.css rebuilt"
+    bash scripts/docs_css.sh
 
 # Living Library builder v0 (0.52.6) — stdlib only → docs/_build/ (+ deploy canopy).
 docs-build:
@@ -244,16 +244,36 @@ docs-build:
 # Optional: rebuild landing CSS then the library (local polish before publish).
 docs-build-all: docs-css docs-build
 
-# Hermetic library build in NeonRoot (git-seeded; no Node required).
+# Build/refresh NeonRoot palm-docs image (Tailwind + uv; host Node optional).
+docs-image:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p .neonroot
+    neonroot vault add palm-docs "$PWD/.neonroot" 2>/dev/null || true
+    neonroot image create palm-docs --template minimal --vault palm-docs 2>/dev/null || true
+    cp ci/Containerfile.docs .neonroot/images/palm-docs/Containerfile
+    neonroot image build palm-docs --vault palm-docs
+    echo "✅ palm-docs image built — now: just docs-css-sandbox | docs-build-sandbox"
+
+# Tailwind via palm-docs image (no host node_modules required).
+# Seeds the workspace path so output.css can land on the host when seed is writable.
+docs-css-sandbox:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    neonroot spawn palm-docs-css --image palm-docs --vault palm-docs --sandbox --seed "$PWD" -- \
+        bash scripts/docs_css.sh
+    echo "✅ docs-css via palm-docs image"
+
+# Library build in NeonRoot palm-docs (git-archive seed = hermetic verify; no write-back).
 docs-build-sandbox:
     #!/usr/bin/env bash
     set -euo pipefail
     seed="$(mktemp -d)"
     trap 'rm -rf "$seed"' EXIT
     git archive HEAD | tar -x -C "$seed"
-    neonroot spawn palm-docs-build --image palm-ci --vault palm-ci --sandbox --seed "$seed" -- \
-        just docs-build
-    echo "✅ hermetic docs-build passed in NeonRoot"
+    neonroot spawn palm-docs-build --image palm-docs --vault palm-docs --sandbox --seed "$seed" -- \
+        uv run python scripts/docs_build.py
+    echo "✅ hermetic docs-build passed in palm-docs (NeonRoot)"
 
 release-prep:
     @echo "📋 Release prep for {{package}}"
@@ -327,10 +347,12 @@ help:
     @echo "   just publish          → Build + PyPI (5s warning)"
     @echo "   just guard-common     → palm.common pattern boundary tests"
     @echo "   just docs-check       → Version + documentation surface consistency"
-    @echo "   just docs-css         → Rebuild docs site Tailwind CSS"
+    @echo "   just docs-css         → Rebuild docs site Tailwind CSS (host Node)"
+    @echo "   just docs-image       → Build NeonRoot palm-docs image (Tailwind + uv)"
+    @echo "   just docs-css-sandbox → Tailwind via palm-docs (no host node_modules)"
     @echo "   just docs-build       → Living Library → docs/_build (+ deploy canopy)"
     @echo "   just docs-build-all   → docs-css + docs-build"
-    @echo "   just docs-build-sandbox → hermetic docs-build via NeonRoot"
+    @echo "   just docs-build-sandbox → hermetic docs-build via palm-docs image"
     @echo "   just release-prep     → docs-check + full-check + build"
     @echo "   just demo-full        → examples/full_demo.py"
     @echo "   just mcp-inspector    → MCP Inspector UI for palm-mcp"

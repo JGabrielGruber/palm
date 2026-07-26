@@ -36,7 +36,7 @@ Sync: `just docs-sync-mirrors` or `just bump-version` ([PD-031](../TECH-DEBT.md)
 - **Cloudflare** — assembled canopy `docs/_build/deploy` after `just docs-build` (wrangler assets; adjust host build command as needed).
 - **SSR / DocsService** — late 0.52 stub or later; list/get over the same tree.
 - **MCP / agents** — `palm://…` and skill mirrors over the same genome.
-- **Hermetic rebuild (0.53+)** — NeonRoot provider spawns tool images ([VISION-0.53](VISION-0.53.md)); **Palm pipeline** that *is* the build is **0.54** ([VISION-0.54](VISION-0.54.md)).
+- **Hermetic rebuild (0.53+)** — NeonRoot provider + **palm-docs** / **palm-ci** images ([VISION-0.53](VISION-0.53.md), [ci/README.md](../ci/README.md)). Tailwind: `just docs-css-sandbox` (no host Node). **Palm pipeline** that *is* the build is **0.54** ([VISION-0.54](VISION-0.54.md)).
 
 ## Wiki map
 

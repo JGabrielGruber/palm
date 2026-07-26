@@ -56,7 +56,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.53.1 Provider scaffold + honest `health` | ✅ |
 | 0.53.2 `spawn` — git-archive seed + command | ✅ |
 | 0.53.3 Resource bindings + example definitions | ✅ |
-| 0.53.4+ images, doctor/assist | pending |
+| 0.53.4 palm-docs image + docs-css-sandbox | ✅ |
+| 0.53.5+ operator UX, doctor/assist | pending |
 
 ## Key Capabilities (Mature)
 

@@ -9,6 +9,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - **0.53.1** — `palm.providers.neonroot` scaffold: ProviderApp + registry, `health` / `describe`, honest failure when CLI missing; `spawn` listed but not yet implemented.
 - **0.53.2** — `spawn`: `image` + `command[]`, seed `git-archive` (default) or host path, optional vault/sandbox/isolated; returns exit code + stdout/stderr tails.
 - **0.53.3** — Resource bindings (`bindings/resource/descriptor`) + example resources `neonroot-health`, `neonroot-spawn-true`, `neonroot-spawn-docs-build`.
+- **0.53.4** — `palm-docs` NeonRoot image (`ci/Containerfile.docs`: uv + pinned Tailwind CLI); `just docs-image`, `docs-css-sandbox`, `docs-build-sandbox` on palm-docs; host `docs/node_modules` optional.
 
 ### 0.52 — The Living Library (docs-as-code · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md))
 - **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; thin `just docs-build`. Sequelae: 0.53 runners → 0.54 pipeline.
