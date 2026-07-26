@@ -57,13 +57,16 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 ## 0.54 — Library Pipeline (open)
 
 **Vision:** [docs/VISION-0.54.md](docs/VISION-0.54.md) · **ADR:** [docs/adr/023-library-pipeline.md](docs/adr/023-library-pipeline.md)  
-**Theme:** Palm **pipeline definition** rebuilds the Living Library via neonroot resources (not `just` in a step).  
-**Horizon (not this minor):** real postgres/mongodb/graphql tests in NeonRoot images, same grammar (PD-022).
+**Theme:** Documentation as a **storage-backed Palm product** — multi-corpus hermetic **publish** resources → pin in storage → **DocsService** list/get/rebuild. Disk `_build`/Cloudflare = optional **export**, not live truth.  
+**Horizon:** postgres/mongodb adapter tests in NeonRoot images (PD-022); more corpora (api/sdk).
 
 | Patch | Status |
 |-------|--------|
-| 0.54.0 Plan + ADR-023 | ✅ |
-| 0.54.1+ flow definition, e2e, Assist, failure semantics, docs | pending |
+| 0.54.0 Plan + ADR-023 (storage + DocsService + multi-corpus) | ✅ |
+| 0.54.1 Storage schema + pin | pending |
+| 0.54.2 First corpus publish → storage | pending |
+| 0.54.3 DocsService stub | pending |
+| 0.54.4+ pipeline, tests, Assist, export phenotype | pending |
 
 ## Key Capabilities (Mature)
 
