@@ -45,6 +45,7 @@ NeonRoot workspaces run on **tmpfs** (fast, disposable). Promote results with
 palm flow start hermetic-job-smoke    # wizard resource chain (0.54.2)
 palm flow start hermetic-job-dag      # linear DAG (0.54.3)
 palm flow start hermetic-job-fanout   # preflight → A‖B → join (0.54.4)
+palm flow start hermetic-ci-slice     # ruff → guard_core (0.54.6, non-docs)
 ```
 
 Needs NeonRoot CLI; spawn steps need `just ci-image`.

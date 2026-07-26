@@ -11,6 +11,8 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - **0.54.3** — DAG pattern v0: `nodes` with `resource_ref` / `depends_on` (implicit linear chain); `hermetic-job-dag` example flow.
 - **0.54.4** — DAG fan-out dogfood `hermetic-job-fanout` (preflight → two jobs → join); horizon note for Assist “run code”.
 - **0.54.5** — NeonRoot 0.2 `seed_mode` (`copy`\|`bind`) on hermetic job contract; [HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md); `just docs-css-bind`.
+- **0.54.6** — Non-docs dogfood DAG `hermetic-ci-slice`: preflight → hermetic ruff → guard_core.
+- **0.54.7** — DEVELOPMENT / AGENTS purpose-test notes; Living Library product domain deferred to 0.55.
 
 ### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
 - **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.

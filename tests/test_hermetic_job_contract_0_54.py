@@ -122,3 +122,40 @@ def test_hermetic_job_smoke_definitions() -> None:
     register_definitions(repo)
     # 2 resources + 3 flows + 3 processes (smoke + dag + fanout)
     assert repo.n == 8
+
+
+def test_hermetic_ci_slice_definitions() -> None:
+    """Non-docs dogfood: CI slice uses only neonroot (0.54.6)."""
+    from examples.definitions.hermetic_ci_slice import (
+        HERMETIC_CI_GUARD_CORE,
+        HERMETIC_CI_RUFF,
+        HERMETIC_CI_SLICE_FLOW,
+        register_definitions,
+    )
+
+    assert HERMETIC_CI_RUFF.provider == "neonroot"
+    assert HERMETIC_CI_GUARD_CORE.provider == "neonroot"
+    validate_hermetic_job_params(dict(HERMETIC_CI_RUFF.params))
+    validate_hermetic_job_params(dict(HERMETIC_CI_GUARD_CORE.params))
+
+    nodes = {n["id"]: n for n in HERMETIC_CI_SLICE_FLOW.options["nodes"]}
+    assert nodes["ruff"]["depends_on"] == ["preflight"]
+    assert nodes["guard_core"]["depends_on"] == ["ruff"]
+    assert HERMETIC_CI_SLICE_FLOW.pattern == "dag"
+
+    class _Repo:
+        def __init__(self) -> None:
+            self.n = 0
+
+        def save_resource(self, _r):
+            self.n += 1
+
+        def save_flow(self, _f):
+            self.n += 1
+
+        def save_process(self, _p):
+            self.n += 1
+
+    repo = _Repo()
+    register_definitions(repo)
+    assert repo.n == 4

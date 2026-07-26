@@ -83,6 +83,7 @@ Purpose-test flows — **only** `neonroot` resources::
     palm flow start hermetic-job-smoke    # wizard resource chain
     palm flow start hermetic-job-dag      # linear DAG
     palm flow start hermetic-job-fanout   # fan-out DAG (A‖B then join)
+    palm flow start hermetic-ci-slice     # ruff → guard_core (non-docs)
 
 See [docs/HERMETIC-JOBS.md](../docs/HERMETIC-JOBS.md). Spawn needs `just ci-image`.
 

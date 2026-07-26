@@ -592,14 +592,45 @@ pip install -i https://test.pypi.org/simple/ palmengine[cli]
 
 Host tests: `tests/test_application_host_cqrs.py`, `tests/test_cqrs_phase4.py`, `tests/test_cqrs_phase5.py`.
 
+## Hermetic jobs & purpose test (0.54)
+
+Palm should **orchestrate** work as definitions; foreign toolchains run only in
+**NeonRoot** (tmpfs workspaces). See [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md),
+[docs/HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md), [docs/VISION-0.54.md](docs/VISION-0.54.md).
+
+| Mode | Use |
+|------|-----|
+| Plain Palm | `kv`, `file`, transforms, `rest` — no isolation |
+| Hermetic job | `provider: neonroot`, `action: spawn` — image + seed + command |
+
+```bash
+just ci-image
+palm flow start hermetic-job-smoke     # preflight → true
+palm flow start hermetic-job-dag       # same as DAG
+palm flow start hermetic-job-fanout    # fan-out join
+palm flow start hermetic-ci-slice      # ruff → guard_core (non-docs dogfood)
+just docs-css-sandbox                  # copy + --output
+just docs-css-bind                     # NeonRoot 0.2 bind (live host)
+just ci-sandbox                        # full hermetic CI (justfile, not a flow)
+```
+
+**Living Library product domain** (DocsService, storage corpora as a product) is
+**0.55** — optional dogfood, not required for core Palm. Static docs tooling
+remains: `just docs-build`, wiki under `docs/wiki/`.
+
+**Assist “run code” (horizon):** pick image + payload → stage → neonroot.spawn →
+results; no in-engine `exec`.
+
 ## Related documents
 
 - [SCOPE.md](SCOPE.md) — vision, scope, and roadmap
 - [ARCHITECTURE.md](ARCHITECTURE.md) — ApplicationHost, CQRS, reliability
+- [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md) — hermetic job contract
+- [docs/VISION-0.54.md](docs/VISION-0.54.md) · [docs/VISION-0.55.md](docs/VISION-0.55.md)
 - [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
 - [README.md](README.md) — quick start and CLI
 - [CHANGELOG.md](CHANGELOG.md) — release history
 
 ---
 
-Last updated: June 2026 (0.13.13)
+Last updated: July 2026 (0.54 hermetic jobs)

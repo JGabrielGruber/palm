@@ -92,8 +92,8 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 | **0.54.3** ✅ | **DAG pattern v0** — resource nodes, depends_on / implicit chain, one node per tick |
 | **0.54.4** ✅ | DAG fan-out dogfood: `hermetic-job-fanout` (preflight → A‖B → join) |
 | **0.54.5** ✅ | NeonRoot 0.2 `seed_mode` in contract + [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md); `docs-css-bind` recipe |
-| **0.54.6** | Second dogfood process (e.g. hermetic ci slice) proving non-docs reuse |
-| **0.54.7** | Docs: DEVELOPMENT / AGENTS — purpose test; Living Library product → 0.55 |
+| **0.54.6** ✅ | Second dogfood: `hermetic-ci-slice` (ruff → guard_core, neonroot only) |
+| **0.54.7** ✅ | DEVELOPMENT + AGENTS purpose-test notes; Living Library product → 0.55 |
 
 ---
 
