@@ -1,9 +1,12 @@
-# VISION 0.55 — Living Library dogfood domain (optional)
+# VISION 0.55 — Session plane (lifecycle + subscriptions)
 
-**Status:** 📋 **Queued** — after [VISION-0.54](VISION-0.54.md) hermetic jobs / DAG purpose test.  
-**Theme:** Treat documentation as an **optional Palm business process** (analytics-shaped domain), not core platform.
+**Status:** 📋 **Queued** — after [VISION-0.54](VISION-0.54.md) hermetic jobs dogfood.  
+**Theme:** Treat the **session** as a first-class subject: lifecycle, multi-event subscriptions, optional storage projection — shared by Assist, dashboard, and composition.
 
-> *Palm already runs hermetic jobs and graphs. 0.55 asks Palm to use them for its own canopy — as a guest domain.*
+> *Hermetic run-code proved the loop. Operators and dashboards both need to watch a session live — without each surface inventing wait/poll hacks.*
+
+**ADR:** plan at `0.55.0` (session subscription contract; storage boundaries).  
+**Builds on:** [EVENT-PLANE.md](EVENT-PLANE.md) · public event catalog (0.42) · Assist bind (0.32) · events WS (0.42).
 
 ---
 
@@ -11,19 +14,31 @@
 
 | Do | Don’t |
 |----|--------|
-| Optional composition service **docs** when wanted | Force library product into every embed |
-| Definitions pack: rebuild process, resources, corpora as **config** | Grow product code in `palm.common` |
-| Use **neonroot** only for steps that need tools (CSS, generators) | Require neonroot for plain markdown pin |
-| Use **kv** / general storage for pins if product needs live query | Invent a second storage engine for docs |
-| Thin DocsService: status/get/trigger process | God service that owns NeonRoot + all generators |
+| **Session** = durable subject (`instance_id`) with lifecycle | Firehose all jobs to every client |
+| Multi-type **subscriptions** filtered by session/job | One-off Portal-only hacks |
+| One spine for **Assist + dashboard + composition** | Separate “chat bus” vs “ops bus” |
+| Thin **SessionService** (watch/list/projection) if product API needs it | God service owning orchestration |
+| Optional **storage** for session projection / watch registry | Second source of truth vs instance/job |
+| Public types + small payloads (ids, status, step) | Stream full stdout/bodies on the bus |
 
 ---
 
-## Depends on 0.54
+## Why now (after 0.54.10)
 
-- Hermetic job resource contract (neonroot)  
-- Multi-step definition graph (wizard chain and/or **dag**)  
-- Clear split: Palm graph vs tmpfs job  
+Dogfooding `hermetic-run-code` exposed the gap: long resource steps, Portal mid-wait, dashboard/ops wanting the same story. Fixes for auto-advance are necessary but not sufficient — Palm needs a **session subscription** primitive.
+
+---
+
+## Surfaces (same model)
+
+| Surface | Use |
+|---------|-----|
+| **Assist / Portal** | After bind: fan-in progress; turn remains “what next” |
+| **Dashboard / Explorer** | Watch many sessions or waiting fleet |
+| **Composition / inbound** | Precise “when this session finishes” |
+| **Events WS** | Generic multi-type + `filter.session_id` |
+
+Not HTTP SSE as the product contract (WS + in-process handlers). MCP may stay poll/meta-tool.
 
 ---
 
@@ -31,21 +46,35 @@
 
 | Patch | Direction |
 |-------|-----------|
-| **0.55.0** | Plan + ADR (docs domain boundaries) |
-| **0.55.1** | Definition pack: rebuild Living Library process |
-| **0.55.2** | Optional DocsService (compose-in) |
-| **0.55.3** | Assist/MCP progressive surface |
-| **0.55.4** | Corpora as high-level steps (wiki, mcp inventory, …) |
-| **0.55.5** | Edge export phenotype from product pin or host `_build` |
+| **0.55.0** | Plan + ADR: session lifecycle states, subscription filter, storage optional |
+| **0.55.1** | Events WS / in-process watch: `filter.session_id` \| `job_id` |
+| **0.55.2** | SessionWatch registry (common or execution) + tests |
+| **0.55.3** | Assist bind → optional progress/event fan-in |
+| **0.55.4** | Dashboard or REST “live waiting” dogfood |
+| **0.55.5** | SessionService compose-in + optional projection store |
+
+---
+
+## Deferred (was interim 0.55)
+
+**Living Library docs dogfood domain** (DocsService, corpora as process) → later minor (e.g. 0.56) after session plane lands. Static 0.52 tooling stays.
 
 ---
 
 ## Non-goals
 
-- Making docs required for Palm core  
-- Replacing 0.52 static `docs/` SOURCE  
-- Full CMS  
+- Replacing instance repository / job orchestration  
+- Full CMS or docs product in this theme  
+- Unfiltered global event dump to Portal  
 
 ---
 
-*Dogfood the canopy after the engine proves it can run real work.* 🌴📚
+## Depends on
+
+- 0.54 hermetic jobs + run-code dogfood  
+- Event plane: orchestration bus for job/flow lifecycle  
+- Public event catalog  
+
+---
+
+*Session is the human unit of work. Subscribe to its life.* 🌴📡

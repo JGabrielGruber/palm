@@ -85,7 +85,9 @@ class FlowSession:
         except (TypeError, RuntimeError, ValueError) as exc:
             raise exc
 
-        self._flows.wait_until_idle()
+        # Hermetic resource steps (neonroot) often exceed the default 5s idle wait;
+        # return only after the drive finishes or a long bound elapses.
+        self._flows.wait_until_idle(timeout=180.0)
         ctx = self.context(sync_gate=True)
         if slug is not None:
             ctx.detail["slug"] = slug
@@ -126,7 +128,7 @@ class FlowSession:
         except RuntimeError as exc:
             raise exc
 
-        self._flows.wait_until_idle()
+        self._flows.wait_until_idle(timeout=180.0)
         return self
 
     def resume_child_wait(self) -> SessionContext:

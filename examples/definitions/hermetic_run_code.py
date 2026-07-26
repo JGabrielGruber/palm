@@ -1,23 +1,27 @@
 """
-Hermetic run-code wizard — Assist-friendly, definition-persisted (0.54.9).
+Hermetic run-code — basic Palm flow dogfooding NeonRoot (0.54.9+).
 
-Like todo-builder: a **saved flow definition** operators start via Assist/CLI.
-User picks an image, pastes Python, Palm stages a run dir and executes via
-``neonroot.run_script`` (never in-engine exec).
+Textbook resource-action loop (no in-engine exec)::
+
+    1. Select image          → state.image
+    2. Write run file        → state.code  (staged as payload/main.py)
+    3. Run via resource      → neonroot.run_script
+    4. Store result in memory→ state.run_result / state.stdout / state.exit_code
+    5. Display to the user   → result step + summary
 
 ::
 
     palm flow start hermetic-run-code
+    # or palm_assist(params={flow_id: "hermetic-run-code"})
 
-Needs NeonRoot + image (e.g. ``just ci-image`` for palm-ci).
-
-More definitions later (optional): snippet libraries, multi-file projects,
-list_images resource, saved payload artifacts — not required for v0.
+Needs NeonRoot + image (``just ci-image`` for palm-ci).
 """
 
 from __future__ import annotations
 
 from palm.definitions import FlowDefinition, ProcessDefinition, ResourceDefinition
+
+# ── Resource: stage file + neonroot spawn (the action under test) ────────────
 
 HERMETIC_RUN_SCRIPT = ResourceDefinition(
     id="resource-hermetic-run-script",
@@ -36,12 +40,14 @@ HERMETIC_RUN_SCRIPT = ResourceDefinition(
     output_key="run_result",
     metadata={
         "example": True,
-        "description": "Stage Python code and run under allowlisted NeonRoot image",
-        "tags": ["hermetic-job", "run-code", "assist", "0.54"],
+        "description": "Stage payload/main.py and run under allowlisted NeonRoot image",
+        "tags": ["hermetic-job", "run-code", "assist", "neonroot", "0.54"],
         "theme": "0.54",
         "contract": "hermetic_job",
     },
 )
+
+# ── Flow: image → code → run → remember → show ───────────────────────────────
 
 HERMETIC_RUN_CODE_FLOW = FlowDefinition(
     id="flow-hermetic-run-code",
@@ -55,6 +61,10 @@ HERMETIC_RUN_CODE_FLOW = FlowDefinition(
                 "enum": ["palm-ci", "palm-docs"],
             },
             "code": {"type": "string", "minLength": 1},
+            # Memory after the resource call
+            "run_result": {"type": "object"},
+            "stdout": {"type": "string"},
+            "exit_code": {},
         },
         "required": ["image", "code"],
     },
@@ -63,49 +73,74 @@ HERMETIC_RUN_CODE_FLOW = FlowDefinition(
         "include_commit": False,
         "allow_backtrack": True,
         "steps": [
-            {
-                "slug": "intro",
-                "title": "Hermetic run-code",
-                "prompt": (
-                    "Run a short Python snippet in a NeonRoot image (tmpfs workspace). "
-                    "Palm stages the file and spawns the runner — code never executes "
-                    "inside the Palm engine. Images are allowlisted (palm-ci, palm-docs)."
-                ),
-                "step_kind": "introduction",
-                "required": False,
-            },
+            # 1 — select image
             {
                 "slug": "image",
                 "title": "Image",
-                "prompt": "Which NeonRoot image should run your code?",
+                "prompt": (
+                    "Pick a NeonRoot image. The runner stages your code into a "
+                    "disposable workspace and spawns this image (never executes "
+                    "inside Palm)."
+                ),
                 "field_type": "choice",
                 "choices": ["palm-ci", "palm-docs"],
                 "validation": [{"rule": "not_empty"}],
             },
+            # 2 — update run file content
             {
                 "slug": "code",
-                "title": "Python code",
+                "title": "Run file",
                 "prompt": (
-                    "Paste Python to run (written to payload/main.py). "
-                    "Example: print('hello from hermetic job')"
+                    "Python for payload/main.py. Use print(...) so stdout is captured. "
+                    "Example:\nprint('hello from hermetic job')\nprint(2 + 2)"
                 ),
                 "validation": [{"rule": "min_length", "params": {"min": 1}}],
             },
-            {
-                "slug": "preflight",
-                "title": "NeonRoot preflight",
-                "prompt": "Probe NeonRoot CLI",
-                "step_kind": "resource",
-                "resource_ref": "hermetic-preflight",
-                "output_key": "hermetic_preflight",
-            },
+            # 3 — resource action call (stage + neonroot spawn)
             {
                 "slug": "run",
-                "title": "Run script",
-                "prompt": "Stage and execute in the selected image",
+                "title": "Run",
+                "prompt": "Stage payload and invoke neonroot.run_script",
                 "step_kind": "resource",
                 "resource_ref": "hermetic-run-script",
                 "output_key": "run_result",
+            },
+            # 4 — store result as flat memory (for display + later steps)
+            {
+                "slug": "remember_stdout",
+                "step_kind": "transform",
+                "title": "Remember stdout",
+                "source_key": "run_result",
+                "target_key": "stdout",
+                "rule": "jsonpath_extract",
+                "options": {
+                    "path": "stdout",
+                    "default": "",
+                },
+            },
+            {
+                "slug": "remember_exit",
+                "step_kind": "transform",
+                "title": "Remember exit code",
+                "source_key": "run_result",
+                "target_key": "exit_code",
+                "rule": "jsonpath_extract",
+                "options": {
+                    "path": "exit_code",
+                    "default": -1,
+                },
+            },
+            # 5 — display to the user (prompt binds state → Assist/WS turn)
+            {
+                "slug": "result",
+                "title": "Result",
+                "step_kind": "introduction",
+                "required": False,
+                "prompt": (
+                    "NeonRoot run finished · exit {{ state.exit_code }}\n\n"
+                    "--- stdout ---\n"
+                    "{{ state.stdout }}"
+                ),
             },
         ],
     },
@@ -117,7 +152,10 @@ HERMETIC_RUN_CODE_PROCESS = ProcessDefinition(
     flows=[HERMETIC_RUN_CODE_FLOW],
     metadata={
         "example": True,
-        "description": "Assist run-code: choose image, paste Python, neonroot.run_script",
+        "description": (
+            "Basic NeonRoot loop: select image → write run file → "
+            "resource run_script → store result → display"
+        ),
     },
 )
 

@@ -61,6 +61,8 @@ def build_compose_status(
         "slug",
         "prompt_title",
         "prompt",
+        "auto_advance",
+        "output_key",
     ):
         value = wizard_inspect.get(key)
         if value is not None:

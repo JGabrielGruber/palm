@@ -430,6 +430,55 @@
     renderInput(payload);
     renderActions(payload.actions || []);
     scrollLogToEnd();
+    // Resource / transform steps auto-run — do not leave the operator typing free text.
+    maybeAutoAdvanceResource(payload);
+  }
+
+  /**
+   * When Assist lands on a non-interactive resource step (auto_advance), tick
+   * flows/session-resume so NeonRoot (and other resources) actually run.
+   */
+  function maybeAutoAdvanceResource(payload) {
+    if (!payload || state.pending) return;
+    const schema = payload.input || {};
+    const stepKind = schema.step_kind || (payload.compose && payload.compose.step_kind);
+    const interactive = schema.interactive;
+    const auto =
+      schema.auto_advance === true ||
+      interactive === false ||
+      stepKind === "resource" ||
+      schema.kind === "resource" ||
+      schema.widget === "resource" ||
+      schema.field_type === "resource";
+    // Only auto-tick when still waiting — mid-drive "running" is not resumeable.
+    const waiting =
+      payload.status === "waiting" || payload.status === "WAITING_FOR_INPUT";
+    if (!auto || !waiting) return;
+    // Prefer explicit resume CTA if present
+    const actions = payload.actions || [];
+    const resume = actions.find(
+      (a) =>
+        a &&
+        (a.alias === "flows/session-resume" ||
+          String(a.label || "").toLowerCase().includes("resume resource"))
+    );
+    if (resume) {
+      appendBubble("sys", "Running resource step…");
+      runAction(resume);
+      return;
+    }
+    if (!state.sessionId) return;
+    appendBubble("sys", "Running resource step…");
+    send({
+      op: "dispatch",
+      id: nextId(),
+      format: "assistant",
+      alias: "flows/session-resume",
+      params: {
+        session_id: state.sessionId,
+        flow_id: state.flowId || undefined,
+      },
+    });
   }
 
   function renderChoiceChips(choices, { menu } = {}) {
@@ -478,6 +527,22 @@
     let widget =
       (schema && schema.widget) || (choices.length ? "choice" : "text");
     if (menuMode) widget = "menu";
+
+    // Non-interactive resource / transform: lock composer (auto-advance handles resume)
+    const autoResource =
+      schema &&
+      (schema.interactive === false ||
+        schema.auto_advance === true ||
+        schema.kind === "resource" ||
+        schema.widget === "resource" ||
+        schema.field_type === "resource" ||
+        schema.step_kind === "resource");
+    if (autoResource && status !== "complete" && status !== "failed") {
+      textInput.placeholder = "Resource running…";
+      textInput.disabled = true;
+      btnSend.disabled = true;
+      return;
+    }
 
     setMenuSearchVisible(widget === "menu", state.menuSection);
 

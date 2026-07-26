@@ -298,16 +298,22 @@ class WizardResourceLeaf(LeafNode):
                     step_slug=self._ctx.step.slug,
                 ),
             )
-        state.set(
-            WizardKeys.RESOURCE_FEEDBACK,
-            format_resource_feedback(
-                self._ctx.step,
-                resource_id=str(resource_id) if resource_id else None,
-                provider=str(provider) if provider else None,
-                action=str(action) if action else None,
-                success=True,
-            ),
+        feedback = format_resource_feedback(
+            self._ctx.step,
+            resource_id=str(resource_id) if resource_id else None,
+            provider=str(provider) if provider else None,
+            action=str(action) if action else None,
+            success=True,
         )
+        # Surface hermetic / spawn stdout so Assist turns show the return value.
+        if isinstance(result_value, dict):
+            stdout = result_value.get("stdout_tail")
+            if isinstance(stdout, str) and stdout.strip():
+                preview = stdout.strip()
+                if len(preview) > 500:
+                    preview = preview[-500:]
+                feedback = f"{feedback}\n--- stdout ---\n{preview}"
+        state.set(WizardKeys.RESOURCE_FEEDBACK, feedback)
         state.set(
             f"{WizardKeys.RESOURCE_RESULT}:{self._ctx.step.slug}",
             result_value,

@@ -72,20 +72,25 @@ options:
 
 One ready node per tick (stable order among ready); state under `dag.*`.
 
-### Assist run-code (0.54.9)
+### Assist run-code (0.54.9) — basic NeonRoot loop
 
-Persisted wizard (like todo-builder)::
+Persisted wizard (like todo-builder). Textbook resource-action flow::
 
     palm flow start hermetic-run-code
     # or palm_assist(params={flow_id: "hermetic-run-code"})
 
-Steps: choose image → paste Python → preflight → ``neonroot.run_script``  
-(stages ``payload/main.py`` via [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md), spawn, return tails).
+| Step | What happens |
+|------|----------------|
+| **image** | Operator picks allowlisted NeonRoot image (`palm-ci` / `palm-docs`) |
+| **code** | Operator writes `payload/main.py` content (`print(...)` for stdout) |
+| **run** | Resource `hermetic-run-script` → `neonroot.run_script` (stage + spawn) |
+| **remember_*** | Transform extracts `stdout` / `exit_code` into wizard memory |
+| **result** | Display binds `{{ state.stdout }}` / `{{ state.exit_code }}` to the turn |
+| **summary** | Confirm answers (includes full `run_result`) |
 
-**Definitions needed (v0):** flow + process + one resource (`hermetic-run-script`).  
+Staging uses [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md). Not in-engine `exec`.  
+**Definitions (v0):** flow + process + resource `hermetic-run-script`.  
 **Later (optional):** multi-file projects, snippet catalog, `list_images`, saved artifacts.
-
-Not in-engine `exec`. Image allowlist: `palm-ci`, `palm-docs` (extend via `allowed_images`).
 
 ### DAG ready-set (0.54.8)
 

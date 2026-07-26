@@ -52,8 +52,16 @@ def test_run_script_stages_and_spawns(tmp_path: Path) -> None:
         )
     assert out["exit_code"] == 0
     assert out["stdout_tail"] == "hello\n"
+    assert out["stdout"] == "hello\n"
+    assert out["stderr"] == ""
     assert captured["params"]["seed_mode"] == "bind"
-    assert captured["params"]["command"] == ["python", "payload/main.py"]
+    assert captured["params"]["command"] == [
+        "uv",
+        "run",
+        "--no-project",
+        "python",
+        "payload/main.py",
+    ]
     # GC removes run dir by default
     assert list(tmp_path.joinpath("palm/hermetic/runs").glob("*")) == []
 
@@ -92,7 +100,19 @@ def test_hermetic_run_code_definitions() -> None:
     assert "{{ state.code }}" in str(HERMETIC_RUN_SCRIPT.params.get("code"))
     assert HERMETIC_RUN_CODE_FLOW.pattern == "wizard"
     steps = [s["slug"] for s in HERMETIC_RUN_CODE_FLOW.options["steps"]]
-    assert "image" in steps and "code" in steps and "run" in steps
+    # image → code → run (resource) → remember → display
+    assert steps == [
+        "image",
+        "code",
+        "run",
+        "remember_stdout",
+        "remember_exit",
+        "result",
+    ]
+    run_step = next(s for s in HERMETIC_RUN_CODE_FLOW.options["steps"] if s["slug"] == "run")
+    assert run_step["step_kind"] == "resource"
+    assert run_step["resource_ref"] == "hermetic-run-script"
+    assert run_step["output_key"] == "run_result"
 
     class _Repo:
         def __init__(self) -> None:

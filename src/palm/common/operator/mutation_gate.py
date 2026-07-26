@@ -102,19 +102,33 @@ def build_mutation_envelope(
     step_kind = inspect.get("step_kind")
     field_type = inspect.get("field_type")
     waiting = status == "WAITING_FOR_INPUT"
+    # Auto resource / transform ticks are not free-text answers.
+    auto_step = (
+        bool(inspect.get("auto_advance"))
+        or step_kind in {"resource", "transform"}
+        or field_type in {"resource", "transform"}
+    )
 
     mutations_allowed = waiting and status not in _TERMINAL
+    requires_user_input = mutations_allowed and not auto_step
     confirm_step = step_kind == "summary" or field_type == "confirm"
 
     payload: dict[str, Any] = {
         "mutations_allowed": mutations_allowed,
-        "requires_user_input": mutations_allowed,
+        "requires_user_input": requires_user_input,
         "step_slug": step,
     }
+    if auto_step and waiting:
+        payload["auto_advance"] = True
     if confirm_step:
         payload["confirm_step"] = True
         payload["agent_hint"] = (
             "Confirm step: do not send yes/no unless the user explicitly said yes or no."
+        )
+    elif auto_step and waiting:
+        payload["agent_hint"] = (
+            "Auto-advance resource/transform: call flows/session-resume "
+            "(do not send free-text value)."
         )
     elif not mutations_allowed:
         payload["agent_hint"] = (

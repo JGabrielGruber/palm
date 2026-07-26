@@ -51,15 +51,29 @@ def build_input_schema(
 
     field_type = composed.get("field_type")
     step_kind = composed.get("step_kind") or "input"
-    if not field_type and step_kind in {"resource", "transform", "branch"}:
+    # Resource leaves publish field_type="resource" + auto_advance — never free-text.
+    is_auto_step = (
+        step_kind in {"resource", "transform", "branch"}
+        or field_type in {"resource", "transform"}
+        or bool(composed.get("auto_advance"))
+    )
+    if is_auto_step and step_kind in {"resource", "transform", "branch", "input"}:
+        kind = step_kind if step_kind in {"resource", "transform", "branch"} else str(
+            field_type or "resource"
+        )
         schema: dict[str, Any] = {
-            "kind": step_kind,
+            "kind": kind,
             "step": composed.get("step") or composed.get("slug"),
+            "step_kind": step_kind if step_kind != "input" else kind,
+            "field_type": field_type or kind,
+            "widget": kind,
             "interactive": False,
+            "auto_advance": True,
+            "required": False,
         }
         if composed.get("resource_ref"):
             schema["resource_ref"] = composed["resource_ref"]
-        return schema
+        return {k: v for k, v in schema.items() if v is not None}
 
     if not field_type and not choices and step_kind not in {"collection", "summary", "commit"}:
         if status == "waiting":

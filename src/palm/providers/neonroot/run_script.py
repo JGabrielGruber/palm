@@ -18,8 +18,12 @@ from palm.providers.neonroot.spawn import resolve_repo_root, run_spawn
 # Security: only these images by default (override via params.allowed_images).
 DEFAULT_ALLOWED_IMAGES: tuple[str, ...] = ("palm-ci", "palm-docs")
 
+# palm-ci / palm-docs ship ``uv`` + UV_PYTHON (no system python on PATH).
 _LANG_FILES = {
-    "python": ("main.py", ["python", "payload/main.py"]),
+    "python": (
+        "main.py",
+        ["uv", "run", "--no-project", "python", "payload/main.py"],
+    ),
 }
 
 
@@ -128,6 +132,9 @@ def run_script_job(params: dict[str, Any]) -> dict[str, Any]:
     payload["language"] = language
     payload["image"] = image
     payload["entrypoint"] = cmd
+    # Flat memory keys for wizard state / Assist display (alias tails).
+    payload["stdout"] = str(payload.get("stdout_tail") or "")
+    payload["stderr"] = str(payload.get("stderr_tail") or "")
     # Do not echo full source by default (size / logs); optional flag later
     return payload
 

@@ -96,6 +96,7 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 | **0.54.7** ✅ | DEVELOPMENT + AGENTS purpose-test notes; Living Library product → 0.55 |
 | **0.54.8** ✅ | Polish for 0.55: DAG `drain_ready`, `create_run_dir`, Assist discover starters |
 | **0.54.9** ✅ | Assist run-code wizard (`hermetic-run-code` + `neonroot.run_script`) |
+| **0.54.10** ✅ | Run-code dogfood complete: `uv run` entrypoint, textbook loop, Portal resource auto-advance |
 
 ---
 
@@ -114,9 +115,9 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 
 | Theme | Content |
 |-------|---------|
-| **0.55** | Optional **docs dogfood domain** — Living Library as business process on hermetic jobs + kv; DocsService optional composition |
-| **Assist run-code** | ✅ v0: `hermetic-run-code` + `run_script` (allowlisted images; multi-file / snippets later) |
-| **Later** | Payload artifact registry; true parallel ready-set; adapter runners (PD-022); NeonRoot bind-mode + Palm run-dir |
+| **0.55** | **Session plane** — lifecycle + multi-event subscriptions (Assist, dashboard, composition); docs dogfood deferred |
+| **Assist run-code** | ✅ v0 + dogfood: `hermetic-run-code` + `run_script` (allowlisted; multi-file later) |
+| **Later** | Docs dogfood domain; payload artifact registry; adapter runners (PD-022) |
 
 ---
 

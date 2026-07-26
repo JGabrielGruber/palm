@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.51.6` · **Theme open:** **`0.54.0` Hermetic Jobs (replan)**  
+**Current Version:** `0.51.6` · **Theme closed:** **`0.54` Hermetic Jobs** · **Next:** **`0.55` Session plane (queued)**  
 **Last Updated:** July 26, 2026  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52 Living Library tooling** · **0.53 Sovereign Runners (landed)** · **0.54 Hermetic Jobs (replanned)** · **0.55 docs dogfood domain (queued)**.
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52 Living Library tooling** · **0.53 Sovereign Runners** · **0.54 Hermetic Jobs** · **0.55 Session plane (queued)** · docs dogfood domain deferred.
 
 ## Quick Overview
 
@@ -45,7 +45,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 |-------|--------|
 | 0.53.0–0.53.8 | ✅ closed |
 
-## 0.54 — Hermetic Jobs (open · **replanned**)
+## 0.54 — Hermetic Jobs (**closed**)
 
 **Vision:** [docs/VISION-0.54.md](docs/VISION-0.54.md) · **ADR:** [docs/adr/023-hermetic-jobs.md](docs/adr/023-hermetic-jobs.md)  
 
@@ -65,18 +65,21 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | 0.54.7 Purpose-test notes (DEVELOPMENT/AGENTS) | ✅ |
 | 0.54.8 Polish: drain_ready, run_dir helper, Assist discover | ✅ |
 | 0.54.9 Assist run-code wizard (`hermetic-run-code`) | ✅ |
-| **0.54 theme** | ✅ closed — next [0.55](docs/VISION-0.55.md) docs dogfood domain |
+| 0.54.10 Run-code dogfood complete (Portal + resource auto-advance) | ✅ |
+| **0.54 theme** | ✅ closed — dogfood proven; next [0.55](docs/VISION-0.55.md) |
 
-## 0.55 — Docs dogfood domain (queued)
+## 0.55 — Session plane (queued · **replan candidate**)
 
 **Vision:** [docs/VISION-0.55.md](docs/VISION-0.55.md)  
 
-Optional Living Library **business process** + thin DocsService — analytics-shaped, not core.
+**Session lifecycle + multi-event subscriptions** (Assist, dashboard, composition).  
+Living Library **docs dogfood domain** deferred further (was interim 0.55).
 
 ## Horizon
 
+- Session service / watches / storage projection (0.55)  
+- Docs dogfood domain (post session plane)  
 - Adapter runners (postgres/mongo) via neonroot (PD-022)  
-- Payload/artifact registry for registered modules  
-- NeonRoot bind-mode + Palm run-dir contract  
+- Payload/artifact registry for registered modules
 
 See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md).

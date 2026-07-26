@@ -36,3 +36,20 @@ def test_summary_confirm_requires_explicit_user() -> None:
     assert env["mutations_allowed"] is True
     assert env["confirm_step"] is True
     assert "do not send yes/no unless the user explicitly" in env.get("agent_hint", "").lower()
+
+
+def test_resource_auto_step_does_not_require_free_text() -> None:
+    """Portal was stuck typing into resource steps — auto-advance is resume, not value."""
+    inspect = {
+        "status": "WAITING_FOR_INPUT",
+        "step": "run",
+        "step_kind": "resource",
+        "field_type": "resource",
+        "auto_advance": True,
+        "resource_ref": "hermetic-run-script",
+    }
+    env = build_mutation_envelope(inspect)
+    assert env["mutations_allowed"] is True
+    assert env["requires_user_input"] is False
+    assert env.get("auto_advance") is True
+    assert "session-resume" in env.get("agent_hint", "")

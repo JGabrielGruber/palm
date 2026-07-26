@@ -48,6 +48,15 @@ def hint_text(composed: dict[str, Any]) -> str:
         return "Reply with item number or label."
 
     field_type = composed.get("field_type")
+    step_kind = composed.get("step_kind")
+    if (
+        step_kind == "resource"
+        or field_type == "resource"
+        or composed.get("auto_advance")
+    ):
+        if composed.get("resource_error"):
+            return "Resource failed — try Resume or Doctor."
+        return "Resource step auto-runs — wait, or use Resume resource step if stuck."
     if field_type == "confirm":
         return "Reply yes or no."
     if field_type == "choice" or composed.get("choices"):

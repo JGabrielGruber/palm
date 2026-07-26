@@ -108,8 +108,19 @@ class NeonrootProvider(BaseProvider):
                 **{k: v for k, v in payload.items() if k != "error" and v is not None},
             )
         if exit_code != 0:
+            stderr = str(payload.get("stderr_tail") or "").strip()
+            stdout = str(payload.get("stdout_tail") or "").strip()
+            detail = f"spawn command exited {exit_code}"
+            # Prefer stderr (runtime errors); fall back to stdout (often neonroot logs).
+            tail = stderr or stdout
+            if tail:
+                # Keep failure lines short for Assist / validation feedback.
+                one_line = " | ".join(
+                    ln.strip() for ln in tail.splitlines() if ln.strip()
+                )[-400:]
+                detail = f"{detail}: {one_line}"
             return ProviderResult.fail(
-                f"spawn command exited {exit_code}",
+                detail,
                 action=action,
                 provider=self.name,
                 **payload,
