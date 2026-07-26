@@ -76,6 +76,14 @@ palm flow start ingest-wizard
 palm process submit data-ingestion
 ```
 
+## Hermetic job smoke (`hermetic-job-smoke`, 0.54)
+
+Purpose-test flow — multi-step resources using **only** `neonroot`::
+
+    palm flow start hermetic-job-smoke
+
+See [docs/HERMETIC-JOBS.md](../docs/HERMETIC-JOBS.md). Spawn step needs `just ci-image`.
+
 ## NeonRoot runners (`neonroot-*` resources, 0.53)
 
 Sovereign Runners examples — `examples/definitions/neonroot_runners.py`:

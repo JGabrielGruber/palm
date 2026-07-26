@@ -116,6 +116,8 @@ def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
         raise ValueError("spawn requires params.image (NeonRoot image name)")
 
     command = _as_str_list(params.get("command"), field_name="command")
+    if not command:
+        raise ValueError("spawn requires params.command (non-empty argv list)")
     vault = params.get("vault")
     name = params.get("name")
     seed = params.get("seed", "git-archive")

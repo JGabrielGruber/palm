@@ -55,8 +55,10 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 | Patch | Status |
 |-------|--------|
-| 0.54.0 Replan + discard product stack | ✅ (this cut) |
-| 0.54.1+ hermetic job contract, dogfood flow, DAG v0, second example | pending |
+| 0.54.0 Replan + discard product stack | ✅ |
+| 0.54.1 Hermetic job contract + [HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md) | ✅ |
+| 0.54.2 Dogfood flow `hermetic-job-smoke` (neonroot only) | ✅ |
+| 0.54.3+ DAG pattern v0, multi-node, second example | pending |
 
 ## 0.55 — Docs dogfood domain (queued)
 

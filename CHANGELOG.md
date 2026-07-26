@@ -6,6 +6,8 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ### 0.54 — Hermetic Jobs ([VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-hermetic-jobs.md))
 - **0.54.0 (replan)** — Purpose-test theme: definition graphs + neonroot jobs; real DAG growth. **Discard** interim library product stack (`common.library`, `providers/library`, `services/docs`). Docs domain dogfood → [VISION-0.55](docs/VISION-0.55.md).
+- **0.54.1** — Hermetic job contract: `palm.providers.neonroot.contract`, [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md).
+- **0.54.2** — Dogfood flow `hermetic-job-smoke`: neonroot preflight → spawn `true` (definitions only; no domain provider).
 
 ### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
 - **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.
