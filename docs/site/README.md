@@ -11,8 +11,8 @@
 | Recipe | Image | Role |
 |--------|-------|------|
 | `just docs-image` | palm-docs | Build image (uv + Tailwind CLI; see `ci/Containerfile.docs`) |
-| `just docs-css-sandbox` | palm-docs | Rebuild `styles/output.css` without host `node_modules` |
-| `just docs-build-sandbox` | palm-docs | Hermetic verify of Living Library builder (git-archive seed) |
+| `just docs-css-sandbox` | palm-docs | Rebuild CSS; seeds **`docs/` only** (never full repo / `data/`) |
+| `just docs-build-sandbox` | palm-docs | Hermetic verify of Living Library builder (**git-archive** seed) |
 | `just docs-css` | host | Optional full-weight path (`docs/package.json` + npx) |
 
 Do **not** hand-edit anything under `docs/_build/`.

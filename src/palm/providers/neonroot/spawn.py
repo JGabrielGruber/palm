@@ -8,9 +8,11 @@ Maps to::
 ``seed`` policy (ADR-022):
 
 - ``git-archive`` (default for hermetic claims) — ``git archive HEAD`` into a
-  temp directory, seed that path, delete after spawn.
-- absolute/relative path — seed that host directory; **explicit** non-hermetic
-  workspace seed (dirty tree possible).
+  temp directory, seed that path, delete after spawn. Prefer over full ``$PWD``:
+  host ``data/`` may be root-owned and break NeonRoot's seed walk.
+- absolute/relative path — seed that host directory; **prefer a narrow path**
+  (e.g. ``docs/`` for CSS), never a whole Palm checkout with unreadable trees
+  unless NeonRoot gains seed-ignore.
 - omit / empty with ``seed_mode: none`` — no ``--seed`` flag.
 """
 

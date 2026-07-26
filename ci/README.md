@@ -20,9 +20,18 @@ build and spawn them for day-to-day ops.
 
 Full-weight local `docs/node_modules` remains supported (`just docs-css`).
 
-## Seed policy
+## Seed policy (be careful)
 
-- **git-archive** — hermetic verification (no write-back to host).
-- **workspace path** (`$PWD`) — used by `docs-css-sandbox` so CSS can land on the host when NeonRoot seeds allow; prefer for authoring.
+NeonRoot `--seed <dir>` **walks and copies** that directory. It is **not** “load Palm into the sandbox.”
 
-See ADR-022 and the neonroot provider `spawn` action.
+| Seed | Used by | Notes |
+|------|---------|--------|
+| **`docs/` only** | `just docs-css-sandbox` | Enough for Tailwind; avoids host `data/`, `.venv`, secrets |
+| **git-archive HEAD** | `just docs-build-sandbox`, `ci-sandbox` | Tracked files only — no gitignored `data/` |
+| **Full `$PWD`** | **Avoid** for Palm checkouts | Host `data/palm/…` is often root-owned → `permission denied` mid-seed |
+
+**Do we need a NeonRoot seed-ignore?** Useful for full-tree seeds (`.neonrootignore` / exclude `data/`, `.venv`, `.git`). That’s a **NeonRoot** feature if you want it later — Palm recipes should not rely on seeding the whole monorepo in the meantime.
+
+**Write-back:** if seed is copy-in (not a bind mount), container writes may not update the host; treat sandbox CSS/build as hermetic verify unless your NeonRoot version binds the seed path. Host authoring fallback: `just docs-css` with optional `docs/node_modules`.
+
+See ADR-022 and the neonroot provider `spawn` action (`seed: git-archive` | path).
