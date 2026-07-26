@@ -53,6 +53,12 @@ def discover(query: str = "", *, limit: int = 12) -> dict[str, Any]:
         },
         {
             "kind": "params",
+            "summary": "Hermetic run-code wizard (pick image, paste Python)",
+            "call": 'palm_assist(params={flow_id: "hermetic-run-code"})',
+            "alias": "hermetic-run-code",
+        },
+        {
+            "kind": "params",
             "summary": "Hermetic job smoke (neonroot preflight → true)",
             "call": 'palm_assist(params={flow_id: "hermetic-job-smoke"})',
             "alias": "hermetic-job-smoke",

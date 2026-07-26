@@ -8,6 +8,7 @@ from palm.core.resource import BaseProvider
 from palm.core.resource.result import ProviderDescriptor, ProviderHealth, ProviderResult
 from palm.providers.neonroot.bindings.resource.descriptor import describe
 from palm.providers.neonroot.cli import probe_neonroot
+from palm.providers.neonroot.run_script import run_script_job
 from palm.providers.neonroot.spawn import resolve_repo_root, run_spawn
 
 
@@ -54,36 +55,24 @@ class NeonrootProvider(BaseProvider):
             )
 
         if action == "spawn":
+            return self._spawn_result(merged, action=action)
+
+        if action == "run_script":
             try:
-                payload = run_spawn(merged, repo_root=resolve_repo_root())
+                payload = run_script_job(merged)
             except (ValueError, RuntimeError) as exc:
                 return ProviderResult.fail(str(exc), action=action, provider=self.name)
             except Exception as exc:
                 return ProviderResult.fail(
-                    f"spawn failed: {exc}",
+                    f"run_script failed: {exc}",
                     action=action,
                     provider=self.name,
                 )
-            exit_code = payload.get("exit_code")
-            if payload.get("timed_out") or exit_code is None:
-                return ProviderResult.fail(
-                    str(payload.get("error") or "spawn timed out or produced no exit code"),
-                    action=action,
-                    provider=self.name,
-                    **{k: v for k, v in payload.items() if k != "error" and v is not None},
-                )
-            if exit_code != 0:
-                return ProviderResult.fail(
-                    f"spawn command exited {exit_code}",
-                    action=action,
-                    provider=self.name,
-                    **payload,
-                )
-            return ProviderResult.ok(payload, action=action, provider=self.name)
+            return self._spawn_result_from_payload(payload, action=action)
 
         if action in ("list_images", "image.ensure", "image.build"):
             return ProviderResult.fail(
-                f"action {action!r} not implemented until a later 0.53 slice",
+                f"action {action!r} not implemented yet",
                 action=action,
                 provider=self.name,
             )
@@ -93,6 +82,39 @@ class NeonrootProvider(BaseProvider):
             action=action,
             provider=self.name,
         )
+
+    def _spawn_result(self, merged: dict[str, Any], *, action: str) -> ProviderResult:
+        try:
+            payload = run_spawn(merged, repo_root=resolve_repo_root())
+        except (ValueError, RuntimeError) as exc:
+            return ProviderResult.fail(str(exc), action=action, provider=self.name)
+        except Exception as exc:
+            return ProviderResult.fail(
+                f"spawn failed: {exc}",
+                action=action,
+                provider=self.name,
+            )
+        return self._spawn_result_from_payload(payload, action=action)
+
+    def _spawn_result_from_payload(
+        self, payload: dict[str, Any], *, action: str
+    ) -> ProviderResult:
+        exit_code = payload.get("exit_code")
+        if payload.get("timed_out") or exit_code is None:
+            return ProviderResult.fail(
+                str(payload.get("error") or "spawn timed out or produced no exit code"),
+                action=action,
+                provider=self.name,
+                **{k: v for k, v in payload.items() if k != "error" and v is not None},
+            )
+        if exit_code != 0:
+            return ProviderResult.fail(
+                f"spawn command exited {exit_code}",
+                action=action,
+                provider=self.name,
+                **payload,
+            )
+        return ProviderResult.ok(payload, action=action, provider=self.name)
 
     def describe(self) -> ProviderDescriptor:
         return describe(name=self.name)

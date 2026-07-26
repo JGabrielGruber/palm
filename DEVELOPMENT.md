@@ -609,6 +609,7 @@ palm flow start hermetic-job-smoke     # preflight → true
 palm flow start hermetic-job-dag       # same as DAG
 palm flow start hermetic-job-fanout    # fan-out join
 palm flow start hermetic-ci-slice      # ruff → guard_core (non-docs dogfood)
+palm flow start hermetic-run-code      # Assist: image + paste Python → run_script
 just docs-css-sandbox                  # copy + --output
 just docs-css-bind                     # NeonRoot 0.2 bind (live host)
 just ci-sandbox                        # full hermetic CI (justfile, not a flow)
@@ -618,8 +619,9 @@ just ci-sandbox                        # full hermetic CI (justfile, not a flow)
 **0.55** — optional dogfood, not required for core Palm. Static docs tooling
 remains: `just docs-build`, wiki under `docs/wiki/`.
 
-**Assist “run code” (horizon):** pick image + payload → stage → neonroot.spawn →
-results; no in-engine `exec`.
+**Assist run-code:** persisted flow `hermetic-run-code` (definitions in
+`examples/definitions/hermetic_run_code.py`); resource `hermetic-run-script`
+→ `neonroot.run_script`. No in-engine `exec`.
 
 ## Related documents
 

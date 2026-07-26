@@ -72,15 +72,20 @@ options:
 
 One ready node per tick (stable order among ready); state under `dag.*`.
 
-### Assist “run code” (horizon / 0.55+)
+### Assist run-code (0.54.9)
 
-Pick an image, provide a payload/script:
+Persisted wizard (like todo-builder)::
 
-1. `create_run_dir` + `write_payload_file` ([HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md))  
-2. `neonroot.spawn` with `seed_mode=bind` (or copy)  
-3. Return stdout / `output/`  
+    palm flow start hermetic-run-code
+    # or palm_assist(params={flow_id: "hermetic-run-code"})
 
-Not in-engine `exec`. Discover starters: `hermetic-job-smoke`, `hermetic-ci-slice`, `hermetic-job-fanout`.
+Steps: choose image → paste Python → preflight → ``neonroot.run_script``  
+(stages ``payload/main.py`` via [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md), spawn, return tails).
+
+**Definitions needed (v0):** flow + process + one resource (`hermetic-run-script`).  
+**Later (optional):** multi-file projects, snippet catalog, `list_images`, saved artifacts.
+
+Not in-engine `exec`. Image allowlist: `palm-ci`, `palm-docs` (extend via `allowed_images`).
 
 ### DAG ready-set (0.54.8)
 

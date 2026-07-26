@@ -20,12 +20,17 @@ def describe(*, name: str) -> ProviderDescriptor:
             ProviderActionDescriptor(
                 "spawn",
                 "Run a command in a NeonRoot sandbox "
-                "(params: image, command[], seed=git-archive|path, "
+                "(params: image, command[], seed=git-archive|path, seed_mode, "
                 "seed_exclude[], outputs[{host,container}|host:container], vault?, sandbox?)",
             ),
             ProviderActionDescriptor(
+                "run_script",
+                "Stage code into a run dir and spawn (params: image, code, language=python; "
+                "allowlisted images; no in-engine exec)",
+            ),
+            ProviderActionDescriptor(
                 "list_images",
-                "List images in a vault (later 0.53)",
+                "List images in a vault (later)",
             ),
         ),
     )

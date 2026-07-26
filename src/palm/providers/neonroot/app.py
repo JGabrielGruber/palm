@@ -11,7 +11,8 @@ class NeonrootApp(ProviderApp):
     palm_layers = ("core.resource",)
     actions = (
         "health",
-        "spawn",  # 0.53.2 — git-archive | path seed + command
+        "spawn",  # hermetic job
+        "run_script",  # Assist run-code: stage payload + spawn
         "list_images",  # later
     )
     registry_hooks = ("provider_registry",)
