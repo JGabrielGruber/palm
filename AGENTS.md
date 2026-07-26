@@ -6,7 +6,7 @@ For AI coding agents and human developers
 *“Palm grows where the sun meets the sea.”*  
 Orchestration should feel alive, truthful, and humane. Structure must serve clarity and longevity, never become a cage.
 
-**Last updated:** July 2026 (0.52.5 — ADR hygiene + Living Library; see [docs/adr/README.md](docs/adr/README.md), [docs/VISION-0.52.md](docs/VISION-0.52.md), [TECH-DEBT.md](TECH-DEBT.md))
+**Last updated:** July 2026 (0.53.0 — Sovereign Runners plan; [docs/VISION-0.53.md](docs/VISION-0.53.md) · [docs/adr/022-neonroot-provider.md](docs/adr/022-neonroot-provider.md); pipeline dogfood → [0.54](docs/VISION-0.54.md))
 
 ---
 

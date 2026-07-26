@@ -4,8 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
+- **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.
+
 ### 0.52 — The Living Library (docs-as-code · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md))
-- **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; root declutter and T6 gates next; thin `just docs-build` (no heavy doc frameworks). **0.53** reserved for building the library *with Palm* (pipeline dogfood).
+- **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; thin `just docs-build`. Sequelae: 0.53 runners → 0.54 pipeline.
 - **0.52.1** — Docs gates green (PD-031): `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy `docs/llms.txt`, `docs/mcp.txt`, and `docs/skills/palm` into MCP data + `.grok` mirrors so bumps no longer re-break `docs-check`.
 - **0.52.2** — Root declutter (PD-021): `git mv` `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; link rewrite + folder READMEs. Root keeps constitution-scale markdown only.
 - **0.52.3** — Shelf tree: `docs/wiki/` (guides + concept stubs), `docs/LIBRARY.md` (SOURCE/BUILD/SURFACE contract), `docs/site/` reserved; Explorer wizard guide moved to `docs/wiki/guides/explorer-wizard.md`. Landing page stays at `docs/index.html` until assemble.

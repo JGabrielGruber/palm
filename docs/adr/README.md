@@ -36,8 +36,11 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [019](019-composition-profiles.md) | Composition profiles — declare the app's shape (0.50) | Accepted |
 | [020](020-living-capabilities.md) | Living capabilities — third axis (0.51) | Accepted |
 | [021](021-living-library.md) | The Living Library — SOURCE / BUILD / SURFACE (0.52) | Accepted |
+| [022](022-neonroot-provider.md) | NeonRoot as a Palm provider — Sovereign Runners (0.53) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
+
+**Next free number:** 023.
 
 ## How to add an ADR
 

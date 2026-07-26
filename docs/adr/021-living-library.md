@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** — July 2026 (0.52.0, theme: **The Living Library**).  
-Planned in [VISION-0.52](../VISION-0.52.md). Implements TECH-DEBT **T6** direction (docs-as-code) with a longer product arc (docs as service; Palm-pipeline build in **0.53**).
+Planned in [VISION-0.52](../VISION-0.52.md). Implements TECH-DEBT **T6** direction (docs-as-code) with a longer product arc (docs as service; **neonroot runners in 0.53**; Palm-pipeline build in **0.54**).
 
 ## Context
 
@@ -46,11 +46,12 @@ A natural product destination is **docs as a Palm service** (queryable, SSR-serv
 - **Forbidden as required deps in 0.52:** mkdocs, Sphinx, Material, pdoc, or other heavy doc frameworks.
 - Polish API HTML is optional and must not block T6 cleanup.
 
-### 5. Palm-pipeline dogfood is 0.53
+### 5. Palm-pipeline dogfood is 0.54 (runners in 0.53)
 
-- **0.53** will explore building the library **using Palm** (pipeline / orchestration as the build graph) to pressure engine capabilities.
+- **0.53** — NeonRoot as a Palm provider (hermetic spawn / tool images) — [VISION-0.53](../VISION-0.53.md), [ADR-022](022-neonroot-provider.md).
+- **0.54** — build the library **using a Palm pipeline** on those runners — [VISION-0.54](../VISION-0.54.md).
 - **Not** a Palm step that shells out to `just docs-build` and calls it dogfood.
-- 0.52 therefore **must not over-invest** in a Python-only docs platform that 0.53 would replace; keep the 0.52 builder thin and replaceable.
+- 0.52 therefore **must not over-invest** in a Python-only docs platform that 0.54 would re-own as orchestration; keep the 0.52 builder thin and replaceable as the *work unit*.
 
 ### 6. Docs as a service (timing)
 
@@ -69,14 +70,14 @@ The handcrafted product story (`index.html` / site) **stays**. Wiki and referenc
 
 ## Consequences
 
-- **Positive.** Docs become navigable and gateable (T6); static vs built is honest; Cloudflare and future SSR share one assembled truth; 0.53 has a clear contract (replace thin BUILD, keep SOURCE/SURFACE law).
+- **Positive.** Docs become navigable and gateable (T6); static vs built is honest; Cloudflare and future SSR share one assembled truth; 0.53–0.54 have a clear contract (runners then pipeline; keep SOURCE/SURFACE law).
 - **Risk.** File moves break links — mitigate with `git mv`, link check in `docs-check`, and one declutter slice.
-- **Risk.** A too-clever 0.52 builder wastes effort before Palm-pipeline dogfood — mitigated by decision 4–5.
+- **Risk.** A too-clever 0.52 builder wastes effort before pipeline dogfood — mitigated by decision 4–5.
 - **Bounded.** No full Docs CMS; no mandatory history rewrite; no heavy framework lock-in.
 
 ## Alternatives considered
 
-- **Adopt mkdocs-material immediately.** Rejected for 0.52 — good canopy, wrong cost before shelf cleanup and before 0.53 may redefine BUILD as a Palm pipeline.
+- **Adopt mkdocs-material immediately.** Rejected for 0.52 — good canopy, wrong cost before shelf cleanup and before 0.54 may redefine BUILD *orchestration* as a Palm pipeline.
 - **Docs only as Cloudflare static forever.** Insufficient — agents and SSR need the same genome; service/surface path must stay open.
 - **Palm flow wrapping `just` in 0.52.** Rejected — not real dogfood; confuses “orchestration product” with “shell recipe.”
 - **Rewrite all history to drop Claude trailers as part of declutter.** Rejected as default — orthogonal, destructive; policy first.

@@ -4,7 +4,7 @@
 **Theme:** Knowledge architecture for Palm: *one genome of truth, many surfaces that serve it.*  
 **Debt line:** TECH-DEBT **T6** (docs-as-code) — PD-019, PD-020, PD-021, PD-031 — plus intentional growth beyond the register.  
 **Sibling conventions:** [VERSIONING.md](VERSIONING.md), [AGENTS.md](../AGENTS.md) §5, [PHILOSOPHY.md](../PHILOSOPHY.md).  
-**Sequel:** **0.53** — build the library *with Palm* (pipeline dogfood), not a shell around `just`.
+**Sequel:** **[0.53 Sovereign Runners](VISION-0.53.md)** (neonroot provider) · **[0.54 Library Pipeline](VISION-0.54.md)** (Palm builds the canopy).
 
 > *Palm grows where the sun meets the sea.*  
 > Documentation is not a pile of leaves at the root — it is the **canopy**: how light reaches others.  
@@ -37,9 +37,10 @@ Palm already has a pure core, registry-driven edges, and multi-shape runtimes. I
 | Minor | Builder | Intent |
 |-------|---------|--------|
 | **0.52** | `just docs-build` — thin, boring, good enough | Shelves, gates, static vs built, serve assembled artifacts |
-| **0.53** | **A Palm pipeline** that *is* the build (orchestration, steps, durable instance) | Capability pressure on Palm itself — inefficient on purpose as a learning gym |
+| **0.53** | **NeonRoot provider** — hermetic spawn as a resource ([VISION-0.53](VISION-0.53.md)) | Sovereign runners |
+| **0.54** | **A Palm pipeline** that *is* the docs build ([VISION-0.54](VISION-0.54.md)) | Capability pressure / dogfood gym |
 
-0.52 must **not** invest in a polished Python docs platform that 0.53 would throw away. Prefer dumb copies, JSON inventories, and a few HTML stubs over external doc frameworks.
+0.52 must **not** invest in a polished Python docs platform that 0.54 would re-own as a Palm pipeline. Prefer dumb copies, JSON inventories, and a few HTML stubs over external doc frameworks.
 
 The long arc after structure: **Docs as a service domain**, mountable as a surface. 0.52 may leave a **read-only stub**; it does not ship a fat Docs god-service.
 
@@ -55,7 +56,8 @@ The long arc after structure: **Docs as a service domain**, mountable as a surfa
                                        │ serve / mount
                     ┌──────────────────┴──────────────────┐
    BUILD            │  0.52: just docs-build (thin)        │
-   (metabolism)     │  0.53: Palm pipeline (dogfood)       │
+   (metabolism)     │  0.53: run build via neonroot        │
+                    │  0.54: Palm pipeline (dogfood)       │
                     └──────────────────▲──────────────────┘
                                        │ read
                     ┌──────────────────┴──────────────────┐
@@ -135,7 +137,7 @@ docs/
 - A Palm flow that shells out to `just` (that is not dogfood — that is a wrapper)  
 - Replacing the handcrafted landing page with a theme engine  
 
-If a step needs a heavy tool, **stub the shelf** and leave the real work for 0.53’s pipeline pressure or a later polish patch.
+If a step needs a heavy tool, **stub the shelf** and leave multi-step Palm pipeline pressure for **0.54** (after neonroot runners in **0.53**).
 
 ---
 
@@ -154,7 +156,7 @@ CompositionProfile
 | Thin `DocsService` (list/get artifacts) | 0.52 late, optional stub |
 | SSR / MCP `palm://docs` | 0.52 if cheap; else 0.53+ |
 | Cloudflare assembled publish | 0.52 (evolve current wrangler assets) |
-| **Palm pipeline that builds the library** | **0.53** |
+| **Palm pipeline that builds the library** | **0.54** |
 
 ### What 0.52 must not do
 
@@ -162,7 +164,7 @@ CompositionProfile
 - DocsService as a second host  
 - Heavy doc frameworks “because professional”  
 - History rewrite in the same patch as file moves  
-- Fake dogfood (`just` inside a Palm step) presented as 0.53 work
+- Fake dogfood (`just` inside a Palm step) presented as 0.53 or 0.54 work
 
 ### Honest stubs
 
@@ -188,7 +190,7 @@ CompositionProfile
 | **0.52.9** | **Agent map** *(optional)* — deeper llms / `palm://docs` over same SOURCE | Progressive disclosure |
 | **0.52.10** | **History policy** *(optional)* — DEVELOPMENT note on AI trailers; rewrite runbook only if maintainer opts in | Hygiene |
 
-**Explicitly not in 0.52:** Palm-native docs pipeline → **[VISION-0.53]** when opened.
+**Explicitly not in 0.52:** neonroot provider → **[VISION-0.53](VISION-0.53.md)**; Palm docs pipeline → **[VISION-0.54](VISION-0.54.md)**.
 
 ---
 
@@ -198,7 +200,7 @@ CompositionProfile
 2. SOURCE / BUILD / SURFACE law; generators never write the hand genome.  
 3. `_build/` prefer **gitignore + build on demand/CI**; commit only if deploy forces it.  
 4. **0.52 builder stays thin** — no required external doc frameworks.  
-5. **0.53** owns Palm-pipeline dogfood (build *with* Palm, not wrap `just`).  
+5. **0.53** owns neonroot provider / tool images; **0.54** owns Palm-pipeline dogfood (build *with* Palm, not wrap `just`).  
 6. Landing page soul stays handcrafted.  
 7. AI Co-Authored-By not required; history rewrite opt-in only.
 
@@ -206,7 +208,7 @@ CompositionProfile
 
 ## Out of scope (this minor)
 
-- 0.53 Palm pipeline builder  
+- 0.53 neonroot provider (see VISION-0.53); 0.54 Palm pipeline builder  
 - Full CMS / multi-author wiki auth  
 - 100% API reference coverage  
 - Mandatory history rewrite  
@@ -222,7 +224,7 @@ CompositionProfile
 - Wiki shelves exist; Cloudflare (or documented path) can publish an **assembled** library.  
 - Path to Docs service / SSR is written and unblocked — implementation may be stub.  
 - T6 PD-019…021, PD-031 closed or explicitly deferred in TECH-DEBT.  
-- STATUS + CHANGELOG name The Living Library; 0.53 called out as pipeline dogfood season.
+- STATUS + CHANGELOG name The Living Library; 0.53 = runners; 0.54 = pipeline dogfood.
 
 ---
 
@@ -231,7 +233,7 @@ CompositionProfile
 - **Names** layers before tools.  
 - **Cleans** the forest floor so growth is visible.  
 - **Builds** with something boring and honest in 0.52.  
-- **Reserves** the real dogfood — Palm *as* the builder — for 0.53.  
+- **Reserves** runners for 0.53 and Palm *as* the builder for 0.54.  
 - **Leaves stubs** that tell the truth.
 
 ---

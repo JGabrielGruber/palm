@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.51.6` · **Theme open:** `0.52.0` The Living Library  
+**Current Version:** `0.51.6` · **Themes:** `0.52` Living Library (in progress) · **`0.53.0` Sovereign Runners opened**  
 **Last Updated:** July 26, 2026  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist remote · Portal/WS · Analytics + dashboards · WorkIntent / journal · event stream · composition profiles (0.49–0.51) · **0.52 The Living Library (docs-as-code / T6) opened** · Debt paydown 0.46–0.48 (T1 CI, T3 imports, T2 host split).
+**Maturity:** Wizard · MCP · Assist remote · Portal/WS · Analytics + dashboards · WorkIntent / journal · event stream · composition profiles (0.49–0.51) · **0.52 Living Library** · **0.53 NeonRoot provider (plan)** · Debt paydown 0.46–0.48 (T1/T3/T2).
 
 ## Quick Overview
 
@@ -31,7 +31,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 **Vision:** [docs/VISION-0.52.md](docs/VISION-0.52.md) · **ADR:** [docs/adr/021-living-library.md](docs/adr/021-living-library.md)  
 **Theme:** One knowledge genome (SOURCE) → thin build (`just docs-build`) → many surfaces (Cloudflare, later SSR/MCP). Closes TECH-DEBT **T6** (PD-019…021, PD-031).  
 **Builder bar:** simple — stdlib/scripts, no heavy doc frameworks.  
-**Sequel (not this minor):** **0.53** — build the library *with Palm* (pipeline dogfood), not a wrapper around `just`.
+**Sequels:** **[0.53 Sovereign Runners](docs/VISION-0.53.md)** (neonroot provider) · **[0.54 Library Pipeline](docs/VISION-0.54.md)** (Palm builds the canopy).
 
 | Patch | Status |
 |-------|--------|
@@ -43,6 +43,17 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.52.5 ADR hygiene — index, 013 reserved, ADR-or-waive (PD-020) | ✅ |
 | 0.52.6 Builder v0 — `just docs-build` → `_build/` + deploy canopy; wrangler → `_build/deploy` | ✅ |
 | 0.52.7+ optional stubs (DocsService / agent map / history policy) | pending |
+
+## 0.53 — Sovereign Runners (open)
+
+**Vision:** [docs/VISION-0.53.md](docs/VISION-0.53.md) · **ADR:** [docs/adr/022-neonroot-provider.md](docs/adr/022-neonroot-provider.md)  
+**Theme:** NeonRoot as a Palm **provider** — hermetic `spawn` / tool images (`palm-ci`, `palm-docs`) as resources. Enables thin workspaces and honest 0.54 dogfood.  
+**Not this minor:** Palm docs pipeline (→ 0.54).
+
+| Patch | Status |
+|-------|--------|
+| 0.53.0 Plan + ADR-022 | ✅ |
+| 0.53.1+ provider scaffold, spawn, images, doctor/assist | pending |
 
 ## Key Capabilities (Mature)
 
