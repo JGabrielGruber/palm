@@ -181,7 +181,7 @@ CompositionProfile
 | **0.52.2** ✅ | **Root declutter** — RELEASE → `docs/releases/`, MIGRATION → `docs/migrations/` (PD-021) | Clean floor |
 | **0.52.3** ✅ | **Shelf tree** — `docs/wiki/` (+ stubs), `LIBRARY.md`, static vs `_build`; `docs/site/` reserved (landing stays at docs root until assemble) | Structure |
 | **0.52.4** ✅ | **Stamp completeness** — SYNC ARCHITECTURE / DEVELOPMENT / SCOPE (PD-019) | Docs-as-code |
-| **0.52.5** | **ADR hygiene** — index, 013 note, AGENTS rule (PD-020) | Discipline |
+| **0.52.5** ✅ | **ADR hygiene** — index, 013 reserved, ADR-or-waive (PD-020) | Discipline |
 | **0.52.6** | **Builder v0** — `just docs-build`: copy wiki + one inventory into `_build/` (stdlib/scripts only) | Thin metabolism |
 | **0.52.7** | **Assemble & edge** — deploy bundle for Cloudflare from assembled tree | Surface: CDN |
 | **0.52.8** | **In-process stub** *(optional)* — composition-gated list/get of artifacts | Docs-as-service bud |

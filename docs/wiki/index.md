@@ -22,7 +22,7 @@ See also: [Living Library contract](../LIBRARY.md) · [VISION-0.52](../VISION-0.
 
 | Kind | Where |
 |------|--------|
-| ADRs | [../adr/](../adr/) |
+| ADRs | [../adr/](../adr/) · [index](../adr/README.md) |
 | Theme plans | `docs/VISION-0.X.md` |
 | Migrations / releases | [../migrations/](../migrations/) · [../releases/](../releases/) |
 | Product landing page | [../index.html](../index.html) (site soul) |

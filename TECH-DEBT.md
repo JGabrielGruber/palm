@@ -32,7 +32,7 @@ plus the **assist/MCP surface** absorbed most of the growth.
 4. **`ApplicationHost` god-object** — 1170 LOC, 89 methods, 29 `@property`; #1 churn hotspot. Breaks the project's own SRP rule. *(PD-009)*
 5. **595 deferred (function-local) imports** used to dodge circular deps — a systemic layering escape valve. *(PD-012)*
 6. **Three overlapping observability APIs** (`event_plane`/`ops`/`control_plane`) with magic-string bus IDs and a live deprecated alias. *(PD-018)*
-7. **Docs stamp ~30 minors behind** (ARCHITECTURE.md @0.13.13) and ADRs stop at 014 (013 missing). *(PD-019, PD-020)*
+7. ~~**Docs stamp / ADR gap**~~ — PD-019 and PD-020 closed in 0.52.4–0.52.5.
 
 **Headline metrics:** 814 src files / 75.5k LOC (tests 265 / 30.9k) · overall coverage **80.2%** (runtimes
 69.6%, core 92.8%) · **19 tests failing** on master · lint **RED**, xenon **RED**, guard-common **RED**,
@@ -77,7 +77,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 | PD-029 | `urllib.urlopen` with no scheme allowlist (9 sites) | T9 | dependency-security | S3 | layer | M | 3 | confirmed |
 | PD-030 | Empty extras `postgres=[]`/`mongodb=[]` (drivers unpinned) | T7/T9 | dependency-security | S3 | module | S | 3 | confirmed |
 | PD-019 | ~~~Doc version stamps ~30 minors behind~~~ **closed 0.52.4** — ARCHITECTURE/DEVELOPMENT/SCOPE in SYNC_TARGETS + docs-check | T6 | doc-drift | S3 | layer | M | 3 | ✅ done |
-| PD-020 | ADR discipline broken (013 missing, stops at 014) | T6 | doc-drift | S3 | layer | M | 3 | confirmed |
+| PD-020 | ~~~ADR discipline broken (013 missing, stops at 014)~~~ **closed 0.52.5** — index + 013 reserved + ADR-or-waive rule | T6 | doc-drift | S3 | layer | M | 3 | ✅ done |
 | PD-031 | ~~~`docs-check` gate RED on master (skill/mcp-data mirror drift)~~~ **closed 0.52.1** — mirrors sync via `docs_mirrors` + `sync_version` | T6 | ci-tooling | S3 | module | S | 3 | ✅ done |
 | PD-006 | `.pre-commit-config.yaml` missing (half-wired) | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
 | PD-007 | Audit tools referenced but undeclared in pyproject | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
@@ -174,7 +174,9 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 - Was: ARCHITECTURE / DEVELOPMENT / SCOPE header stamps lagged dozens of minors (audit 08-docs).
 - Fix: `SYNC_TARGETS` + `docs-check` surfaces include those three; `just bump-version` / `sync_version` keep headers on the package version.
 
-**PD-020 — ADR discipline broken.** `S3 · layer · Effort M` — `docs/adr/` runs 001–012 then 014; **013 missing**; most post-0.25 features (through 0.45) have no ADR despite the "every significant decision needs an ADR" rule (08-docs.txt).
+**PD-020 — ADR discipline broken.** `S3 · layer · Effort M` — **✅ closed 0.52.5**
+- Was: gap at 013; no living index; “must have ADR” without a waive path → silent debt.
+- Fix: [`docs/adr/README.md`](docs/adr/README.md) index (001–021); [013 reserved](docs/adr/013-number-reserved.md); AGENTS §5 **ADR or explicit waive**; review checklist item.
 
 **PD-021 — Root markdown sprawl.** `S4 · layer · Effort M` — **✅ closed 0.52.2** — `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; links rewritten. Root is constitution-scale.
 

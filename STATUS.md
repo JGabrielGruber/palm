@@ -40,7 +40,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.52.2 Root declutter — RELEASE → `docs/releases/`, MIGRATION → `docs/migrations/` (PD-021) | ✅ |
 | 0.52.3 Shelf tree — `docs/wiki/`, `LIBRARY.md`, static vs `_build` contract | ✅ |
 | 0.52.4 Stamp completeness — ARCHITECTURE/DEVELOPMENT/SCOPE in sync + docs-check (PD-019) | ✅ |
-| 0.52.5+ ADR hygiene, thin builder, assemble… | pending |
+| 0.52.5 ADR hygiene — index, 013 reserved, ADR-or-waive (PD-020) | ✅ |
+| 0.52.6+ thin builder, assemble… | pending |
 
 ## Key Capabilities (Mature)
 

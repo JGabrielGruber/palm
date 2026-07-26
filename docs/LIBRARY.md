@@ -8,7 +8,7 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 |------|------|
 | Repo root constitution | `README`, `AGENTS`, `PHILOSOPHY`, `STATUS`, `TECH-DEBT`, `ARCHITECTURE`, `DEVELOPMENT`, `SCOPE`, `CHANGELOG` — header version stamps on ARCHITECTURE / DEVELOPMENT / SCOPE sync via `scripts/sync_version.py` (0.52.4) |
 | `docs/wiki/` | Human narrative — guides & concepts |
-| `docs/adr/` | Decisions |
+| `docs/adr/` | Decisions — index [adr/README.md](adr/README.md); **ADR or explicit waive** (AGENTS §5) |
 | `docs/migrations/`, `docs/releases/` | Point-in-time notes |
 | `docs/VISION-*.md` | Theme plans (optional later move to `docs/vision/`) |
 | `docs/llms.txt`, `docs/mcp.txt`, `docs/MCP.md`, `docs/skills/` | Agent progressive disclosure |

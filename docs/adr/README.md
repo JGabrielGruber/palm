@@ -1,0 +1,52 @@
+# Architecture Decision Records
+
+Living index of Palm ADRs. Canonical folder: `docs/adr/`.  
+Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/adr.md`](../../.github/ISSUE_TEMPLATE/adr.md) · library: [LIBRARY.md](../LIBRARY.md).
+
+**Rule (0.52.5 / PD-020):** every significant architectural decision ships an ADR **or** an explicit waive recorded in the theme VISION / STATUS (why no ADR). Numbers are **append-only** — never renumber accepted ADRs to close a gap.
+
+## Number gap
+
+| Number | Status |
+|--------|--------|
+| **013** | **Unused — intentionally vacant.** See [013-number-reserved.md](013-number-reserved.md). Do not invent a retroactive decision to “fill” the hole. Next free integer after the latest accepted ADR. |
+
+## Index
+
+| ADR | Title | Status (header) |
+|-----|--------|-----------------|
+| [001](001-compositional-power-resources.md) | Compositional Power — Resource System Evolution (0.12) | Accepted |
+| [002](002-pattern-apps-and-common-boundaries.md) | Pattern Apps and `palm.common` Boundaries | Accepted |
+| [003](003-provider-apps.md) | Provider Apps and Django-Style Layout | Accepted |
+| [004](004-cqrs-schemas-service-layer.md) | CQRS Schemas and Service Layer | Accepted |
+| [005](005-service-domain-api.md) | Service Domain API (0.16) | Proposed\* |
+| [006](006-assist-domain.md) | Assist Service Domain (0.18–0.19) | Accepted |
+| [007](007-definition-revisioning.md) | Definition Revisioning & Migration (0.24) | Accepted |
+| [008](008-design-service.md) | Design Service (0.25) | Accepted |
+| [009](009-service-cqrs-contributors.md) | Service CQRS Contributors | Accepted |
+| [010](010-prompt-state-interpolation.md) | Wizard Prompt State Interpolation (0.27) | Accepted |
+| [011](011-local-document-resources.md) | Local Document & KV Resource Providers (0.28) | Accepted |
+| [012](012-wizard-branch-step.md) | Wizard Branch Step (`step_kind: branch`) | Accepted |
+| [013](013-number-reserved.md) | *(number reserved / unused)* | Vacant |
+| [014](014-dashboard-definitions.md) | Dashboard Definitions (0.39) | Accepted |
+| [015](015-technical-debt-baseline.md) | Technical-Debt Baseline & Audit Methodology (0.45) | Accepted |
+| [016](016-ci-gate.md) | CI Quality Gate — NeonRoot hermetic checks (0.46) | Accepted |
+| [017](017-import-seams.md) | Sanctioned import seams — closing T3 (0.47) | Accepted |
+| [018](018-application-host-decomposition.md) | `ApplicationHost` decomposition strategy (0.48) | Accepted |
+| [019](019-composition-profiles.md) | Composition profiles — declare the app's shape (0.50) | Accepted |
+| [020](020-living-capabilities.md) | Living capabilities — third axis (0.51) | Accepted |
+| [021](021-living-library.md) | The Living Library — SOURCE / BUILD / SURFACE (0.52) | Accepted |
+
+\*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
+
+## How to add an ADR
+
+1. Take the next free integer (`ls docs/adr/` — skip reserved vacancies).
+2. Copy `.github/ISSUE_TEMPLATE/adr.md` → `docs/adr/NNN-short-slug.md`.
+3. Status **Proposed** until the theme lands; then **Accepted** (or **Superseded** / **Rejected**).
+4. Link from the theme `VISION-0.X.md`, and update **this index**.
+5. If a change is significant but an ADR is **not** warranted (pure docs, pure rename with existing ADR, trivial fix): write one line in the VISION or STATUS slice — `ADR: waived — <reason>`.
+
+## Out of band
+
+Historical design notes and plans live under `docs/superpowers/` — they are **not** ADRs. Promote durable decisions into this folder when the choice becomes load-bearing.

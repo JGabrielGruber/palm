@@ -6,7 +6,7 @@ For AI coding agents and human developers
 *“Palm grows where the sun meets the sea.”*  
 Orchestration should feel alive, truthful, and humane. Structure must serve clarity and longevity, never become a cage.
 
-**Last updated:** July 2026 (0.52.0 — **The Living Library** opens T6 docs-as-code; see [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-0.52.md](docs/VISION-0.52.md), [docs/adr/021-living-library.md](docs/adr/021-living-library.md), [TECH-DEBT.md](TECH-DEBT.md))
+**Last updated:** July 2026 (0.52.5 — ADR hygiene + Living Library; see [docs/adr/README.md](docs/adr/README.md), [docs/VISION-0.52.md](docs/VISION-0.52.md), [TECH-DEBT.md](TECH-DEBT.md))
 
 ---
 
@@ -152,21 +152,25 @@ Follow these patterns. They exist so growth remains orderly.
 
 Documentation is not optional. It is part of the system.
 
-- Every significant architectural decision **must** have an ADR (Architecture Decision Record) in `.github/ISSUE_TEMPLATE/adr.md` or a dedicated `docs/adr/` folder.
+- **ADR or explicit waive (0.52.5 / PD-020):** every significant architectural decision **must** either:
+  1. ship an ADR under [`docs/adr/`](docs/adr/) (template: [`.github/ISSUE_TEMPLATE/adr.md`](.github/ISSUE_TEMPLATE/adr.md)), **and** be listed in [`docs/adr/README.md`](docs/adr/README.md); or
+  2. record an **explicit waive** on the theme VISION / STATUS slice: `ADR: waived — <one-line reason>` (e.g. pure rename covered by an existing ADR, docs-only, trivial fix).
+  Numbers are **append-only** (next free integer; never renumber). Vacant slots (e.g. 013) stay vacant — see [013-number-reserved](docs/adr/013-number-reserved.md).
 - Major changes to public API, layer responsibilities, or reliability primitives **must** update:
   - `README.md`
   - `ARCHITECTURE.md`
   - `DEVELOPMENT.md`
   - `AGENTS.md` (this file)
-  - `MIGRATION-*.md` when breaking changes occur
-- A living `STATUS.md` (or `docs/STATUS.md`) must exist and be kept reasonably current. It is the single source of truth for the current state of the project.
+  - `docs/migrations/MIGRATION-*.md` when breaking changes occur
+- A living `STATUS.md` must exist and be kept reasonably current. It is the single source of truth for the current state of the project.
+- Living Library: [`docs/LIBRARY.md`](docs/LIBRARY.md) · wiki [`docs/wiki/`](docs/wiki/index.md).
 - `docs/mcp.txt` should be maintained as the MCP operator guide (served as `palm://agent/guide` via `PALM_LLMS_TXT`).
 - `docs/llms.txt` should be maintained as broader project context for AI agents.
 - `docs/MCP.md` is the canonical guide for agent development with Palm MCP (setup, workflows, tool inventory).
 - When updating the website (`docs/index.html`), structured data (JSON-LD) and feature highlights must reflect current capabilities.
 - **`TECH-DEBT.md`** (repo root) is the single source of truth for known technical debt — peer to `STATUS.md`. Add new items as `PD-NNN`; close them as fixed. Do not let it go stale.
 - **`docs/VERSIONING.md`** defines the versioning & release convention: **one theme per minor**, `X.0` plans (a `VISION-0.X.md`), `X.N` executes one slice each. Read it before opening a new minor.
-- **Docs-sync is gated:** `just docs-check` must pass. Note that `ARCHITECTURE.md` / `DEVELOPMENT.md` / `SCOPE.md` are **not** auto-synced by `scripts/sync_version.py` today — update their stamps by hand (or extend `SYNC_TARGETS`).
+- **Docs-sync is gated:** `just docs-check` must pass. Version stamps (including `ARCHITECTURE` / `DEVELOPMENT` / `SCOPE`) and MCP/Grok mirrors update via `scripts/sync_version.py` / `just bump-version`.
 
 **Rule:** If the code and the documentation diverge, the documentation debt must be treated as seriously as a bug.
 
@@ -180,6 +184,8 @@ Documentation is not optional. It is part of the system.
 - [ ] Thread-safety respected for all registries
 - [ ] Tests added/updated (unit + integration where appropriate)
 - [ ] Documentation updated (README, ARCHITECTURE, ADRs, STATUS.md, etc.)
+- [ ] **ADR or waive** — significant decisions have a new/updated `docs/adr/*` (+ index) **or** an explicit `ADR: waived — …` on the theme VISION/STATUS *(PD-020)*
+- [ ] `just docs-check` green when docs or version surfaces change
 - [ ] No imports from `archive/`
 - [ ] Public API surface is explicit (`__all__` where relevant)
 - [ ] Backward compatibility or clear deprecation path considered
