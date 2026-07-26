@@ -66,7 +66,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.54.1 Storage schema + pin (`palm.common.library`) | ✅ |
 | 0.54.2 Wiki corpus publish → storage | ✅ |
 | 0.54.3 DocsService stub (list/get/status/rebuild) | ✅ |
-| 0.54.4+ pipeline, Assist, export phenotype | pending |
+| 0.54.4 Library provider + rebuild-living-library graph | ✅ |
+| 0.54.5+ characterization, Assist, export | pending |
 
 ## Key Capabilities (Mature)
 

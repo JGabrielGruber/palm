@@ -76,6 +76,16 @@ palm flow start ingest-wizard
 palm process submit data-ingestion
 ```
 
+## Rebuild Living Library (`rebuild-living-library`, 0.54)
+
+Resource graph (wizard of resource steps) that publishes the wiki corpus into
+Palm storage and reads back the pin::
+
+    palm flow start rebuild-living-library
+
+Resources: `docs-corpus-wiki-publish`, `library-status` (provider `library`).
+Also: `just library-publish-wiki` / `host.docs.rebuild("wiki")` for direct paths.
+
 ## NeonRoot runners (`neonroot-*` resources, 0.53)
 
 Sovereign Runners examples — `examples/definitions/neonroot_runners.py`:

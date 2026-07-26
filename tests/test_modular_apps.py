@@ -49,6 +49,7 @@ def test_installed_provider_apps_register() -> None:
         "kv",
         "file",
         "neonroot",
+        "library",
     }
     for name in INSTALLED_PROVIDERS:
         provider_registry.get(name)

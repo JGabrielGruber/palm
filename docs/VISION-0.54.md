@@ -139,7 +139,7 @@ neonroot-health?
 | **0.54.1** ✅ | Storage schema + publish helpers (`palm.common.library`, pin) |
 | **0.54.2** ✅ | Wiki corpus publish SOURCE → storage (`publish_wiki_corpus`, `just library-publish-wiki`) |
 | **0.54.3** ✅ | **DocsService** stub: list/get/status/rebuild(`wiki`) over pin |
-| **0.54.4** | Pipeline definition: rebuild graph + pin |
+| **0.54.4** ✅ | Library provider + `rebuild-living-library` resource graph (wizard steps) |
 | **0.54.5** | Characterization tests (mock neonroot / memory KV) |
 | **0.54.6** | Assist / MCP progressive `palm://docs/…` or discover |
 | **0.54.7** | Optional edge export phenotype; LIBRARY/DEVELOPMENT dual metabolism docs |
