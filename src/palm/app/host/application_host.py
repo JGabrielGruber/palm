@@ -120,6 +120,7 @@ class ApplicationHost:
         self._assist: Any | None = None
         self._design: Any | None = None
         self._analytics: Any | None = None
+        self._docs: Any | None = None
         self._started = False
         self._signal_stop = threading.Event()
         self._observability = HostObservability(self)
@@ -182,6 +183,11 @@ class ApplicationHost:
     def analytics(self):
         """Analytics service API — BI describe/query (0.35)."""
         return self._analytics
+
+    @property
+    def docs(self):
+        """Docs service API — Living Library list/get/status/rebuild (0.54.3)."""
+        return self._docs
 
     @property
     def work_drain(self):
@@ -552,6 +558,7 @@ class ApplicationHost:
         self._assist = built.get("assist")
         self._design = built.get("design")
         self._analytics = built.get("analytics")
+        self._docs = built.get("docs")
         if self._assist is not None and self._analytics is not None:
             self._assist.bind_analytics(self._analytics)
         self._wire_dashboard_store()

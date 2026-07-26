@@ -65,8 +65,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.54.0 Plan + ADR-023 (storage + DocsService + multi-corpus) | ✅ |
 | 0.54.1 Storage schema + pin (`palm.common.library`) | ✅ |
 | 0.54.2 Wiki corpus publish → storage | ✅ |
-| 0.54.3 DocsService stub | pending |
-| 0.54.4+ pipeline, tests, Assist, export phenotype | pending |
+| 0.54.3 DocsService stub (list/get/status/rebuild) | ✅ |
+| 0.54.4+ pipeline, Assist, export phenotype | pending |
 
 ## Key Capabilities (Mature)
 
