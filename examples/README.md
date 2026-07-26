@@ -80,8 +80,9 @@ palm process submit data-ingestion
 
 Purpose-test flows — **only** `neonroot` resources::
 
-    palm flow start hermetic-job-smoke   # wizard resource chain
-    palm flow start hermetic-job-dag     # DAG pattern v0
+    palm flow start hermetic-job-smoke    # wizard resource chain
+    palm flow start hermetic-job-dag      # linear DAG
+    palm flow start hermetic-job-fanout   # fan-out DAG (A‖B then join)
 
 See [docs/HERMETIC-JOBS.md](../docs/HERMETIC-JOBS.md). Spawn needs `just ci-image`.
 

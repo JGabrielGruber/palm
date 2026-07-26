@@ -90,10 +90,10 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 | **0.54.1** ✅ | Hermetic job contract (`neonroot.contract`, [HERMETIC-JOBS.md](HERMETIC-JOBS.md)) + tests |
 | **0.54.2** ✅ | Dogfood flow `hermetic-job-smoke` (neonroot only: preflight → spawn true) |
 | **0.54.3** ✅ | **DAG pattern v0** — resource nodes, depends_on / implicit chain, one node per tick |
-| **0.54.4** | DAG + neonroot: fan-out or multi-node hermetic example |
+| **0.54.4** ✅ | DAG fan-out dogfood: `hermetic-job-fanout` (preflight → A‖B → join) |
 | **0.54.5** | Run-dir contract / bind-mode notes when NeonRoot supports bind; GC policy |
-| **0.54.6** | Second dogfood process (e.g. “hermetic ci slice”) proving non-docs reuse |
-| **0.54.7** | Docs: DEVELOPMENT / AGENTS — purpose test; point Living Library product to 0.55 |
+| **0.54.6** | Second dogfood process (e.g. hermetic ci slice) proving non-docs reuse |
+| **0.54.7** | Docs: DEVELOPMENT / AGENTS — purpose test; Living Library product → 0.55 |
 
 ---
 
@@ -113,7 +113,8 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 | Theme | Content |
 |-------|---------|
 | **0.55** | Optional **docs dogfood domain** — Living Library as business process on hermetic jobs + kv; DocsService optional composition |
-| **Later** | Payload artifact registry; DAG advanced scheduling; adapter runners (PD-022) via neonroot |
+| **Assist “run code”** | Operator picks **image**, supplies **payload/code**, Palm stages + **neonroot.spawn**, returns stdout/artifacts — complex flow on this theme’s grammar (payload allowlists, not `exec` in-engine) |
+| **Later** | Payload artifact registry; true parallel ready-set; adapter runners (PD-022); NeonRoot bind-mode + Palm run-dir |
 
 ---
 

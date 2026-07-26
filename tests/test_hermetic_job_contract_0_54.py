@@ -88,5 +88,5 @@ def test_hermetic_job_smoke_definitions() -> None:
 
     repo = _Repo()
     register_definitions(repo)
-    # 2 resources + 2 flows + 2 processes (smoke wizard + dag)
-    assert repo.n == 6
+    # 2 resources + 3 flows + 3 processes (smoke + dag + fanout)
+    assert repo.n == 8

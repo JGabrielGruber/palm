@@ -127,6 +127,51 @@ HERMETIC_JOB_DAG_PROCESS = ProcessDefinition(
     },
 )
 
+# 0.54.4 — fan-out: preflight → (branch_a || branch_b) → join  (v0 runs ready nodes one-at-a-time)
+HERMETIC_JOB_FANOUT_FLOW = FlowDefinition(
+    id="flow-hermetic-job-fanout",
+    name="hermetic-job-fanout",
+    pattern="dag",
+    options={
+        "chain_implicit": False,
+        "nodes": [
+            {
+                "id": "preflight",
+                "resource_ref": "hermetic-preflight",
+                "output_key": "hermetic_preflight",
+            },
+            {
+                "id": "branch_a",
+                "resource_ref": "hermetic-true-job",
+                "depends_on": ["preflight"],
+                "output_key": "branch_a",
+            },
+            {
+                "id": "branch_b",
+                "resource_ref": "hermetic-true-job",
+                "depends_on": ["preflight"],
+                "output_key": "branch_b",
+            },
+            {
+                "id": "join",
+                "resource_ref": "hermetic-true-job",
+                "depends_on": ["branch_a", "branch_b"],
+                "output_key": "join",
+            },
+        ],
+    },
+)
+
+HERMETIC_JOB_FANOUT_PROCESS = ProcessDefinition(
+    id="proc-hermetic-job-fanout",
+    name="hermetic-job-fanout",
+    flows=[HERMETIC_JOB_FANOUT_FLOW],
+    metadata={
+        "example": True,
+        "description": "0.54.4 DAG fan-out dogfood: preflight then two hermetic jobs then join",
+    },
+)
+
 
 def register_definitions(repository: object) -> None:
     save_resource = getattr(repository, "save_resource", None)
@@ -138,6 +183,8 @@ def register_definitions(repository: object) -> None:
     if callable(save_flow):
         save_flow(HERMETIC_JOB_SMOKE_FLOW)
         save_flow(HERMETIC_JOB_DAG_FLOW)
+        save_flow(HERMETIC_JOB_FANOUT_FLOW)
     if callable(save_process):
         save_process(HERMETIC_JOB_SMOKE_PROCESS)
         save_process(HERMETIC_JOB_DAG_PROCESS)
+        save_process(HERMETIC_JOB_FANOUT_PROCESS)

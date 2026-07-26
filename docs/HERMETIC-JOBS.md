@@ -39,26 +39,39 @@ NeonRoot workspaces run on **tmpfs** (fast, disposable). Promote results with
 ## Dogfood flows
 
 ```bash
-palm flow start hermetic-job-smoke   # wizard of resource steps (0.54.2)
-palm flow start hermetic-job-dag     # same graph as DAG pattern (0.54.3)
+palm flow start hermetic-job-smoke    # wizard resource chain (0.54.2)
+palm flow start hermetic-job-dag      # linear DAG (0.54.3)
+palm flow start hermetic-job-fanout   # preflight → A‖B → join (0.54.4)
 ```
 
-Needs NeonRoot CLI; spawn step needs `just ci-image`.
+Needs NeonRoot CLI; spawn steps need `just ci-image`.
 
 ### DAG definition shape (v0)
 
 ```yaml
 pattern: dag
 options:
+  chain_implicit: false   # set true (default) to chain list order when deps empty
   nodes:
     - id: preflight
       resource_ref: hermetic-preflight
-    - id: run_true
+    - id: branch_a
       resource_ref: hermetic-true-job
-      # depends_on: [preflight]  # optional; list order chains if all empty
+      depends_on: [preflight]
+    - id: branch_b
+      resource_ref: hermetic-true-job
+      depends_on: [preflight]
+    - id: join
+      resource_ref: hermetic-true-job
+      depends_on: [branch_a, branch_b]
 ```
 
-One ready node per tick; state under `dag.*`.
+One ready node per tick (stable order among ready); state under `dag.*`.
+
+### Future: Assist “run code”
+
+Pick an image, provide a payload/script, Palm stages + `neonroot.spawn`, return result —
+builds on this contract (not in-engine `exec`). See VISION-0.54 horizon.
 
 ## Docs product domain
 

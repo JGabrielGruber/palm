@@ -95,6 +95,59 @@ def test_dag_fails_on_resource_error() -> None:
     assert state.get("dag")["status"] == "failed"
 
 
+def test_fan_out_deps_run_after_preflight() -> None:
+    """preflight → (a, b) → join; one ready node per tick (stable order)."""
+    engine = MagicMock()
+    calls: list[str] = []
+
+    def _invoke(ref, **kwargs):
+        # encode node via output tracking — invoke only gets resource_ref
+        calls.append(str(ref))
+        return ProviderResult.ok({"ok": True, "n": len(calls)})
+
+    engine.invoke.side_effect = _invoke
+    engine.is_initialized = True
+
+    cfg = DagConfig.from_options(
+        {
+            "chain_implicit": False,
+            "nodes": [
+                {"id": "preflight", "resource_ref": "health-res"},
+                {
+                    "id": "branch_a",
+                    "resource_ref": "job-res",
+                    "depends_on": ["preflight"],
+                    "output_key": "a",
+                },
+                {
+                    "id": "branch_b",
+                    "resource_ref": "job-res",
+                    "depends_on": ["preflight"],
+                    "output_key": "b",
+                },
+                {
+                    "id": "join",
+                    "resource_ref": "job-res",
+                    "depends_on": ["branch_a", "branch_b"],
+                    "output_key": "j",
+                },
+            ],
+        }
+    )
+    pattern = DagPattern(config=cfg, resource_engine=engine)
+    state = DictBackedState()
+
+    assert pattern.tick(state) == PatternStatus.RUNNING  # preflight
+    assert calls == ["health-res"]
+    assert pattern.tick(state) == PatternStatus.RUNNING  # branch_a (stable order)
+    assert pattern.tick(state) == PatternStatus.RUNNING  # branch_b
+    assert pattern.tick(state) == PatternStatus.SUCCESS  # join
+    assert calls == ["health-res", "job-res", "job-res", "job-res"]
+    assert state.get("a") is not None and state.get("b") is not None
+    assert state.get("j") is not None
+    assert state.get("dag")["status"] == "succeeded"
+
+
 def test_builder_wires_resource_engine() -> None:
     from palm.common.patterns.build_context import PatternBuildContext
     from palm.definitions.flow import FlowDefinition
