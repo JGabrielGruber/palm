@@ -83,6 +83,33 @@ def build_doctor_report(
                 if lag > 100:
                     issues.append(f"journal consumer {name!r} lag={lag}")
 
+    # 0.53.6 — Sovereign Runners (NeonRoot) surface
+    neonroot: dict[str, Any] = {}
+    composition_has_neonroot: bool | None = None
+    for attr in ("application_host", "host_bridge", "_host_bridge", "host"):
+        host = getattr(runtime, attr, None)
+        if host is None:
+            continue
+        composition = getattr(host, "composition", None)
+        if composition is not None and hasattr(composition, "has"):
+            try:
+                composition_has_neonroot = bool(composition.has("neonroot"))
+            except Exception:
+                composition_has_neonroot = None
+            break
+    try:
+        from palm.providers.neonroot.doctor import (
+            neonroot_doctor_issues,
+            neonroot_doctor_section,
+        )
+
+        neonroot = neonroot_doctor_section(
+            composition_has_neonroot=composition_has_neonroot,
+        )
+        issues.extend(neonroot_doctor_issues(neonroot))
+    except Exception as exc:
+        neonroot = {"available": False, "error": f"neonroot doctor probe failed: {exc}"}
+
     return {
         "status": "ok" if not issues else "degraded",
         "version": __version__,
@@ -95,6 +122,7 @@ def build_doctor_report(
         "registries": registries,
         "resource_count": resource_count,
         "resource_preflight": resource_preflight,
+        "neonroot": neonroot,
         "control_plane": cp or {
             "work_pending": 0,
             "work_drain_running": False,

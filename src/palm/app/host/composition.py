@@ -23,7 +23,14 @@ from typing import Literal, Self
 ServiceName = Literal["system", "definitions", "execution", "assist", "design", "analytics"]
 SurfaceName = Literal["rest", "websocket", "mcp", "explorer", "studio"]
 Capability = Literal[
-    "work_drain", "outbox", "compensation", "webhook", "journal", "analytics", "projections"
+    "work_drain",
+    "outbox",
+    "compensation",
+    "webhook",
+    "journal",
+    "analytics",
+    "projections",
+    "neonroot",  # 0.53.8 — hermetic runners available (provider optional at CLI)
 ]
 
 #: The full service set the host builds today (pinned to CORE_SERVICE_PROVIDERS by tests).
@@ -41,7 +48,7 @@ CORE_SERVICES: tuple[ServiceName, ...] = ("system", "definitions", "execution")
 SERVER_SURFACES: tuple[SurfaceName, ...] = ("rest", "websocket", "mcp", "explorer", "studio")
 #: Background/optional capabilities on for a full host by default.
 DEFAULT_CAPABILITIES: frozenset[Capability] = frozenset(
-    {"outbox", "compensation", "journal", "analytics", "projections"}
+    {"outbox", "compensation", "journal", "analytics", "projections", "neonroot"}
 )
 
 

@@ -1,6 +1,6 @@
 # VISION 0.53 — Sovereign Runners (NeonRoot as a Palm provider)
 
-**Status:** 🟢 **Open (0.53.0)** — plan + [ADR-022](adr/022-neonroot-provider.md).  
+**Status:** 🟢 **Landed (0.53.1–0.53.8)** — plan + [ADR-022](adr/022-neonroot-provider.md). Theme ready for **0.54**.  
 **Theme:** Make **hermetic execution** a first-class Palm capability: NeonRoot is not only a justfile habit for CI — it is a **provider** the resource engine can invoke.  
 **Lineage:** ADR-016 (NeonRoot CI) · ADR-003 (provider apps) · Living Library BUILD (0.52) · composition capabilities (0.51).  
 **Sequel:** **[VISION-0.54](VISION-0.54.md)** — Palm **pipeline** builds the Living Library *on* these runners (docs dogfood).
@@ -128,9 +128,9 @@ params:
 | **0.53.3** ✅ | Resource bindings + example definitions (`neonroot_runners`) | ResourceEngine path |
 | **0.53.4** ✅ | `palm-docs` image + Tailwind-in-image; `just docs-image` / `docs-css-sandbox` / `docs-build-sandbox` | Thin workspace option |
 | **0.53.5** ✅ | Adopt NeonRoot `--output` + `--seed-exclude` in recipes + provider spawn params | Operator UX |
-| **0.53.6** | Events + doctor surface (spawn lifecycle; neonroot section) | Observability |
-| **0.53.7** | Assist / MCP path *(optional)* — “run hermetic check/build” via resource or thin assist alias | Operator loop |
-| **0.53.8** | Composition note — optional capability or settings flag for neonroot availability | 0.51 grammar |
+| **0.53.6** ✅ | Doctor surface — `neonroot` section (CLI probe + soft issues) | Observability |
+| **0.53.7** ✅ | Assist discover + MCP examples for neonroot resources | Operator loop |
+| **0.53.8** ✅ | Composition capability `neonroot` + `enable_neonroot_runners` settings | 0.51 grammar |
 
 ---
 

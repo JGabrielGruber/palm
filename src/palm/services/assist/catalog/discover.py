@@ -30,8 +30,26 @@ def discover(query: str = "", *, limit: int = 12) -> dict[str, Any]:
         {
             "alias": "assist/doctor",
             "kind": "alias",
-            "summary": "Engine health + resource preflight",
+            "summary": "Engine health + resource preflight (+ neonroot section)",
             "call": 'palm_assist(alias="assist/doctor")',
+        },
+        {
+            "kind": "resource",
+            "summary": "NeonRoot CLI health (Sovereign Runners)",
+            "call": 'palm_providers_invoke(resource_ref="neonroot-health")',
+            "alias": "neonroot-health",
+        },
+        {
+            "kind": "resource",
+            "summary": "Hermetic true in palm-ci (needs NeonRoot + just ci-image)",
+            "call": 'palm_providers_invoke(resource_ref="neonroot-spawn-true")',
+            "alias": "neonroot-spawn-true",
+        },
+        {
+            "kind": "resource",
+            "summary": "Living Library build in palm-docs sandbox",
+            "call": 'palm_providers_invoke(resource_ref="neonroot-spawn-docs-build")',
+            "alias": "neonroot-spawn-docs-build",
         },
         {
             "alias": "assist/menu",

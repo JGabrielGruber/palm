@@ -170,6 +170,9 @@ def _capabilities_from_settings(settings: PalmSettings) -> frozenset[str]:
         capabilities.add("work_drain")
     if settings.analytics_enabled:
         capabilities.add("analytics")
+    # 0.53.8 — soft composition flag for hermetic runners (does not load NeonRoot).
+    if getattr(settings, "enable_neonroot_runners", True):
+        capabilities.add("neonroot")
     return frozenset(capabilities)
 
 

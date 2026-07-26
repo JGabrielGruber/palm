@@ -58,7 +58,10 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.53.3 Resource bindings + example definitions | ✅ |
 | 0.53.4 palm-docs image + docs-css-sandbox | ✅ |
 | 0.53.5 NeonRoot `--output` / seed-exclude in recipes + provider | ✅ |
-| 0.53.6+ doctor/assist | pending |
+| 0.53.6 Doctor neonroot section | ✅ |
+| 0.53.7 Assist discover + MCP neonroot examples | ✅ |
+| 0.53.8 Composition capability `neonroot` + settings flag | ✅ |
+| **0.53 theme** | ✅ closed — next [0.54 Library Pipeline](docs/VISION-0.54.md) |
 
 ## Key Capabilities (Mature)
 

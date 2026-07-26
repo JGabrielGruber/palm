@@ -194,6 +194,46 @@ def run_doctor(ctx: CliContext) -> int:
             if note:
                 console.print(f"[dim]{note}[/]")
 
+    # 0.53.6 — NeonRoot / Sovereign Runners
+    try:
+        from palm.providers.neonroot.doctor import (
+            neonroot_doctor_issues,
+            neonroot_doctor_section,
+        )
+
+        composition = getattr(host, "composition", None)
+        has_nr = None
+        if composition is not None and hasattr(composition, "has"):
+            has_nr = bool(composition.has("neonroot"))
+        nr = neonroot_doctor_section(composition_has_neonroot=has_nr)
+        issues.extend(neonroot_doctor_issues(nr))
+        nr_table = Table(title="NeonRoot (Sovereign Runners)", show_lines=True)
+        nr_table.add_column("Item", style="cyan")
+        nr_table.add_column("Value")
+        nr_table.add_row(
+            "provider registered",
+            "[green]yes[/]" if nr.get("registered") else "[red]no[/]",
+        )
+        nr_table.add_row(
+            "CLI available",
+            (
+                f"[green]yes[/] {nr.get('version') or nr.get('path') or ''}"
+                if nr.get("available")
+                else f"[yellow]no[/] {nr.get('error') or ''}"
+            ),
+        )
+        if has_nr is not None:
+            nr_table.add_row(
+                "composition capability",
+                "[green]neonroot[/]" if has_nr else "[dim]not declared[/]",
+            )
+        nr_table.add_row("images", ", ".join(nr.get("images_hint") or ()) or "—")
+        console.print(nr_table)
+        if nr.get("note"):
+            console.print(f"[dim]{nr['note']}[/]")
+    except Exception as exc:
+        console.print(f"[yellow]NeonRoot doctor section skipped:[/] {exc}")
+
     if issues:
         console.print(
             Panel(

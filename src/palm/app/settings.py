@@ -65,6 +65,9 @@ class PalmSettings(BaseSettings):
     projection_rebuild_skip_if_fresh: bool = True
     enable_compensation: bool = True
     enable_webhook_dispatcher: bool = False
+    # 0.53.8 — declare composition capability "neonroot" (hermetic runners). Does not
+    # install the CLI; doctor soft-flags when declared but neonroot is missing on PATH.
+    enable_neonroot_runners: bool = True
     webhook_urls: list[str] = Field(default_factory=list)
     webhook_event_types: list[str] = Field(default_factory=list)
     worker_ready_timeout: float = 5.0
