@@ -43,7 +43,7 @@ Make the 0.20 assistant envelope the **default human experience** in CLI and Exp
 1. **Single source of humanize** — CLI and Explorer call [`build_assistant_view`](../../../src/palm/services/assist/views.py) via `AssistSession.context()` or `ctx.assist.dispatch(..., format="assistant")`. No copy of `_humanize_*` in runtimes.
 2. **Common stays small** — no new humanize logic in `palm/common/`; `just guard-common` must pass every release.
 3. **Powertool defaults unchanged** — `palm_flows_*` and flows REST default to powertool; `format=assistant` is opt-in only.
-4. **Reuse Explorer patterns** — assist SSR mirrors wizard HTMX contract ([EXPLORER-WIZARD.md](../../../EXPLORER-WIZARD.md)); new `#assist-workspace` target, same loading/disable overlay pattern.
+4. **Reuse Explorer patterns** — assist SSR mirrors wizard HTMX contract ([EXPLORER-WIZARD.md](../../wiki/guides/explorer-wizard.md)); new `#assist-workspace` target, same loading/disable overlay pattern.
 5. **Assist routes for assist UI** — Explorer assist pages dispatch through `ctx.assist`, not flows CQRS.
 6. **Core purity unchanged** — view shaping remains service/runtime concern.
 
@@ -421,6 +421,6 @@ just guard-common
 - [Assistant vs Powertool views (0.20)](2026-07-01-assistant-powertool-views-design.md)
 - [Assist domain design](2026-07-01-assist-domain-design.md)
 - [MIGRATION-0.20.md](../../migrations/MIGRATION-0.20.md)
-- [EXPLORER-WIZARD.md](../../../EXPLORER-WIZARD.md)
+- [EXPLORER-WIZARD.md](../../wiki/guides/explorer-wizard.md)
 - [docs/MCP.md](../../MCP.md)
 - [STATUS.md](../../STATUS.md)

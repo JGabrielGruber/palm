@@ -489,7 +489,7 @@ flowchart LR
     htmx[HTMX POST input] --> ws
 ```
 
-Collection steps render a dedicated UI (overview grid, per-item edit/remove, field-phase draft, remove confirm) that maps to the same backend phase strings the CLI uses. See [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md).
+Collection steps render a dedicated UI (overview grid, per-item edit/remove, field-phase draft, remove confirm) that maps to the same backend phase strings the CLI uses. See [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md).
 
 **Wizard phase system** (0.13 internal refactor): each `step_kind` registers a phase factory under `palm/patterns/wizard/phases/`. Collection steps compose a `PhaseKeyedSelectorNode` subtree (`menu` → `select_item` → `field` → `remove_confirm`). `WizardPattern.tick()` only drives the root tree — backtrack, validation, and completion are phase responsibilities. See [MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md).
 

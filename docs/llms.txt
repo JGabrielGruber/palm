@@ -203,7 +203,7 @@ src/palm/
 | docs/PATTERN-APPS.md | PatternApp manifests, bindings/flow layout, common boundary |
 | docs/PROVIDER-APPS.md | ProviderApp manifests, bindings/flow layout for providers; palm reference |
 | docs/adr/002-pattern-apps-and-common-boundaries.md | ADR for pattern/common split |
-| EXPLORER-WIZARD.md | Explorer wizard workspace + collection UI guide |
+| docs/wiki/guides/explorer-wizard.md | Explorer wizard workspace + collection UI guide |
 | docs/MCP.md | **Agent MCP guide** — setup, workflows, full tool inventory |
 | docs/skills/palm/SKILL.md | Portable agent skill — copy into Cursor, Claude, or custom hosts |
 | docs/mcp.txt | MCP operator guide (`palm://agent/guide` default) |

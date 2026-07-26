@@ -8,6 +8,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; root declutter and T6 gates next; thin `just docs-build` (no heavy doc frameworks). **0.53** reserved for building the library *with Palm* (pipeline dogfood).
 - **0.52.1** — Docs gates green (PD-031): `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy `docs/llms.txt`, `docs/mcp.txt`, and `docs/skills/palm` into MCP data + `.grok` mirrors so bumps no longer re-break `docs-check`.
 - **0.52.2** — Root declutter (PD-021): `git mv` `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; link rewrite + folder READMEs. Root keeps constitution-scale markdown only.
+- **0.52.3** — Shelf tree: `docs/wiki/` (guides + concept stubs), `docs/LIBRARY.md` (SOURCE/BUILD/SURFACE contract), `docs/site/` reserved; Explorer wizard guide moved to `docs/wiki/guides/explorer-wizard.md`. Landing page stays at `docs/index.html` until assemble.
 
 ## [0.51.6] — 2026-07-16
 
@@ -1049,7 +1050,7 @@ Guide: [docs/MCP.md](docs/MCP.md) · Agent context: [docs/llms.txt](docs/llms.tx
 
 **Wizard Experience release** — first-class `/v1/wizards` REST surface, HTMX-powered Explorer workspace, and rich collection-step UI.
 
-Vision: [docs/VISION-0.13.md](docs/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md) · Phases: [src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md)
+Vision: [docs/VISION-0.13.md](docs/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md) · Phases: [src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md)
 
 ### Added
 
@@ -1060,7 +1061,7 @@ Vision: [docs/VISION-0.13.md](docs/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md
 - **Collection step UI** — overview card, numbered item cards, add/edit/remove flows, field-phase draft panel, remove confirmation dialog
 - **`collection_input.py`** — maps Explorer form actions to wizard `provide_input` values (including compound edit/remove)
 - **Extended job inspection** — collection phase metadata (`collection_draft`, `collection_progress`, `item_fields`, …) flows into wizard `prompt`
-- **Guide** — [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md) for operators and integrators
+- **Guide** — [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md) for operators and integrators
 - **Tests** — `tests/test_server_wizards.py`, Explorer wizard + collection HTMX coverage in `tests/test_server_ssr.py`
 
 ### Changed

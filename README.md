@@ -173,7 +173,7 @@ curl -s -X POST http://localhost:8080/v1/api/flows/todo-builder/create \
 open http://localhost:8080/explorer/instances/<session_id>
 ```
 
-Use **Add New** on the collection overview, fill fields, edit or remove items, then **Continue to summary**. Full guide: [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md).
+Use **Add New** on the collection overview, fill fields, edit or remove items, then **Continue to summary**. Full guide: [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md).
 
 **Try the new examples:**
 

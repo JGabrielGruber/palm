@@ -2,6 +2,7 @@
 
 **Current Version:** `0.51.6` · **Theme open:** `0.52.0` The Living Library  
 **Last Updated:** July 26, 2026  
+**Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
 **Maturity:** Wizard · MCP · Assist remote · Portal/WS · Analytics + dashboards · WorkIntent / journal · event stream · composition profiles (0.49–0.51) · **0.52 The Living Library (docs-as-code / T6) opened** · Debt paydown 0.46–0.48 (T1 CI, T3 imports, T2 host split).
 
 ## Quick Overview
@@ -37,7 +38,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | 0.52.0 Plan + ADR-021 | ✅ |
 | 0.52.1 Gates green — doc mirrors + `sync_version` copies them (PD-031) | ✅ |
 | 0.52.2 Root declutter — RELEASE → `docs/releases/`, MIGRATION → `docs/migrations/` (PD-021) | ✅ |
-| 0.52.3+ shelves, stamps, thin builder, assemble… | pending |
+| 0.52.3 Shelf tree — `docs/wiki/`, `LIBRARY.md`, static vs `_build` contract | ✅ |
+| 0.52.4+ stamps, ADR hygiene, thin builder, assemble… | pending |
 
 ## Key Capabilities (Mature)
 
@@ -60,7 +62,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 ## 0.13 — Wizard Experience (Shipped)
 
 **Vision document:** [docs/VISION-0.13.md](docs/VISION-0.13.md)  
-**Operator guide:** [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md)  
+**Operator guide:** [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md)  
 **Phase refactor:** [src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md)  
 **Release checklist:** [RELEASE-0.13.0.md](docs/releases/RELEASE-0.13.0.md)
 
@@ -175,7 +177,7 @@ just mcp-inspector                       # MCP Inspector UI
 | `docs/PROVIDER-APPS.md`| Good           | Canonical ProviderApp + bindings/flow guide |
 | `docs/adr/002-*.md`   | Good            | Pattern/common boundary ADR |
 | `docs/adr/003-*.md`   | Good            | Provider app layout ADR |
-| `EXPLORER-WIZARD.md`  | Good            | Human operator + integrator guide |
+| `docs/wiki/guides/explorer-wizard.md`  | Good            | Human operator + integrator guide |
 | `docs/VISION-0.13.md` | Good            | Release vision |
 | `docs/index.html`     | Good            | v0.16.5 badge + service API in featureList |
 | `docs/mcp.txt`        | Good            | MCP operator guide (`palm://agent/guide` default) |
@@ -512,7 +514,7 @@ just mcp-inspector                       # MCP Inspector UI
 ## Useful Links
 
 - [CHANGELOG.md](CHANGELOG.md)
-- [EXPLORER-WIZARD.md](EXPLORER-WIZARD.md)
+- [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md)
 - [ARCHITECTURE.md](ARCHITECTURE.md)
 - [AGENTS.md](AGENTS.md)
 - [DEVELOPMENT.md](DEVELOPMENT.md)

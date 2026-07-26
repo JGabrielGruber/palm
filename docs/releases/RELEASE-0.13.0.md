@@ -10,7 +10,7 @@
 - [ ] `just check` passes (lint, typecheck, test-quick, guard-core)
 - [ ] `just test-full` green (optional but recommended before PyPI)
 - [ ] `just docs-build` — Tailwind CSS rebuilt if `docs/` changed
-- [ ] Review [EXPLORER-WIZARD.md](../../EXPLORER-WIZARD.md) and [docs/VISION-0.13.md](../VISION-0.13.md)
+- [ ] Review [EXPLORER-WIZARD.md](../wiki/guides/explorer-wizard.md) and [docs/VISION-0.13.md](../VISION-0.13.md)
 
 ## Build & verify
 
@@ -53,4 +53,4 @@ Create GitHub release from tag `v0.13.0`:
 - **Explorer wizard workspace** with HTMX partial updates
 - **Collection step UI** — overview card, add/edit/remove, field draft, remove confirm
 - Wizard **phase modularization** under `palm/patterns/wizard/phases/`
-- Guide: [EXPLORER-WIZARD.md](../../EXPLORER-WIZARD.md)
+- Guide: [EXPLORER-WIZARD.md](../wiki/guides/explorer-wizard.md)

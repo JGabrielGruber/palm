@@ -181,4 +181,4 @@ The image installs `[cli]` and `[mcp]` extras. `docs/` and `examples/definitions
 | [docs/mcp.txt](mcp.txt) | `palm://agent/guide` |
 | [docs/skills/palm/](skills/palm/) | Portable agent skill |
 | [DEVELOPMENT.md](../DEVELOPMENT.md) | Contributor setup |
-| [EXPLORER-WIZARD.md](../EXPLORER-WIZARD.md) | Explorer UI guide |
+| [EXPLORER-WIZARD.md](wiki/guides/explorer-wizard.md) | Explorer UI guide |

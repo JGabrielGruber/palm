@@ -111,4 +111,4 @@ The `prompt` block on `GET /v1/wizards/{id}` includes `collection_phase`,
 `collection_items`, `collection_draft`, `item_fields`, and related metadata
 from live job inspection — Explorer renders phase-specific UI from this payload.
 
-See [EXPLORER-WIZARD.md](../../../../EXPLORER-WIZARD.md) (repo root).
+See [explorer-wizard guide](../../../../docs/wiki/guides/explorer-wizard.md).

@@ -123,7 +123,7 @@ curl -s -X POST http://localhost:8080/v1/wizards \
 # Open /explorer/instances/<instance_id> — Add New, edit/remove items, continue to summary
 ```
 
-See [EXPLORER-WIZARD.md](../EXPLORER-WIZARD.md).
+See [EXPLORER-WIZARD.md](../docs/wiki/guides/explorer-wizard.md).
 
 ## Migrate instance demo (`migrate-instance-demo`)
 
