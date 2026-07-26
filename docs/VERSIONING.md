@@ -59,12 +59,10 @@ Bump with (**at an embedded-release point — a minor or patch-group — not per
 just bump-version 0.X.N        # → scripts/sync_version.py --set
 ```
 
-This propagates the stamp to the **auto-synced** surfaces: `README.md`, `STATUS.md`, `docs/llms.txt`,
-`docs/mcp.txt`, `docs/DOCKER.md`, `docs/index.html`. Verify with `just sync-version --check` and `just docs-check`.
-
-> ⚠️ **Not auto-synced today:** `ARCHITECTURE.md`, `DEVELOPMENT.md`, `SCOPE.md`. They are stamped by hand and
-> have drifted (TECH-DEBT `PD-019`). Update them manually on relevant changes, or extend `SYNC_TARGETS` in
-> `scripts/sync_version.py`.
+This propagates the stamp to the **auto-synced** surfaces: `README.md`, `STATUS.md`, `ARCHITECTURE.md`,
+`DEVELOPMENT.md`, `SCOPE.md`, `docs/llms.txt`, `docs/mcp.txt`, `docs/DOCKER.md`, `docs/index.html`, plus
+MCP/Grok **doc mirrors** ([0.52.1](VISION-0.52.md)). Verify with `uv run python scripts/sync_version.py --check`
+and `just docs-check`.
 
 ## Publishing
 

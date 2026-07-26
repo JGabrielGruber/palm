@@ -76,7 +76,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 | PD-024 | 163 broad `except Exception`, several swallow errors | T8 | convention | S3 | layer | M | 3 | confirmed |
 | PD-029 | `urllib.urlopen` with no scheme allowlist (9 sites) | T9 | dependency-security | S3 | layer | M | 3 | confirmed |
 | PD-030 | Empty extras `postgres=[]`/`mongodb=[]` (drivers unpinned) | T7/T9 | dependency-security | S3 | module | S | 3 | confirmed |
-| PD-019 | Doc version stamps ~30 minors behind | T6 | doc-drift | S3 | layer | M | 3 | confirmed |
+| PD-019 | ~~~Doc version stamps ~30 minors behind~~~ **closed 0.52.4** — ARCHITECTURE/DEVELOPMENT/SCOPE in SYNC_TARGETS + docs-check | T6 | doc-drift | S3 | layer | M | 3 | ✅ done |
 | PD-020 | ADR discipline broken (013 missing, stops at 014) | T6 | doc-drift | S3 | layer | M | 3 | confirmed |
 | PD-031 | ~~~`docs-check` gate RED on master (skill/mcp-data mirror drift)~~~ **closed 0.52.1** — mirrors sync via `docs_mirrors` + `sync_version` | T6 | ci-tooling | S3 | module | S | 3 | ✅ done |
 | PD-006 | `.pre-commit-config.yaml` missing (half-wired) | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
@@ -170,7 +170,9 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 
 ### T6 — Docs-as-code is unenforced
 
-**PD-019 — Version stamps ~30 minors behind.** `S3 · layer · Effort M · Docs-as-Code(§5)` — ARCHITECTURE.md 0.13.13, STATUS.md 0.39.0, README.md 0.34.5, DEVELOPMENT.md 0.16.5, SCOPE.md 0.13.0 vs code 0.45.8 (08-docs.txt). Reuse the existing `scripts/sync_version.py` + `scripts/docs_check.py` (already wired but not gating).
+**PD-019 — Version stamps ~30 minors behind.** `S3 · layer · Effort M · Docs-as-Code(§5)` — **✅ closed 0.52.4**
+- Was: ARCHITECTURE / DEVELOPMENT / SCOPE header stamps lagged dozens of minors (audit 08-docs).
+- Fix: `SYNC_TARGETS` + `docs-check` surfaces include those three; `just bump-version` / `sync_version` keep headers on the package version.
 
 **PD-020 — ADR discipline broken.** `S3 · layer · Effort M` — `docs/adr/` runs 001–012 then 014; **013 missing**; most post-0.25 features (through 0.45) have no ADR despite the "every significant decision needs an ADR" rule (08-docs.txt).
 

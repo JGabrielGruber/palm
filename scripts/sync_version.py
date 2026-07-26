@@ -50,6 +50,25 @@ def _register_targets(version: str) -> None:
             rf"\g<1>{version}",
         ),
     ]
+    # Constitution stamps (PD-019 / 0.52.4) — header only; body history may still cite older minors
+    SYNC_TARGETS[ROOT / "ARCHITECTURE.md"] = [
+        (
+            re.compile(r"(\*\*Palm Engine\*\* · \*\*)[0-9.]+(\*\*)"),
+            rf"\g<1>{version}\g<2>",
+        ),
+    ]
+    SYNC_TARGETS[ROOT / "DEVELOPMENT.md"] = [
+        (
+            re.compile(r"(Guide for contributors working on Palm \*\*)[0-9.]+(\*\*)"),
+            rf"\g<1>{version}\g<2>",
+        ),
+    ]
+    SYNC_TARGETS[ROOT / "SCOPE.md"] = [
+        (
+            re.compile(r"(\*\*Version:\*\* )[0-9.]+"),
+            rf"\g<1>{version}",
+        ),
+    ]
     index = ROOT / "docs/index.html"
     SYNC_TARGETS[index] = [
         (re.compile(r'("version": ")[^"]+(")'), rf'\g<1>{version}\g<2>'),

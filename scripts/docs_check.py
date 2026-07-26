@@ -61,6 +61,9 @@ VERSION_SOURCES = (PYPROJECT, INIT)
 SYNC_SURFACE_FILES = (
     ROOT / "README.md",
     ROOT / "STATUS.md",
+    ROOT / "ARCHITECTURE.md",
+    ROOT / "DEVELOPMENT.md",
+    ROOT / "SCOPE.md",
     ROOT / "docs/index.html",
     ROOT / "docs/llms.txt",
 )

@@ -9,6 +9,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - **0.52.1** — Docs gates green (PD-031): `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy `docs/llms.txt`, `docs/mcp.txt`, and `docs/skills/palm` into MCP data + `.grok` mirrors so bumps no longer re-break `docs-check`.
 - **0.52.2** — Root declutter (PD-021): `git mv` `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; link rewrite + folder READMEs. Root keeps constitution-scale markdown only.
 - **0.52.3** — Shelf tree: `docs/wiki/` (guides + concept stubs), `docs/LIBRARY.md` (SOURCE/BUILD/SURFACE contract), `docs/site/` reserved; Explorer wizard guide moved to `docs/wiki/guides/explorer-wizard.md`. Landing page stays at `docs/index.html` until assemble.
+- **0.52.4** — Stamp completeness (PD-019): `ARCHITECTURE.md` / `DEVELOPMENT.md` / `SCOPE.md` header versions in `SYNC_TARGETS` and `docs-check` surfaces; no more silent multi-minor drift on those docs.
 
 ## [0.51.6] — 2026-07-16
 

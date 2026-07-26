@@ -6,7 +6,7 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 
 | Path | Role |
 |------|------|
-| Repo root constitution | `README`, `AGENTS`, `PHILOSOPHY`, `STATUS`, `TECH-DEBT`, `ARCHITECTURE`, `DEVELOPMENT`, `SCOPE`, `CHANGELOG` |
+| Repo root constitution | `README`, `AGENTS`, `PHILOSOPHY`, `STATUS`, `TECH-DEBT`, `ARCHITECTURE`, `DEVELOPMENT`, `SCOPE`, `CHANGELOG` — header version stamps on ARCHITECTURE / DEVELOPMENT / SCOPE sync via `scripts/sync_version.py` (0.52.4) |
 | `docs/wiki/` | Human narrative — guides & concepts |
 | `docs/adr/` | Decisions |
 | `docs/migrations/`, `docs/releases/` | Point-in-time notes |
