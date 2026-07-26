@@ -102,7 +102,12 @@ mcp-inventory surface='full':
     uv run --extra mcp python scripts/mcp_catalog_inventory.py --surface {{surface}}
 
 bump-version version:
+    # Stamps version surfaces *and* copies docs → MCP/Grok mirrors (PD-031 / 0.52.1)
     uv run python scripts/sync_version.py --set {{version}}
+
+docs-sync-mirrors:
+    @echo "📄 Syncing docs/ → MCP data + .grok skill mirrors..."
+    uv run python scripts/sync_version.py
 
 docs-check:
     @echo "📄 Checking documentation version consistency..."

@@ -10,6 +10,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from docs_mirrors import (  # noqa: E402
+    BUNDLED_LLMS,
+    BUNDLED_MCP,
+    BUNDLED_PALM_SKILL,
+    DOCS_PALM_SKILL,
+    GROK_PALM_SKILL,
+    PALM_SKILL_SYNC_FILES,
+)
 from version_utils import PYPROJECT, INIT, read_version  # noqa: E402
 
 STALE_ARCHITECTURE_PATTERNS = (
@@ -57,20 +65,9 @@ SYNC_SURFACE_FILES = (
     ROOT / "docs/llms.txt",
 )
 
-BUNDLED_LLMS_TXT = ROOT / "src/palm/runtimes/mcp/data/llms.txt"
-BUNDLED_MCP_TXT = ROOT / "src/palm/runtimes/mcp/data/mcp.txt"
-DOCS_PALM_SKILL = ROOT / "docs/skills/palm"
-GROK_PALM_SKILL = ROOT / ".grok/skills/palm"
-_PALM_SKILL_SYNC_FILES = (
-    "SKILL.md",
-    "references/agent-guide.md",
-    "references/mcp-patterns.md",
-    "references/session-management.md",
-    "references/common-flows.md",
-    "references/design-flows.md",
-    "references/branching-flows.md",
-)
-BUNDLED_PALM_SKILL = ROOT / "src/palm/runtimes/mcp/data/skills/palm"
+BUNDLED_LLMS_TXT = BUNDLED_LLMS
+BUNDLED_MCP_TXT = BUNDLED_MCP
+_PALM_SKILL_SYNC_FILES = PALM_SKILL_SYNC_FILES
 
 
 def check_version_sources(version: str, errors: list[str]) -> None:

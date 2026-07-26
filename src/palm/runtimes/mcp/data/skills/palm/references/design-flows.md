@@ -4,20 +4,50 @@
 
 **Golden rule:** use **`palm_design_*`** tools for catalog writes. Do **not** use `palm_definitions_*` create/update unless an integrator doc explicitly requires it.
 
+### Preferred weak-LLM path (0.30.4–0.30.5) — one tool
+
+```text
+# Direct (best)
+palm_design_publish_flow(body={name, pattern, options: {steps: [...]}})
+
+# Same via palm_assist (0.30.5+)
+palm_assist(params={body: {name, pattern, options: {steps: [...]}}})
+  → design/publish → status=committed, flow_id, actions
+```
+
+Same for resources: `palm_design_publish_resource` or `palm_assist(params={kind: "resource", body: …})`.
+
+### From operator-entry (0.30.1+)
+
+```text
+1. palm_assist()  → create-flow   # completes immediately (no summary yes) 0.30.5+
+2. palm_design_publish_flow(body=…)  or palm_assist(params={body: …})
+3. Run from returned actions
+```
+
+### design-entry scenario (0.30.2+)
+
+```text
+palm_assist(alias="design-entry/start") → intent → name_or_base → complete
+  → palm_design_publish_flow (one call)
+```
+
+### Handoff `kind: design` (0.30.3+)
+
+`design_action` is typically `publish_flow` / `publish_resource`. Always read `operator_hint`. See [MIGRATION-0.30.md](../../../../MIGRATION-0.30.md).
+
 ---
 
-## A. Create a new wizard flow (copy this loop)
+## A. Create a new wizard flow (step-by-step alternative)
 
-Always run **all four steps in order**. Save `proposal_id` from step 1.
+Prefer **A0** (`palm_design_publish_flow`). Use this only when debugging validation/impact:
 
 ```text
 1. palm_design_propose_flow(body={...})
 2. palm_design_impact(proposal_id="prop-...")
 3. palm_design_commit(proposal_id="prop-...")
-4. palm_flows_describe(flow_id="my-flow")   ← verify revision published
+4. palm_flows_describe(flow_id="my-flow")
 ```
-
-**Optional:** `palm_design_validate(proposal_id)` if propose did not return `"valid": true`.
 
 ### Minimal `body` (wizard)
 

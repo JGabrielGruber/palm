@@ -177,7 +177,7 @@ CompositionProfile
 | Patch | Slice | Closes / intent |
 |-------|--------|-----------------|
 | **0.52.0** | **Plan** — this VISION + ADR-021 | Theme open |
-| **0.52.1** | **Gates green** — `docs-check` + skill/mcp mirrors on bump (PD-031) | Safety net |
+| **0.52.1** ✅ | **Gates green** — `docs_mirrors` + `sync_version` copies skill/mcp mirrors on bump (PD-031) | Safety net |
 | **0.52.2** | **Root declutter** — RELEASE → `docs/releases/`, MIGRATION → `docs/migrations/` (PD-021) | Clean floor |
 | **0.52.3** | **Shelf tree** — `docs/wiki/` (+ stubs), static vs `_build` contract; optional `docs/site/` without behavior change | Structure |
 | **0.52.4** | **Stamp completeness** — SYNC ARCHITECTURE / DEVELOPMENT / SCOPE (PD-019) | Docs-as-code |

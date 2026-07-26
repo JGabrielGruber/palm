@@ -35,7 +35,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | Patch | Status |
 |-------|--------|
 | 0.52.0 Plan + ADR-021 | ✅ |
-| 0.52.1+ gates, declutter, shelves, thin builder, assemble… | pending |
+| 0.52.1 Gates green — doc mirrors + `sync_version` copies them (PD-031) | ✅ |
+| 0.52.2+ declutter, shelves, thin builder, assemble… | pending |
 
 ## Key Capabilities (Mature)
 

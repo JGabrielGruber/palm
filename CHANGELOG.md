@@ -6,6 +6,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ### 0.52 — The Living Library (docs-as-code · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md))
 - **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; root declutter and T6 gates next; thin `just docs-build` (no heavy doc frameworks). **0.53** reserved for building the library *with Palm* (pipeline dogfood).
+- **0.52.1** — Docs gates green (PD-031): `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy `docs/llms.txt`, `docs/mcp.txt`, and `docs/skills/palm` into MCP data + `.grok` mirrors so bumps no longer re-break `docs-check`.
 
 ## [0.51.6] — 2026-07-16
 

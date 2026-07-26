@@ -12,6 +12,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from docs_mirrors import sync_doc_mirrors  # noqa: E402
 from version_utils import ROOT, read_version, write_version  # noqa: E402
 
 SYNC_TARGETS: dict[Path, list[tuple[re.Pattern[str], str]]] = {}
@@ -90,14 +91,20 @@ def main() -> int:
         version = read_version()
 
     changes = sync_surfaces(version, dry_run=args.check)
+    mirror_changes = sync_doc_mirrors(dry_run=args.check)
     if args.check:
-        if changes:
-            print("Version sync required for:")
-            for item in changes:
-                print(f"  - {item}")
+        if changes or mirror_changes:
+            if changes:
+                print("Version sync required for:")
+                for item in changes:
+                    print(f"  - {item}")
+            if mirror_changes:
+                print("Doc mirror sync required for:")
+                for item in mirror_changes:
+                    print(f"  - {item}")
             print(f"Run: uv run python scripts/sync_version.py  (version {version})")
             return 1
-        print(f"[OK] Sync targets aligned on {version}")
+        print(f"[OK] Sync targets + doc mirrors aligned on {version}")
         return 0
 
     if changes:
@@ -106,6 +113,12 @@ def main() -> int:
             print(f"  - {item}")
     else:
         print(f"[OK] Sync targets already on {version}")
+    if mirror_changes:
+        print("Synced doc mirrors:")
+        for item in mirror_changes:
+            print(f"  - {item}")
+    else:
+        print("[OK] Doc mirrors already match docs/ sources")
     return 0
 
 

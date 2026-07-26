@@ -78,7 +78,7 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 | PD-030 | Empty extras `postgres=[]`/`mongodb=[]` (drivers unpinned) | T7/T9 | dependency-security | S3 | module | S | 3 | confirmed |
 | PD-019 | Doc version stamps ~30 minors behind | T6 | doc-drift | S3 | layer | M | 3 | confirmed |
 | PD-020 | ADR discipline broken (013 missing, stops at 014) | T6 | doc-drift | S3 | layer | M | 3 | confirmed |
-| PD-031 | `docs-check` gate RED on master (skill/mcp-data mirror drift) | T6 | ci-tooling | S3 | module | S | 3 | confirmed |
+| PD-031 | ~~~`docs-check` gate RED on master (skill/mcp-data mirror drift)~~~ **closed 0.52.1** — mirrors sync via `docs_mirrors` + `sync_version` | T6 | ci-tooling | S3 | module | S | 3 | ✅ done |
 | PD-006 | `.pre-commit-config.yaml` missing (half-wired) | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
 | PD-007 | Audit tools referenced but undeclared in pyproject | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
 | PD-015 | `mcp/in_process.py` 871 LOC / 35% cov / churn 20 | T4 | complexity | S2 | module | L | 2 | confirmed |
@@ -176,10 +176,9 @@ Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks belo
 
 **PD-021 — Root markdown sprawl.** `S4 · layer · Effort M` — 28 `RELEASE-*.md` + 14 `MIGRATION-*.md` (50 root `.md` total) overlap the 82 KB `CHANGELOG.md` (08-docs.txt). Direction: move point-release notes under `docs/releases/`.
 
-**PD-031 — `docs-check` gate RED on master.** `S3 · module · Effort S · Docs-as-Code, ci-tooling` *(found while opening 0.46.0)*
-- Evidence: `just docs-check` → exit 1. `docs/skills/palm/SKILL.md` + 3 references (+ a `.grok/` copy) are out of sync with their `src/palm/runtimes/mcp/data/` / `.grok/skills/` mirrors — **pre-existing committed drift** (files unchanged in worktree). Separately, `just bump-version` stamps `docs/llms.txt`/`docs/mcp.txt` but does **not** propagate to their `mcp/data/` mirrors, so every bump re-breaks docs-check unless the mirrors are hand-copied. `CHANGELOG.md` is also missing all 0.45.x entries.
-- Risk: another silently-red gate (cf. PD-002/004/005); `just release-prep` fails at docs-check.
-- Direction: sync the skill mirrors (source of truth = `docs/skills/`); make `sync_version.py` (or a `just` recipe) copy the `mcp/data` + `.grok` mirrors as part of the bump. Fits 0.46 T1's "green the gates."
+**PD-031 — `docs-check` gate RED on master.** `S3 · module · Effort S · Docs-as-Code, ci-tooling` *(found while opening 0.46.0)* — **✅ closed 0.52.1**
+- Was: skill/MCP mirrors drifted from `docs/`; bump stamped `docs/llms.txt`/`mcp.txt` without copying into `mcp/data/`.
+- Fix: `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy canonical sources into MCP package + `.grok` mirrors; `just docs-check` green.
 
 ### T7 — Placeholders & untested adapters
 
