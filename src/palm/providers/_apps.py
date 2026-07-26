@@ -6,7 +6,15 @@ from __future__ import annotations
 
 import importlib
 
-INSTALLED_PROVIDERS: tuple[str, ...] = ("rest", "graphql", "postgres", "palm", "kv", "file")
+INSTALLED_PROVIDERS: tuple[str, ...] = (
+    "rest",
+    "graphql",
+    "postgres",
+    "palm",
+    "kv",
+    "file",
+    "neonroot",  # 0.53 — optional host CLI; health is honest when missing
+)
 
 
 def autoload() -> None:

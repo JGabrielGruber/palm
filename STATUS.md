@@ -53,7 +53,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md) for full detai
 | Patch | Status |
 |-------|--------|
 | 0.53.0 Plan + ADR-022 | ✅ |
-| 0.53.1+ provider scaffold, spawn, images, doctor/assist | pending |
+| 0.53.1 Provider scaffold + honest `health` | ✅ |
+| 0.53.2+ spawn, images, doctor/assist | pending |
 
 ## Key Capabilities (Mature)
 

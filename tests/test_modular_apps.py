@@ -41,7 +41,15 @@ def test_installed_provider_apps_register() -> None:
     from palm.common.providers._registry import get_provider_app, installed_provider_apps
     from palm.common.providers.app import ProviderApp
 
-    assert set(INSTALLED_PROVIDERS) == {"rest", "graphql", "postgres", "palm", "kv", "file"}
+    assert set(INSTALLED_PROVIDERS) == {
+        "rest",
+        "graphql",
+        "postgres",
+        "palm",
+        "kv",
+        "file",
+        "neonroot",
+    }
     for name in INSTALLED_PROVIDERS:
         provider_registry.get(name)
 

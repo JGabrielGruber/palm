@@ -6,6 +6,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ### 0.53 — Sovereign Runners (neonroot provider · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md))
 - **0.53.0** — Plan + ADR-022. Hermetic execution as a Palm **provider** (`health` / `spawn`, tool images). Docs **pipeline** dogfood deferred to **[0.54](docs/VISION-0.54.md)**.
+- **0.53.1** — `palm.providers.neonroot` scaffold: ProviderApp + registry, `health` / `describe`, honest failure when CLI missing; `spawn` listed but not yet implemented.
 
 ### 0.52 — The Living Library (docs-as-code · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md))
 - **0.52.0** — Plan + ADR-021. Knowledge architecture: SOURCE / BUILD / SURFACE; thin `just docs-build`. Sequelae: 0.53 runners → 0.54 pipeline.

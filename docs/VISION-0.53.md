@@ -123,7 +123,7 @@ params:
 | Patch | Slice | Notes |
 |-------|--------|------|
 | **0.53.0** | Plan — this VISION + ADR-022 | Theme open |
-| **0.53.1** | Provider scaffold — `ProviderApp` + registry + `health` (honest fail if CLI missing) | Edge registration |
+| **0.53.1** ✅ | Provider scaffold — `ProviderApp` + registry + `health` (honest fail if CLI missing) | Edge registration |
 | **0.53.2** | `spawn` — git-archive seed + command; characterization tests (mock or neonroot-if-present) | Core verb |
 | **0.53.3** | Resource bindings + one example definition / `examples/` | ResourceEngine path |
 | **0.53.4** | `palm-docs` image (or extend palm-ci) + Tailwind-in-image path; `just docs-css-sandbox` | Thin workspace option |
