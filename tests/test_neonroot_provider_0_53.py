@@ -189,3 +189,39 @@ def test_run_spawn_unavailable_raises() -> None:
     with patch("palm.providers.neonroot.spawn.probe_neonroot", return_value=missing):
         with pytest.raises(RuntimeError, match="not found"):
             run_spawn({"image": "x", "command": ["true"]}, repo_root=Path.cwd())
+
+
+def test_example_resource_definitions_shape() -> None:
+    from examples.definitions.neonroot_runners import (
+        NEONROOT_HEALTH,
+        NEONROOT_SPAWN_DOCS_BUILD,
+        NEONROOT_SPAWN_TRUE,
+    )
+
+    assert NEONROOT_HEALTH.provider == "neonroot"
+    assert NEONROOT_HEALTH.action == "health"
+    assert NEONROOT_SPAWN_TRUE.action == "spawn"
+    assert NEONROOT_SPAWN_TRUE.params.get("seed") == "git-archive"
+    assert NEONROOT_SPAWN_TRUE.params.get("command") == ["true"]
+    assert "docs_build" in " ".join(NEONROOT_SPAWN_DOCS_BUILD.params.get("command") or [])
+
+
+def test_resource_engine_invokes_neonroot_health(neonroot_provider: NeonrootProvider) -> None:
+    """ResourceEngine path: definition-shaped invoke via provider=neonroot."""
+    from palm.core.resource.engine import ResourceEngine
+
+    engine = ResourceEngine()
+    engine.initialize()
+    # Engine resolves providers from registry; force our instance into the cache
+    # so health can be mocked without a second connect race.
+    engine._active["neonroot"] = neonroot_provider
+
+    present = NeonrootProbe(
+        available=True,
+        path="/usr/bin/neonroot",
+        version="NeonRoot 0.0.2",
+    )
+    with patch("palm.providers.neonroot.provider.probe_neonroot", return_value=present):
+        result = engine.invoke(provider="neonroot", action="health", params={})
+    assert result.success is True
+    assert result.data["available"] is True

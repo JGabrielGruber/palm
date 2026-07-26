@@ -76,6 +76,22 @@ palm flow start ingest-wizard
 palm process submit data-ingestion
 ```
 
+## NeonRoot runners (`neonroot-*` resources, 0.53)
+
+Sovereign Runners examples — `examples/definitions/neonroot_runners.py`:
+
+| Resource | Action | Notes |
+|----------|--------|--------|
+| `neonroot-health` | `health` | Probe CLI; safe without an image |
+| `neonroot-spawn-true` | `spawn` | `true` in `palm-ci` (needs NeonRoot + image) |
+| `neonroot-spawn-docs-build` | `spawn` | Living Library builder in sandbox |
+
+```bash
+palm resource invoke neonroot-health
+# optional, after `just ci-image`:
+palm resource invoke neonroot-spawn-true
+```
+
 ## Approval workflow (`approval-workflow`)
 
 Spend approval with structured validation and commit.

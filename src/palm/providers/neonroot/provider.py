@@ -5,12 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 from palm.core.resource import BaseProvider
-from palm.core.resource.result import (
-    ProviderActionDescriptor,
-    ProviderDescriptor,
-    ProviderHealth,
-    ProviderResult,
-)
+from palm.core.resource.result import ProviderDescriptor, ProviderHealth, ProviderResult
+from palm.providers.neonroot.bindings.resource.descriptor import describe
 from palm.providers.neonroot.cli import probe_neonroot
 from palm.providers.neonroot.spawn import resolve_repo_root, run_spawn
 
@@ -99,25 +95,7 @@ class NeonrootProvider(BaseProvider):
         )
 
     def describe(self) -> ProviderDescriptor:
-        return ProviderDescriptor(
-            name=self.name,
-            description=(
-                "NeonRoot hermetic runners — sandbox spawn and tool images "
-                "(optional host CLI; health is honest when missing)"
-            ),
-            actions=(
-                ProviderActionDescriptor("health", "Probe neonroot CLI availability/version"),
-                ProviderActionDescriptor(
-                    "spawn",
-                    "Run a command in a NeonRoot sandbox "
-                    "(params: image, command[], seed=git-archive|path, vault?, sandbox?)",
-                ),
-                ProviderActionDescriptor(
-                    "list_images",
-                    "List images in a vault (later 0.53)",
-                ),
-            ),
-        )
+        return describe(name=self.name)
 
     def health(self) -> ProviderHealth:
         probe = probe_neonroot()
