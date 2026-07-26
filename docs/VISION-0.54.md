@@ -136,7 +136,7 @@ neonroot-health?
 | Patch | Scope |
 |-------|--------|
 | **0.54.0** | Plan (this doc) + ADR-023 refined ✅ |
-| **0.54.1** | Storage schema + publish helpers (library namespace, pin) |
+| **0.54.1** ✅ | Storage schema + publish helpers (`palm.common.library`, pin) |
 | **0.54.2** | At least **one** corpus publish resource (wiki or inventory JSON) → storage |
 | **0.54.3** | **DocsService** stub: list/get/status over pin |
 | **0.54.4** | Pipeline definition: rebuild graph + pin |
