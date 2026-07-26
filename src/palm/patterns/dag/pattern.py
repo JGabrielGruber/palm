@@ -51,20 +51,51 @@ class DagPattern(BasePattern):
         if dag.get("status") == _STATUS_FAILED:
             return PatternStatus.FAILURE
 
-        ready = self._ready_nodes(dag)
-        if not ready:
-            # no ready but not all done → blocked (should not happen if acyclic)
-            if self._all_succeeded(dag):
-                dag["status"] = _STATUS_SUCCEEDED
-                state.set(_DAG_KEY, dag)
+        # 0.54.8: drain ready-set (and newly unlocked nodes) in one tick when
+        # drain_ready; otherwise a single ready node per tick.
+        last = PatternStatus.RUNNING
+        while True:
+            dag = state.get(_DAG_KEY)
+            if not isinstance(dag, dict):
+                return PatternStatus.FAILURE
+            if dag.get("status") == _STATUS_FAILED:
+                return PatternStatus.FAILURE
+            if dag.get("status") == _STATUS_SUCCEEDED:
                 return PatternStatus.SUCCESS
-            dag["status"] = _STATUS_FAILED
-            dag["error"] = "DAG stuck: no ready nodes and not all succeeded"
-            state.set(_DAG_KEY, dag)
-            return PatternStatus.FAILURE
 
-        node = ready[0]
-        return self._run_node(state, dag, node)
+            ready = self._ready_nodes(dag)
+            if not ready:
+                if self._all_succeeded(dag):
+                    dag["status"] = _STATUS_SUCCEEDED
+                    state.set(_DAG_KEY, dag)
+                    return PatternStatus.SUCCESS
+                dag["status"] = _STATUS_FAILED
+                dag["error"] = "DAG stuck: no ready nodes and not all succeeded"
+                state.set(_DAG_KEY, dag)
+                return PatternStatus.FAILURE
+
+            batch = list(ready) if self._config.drain_ready else ready[:1]
+            for node in batch:
+                dag = state.get(_DAG_KEY)
+                if not isinstance(dag, dict) or dag.get("status") == _STATUS_FAILED:
+                    return PatternStatus.FAILURE
+                st = ((dag.get("nodes") or {}).get(node.id) or {}).get("status")
+                if st != _STATUS_PENDING:
+                    continue
+                node_state = dag.get("nodes") or {}
+                deps_ok = all(
+                    (node_state.get(d) or {}).get("status") == _STATUS_SUCCEEDED
+                    for d in node.depends_on
+                )
+                if not deps_ok:
+                    continue
+                last = self._run_node(state, dag, node)
+                if last in (PatternStatus.FAILURE, PatternStatus.SUCCESS):
+                    return last
+            if not self._config.drain_ready:
+                break
+            # drain_ready: loop to pick up nodes unlocked by this batch (e.g. join)
+        return last
 
     def reset(self) -> None:
         self._seeded = False

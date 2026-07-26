@@ -63,7 +63,8 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | 0.54.5 seed_mode bind/copy + run-dir docs | ✅ |
 | 0.54.6 Second dogfood `hermetic-ci-slice` | ✅ |
 | 0.54.7 Purpose-test notes (DEVELOPMENT/AGENTS) | ✅ |
-| **0.54 theme** (core purpose path) | ✅ ready to close; further DAG polish optional |
+| 0.54.8 Polish: drain_ready, run_dir helper, Assist discover | ✅ |
+| **0.54 theme** | ✅ closed — next [0.55](docs/VISION-0.55.md) docs dogfood domain |
 
 ## 0.55 — Docs dogfood domain (queued)
 

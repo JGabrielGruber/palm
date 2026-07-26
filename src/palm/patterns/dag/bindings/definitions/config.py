@@ -58,6 +58,9 @@ class DagConfig:
     initial_state: dict[str, Any] = field(default_factory=dict)
     #: If True (default), nodes with empty depends_on are chained in list order.
     chain_implicit: bool = True
+    #: If True (default, 0.54.8), run all currently ready nodes in one tick
+    #: (sequential invokes). If False, run only the first ready node per tick.
+    drain_ready: bool = True
 
     @classmethod
     def from_options(cls, options: dict[str, Any]) -> DagConfig:
@@ -76,7 +79,13 @@ class DagConfig:
         initial = options.get("initial_state")
         if initial is not None and not isinstance(initial, dict):
             raise ValueError("DAG initial_state must be a dict")
-        return cls(nodes=ordered, initial_state=dict(initial or {}), chain_implicit=chain)
+        drain = bool(options.get("drain_ready", True))
+        return cls(
+            nodes=ordered,
+            initial_state=dict(initial or {}),
+            chain_implicit=chain,
+            drain_ready=drain,
+        )
 
 
 def _apply_implicit_chain(nodes: tuple[DagNodeSpec, ...]) -> tuple[DagNodeSpec, ...]:

@@ -72,10 +72,20 @@ options:
 
 One ready node per tick (stable order among ready); state under `dag.*`.
 
-### Future: Assist “run code”
+### Assist “run code” (horizon / 0.55+)
 
-Pick an image, provide a payload/script, Palm stages + `neonroot.spawn`, return result —
-builds on this contract (not in-engine `exec`). See VISION-0.54 horizon.
+Pick an image, provide a payload/script:
+
+1. `create_run_dir` + `write_payload_file` ([HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md))  
+2. `neonroot.spawn` with `seed_mode=bind` (or copy)  
+3. Return stdout / `output/`  
+
+Not in-engine `exec`. Discover starters: `hermetic-job-smoke`, `hermetic-ci-slice`, `hermetic-job-fanout`.
+
+### DAG ready-set (0.54.8)
+
+Default ``drain_ready: true`` — one tick runs all currently ready nodes (sequential
+invokes). Set ``drain_ready: false`` for one node per tick.
 
 ## Docs product domain
 

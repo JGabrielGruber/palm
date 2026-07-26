@@ -52,6 +52,24 @@ def discover(query: str = "", *, limit: int = 12) -> dict[str, Any]:
             "alias": "neonroot-spawn-docs-build",
         },
         {
+            "kind": "params",
+            "summary": "Hermetic job smoke (neonroot preflight → true)",
+            "call": 'palm_assist(params={flow_id: "hermetic-job-smoke"})',
+            "alias": "hermetic-job-smoke",
+        },
+        {
+            "kind": "params",
+            "summary": "Hermetic CI slice DAG (ruff → guard_core)",
+            "call": 'palm_assist(params={flow_id: "hermetic-ci-slice"})',
+            "alias": "hermetic-ci-slice",
+        },
+        {
+            "kind": "params",
+            "summary": "Hermetic DAG fan-out (preflight → A‖B → join)",
+            "call": 'palm_assist(params={flow_id: "hermetic-job-fanout"})',
+            "alias": "hermetic-job-fanout",
+        },
+        {
             "alias": "assist/menu",
             "kind": "alias",
             "summary": "Browse/search/page flows and scenarios (0.34)",

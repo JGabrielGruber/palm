@@ -1,6 +1,6 @@
 # VISION 0.54 — Hermetic Jobs (definition-driven work)
 
-**Status:** 🟢 **Open (0.54.0 replan)** — purpose-test theme. Prior 0.54 “library product in common / DocsService” **discarded**.  
+**Status:** 🟢 **Landed (0.54.0–0.54.8)** — purpose-test theme closed. Prior library-product experiment discarded; docs domain → 0.55.  
 **ADR:** [023-hermetic-jobs.md](adr/023-hermetic-jobs.md) (supersedes library-pipeline framing).  
 **Depends on:** [VISION-0.53](VISION-0.53.md) Sovereign Runners (**landed**).  
 **Sequel:** [VISION-0.55](VISION-0.55.md) — optional **docs dogfood domain** (Living Library as a Palm business process).
@@ -94,6 +94,7 @@ Palm stages; NeonRoot bind/seeds; outputs explicit. Vault stays images + rare co
 | **0.54.5** ✅ | NeonRoot 0.2 `seed_mode` in contract + [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md); `docs-css-bind` recipe |
 | **0.54.6** ✅ | Second dogfood: `hermetic-ci-slice` (ruff → guard_core, neonroot only) |
 | **0.54.7** ✅ | DEVELOPMENT + AGENTS purpose-test notes; Living Library product → 0.55 |
+| **0.54.8** ✅ | Polish for 0.55: DAG `drain_ready`, `create_run_dir`, Assist discover starters |
 
 ---
 

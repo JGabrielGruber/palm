@@ -71,12 +71,10 @@ def test_dag_runs_nodes_sequentially() -> None:
     pattern = DagPattern(name="test-dag", config=cfg, resource_engine=engine)
     state = DictBackedState()
 
-    assert pattern.tick(state) == PatternStatus.RUNNING
-    assert calls == ["res-a"]
-    assert state.get("out_a") == {"ref": "res-a", "n": 1}
-
+    # drain_ready default: whole linear chain in one tick
     assert pattern.tick(state) == PatternStatus.SUCCESS
     assert calls == ["res-a", "res-b"]
+    assert state.get("out_a") == {"ref": "res-a", "n": 1}
     assert state.get("out_b") == {"ref": "res-b", "n": 2}
     assert state.get("dag")["status"] == "succeeded"
 
@@ -137,15 +135,43 @@ def test_fan_out_deps_run_after_preflight() -> None:
     pattern = DagPattern(config=cfg, resource_engine=engine)
     state = DictBackedState()
 
-    assert pattern.tick(state) == PatternStatus.RUNNING  # preflight
-    assert calls == ["health-res"]
-    assert pattern.tick(state) == PatternStatus.RUNNING  # branch_a (stable order)
-    assert pattern.tick(state) == PatternStatus.RUNNING  # branch_b
-    assert pattern.tick(state) == PatternStatus.SUCCESS  # join
+    # 0.54.8 drain_ready: whole fan-out completes in one tick
+    assert pattern.tick(state) == PatternStatus.SUCCESS
     assert calls == ["health-res", "job-res", "job-res", "job-res"]
     assert state.get("a") is not None and state.get("b") is not None
     assert state.get("j") is not None
     assert state.get("dag")["status"] == "succeeded"
+
+
+def test_drain_ready_false_one_node_per_tick() -> None:
+    engine = MagicMock()
+    calls: list[str] = []
+
+    def _invoke(ref, **kwargs):
+        calls.append(str(ref))
+        return ProviderResult.ok({"n": len(calls)})
+
+    engine.invoke.side_effect = _invoke
+    engine.is_initialized = True
+    cfg = DagConfig.from_options(
+        {
+            "drain_ready": False,
+            "chain_implicit": False,
+            "nodes": [
+                {"id": "preflight", "resource_ref": "h"},
+                {"id": "a", "resource_ref": "j", "depends_on": ["preflight"]},
+                {"id": "b", "resource_ref": "j", "depends_on": ["preflight"]},
+            ],
+        }
+    )
+    pattern = DagPattern(config=cfg, resource_engine=engine)
+    state = DictBackedState()
+    assert pattern.tick(state) == PatternStatus.RUNNING
+    assert calls == ["h"]
+    assert pattern.tick(state) == PatternStatus.RUNNING
+    assert calls == ["h", "j"]
+    assert pattern.tick(state) == PatternStatus.SUCCESS
+    assert calls == ["h", "j", "j"]
 
 
 def test_builder_wires_resource_engine() -> None:

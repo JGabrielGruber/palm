@@ -12,7 +12,7 @@ NeonRoot **0.2** adds `--seed-mode copy|bind`.
 
 Palm resource params: `seed_mode: "copy" | "bind"` (see `neonroot.contract`).
 
-## Palm-owned run layout (optional, for bind)
+## Palm-owned run layout (0.54.8 helper)
 
 When Palm should stage I/O for a job without seeding the whole monorepo:
 
@@ -24,12 +24,29 @@ When Palm should stage I/O for a job without seeding the whole monorepo:
   meta.json    # image, command, digests (mirror of job state)
 ```
 
+Python (thin helper, not a domain service)::
+
+```python
+from palm.providers.neonroot import create_run_dir, write_payload_file, remove_run_dir
+
+run = create_run_dir(data_dir="data", meta={"purpose": "assist-run-code"})
+write_payload_file(run, "main.py", "print('hi')\n")
+params = run.neonroot_spawn_params(
+    image="palm-ci",
+    command=["python", "payload/main.py"],
+    vault="palm-ci",
+    seed_mode="bind",  # default
+)
+# → neonroot provider invoke spawn with params
+# remove_run_dir(run)  # GC after success
+```
+
 | Actor | Action |
 |-------|--------|
-| Palm (before) | Create run dir; place payload/input; record `run_id` in job state |
-| NeonRoot | `spawn --seed …/runs/{id} --seed-mode bind` (or copy for hermetic snapshot of that dir) |
+| Palm (before) | `create_run_dir` + payload; record paths in job state |
+| NeonRoot | `spawn --seed …/runs/{id} --seed-mode bind` (or copy) |
 | Job | Read payload/input; write output/ |
-| Palm (after) | Read output/; optional promote to product storage; GC run dir |
+| Palm (after) | Read output/; optional promote; `remove_run_dir` |
 
 **GC:** delete `runs/{run_id}` after success (or after TTL on failure). Never bind entire `data/palm/` (instances, secrets).
 
