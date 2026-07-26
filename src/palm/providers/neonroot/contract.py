@@ -26,6 +26,12 @@ Canonical spawn params
 ``outputs`` (list, optional)
     After **successful** exit only: ``host:container`` or
     ``{host, container}`` maps (container path relative, no ``..``).
+    Prefer this for hermetic write-back; not required when ``seed_mode=bind``
+    (writes already hit the host seed tree).
+
+``seed_mode`` (str, default ``copy``)
+    NeonRoot 0.2+: ``copy`` (hermetic seed into tmpfs) or ``bind`` (live-mount
+    host ``seed`` path; not hermetic; no ``seed_exclude``; requires host path).
 
 ``vault`` (str, optional)
     NeonRoot vault name.
@@ -73,6 +79,7 @@ HERMETIC_JOB_SPAWN_FIELDS: frozenset[str] = frozenset(
         "name",
         "cwd",
         "repo_root",
+        "seed_mode",
     }
 )
 
@@ -98,6 +105,7 @@ def hermetic_job_summary(req: SpawnRequest) -> dict[str, Any]:
         "command": list(req.command),
         "seed": req.seed,
         "seed_exclude": list(req.seed_exclude),
+        "seed_mode": req.seed_mode,
         "outputs": list(req.outputs),
         "vault": req.vault,
         "sandbox": req.sandbox,

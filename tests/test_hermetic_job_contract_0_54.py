@@ -46,6 +46,38 @@ def test_known_fields_documented() -> None:
     assert "image" in HERMETIC_JOB_SPAWN_FIELDS
     assert "command" in HERMETIC_JOB_SPAWN_FIELDS
     assert "outputs" in HERMETIC_JOB_SPAWN_FIELDS
+    assert "seed_mode" in HERMETIC_JOB_SPAWN_FIELDS
+
+
+def test_seed_mode_bind_requires_host_path() -> None:
+    with pytest.raises(ValueError, match="bind"):
+        validate_hermetic_job_params(
+            {
+                "image": "palm-ci",
+                "command": ["true"],
+                "seed": "git-archive",
+                "seed_mode": "bind",
+            }
+        )
+    with pytest.raises(ValueError, match="seed_exclude"):
+        validate_hermetic_job_params(
+            {
+                "image": "palm-ci",
+                "command": ["true"],
+                "seed": "/tmp/ws",
+                "seed_mode": "bind",
+                "seed_exclude": ["data/"],
+            }
+        )
+    req = validate_hermetic_job_params(
+        {
+            "image": "palm-docs",
+            "command": ["true"],
+            "seed": "/tmp/docs",
+            "seed_mode": "bind",
+        }
+    )
+    assert req.seed_mode == "bind"
 
 
 def test_hermetic_job_smoke_definitions() -> None:

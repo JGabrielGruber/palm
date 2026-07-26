@@ -127,6 +127,20 @@ def test_build_spawn_argv_sandbox_and_seed() -> None:
     assert argv[argv.index("--") + 1 :] == ["uv", "run", "python", "-c", "print(1)"]
 
 
+def test_build_spawn_argv_seed_mode_bind() -> None:
+    req = parse_spawn_params(
+        {
+            "image": "palm-docs",
+            "command": ["true"],
+            "seed": "/tmp/docs",
+            "seed_mode": "bind",
+        }
+    )
+    argv = build_spawn_argv("neonroot", req, seed_path="/tmp/docs")
+    assert "--seed-mode" in argv
+    assert "bind" in argv
+
+
 def test_build_spawn_argv_exclude_and_output() -> None:
     req = parse_spawn_params(
         {

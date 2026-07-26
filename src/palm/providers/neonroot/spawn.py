@@ -53,6 +53,7 @@ class SpawnRequest:
     cwd: str | None = None  # git-archive root; default: process cwd / repo
     seed_exclude: tuple[str, ...] = ()
     outputs: tuple[str, ...] = ()  # each "host:container"
+    seed_mode: str = "copy"  # copy (hermetic, default) | bind (live host mount; NeonRoot 0.2+)
 
 
 def _as_str_list(value: Any, *, field_name: str, allow_empty: bool = False) -> list[str]:
@@ -141,6 +142,21 @@ def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
     )
     outputs = _normalize_outputs(params.get("outputs") or params.get("output"))
 
+    seed_mode = str(params.get("seed_mode") or "copy").strip().lower()
+    if seed_mode not in ("copy", "bind"):
+        raise ValueError("seed_mode must be 'copy' or 'bind'")
+    if seed_mode == "bind":
+        if seed in ("", "none", "false", "no", "git-archive"):
+            raise ValueError(
+                "seed_mode=bind requires params.seed as a host directory path "
+                "(not git-archive/none)"
+            )
+        if seed_exclude:
+            raise ValueError(
+                "seed_mode=bind does not support seed_exclude "
+                "(NeonRoot rejects exclude with bind)"
+            )
+
     cwd = params.get("cwd") or params.get("repo_root")
     return SpawnRequest(
         image=str(image).strip(),
@@ -155,6 +171,7 @@ def parse_spawn_params(params: dict[str, Any]) -> SpawnRequest:
         cwd=str(cwd) if cwd else None,
         seed_exclude=seed_exclude,
         outputs=outputs,
+        seed_mode=seed_mode,
     )
 
 
@@ -227,6 +244,8 @@ def build_spawn_argv(
         argv.append("--keep")
     if seed_path:
         argv.extend(["--seed", seed_path])
+        if req.seed_mode and req.seed_mode != "copy":
+            argv.extend(["--seed-mode", req.seed_mode])
     for excl in req.seed_exclude:
         argv.extend(["--seed-exclude", excl])
     root = repo_root or Path.cwd()
@@ -279,6 +298,7 @@ def run_spawn(
             "seed": req.seed,
             "seed_path": seed_path,
             "seed_exclude": list(req.seed_exclude),
+            "seed_mode": req.seed_mode,
             "outputs": list(req.outputs),
             "sandbox": req.sandbox,
             "isolated": req.isolated,
@@ -301,6 +321,7 @@ def run_spawn(
             "seed": req.seed,
             "seed_path": seed_path,
             "seed_exclude": list(req.seed_exclude),
+            "seed_mode": req.seed_mode,
             "outputs": list(req.outputs),
             "command": list(req.command),
             "stdout_tail": _tail(stdout),

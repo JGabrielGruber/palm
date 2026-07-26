@@ -18,11 +18,14 @@
 | `image` | yes | e.g. `palm-ci`, `palm-docs` |
 | `command` | yes | argv list |
 | `seed` | no (default `git-archive`) | `git-archive` \| path \| `none` |
-| `seed_exclude` | no | list of paths/globs |
-| `outputs` | no | success-only `host:container` maps |
+| `seed_mode` | no (default `copy`) | `copy` (hermetic) \| `bind` (live host; NeonRoot 0.2+; needs path seed) |
+| `seed_exclude` | no | list of paths/globs (**not** with `bind`) |
+| `outputs` | no | success-only `host:container` maps (prefer with `copy`) |
 | `vault` | no | vault name |
 | `sandbox` / `isolated` | no | defaults sandbox on |
 | `timeout` | no | seconds |
+
+Run-dir + bind notes: [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md).
 
 Python validation: `palm.providers.neonroot.contract.validate_hermetic_job_params`.
 

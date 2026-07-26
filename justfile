@@ -256,21 +256,32 @@ docs-image:
     echo "✅ palm-docs image built — now: just docs-css-sandbox | docs-build-sandbox"
 
 # Tailwind via palm-docs image (no host node_modules required).
-# Seeds docs/ only; --output pulls styles/output.css back to the host after success.
+# Default: hermetic copy seed + --output write-back (safe).
 docs-css-sandbox:
     #!/usr/bin/env bash
     set -euo pipefail
     docs_dir="$PWD/docs"
     test -f "$docs_dir/styles/input.css" || { echo "error: missing docs/styles/input.css" >&2; exit 1; }
-    # NODE_PATH so @import "tailwindcss" resolves from the global image install
-    # (seed is bare docs/ — no local node_modules).
     neonroot spawn palm-docs-css \
         --image palm-docs --vault palm-docs --sandbox \
-        --seed "$docs_dir" \
+        --seed "$docs_dir" --seed-mode copy \
         --output "$docs_dir/styles/output.css:styles/output.css" \
         -- \
         sh -c 'export NODE_PATH="$(npm root -g)${NODE_PATH:+:$NODE_PATH}"; tailwindcss -i styles/input.css -o styles/output.css'
-    echo "✅ docs/styles/output.css rebuilt via palm-docs (--output after success)"
+    echo "✅ docs/styles/output.css rebuilt via palm-docs (copy + --output)"
+
+# Same CSS job with NeonRoot 0.2 bind (writes hit host docs/ live; not hermetic).
+docs-css-bind:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    docs_dir="$PWD/docs"
+    test -f "$docs_dir/styles/input.css" || { echo "error: missing docs/styles/input.css" >&2; exit 1; }
+    neonroot spawn palm-docs-css-bind \
+        --image palm-docs --vault palm-docs --sandbox \
+        --seed "$docs_dir" --seed-mode bind \
+        -- \
+        sh -c 'export NODE_PATH="$(npm root -g)${NODE_PATH:+:$NODE_PATH}"; tailwindcss -i styles/input.css -o styles/output.css'
+    echo "✅ docs/styles/output.css via palm-docs bind (host tree live)"
 
 # Library build in NeonRoot palm-docs — git-archive seed + export deploy canopy.
 docs-build-sandbox:
@@ -362,7 +373,8 @@ help:
     @echo "   just docs-check       → Version + documentation surface consistency"
     @echo "   just docs-css         → Rebuild docs site Tailwind CSS (host Node)"
     @echo "   just docs-image       → Build NeonRoot palm-docs image (Tailwind + uv)"
-    @echo "   just docs-css-sandbox → Tailwind via palm-docs (no host node_modules)"
+    @echo "   just docs-css-sandbox → Tailwind via palm-docs (copy + --output)"
+    @echo "   just docs-css-bind    → Tailwind via palm-docs (seed-mode bind)"
     @echo "   just docs-build       → Living Library → docs/_build (+ deploy canopy)"
     @echo "   just docs-build-all   → docs-css + docs-build"
     @echo "   just docs-build-sandbox → hermetic docs-build via palm-docs image"

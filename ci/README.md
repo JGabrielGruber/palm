@@ -41,10 +41,11 @@ just docs-image    # palm-docs
 
 | Primitive | Copy? | Persist changes? | Palm use |
 |-----------|-------|------------------|----------|
-| **`spawn --seed`** | Yes — into throwaway workspace | **No** whole-tree | Hermetic run |
-| **`spawn --output host:container`** | — | **Yes** — explicit files/dirs **after success** | CSS / `_build` export to host |
-| **`spawn --seed-exclude` / `.neonrootignore`** | Skips paths while seeding | — | Safe if seeding repo root (`data/`, `.venv`) |
-| **workspace** (`load` / `run` / `commit`) | Yes — vault workspace | **Yes** — commit back to **vault** | Long-lived edit in NeonRoot (not host tree) |
+| **`spawn --seed` + `--seed-mode copy`** (default) | Into vault bare → tmpfs | Hermetic; use `--output` for host artifacts | CI, dogfood purity |
+| **`spawn --seed-mode bind`** (NeonRoot 0.2) | Host dir live-mounted | Writes hit host; not hermetic; no exclude/commit | Trusted local whole-tree (e.g. `docs-css-bind`) |
+| **`spawn --output host:container`** | — | Explicit files/dirs **after success** | Safe write-back with copy mode |
+| **`spawn --seed-exclude` / `.neonrootignore`** | Skips paths (copy mode) | — | Full-tree seed hygiene |
+| **workspace** (`load` / `run` / `commit`) | tmpfs; optional vault commit | Durable tool tree | Inspect / long tool work — not product pin |
 
 **Seed is not whole-tree write-back.** For host artifacts use **`--output`**. For vault durability use **workspaces**. Repo root may use [`.neonrootignore`](../.neonrootignore) when seeding `$PWD`.
 

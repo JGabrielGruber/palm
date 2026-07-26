@@ -60,7 +60,8 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | 0.54.2 Dogfood flow `hermetic-job-smoke` (neonroot only) | ✅ |
 | 0.54.3 DAG pattern v0 (resource nodes + deps) | ✅ |
 | 0.54.4 DAG fan-out `hermetic-job-fanout` | ✅ |
-| 0.54.5+ run-dir notes, second dogfood, docs | pending |
+| 0.54.5 seed_mode bind/copy + run-dir docs | ✅ |
+| 0.54.6+ second dogfood, purpose-test docs | pending |
 
 ## 0.55 — Docs dogfood domain (queued)
 
