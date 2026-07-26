@@ -18,12 +18,23 @@
 
 ### D1 — Workload plane and pure engine
 
-Introduce a **workload plane** with pure core **`WorkloadEngine`**:
+Introduce a **workload plane** with pure core **`WorkloadEngine`** under **`palm/core/workload/`**:
 
 - Operations: `start`/`place`, `exec`, `status`, `stop`/`collect`  
 - Types: `WorkloadSpec`, `Workload`, `WorkloadResult`, `WorkloadHandle`, status enum  
-- Registry of **`WorkloadRuntime`** adapters  
+- **`WorkloadRuntime` protocol** (the base contract) + registry in **core** (not common)  
 - **No** imports of neonroot, docker, k8s, SSH SDKs in `palm/core/`
+
+**Package layout (locked):**
+
+| Layer | Path |
+|-------|------|
+| Engine + protocol | `palm/core/workload/` |
+| Placement / ownership / event helpers | `palm/common/workload/` |
+| Concrete adapters | `palm/runners/<name>/` (`host`, `neonroot`, `ssh`, `palm`, …) |
+| CQRS product API | `palm/services/execution/workloads/` → `ExecutionService.workloads` |
+
+v1 stays in this monorepo (no separate runners git repository). Optional install extras may split adapters later without moving the protocol out of core.
 
 ### D2 — Universal WorkloadSpec
 
@@ -61,7 +72,7 @@ ExecutionService.workloads → WorkloadExecutionService
 
 CQRS commands/queries/schemas register via the **execution** ServiceCqrsContributor path ([ADR-009](009-service-cqrs-contributors.md)), then REST/MCP/assist aliases/palm provider.
 
-**Rationale:** Workloads are “how execution places isolated work,” the same family as provider invoke and flow sessions — not a Design-like product domain. A separate top-level service multiplies host wiring without benefit.
+**Rationale:** Workloads are “how execution places isolated work,” the same family as provider invoke and flow sessions — not a Design-like product domain. A separate top-level service multiplies host wiring without benefit. Concrete isolation backends live in **`palm/runners/`**, not under the service package.
 
 Application code paths **must not** call WorkloadEngine directly except tests, WorkloadLeaf contract harnesses, and carefully gated façades.
 
@@ -71,7 +82,7 @@ Support **idempotency_key** on start.
 
 ### D8b — WorkloadLeaf freezes the pattern contract with the engine
 
-Ship **WorkloadLeaf** (BT leaf) and **contract tests** (leaf + fake WorkloadRuntime + real WorkloadEngine) in the same implementation arc as the core engine. That defines how graphs wait, fail, cancel, and complete before multiple patterns invent divergent call shapes. Production leaves may later call `execution.workloads` CQRS; tests bind a narrow port/fake.
+Ship **WorkloadLeaf** (BT leaf) and **contract tests** (leaf + fake WorkloadRuntime + real WorkloadEngine) in the same implementation arc as the core engine (**0.56.1–0.56.2**). That defines how graphs wait, fail, cancel, and complete before multiple patterns invent divergent call shapes. Production leaves may later call `execution.workloads` CQRS; tests bind a narrow port/fake.
 
 ### D9 — Events and reactive composition
 
@@ -94,8 +105,9 @@ Workloads record owner (`job_id` and/or `instance_id` and/or `lease`). Cancel, c
 
 ### D13 — Extension model
 
-New isolation backends = new **WorkloadRuntime** packages.  
-New “can we run X?” (GPU, terraform image, ruff, docs build) = Spec + image/command + placement labels — **not** new core engines.
+New isolation backends = new packages under **`palm/runners/<name>/`** implementing core `WorkloadRuntime`.  
+New “can we run X?” (GPU, terraform image, ruff, docs build) = Spec + image/command + placement labels — **not** new core engines.  
+Do **not** put the protocol ABC in `common` (that is core); do **not** put driver clients in core.
 
 ## Consequences
 

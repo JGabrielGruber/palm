@@ -78,18 +78,49 @@
        Session plane (0.55)        ← subscribe by session_id / workload_id
 ```
 
-### 3.1 Core purity
+### 3.1 Package layout (normative)
 
-`palm/core/workload/` (name locked at ADR accept; prefer **workload** not runner):
+Same spirit as providers / storages — **not** a separate git repo for v1.
+
+```text
+palm/core/workload/                 # PURE — base contract + engine
+  engine.py, spec.py, result.py, handle.py
+  protocol.py                       # WorkloadRuntime ABC/Protocol  ← “base”
+  registry.py
+
+palm/common/workload/               # coordination only (no driver clients)
+  placement.py, ownership.py, events.py
+  # optional: projection helpers — NOT neonroot/ssh/k8s
+
+palm/runners/                       # concrete WorkloadRuntime adapters
+  _apps.py                          # INSTALLED_RUNNERS
+  host/, neonroot/, ssh/, palm/, k8s/, …
+  # each: runtime.py + app.py + registry.py
+
+palm/services/execution/workloads/  # product CQRS (ExecutionService.workloads)
+  service.py, bindings/cqrs/…
+
+palm/patterns/… WorkloadLeaf        # BT contract with engine/port
+```
+
+| Piece | Package | Not |
+|-------|---------|-----|
+| **Base** protocol + engine | **`core/workload`** | `common` as home of the ABC |
+| Policy / placement glue | **`common/workload`** | Driver SDKs |
+| host, neonroot, ssh, peer palm | **`palm/runners/*`** | Top-level `services/workloads` |
+| CQRS / REST | **`execution/workloads`** | Edges calling core directly |
+| Separate runners git repo | **No for v1** | Optional install extras much later |
+
+**Core purity**
 
 | In core | Out of core |
 |---------|-------------|
 | Spec, Result, Handle, Status | neonroot, docker, k8s, paramiko clients |
-| Engine + in-memory index | Persistence of workload rows (optional common/service) |
-| Runtime Protocol + registry | Host inventory storage backends |
+| Engine + in-memory index | Durable workload rows (service/common later) |
+| `WorkloadRuntime` protocol + registry | Host inventory storage backends |
 | Transition validation | Image builds, registries |
 
-Implementations: `palm/workloads/<name>/` (or `palm/runners/`) — PatternApp/ProviderApp-style `registry.py`, bootstrap registration, `threading.RLock`.
+Runners register at bootstrap (`registry.py`, `threading.RLock`), Django-style like providers.
 
 ### 3.2 Layer duties (error-proofing)
 
@@ -528,9 +559,9 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 
 ## 21. Open decisions (close in ADR accept)
 
-1. Final package path `palm.core.workload`  
-2. `workspace` vs `service` enum  
-3. Façade deprecation timeline  
+1. ~~Package layout~~ → **locked** §3.1 (`core/workload`, `common/workload`, `runners/*`, `execution/workloads`)  
+2. `workspace` vs `service` enum (alias vs distinct kind)  
+3. Façade deprecation timeline for `provider: neonroot`  
 4. Secret ref scheme (reuse existing auth/secrets if any)  
 5. Default `max_hops` and peer auth mechanism  
 6. Whether `execution.workloads` is always-on or composition-profile gated only  
