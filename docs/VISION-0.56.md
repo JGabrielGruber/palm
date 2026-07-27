@@ -569,4 +569,10 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 
 ---
 
+## Horizon
+
+Workload plane is **place** (and peer `runtime=palm`) under [**The Grove**](VISION-GROVE.md). Long-term org mesh reuses the same Spec, ownership, events, and reactive **wait** interest — completers announce themselves; peers open interest. Prefer designs where a second Palm is only trust + target id + lifecycle events, not a new integration grammar.
+
+---
+
 *Allocate places. Speak through providers. Command via CQRS. Continue via events. Grow runtimes without growing core.* 🌴⚙️

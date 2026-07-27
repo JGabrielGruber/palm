@@ -77,10 +77,14 @@ Living Library **docs dogfood domain** deferred further (was interim 0.55).
 
 ## Horizon
 
+**North star (multi-theme):** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization: many palms (users, services, capacity) talking through org flows, reactive interests, and continuous interfaces. Near minors should deepen **start / continue / place / speak / trust** toward that canopy.
+
+- **Reactive interests** (candidate theme / hard front of 0.55–0.56) — wait plane + event-match resume; WorkIntent remains start ([VISION-GROVE](docs/VISION-GROVE.md) §4)  
 - **0.55** Session plane — watches / subscriptions / optional SessionService ([VISION-0.55](docs/VISION-0.55.md))  
-- **0.56** Workload plane — WorkloadEngine + CQRS service + runtimes + events→pipelines ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
+- **0.56** Workload plane — WorkloadEngine + CQRS service + runtimes + peer palm ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
 - Docs dogfood domain (post session + workload foundations)  
 - Adapter runners via workloads (PD-022)  
+- Peer / org dogfood (later seasons under The Grove)  
 - Payload/artifact registry for registered modules
 
-See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md).
+See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-GROVE.md](docs/VISION-GROVE.md).

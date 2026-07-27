@@ -76,6 +76,10 @@ Not HTTP SSE as the product contract (WS + in-process handlers). MCP may stay po
 - Event plane: orchestration bus for job/flow lifecycle  
 - Public event catalog  
 
+## Horizon
+
+Session plane is how humans **watch and walk** journeys. Long-term multi-palm presence and org-scale Assist routing aim at [**The Grove**](VISION-GROVE.md) (Palm Organization north star). Prefer subscription shapes that can later filter by session **and** open wait interest.
+
 ---
 
 *Session is the human unit of work. Subscribe to its life.* 🌴📡
