@@ -1,6 +1,6 @@
 # VISION 0.55 — Reactive Interests (wait + trigger law)
 
-**Status:** 📋 **Open** — `0.55.0` plan (this document + [ADR-025](adr/025-reactive-interests.md)).  
+**Status:** ✅ **Closed** — theme exit `0.55.9` (plan [ADR-025](adr/025-reactive-interests.md); migration [MIGRATION-0.55](migrations/MIGRATION-0.55.md)).  
 **Theme:** Make **start** and **continue** first-class under one reactive law — completers emit self-events; Palm matches **trigger interest** → WorkIntent and **wait interest** → resume. Nested flow cutover; second wait kind stub; inspect/doctor. Grove-shaped foundation.
 
 > *Two verbs, one bus. Completers speak of themselves. Palm starts or continues.*
@@ -129,7 +129,7 @@ rule / inbound / schedule → WorkIntent → drain → new job
 | **0.55.6** | Instance rehydrate + restart mid-wait test; double-event idempotency — **done** | Durability |
 | **0.55.7** | Second kind stub (`workload`) + emit ready/fail + contract test — **done** | Grove / 0.56 socket |
 | **0.55.8** | EVENT-PLANE + WORK-DRAIN + AGENTS/ARCHITECTURE; trigger↔wait catalog — **done** | Constitution |
-| **0.55.9** | Compat cleanup (or time-box), MIGRATION note if inspect breaks, theme exit | Close |
+| **0.55.9** | Compat cleanup (time-box dual-path), [MIGRATION-0.55](migrations/MIGRATION-0.55.md), theme exit — **done** | Close |
 
 Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.
 
@@ -137,16 +137,16 @@ Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.
 
 ## 7. Success criteria (theme exit)
 
-1. Nested compositional wait dogfood works with **matcher** as normative unpark.  
-2. Completer path does not require child to call parent resume APIs.  
-3. Wait interest visible in inspect / list waiting / doctor.  
-4. Restart mid-wait recovers interest and can still complete.  
-5. Double completion does not double-corrupt owner.  
-6. Target fail policy defined and tested for nested job kind.  
-7. Second kind stub green (open wait → fake event → resume).  
-8. Trigger → WorkIntent → new job still green; docs name both verbs.  
-9. `just check` green; docs-check when surfaces change.  
-10. [VISION-GROVE](VISION-GROVE.md) §4 reflected in ARCHITECTURE/AGENTS short form.
+1. ✅ Nested compositional wait dogfood works with **matcher** as normative unpark.  
+2. ✅ Completer path does not require child to call parent resume APIs.  
+3. ✅ Wait interest visible in inspect / list waiting / doctor.  
+4. ✅ Restart mid-wait recovers interest and can still complete.  
+5. ✅ Double completion does not double-corrupt owner.  
+6. ✅ Target fail policy defined and tested for nested job kind.  
+7. ✅ Second kind stub green (open wait → fake event → resume).  
+8. ✅ Trigger → WorkIntent → new job still green; docs name both verbs.  
+9. ✅ Wait/matcher suites + guards green at exit; full `just check` for release gate.  
+10. ✅ [VISION-GROVE](VISION-GROVE.md) §4 reflected in ARCHITECTURE/AGENTS short form.
 
 ---
 
@@ -174,14 +174,20 @@ Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.
 
 ---
 
-## 10. Open decisions (close during 0.55.1–0.55.4)
+## 10. Decisions (closed)
 
-1. ~~Exact state key / serialization version for wait interest.~~ **Closed 0.55.1:** `palm.wait.interests` list; `v: 1`; pure types in `palm.core.wait`.  
-2. JobStatus: reuse `WAITING_FOR_INPUT` vs introduce single park label (prefer **reuse + interest fields** unless Assist demands more).  
-3. Fail policy defaults for nested job — **default locked:** `on_target_failed=fail_owner` (`leave` available). Nested cutover may refine.  
-4. How long dual-path (hook + matcher) lasts (prefer gone by 0.55.4–0.55.9).  
-5. Package name for matcher/coordination: prefer **`palm.common.wait`** in 0.55.2 (core stays pure interest + state_ops; graduate `child_wait` onto it later).
+1. ~~State key / serialization.~~ **0.55.1:** `palm.wait.interests` list; `v: 1`; pure types in `palm.core.wait`.  
+2. ~~JobStatus park label.~~ **Reuse `WAITING_FOR_INPUT` + interest fields** (no new park enum).  
+3. ~~Fail policy default.~~ **`on_target_failed=fail_owner`** (`leave` available).  
+4. ~~Dual-path duration.~~ **Time-boxed: `ChildCompletionHook` default-on through theme exit** for pre-interest parks; matcher remains normative. Revisit removal after live parks without interest are gone (not 0.55).  
+5. ~~Package home.~~ **`palm.common.wait`** for matcher/policy/stub; pure interest in `palm.core.wait`.
 
 ---
+
+## 11. Theme exit notes (0.55.9)
+
+- Migration: [MIGRATION-0.55](migrations/MIGRATION-0.55.md) (additive; no forced break).  
+- Next: [VISION-0.56](VISION-0.56.md) WorkloadEngine consumes `kind=workload`.  
+- Session watches: [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md).
 
 *Start with rules. Continue with waits. Match on the bus. Grow kinds without growing laws.* 🌴⚡

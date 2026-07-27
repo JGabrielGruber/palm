@@ -4,13 +4,22 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### 0.55.0 — Reactive Interests (plan open)
+### 0.55 — Reactive Interests (**theme closed**)
 
-- **Theme open:** [VISION-0.55](docs/VISION-0.55.md) **Reactive Interests** — wait + trigger law; completers emit; Palm matches start vs continue  
-- **ADR-025** accepted: [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md)  
-- **North star:** [VISION-GROVE](docs/VISION-GROVE.md) (Palm Organization)  
-- **Replan:** Session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (queued after 0.55); execution starts at **0.55.1**  
-- Code version remains `0.54.10` until first embedded release of 0.55 slices
+Logical slices **0.55.0–0.55.9** (code version still `0.54.10` until embedded release).  
+Vision: [VISION-0.55](docs/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-interests.md) · migration: [MIGRATION-0.55](docs/migrations/MIGRATION-0.55.md)
+
+#### Added
+- **Wait interest** (`palm.core.wait`) — durable `palm.wait.interests` on job/instance state  
+- **WaitMatcher** (`palm.common.wait`) on `runtime.event` — resume/fail owners; job scan + idempotency  
+- Nested wizards open `kind=job` interest on park; workload **stub** emit `workload.*` (0.56 socket)  
+- Operator **`waiting_on`** on inspect / list-waiting / Assist; doctor **`reactive_interests`**  
+- Constitution: [EVENT-PLANE](docs/EVENT-PLANE.md) trigger↔wait catalog · [WORK-DRAIN](docs/WORK-DRAIN.md) start peer · AGENTS/ARCHITECTURE Grove §4  
+
+#### Notes
+- **Start** = WorkIntent drain; **continue** = wait interest (not WorkIntent kinds)  
+- `ChildCompletionHook` default-on dual-path time-box for pre-interest parks  
+- Session plane remains queued: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)
 
 ## [0.54.10] — 2026-07-26
 

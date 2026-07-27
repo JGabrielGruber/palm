@@ -103,7 +103,12 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 - [x] Second kind stub (`workload` emit ready/fail, 0.55.7)  
 - [x] Doctor/inspect both verbs (reactive_interests section, 0.55.5)  
 - [x] Constitution docs EVENT-PLANE / WORK-DRAIN / AGENTS / ARCHITECTURE (0.55.8)  
-- [ ] `just check` green  
+- [x] Theme exit 0.55.9 — dual-path time-box + [MIGRATION-0.55](../migrations/MIGRATION-0.55.md)  
+- [x] Wait/matcher characterization green at exit  
+
+## Theme status
+
+**Closed** with **0.55.9**. Dual-path `ChildCompletionHook` retained by design (compat); normative unpark remains WaitMatcher.
 
 ## References
 

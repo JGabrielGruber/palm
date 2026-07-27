@@ -162,8 +162,9 @@ class BaseRuntime:
                 )
             )
         hooks.append(JobExecutionContextHook())
-        # 0.55.4: WaitMatcher is normative unpark; ChildCompletionHook is compat
-        # dual-path (idempotent if matcher already resumed the parent).
+        # 0.55.4+: WaitMatcher is normative unpark. ChildCompletionHook stays
+        # default-on as dual-path compat (pre-interest parks / matcher off).
+        # See docs/migrations/MIGRATION-0.55.md · VISION-0.55.9 time-box.
         if options.get("child_completion_hook", True):
             hooks.append(ChildCompletionHook(self))
         hooks.append(

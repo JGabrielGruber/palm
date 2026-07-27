@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme open:** **`0.55` Reactive Interests** (`0.55.0` plan) · **Prior closed:** **`0.54` Hermetic Jobs**  
+**Current Version:** `0.54.10` · **Theme closed:** **`0.55` Reactive Interests** · **Next open:** **`0.56` Workload** (plan) · **Prior:** **`0.54` Hermetic Jobs**  
 **Last Updated:** July 27, 2026  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.54** landed · **0.55 Reactive Interests (plan)** · session plane / docs dogfood deferred · north star [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** landed · session plane / docs dogfood deferred · north star [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -68,9 +68,10 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | 0.54.10 Run-code dogfood complete (Portal + resource auto-advance) | ✅ |
 | **0.54 theme** | ✅ closed — dogfood proven |
 
-## 0.55 — Reactive Interests (**open** · `0.55.0` plan)
+## 0.55 — Reactive Interests (**closed** · theme exit `0.55.9`)
 
-**Vision:** [docs/VISION-0.55.md](docs/VISION-0.55.md) · **ADR:** [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md) (accepted with 0.55.0)  
+**Vision:** [docs/VISION-0.55.md](docs/VISION-0.55.md) · **ADR:** [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md)  
+**Migration:** [docs/migrations/MIGRATION-0.55.md](docs/migrations/MIGRATION-0.55.md)  
 **North star:** [docs/VISION-GROVE.md](docs/VISION-GROVE.md) §4  
 
 **Theme:** Two verbs on `runtime.event` — **start** (trigger → WorkIntent) and **continue** (wait interest → resume). Completers emit self-events; Palm matches. Nested flow cutover; second wait kind stub; inspect/doctor.
@@ -86,7 +87,8 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.6** Restart + idempotency (rehydrate + matcher guards) | ✅ |
 | **0.55.7** Second kind stub (`workload` + emit ready/fail) | ✅ |
 | **0.55.8** Docs constitution (EVENT-PLANE, WORK-DRAIN, AGENTS, ARCHITECTURE) | ✅ |
-| 0.55.9 Compat cleanup + theme exit | 📋 |
+| **0.55.9** Compat time-box + MIGRATION-0.55 + theme exit | ✅ |
+| **0.55 theme** | ✅ closed — base reactiveness unlocked |
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 
@@ -94,7 +96,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 **North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
 
-- **0.55** Reactive Interests — in progress ([VISION-0.55](docs/VISION-0.55.md))  
+- **0.55** Reactive Interests — **closed** ([VISION-0.55](docs/VISION-0.55.md))  
 - **0.56** Workload plane ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
 - **Session plane** (queued) — [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
 - Docs dogfood domain (post session + workload)  
