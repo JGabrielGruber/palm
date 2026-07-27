@@ -119,3 +119,4 @@ Explicit / server drain should call `host.tick_work()` — it flushes deferred i
 - **Outbox** — reliable external delivery of events (webhooks to third parties)
 - **`enable_webhook_dispatcher`** — dispatches journal events to configured URLs
 - **Inbound REST** — ingress that *enqueues* work; drain *executes* it
+- **Wait matcher** — continue/unpark parked jobs; does not enqueue WorkIntents ([EVENT-PLANE](EVENT-PLANE.md), `palm.common.wait`)

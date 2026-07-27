@@ -100,10 +100,10 @@ Coding agents should operate Palm through MCP — **prefer a single meta-tool `p
 | Run flow | `palm_assist(params={flow_id: "coconut-npc"})` |
 | Continue | `palm_assist(params={session_id, flow_id, value})` |
 | Publish flow | `palm_assist(params={body: {name, pattern, options.steps}})` or `alias=design/publish` |
-| Doctor / list / waiting | `assist/doctor` · `assist/catalog/flows` · `assist/catalog/waiting` |
+| Doctor / list / waiting | `assist/doctor` · `assist/catalog/flows` · `assist/catalog/waiting` (rows may include **`waiting_on`**) |
 | Resume resource | `alias=flows/session-resume` + `session_id`, `flow_id` |
 
-**Conventions:** session-first (`session_id`); plain `value`/`input` strings; follow returned **`question` / `choices` / `actions` / `mutation`**; do **not** guess state; design writes via **publish** (or propose→impact→commit only when inspecting impact); never `palm_processes_submit` for interactive wizard entry; `resume-child-wait` only when `waiting_for_child`.
+**Conventions:** session-first (`session_id`); plain `value`/`input` strings; follow returned **`question` / `choices` / `actions` / `mutation`** / **`waiting_on`**; do **not** guess state; design writes via **publish** (or propose→impact→commit only when inspecting impact); never `palm_processes_submit` for interactive wizard entry; `resume-child-wait` only when `waiting_for_child` (matcher is normative unpark when interest is open).
 
 **Token efficiency (0.31):**
 
@@ -146,6 +146,8 @@ Follow these patterns. They exist so growth remains orderly.
 | WebSocket / Portal transport (0.32+) | `palm/runtimes/server/surfaces/websocket/` | Frames → shared assist dispatch; **no** new service domain; see [VISION-0.32](docs/VISION-0.32.md) |
 | MCP tool, resource, or prompt | `palm/runtimes/mcp/` + pattern or app `app.py` | Pattern: `register_mcp_contributor()`. App: `register_app_mcp_contributor()`. See [docs/MCP.md](docs/MCP.md) |
 | Cross-cutting coordination | `palm/common/<area>/` | executions, plans, hooks, persistence, etc. |
+| Wait interest (pure) | `palm/core/wait/` | `WaitInterest`, open/close on state — no I/O |
+| Wait matcher / policy / workload stub | `palm/common/wait/` | Match `runtime.event` → resume/fail; stub emit for 0.56 |
 | Definition revisioning (0.24+) | `palm/common/persistence/definition_repository.py`, `palm/definitions/`, `palm/instances/` | Append-only `publish_flow_revision`; instance `flow_revision` pin; see [VISION-0.24](docs/VISION-0.24.md) |
 | Definition migration rules (0.24.2+) | `palm/common/persistence/definition_migration.py` | `register_migration_rule()` / `resolve_migration_rule()`; see [ADR-007](docs/adr/007-definition-revisioning.md) |
 | Instance migration execution (0.24.3+) | `palm/common/persistence/instance_migration.py` | `migrate_instance()`; preserve `migration_*` in `instance_sync.py`; REST `POST …/instances/{id}/migrate` |
