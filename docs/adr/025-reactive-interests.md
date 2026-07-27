@@ -100,7 +100,7 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 - [x] Matcher normative for nested flow (BaseRuntime wire + job scan, 0.55.4)  
 - [x] Doctor/inspect/list-waiting expose waiting_on (0.55.5)  
 - [x] Wait interest on instance across restart (0.55.6 rehydrate + dogfood)  
-- [ ] Second kind stub  
+- [x] Second kind stub (`workload` emit ready/fail, 0.55.7)  
 - [x] Doctor/inspect both verbs (reactive_interests section, 0.55.5)  
 - [ ] `just check` green  
 

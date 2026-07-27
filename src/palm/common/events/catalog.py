@@ -24,6 +24,10 @@ PUBLIC_EVENT_TYPES: frozenset[str] = frozenset(
         "job.completed",
         "job.status_changed",
         "inbound.received",
+        # 0.55.7 workload wait-kind stub (full engine 0.56)
+        "workload.ready",
+        "workload.failed",
+        "workload.completed",
     }
 )
 
@@ -36,6 +40,9 @@ COMPOSITION_EVENT_TYPES: frozenset[str] = frozenset(
         "job.completed",
         "job.status_changed",
         "inbound.received",
+        "workload.ready",
+        "workload.failed",
+        "workload.completed",
     }
 )
 
@@ -108,6 +115,24 @@ _CATALOG: tuple[EventTypeInfo, ...] = (
         "inbound.received",
         "inbound",
         "Inbound resource signal accepted (webhook/stream); WorkIntent may follow",
+        composition=True,
+    ),
+    EventTypeInfo(
+        "workload.ready",
+        "workload",
+        "Workload unit ready (0.55.7 stub; 0.56 engine emits for real)",
+        composition=True,
+    ),
+    EventTypeInfo(
+        "workload.failed",
+        "workload",
+        "Workload unit failed (wait interest fail_owner / leave policy)",
+        composition=True,
+    ),
+    EventTypeInfo(
+        "workload.completed",
+        "workload",
+        "Workload unit terminal complete (status in payload)",
         composition=True,
     ),
 )

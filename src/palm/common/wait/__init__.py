@@ -34,6 +34,16 @@ from palm.common.wait.signals import (
     extract_target_signal,
 )
 from palm.common.wait.tracked import close_tracked_wait, open_tracked_wait
+from palm.common.wait.workload_stub import (
+    WORKLOAD_EVENT_COMPLETED,
+    WORKLOAD_EVENT_FAILED,
+    WORKLOAD_EVENT_READY,
+    WORKLOAD_STUB_EVENT_TYPES,
+    emit_workload_completed,
+    emit_workload_failed,
+    emit_workload_ready,
+    open_workload_wait,
+)
 
 __all__ = [
     "ACTION_FAIL_OWNER",
@@ -44,15 +54,23 @@ __all__ = [
     "OUTCOME_FAILED",
     "OUTCOME_READY",
     "OUTCOME_SUCCEEDED",
+    "WORKLOAD_EVENT_COMPLETED",
+    "WORKLOAD_EVENT_FAILED",
+    "WORKLOAD_EVENT_READY",
+    "WORKLOAD_STUB_EVENT_TYPES",
     "MatchDisposition",
     "TargetSignal",
     "WaitMatcher",
     "WaitOwnerIndex",
     "bind_wait_matcher_to_runtime",
     "close_tracked_wait",
+    "emit_workload_completed",
+    "emit_workload_failed",
+    "emit_workload_ready",
     "extract_signal_from_event",
     "extract_target_signal",
     "open_tracked_wait",
+    "open_workload_wait",
     "rehydrate_wait_interests",
     "rehydrate_wait_interests_from_snapshot",
     "resolve_wait_action",
