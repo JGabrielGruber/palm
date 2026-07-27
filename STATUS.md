@@ -92,6 +92,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.10** Continue plane — [VISION-0.55.10](docs/VISION-0.55.10.md) (`WaitPlaneService`) | ✅ |
 | **0.55.11** Index discipline / single open path (`access` + rebuild) | ✅ |
 | **0.55.12** Dual nested-state collapse (interest authority) | ✅ |
+| **0.55.13** Slash `set_child_wait` façade → `nested_park` | ✅ |
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 

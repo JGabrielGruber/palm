@@ -97,11 +97,11 @@ def test_nested_park_registers_on_bound_plane() -> None:
         parent_job = rt.submit_flow("parent-idx-flow")
         rt.wait_until_idle(timeout=5)
         assert parent_job.status == JobStatus.WAITING_FOR_INPUT
-        from palm.patterns.wizard.bindings.resource.child_wait import get_child_wait
+        from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
 
-        waiting = get_child_wait(parent_job.state)
-        assert isinstance(waiting, dict)
-        child_id = str(waiting["child_job_id"])
+        park = nested_park_interest(parent_job.state)
+        assert park is not None
+        child_id = str(park.target_id)
 
         assert rt.wait_plane is not None
         owners = rt.wait_plane.index.owners_for(kind=WAIT_KIND_JOB, target_id=child_id)

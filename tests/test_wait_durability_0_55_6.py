@@ -144,7 +144,7 @@ def _nested_flows() -> tuple[FlowDefinition, FlowDefinition, ResourceDefinition]
 
 def test_nested_mid_wait_survives_runtime_restart() -> None:
     """Park parent mid-child-wait, restart runtime, rehydrate interest, complete."""
-    from palm.patterns.wizard.bindings.resource.child_wait import get_child_wait
+    from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
 
     storage = StorageEngine()
     storage.initialize(backend="memory")
@@ -162,9 +162,9 @@ def test_nested_mid_wait_survives_runtime_restart() -> None:
         assert parent_job.status == JobStatus.WAITING_FOR_INPUT
         assert has_open_waits(parent_job.state)
 
-        waiting = get_child_wait(parent_job.state)
-        assert isinstance(waiting, dict)
-        child_job_id = str(waiting["child_job_id"])
+        park = nested_park_interest(parent_job.state)
+        assert park is not None
+        child_job_id = str(park.target_id)
         child_job = rt1.get_job(child_job_id)
         parent_instance_id = str(parent_job.metadata["instance_id"])
         child_instance_id = str(child_job.metadata["instance_id"])
@@ -199,7 +199,7 @@ def test_nested_mid_wait_survives_runtime_restart() -> None:
         assert child_done.status == JobStatus.SUCCEEDED
         assert parent_done.status == JobStatus.SUCCEEDED
         assert not has_open_waits(parent_done.state)
-        assert get_child_wait(parent_done.state) is None
+        assert nested_park_interest(parent_done.state) is None
     finally:
         rt2.stop()
         storage.shutdown()

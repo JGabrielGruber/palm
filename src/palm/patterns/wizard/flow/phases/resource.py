@@ -13,7 +13,8 @@ from palm.common.resource.compensation import is_mutating_action, track_resource
 from palm.core.behavior_tree import LeafNode, PatternStatus
 from palm.core.context import BaseState
 from palm.core.orchestration import JobStatus
-from palm.common.patterns._registry import get_child_wait_hooks
+from palm.common.providers._registry import get_bound_runtime
+from palm.core.wait import WaitInterest
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 from palm.patterns.wizard.bindings.context.state import get_answers, set_answers
 from palm.patterns.wizard.bindings.definitions.config import WizardStepConfig
@@ -26,13 +27,14 @@ from palm.patterns.wizard.bindings.events.support import (
     publish_prompt,
 )
 from palm.patterns.wizard.bindings.events.types import WizardEventType
-from palm.patterns.wizard.bindings.resource.child_wait import (
-    child_job_id_from_wait,
-    child_wait_from_result,
-    clear_child_wait,
-    default_child_wait_prompt,
-    get_child_wait,
-    set_child_wait,
+from palm.patterns.wizard.bindings.resource.nested_park import (
+    clear_nested_park,
+    default_nested_prompt,
+    nested_park_for_step,
+    open_nested_park,
+    park_meta_from_result,
+    poll_child_job,
+    refresh_nested_park_status,
 )
 from palm.patterns.wizard.flow.phases._base import WizardPhaseContext, wizard_prompt_key
 from palm.patterns.wizard.flow.validation import (
@@ -124,20 +126,21 @@ class WizardResourceLeaf(LeafNode):
             resource_ref=step.resource_ref,
             output_key=step.output_key or step.slug,
         )
-        waiting = get_child_wait(state)
-        if waiting:
+        interest = nested_park_for_step(state, self._ctx.step.slug)
+        if interest is not None:
+            meta = interest.meta or {}
             bundle["waiting_for_child"] = True
-            bundle["waiting_for_child_job_id"] = waiting.get("child_job_id")
-            bundle["waiting_for_child_instance_id"] = waiting.get("child_instance_id")
-            bundle["child_job_href"] = waiting.get("child_job_href")
-            bundle["child_instance_href"] = waiting.get("child_instance_href")
-            bundle["child_status"] = waiting.get("child_status")
+            bundle["waiting_for_child_job_id"] = interest.target_id
+            bundle["waiting_for_child_instance_id"] = meta.get("child_instance_id")
+            bundle["child_job_href"] = meta.get("child_job_href")
+            bundle["child_instance_href"] = meta.get("child_instance_href")
+            bundle["child_status"] = meta.get("child_status")
         return bundle
 
     def _tick_impl(self, state: BaseState) -> PatternStatus:
-        pending = get_child_wait(state)
-        if pending and pending.get("step_slug") == self._ctx.step.slug:
-            return self._poll_child_wait(state, pending)
+        pending = nested_park_for_step(state, self._ctx.step.slug)
+        if pending is not None:
+            return self._poll_nested_park(state, pending)
 
         enter_wizard_step(
             state,
@@ -163,38 +166,41 @@ class WizardResourceLeaf(LeafNode):
         status = self._inner.tick(state)
 
         if status == PatternStatus.WAITING_FOR_CHILD:
-            return self._enter_child_wait(state)
+            return self._enter_nested_park(state)
 
         if status == PatternStatus.SUCCESS:
             return self._complete_success(state)
 
         return self._handle_resource_failure(state)
 
-    def _enter_child_wait(self, state: BaseState) -> PatternStatus:
+    def _enter_nested_park(self, state: BaseState) -> PatternStatus:
         result_value = state.get(self._inner.output_key)
-        waiting = child_wait_from_result(
+        park = park_meta_from_result(
             result_value if isinstance(result_value, dict) else {},
             step_slug=self._ctx.step.slug,
             output_key=self._inner.output_key,
             resource_ref=self._ctx.step.resource_ref,
         )
-        set_child_wait(state, waiting)
+        interest = open_nested_park(
+            state, target_id=park["target_id"], meta=park["meta"]
+        )
 
-        prompt = default_child_wait_prompt(waiting)
+        prompt = default_nested_prompt(interest)
         publish_prompt(
             state,
             prompt_key=self.prompt_key(),
             bundle=self._prompt_bundle(state, prompt=prompt),
         )
+        meta = interest.meta or {}
         emit_wizard_event(
             self._ctx.emit,
             self._ctx.wizard_name,
             WizardEventType.CHILD_WAITING,
             slug=self._ctx.step.slug,
             step_index=self._ctx.step_index,
-            child_job_id=waiting.get("child_job_id"),
-            child_instance_id=waiting.get("child_instance_id"),
-            child_status=waiting.get("child_status"),
+            child_job_id=interest.target_id,
+            child_instance_id=meta.get("child_instance_id"),
+            child_status=meta.get("child_status"),
         )
         state.set(
             WizardKeys.RESOURCE_FEEDBACK,
@@ -208,35 +214,26 @@ class WizardResourceLeaf(LeafNode):
         )
         return PatternStatus.WAITING_FOR_CHILD
 
-    def _poll_child_wait(self, state: BaseState, waiting: dict[str, Any]) -> PatternStatus:
-        child_job_id = child_job_id_from_wait(waiting)
-        if not child_job_id:
-            return self._fail_step(state, message="Missing child_job_id while waiting for child")
-
-        child_wait = get_child_wait_hooks("wizard")
-        child_job = (
-            child_wait.poll_child_for_parent(state, child_job_id)
-            if child_wait is not None
-            else None
-        )
+    def _poll_nested_park(self, state: BaseState, interest: WaitInterest) -> PatternStatus:
+        child_job_id = interest.target_id
+        runtime = get_bound_runtime()
+        child_job = poll_child_job(runtime, child_job_id) if runtime is not None else None
         if child_job is None:
             publish_prompt(
                 state,
                 prompt_key=self.prompt_key(),
                 bundle=self._prompt_bundle(
                     state,
-                    prompt=default_child_wait_prompt(waiting),
+                    prompt=default_nested_prompt(interest),
                 ),
             )
             return PatternStatus.WAITING_FOR_CHILD
-        if child_job is None:
-            return self._fail_step(state, message=f"Child job not found: {child_job_id!r}")
 
-        waiting["child_status"] = child_job.status.value
-        set_child_wait(state, waiting)
+        interest = refresh_nested_park_status(state, interest, child_job.status.value)
+        meta = interest.meta or {}
 
         if child_job.status == JobStatus.SUCCEEDED:
-            payload = dict(waiting.get("child_payload") or {})
+            payload = dict(meta.get("child_payload") or {})
             payload.update(
                 {
                     "job_id": child_job.id,
@@ -247,7 +244,7 @@ class WizardResourceLeaf(LeafNode):
                 }
             )
             state.set(self._inner.output_key, payload)
-            clear_child_wait(state)
+            clear_nested_park(state, target_id=child_job_id)
             emit_wizard_event(
                 self._ctx.emit,
                 self._ctx.wizard_name,
@@ -260,7 +257,7 @@ class WizardResourceLeaf(LeafNode):
             return self._complete_success(state)
 
         if child_job.status in {JobStatus.FAILED, JobStatus.CANCELLED}:
-            clear_child_wait(state)
+            clear_nested_park(state, target_id=child_job_id)
             return self._fail_step(
                 state,
                 message=f"Nested wizard {child_job_id!r} ended with {child_job.status.value}",
@@ -269,7 +266,7 @@ class WizardResourceLeaf(LeafNode):
         publish_prompt(
             state,
             prompt_key=self.prompt_key(),
-            bundle=self._prompt_bundle(state, prompt=default_child_wait_prompt(waiting)),
+            bundle=self._prompt_bundle(state, prompt=default_nested_prompt(interest)),
         )
         return PatternStatus.WAITING_FOR_CHILD
 

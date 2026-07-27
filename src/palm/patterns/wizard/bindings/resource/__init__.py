@@ -1,15 +1,15 @@
-"""Resource bindings — child-job wait coordination for nested wizards."""
+"""Resource bindings — nested park via continue-plane interest."""
 
-from palm.patterns.wizard.bindings.resource.child_wait import (
-    child_job_id_from_wait,
-    get_child_wait,
+from palm.patterns.wizard.bindings.resource.nested_park import (
+    clear_nested_park,
+    nested_park_interest,
+    open_nested_park,
     poll_child_job,
-    set_child_wait,
 )
 
 __all__ = [
-    "child_job_id_from_wait",
-    "get_child_wait",
+    "clear_nested_park",
+    "nested_park_interest",
+    "open_nested_park",
     "poll_child_job",
-    "set_child_wait",
 ]

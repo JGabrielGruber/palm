@@ -964,7 +964,7 @@ runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail 
 | **WaitPlaneService** + matcher/policy/present | `palm/common/wait/` (`plane.py` is the façade) |
 | Work drain / trigger registry | `palm/app/host/workplane/`, `palm/common/work/` |
 | Runtime wire | `BaseRuntime.wait_plane` always attached at start |
-| Nested wizard park | `set_child_wait` writes **only** `kind=job` interest (meta holds step/payload); plane unparks; no dual `WAITING_FOR_CHILD` key (0.55.12) |
+| Nested wizard park | `open_nested_park` → `kind=job` interest (meta holds step/payload); plane unparks; no `set_child_wait` façade |
 | Operator surfaces | `waiting_on` via `present`; doctor `reactive_interests` from plane snapshot |
 
 **Rules:** completers emit self-events only; **no** inverted parent-resume hooks; do not fold resume into WorkIntent kinds; new async parks open a wait kind into the continue plane. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).

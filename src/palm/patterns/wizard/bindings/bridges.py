@@ -1,11 +1,7 @@
 """
 Wizard bridge hooks — register pattern-specific runtime surfaces on ``_registry``.
 
-Keeps ``palm.common`` free of direct wizard imports; common dispatches through
-:mod:`palm.common.patterns._registry` instead.
-
-Nested child unpark is **not** registered here — :class:`~palm.common.wait.WaitMatcher`
-matches wait interest on ``runtime.event`` (register-downward reactive law).
+Nested unpark is WaitPlaneService (interest match), not pattern hooks.
 """
 
 from __future__ import annotations
@@ -19,10 +15,11 @@ from palm.common.patterns._registry import (
     register_interactive_runtime,
     register_read_model_builder,
 )
+from palm.common.providers._registry import get_bound_runtime
 from palm.core.orchestration import Job
 from palm.patterns.wizard.bindings.behavior_tree.backtrack import can_backtrack_to
-from palm.patterns.wizard.bindings.resource.child_wait import (
-    get_child_wait,
+from palm.patterns.wizard.bindings.resource.nested_park import (
+    nested_park_interest,
     poll_child_job,
 )
 from palm.patterns.wizard.pattern import WizardPattern
@@ -54,14 +51,10 @@ def _wizard_previous_step(executable: Any, state: Any) -> str:
 
 
 def _wizard_parent_is_waiting(job: Job) -> bool:
-    """Parked on nested child — interest authority (get_child_wait projects it)."""
-    waiting = get_child_wait(job.state)
-    return isinstance(waiting, dict) and bool(waiting.get("child_job_id"))
+    return nested_park_interest(job.state) is not None
 
 
 def _wizard_poll_child_for_parent(_state: Any, child_job_id: str) -> Job | None:
-    from palm.common.providers._registry import get_bound_runtime
-
     runtime = get_bound_runtime()
     if runtime is None:
         return None
