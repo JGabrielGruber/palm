@@ -98,9 +98,10 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 - [x] Matcher + resume/fail policy on bus (`palm.common.wait`, 0.55.2)  
 - [x] Nested flow opens wait interest (dual-path with ChildCompletionHook, 0.55.3)  
 - [x] Matcher normative for nested flow (BaseRuntime wire + job scan, 0.55.4)  
+- [x] Doctor/inspect/list-waiting expose waiting_on (0.55.5)  
 - [ ] Wait interest on instance across restart  
 - [ ] Second kind stub  
-- [ ] Doctor/inspect both verbs  
+- [x] Doctor/inspect both verbs (reactive_interests section, 0.55.5)  
 - [ ] `just check` green  
 
 ## References

@@ -43,6 +43,12 @@ def slim_waiting_job_row(row: Mapping[str, Any]) -> dict[str, Any]:
         payload["flow"] = flow
     if step is not None:
         payload["step"] = step
+    waiting_on = row.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        payload["waiting_on"] = list(waiting_on)
+        summary = row.get("waiting_on_summary")
+        if isinstance(summary, dict):
+            payload["waiting_on_summary"] = dict(summary)
     return payload
 
 
@@ -104,18 +110,36 @@ def _enrich_job_list_row(
     if step is not None:
         payload["step"] = step
 
+    if job_id and "waiting_on" not in payload:
+        live = _live_job(runtime, job_id)
+        if live is not None:
+            from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
+
+            waiting_on = waiting_on_from_job(live)
+            if waiting_on:
+                payload["waiting_on"] = waiting_on
+                summary_wo = summarize_waiting_on(waiting_on)
+                if summary_wo:
+                    payload["waiting_on_summary"] = summary_wo
+
     return payload
 
 
-def _live_job_metadata(runtime: Any, job_id: str) -> dict[str, Any] | None:
+def _live_job(runtime: Any, job_id: str) -> Any | None:
     get_job = getattr(runtime, "get_job", None)
     if get_job is None:
         return None
     try:
-        job = get_job(job_id)
+        return get_job(job_id)
     except JobNotFoundError:
         return None
     except Exception:
+        return None
+
+
+def _live_job_metadata(runtime: Any, job_id: str) -> dict[str, Any] | None:
+    job = _live_job(runtime, job_id)
+    if job is None:
         return None
     meta = job.metadata
     return dict(meta) if isinstance(meta, dict) else None

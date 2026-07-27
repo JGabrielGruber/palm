@@ -82,7 +82,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.2** Matcher + resume/fail policy (`palm.common.wait`) | ✅ |
 | **0.55.3** Nested flow opens wait (dual-path OK) | ✅ |
 | **0.55.4** Matcher normative unpark; cutover | ✅ |
-| 0.55.5 Inspect / Assist / list-waiting / doctor | 📋 |
+| **0.55.5** Inspect / Assist / list-waiting / doctor (`waiting_on`) | ✅ |
 | 0.55.6 Restart + idempotency | 📋 |
 | 0.55.7 Second kind stub (`workload`) | 📋 |
 | 0.55.8 Docs constitution (EVENT-PLANE, AGENTS, …) | 📋 |

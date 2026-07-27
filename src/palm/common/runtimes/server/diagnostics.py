@@ -31,6 +31,24 @@ def build_doctor_report(
     orch = getattr(runtime, "orchestration", None)
     jobs = orch.list_jobs() if orch is not None else []
     waiting = sum(1 for job in jobs if job.status.value == "WAITING_FOR_INPUT")
+    open_wait_owners = 0
+    open_wait_interests = 0
+    wait_kind_counts: dict[str, int] = {}
+    try:
+        from palm.common.wait.present import waiting_on_from_job
+
+        for job in jobs:
+            rows = waiting_on_from_job(job)
+            if not rows:
+                continue
+            open_wait_owners += 1
+            open_wait_interests += len(rows)
+            for row in rows:
+                kind = str(row.get("kind") or "unknown")
+                wait_kind_counts[kind] = wait_kind_counts.get(kind, 0) + 1
+    except Exception:
+        pass
+    wait_matcher_wired = getattr(runtime, "wait_matcher", None) is not None
 
     from palm.common.transforms import autoload as autoload_transforms
 
@@ -132,6 +150,20 @@ def build_doctor_report(
         "jobs": {
             "total": len(jobs),
             "waiting_for_input": waiting,
+            "open_wait_owners": open_wait_owners,
+            "open_wait_interests": open_wait_interests,
+            "wait_kinds": wait_kind_counts,
+        },
+        "reactive_interests": {
+            "wait_matcher_wired": wait_matcher_wired,
+            "open_wait_owners": open_wait_owners,
+            "open_wait_interests": open_wait_interests,
+            "wait_kinds": wait_kind_counts,
+            "verbs": ["start", "continue"],
+            "note": (
+                "start = trigger → WorkIntent; continue = wait interest → resume "
+                "(VISION-0.55 / ADR-025)"
+            ),
         },
         "issues": issues,
     }

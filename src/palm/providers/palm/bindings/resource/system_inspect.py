@@ -120,19 +120,26 @@ def _local_list(action: str, params: PalmInvokeParams) -> list[dict[str, Any]]:
         return out[:limit] if limit is not None else out
 
     if action == "list_waiting":
+        from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
+
         jobs = runtime.orchestration.list_jobs(status=JobStatus.WAITING_FOR_INPUT)
         out = []
         for j in jobs:
             meta = dict(j.metadata or {})
-            out.append(
-                {
-                    "job_id": j.id,
-                    "instance_id": meta.get("instance_id"),
-                    "status": j.status.value,
-                    "flow_name": meta.get("flow") or meta.get("flow_name"),
-                    "step": meta.get("step") or meta.get("current_step"),
-                }
-            )
+            row: dict[str, Any] = {
+                "job_id": j.id,
+                "instance_id": meta.get("instance_id"),
+                "status": j.status.value,
+                "flow_name": meta.get("flow") or meta.get("flow_name"),
+                "step": meta.get("step") or meta.get("current_step"),
+            }
+            waiting_on = waiting_on_from_job(j)
+            if waiting_on:
+                row["waiting_on"] = waiting_on
+                summary = summarize_waiting_on(waiting_on)
+                if summary:
+                    row["waiting_on_summary"] = summary
+            out.append(row)
         return out[:limit] if limit is not None else out
 
     if action == "list_instances":

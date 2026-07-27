@@ -26,6 +26,7 @@ class AssistCatalogService:
 
     def list_waiting(self, *, limit: int = 50) -> list[dict[str, Any]]:
         """Jobs/instances waiting for interactive input (assist-only friendly)."""
+        from palm.common.operator.waiting_jobs import enrich_job_list_rows, slim_waiting_job_row
         from palm.core.orchestration import JobStatus
 
         rows = self._assist.system.list_jobs(
@@ -40,7 +41,10 @@ class AssistCatalogService:
                 out.append(dict(row))
             else:
                 out.append({"value": str(row)})
-        return out
+        runtime = self._assist.resolve_runtime()
+        if runtime is not None:
+            out = enrich_job_list_rows(runtime, out)
+        return [slim_waiting_job_row(row) for row in out]
 
     def discover(self, query: str = "", *, limit: int = 12) -> dict[str, Any]:
         return run_discover(query, limit=limit)

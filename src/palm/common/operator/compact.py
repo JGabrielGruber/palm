@@ -64,6 +64,11 @@ def compact_wizard_inspect(
     waiting_for_child = bool(prompt.get("waiting_for_child"))
     payload["waiting_for_child"] = waiting_for_child
 
+    # 0.55.5 — reactive wait interest (may be present without waiting_for_child flag)
+    waiting_on = wizard_view.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        payload["waiting_on"] = list(waiting_on)
+
     if "children" in fields and waiting_for_child:
         child: dict[str, Any] = {}
         child_job_id = prompt.get("waiting_for_child_job_id")
@@ -259,6 +264,10 @@ def compact_job_inspect(
 
     waiting_for_child = bool(pattern.get("waiting_for_child"))
     payload["waiting_for_child"] = waiting_for_child
+
+    waiting_on = pattern.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        payload["waiting_on"] = list(waiting_on)
 
     if "children" in fields and waiting_for_child:
         child: dict[str, Any] = {}

@@ -47,6 +47,8 @@ def merge_snapshot_fields(composed: dict[str, Any], snapshot: dict[str, Any]) ->
         "step_index",
         "slug",
         "step",
+        "waiting_on",
+        "waiting_for_child",
     ):
         if snapshot.get(key) is not None and composed.get(key) is None:
             composed[key] = snapshot[key]
