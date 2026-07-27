@@ -128,7 +128,7 @@ rule / inbound / schedule → WorkIntent → drain → new job
 | **0.55.5** | Inspect / Assist / list-waiting / doctor expose `waiting_on` — **done** | Surfaces |
 | **0.55.6** | Instance rehydrate + restart mid-wait test; double-event idempotency — **done** | Durability |
 | **0.55.7** | Second kind stub (`workload`) + emit ready/fail + contract test — **done** | Grove / 0.56 socket |
-| **0.55.8** | EVENT-PLANE + WORK-DRAIN + AGENTS/ARCHITECTURE; trigger↔wait catalog | Constitution |
+| **0.55.8** | EVENT-PLANE + WORK-DRAIN + AGENTS/ARCHITECTURE; trigger↔wait catalog — **done** | Constitution |
 | **0.55.9** | Compat cleanup (or time-box), MIGRATION note if inspect breaks, theme exit | Close |
 
 Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.

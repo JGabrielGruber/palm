@@ -2,6 +2,15 @@
 
 **WorkIntent** is Palm's deferred-work queue (0.37+): enqueue at signal time, **run when able**.
 
+This is the **start** verb of [Reactive Interests](VISION-0.55.md) / [ADR-025](adr/025-reactive-interests.md):
+
+| Verb | Unit | Outcome |
+|------|------|---------|
+| **Start** | WorkIntent (this document) | New job via drain → `submit_flow` |
+| **Continue** | Wait interest on parked owner | `resume_job` / fail — see [EVENT-PLANE](EVENT-PLANE.md) |
+
+Do **not** encode resume as a WorkIntent kind. Triggers, inbound, and schedules stay on the start plane.
+
 Sources that enqueue work:
 
 - `metadata.triggers` on flows (e.g. `resource.changed` → `todo-analytics`)
@@ -76,6 +85,16 @@ signal (webhook, resource.changed, schedule)
   → drain: tick_work() OR background service
   → submit_flow(target, payload)
 ```
+
+Peer path on the **same** `runtime.event` bus (continue, not start):
+
+```text
+completer self-event (job.completed · flow.session.* · workload.*)
+  → WaitMatcher (open palm.wait.interests on owner)
+  → resume_job / fail owner
+```
+
+Catalog: [EVENT-PLANE](EVENT-PLANE.md) § Trigger ↔ wait composition catalog.
 
 Inbound specifically: [inbound_demo README](../examples/definitions/inbound_demo/README.md) · [VISION-0.43](VISION-0.43.md).
 

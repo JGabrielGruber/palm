@@ -102,6 +102,7 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 - [x] Wait interest on instance across restart (0.55.6 rehydrate + dogfood)  
 - [x] Second kind stub (`workload` emit ready/fail, 0.55.7)  
 - [x] Doctor/inspect both verbs (reactive_interests section, 0.55.5)  
+- [x] Constitution docs EVENT-PLANE / WORK-DRAIN / AGENTS / ARCHITECTURE (0.55.8)  
 - [ ] `just check` green  
 
 ## References

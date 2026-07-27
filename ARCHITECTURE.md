@@ -943,12 +943,41 @@ New production code must not import from `archive/`.
 
 ---
 
+## Reactive Interests (0.55) — start and continue
+
+Palm’s orchestration bus carries **two peer verbs** under one law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-interests.md), [VISION-0.55](docs/VISION-0.55.md)):
+
+| Verb | Interest | Action |
+|------|----------|--------|
+| **Start** | Trigger / inbound / schedule | **WorkIntent** → work drain → new job |
+| **Continue** | Wait interest on parked owner job/instance | **resume_job** or fail owner |
+
+```text
+runtime.event  ──►  WaitMatcher (continue)  ──►  resume / fail owner
+               └──►  Triggers / inbound (start) ──►  WorkIntent → drain
+```
+
+| Concern | Location |
+|---------|----------|
+| Pure interest + state helpers | `palm/core/wait/` (`palm.wait.interests` on state) |
+| Pure WorkIntent | `palm/core/work/` |
+| Matcher, policy, index, workload stub emit | `palm/common/wait/` |
+| Work drain / trigger registry | `palm/app/host/workplane/`, `palm/common/work/` |
+| Runtime wire | `BaseRuntime` (`wait_matcher`, default on) |
+| Nested wizard park | `set_child_wait` opens `kind=job` interest (dual-path with thin `ChildCompletionHook`) |
+| Operator surfaces | `waiting_on` on inspect / list-waiting; doctor `reactive_interests` |
+
+**Rules:** completers emit self-events only; do not teach child jobs parent-resume APIs as the normative path; do not fold resume into WorkIntent kinds; new async parks should open a wait kind, not a private hook. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).
+
+---
+
 ## Design goals (summary)
 
 - **Core purity** — testable engines, zero domain coupling
 - **BT-native control flow** — steps, guards, and kernels are nodes
 - **Registry extension** — patterns, providers, storages without forked core
 - **Durable truth** — definitions + instances survive restarts
+- **Reactive interests** — start (WorkIntent) and continue (wait) on one bus
 - **Runtime middleware** — auth and ops at the edge; guards in the tree when needed
 - **One engine, many surfaces** — embedded, CLI, server, and daemon share `palm.common`
 
@@ -958,6 +987,11 @@ New production code must not import from `archive/`.
 
 - [SCOPE.md](SCOPE.md) — vision, in/out of scope, roadmap
 - [docs/VISION-0.12.md](docs/VISION-0.12.md) — 0.12 Resource System vision
+- [docs/VISION-0.55.md](docs/VISION-0.55.md) — Reactive Interests
+- [docs/VISION-GROVE.md](docs/VISION-GROVE.md) — Grove north star (Law §4)
+- [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md) — host vs runtime buses; trigger ↔ wait catalog
+- [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md) — WorkIntent start path
+- [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md) — wait + trigger ADR
 - [README.md](README.md) — quick start and CLI
 - [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
 - [DEVELOPMENT.md](DEVELOPMENT.md) — contributor guide

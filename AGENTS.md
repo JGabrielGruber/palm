@@ -6,7 +6,7 @@ For AI coding agents and human developers
 *“Palm grows where the sun meets the sea.”*  
 Orchestration should feel alive, truthful, and humane. Structure must serve clarity and longevity, never become a cage.
 
-**Last updated:** July 2026 (0.54 closed; **0.55 Reactive Interests** open — [VISION-0.55](docs/VISION-0.55.md) · [ADR-025](docs/adr/025-reactive-interests.md); north star [VISION-GROVE](docs/VISION-GROVE.md); session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
+**Last updated:** July 2026 (0.54 closed; **0.55 Reactive Interests** executing — [VISION-0.55](docs/VISION-0.55.md) · [ADR-025](docs/adr/025-reactive-interests.md); law in [EVENT-PLANE](docs/EVENT-PLANE.md) · [WORK-DRAIN](docs/WORK-DRAIN.md); north star [VISION-GROVE](docs/VISION-GROVE.md); session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
 
 ---
 
@@ -64,6 +64,20 @@ palm/core/                 ← PURE foundational engines (Behavior Tree, Orchest
 - Registries use `threading.RLock` and are populated at bootstrap time.
 - Job state transitions happen only through `RunResult` + `OrchestrationEngine.apply_result()`.
 - Persistence and resume are first-class (via `InstancePersistenceHook` and state snapshots).
+
+### Reactive Interests (0.55 — two verbs on `runtime.event`)
+
+Law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-interests.md)): **completers emit self-events; Palm starts or continues.**
+
+| Verb | Interest | Action | Modules |
+|------|----------|--------|---------|
+| **Start** | Trigger / inbound / schedule | WorkIntent → drain → new job | [WORK-DRAIN](docs/WORK-DRAIN.md), `palm.core.work`, `WorkDrainService` |
+| **Continue** | Wait interest on parked owner | resume / fail owner | `palm.core.wait`, `palm.common.wait.WaitMatcher` |
+
+- State key: **`palm.wait.interests`** (list). Nested wizards open `kind=job` when parking; workload stub uses `kind=workload` ([VISION-0.56](docs/VISION-0.56.md) socket).
+- Wire: `BaseRuntime` attaches matcher on `runtime.event` (`enable_wait_matcher`). `ChildCompletionHook` is dual-path compat only.
+- Surfaces: inspect / list-waiting / doctor expose **`waiting_on`**; doctor `reactive_interests`.
+- Catalog: [EVENT-PLANE](docs/EVENT-PLANE.md) trigger ↔ wait table. Do **not** invent private resume paths for new async steps.
 
 ### Operating Palm via MCP (0.31 — meta-surface + assist-first)
 
