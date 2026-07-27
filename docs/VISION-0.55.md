@@ -77,22 +77,28 @@ Without 0.55, workload and session risk inventing private resume paths.
 
 ---
 
-## 4. Wait interest contract (normative sketch)
+## 4. Wait interest contract (**locked 0.55.1**)
 
-Serializable on owner state / instance (exact key names lock in 0.55.1):
+Serializable on owner job/instance state under key **`palm.wait.interests`**
+(list of interest dicts). Module: [`palm.core.wait`](../src/palm/core/wait/).
 
 ```text
 WaitInterest {
-  kind: "job" | "workload" | …     # target family
-  target_id: str                   # child job_id, workload_id, …
-  opened_at: str
-  policy?: { on_target_failed: fail_owner | … }
-  meta?: { step_slug, output_key, … }  # pattern UX
+  v: 1                               # WAIT_INTEREST_SCHEMA_VERSION
+  kind: "job" | "workload" | …       # WAIT_KIND_JOB | WAIT_KIND_WORKLOAD | …
+  target_id: str                     # child job_id, workload_id, …
+  opened_at: str                     # ISO-8601 UTC
+  policy: { on_target_failed: "fail_owner" | "leave" }
+  meta: { step_slug?, output_key?, … }  # pattern UX (opaque)
 }
 ```
 
+Helpers (pure, no I/O): `open_wait_interest` / `close_wait_interest` /
+`list_wait_interests` / `open_wait_on_job` / `close_wait_on_job` /
+`make_job_wait` / `make_workload_wait`.
+
 - Owner job **parks** (existing lifecycle: e.g. `WAITING_FOR_INPUT` or documented park status) with interest present.  
-- Matcher: on event for `target_id` + kind → **resume** or **fail** owner per policy.  
+- Matcher (0.55.2+): on event for `target_id` + kind → **resume** or **fail** owner per policy.  
 - Optional target→owners **index** for O(1) match (may start as scan of live jobs).  
 - PatternStatus: keep or generalize `WAITING_FOR_CHILD` as external wait (document; rename optional later).
 
@@ -115,7 +121,7 @@ rule / inbound / schedule → WorkIntent → drain → new job
 | Patch | Deliverable | Hardens |
 |-------|-------------|---------|
 | **0.55.0** | This VISION + ADR-025 accepted; STATUS/AGENTS/Grove links; session plane parked in VISION-SESSION-PLANE | Theme open |
-| **0.55.1** | Wait interest type + open/close on job/state helpers + unit tests | Contract |
+| **0.55.1** | Wait interest type + open/close on job/state helpers + unit tests — **done** (`palm.core.wait`) | Contract |
 | **0.55.2** | Matcher on `runtime.event` + resume/fail policy + contract tests (fake events) | Reaction |
 | **0.55.3** | Nested flow **opens wait** when child starts; dual-path OK with existing hook | Migration |
 | **0.55.4** | Normative unpark = matcher; ChildCompletionHook thin/compat; characterization green | Cutover |
@@ -170,11 +176,11 @@ Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.
 
 ## 10. Open decisions (close during 0.55.1–0.55.4)
 
-1. Exact state key / serialization version for wait interest.  
+1. ~~Exact state key / serialization version for wait interest.~~ **Closed 0.55.1:** `palm.wait.interests` list; `v: 1`; pure types in `palm.core.wait`.  
 2. JobStatus: reuse `WAITING_FOR_INPUT` vs introduce single park label (prefer **reuse + interest fields** unless Assist demands more).  
-3. Fail policy defaults for nested job.  
+3. Fail policy defaults for nested job — **default locked:** `on_target_failed=fail_owner` (`leave` available). Nested cutover may refine.  
 4. How long dual-path (hook + matcher) lasts (prefer gone by 0.55.4–0.55.9).  
-5. Package name: `palm.common.wait` vs graduate `child_wait` module.
+5. Package name for matcher/coordination: prefer **`palm.common.wait`** in 0.55.2 (core stays pure interest + state_ops; graduate `child_wait` onto it later).
 
 ---
 

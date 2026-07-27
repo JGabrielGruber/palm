@@ -78,7 +78,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | Patch | Status |
 |-------|--------|
 | **0.55.0** Plan + ADR-025 + replan session → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) | ✅ |
-| 0.55.1 Wait interest contract + helpers | 📋 |
+| **0.55.1** Wait interest contract + helpers (`palm.core.wait`) | ✅ |
 | 0.55.2 Matcher + resume/fail policy | 📋 |
 | 0.55.3 Nested flow opens wait (dual-path OK) | 📋 |
 | 0.55.4 Matcher normative unpark; cutover | 📋 |
