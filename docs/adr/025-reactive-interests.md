@@ -95,6 +95,7 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 ## Checklist (theme exit — see VISION-0.55 §7)
 
 - [x] Wait interest contract + pure open/close (`palm.core.wait`, 0.55.1)  
+- [x] Matcher + resume/fail policy on bus (`palm.common.wait`, 0.55.2)  
 - [ ] Matcher normative for nested flow  
 - [ ] Wait interest on instance across restart  
 - [ ] Second kind stub  
