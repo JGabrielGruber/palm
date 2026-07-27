@@ -18,6 +18,10 @@ from palm.common.wait.present import (
     waiting_on_from_state,
     waiting_on_row,
 )
+from palm.common.wait.rehydrate import (
+    rehydrate_wait_interests,
+    rehydrate_wait_interests_from_snapshot,
+)
 from palm.common.wait.runtime_bind import bind_wait_matcher_to_runtime
 from palm.common.wait.signals import (
     MATCHER_EVENT_TYPES,
@@ -49,6 +53,8 @@ __all__ = [
     "extract_signal_from_event",
     "extract_target_signal",
     "open_tracked_wait",
+    "rehydrate_wait_interests",
+    "rehydrate_wait_interests_from_snapshot",
     "resolve_wait_action",
     "summarize_waiting_on",
     "waiting_on_from_job",

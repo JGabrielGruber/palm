@@ -92,11 +92,24 @@ def prepare_resume_state(
 ) -> BlackboardState:
     """Load blackboard state and delegate pattern-specific resume restoration."""
     state = state_from_snapshot(instance.state_snapshot)
+    # 0.55.6 — normalize reactive wait interests after snapshot restore.
+    try:
+        from palm.common.wait.rehydrate import rehydrate_wait_interests
+
+        rehydrate_wait_interests(state)
+    except Exception:
+        pass
     handler = _resume_handler(instance.pattern)
     if handler is not None:
         restored = handler(instance, executable, state)
         if not isinstance(restored, BlackboardState):
             raise TypeError(f"Resume handler for {instance.pattern!r} must return BlackboardState")
+        try:
+            from palm.common.wait.rehydrate import rehydrate_wait_interests
+
+            rehydrate_wait_interests(restored)
+        except Exception:
+            pass
         return restored
     return state
 

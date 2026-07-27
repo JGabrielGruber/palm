@@ -1,10 +1,13 @@
 """Wait matcher — match runtime.event completer signals → resume/fail owner.
 
 0.55.2: contract + policy. 0.55.4: normative unpark when wired on BaseRuntime.
+0.55.6: thread-safe match + event-id / action-key idempotency.
 """
 
 from __future__ import annotations
 
+import threading
+from collections import OrderedDict
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -27,6 +30,9 @@ from palm.core.wait import WaitInterest, close_wait_on_job, list_waits_on_job
 if TYPE_CHECKING:
     from palm.core.event import Event, EventEngine
 
+# Bound recent-event memory (0.55.6 double-delivery guard).
+_MAX_SEEN_EVENT_IDS = 512
+_MAX_ACTED_KEYS = 512
 
 GetJob = Callable[[str], Any]
 ListJobs = Callable[[], Iterable[Any]]
@@ -44,6 +50,17 @@ class MatchDisposition:
     action: str
 
 
+def _lru_add(store: OrderedDict[str, None], key: str, *, max_size: int) -> bool:
+    """Record ``key``. Return True if newly added, False if already seen."""
+    if key in store:
+        store.move_to_end(key)
+        return False
+    store[key] = None
+    while len(store) > max_size:
+        store.popitem(last=False)
+    return True
+
+
 @dataclass
 class WaitMatcher:
     """Subscribe to completer events; unpark or fail owners with open interest.
@@ -52,6 +69,9 @@ class WaitMatcher:
     * ``list_jobs`` — scan live jobs for open interests (nested flow 0.55.3+).
     * ``get_job`` — load owner job; when set, interest is verified on ``job.state``.
     * ``resume_owner`` / ``fail_owner`` — side effects (orchestration resume / fail).
+
+    Idempotency (0.55.6): close interest before side effects; ignore duplicate
+    event ids; ignore repeat (owner, kind, target_id, action) within the LRU window.
     """
 
     index: WaitOwnerIndex = field(default_factory=WaitOwnerIndex)
@@ -61,6 +81,11 @@ class WaitMatcher:
     fail_owner: FailOwner | None = None
     _subs: list[Any] = field(default_factory=list, repr=False)
     _event_engine: Any = field(default=None, repr=False)
+    _lock: threading.RLock = field(default_factory=threading.RLock, repr=False)
+    _seen_event_ids: OrderedDict[str, None] = field(
+        default_factory=OrderedDict, repr=False
+    )
+    _acted_keys: OrderedDict[str, None] = field(default_factory=OrderedDict, repr=False)
 
     def attach_events(self, event_engine: EventEngine) -> None:
         """Subscribe to normative completer event types on ``runtime.event``."""
@@ -82,6 +107,15 @@ class WaitMatcher:
         self.handle_event(event)
 
     def handle_event(self, event: Any) -> list[MatchDisposition]:
+        event_id = getattr(event, "id", None)
+        if event_id is not None:
+            with self._lock:
+                if not _lru_add(
+                    self._seen_event_ids,
+                    str(event_id),
+                    max_size=_MAX_SEEN_EVENT_IDS,
+                ):
+                    return []
         signal = extract_signal_from_event(event)
         if signal is None:
             return []
@@ -91,21 +125,34 @@ class WaitMatcher:
         self,
         event_type: str,
         payload: dict[str, Any] | None = None,
+        *,
+        event_id: str | None = None,
     ) -> list[MatchDisposition]:
+        if event_id is not None:
+            with self._lock:
+                if not _lru_add(
+                    self._seen_event_ids,
+                    str(event_id),
+                    max_size=_MAX_SEEN_EVENT_IDS,
+                ):
+                    return []
         signal = extract_target_signal(event_type, payload)
         if signal is None:
             return []
         return self.handle_signal(signal)
 
     def handle_signal(self, signal: TargetSignal) -> list[MatchDisposition]:
-        owner_ids = set(self.index.owners_for(kind=signal.kind, target_id=signal.target_id))
-        owner_ids.update(self._scan_owners(signal))
-        results: list[MatchDisposition] = []
-        for owner_id in sorted(owner_ids):
-            disp = self._match_one_owner(owner_id, signal)
-            if disp is not None:
-                results.append(disp)
-        return results
+        with self._lock:
+            owner_ids = set(
+                self.index.owners_for(kind=signal.kind, target_id=signal.target_id)
+            )
+            owner_ids.update(self._scan_owners(signal))
+            results: list[MatchDisposition] = []
+            for owner_id in sorted(owner_ids):
+                disp = self._match_one_owner(owner_id, signal)
+                if disp is not None:
+                    results.append(disp)
+            return results
 
     def _scan_owners(self, signal: TargetSignal) -> set[str]:
         """Discover owners by scanning live jobs' open wait interests."""
@@ -153,7 +200,12 @@ class WaitMatcher:
                 action=ACTION_NOOP,
             )
 
-        # Close first for double-event idempotency (0.55.6 hardens further).
+        acted_key = f"{owner_job_id}|{interest.kind}|{interest.target_id}|{action}"
+        if not _lru_add(self._acted_keys, acted_key, max_size=_MAX_ACTED_KEYS):
+            # Same owner/target/action already applied (duplicate event types).
+            return None
+
+        # Close first so a twin event in the same burst cannot re-act.
         self._close_interest(owner_job_id, interest)
 
         if action == ACTION_RESUME_OWNER and self.resume_owner is not None:
