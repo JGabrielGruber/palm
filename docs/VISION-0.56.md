@@ -1,12 +1,12 @@
 # VISION 0.56 — Workload plane (WorkloadEngine + runtimes)
 
-**Status:** 📋 **Queued** — after [VISION-0.55](VISION-0.55.md) session plane foundations (events overlap late 0.55 / early 0.56).  
-**Theme:** First-class **isolated workloads** — one-shot **runs** and long-lived **services** — via pure **WorkloadEngine**, pluggable **WorkloadRuntimes**, **hosts**, **execution-domain CQRS** (`ExecutionService.workloads`), **WorkloadLeaf** contract tests, optional resource **blueprints**, and **event-driven composition** (pipelines). NeonRoot becomes one runtime, not the product.
+**Status:** 📋 **Queued** — after [VISION-0.55](VISION-0.55.md) **Reactive Interests** (wait kind socket + matcher). Session watches: [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) (may overlap late).  
+**Theme:** First-class **isolated workloads** — one-shot **runs** and long-lived **services** — via pure **WorkloadEngine**, pluggable **WorkloadRuntimes**, **hosts**, **execution-domain CQRS** (`ExecutionService.workloads`), **WorkloadLeaf** (opens **wait interest**), optional resource **blueprints**, and **event-driven composition** (pipelines). NeonRoot becomes one runtime, not the product.
 
 > *Palm orchestrates life. Workloads are where foreign work lives. Providers are how we speak to systems. CQRS is how edges ask. Events are how the graph continues. Never collapse those layers.*
 
 **ADR:** [024-workload-engine.md](adr/024-workload-engine.md) (accept with **0.56.0**).  
-**Builds on:** [ADR-003](adr/003-provider-apps.md) · [ADR-009](adr/009-service-cqrs-contributors.md) · [ADR-022](adr/022-neonroot-provider.md) · [ADR-023](adr/023-hermetic-jobs.md) · [EVENT-PLANE](EVENT-PLANE.md) · [VISION-0.54](VISION-0.54.md) · [VISION-0.55](VISION-0.55.md).
+**Builds on:** [ADR-003](adr/003-provider-apps.md) · [ADR-009](adr/009-service-cqrs-contributors.md) · [ADR-022](adr/022-neonroot-provider.md) · [ADR-023](adr/023-hermetic-jobs.md) · [ADR-025](adr/025-reactive-interests.md) · [EVENT-PLANE](EVENT-PLANE.md) · [VISION-0.54](VISION-0.54.md) · [VISION-0.55](VISION-0.55.md) · [VISION-GROVE](VISION-GROVE.md).
 
 ---
 
@@ -571,7 +571,7 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 
 ## Horizon
 
-Workload plane is **place** (and peer `runtime=palm`) under [**The Grove**](VISION-GROVE.md). Long-term org mesh reuses the same Spec, ownership, events, and reactive **wait** interest — completers announce themselves; peers open interest. Prefer designs where a second Palm is only trust + target id + lifecycle events, not a new integration grammar.
+Workload plane is **place** (and peer `runtime=palm`) under [**The Grove**](VISION-GROVE.md). It **consumes** [0.55](VISION-0.55.md) wait interest (`kind=workload`) and emits lifecycle events for the matcher — completers announce themselves; graphs open interest. Prefer designs where a second Palm is only trust + target id + lifecycle events, not a new integration grammar.
 
 ---
 

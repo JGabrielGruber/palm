@@ -6,7 +6,7 @@ For AI coding agents and human developers
 *“Palm grows where the sun meets the sea.”*  
 Orchestration should feel alive, truthful, and humane. Structure must serve clarity and longevity, never become a cage.
 
-**Last updated:** July 2026 (0.54 Hermetic Jobs closed — run-code dogfood; [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md); next [VISION-0.55](docs/VISION-0.55.md) session plane; multi-theme north star [VISION-GROVE](docs/VISION-GROVE.md))
+**Last updated:** July 2026 (0.54 closed; **0.55 Reactive Interests** open — [VISION-0.55](docs/VISION-0.55.md) · [ADR-025](docs/adr/025-reactive-interests.md); north star [VISION-GROVE](docs/VISION-GROVE.md); session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
 
 ---
 

@@ -11,7 +11,7 @@
 2. Hermetic jobs (0.54) proved definition graphs + isolated exec ([ADR-023](023-hermetic-jobs.md)), but **isolation ≠ data I/O**. Modeling every backend as “just another provider” does not scale to host/SSH/K8s/peer-Palm, warm workspaces, GPU placement, or Terraform-in-an-image.
 3. Product surfaces in Palm are **CQRS-first** ([ADR-009](009-service-cqrs-contributors.md)). A new plane that only exposes a Python engine will be bypassed incorrectly by REST/MCP/Assist.
 4. Reactive composition already uses the **orchestration event bus** ([EVENT-PLANE](../EVENT-PLANE.md)): `flow.session.*` / `job.*` → inbound triggers → new work. Workload terminal states must join that plane so **pipelines can follow workloads** without embedding graph logic in the engine.
-5. Session plane (0.55) needs attachable subjects for long-running and warm allocations.
+5. Reactive interests ([ADR-025](025-reactive-interests.md) / 0.55) provide wait/resume; workloads emit lifecycle events and are waited on as `kind=workload`. Session watches ([VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md)) attach later.
 6. Unsafe but useful **host** execution must exist for dogfood and slim Compose, **default off**.
 
 ## Decision

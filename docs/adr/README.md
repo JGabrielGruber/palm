@@ -39,11 +39,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [022](022-neonroot-provider.md) | NeonRoot as a Palm provider — Sovereign Runners (0.53) | Accepted |
 | [023](023-hermetic-jobs.md) | Hermetic jobs — NeonRoot as job runner, Palm as graph (0.54 replan) | Accepted |
 | [024](024-workload-engine.md) | WorkloadEngine and the workload plane (0.56 plan) | Proposed |
+| [025](025-reactive-interests.md) | Reactive Interests — wait + trigger law (0.55) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
-**Next free number:** 025.  
-**Note:** Earlier 0.54 “library pipeline / DocsService” draft was **replanned**. Docs product domain deferred past session + workload planes.
+**Next free number:** 026.  
+**Note:** Earlier 0.54 “library pipeline / DocsService” draft was **replanned**. Session plane deferred to [VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md) after Reactive Interests (0.55). Docs product domain further deferred.
 
 ## How to add an ADR
 

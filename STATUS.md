@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme closed:** **`0.54` Hermetic Jobs** · **Next:** **`0.55` Session plane (queued)**  
-**Last Updated:** July 26, 2026  
+**Current Version:** `0.54.10` · **Theme open:** **`0.55` Reactive Interests** (`0.55.0` plan) · **Prior closed:** **`0.54` Hermetic Jobs**  
+**Last Updated:** July 27, 2026  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52 Living Library tooling** · **0.53 Sovereign Runners** · **0.54 Hermetic Jobs** · **0.55 Session plane (queued)** · docs dogfood domain deferred.
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.54** landed · **0.55 Reactive Interests (plan)** · session plane / docs dogfood deferred · north star [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -33,7 +33,7 @@ SOURCE/BUILD/SURFACE, root declutter, wiki shelves, thin `just docs-build`, Clou
 
 | Notes |
 |-------|
-| Static docs tooling remains. **DocsService / storage corpora product → 0.55.** |
+| Static docs tooling remains. **DocsService / storage corpora product → after session + workload.** |
 
 ## 0.53 — Sovereign Runners (landed)
 
@@ -66,25 +66,40 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | 0.54.8 Polish: drain_ready, run_dir helper, Assist discover | ✅ |
 | 0.54.9 Assist run-code wizard (`hermetic-run-code`) | ✅ |
 | 0.54.10 Run-code dogfood complete (Portal + resource auto-advance) | ✅ |
-| **0.54 theme** | ✅ closed — dogfood proven; next [0.55](docs/VISION-0.55.md) |
+| **0.54 theme** | ✅ closed — dogfood proven |
 
-## 0.55 — Session plane (queued · **replan candidate**)
+## 0.55 — Reactive Interests (**open** · `0.55.0` plan)
 
-**Vision:** [docs/VISION-0.55.md](docs/VISION-0.55.md)  
+**Vision:** [docs/VISION-0.55.md](docs/VISION-0.55.md) · **ADR:** [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md) (accepted with 0.55.0)  
+**North star:** [docs/VISION-GROVE.md](docs/VISION-GROVE.md) §4  
 
-**Session lifecycle + multi-event subscriptions** (Assist, dashboard, composition).  
-Living Library **docs dogfood domain** deferred further (was interim 0.55).
+**Theme:** Two verbs on `runtime.event` — **start** (trigger → WorkIntent) and **continue** (wait interest → resume). Completers emit self-events; Palm matches. Nested flow cutover; second wait kind stub; inspect/doctor.
+
+| Patch | Status |
+|-------|--------|
+| **0.55.0** Plan + ADR-025 + replan session → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) | ✅ |
+| 0.55.1 Wait interest contract + helpers | 📋 |
+| 0.55.2 Matcher + resume/fail policy | 📋 |
+| 0.55.3 Nested flow opens wait (dual-path OK) | 📋 |
+| 0.55.4 Matcher normative unpark; cutover | 📋 |
+| 0.55.5 Inspect / Assist / list-waiting / doctor | 📋 |
+| 0.55.6 Restart + idempotency | 📋 |
+| 0.55.7 Second kind stub (`workload`) | 📋 |
+| 0.55.8 Docs constitution (EVENT-PLANE, AGENTS, …) | 📋 |
+| 0.55.9 Compat cleanup + theme exit | 📋 |
+
+**Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 
 ## Horizon
 
-**North star (multi-theme):** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization: many palms (users, services, capacity) talking through org flows, reactive interests, and continuous interfaces. Near minors should deepen **start / continue / place / speak / trust** toward that canopy.
+**North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
 
-- **Reactive interests** (candidate theme / hard front of 0.55–0.56) — wait plane + event-match resume; WorkIntent remains start ([VISION-GROVE](docs/VISION-GROVE.md) §4)  
-- **0.55** Session plane — watches / subscriptions / optional SessionService ([VISION-0.55](docs/VISION-0.55.md))  
-- **0.56** Workload plane — WorkloadEngine + CQRS service + runtimes + peer palm ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
-- Docs dogfood domain (post session + workload foundations)  
+- **0.55** Reactive Interests — in progress ([VISION-0.55](docs/VISION-0.55.md))  
+- **0.56** Workload plane ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
+- **Session plane** (queued) — [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
+- Docs dogfood domain (post session + workload)  
 - Adapter runners via workloads (PD-022)  
-- Peer / org dogfood (later seasons under The Grove)  
+- Peer / org dogfood (Grove later seasons)  
 - Payload/artifact registry for registered modules
 
 See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-GROVE.md](docs/VISION-GROVE.md).

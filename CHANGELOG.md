@@ -4,6 +4,14 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.55.0 — Reactive Interests (plan open)
+
+- **Theme open:** [VISION-0.55](docs/VISION-0.55.md) **Reactive Interests** — wait + trigger law; completers emit; Palm matches start vs continue  
+- **ADR-025** accepted: [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md)  
+- **North star:** [VISION-GROVE](docs/VISION-GROVE.md) (Palm Organization)  
+- **Replan:** Session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (queued after 0.55); execution starts at **0.55.1**  
+- Code version remains `0.54.10` until first embedded release of 0.55 slices
+
 ## [0.54.10] — 2026-07-26
 
 Embedded release of the **0.54 Hermetic Jobs** theme (0.54.0–0.54.10).  
@@ -21,7 +29,7 @@ Vision: [VISION-0.54](docs/VISION-0.54.md) · ADR: [023-hermetic-jobs](docs/adr/
 
 ### Changed
 - Discarded interim 0.54 library product stack (`common.library`, `providers/library`, `services/docs`)
-- Next theme: [VISION-0.55](docs/VISION-0.55.md) **Session plane** (lifecycle + multi-event subscriptions); Living Library docs dogfood deferred further
+- Next theme (opened as plan): [VISION-0.55](docs/VISION-0.55.md) **Reactive Interests** (session plane deferred to [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
 
 ### Slice log
 - **0.54.0** — Replan + discard product stack  

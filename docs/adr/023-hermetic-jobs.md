@@ -4,7 +4,7 @@
 
 **Accepted** — July 2026 (0.54.0 **replan**).  
 **Supersedes** the earlier “library pipeline / DocsService in 0.54” framing of ADR-023 drafts.  
-Sibling of [ADR-022](022-neonroot-provider.md). Docs product domain deferred to [VISION-0.55](../VISION-0.55.md).
+Sibling of [ADR-022](022-neonroot-provider.md). Docs product domain deferred past [VISION-0.55](../VISION-0.55.md) Reactive Interests and workload/session foundations.
 
 ## Context
 
@@ -26,7 +26,7 @@ Palm’s purpose test is: **business rules as definitions; foreign code only in 
 
 3. **Palm graphs** (wizard resource chains now; **dag pattern** as the platform growth target) schedule resource nodes. Simple nodes use existing providers (kv, file, transforms); heavy nodes use **neonroot**.
 
-4. **No domain library stack in 0.54.** Discard `common.library`, `providers/library`, `services/docs` from the 0.54 experiment. Optional Living Library **product** returns in **0.55** as a dogfood domain pack (analytics-shaped: optional composition, definitions-first).
+4. **No domain library stack in 0.54.** Discard `common.library`, `providers/library`, `services/docs` from the 0.54 experiment. Optional Living Library **product** returns in a **later** minor after reactive interests + session/workload foundations.
 
 5. **Security:** allowlists and policy for images/paths/commands may be hardcoded; **process structure** should be definitions.
 

@@ -6,7 +6,7 @@
 
 > *Palm grows where the sun meets the sea. A grove is many palms, one light, continuous conversation.*
 
-**Related near themes:** [VISION-0.55](VISION-0.55.md) session · [VISION-0.56](VISION-0.56.md) workload · [EVENT-PLANE](EVENT-PLANE.md) · [WORK-DRAIN](WORK-DRAIN.md) · [ADR-024](adr/024-workload-engine.md) · [PHILOSOPHY](../PHILOSOPHY.md)
+**Related near themes:** [VISION-0.55](VISION-0.55.md) **Reactive Interests** · [VISION-0.56](VISION-0.56.md) workload · [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) · [EVENT-PLANE](EVENT-PLANE.md) · [WORK-DRAIN](WORK-DRAIN.md) · [ADR-025](adr/025-reactive-interests.md) · [ADR-024](adr/024-workload-engine.md) · [PHILOSOPHY](../PHILOSOPHY.md)
 
 ---
 
@@ -138,10 +138,10 @@ Continue:  job opens wait → parks → target emits → matcher → resume owne
 
 | Block | Grove role | Near steer |
 |-------|------------|------------|
-| **Reactive interests** | Social contract of every node and of the mesh | Extract wait plane; event-match resume; keep WorkIntent as start |
+| **Reactive interests (0.55)** | Social contract of every node and of the mesh | Wait plane; event-match resume; WorkIntent as start |
 | **Event plane** | Nervous system | Stable public payloads; runtime bus for lifecycle |
 | **Work plane** | Deferred **start** | Triggers, inbound, schedules, drain — already strong |
-| **Session plane (0.55)** | Human unit of walk/watch | Subscribe to journey life; later multi-node presence |
+| **Session plane** (queued) | Human unit of walk/watch | Subscribe to journey life + open waits |
 | **Workload plane (0.56)** | Place body of work (incl. `runtime=palm`) | Isolation ≠ I/O; peer placement; ownership |
 | **Definitions + revisions** | Shared language of the org | Catalog pin; instance pin; Design evolve |
 | **Providers / blueprints** | **Speak** after READY | Continuous consume, not parallel service APIs |
@@ -193,17 +193,17 @@ When proposing a feature, ask:
 
 Execution order still follows [VERSIONING](VERSIONING.md) minors. This is **compass heading**:
 
-| Season spirit | Outcome toward Grove |
-|---------------|----------------------|
-| **Reactive interests** | Local start/continue boring and true; nested flow on event match; second wait kind stubable |
-| **Session plane** | Humans watch the same interests; walk is observable |
-| **Workload plane** | Place work; peer palm runtime; ownership; events for ready/stop |
-| **Peer dogfood** | Two Palms: handoff + wait + place |
-| **Org catalog + trust** | Named organization, shared definitions, allowlists |
-| **User / service phenotypes** | Composition profiles for multi-user and service palms |
-| **Continuous service interfaces** | Service products ship as Palm participation by default |
+| Season spirit | Outcome toward Grove | Theme |
+|---------------|----------------------|--------|
+| **Reactive interests** | Local start/continue true; nested flow on event match; second wait kind stub | **[0.55](VISION-0.55.md)** open |
+| **Workload plane** | Place work; peer palm runtime; ownership; real `workload.*` events | **[0.56](VISION-0.56.md)** queued |
+| **Session plane** | Humans watch the same interests; walk is observable | [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) queued |
+| **Peer dogfood** | Two Palms: handoff + wait + place | later |
+| **Org catalog + trust** | Named organization, shared definitions, allowlists | later |
+| **User / service phenotypes** | Composition profiles for multi-user and service palms | later |
+| **Continuous service interfaces** | Service products ship as Palm participation by default | later |
 
-Near minors (0.55, 0.56, and any **Reactive interests** theme opened before or beside them) should **cite this document** when a slice choice is “local only” vs “Grove-shaped.”
+Near minors **must** cite this document when a slice choice is “local only” vs “Grove-shaped.” **0.55** implements §4 of the Law.
 
 ---
 

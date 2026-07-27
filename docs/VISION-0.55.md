@@ -1,85 +1,181 @@
-# VISION 0.55 — Session plane (lifecycle + subscriptions)
+# VISION 0.55 — Reactive Interests (wait + trigger law)
 
-**Status:** 📋 **Queued** — after [VISION-0.54](VISION-0.54.md) hermetic jobs dogfood.  
-**Sequel:** [VISION-0.56](VISION-0.56.md) Workload plane (WorkloadEngine + runtimes) — session plane should land first for watches; late overlap OK.  
-**Theme:** Treat the **session** as a first-class subject: lifecycle, multi-event subscriptions, optional storage projection — shared by Assist, dashboard, and composition.
+**Status:** 📋 **Open** — `0.55.0` plan (this document + [ADR-025](adr/025-reactive-interests.md)).  
+**Theme:** Make **start** and **continue** first-class under one reactive law — completers emit self-events; Palm matches **trigger interest** → WorkIntent and **wait interest** → resume. Nested flow cutover; second wait kind stub; inspect/doctor. Grove-shaped foundation.
 
-> *Hermetic run-code proved the loop. Operators and dashboards both need to watch a session live — without each surface inventing wait/poll hacks.*
+> *Two verbs, one bus. Completers speak of themselves. Palm starts or continues.*
 
-**ADR:** plan at `0.55.0` (session subscription contract; storage boundaries).  
-**Builds on:** [EVENT-PLANE.md](EVENT-PLANE.md) · public event catalog (0.42) · Assist bind (0.32) · events WS (0.42).
+**ADR:** [025-reactive-interests.md](adr/025-reactive-interests.md) — **accept with 0.55.0**.  
+**North star:** [VISION-GROVE](VISION-GROVE.md) §4 (Law of Reactive Interests).  
+**Builds on:** [EVENT-PLANE](EVENT-PLANE.md) · [WORK-DRAIN](WORK-DRAIN.md) · nested child-wait · [VISION-0.54](VISION-0.54.md).  
+**Sequel:** [VISION-0.56](VISION-0.56.md) Workload (place + peer; `kind=workload` waits) · [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) (queued watches).
 
----
-
-## Intent
-
-| Do | Don’t |
-|----|--------|
-| **Session** = durable subject (`instance_id`) with lifecycle | Firehose all jobs to every client |
-| Multi-type **subscriptions** filtered by session/job | One-off Portal-only hacks |
-| One spine for **Assist + dashboard + composition** | Separate “chat bus” vs “ops bus” |
-| Thin **SessionService** (watch/list/projection) if product API needs it | God service owning orchestration |
-| Optional **storage** for session projection / watch registry | Second source of truth vs instance/job |
-| Public types + small payloads (ids, status, step) | Stream full stdout/bodies on the bus |
+**Replan note:** Former “0.55 Session plane” moved to [VISION-SESSION-PLANE.md](VISION-SESSION-PLANE.md) so the **law** lands before multi-surface watches and full workload product.
 
 ---
 
-## Why now (after 0.54.10)
+## 1. Why this theme now
 
-Dogfooding `hermetic-run-code` exposed the gap: long resource steps, Portal mid-wait, dashboard/ops wanting the same story. Fixes for auto-advance are necessary but not sufficient — Palm needs a **session subscription** primitive.
+| Pressure | Response |
+|----------|----------|
+| Nested flow “child reaches up to parent” | **Wait interest** on owner + event match |
+| Long hermetic / future workload steps need park, not lock | Same continue path |
+| WorkIntent plane already strong for **start** | Elevate as peer verb; shared event catalog |
+| Grove needs remote peers later | Local law first: self-events + local interest |
+| 0.56 WorkloadLeaf needs a socket | Second wait kind stub in 0.55 |
 
----
-
-## Surfaces (same model)
-
-| Surface | Use |
-|---------|-----|
-| **Assist / Portal** | After bind: fan-in progress; turn remains “what next” |
-| **Dashboard / Explorer** | Watch many sessions or waiting fleet |
-| **Composition / inbound** | Precise “when this session finishes” |
-| **Events WS** | Generic multi-type + `filter.session_id` |
-
-Not HTTP SSE as the product contract (WS + in-process handlers). MCP may stay poll/meta-tool.
+Without 0.55, workload and session risk inventing private resume paths.
 
 ---
 
-## Slice sketch (lock at 0.55.0)
+## 2. Intent
 
-| Patch | Direction |
-|-------|-----------|
-| **0.55.0** | Plan + ADR: session lifecycle states, subscription filter, storage optional |
-| **0.55.1** | Events WS / in-process watch: `filter.session_id` \| `job_id` |
-| **0.55.2** | SessionWatch registry (common or execution) + tests |
-| **0.55.3** | Assist bind → optional progress/event fan-in |
-| **0.55.4** | Dashboard or REST “live waiting” dogfood |
-| **0.55.5** | SessionService compose-in + optional projection store |
-
----
-
-## Deferred (was interim 0.55)
-
-**Living Library docs dogfood domain** (DocsService, corpora as process) → later minor (e.g. 0.56) after session plane lands. Static 0.52 tooling stays.
+| Do | Outcome |
+|----|---------|
+| **Law** of two verbs (start / continue) | Documented, tested, constitution-linked |
+| **Wait interest** on parked job + instance | Durable, inspectable `{ kind, target_id, … }` |
+| **Matcher** on `runtime.event` | Normative unpark / fail-owner policy |
+| **Nested flow** on the wait plane | First production kind (`job` / child job target) |
+| **WorkIntent / triggers** remain start path | Documented sibling; doctor shows both |
+| **Second kind stub** (`workload` target + fake emit) | Proves grammar for 0.56 |
+| Surfaces: inspect, list waiting, doctor, Assist fields | Humans/agents see *why* parked |
+| Restart + idempotency | Long-term support |
 
 ---
 
-## Non-goals
+## 3. Architecture (target)
 
-- Replacing instance repository / job orchestration  
-- Full CMS or docs product in this theme  
-- Unfiltered global event dump to Portal  
+```text
+                    runtime.event
+         (job.* · flow.session.* · resource.* · stub workload.*)
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+     Wait matcher                      Trigger path
+     (open waits by target)            (TriggerRegistry / inbound)
+              │                               │
+              ▼                               ▼
+     resume_job / fail                 WorkIntentStore → drain
+     (owner job)                       → submit_flow (new job)
+              │
+              ▼
+     Pattern yields WAITING_* / park
+     interest on job + instance state
+```
+
+| Layer | Home |
+|-------|------|
+| Wait interest types + pure helpers | `palm/core/` and/or thin pure module (no I/O) |
+| Open / index / match / complete + resume policy | `palm/common/` (e.g. `common/wait/` or graduate `child_wait`) |
+| Bus subscription + host wire | Runtime hooks / workplane sibling |
+| Nested flow adapter | Wizard bridges — open wait, no parent-resume in completer |
+| Start path | Existing `WorkDrainService` + triggers + inbound |
+
+**Completers** (child job, stub workload): emit self-lifecycle only.  
+**Waiters**: open interest, park.  
+**Palm**: match.
 
 ---
 
-## Depends on
+## 4. Wait interest contract (normative sketch)
 
-- 0.54 hermetic jobs + run-code dogfood  
-- Event plane: orchestration bus for job/flow lifecycle  
-- Public event catalog  
+Serializable on owner state / instance (exact key names lock in 0.55.1):
 
-## Horizon
+```text
+WaitInterest {
+  kind: "job" | "workload" | …     # target family
+  target_id: str                   # child job_id, workload_id, …
+  opened_at: str
+  policy?: { on_target_failed: fail_owner | … }
+  meta?: { step_slug, output_key, … }  # pattern UX
+}
+```
 
-Session plane is how humans **watch and walk** journeys. Long-term multi-palm presence and org-scale Assist routing aim at [**The Grove**](VISION-GROVE.md) (Palm Organization north star). Prefer subscription shapes that can later filter by session **and** open wait interest.
+- Owner job **parks** (existing lifecycle: e.g. `WAITING_FOR_INPUT` or documented park status) with interest present.  
+- Matcher: on event for `target_id` + kind → **resume** or **fail** owner per policy.  
+- Optional target→owners **index** for O(1) match (may start as scan of live jobs).  
+- PatternStatus: keep or generalize `WAITING_FOR_CHILD` as external wait (document; rename optional later).
 
 ---
 
-*Session is the human unit of work. Subscribe to its life.* 🌴📡
+## 5. Start path (affirm existing)
+
+Unchanged architecture, first-class in this theme’s **story**:
+
+```text
+rule / inbound / schedule → WorkIntent → drain → new job
+```
+
+0.55 work: catalog alignment, doctor, docs — not a rewrite of WorkIntent.
+
+---
+
+## 6. Slice plan (lock at 0.55.0)
+
+| Patch | Deliverable | Hardens |
+|-------|-------------|---------|
+| **0.55.0** | This VISION + ADR-025 accepted; STATUS/AGENTS/Grove links; session plane parked in VISION-SESSION-PLANE | Theme open |
+| **0.55.1** | Wait interest type + open/close on job/state helpers + unit tests | Contract |
+| **0.55.2** | Matcher on `runtime.event` + resume/fail policy + contract tests (fake events) | Reaction |
+| **0.55.3** | Nested flow **opens wait** when child starts; dual-path OK with existing hook | Migration |
+| **0.55.4** | Normative unpark = matcher; ChildCompletionHook thin/compat; characterization green | Cutover |
+| **0.55.5** | Inspect / Assist / list-waiting / doctor expose `waiting_on` | Surfaces |
+| **0.55.6** | Instance rehydrate + restart mid-wait test; double-event idempotency | Durability |
+| **0.55.7** | Second kind stub (`workload`) + emit ready/fail + contract test | Grove / 0.56 socket |
+| **0.55.8** | EVENT-PLANE + WORK-DRAIN + AGENTS/ARCHITECTURE; trigger↔wait catalog | Constitution |
+| **0.55.9** | Compat cleanup (or time-box), MIGRATION note if inspect breaks, theme exit | Close |
+
+Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.
+
+---
+
+## 7. Success criteria (theme exit)
+
+1. Nested compositional wait dogfood works with **matcher** as normative unpark.  
+2. Completer path does not require child to call parent resume APIs.  
+3. Wait interest visible in inspect / list waiting / doctor.  
+4. Restart mid-wait recovers interest and can still complete.  
+5. Double completion does not double-corrupt owner.  
+6. Target fail policy defined and tested for nested job kind.  
+7. Second kind stub green (open wait → fake event → resume).  
+8. Trigger → WorkIntent → new job still green; docs name both verbs.  
+9. `just check` green; docs-check when surfaces change.  
+10. [VISION-GROVE](VISION-GROVE.md) §4 reflected in ARCHITECTURE/AGENTS short form.
+
+---
+
+## 8. Non-goals (this minor)
+
+- Full WorkloadEngine / runners / neonroot-as-runtime (→ **0.56**)  
+- Full SessionService / WS watch product (→ [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md))  
+- Multi-palm org mesh / trust fabric (→ Grove later seasons)  
+- Replacing WorkIntent with waits or waits with intents  
+- Streaming multi-MB logs on the bus  
+
+---
+
+## 9. Relationship to Grove & neighbors
+
+| Document | Relation |
+|----------|----------|
+| [VISION-GROVE](VISION-GROVE.md) | North star; 0.55 implements §4 law locally |
+| [VISION-0.56](VISION-0.56.md) | Consumes wait kind `workload`; place/peer |
+| [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) | Watches same events + open waits |
+| [EVENT-PLANE](EVENT-PLANE.md) | Bus contract |
+| [WORK-DRAIN](WORK-DRAIN.md) | Start verb |
+
+**Complexity filter:** every 0.55.N slice must strengthen start, continue, match, inspect, or durability under the Law — or it is out of theme.
+
+---
+
+## 10. Open decisions (close during 0.55.1–0.55.4)
+
+1. Exact state key / serialization version for wait interest.  
+2. JobStatus: reuse `WAITING_FOR_INPUT` vs introduce single park label (prefer **reuse + interest fields** unless Assist demands more).  
+3. Fail policy defaults for nested job.  
+4. How long dual-path (hook + matcher) lasts (prefer gone by 0.55.4–0.55.9).  
+5. Package name: `palm.common.wait` vs graduate `child_wait` module.
+
+---
+
+*Start with rules. Continue with waits. Match on the bus. Grow kinds without growing laws.* 🌴⚡

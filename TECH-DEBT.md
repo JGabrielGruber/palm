@@ -242,7 +242,8 @@ tracker** — flip items as they close. Order follows the dependency roots above
 | **0.52** | **T6 — The Living Library** (docs-as-code) | 🟡 open · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md) | SOURCE/BUILD/SURFACE; T6 PDs closed through 0.52.5; builder+deploy 0.52.6 |
 | **0.53** | **Sovereign Runners** — NeonRoot as provider | ✅ landed (0.53.0–0.53.8) · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md) | provider + palm-ci/docs images + doctor/assist + composition flag |
 | **0.54** | **Hermetic Jobs** — definition graphs + neonroot; DAG v0 | 🟡 open (0.54.0 replan) · [VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-hermetic-jobs.md) | Purpose test; docs product deferred |
-| **0.55** | **Docs dogfood domain** (optional) | queued · [VISION-0.55](docs/VISION-0.55.md) | Living Library as business process on hermetic jobs |
+| **0.55** | **Reactive Interests** | open · [VISION-0.55](docs/VISION-0.55.md) · [ADR-025](docs/adr/025-reactive-interests.md) | Wait + trigger law; Grove foundation |
+| **post-0.56** | **Docs dogfood domain** (optional) | queued · after session + workload | Living Library as business process on hermetic jobs |
 | later | **Adapter runners** (T7 / PD-022) | queued | Postgres/Mongo/GraphQL real tests in NeonRoot images; pin extras; gate placeholders |
 | next | T5 — observability unification | queued | Likely breaks API → `MIGRATION` doc |
 | later | T4 — assist/MCP complexity + coverage | queued | |
