@@ -223,7 +223,7 @@ class WaitPlaneService:
             "index_size": len(self._index),
             "note": (
                 "start = trigger → WorkIntent; continue = WaitPlaneService "
-                "(VISION-0.55.10 / 0.55.11)"
+                "(VISION-0.55.10 / 0.55.15 public door)"
             ),
         }
 

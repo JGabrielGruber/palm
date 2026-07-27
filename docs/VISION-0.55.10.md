@@ -1,6 +1,6 @@
 # VISION 0.55.10 — Continue Plane (seat the wait subsystem)
 
-**Status:** ✅ **Done** (slice) — post-exit hardening of [VISION-0.55](VISION-0.55.md); continue plane seated. Follow-ons 0.55.11–12 still open.  
+**Status:** ✅ **Done** (slice) — post-exit hardening of [VISION-0.55](VISION-0.55.md); continue plane seated. Follow-ons **0.55.11–0.55.15** closed (latest: [VISION-0.55.15](VISION-0.55.15.md) API collapse).  
 **ADR:** [025-reactive-interests](adr/025-reactive-interests.md) still governs the law; this slice is placement, not a new law.  
 **Trigger:** CI + architecture review — continue path worked as behavior but lived as a **wiring pile**, not a Palm plane.
 
@@ -72,10 +72,11 @@
 | Patch | Deliverable |
 |-------|-------------|
 | **0.55.10** (this) | Plan + WaitPlaneService + BaseRuntime wire + hoist deferred imports + doctor contributor for neonroot — **done** |
-| **0.55.11** (follow) | Single open path via plane + index discipline — see STATUS |
+| **0.55.11** (follow) | Single open path via plane + index discipline — **done** |
 | **0.55.12** (follow) | Collapse dual nested state / naming docs for three waits — **done** |
 | **0.55.13** | Slash `set_child_wait` → `open_nested_park` / interest-only resource phase — **done** |
 | **0.55.14** | Plane delivers nested completion; matcher always closes interest — **done** |
+| **0.55.15** | Slim public API door; delete tracked/runtime_bind kit — [VISION-0.55.15](VISION-0.55.15.md) — **done** |
 
 Adjust boundaries with STATUS note.
 

@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-from palm.common.wait import (
-    ACTION_FAIL_OWNER,
-    ACTION_RESUME_OWNER,
-    WaitMatcher,
+from palm.common.wait.matcher import WaitMatcher
+from palm.common.wait.policy import ACTION_FAIL_OWNER, ACTION_RESUME_OWNER
+from palm.common.wait.present import waiting_on_from_job
+from palm.common.wait.workload_stub import (
     emit_workload_failed,
     emit_workload_ready,
     open_workload_wait,
 )
-from palm.common.wait.present import waiting_on_from_job
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import (

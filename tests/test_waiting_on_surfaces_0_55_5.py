@@ -8,7 +8,7 @@ from palm.common.runtimes.server.diagnostics import build_doctor_report
 from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import make_job_wait, open_wait_on_job
-from palm.patterns.wizard.bindings.resource.child_wait import set_child_wait
+from palm.patterns.wizard.bindings.resource.nested_park import open_nested_park
 from palm.services.assist.present.humanize import hint_text, question_text
 
 
@@ -103,14 +103,15 @@ def test_assist_humanize_waiting_on() -> None:
     assert "wait interest" in hint_text(composed).lower() or "Parked" in hint_text(composed)
 
 
-def test_set_child_wait_surfaces_in_present() -> None:
+def test_nested_park_surfaces_in_present() -> None:
     job = Job(id="p", executable=None)
-    set_child_wait(
+    open_nested_park(
         job.state,
-        {
+        target_id="nested-1",
+        meta={
+            "source": "nested_wizard",
             "step_slug": "spawn",
             "output_key": "out",
-            "child_job_id": "nested-1",
         },
     )
     rows = waiting_on_from_job(job)

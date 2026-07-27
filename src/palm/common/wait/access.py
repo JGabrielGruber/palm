@@ -1,4 +1,10 @@
-"""Resolve the continue plane from a bound runtime (register-downward access)."""
+"""Register-downward open/close when code has job/state but not a plane ref.
+
+Prefer :meth:`~palm.common.wait.plane.WaitPlaneService.open_on_job` when the
+caller already holds the continue plane. These helpers resolve
+``runtime.wait_plane`` from the bound runtime and fall back to pure
+:mod:`palm.core.wait` open/close when unbound (tests / engines).
+"""
 
 from __future__ import annotations
 

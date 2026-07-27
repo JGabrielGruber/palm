@@ -2,16 +2,17 @@
 
 from __future__ import annotations
 
-from palm.common.wait import (
+from typing import Any
+
+from palm.common.wait.index import WaitOwnerIndex
+from palm.common.wait.matcher import WaitMatcher
+from palm.common.wait.policy import (
     ACTION_FAIL_OWNER,
     ACTION_NOOP,
     ACTION_RESUME_OWNER,
-    WaitMatcher,
-    WaitOwnerIndex,
-    extract_target_signal,
-    open_tracked_wait,
     resolve_wait_action,
 )
+from palm.common.wait.signals import TargetSignal, extract_target_signal
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import (
@@ -23,7 +24,20 @@ from palm.core.wait import (
     list_waits_on_job,
     make_job_wait,
     make_workload_wait,
+    open_wait_on_job,
 )
+
+
+def _open_and_index(
+    index: WaitOwnerIndex,
+    job: Any,
+    interest: WaitInterest,
+    **kwargs: Any,
+) -> WaitInterest:
+    """Unit-test open: pure core + index (no plane kit)."""
+    opened = open_wait_on_job(job, interest, **kwargs)
+    index.register(str(job.id), opened)
+    return opened
 
 
 def test_extract_job_completed_succeeded() -> None:
@@ -58,7 +72,6 @@ def test_extract_flow_session_and_workload() -> None:
 
 def test_policy_resume_and_fail_leave() -> None:
     interest = make_job_wait("c1")
-    from palm.common.wait.signals import TargetSignal
 
     assert (
         resolve_wait_action(
@@ -108,7 +121,7 @@ def test_matcher_resumes_owner_on_child_success() -> None:
     owner = Job(id="owner-1", executable=None)
     owner.status = JobStatus.WAITING_FOR_INPUT
     child_id = "child-9"
-    open_tracked_wait(index, owner, make_job_wait(child_id, meta={"step_slug": "nest"}))
+    _open_and_index(index, owner, make_job_wait(child_id, meta={"step_slug": "nest"}))
 
     resumes: list[str] = []
     fails: list[str] = []
@@ -145,7 +158,7 @@ def test_matcher_resumes_owner_on_child_success() -> None:
 def test_matcher_fails_owner_on_child_failed() -> None:
     index = WaitOwnerIndex()
     owner = Job(id="owner-2", executable=None)
-    open_tracked_wait(index, owner, make_job_wait("bad-child"))
+    _open_and_index(index, owner, make_job_wait("bad-child"))
     fails: list[str] = []
     jobs = {owner.id: owner}
     matcher = WaitMatcher(
@@ -170,7 +183,7 @@ def test_matcher_leave_policy_keeps_interest() -> None:
         target_id="fragile",
         policy=WaitPolicy(on_target_failed=ON_TARGET_FAILED_LEAVE),
     )
-    open_tracked_wait(index, owner, interest)
+    _open_and_index(index, owner, interest)
     fails: list[str] = []
     matcher = WaitMatcher(
         index=index,
@@ -192,7 +205,7 @@ def test_matcher_subscribes_to_event_engine() -> None:
     engine.initialize()
     index = WaitOwnerIndex()
     owner = Job(id="owner-bus", executable=None)
-    open_tracked_wait(index, owner, make_job_wait("via-bus"))
+    _open_and_index(index, owner, make_job_wait("via-bus"))
     resumes: list[str] = []
     matcher = WaitMatcher(
         index=index,
@@ -209,7 +222,7 @@ def test_matcher_subscribes_to_event_engine() -> None:
 def test_workload_ready_signal_resumes() -> None:
     index = WaitOwnerIndex()
     owner = Job(id="owner-wl", executable=None)
-    open_tracked_wait(index, owner, make_workload_wait("wl-42"))
+    _open_and_index(index, owner, make_workload_wait("wl-42"))
     resumes: list[str] = []
     matcher = WaitMatcher(
         index=index,

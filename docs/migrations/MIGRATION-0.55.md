@@ -42,6 +42,19 @@ completes from delivered output — no `pattern_park` keep-open, no re-poll
 required after match. Poll remains only while the interest is still open
 (child not finished).
 
+## Public API collapse (0.55.15)
+
+Package root `palm.common.wait` is a **slim door** — not a barrel of internals.
+
+| Prefer | Avoid / removed |
+|--------|-----------------|
+| `WaitPlaneService` / `bind_wait_plane_to_runtime` | `bind_wait_matcher_to_runtime` (deleted) |
+| `plane.open_on_job` / `open_interest_on_job` | `open_tracked_wait` (deleted) |
+| `palm.common.wait.matcher` / `.signals` / … | Re-exports of matcher, policy, deliver, stub from package root |
+| `palm.common.wait.workload_stub` | `from palm.common.wait import open_workload_wait` |
+
+Pure types stay on `palm.core.wait`. Operator present helpers remain on the package root.
+
 ## Nested park slash (post-0.55.12)
 
 **Breaking for custom callers:** `set_child_wait` / `get_child_wait` / `clear_child_wait` are **gone**.
@@ -67,7 +80,8 @@ Module: `palm.patterns.wizard.bindings.resource.nested_park`.
 - [ ] Nested custom parks: `open_nested_park` / `make_job_wait` + plane — **not** `set_child_wait`
 - [ ] Remove any use of `ChildCompletionHook` or `resume_parent_after_child`
 - [ ] Prefer `waiting_on` / `nested_park_interest` over deleted dual-key helpers
-- [ ] Workload stub: `open_workload_wait` + `emit_workload_*` (full engine → 0.56)
+- [ ] Workload stub: `from palm.common.wait.workload_stub import open_workload_wait, emit_workload_*` (full engine → 0.56)
+- [ ] Custom open/match: plane or `access.open_interest_*` — not deleted tracked/runtime_bind helpers
 
 ## References
 

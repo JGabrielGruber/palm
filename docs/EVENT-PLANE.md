@@ -30,7 +30,7 @@ host.event.emit("job.completed", job_id="j-1")
 | Verb | Interest | Reaction on `runtime.event` | Home |
 |------|----------|-----------------------------|------|
 | **Start** | Trigger (rule / inbound / schedule) | Enqueue **WorkIntent** → drain → new job | [WORK-DRAIN](WORK-DRAIN.md), `WorkDrainService` |
-| **Continue** | **Wait interest** on parked owner | **resume_job** / fail owner per policy | `palm.core.wait`, `palm.common.wait.WaitMatcher` |
+| **Continue** | **Wait interest** on parked owner | **resume_job** / fail owner per policy | `palm.core.wait`, **`WaitPlaneService`** (`palm.common.wait`) |
 
 Same event type may feed **both** paths (e.g. `flow.session.succeeded` can start a reaction flow *and* unpark a waiter). Do not merge resume into WorkIntent kinds.
 
@@ -57,7 +57,7 @@ Same event type may feed **both** paths (e.g. `flow.session.succeeded` can start
 - `InboundBindingService` (`mode: internal`) → `_runtime_event_engine()`
 - `WorkDrainService` trigger subscriptions → `_runtime_event_engine()`
 - `OrchestrationEngine` → `runtime.event` (set at runtime bootstrap)
-- **`WaitMatcher`** → `runtime.event` via `BaseRuntime` (**always** wired; sole continue path) — [ADR-025](adr/025-reactive-interests.md)
+- **`WaitPlaneService`** → `runtime.event` via `BaseRuntime` (**always** wired; sole continue path; public door **0.55.15**) — [ADR-025](adr/025-reactive-interests.md)
 - Event journal + outbox reliable delivery → `host.event`
 
 When the runtime is not started, `_runtime_event_engine()` falls back to `host.event` (embedded/tests without full server profile).
@@ -95,7 +95,7 @@ Public/composition sets: `palm.common.events.catalog` (`PUBLIC_EVENT_TYPES`, `CO
 ### Wait interest (durable)
 
 Owner job/instance state key **`palm.wait.interests`** (list). Shape: `kind`, `target_id`, `opened_at`, `policy.on_target_failed`, `meta`, `v`.  
-Pure types: `palm.core.wait`. Matcher + policy: `palm.common.wait`. Surfaces: `waiting_on` on inspect / list-waiting / doctor.
+Pure types: `palm.core.wait`. Continue plane: `WaitPlaneService` (package root); matcher/policy/stub as **submodules**. Surfaces: `waiting_on` on inspect / list-waiting / doctor.
 
 ### Workload stub events (0.55.7)
 

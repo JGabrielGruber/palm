@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme:** **`0.55` Reactive Interests** (law closed; **0.55.10 Continue Plane** open) · **Next minor plan:** **`0.56` Workload** · **Prior:** **`0.54` Hermetic Jobs**  
+**Current Version:** `0.54.10` · **Theme:** **`0.55` Reactive Interests** (law closed; continue plane **0.55.10–0.55.15** seated) · **Next minor plan:** **`0.56` Workload** · **Prior:** **`0.54` Hermetic Jobs**  
 **Last Updated:** July 27, 2026  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane seating · north star [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane API door · north star [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -94,6 +94,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.12** Dual nested-state collapse (interest authority) | ✅ |
 | **0.55.13** Slash `set_child_wait` façade → `nested_park` | ✅ |
 | **0.55.14** Plane delivers nested completion; no pattern_park keep-open | ✅ |
+| **0.55.15** Slim public API door — [VISION-0.55.15](docs/VISION-0.55.15.md) | ✅ |
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 
@@ -101,7 +102,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 **North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
 
-- **0.55** Reactive Interests — law closed; **Continue plane seating** ([VISION-0.55.10](docs/VISION-0.55.10.md))  
+- **0.55** Reactive Interests — law closed; continue plane seated through **0.55.15** API collapse ([VISION-0.55.10](docs/VISION-0.55.10.md) · [VISION-0.55.15](docs/VISION-0.55.15.md))  
 - **0.56** Workload plane ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
 - **Session plane** (queued) — [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
 - Docs dogfood domain (post session + workload)  
