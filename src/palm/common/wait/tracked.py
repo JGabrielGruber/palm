@@ -1,4 +1,8 @@
-"""Open/close waits while keeping the owner index in sync."""
+"""Tracked open/close — thin aliases for :class:`WaitPlaneService` index discipline.
+
+Prefer ``plane.open_on_job`` / ``plane.close_on_job`` or
+:mod:`palm.common.wait.access` when a runtime is bound.
+"""
 
 from __future__ import annotations
 
@@ -20,8 +24,7 @@ def open_tracked_wait(
 ) -> WaitInterest:
     """Open wait on ``job.state`` and register owner in ``index``."""
     opened = open_wait_on_job(job, interest, **kwargs)
-    owner_id = str(job.id)
-    index.register(owner_id, opened)
+    index.register(str(job.id), opened)
     return opened
 
 
@@ -34,8 +37,7 @@ def close_tracked_wait(
 ) -> WaitInterest | None:
     """Close wait on ``job.state`` and drop index entry."""
     closed = close_wait_on_job(job, kind=kind, target_id=target_id)
-    owner_id = str(job.id)
-    index.unregister(owner_id, kind=kind, target_id=target_id)
+    index.unregister(str(job.id), kind=kind, target_id=target_id)
     return closed
 
 

@@ -90,7 +90,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.9** Compat time-box + MIGRATION-0.55 + theme exit | ✅ |
 | **0.55 law** | ✅ closed — base reactiveness unlocked; dual-path hook removed |
 | **0.55.10** Continue plane — [VISION-0.55.10](docs/VISION-0.55.10.md) (`WaitPlaneService`) | ✅ |
-| 0.55.11 Index discipline / single open path | 📋 |
+| **0.55.11** Index discipline / single open path (`access` + rebuild) | ✅ |
 | 0.55.12 Dual nested-state collapse | 📋 |
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).

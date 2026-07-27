@@ -4,6 +4,14 @@ Pure interest types live in :mod:`palm.core.wait`. Coordination and
 :class:`~palm.common.wait.plane.WaitPlaneService` live here (0.55.10).
 """
 
+from palm.common.wait.access import (
+    close_interest_for_state,
+    close_interest_on_job,
+    find_job_for_state,
+    get_wait_plane,
+    open_interest_for_state,
+    open_interest_on_job,
+)
 from palm.common.wait.index import WaitOwnerIndex
 from palm.common.wait.matcher import MatchDisposition, WaitMatcher
 from palm.common.wait.plane import WaitPlaneService, bind_wait_plane_to_runtime
@@ -66,12 +74,18 @@ __all__ = [
     "WaitPlaneService",
     "bind_wait_matcher_to_runtime",
     "bind_wait_plane_to_runtime",
+    "close_interest_for_state",
+    "close_interest_on_job",
     "close_tracked_wait",
     "emit_workload_completed",
     "emit_workload_failed",
     "emit_workload_ready",
     "extract_signal_from_event",
     "extract_target_signal",
+    "find_job_for_state",
+    "get_wait_plane",
+    "open_interest_for_state",
+    "open_interest_on_job",
     "open_tracked_wait",
     "open_workload_wait",
     "rehydrate_wait_interests",

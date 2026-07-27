@@ -13,11 +13,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from palm.common.wait.access import open_interest_on_job
 from palm.core.wait import (
     WAIT_KIND_WORKLOAD,
     WaitInterest,
     make_workload_wait,
-    open_wait_on_job,
 )
 
 # Normative stub event names (matcher already understands these).
@@ -43,7 +43,7 @@ def open_workload_wait(
     """Park owner interest on a workload target (``kind=workload``)."""
     body = {"source": "workload_stub", **dict(meta or {})}
     interest = make_workload_wait(str(workload_id), meta=body)
-    return open_wait_on_job(job, interest)
+    return open_interest_on_job(job, interest)
 
 
 def emit_workload_ready(

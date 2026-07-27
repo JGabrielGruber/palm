@@ -10,15 +10,17 @@ from __future__ import annotations
 
 from typing import Any
 
+from palm.common.wait.access import (
+    close_interest_for_state,
+    open_interest_for_state,
+)
 from palm.core.orchestration import Job, JobStatus
 from palm.core.resource.result import ProviderResult
 from palm.core.wait import (
     WAIT_KIND_JOB,
     WaitInterest,
-    close_wait_interest,
     find_wait_interests,
     make_job_wait,
-    open_wait_interest,
 )
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 
@@ -86,11 +88,12 @@ def wait_interest_from_child_wait(waiting: dict[str, Any]) -> WaitInterest | Non
 
 
 def open_wait_interest_for_child(state: Any, waiting: dict[str, Any]) -> WaitInterest | None:
-    """Open (or refresh) reactive wait interest for a parked nested child."""
+    """Open (or refresh) wait interest via continue plane when runtime is bound."""
     interest = wait_interest_from_child_wait(waiting)
     if interest is None:
         return None
-    return open_wait_interest(state, interest, replace_same_target=True)
+    # 0.55.11 — single open path prefers WaitPlaneService + owner job.
+    return open_interest_for_state(state, interest, replace_same_target=True)
 
 
 def close_wait_interest_for_child(state: Any, *, child_job_id: str | None = None) -> None:
@@ -103,13 +106,13 @@ def close_wait_interest_for_child(state: Any, *, child_job_id: str | None = None
         # Fall back: close any nested_wizard job interests still open.
         for w in find_wait_interests(state, kind=WAIT_KIND_JOB):
             if (w.meta or {}).get("source") == "nested_wizard":
-                close_wait_interest(state, kind=w.kind, target_id=w.target_id)
+                close_interest_for_state(state, kind=w.kind, target_id=w.target_id)
         return
-    close_wait_interest(state, kind=WAIT_KIND_JOB, target_id=str(target))
+    close_interest_for_state(state, kind=WAIT_KIND_JOB, target_id=str(target))
 
 
 def set_child_wait(state: Any, payload: dict[str, Any]) -> None:
-    """Park nested-child linkage and open reactive wait interest (0.55.3)."""
+    """Park nested-child linkage and open wait interest on the continue plane."""
     body = dict(payload)
     _state_set(state, WizardKeys.WAITING_FOR_CHILD, body)
     open_wait_interest_for_child(state, body)

@@ -19,6 +19,7 @@ from palm.core.orchestration.run_result import RunResult
 from palm.core.wait import (
     WaitInterest,
     close_wait_on_job,
+    list_waits_on_job,
     open_wait_on_job,
 )
 
@@ -105,13 +106,35 @@ class WaitPlaneService:
         if event is not None:
             matcher.attach_events(event)
         self._matcher = matcher
+        # 0.55.11 — index is load-bearing; rebuild from live job state.
+        self.rebuild_index()
         return matcher
 
     def detach(self) -> None:
         if self._matcher is not None:
             self._matcher.detach_events()
             self._matcher = None
+        self._index.clear()
         self._runtime = None
+
+    def rebuild_index(self) -> int:
+        """Rebuild target→owners index from live jobs' open interests. Returns count."""
+        self._index.clear()
+        if self._runtime is None:
+            return 0
+        orch = getattr(self._runtime, "orchestration", None)
+        if orch is None:
+            return 0
+        n = 0
+        for job in list(orch.jobs.values()):
+            try:
+                waits = list_waits_on_job(job)
+            except Exception:
+                continue
+            for w in waits:
+                self._index.register(str(job.id), w)
+                n += 1
+        return n
 
     def open_on_job(
         self,
@@ -119,7 +142,7 @@ class WaitPlaneService:
         interest: WaitInterest,
         **kwargs: Any,
     ) -> WaitInterest:
-        """Open interest on job state and register owner index."""
+        """Open interest on job state and register owner index (sole open path)."""
         opened = open_wait_on_job(job, interest, **kwargs)
         self._index.register(str(job.id), opened)
         return opened
@@ -139,6 +162,15 @@ class WaitPlaneService:
     def rehydrate_state(self, state: Any) -> list[WaitInterest]:
         """Normalize wait interests after snapshot restore."""
         return rehydrate_wait_interests(state)
+
+    def rehydrate_job(self, job: Any) -> list[WaitInterest]:
+        """Normalize interests on ``job.state`` and refresh index for that owner."""
+        interests = rehydrate_wait_interests(job.state)
+        owner_id = str(job.id)
+        self._index.unregister_all_for_owner(owner_id)
+        for w in interests:
+            self._index.register(owner_id, w)
+        return interests
 
     def handle_payload(
         self,
@@ -178,9 +210,10 @@ class WaitPlaneService:
             "open_wait_interests": open_interests,
             "wait_kinds": wait_kinds,
             "verbs": ["start", "continue"],
+            "index_size": len(self._index),
             "note": (
                 "start = trigger → WorkIntent; continue = WaitPlaneService "
-                "(VISION-0.55 / 0.55.10)"
+                "(VISION-0.55.10 / 0.55.11)"
             ),
         }
 
