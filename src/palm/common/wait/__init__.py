@@ -12,6 +12,7 @@ from palm.common.wait.policy import (
     ACTION_RESUME_OWNER,
     resolve_wait_action,
 )
+from palm.common.wait.runtime_bind import bind_wait_matcher_to_runtime
 from palm.common.wait.signals import (
     MATCHER_EVENT_TYPES,
     OUTCOME_CANCELLED,
@@ -37,6 +38,7 @@ __all__ = [
     "TargetSignal",
     "WaitMatcher",
     "WaitOwnerIndex",
+    "bind_wait_matcher_to_runtime",
     "close_tracked_wait",
     "extract_signal_from_event",
     "extract_target_signal",

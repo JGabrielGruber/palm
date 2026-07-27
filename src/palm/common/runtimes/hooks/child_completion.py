@@ -1,4 +1,13 @@
-"""Auto-resume parent flows when a correlated nested child job completes."""
+"""Compat unpark for nested child success (pre-matcher / dual-path).
+
+**Normative path (0.55.4+):** :class:`~palm.common.wait.WaitMatcher` on
+``runtime.event`` matches open wait interest and resumes or fails the owner.
+
+This hook remains as a thin compatibility layer: when a child job succeeds and
+still carries ``__palm:parent_job_id``, attempt the inverted parent resume.
+``resume_job`` is a no-op if the parent is no longer ``WAITING_FOR_INPUT``
+(matcher already unparked). Remove or gate further in 0.55.9 if unused.
+"""
 
 from __future__ import annotations
 
@@ -15,7 +24,7 @@ if TYPE_CHECKING:
 
 
 class ChildCompletionHook(JobHookAdapter):
-    """Resume parent jobs waiting on a nested child flow."""
+    """Compat: resume parent when nested child succeeds (idempotent with matcher)."""
 
     def __init__(self, runtime: Any) -> None:
         self._runtime = runtime
@@ -28,6 +37,8 @@ class ChildCompletionHook(JobHookAdapter):
     ) -> None:
         if job.status != JobStatus.SUCCEEDED:
             return
+        # Dual-path with WaitMatcher: matcher runs during event publish (before
+        # hooks). If it already resumed the parent, this is a no-op.
         resume_parent_after_child(self._runtime, job)
 
 

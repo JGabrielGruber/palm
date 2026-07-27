@@ -1,11 +1,11 @@
 """Wait matcher — match runtime.event completer signals → resume/fail owner.
 
-0.55.2: contract + policy. Host wire and nested-flow cutover land in later slices.
+0.55.2: contract + policy. 0.55.4: normative unpark when wired on BaseRuntime.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
@@ -29,6 +29,7 @@ if TYPE_CHECKING:
 
 
 GetJob = Callable[[str], Any]
+ListJobs = Callable[[], Iterable[Any]]
 ResumeOwner = Callable[[str, WaitInterest, TargetSignal], None]
 FailOwner = Callable[[str, WaitInterest, TargetSignal], None]
 
@@ -47,13 +48,15 @@ class MatchDisposition:
 class WaitMatcher:
     """Subscribe to completer events; unpark or fail owners with open interest.
 
-    * ``index`` — target → owners (required for discovery).
+    * ``index`` — optional O(1) target → owners map.
+    * ``list_jobs`` — scan live jobs for open interests (nested flow 0.55.3+).
     * ``get_job`` — load owner job; when set, interest is verified on ``job.state``.
     * ``resume_owner`` / ``fail_owner`` — side effects (orchestration resume / fail).
     """
 
     index: WaitOwnerIndex = field(default_factory=WaitOwnerIndex)
     get_job: GetJob | None = None
+    list_jobs: ListJobs | None = None
     resume_owner: ResumeOwner | None = None
     fail_owner: FailOwner | None = None
     _subs: list[Any] = field(default_factory=list, repr=False)
@@ -95,13 +98,36 @@ class WaitMatcher:
         return self.handle_signal(signal)
 
     def handle_signal(self, signal: TargetSignal) -> list[MatchDisposition]:
-        owner_ids = sorted(self.index.owners_for(kind=signal.kind, target_id=signal.target_id))
+        owner_ids = set(self.index.owners_for(kind=signal.kind, target_id=signal.target_id))
+        owner_ids.update(self._scan_owners(signal))
         results: list[MatchDisposition] = []
-        for owner_id in owner_ids:
+        for owner_id in sorted(owner_ids):
             disp = self._match_one_owner(owner_id, signal)
             if disp is not None:
                 results.append(disp)
         return results
+
+    def _scan_owners(self, signal: TargetSignal) -> set[str]:
+        """Discover owners by scanning live jobs' open wait interests."""
+        if self.list_jobs is None:
+            return set()
+        found: set[str] = set()
+        try:
+            jobs = self.list_jobs()
+        except Exception:
+            return set()
+        for job in jobs:
+            try:
+                waits = list_waits_on_job(job)
+            except Exception:
+                continue
+            for w in waits:
+                if w.matches(kind=signal.kind, target_id=signal.target_id):
+                    jid = getattr(job, "id", None)
+                    if jid:
+                        found.add(str(jid))
+                    break
+        return found
 
     def _match_one_owner(
         self,

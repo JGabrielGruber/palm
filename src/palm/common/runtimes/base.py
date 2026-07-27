@@ -85,6 +85,7 @@ class BaseRuntime:
         self._auth_enforce = False
         self._outbox_store: OutboxStore | None = None
         self._outbox_processor: OutboxProcessor | None = None
+        self._wait_matcher: Any = None
 
     @property
     def is_started(self) -> bool:
@@ -108,6 +109,11 @@ class BaseRuntime:
     def outbox_processor(self) -> OutboxProcessor | None:
         """Outbox drain helper wired at runtime start."""
         return self._outbox_processor
+
+    @property
+    def wait_matcher(self) -> Any:
+        """Reactive wait matcher on ``runtime.event`` (0.55.4+), or ``None``."""
+        return self._wait_matcher
 
     def start(self, **options: Any) -> None:
         """Initialize engines, wire orchestration, and begin accepting jobs."""
@@ -156,7 +162,10 @@ class BaseRuntime:
                 )
             )
         hooks.append(JobExecutionContextHook())
-        hooks.append(ChildCompletionHook(self))
+        # 0.55.4: WaitMatcher is normative unpark; ChildCompletionHook is compat
+        # dual-path (idempotent if matcher already resumed the parent).
+        if options.get("child_completion_hook", True):
+            hooks.append(ChildCompletionHook(self))
         hooks.append(
             InstancePersistenceHook(
                 self.instance_manager,
@@ -198,8 +207,13 @@ class BaseRuntime:
             )
 
         self.orchestration.start()
-        self._started = True
 
+        if options.get("enable_wait_matcher", True):
+            from palm.common.wait.runtime_bind import bind_wait_matcher_to_runtime
+
+            self._wait_matcher = bind_wait_matcher_to_runtime(self)
+
+        self._started = True
 
         bind_runtime = get_runtime_binding()
         if bind_runtime is not None:
@@ -210,10 +224,15 @@ class BaseRuntime:
         if not self._started:
             return
 
-
         unbind_runtime = get_runtime_unbinding()
         if unbind_runtime is not None:
             unbind_runtime()
+
+        if self._wait_matcher is not None:
+            detach = getattr(self._wait_matcher, "detach_events", None)
+            if callable(detach):
+                detach()
+            self._wait_matcher = None
 
         self.orchestration.stop()
         if self._owns_instance_manager:
