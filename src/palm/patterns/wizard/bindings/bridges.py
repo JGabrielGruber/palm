@@ -3,14 +3,15 @@ Wizard bridge hooks — register pattern-specific runtime surfaces on ``_registr
 
 Keeps ``palm.common`` free of direct wizard imports; common dispatches through
 :mod:`palm.common.patterns._registry` instead.
+
+Nested child unpark is **not** registered here — :class:`~palm.common.wait.WaitMatcher`
+matches wait interest on ``runtime.event`` (register-downward reactive law).
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from palm.core.orchestration import Job, JobStatus
-from palm.core.orchestration.exceptions import JobNotFoundError
 from palm.common.patterns._registry import (
     ChildWaitHooks,
     InteractiveRuntimeHooks,
@@ -18,9 +19,10 @@ from palm.common.patterns._registry import (
     register_interactive_runtime,
     register_read_model_builder,
 )
+from palm.core.orchestration import Job
+from palm.core.wait import WAIT_KIND_JOB, find_wait_interests
 from palm.patterns.wizard.bindings.behavior_tree.backtrack import can_backtrack_to
 from palm.patterns.wizard.bindings.resource.child_wait import (
-    child_job_id_from_wait,
     get_child_wait,
     poll_child_job,
 )
@@ -53,6 +55,9 @@ def _wizard_previous_step(executable: Any, state: Any) -> str:
 
 
 def _wizard_parent_is_waiting(job: Job) -> bool:
+    """Parked on nested child: wait interest and/or wizard child-wait payload."""
+    if find_wait_interests(job.state, kind=WAIT_KIND_JOB):
+        return True
     waiting = get_child_wait(job.state)
     return isinstance(waiting, dict) and bool(waiting.get("child_job_id"))
 
@@ -64,26 +69,6 @@ def _wizard_poll_child_for_parent(_state: Any, child_job_id: str) -> Job | None:
     if runtime is None:
         return None
     return poll_child_job(runtime, child_job_id)
-
-
-def _wizard_resume_parent_after_child(runtime: Any, child_job: Job) -> Job | None:
-    if child_job.status != JobStatus.SUCCEEDED:
-        return None
-    parent_id = child_job.metadata.get("__palm:parent_job_id")
-    if not parent_id:
-        return None
-    try:
-        parent = runtime.get_job(str(parent_id))
-    except JobNotFoundError:
-        return None
-    if parent.status != JobStatus.WAITING_FOR_INPUT:
-        return None
-    waiting = get_child_wait(parent.state)
-    child_id = child_job_id_from_wait(waiting)
-    if child_id and child_id != child_job.id:
-        return None
-    runtime.orchestration.resume_job(parent.id)
-    return runtime.get_job(parent.id)
 
 
 def register_wizard_bridges() -> None:
@@ -100,7 +85,6 @@ def register_wizard_bridges() -> None:
         ChildWaitHooks(
             parent_is_waiting=_wizard_parent_is_waiting,
             poll_child_for_parent=_wizard_poll_child_for_parent,
-            resume_parent_after_child=_wizard_resume_parent_after_child,
         ),
     )
     from palm.patterns.wizard.bindings.read_model import build_wizard_view

@@ -75,9 +75,9 @@ Law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-i
 | **Continue** | Wait interest on parked owner | resume / fail owner | `palm.core.wait`, `palm.common.wait.WaitMatcher` |
 
 - State key: **`palm.wait.interests`** (list). Nested wizards open `kind=job` when parking; workload stub uses `kind=workload` ([VISION-0.56](docs/VISION-0.56.md) socket).
-- Wire: `BaseRuntime` attaches matcher on `runtime.event` (`enable_wait_matcher`). `ChildCompletionHook` is dual-path compat only.
+- Wire: `BaseRuntime` **always** attaches `WaitMatcher` on `runtime.event` (sole continue path). Completers do not resume parents.
 - Surfaces: inspect / list-waiting / doctor expose **`waiting_on`**; doctor `reactive_interests`.
-- Catalog: [EVENT-PLANE](docs/EVENT-PLANE.md) trigger ↔ wait table. Do **not** invent private resume paths for new async steps.
+- Catalog: [EVENT-PLANE](docs/EVENT-PLANE.md) trigger ↔ wait table. Do **not** invent private resume paths or inverted completer→waiter hooks.
 
 ### Operating Palm via MCP (0.31 — meta-surface + assist-first)
 
@@ -103,7 +103,7 @@ Coding agents should operate Palm through MCP — **prefer a single meta-tool `p
 | Doctor / list / waiting | `assist/doctor` · `assist/catalog/flows` · `assist/catalog/waiting` (rows may include **`waiting_on`**) |
 | Resume resource | `alias=flows/session-resume` + `session_id`, `flow_id` |
 
-**Conventions:** session-first (`session_id`); plain `value`/`input` strings; follow returned **`question` / `choices` / `actions` / `mutation`** / **`waiting_on`**; do **not** guess state; design writes via **publish** (or propose→impact→commit only when inspecting impact); never `palm_processes_submit` for interactive wizard entry; `resume-child-wait` only when `waiting_for_child` (matcher is normative unpark when interest is open).
+**Conventions:** session-first (`session_id`); plain `value`/`input` strings; follow returned **`question` / `choices` / `actions` / `mutation`** / **`waiting_on`**; do **not** guess state; design writes via **publish** (or propose→impact→commit only when inspecting impact); never `palm_processes_submit` for interactive wizard entry; `resume-child-wait` re-polls a parent still parked on a child — **auto-unpark** is WaitMatcher, not the child reaching up.
 
 **Token efficiency (0.31):**
 

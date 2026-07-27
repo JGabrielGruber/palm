@@ -18,7 +18,7 @@ Vision: [VISION-0.55](docs/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-i
 
 #### Notes
 - **Start** = WorkIntent drain; **continue** = wait interest (not WorkIntent kinds)  
-- `ChildCompletionHook` default-on dual-path time-box for pre-interest parks  
+- **Cleanup:** inverted `ChildCompletionHook` / `resume_parent_after_child` removed — matcher is sole unpark  
 - Session plane remains queued: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)
 
 ## [0.54.10] — 2026-07-26

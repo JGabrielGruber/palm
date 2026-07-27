@@ -57,7 +57,7 @@ Same event type may feed **both** paths (e.g. `flow.session.succeeded` can start
 - `InboundBindingService` (`mode: internal`) → `_runtime_event_engine()`
 - `WorkDrainService` trigger subscriptions → `_runtime_event_engine()`
 - `OrchestrationEngine` → `runtime.event` (set at runtime bootstrap)
-- **`WaitMatcher`** → `runtime.event` via `BaseRuntime` (`enable_wait_matcher=True`, default) — [ADR-025](adr/025-reactive-interests.md)
+- **`WaitMatcher`** → `runtime.event` via `BaseRuntime` (**always** wired; sole continue path) — [ADR-025](adr/025-reactive-interests.md)
 - Event journal + outbox reliable delivery → `host.event`
 
 When the runtime is not started, `_runtime_event_engine()` falls back to `host.event` (embedded/tests without full server profile).

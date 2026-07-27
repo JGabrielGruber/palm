@@ -1,4 +1,9 @@
-"""Resume helpers for parent flows waiting on nested child jobs."""
+"""Nested child-wait helpers — poll and manual resume of parked parents.
+
+Unpark on child completion is owned by :class:`~palm.common.wait.WaitMatcher`
+(wait interest on the owner). These helpers support operator re-poll and
+pattern-side ``parent_is_waiting`` checks only — no inverted parent resume.
+"""
 
 from __future__ import annotations
 
@@ -7,6 +12,7 @@ from typing import TYPE_CHECKING, Any
 from palm.common.patterns._registry import ChildWaitHooks, get_child_wait_hooks
 from palm.common.providers._registry import get_bound_runtime
 from palm.core.orchestration import Job
+from palm.core.wait import WAIT_KIND_JOB, find_wait_interests
 
 if TYPE_CHECKING:
     from palm.common.runtimes.base import BaseRuntime
@@ -29,25 +35,10 @@ def bound_runtime() -> Any | None:
 
 
 def parent_is_waiting_for_child(job: Job) -> bool:
+    """True when the job is parked on a nested child (interest and/or pattern wait)."""
+    if find_wait_interests(job.state, kind=WAIT_KIND_JOB):
+        return True
     return _child_wait_hooks(job).parent_is_waiting(job)
-
-
-def resume_parent_after_child(runtime: BaseRuntime, child_job: Job) -> Job | None:
-    """Resume a parent flow when a correlated child job reaches a terminal state."""
-    parent_id = child_job.metadata.get("__palm:parent_job_id")
-    if not parent_id:
-        return None
-    try:
-        parent = runtime.get_job(str(parent_id))
-    except Exception:
-        return None
-    pattern = str(parent.metadata.get("pattern") or "")
-    if not pattern:
-        return None
-    hooks = get_child_wait_hooks(pattern)
-    if hooks is None:
-        return None
-    return hooks.resume_parent_after_child(runtime, child_job)
 
 
 def resume_child_wait_for_instance(runtime: BaseRuntime, instance_id: str) -> Job:
@@ -73,5 +64,4 @@ __all__ = [
     "parent_is_waiting_for_child",
     "poll_child_for_parent",
     "resume_child_wait_for_instance",
-    "resume_parent_after_child",
 ]

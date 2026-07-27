@@ -1,4 +1,7 @@
-"""Wire :class:`WaitMatcher` onto a runtime's orchestration event bus."""
+"""Wire :class:`WaitMatcher` onto a runtime's orchestration event bus.
+
+Register-downward: the runtime attaches the matcher; completers never import it.
+"""
 
 from __future__ import annotations
 
@@ -14,7 +17,7 @@ from palm.core.wait import WaitInterest
 def bind_wait_matcher_to_runtime(runtime: Any) -> WaitMatcher:
     """Create a matcher bound to ``runtime.event`` / orchestration jobs.
 
-    Normative continue path (0.55.4): completer events → resume or fail owner.
+    Sole continue path: completer events → resume or fail owner.
     """
     orch = runtime.orchestration
 

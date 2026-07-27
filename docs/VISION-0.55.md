@@ -179,7 +179,7 @@ Execution starts at **0.55.1**. Adjust slice boundaries only with STATUS note.
 1. ~~State key / serialization.~~ **0.55.1:** `palm.wait.interests` list; `v: 1`; pure types in `palm.core.wait`.  
 2. ~~JobStatus park label.~~ **Reuse `WAITING_FOR_INPUT` + interest fields** (no new park enum).  
 3. ~~Fail policy default.~~ **`on_target_failed=fail_owner`** (`leave` available).  
-4. ~~Dual-path duration.~~ **Time-boxed: `ChildCompletionHook` default-on through theme exit** for pre-interest parks; matcher remains normative. Revisit removal after live parks without interest are gone (not 0.55).  
+4. ~~Dual-path duration.~~ **Removed post-exit:** no `ChildCompletionHook`; matcher only.
 5. ~~Package home.~~ **`palm.common.wait`** for matcher/policy/stub; pure interest in `palm.core.wait`.
 
 ---

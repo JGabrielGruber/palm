@@ -150,7 +150,7 @@ def test_nested_mid_wait_survives_runtime_restart() -> None:
     child_def, parent_def, res_def = _nested_flows()
 
     rt1 = EmbeddedRuntime(storage=storage)
-    rt1.start(child_completion_hook=False)  # matcher normative path
+    rt1.start()
     try:
         rt1.repository.save_flow(child_def)
         rt1.repository.save_flow(parent_def)
@@ -177,7 +177,7 @@ def test_nested_mid_wait_survives_runtime_restart() -> None:
         rt1.stop()
 
     rt2 = EmbeddedRuntime(storage=storage)
-    rt2.start(child_completion_hook=False)
+    rt2.start()
     try:
         resumed_parent = rt2.resume_process(parent_instance_id)
         assert resumed_parent.status == JobStatus.WAITING_FOR_INPUT

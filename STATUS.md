@@ -88,7 +88,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.7** Second kind stub (`workload` + emit ready/fail) | ✅ |
 | **0.55.8** Docs constitution (EVENT-PLANE, WORK-DRAIN, AGENTS, ARCHITECTURE) | ✅ |
 | **0.55.9** Compat time-box + MIGRATION-0.55 + theme exit | ✅ |
-| **0.55 theme** | ✅ closed — base reactiveness unlocked |
+| **0.55 theme** | ✅ closed — base reactiveness unlocked; post-exit: dual-path hook removed |
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 

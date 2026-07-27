@@ -60,11 +60,14 @@ class InteractiveRuntimeHooks:
 
 @dataclass(frozen=True)
 class ChildWaitHooks:
-    """Pattern bridge for nested child-job wait coordination."""
+    """Pattern bridge for nested child-job wait coordination (poll / inspect).
+
+    Unpark is **not** pattern-owned: :class:`~palm.common.wait.WaitMatcher`
+    resumes owners from ``runtime.event`` when wait interest matches.
+    """
 
     parent_is_waiting: Callable[[Job], bool]
     poll_child_for_parent: Callable[[Any, str], Any | None]
-    resume_parent_after_child: Callable[[Any, Job], Job | None]
 
 
 @dataclass(frozen=True)

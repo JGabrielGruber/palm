@@ -22,7 +22,6 @@ from palm.common.providers._registry import get_runtime_binding, get_runtime_unb
 from palm.common.resource import resource_definition_resolver
 from palm.common.runtimes.hooks import (
     AuthMiddleware,
-    ChildCompletionHook,
     DriveObservabilityHook,
     JobExecutionContextHook,
     authenticate_runtime,
@@ -30,6 +29,7 @@ from palm.common.runtimes.hooks import (
 from palm.common.runtimes.schedulers import QueuedScheduler
 from palm.common.runtimes.wiring import SchedulerPolicy, resolve_scheduler
 from palm.common.storage import StorageFactory
+from palm.common.wait.runtime_bind import bind_wait_matcher_to_runtime
 from palm.core import (
     AuthEngine,
     BehaviorTreeEngine,
@@ -162,11 +162,7 @@ class BaseRuntime:
                 )
             )
         hooks.append(JobExecutionContextHook())
-        # 0.55.4+: WaitMatcher is normative unpark. ChildCompletionHook stays
-        # default-on as dual-path compat (pre-interest parks / matcher off).
-        # See docs/migrations/MIGRATION-0.55.md · VISION-0.55.9 time-box.
-        if options.get("child_completion_hook", True):
-            hooks.append(ChildCompletionHook(self))
+        # Continue verb: WaitMatcher on runtime.event (not job hooks).
         hooks.append(
             InstancePersistenceHook(
                 self.instance_manager,
@@ -209,10 +205,8 @@ class BaseRuntime:
 
         self.orchestration.start()
 
-        if options.get("enable_wait_matcher", True):
-            from palm.common.wait.runtime_bind import bind_wait_matcher_to_runtime
-
-            self._wait_matcher = bind_wait_matcher_to_runtime(self)
+        # Reactive continue path — always wired (Palm philosophy: one law).
+        self._wait_matcher = bind_wait_matcher_to_runtime(self)
 
         self._started = True
 

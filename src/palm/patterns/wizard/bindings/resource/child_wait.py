@@ -1,9 +1,9 @@
 """Nested wizard child-wait state — suspend parent until a child job finishes.
 
-0.55.3: when a parent parks on a nested child, also open a durable
-:class:`~palm.core.wait.WaitInterest` (``kind=job``) so the wait plane and
-matcher (0.55.2+) can see the interest. Legacy ``ChildCompletionHook`` resume
-remains dual-path until 0.55.4 cutover.
+When a parent parks on a nested child, open a durable
+:class:`~palm.core.wait.WaitInterest` (``kind=job``). Unpark is owned by
+:class:`~palm.common.wait.WaitMatcher` on ``runtime.event`` — not by the child
+reaching up to the parent.
 """
 
 from __future__ import annotations

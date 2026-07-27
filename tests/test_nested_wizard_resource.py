@@ -126,7 +126,7 @@ def test_parent_wizard_suspends_until_child_completes(runtime: EmbeddedRuntime) 
     child_job_id = waiting["child_job_id"]
     assert child_job_id
 
-    # 0.55.3: nested park also opens reactive wait interest (dual-path with hook).
+    # Nested park opens reactive wait interest (matcher unparks on child complete).
     assert has_open_waits(parent_job.state)
     interests = list_wait_interests(parent_job.state)
     assert len(interests) == 1
@@ -156,5 +156,5 @@ def test_parent_wizard_suspends_until_child_completes(runtime: EmbeddedRuntime) 
     assert isinstance(answers.get("child_job"), dict)
     assert answers["child_job"]["status"] == JobStatus.SUCCEEDED.value
     assert parent_job.state.get(WizardKeys.WAITING_FOR_CHILD) is None
-    # Interest closed when nested wait clears (hook path still drove resume).
+    # Interest closed when nested wait clears (matcher unparked).
     assert not has_open_waits(parent_job.state)

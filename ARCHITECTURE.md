@@ -964,10 +964,10 @@ runtime.event  ──►  WaitMatcher (continue)  ──►  resume / fail owner
 | Matcher, policy, index, workload stub emit | `palm/common/wait/` |
 | Work drain / trigger registry | `palm/app/host/workplane/`, `palm/common/work/` |
 | Runtime wire | `BaseRuntime` (`wait_matcher`, default on) |
-| Nested wizard park | `set_child_wait` opens `kind=job` interest (dual-path with thin `ChildCompletionHook`) |
+| Nested wizard park | `set_child_wait` opens `kind=job` interest; matcher unparks on child terminal events |
 | Operator surfaces | `waiting_on` on inspect / list-waiting; doctor `reactive_interests` |
 
-**Rules:** completers emit self-events only; do not teach child jobs parent-resume APIs as the normative path; do not fold resume into WorkIntent kinds; new async parks should open a wait kind, not a private hook. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).
+**Rules:** completers emit self-events only; **no** inverted parent-resume hooks; do not fold resume into WorkIntent kinds; new async parks open a wait kind and register downward into the matcher plane. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).
 
 ---
 

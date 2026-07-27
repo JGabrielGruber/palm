@@ -110,7 +110,7 @@ def test_emit_failed_leave_policy_keeps_interest() -> None:
 def test_runtime_event_bus_emits_workload_ready() -> None:
     """Stub events publish on the same runtime.event bus the matcher uses."""
     rt = EmbeddedRuntime()
-    rt.start(child_completion_hook=False)
+    rt.start()
     try:
         assert rt.wait_matcher is not None
         seen: list[str] = []

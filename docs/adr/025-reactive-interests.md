@@ -108,7 +108,7 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 
 ## Theme status
 
-**Closed** with **0.55.9**. Dual-path `ChildCompletionHook` retained by design (compat); normative unpark remains WaitMatcher.
+**Closed** with **0.55.9**. Post-exit cleanup: **`ChildCompletionHook` and inverted `resume_parent_after_child` removed** — WaitMatcher is the sole continue path ([MIGRATION-0.55](../migrations/MIGRATION-0.55.md)).
 
 ## References
 

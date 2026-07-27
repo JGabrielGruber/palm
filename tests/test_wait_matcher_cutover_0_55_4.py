@@ -1,4 +1,4 @@
-"""0.55.4 — WaitMatcher normative unpark; ChildCompletionHook dual-path compat."""
+"""WaitMatcher is the sole nested unpark path (no ChildCompletionHook)."""
 
 from __future__ import annotations
 
@@ -67,35 +67,21 @@ def _seed(runtime: EmbeddedRuntime) -> None:
 
 
 @pytest.fixture
-def runtime_matcher_only() -> EmbeddedRuntime:
-    """Matcher normative path — ChildCompletionHook disabled."""
+def runtime() -> EmbeddedRuntime:
     rt = EmbeddedRuntime()
-    rt.start(child_completion_hook=False, enable_wait_matcher=True)
+    rt.start()
     _seed(rt)
     yield rt
     rt.stop()
     clear_palm_runtime()
 
 
-@pytest.fixture
-def runtime_dual() -> EmbeddedRuntime:
-    rt = EmbeddedRuntime()
-    rt.start()  # matcher + hook
-    _seed(rt)
-    yield rt
-    rt.stop()
-    clear_palm_runtime()
+def test_runtime_wires_wait_matcher(runtime: EmbeddedRuntime) -> None:
+    assert runtime.wait_matcher is not None
 
 
-def test_runtime_wires_wait_matcher(runtime_dual: EmbeddedRuntime) -> None:
-    assert runtime_dual.wait_matcher is not None
-
-
-def test_nested_unpark_matcher_without_hook(
-    runtime_matcher_only: EmbeddedRuntime,
-) -> None:
-    """Normative path: wait interest + matcher alone completes nested flow."""
-    runtime = runtime_matcher_only
+def test_nested_unpark_via_matcher_only(runtime: EmbeddedRuntime) -> None:
+    """Wait interest + matcher alone completes nested flow (no completion hook)."""
     parent_job = runtime.submit_flow("parent-wizard-554")
     runtime.wait_until_idle(timeout=5)
 
@@ -119,22 +105,6 @@ def test_nested_unpark_matcher_without_hook(
     assert isinstance(answers.get("child_job"), dict)
     assert not has_open_waits(parent_job.state)
     assert parent_job.state.get(WizardKeys.WAITING_FOR_CHILD) is None
-
-
-def test_nested_unpark_dual_path_still_green(runtime_dual: EmbeddedRuntime) -> None:
-    """Matcher + compat hook both present — nested dogfood remains green."""
-    runtime = runtime_dual
-    parent_job = runtime.submit_flow("parent-wizard-554")
-    runtime.wait_until_idle(timeout=5)
-    waiting = parent_job.state.get(WizardKeys.WAITING_FOR_CHILD)
-    assert isinstance(waiting, dict)
-    child_job_id = waiting["child_job_id"]
-
-    runtime.provide_input(child_job_id, "answer")
-    runtime.wait_until_idle(timeout=5)
-
-    parent_job = runtime.get_job(parent_job.id)
-    assert parent_job.status == JobStatus.SUCCEEDED
 
 
 def test_matcher_scan_discovers_owner_without_index() -> None:
