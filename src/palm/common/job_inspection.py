@@ -61,10 +61,7 @@ class JobContext:
     transform_source_key: str | None = None
     transform_target_key: str | None = None
     transform_source_preview: str | None = None
-    waiting_for_child: bool = False
-    waiting_for_child_job_id: str | None = None
-    waiting_for_child_instance_id: str | None = None
-    child_status: str | None = None
+    waiting_on: tuple[dict[str, Any], ...] = ()
     commit_hook: str | None = None
     summary: dict[str, Any] = field(default_factory=dict)
 
@@ -146,13 +143,7 @@ def inspect_job_json(job: Job) -> dict[str, Any]:
         payload["label_field"] = ctx.label_field
     if ctx.item_fields:
         payload["item_fields"] = list(ctx.item_fields)
-    if ctx.waiting_for_child:
-        payload["waiting_for_child"] = True
-        payload["waiting_for_child_job_id"] = ctx.waiting_for_child_job_id
-        payload["waiting_for_child_instance_id"] = ctx.waiting_for_child_instance_id
-        payload["child_status"] = ctx.child_status
-    # Continue plane — pattern-agnostic open wait interests
-    waiting_on = waiting_on_from_job(job)
+    waiting_on = list(ctx.waiting_on) if ctx.waiting_on else waiting_on_from_job(job)
     if waiting_on:
         payload["waiting_on"] = waiting_on
     if ctx.transform_rule:

@@ -137,8 +137,6 @@ def test_parent_wizard_suspends_until_child_completes(runtime: EmbeddedRuntime) 
     assert interests[0].meta.get("step_slug") == "spawn_child"
     raw = parent_job.state.get(STATE_KEY_WAIT_INTERESTS)
     assert isinstance(raw, list) and raw[0]["target_id"] == str(child_job_id)
-    assert parent_job.state.get(WizardKeys.WAITING_FOR_CHILD) is None
-
     child_job = runtime.get_job(str(child_job_id))
     assert child_job.status == JobStatus.WAITING_FOR_INPUT
     assert child_job.metadata.get("__palm:parent_job_id") == parent_job.id

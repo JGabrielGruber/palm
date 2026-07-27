@@ -63,10 +63,15 @@ class _Phase5FakeClient:
             "prompt": {
                 "step": "dispatch",
                 "step_kind": "resource",
-                "waiting_for_child": True,
-                "waiting_for_child_instance_id": "inst-child",
-                "child_status": "WAITING_FOR_INPUT",
             },
+            "waiting_on": [
+                {
+                    "kind": "job",
+                    "target_id": "job-child",
+                    "child_instance_id": "inst-child",
+                    "child_status": "WAITING_FOR_INPUT",
+                }
+            ],
             "answers": {"goal": "Compose docs", "menu_action": "capture_knowledge"},
             "next_actions": [{"action": "session_input"}],
         }

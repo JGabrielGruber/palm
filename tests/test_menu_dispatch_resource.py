@@ -137,8 +137,9 @@ def test_menu_dispatch_spawns_child_after_menu_choice(runtime: EmbeddedRuntime) 
     assert answers.get("route_target") == FLOW_CHILD
 
     context = inspect_job_json(parent)
-    assert context.get("waiting_for_child") is True
-    assert context.get("waiting_for_child_job_id")
+    waiting_on = context.get("waiting_on") or []
+    assert waiting_on
+    assert waiting_on[0].get("target_id")
     assert "Waiting for nested wizard" in (context.get("prompt") or "")
 
     from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
@@ -173,7 +174,7 @@ def test_menu_dispatch_via_instance_input(runtime: EmbeddedRuntime) -> None:
     parent = runtime.get_job(parent.id)
     context = inspect_job_json(parent)
     assert context.get("step") == "dispatch"
-    assert context.get("waiting_for_child") is True
+    assert context.get("waiting_on")
 
 
 def test_menu_dispatch_spawns_child_with_queued_scheduler() -> None:
@@ -197,13 +198,9 @@ def test_menu_dispatch_spawns_child_with_queued_scheduler() -> None:
         assert parent.state.get(WizardKeys.CURRENT_STEP) == "dispatch"
 
         context = inspect_job_json(parent)
-        assert context.get("waiting_for_child") is True
-
-        from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
-
-        park = nested_park_interest(parent.state)
-        assert park is not None
-        child = rt.get_job(str(park.target_id))
+        waiting_on = context.get("waiting_on") or []
+        assert waiting_on
+        child = rt.get_job(str(waiting_on[0]["target_id"]))
         assert child.status == JobStatus.WAITING_FOR_INPUT
     finally:
         rt.stop()
@@ -227,7 +224,7 @@ def test_wizard_resource_form_has_no_text_input() -> None:
     assert "resume-wizard-tick" in html
 
 
-def test_wizard_resource_form_waiting_for_child_shows_link_and_polls() -> None:
+def test_wizard_resource_form_waiting_on_shows_link() -> None:
     html = wizard_input_form(
         "inst-parent",
         {
@@ -236,10 +233,14 @@ def test_wizard_resource_form_waiting_for_child_shows_link_and_polls() -> None:
             "prompt": "Waiting for nested wizard...",
             "field_type": "resource",
             "step_kind": "resource",
-            "waiting_for_child": True,
-            "waiting_for_child_job_id": "job-child-1",
-            "waiting_for_child_instance_id": "inst-child-1",
-            "child_status": "WAITING_FOR_INPUT",
+            "waiting_on": [
+                {
+                    "kind": "job",
+                    "target_id": "job-child-1",
+                    "child_instance_id": "inst-child-1",
+                    "child_status": "WAITING_FOR_INPUT",
+                }
+            ],
         },
     )
     assert 'href="/explorer/instances/inst-child-1"' in html

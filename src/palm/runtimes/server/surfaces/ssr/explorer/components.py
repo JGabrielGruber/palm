@@ -564,15 +564,23 @@ def wizard_child_wizards_section(wizard: dict[str, Any], *, instance_id: str = "
     """Surface nested child wizards spawned via until_input resource steps."""
     children: list[dict[str, Any]] = []
     prompt = wizard.get("prompt") or {}
-    if isinstance(prompt, dict) and prompt.get("waiting_for_child"):
+    waiting_on = None
+    if isinstance(prompt, dict):
+        waiting_on = prompt.get("waiting_on")
+    if not waiting_on:
+        waiting_on = wizard.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        first = waiting_on[0] if isinstance(waiting_on[0], dict) else {}
         children.append(
             {
-                "step": prompt.get("step") or wizard.get("current_step_slug"),
-                "job_id": prompt.get("waiting_for_child_job_id"),
-                "instance_id": prompt.get("waiting_for_child_instance_id"),
-                "status": prompt.get("child_status"),
-                "job_href": prompt.get("child_job_href"),
-                "instance_href": prompt.get("child_instance_href"),
+                "step": (prompt.get("step") if isinstance(prompt, dict) else None)
+                or wizard.get("current_step_slug")
+                or first.get("step_slug"),
+                "job_id": first.get("target_id"),
+                "instance_id": first.get("child_instance_id"),
+                "status": first.get("child_status"),
+                "job_href": first.get("child_job_href"),
+                "instance_href": first.get("child_instance_href"),
                 "active": True,
             }
         )
@@ -582,6 +590,7 @@ def wizard_child_wizards_section(wizard: dict[str, Any], *, instance_id: str = "
         for step_key, value in answers.items():
             if not isinstance(value, dict):
                 continue
+            # Legacy: answer still carries until_input park payload (not delivered yet).
             if not value.get("waiting_for_child_wizard"):
                 continue
             children.append(

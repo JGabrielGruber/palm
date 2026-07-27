@@ -47,10 +47,11 @@ def drive_wizard_inputs(
                 remaining=pending,
                 include_steps=include_steps,
             )
-        if before.get("waiting_for_child"):
+        waiting_on = before.get("waiting_on")
+        if isinstance(waiting_on, list) and waiting_on:
             return _drive_result(
                 instance_id,
-                stopped_reason="waiting_for_child",
+                stopped_reason="waiting_on",
                 steps=steps,
                 view=before,
                 remaining=pending,

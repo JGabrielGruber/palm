@@ -23,7 +23,7 @@ Nested flows **must** open wait interest when parking (wizard `set_child_wait` d
 | Doctor | **`reactive_interests`** |
 | State key | **`palm.wait.interests`** |
 
-Legacy **display** fields remain: `waiting_for_child`, `waiting_for_child_job_id` (UX, not unpark).
+Operator inspect / Assist use **`waiting_on`** (interest rows). Prompt park projection also uses `waiting_on`. Provider signal `waiting_for_child_wizard` remains on nested submit payloads (when to open park), not as durable park state.
 
 ## Law
 

@@ -22,6 +22,7 @@ from palm.common.job_inspection import (
     transform_from_bundle,
     validation_from_bundle,
 )
+from palm.common.wait.present import waiting_on_from_state
 from palm.core.orchestration import Job
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 from palm.patterns.wizard.flow.collection.selection import default_label_field
@@ -65,7 +66,7 @@ def inspect_wizard_job(wizard: WizardPattern, job: Job) -> JobContext:
     transform_rule, transform_source_key, transform_target_key, transform_source_preview = (
         transform_from_bundle(prompt_bundle)
     )
-    waiting_for_child = bool(prompt_bundle.get("waiting_for_child")) if prompt_bundle else False
+    waiting_on = tuple(waiting_on_from_state(state))
     return JobContext(
         pattern="wizard",
         step=wizard.current_step_slug(state),
@@ -93,13 +94,7 @@ def inspect_wizard_job(wizard: WizardPattern, job: Job) -> JobContext:
         transform_source_key=transform_source_key,
         transform_target_key=transform_target_key,
         transform_source_preview=transform_source_preview,
-        waiting_for_child=waiting_for_child,
-        waiting_for_child_job_id=str_from_bundle(prompt_bundle, "waiting_for_child_job_id"),
-        waiting_for_child_instance_id=str_from_bundle(
-            prompt_bundle,
-            "waiting_for_child_instance_id",
-        ),
-        child_status=str_from_bundle(prompt_bundle, "child_status"),
+        waiting_on=waiting_on,
         commit_hook=str_from_bundle(prompt_bundle, "commit_hook"),
         summary=dict_from_bundle(prompt_bundle, "summary"),
     )

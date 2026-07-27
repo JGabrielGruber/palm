@@ -417,14 +417,16 @@ def wizard_resource_form(
     if resource_error:
         validation_html += f'<p class="wizard-validation">{escape(str(resource_error))}</p>'
 
-    if prompt.get("waiting_for_child"):
-        child_job_id = prompt.get("waiting_for_child_job_id") or "child"
-        child_instance_id = prompt.get("waiting_for_child_instance_id")
-        child_status = prompt.get("child_status") or "WAITING_FOR_INPUT"
-        child_instance_href = prompt.get("child_instance_href")
+    waiting_on = prompt.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        first = waiting_on[0] if isinstance(waiting_on[0], dict) else {}
+        child_job_id = first.get("target_id") or "child"
+        child_instance_id = first.get("child_instance_id")
+        child_status = first.get("child_status") or "WAITING_FOR_INPUT"
+        child_instance_href = first.get("child_instance_href")
         if not child_instance_href and child_instance_id:
             child_instance_href = f"/explorer/instances/{child_instance_id}"
-        child_job_href = prompt.get("child_job_href")
+        child_job_href = first.get("child_job_href")
         if not child_job_href and child_job_id:
             child_job_href = f"/explorer/jobs/{child_job_id}"
 

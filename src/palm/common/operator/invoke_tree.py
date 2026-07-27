@@ -42,16 +42,18 @@ def build_invoke_tree(
 
     pattern = inspect_job_json(job)
     active_child = None
-    if pattern.get("waiting_for_child"):
+    waiting_on = pattern.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        first = waiting_on[0] if isinstance(waiting_on[0], dict) else {}
         child: dict[str, Any] = {}
-        child_job_id = pattern.get("waiting_for_child_job_id")
-        child_instance_id = pattern.get("waiting_for_child_instance_id")
+        child_job_id = first.get("target_id")
+        child_instance_id = first.get("child_instance_id")
         if child_job_id:
             child["job_id"] = child_job_id
         if child_instance_id:
             child["instance_id"] = child_instance_id
             child.update(_child_summary(runtime, str(child_instance_id), str(child_job_id or "")))
-        child_status = pattern.get("child_status")
+        child_status = first.get("child_status")
         if child_status:
             child["status"] = child_status
         if child:

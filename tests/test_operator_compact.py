@@ -18,12 +18,26 @@ def _sample_view() -> dict:
             "field_type": "resource",
             "step_kind": "resource",
             "validation_error": None,
-            "waiting_for_child": True,
-            "waiting_for_child_job_id": "child-job",
-            "waiting_for_child_instance_id": "inst-child",
-            "child_status": "WAITING_FOR_INPUT",
+            "waiting_on": [
+                {
+                    "kind": "job",
+                    "target_id": "child-job",
+                    "child_instance_id": "inst-child",
+                    "child_status": "WAITING_FOR_INPUT",
+                    "source": "nested_wizard",
+                }
+            ],
             "choices": ["yes", "no"],
         },
+        "waiting_on": [
+            {
+                "kind": "job",
+                "target_id": "child-job",
+                "child_instance_id": "inst-child",
+                "child_status": "WAITING_FOR_INPUT",
+                "source": "nested_wizard",
+            }
+        ],
         "answers": {"intro": "hello", "goal": "x" * 3000},
         "next_actions": [
             {
@@ -41,7 +55,7 @@ def test_compact_wizard_inspect_default_shape() -> None:
     assert payload["flow"] == "capture"
     assert payload["step"] == "relationship_phase"
     assert payload["step_kind"] == "resource"
-    assert payload["waiting_for_child"] is True
+    assert payload["waiting_on"][0]["target_id"] == "child-job"
     assert payload["child"]["instance_id"] == "inst-child"
     assert payload["answers_keys"] == ["goal", "intro"]
     assert payload["next_actions"] == ["session_input"]

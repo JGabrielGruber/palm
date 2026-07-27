@@ -100,7 +100,7 @@ def test_assist_humanize_waiting_on() -> None:
         "waiting_on": [{"kind": "job", "target_id": "child-7"}],
     }
     assert "child-7" in question_text(composed)
-    assert "wait interest" in hint_text(composed).lower() or "Parked" in hint_text(composed)
+    assert "complete" in hint_text(composed).lower() or "unparks" in hint_text(composed).lower()
 
 
 def test_nested_park_surfaces_in_present() -> None:

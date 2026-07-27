@@ -33,15 +33,12 @@ def build_compose_status(
     if isinstance(preview, dict) and preview:
         payload["answers_preview"] = preview
 
-    if wizard_inspect.get("waiting_for_child"):
-        payload["waiting_for_child"] = True
-        child = wizard_inspect.get("child")
-        if isinstance(child, dict):
-            payload["child"] = child
-
     waiting_on = wizard_inspect.get("waiting_on")
     if isinstance(waiting_on, list) and waiting_on:
         payload["waiting_on"] = list(waiting_on)
+        child = wizard_inspect.get("child")
+        if isinstance(child, dict):
+            payload["child"] = child
 
     for key in (
         "collection_phase",

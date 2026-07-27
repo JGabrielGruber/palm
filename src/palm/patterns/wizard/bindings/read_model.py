@@ -50,6 +50,9 @@ def build_wizard_view(
     }
     if pattern is not None:
         payload["pattern"] = pattern.get("pattern", "wizard")
+        waiting_on = pattern.get("waiting_on")
+        if isinstance(waiting_on, list) and waiting_on:
+            payload["waiting_on"] = list(waiting_on)
     if job_result is not None:
         payload["result"] = job_result
     return payload
@@ -138,13 +141,10 @@ def _prompt_block(pattern: dict[str, Any] | None) -> dict[str, Any] | None:
     collection_draft = pattern.get("collection_draft")
     if isinstance(collection_draft, dict) and collection_draft:
         prompt["collection_draft"] = dict(collection_draft)
+    waiting_on = pattern.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
+        prompt["waiting_on"] = list(waiting_on)
     for key in (
-        "waiting_for_child",
-        "waiting_for_child_job_id",
-        "waiting_for_child_instance_id",
-        "child_status",
-        "child_job_href",
-        "child_instance_href",
         "collection_progress",
         "collection_field",
         "collection_select_action",

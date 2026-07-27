@@ -48,7 +48,6 @@ def merge_snapshot_fields(composed: dict[str, Any], snapshot: dict[str, Any]) ->
         "slug",
         "step",
         "waiting_on",
-        "waiting_for_child",
     ):
         if snapshot.get(key) is not None and composed.get(key) is None:
             composed[key] = snapshot[key]
@@ -57,10 +56,17 @@ def merge_snapshot_fields(composed: dict[str, Any], snapshot: dict[str, Any]) ->
 def invoke_tree_from_snapshot(snapshot: dict[str, Any]) -> dict[str, Any]:
     session_id = snapshot.get("instance_id")
     tree: dict[str, Any] = {"instance_id": session_id}
-    if snapshot.get("waiting_for_child"):
-        child = snapshot.get("child")
-        if isinstance(child, dict):
-            tree["active_child"] = dict(child)
+    child = snapshot.get("child")
+    if isinstance(child, dict):
+        tree["active_child"] = dict(child)
+    elif isinstance(snapshot.get("waiting_on"), list) and snapshot["waiting_on"]:
+        first = snapshot["waiting_on"][0]
+        if isinstance(first, dict) and first.get("target_id"):
+            tree["active_child"] = {
+                "job_id": first.get("target_id"),
+                "instance_id": first.get("child_instance_id"),
+                "status": first.get("child_status"),
+            }
     return tree
 
 

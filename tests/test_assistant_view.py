@@ -73,17 +73,22 @@ def test_assistant_view_choice_humanize() -> None:
     assert "step_kind" not in payload
 
 
-def test_assistant_view_child_wait() -> None:
+def test_assistant_view_waiting_on() -> None:
     _setup()
     flat = {
         "instance_id": "inst-parent",
         "status": "WAITING_FOR_INPUT",
         "current_step_slug": "child_step",
+        "waiting_on": [
+            {
+                "kind": "job",
+                "target_id": "job-child",
+                "child_instance_id": "inst-child",
+                "child_status": "WAITING_FOR_INPUT",
+            }
+        ],
         "prompt": {
             "text": "Parent prompt",
-            "waiting_for_child": True,
-            "waiting_for_child_instance_id": "inst-child",
-            "child_status": "WAITING_FOR_INPUT",
         },
     }
     payload = build_assistant_view(
@@ -91,10 +96,9 @@ def test_assistant_view_child_wait() -> None:
         context=OperatorViewContext(session_id="inst-parent"),
     )
 
-    assert payload["question"] == "Waiting for nested flow to finish."
-    assert "child session" in payload["hint"]
+    assert "job-child" in payload["question"]
+    assert "unparks" in payload["hint"].lower() or "complete" in payload["hint"].lower()
     assert payload["compose"]["active_child"]["instance_id"] == "inst-child"
-    assert payload["compose"]["active_child"]["status"] == "waiting"
 
 
 def test_assistant_view_collection_menu_hint() -> None:

@@ -71,10 +71,11 @@ def render_job_panel(
             if ctx.transform_source_preview:
                 body += f"[dim]Input preview:[/] {ctx.transform_source_preview}\n"
         if ctx.field_type == "resource":
-            if ctx.waiting_for_child:
+            if ctx.waiting_on:
+                target = ctx.waiting_on[0].get("target_id") if ctx.waiting_on else "?"
                 body += (
-                    "\n[yellow]→[/] Waiting for nested wizard"
-                    f" [dim](job {ctx.waiting_for_child_job_id})[/].\n"
+                    "\n[yellow]→[/] Waiting on nested target"
+                    f" [dim](job {target})[/].\n"
                 )
             else:
                 body += "\n[yellow]→[/] Resource step — invokes automatically when reached.\n"

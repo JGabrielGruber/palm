@@ -25,7 +25,14 @@ def test_build_compose_status_merges_tree_and_inspect() -> None:
         "step_kind": "resource",
         "answers_keys": ["goal", "menu_action"],
         "answers_preview": {"goal": "Compose docs"},
-        "waiting_for_child": True,
+        "waiting_on": [
+            {
+                "kind": "job",
+                "target_id": "child-job",
+                "child_instance_id": "inst-child",
+                "child_status": "WAITING_FOR_INPUT",
+            }
+        ],
         "child": {"instance_id": "inst-child", "status": "WAITING_FOR_INPUT"},
         "next_actions": ["session_input"],
         "operator_hint": "drive child inst-child",

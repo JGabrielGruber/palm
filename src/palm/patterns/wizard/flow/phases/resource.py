@@ -10,6 +10,7 @@ from palm.common.operator.resource_remediation import resource_invoke_remediatio
 from palm.common.resource.binding import promote_binding_keys
 from palm.common.resource.builder import build_resource_leaf
 from palm.common.resource.compensation import is_mutating_action, track_resource_invocation
+from palm.common.wait.present import waiting_on_row
 from palm.core.behavior_tree import LeafNode, PatternStatus
 from palm.core.context import BaseState
 from palm.core.orchestration import JobStatus
@@ -115,13 +116,14 @@ class WizardResourceLeaf(LeafNode):
         )
         interest = nested_park_for_step(state, self._ctx.step.slug)
         if interest is not None:
+            # Durable park is interest; prompt carries the same row as inspect.
+            row = waiting_on_row(interest)
             meta = interest.meta or {}
-            bundle["waiting_for_child"] = True
-            bundle["waiting_for_child_job_id"] = interest.target_id
-            bundle["waiting_for_child_instance_id"] = meta.get("child_instance_id")
-            bundle["child_job_href"] = meta.get("child_job_href")
-            bundle["child_instance_href"] = meta.get("child_instance_href")
-            bundle["child_status"] = meta.get("child_status")
+            if meta.get("child_job_href"):
+                row["child_job_href"] = meta["child_job_href"]
+            if meta.get("child_instance_href"):
+                row["child_instance_href"] = meta["child_instance_href"]
+            bundle["waiting_on"] = [row]
         return bundle
 
     def _tick_impl(self, state: BaseState) -> PatternStatus:

@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from palm.common.wait.present import child_projection_from_waiting_on
+
 _DEFAULT_INCLUDE = frozenset(
     {
         "prompt",
@@ -61,27 +63,17 @@ def compact_wizard_inspect(
         if resource_remediation:
             payload["resource_remediation"] = resource_remediation
 
-    waiting_for_child = bool(prompt.get("waiting_for_child"))
-    payload["waiting_for_child"] = waiting_for_child
-
-    # 0.55.5 — reactive wait interest (may be present without waiting_for_child flag)
     waiting_on = wizard_view.get("waiting_on")
+    if not isinstance(waiting_on, list) or not waiting_on:
+        prompt_waiting = prompt.get("waiting_on")
+        if isinstance(prompt_waiting, list) and prompt_waiting:
+            waiting_on = prompt_waiting
     if isinstance(waiting_on, list) and waiting_on:
         payload["waiting_on"] = list(waiting_on)
-
-    if "children" in fields and waiting_for_child:
-        child: dict[str, Any] = {}
-        child_job_id = prompt.get("waiting_for_child_job_id")
-        child_instance_id = prompt.get("waiting_for_child_instance_id")
-        if child_job_id:
-            child["job_id"] = child_job_id
-        if child_instance_id:
-            child["instance_id"] = child_instance_id
-        child_status = prompt.get("child_status")
-        if child_status:
-            child["status"] = child_status
-        if child:
-            payload["child"] = child
+        if "children" in fields:
+            child = child_projection_from_waiting_on(waiting_on)
+            if child:
+                payload["child"] = child
 
     if "answers" in fields:
         payload["answers_keys"] = sorted(answers.keys())
@@ -148,14 +140,17 @@ def _operator_input_hint(payload: dict[str, Any]) -> str | None:
             return str(remediation)
         return "resource step failed; inspect resource_error or run palm_system_doctor()"
 
-    if payload.get("waiting_for_child"):
+    waiting_on = payload.get("waiting_on")
+    if isinstance(waiting_on, list) and waiting_on:
         child = payload.get("child")
         if isinstance(child, dict) and child.get("instance_id"):
             return (
                 f"drive child {child['instance_id']}; "
                 "parent unparks on child completion (continue plane)"
             )
-        return "inspect/drive child session; parent unparks on child completion"
+        first = waiting_on[0] if isinstance(waiting_on[0], dict) else {}
+        target = first.get("target_id") or "target"
+        return f"drive wait target {target}; parent unparks on completion"
 
     phase = payload.get("collection_phase")
     if phase == "menu":
@@ -259,26 +254,13 @@ def compact_job_inspect(
     if "validation" in fields:
         payload["validation_error"] = pattern.get("validation_error")
 
-    waiting_for_child = bool(pattern.get("waiting_for_child"))
-    payload["waiting_for_child"] = waiting_for_child
-
-    waiting_on = pattern.get("waiting_on")
+    waiting_on = pattern.get("waiting_on") or job_context.get("waiting_on")
     if isinstance(waiting_on, list) and waiting_on:
         payload["waiting_on"] = list(waiting_on)
-
-    if "children" in fields and waiting_for_child:
-        child: dict[str, Any] = {}
-        child_job_id = pattern.get("waiting_for_child_job_id")
-        child_instance_id = pattern.get("waiting_for_child_instance_id")
-        if child_job_id:
-            child["job_id"] = child_job_id
-        if child_instance_id:
-            child["instance_id"] = child_instance_id
-        child_status = pattern.get("child_status")
-        if child_status:
-            child["status"] = child_status
-        if child:
-            payload["child"] = child
+        if "children" in fields:
+            child = child_projection_from_waiting_on(waiting_on)
+            if child:
+                payload["child"] = child
 
     answers = pattern.get("answers")
     if isinstance(answers, dict) and "answers" in fields:

@@ -15,8 +15,6 @@ from palm.services.assist.present.status import human_status
 
 
 def question_text(composed: dict[str, Any]) -> str:
-    if composed.get("waiting_for_child"):
-        return "Waiting for nested flow to finish."
     waiting_on = composed.get("waiting_on")
     if isinstance(waiting_on, list) and waiting_on:
         first = waiting_on[0] if isinstance(waiting_on[0], dict) else {}
@@ -38,11 +36,9 @@ def question_text(composed: dict[str, Any]) -> str:
 
 
 def hint_text(composed: dict[str, Any]) -> str:
-    if composed.get("waiting_for_child"):
-        return "Continue the child session, then resume here."
     waiting_on = composed.get("waiting_on")
     if isinstance(waiting_on, list) and waiting_on:
-        return "Parked on reactive wait interest; complete the target to continue."
+        return "Complete the wait target; this session unparks automatically."
 
     phase = composed.get("collection_phase")
     if phase == "menu":
