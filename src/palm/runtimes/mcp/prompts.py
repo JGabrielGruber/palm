@@ -15,8 +15,8 @@ def register_core_prompts(mcp: Any, config: Any, rest_client: Any) -> None:
             "1. Call palm_flows_session with format=compact.\n"
             "2. If validation_error is set, fix input and retry palm_flows_session_input "
             "(plain string input=…).\n"
-            "3. If waiting_for_child, read palm://instances/{id}/tree and "
-            "palm_flows_session_resume_child_wait.\n"
+            "3. If waiting_for_child, drive the child session "
+            "(parent unparks on child completion).\n"
             "4. If collection_phase is menu, use palm_wizard_collection_action; "
             "if field/select_item/remove_confirm, use palm_flows_session_input(input=…).\n"
             f"Session: {instance_id}"
@@ -47,8 +47,7 @@ def register_core_prompts(mcp: Any, config: Any, rest_client: Any) -> None:
         return (
             f"Handoff for session {instance_id}.\n"
             f"Explorer: {base}/explorer/instances/{instance_id}\n"
-            "Primary tools: palm_flows_session, palm_flows_session_input, "
-            "palm_flows_session_resume_child_wait."
+            "Primary tools: palm_flows_session, palm_flows_session_input."
         )
 
 

@@ -15,7 +15,7 @@ class FlowCommandKind(Enum):
 
 
 _SESSION_VERBS = frozenset(
-    {"input", "backtrack", "resume", "resume-child-wait", "cancel"},
+    {"input", "backtrack", "resume", "cancel"},
 )
 
 

@@ -153,12 +153,9 @@ def _operator_input_hint(payload: dict[str, Any]) -> str | None:
         if isinstance(child, dict) and child.get("instance_id"):
             return (
                 f"drive child {child['instance_id']}; "
-                "palm_flows_session_resume_child_wait only while waiting_for_child"
+                "parent unparks on child completion (continue plane)"
             )
-        return (
-            "inspect child session; palm_flows_session_resume_child_wait only while "
-            "waiting_for_child"
-        )
+        return "inspect/drive child session; parent unparks on child completion"
 
     phase = payload.get("collection_phase")
     if phase == "menu":

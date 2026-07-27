@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.common.child_wait import resume_child_wait_for_instance
 from palm.common.cqrs.command import CancelJobCommand
 from palm.common.exceptions import InstanceNotFoundError
 from palm.common.interactive_runtime import (
@@ -130,19 +129,6 @@ class FlowSession:
 
         self._flows.wait_until_idle(timeout=180.0)
         return self
-
-    def resume_child_wait(self) -> SessionContext:
-        """Re-check nested child flow and advance parent when ready."""
-        runtime = self._flows.resolve_runtime()
-        try:
-            resume_child_wait_for_instance(runtime, self.session_id)
-        except InstanceNotFoundError as exc:
-            raise exc
-        except RuntimeError as exc:
-            raise exc
-
-        self._flows.wait_until_idle()
-        return self.context()
 
     def cancel(self) -> dict[str, Any]:
         """Cancel the orchestration job backing this session."""

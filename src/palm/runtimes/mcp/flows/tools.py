@@ -204,25 +204,6 @@ def register_flow_tools(mcp: Any, backend: Any) -> None:
         )
 
     @mcp.tool
-    def palm_flows_session_resume_child_wait(
-        session_id: str,
-        flow_id: str | None = None,
-    ) -> dict[str, Any]:
-        """Re-check nested child flow and advance parent when ready."""
-        try:
-            inspect = flatten_session_view(backend.flows_get_session(flow_id, session_id))
-            fid = ensure_flow_id(flow_id=flow_id, session_id=session_id, inspect=inspect)
-            view = backend.flows_session_resume_child_wait(fid, session_id)
-        except PalmRestError as exc:
-            if exc.status != 400 or "not waiting for a nested child" not in str(exc).lower():
-                raise
-            inspect = flatten_session_view(backend.flows_get_session(flow_id, session_id))
-            payload = compact_wizard_inspect(inspect)
-            payload["resume_child_wait"] = "skipped_not_waiting"
-            return payload
-        return compact_wizard_inspect(flatten_session_view(view))
-
-    @mcp.tool
     def palm_flows_session_drive(
         session_id: str,
         inputs: list[str] | None = None,

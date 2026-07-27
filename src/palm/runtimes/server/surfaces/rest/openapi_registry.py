@@ -112,7 +112,6 @@ _DESCRIPTIONS: dict[str, str] = {
     "session_input": "Deliver interactive input to a waiting session.",
     "session_backtrack": "Backtrack to a prior wizard step.",
     "session_resume": "Resume a waiting interactive flow session.",
-    "session_resume_child_wait": "Resume a parent session after a nested child wait.",
     "session_cancel": "Cancel the session job.",
     "prepare_process": "Stage execution plans for deferred submission.",
     "submit_process": "Consume staged plan ids and submit orchestration jobs.",

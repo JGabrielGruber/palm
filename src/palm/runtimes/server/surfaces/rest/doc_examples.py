@@ -399,11 +399,6 @@ RESPONSE_EXAMPLES: dict[str, Any] = {
         "session_id": "inst-abc123",
         "status": "RUNNING",
     },
-    "session_resume_child_wait": {
-        "session_id": "inst-abc123",
-        "status": "RUNNING",
-        "waiting_for_child": False,
-    },
     "session_cancel": {
         "session_id": "inst-abc123",
         "status": "CANCELLED",

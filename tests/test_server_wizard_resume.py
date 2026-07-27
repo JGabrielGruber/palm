@@ -127,7 +127,8 @@ def test_session_resume_redrives_waiting_wizard(server: ServerRuntime) -> None:
     assert payload["status"] == JobStatus.WAITING_FOR_INPUT.value
 
 
-def test_session_resume_child_wait_rejects_when_not_waiting_on_child(server: ServerRuntime) -> None:
+def test_session_resume_child_wait_route_gone(server: ServerRuntime) -> None:
+    """Manual parent poke removed — continue plane unparks on child events."""
     flow_id = "onboard"
     status, created = _request(
         server.base_url,
@@ -139,49 +140,10 @@ def test_session_resume_child_wait_rejects_when_not_waiting_on_child(server: Ser
     assert isinstance(created, dict)
     session_id = created["session_id"]
 
-    status, payload = _request(
+    status, _payload = _request(
         server.base_url,
         "POST",
         f"/v1/api/flows/{flow_id}/session/{session_id}/resume-child-wait",
     )
-    assert status == 400
-    assert isinstance(payload, dict)
-    assert payload["error"] == "input_rejected"
+    assert status == 404
 
-
-def test_session_resume_child_wait_polls_nested_child(server: ServerRuntime) -> None:
-    status, created = _request(
-        server.base_url,
-        "POST",
-        "/v1/api/flows/parent-wizard/create",
-        body={"flow_name": "parent-wizard"},
-    )
-    assert status in {200, 202}
-    assert isinstance(created, dict)
-    parent_job_id = created["job_id"]
-
-    status, parent_ctx = _request(
-        server.base_url,
-        "GET",
-        f"/v1/api/system/jobs/{parent_job_id}/context",
-    )
-    assert status == 200
-    assert isinstance(parent_ctx, dict)
-    pattern = parent_ctx.get("pattern") or {}
-    assert pattern.get("waiting_for_child") is True
-
-    parent_instance_id = str(parent_ctx["instance"]["instance_id"])
-    flow_id = "parent-wizard"
-    status, payload = _request(
-        server.base_url,
-        "POST",
-        f"/v1/api/flows/{flow_id}/session/{parent_instance_id}/resume-child-wait",
-    )
-    assert status == 200
-    assert isinstance(payload, dict)
-    assert (
-        payload.get("session_id") == parent_instance_id
-        or payload.get("instance_id") == parent_instance_id
-    )
-    assert payload["status"] == JobStatus.WAITING_FOR_INPUT.value
-    assert payload.get("waiting_for_child") is True

@@ -145,7 +145,7 @@ just mcp-inspector                  # MCP Inspector UI
 
 4. **Read vs write** — Use **resources** for catalogs and guides; use **tools** for create, input, resume, cancel. Service REST lives under `/v1/api/…`.
 
-5. **Compositional nesting** — Parent wizards waiting on child flows are normal. Check `waiting_for_child` in inspect, read `palm://instances/{id}/tree`, then `palm_flows_session_resume_child_wait` or inspect the child session.
+5. **Compositional nesting** — Parent wizards waiting on child flows are normal. Check `waiting_for_child` in inspect, read `palm://instances/{id}/tree`, drive/inspect the **child** session (parent unparks on completion).
 
 6. **Collection steps** — Branch on `collection_phase` from inspect (or `operator_hint` on compact responses):
    - `menu` → `palm_wizard_collection_action` (`add`, `edit`, `remove`, `done`, …) **or** `palm_flows_session_input` with choice label/number
@@ -161,7 +161,7 @@ just mcp-inspector                  # MCP Inspector UI
 
 9. **Session map** — Prefer `palm_flows_compose_status(session_id)` when navigating compositional stacks.
 
-10. **Sequential driving** — Drive one session at a time. Call `palm_flows_session_resume_child_wait` only while `waiting_for_child` is true (otherwise returns `resume_child_wait: skipped_not_waiting`).
+10. **Sequential driving** — Drive one session at a time. When `waiting_for_child`, drive the child — do not poke the parent.
 
 ### Mutation guard (0.22.1+)
 
@@ -232,7 +232,7 @@ Assistant turns include an optional `actions` block (0.21.4) — structured next
    — or palm_flows_session_drive(session_id, inputs=["yes", "value", …]) for multi-step bursts
 4. Repeat 2–3 until status is terminal or waiting_for_child
 5. If waiting_for_child:
-     palm_flows_session_resume_child_wait(session_id)
+     # drive child session_id from waiting_on / tree
      or palm_flows_session(child.instance_id)
 ```
 
@@ -288,7 +288,7 @@ Example wizard: `migrate-instance-demo`. Instances pin `flow_revision` at submit
 
 | Tier | Tools | When |
 |------|-------|------|
-| **1 — Operator loop** | `palm_system_list_waiting`, `palm_flows_session`, `palm_flows_session_input`, `palm_flows_session_drive`, `palm_flows_session_resume_child_wait`, `palm_flows_session_resume`, `palm_flows_session_backtrack` | Daily wizard driving |
+| **1 — Operator loop** | `palm_system_list_waiting`, `palm_flows_session`, `palm_flows_session_input`, `palm_flows_session_drive`, `palm_flows_session_resume`, `palm_flows_session_backtrack` | Daily wizard driving |
 | **2 — Lifecycle** | `palm_flows_create_session`, `palm_processes_submit`, `palm_system_job_input`, `palm_system_cancel_job`, `palm_providers_invoke` | Start/stop work |
 | **3 — Debug** | `palm_system_trace_events`, `palm_system_diff_snapshots`, `palm_definitions_explain_step`, `palm_definitions_validate_flow`, `palm_definitions_analyze_impact`, `palm_definitions_migrate_instance`, `palm_system_doctor`, `palm_system_fetch_job`, `palm_flows_compose_status` | Investigation |
 | **Pattern** | `palm_wizard_collection_action`, `palm_wizard_commit_preview`, `palm_parallel_branch_status`, `palm_pipeline_step_trace` | Pattern-specific steps |
@@ -314,7 +314,7 @@ Install: `pip install "palmengine[mcp]"` · CLI: `palm-mcp`
 
 | Domain | Tools |
 |--------|-------|
-| **Flows** | `palm_flows_list`, `palm_flows_describe`, `palm_flows_create_session`, `palm_flows_session`, `palm_flows_session_input`, `palm_flows_session_drive`, `palm_flows_session_resume`, `palm_flows_session_resume_child_wait`, `palm_flows_session_backtrack`, `palm_flows_compose_status` |
+| **Flows** | `palm_flows_list`, `palm_flows_describe`, `palm_flows_create_session`, `palm_flows_session`, `palm_flows_session_input`, `palm_flows_session_drive`, `palm_flows_session_resume`, `palm_flows_session_backtrack`, `palm_flows_compose_status` |
 | **System** | `palm_system_list_waiting`, `palm_system_inspect_job`, `palm_system_job_input`, `palm_system_doctor`, `palm_system_cancel_job`, `palm_system_fetch_job`, `palm_system_trace_events`, `palm_system_diff_snapshots`, `palm_processes_submit` |
 | **Definitions** | `palm_definitions_validate_flow`, `palm_definitions_explain_step`, `palm_definitions_analyze_impact`, `palm_definitions_migrate_instance` |
 | **Design (0.25)** | `palm_design_propose_flow`, `palm_design_validate`, `palm_design_impact`, `palm_design_commit`, `palm_design_list_proposals`, `palm_design_get_proposal`, `palm_design_discard` — weak-LLM playbook: `palm://agent/references/design-flows` |
@@ -333,7 +333,6 @@ Install: `pip install "palmengine[mcp]"` · CLI: `palm-mcp`
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `POST` | `/v1/wizards/{id}/resume-child-wait` | Poll nested child, advance parent |
 | `POST` | `/v1/wizards/{id}/resume-wizard-tick` | Re-drive waiting wizard / resource step |
 | `GET` | `/v1/instances/{id}/tree` | Compositional invoke stack |
 
@@ -344,7 +343,6 @@ Install: `pip install "palmengine[mcp]"` · CLI: `palm-mcp`
 | `palm_list_waiting` | `GET /v1/jobs?status=WAITING_FOR_INPUT` |
 | `palm_inspect_instance` | `GET /v1/wizards/{id}` → compact |
 | `palm_wizard_input` | `POST /v1/wizards/{id}/input` |
-| `palm_resume_child_wait` | `POST /v1/wizards/{id}/resume-child-wait` |
 
 ### MCP resources
 

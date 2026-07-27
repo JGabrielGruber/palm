@@ -141,9 +141,11 @@ def test_menu_dispatch_spawns_child_after_menu_choice(runtime: EmbeddedRuntime) 
     assert context.get("waiting_for_child_job_id")
     assert "Waiting for nested wizard" in (context.get("prompt") or "")
 
-    waiting = parent.state.get(WizardKeys.WAITING_FOR_CHILD)
-    assert isinstance(waiting, dict)
-    child_job_id = waiting["child_job_id"]
+    from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
+
+    park = nested_park_interest(parent.state)
+    assert park is not None
+    child_job_id = park.target_id
     assert child_job_id
 
     child = runtime.get_job(str(child_job_id))
@@ -197,9 +199,11 @@ def test_menu_dispatch_spawns_child_with_queued_scheduler() -> None:
         context = inspect_job_json(parent)
         assert context.get("waiting_for_child") is True
 
-        waiting = parent.state.get(WizardKeys.WAITING_FOR_CHILD)
-        assert isinstance(waiting, dict)
-        child = rt.get_job(str(waiting["child_job_id"]))
+        from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
+
+        park = nested_park_interest(parent.state)
+        assert park is not None
+        child = rt.get_job(str(park.target_id))
         assert child.status == JobStatus.WAITING_FOR_INPUT
     finally:
         rt.stop()
@@ -240,5 +244,5 @@ def test_wizard_resource_form_waiting_for_child_shows_link_and_polls() -> None:
     )
     assert 'href="/explorer/instances/inst-child-1"' in html
     assert "Open nested wizard" in html
-    assert "resume-child-wait" in html
-    assert 'hx-trigger="load, every 3s"' in html
+    assert "resume-child-wait" not in html
+    assert "unparks automatically" in html or "unparks" in html

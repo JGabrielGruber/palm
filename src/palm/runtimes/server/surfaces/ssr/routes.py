@@ -160,12 +160,6 @@ def register_explorer_routes(registry: RouteRegistry, ctx: ServerContext) -> Non
     )
     registry.register(
         method="POST",
-        path="/explorer/instances/{instance_id}/resume-child-wait",
-        handler=actions.resume_child_wait,
-        surface=_SURFACE,
-    )
-    registry.register(
-        method="POST",
         path="/explorer/instances/{instance_id}/resume-wizard-tick",
         handler=actions.resume_wizard_tick,
         surface=_SURFACE,

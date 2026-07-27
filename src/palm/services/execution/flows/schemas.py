@@ -83,10 +83,6 @@ def _next_commands(ctx: SessionContext, view: dict[str, Any]) -> list[list[str]]
                 command_path(flow_id=flow_id, session_id=session_id, verb="backtrack"),
             )
         commands.append(command_path(flow_id=flow_id, session_id=session_id, verb="resume"))
-    if view.get("waiting_for_child") or ctx.detail.get("waiting_for_child"):
-        commands.append(
-            command_path(flow_id=flow_id, session_id=session_id, verb="resume-child-wait"),
-        )
     if status not in {
         JobStatus.SUCCEEDED.value,
         JobStatus.FAILED.value,

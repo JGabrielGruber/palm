@@ -98,8 +98,6 @@ class FlowExecutionService(BaseService):
             if parsed.verb == "resume":
                 handle.resume()
                 return handle.context()
-            if parsed.verb == "resume-child-wait":
-                return handle.resume_child_wait()
             if parsed.verb == "cancel":
                 return handle.cancel()
 

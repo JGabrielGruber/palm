@@ -103,7 +103,7 @@ Coding agents should operate Palm through MCP — **prefer a single meta-tool `p
 | Doctor / list / waiting | `assist/doctor` · `assist/catalog/flows` · `assist/catalog/waiting` (rows may include **`waiting_on`**) |
 | Resume resource | `alias=flows/session-resume` + `session_id`, `flow_id` |
 
-**Conventions:** session-first (`session_id`); plain `value`/`input` strings; follow returned **`question` / `choices` / `actions` / `mutation`** / **`waiting_on`**; do **not** guess state; design writes via **publish** (or propose→impact→commit only when inspecting impact); never `palm_processes_submit` for interactive wizard entry; `resume-child-wait` re-polls a parent still parked on a child — **auto-unpark** is WaitMatcher, not the child reaching up.
+**Conventions:** session-first (`session_id`); plain `value`/`input` strings; follow returned **`question` / `choices` / `actions` / `mutation`** / **`waiting_on`**; do **not** guess state; design writes via **publish** (or propose→impact→commit only when inspecting impact); never `palm_processes_submit` for interactive wizard entry; nested parent unpark is **WaitPlaneService** on child completion — drive the **child**, do not poke the parent.
 
 **Token efficiency (0.31):**
 

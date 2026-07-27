@@ -61,13 +61,6 @@ ROUTES: tuple[RouteEntry, ...] = (
         auth_required=True,
     ),
     RouteEntry(
-        "session_resume_child_wait",
-        "POST",
-        f"{API_PREFIX}/flows/{{flow_id}}/session/{{session_id}}/resume-child-wait",
-        "session_resume_child_wait",
-        auth_required=True,
-    ),
-    RouteEntry(
         "session_cancel",
         "POST",
         f"{API_PREFIX}/flows/{{flow_id}}/session/{{session_id}}/cancel",
@@ -84,7 +77,6 @@ _HANDLERS = {
     "session_input": handlers.session_input,
     "session_backtrack": handlers.session_backtrack,
     "session_resume": handlers.session_resume,
-    "session_resume_child_wait": handlers.session_resume_child_wait,
     "session_cancel": handlers.session_cancel,
 }
 

@@ -446,23 +446,22 @@ def wizard_resource_form(
         body = (
             f"{prompt_html}{validation_html}"
             f'<p class="muted">Nested wizard <code>{escape(str(child_job_id))}</code> '
-            f"is {escape(str(child_status))}. Complete it in a separate tab, then return here "
-            f"(this page auto-refreshes while waiting).</p>"
+            f"is {escape(str(child_status))}. Complete the child; this parent unparks "
+            f"automatically when the child succeeds.</p>"
             f"{child_link}"
         )
-        resume_action = f"/explorer/instances/{instance_id}/resume-child-wait"
-        htmx_attrs = _wizard_htmx_attrs(resume_action) if htmx else ""
-        auto_poll = ' hx-trigger="load, every 3s"' if htmx else ""
-        toolbar = (
-            f'<form class="resource-step-form resume-child-wait" action="{escape(resume_action)}" '
-            f'method="POST"{htmx_attrs}{auto_poll}>'
-            f'<button class="btn-default" type="submit">Check nested wizard status</button>'
-            f"{_wizard_loading_indicator()}"
-            f"</form>"
+        # Soft refresh of the parent workspace (GET), not a resume poke.
+        refresh = f"/explorer/instances/{instance_id}"
+        htmx_attrs = (
+            f' hx-get="{escape(refresh)}" hx-trigger="every 3s" '
+            f'hx-target="#wizard-workspace" hx-swap="outerHTML"'
+            if htmx
+            else ""
         )
         return (
-            f'<div class="resource-step-panel" role="region" aria-live="polite">'
-            f"{body}{toolbar}</div>"
+            f'<div class="resource-step-panel" role="region" aria-live="polite"'
+            f"{htmx_attrs}>"
+            f"{body}</div>"
         )
 
     resume_action = f"/explorer/instances/{instance_id}/resume-wizard-tick"

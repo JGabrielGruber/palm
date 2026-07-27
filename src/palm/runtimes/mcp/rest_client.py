@@ -108,17 +108,6 @@ class PalmRestClient:
         )
         return self.flows_get_session(flow_id, session_id)
 
-    def flows_session_resume_child_wait(
-        self,
-        flow_id: str,
-        session_id: str,
-    ) -> dict[str, Any]:
-        return self._request(
-            "POST",
-            f"/v1/api/flows/{flow_id}/session/{session_id}/resume-child-wait",
-            auth=True,
-        )
-
     def get_wizard(self, instance_id: str) -> dict[str, Any]:
         from palm.runtimes.mcp.flows.views import flatten_session_view
 
@@ -132,16 +121,6 @@ class PalmRestClient:
         if not flow_id:
             raise PalmRestError(400, f"could not resolve flow_id for session {instance_id!r}")
         view = self.flows_session_input(flow_id, instance_id, value)
-        return flatten_session_view(view)
-
-    def resume_child_wait(self, instance_id: str) -> dict[str, Any]:
-        from palm.runtimes.mcp.flows.views import flatten_session_view, resolve_flow_id_from_inspect
-
-        inspect = self.get_wizard(instance_id)
-        flow_id = resolve_flow_id_from_inspect(inspect)
-        if not flow_id:
-            raise PalmRestError(400, f"could not resolve flow_id for session {instance_id!r}")
-        view = self.flows_session_resume_child_wait(flow_id, instance_id)
         return flatten_session_view(view)
 
     def get_instance_tree(self, instance_id: str) -> dict[str, Any]:

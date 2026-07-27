@@ -81,12 +81,6 @@ def map_dispatch_to_rest(
                 params,
             )
             return "POST", url, None, True
-        if len(path) == 5 and path[2] == "session" and path[4] == "resume-child-wait":
-            url = append_format_query(
-                f"/v1/api/flows/{path[1]}/session/{path[3]}/resume-child-wait",
-                params,
-            )
-            return "POST", url, None, True
         if len(path) == 5 and path[2] == "session" and path[4] == "cancel":
             return "POST", f"/v1/api/flows/{path[1]}/session/{path[3]}/cancel", None, True
 

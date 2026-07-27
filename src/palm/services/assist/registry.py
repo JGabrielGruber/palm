@@ -116,13 +116,6 @@ _BUILTIN_MCP_ALIASES: dict[str, tuple[str, ...]] = {
         "{session_id}",
         "resume",
     ),
-    "flows/session-resume-child": (
-        "flows",
-        "{flow_id}",
-        "session",
-        "{session_id}",
-        "resume-child-wait",
-    ),
     "assist/doctor": ("assist", "doctor"),
     "assist/catalog/flows": ("assist", "catalog", "flows"),
     "assist/catalog/waiting": ("assist", "catalog", "waiting"),

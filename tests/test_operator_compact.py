@@ -27,9 +27,9 @@ def _sample_view() -> dict:
         "answers": {"intro": "hello", "goal": "x" * 3000},
         "next_actions": [
             {
-                "action": "resume_child_wait",
+                "action": "session_input",
                 "method": "POST",
-                "path": "/v1/api/flows/capture/session/inst-1/resume-child-wait",
+                "path": "/v1/api/flows/capture/session/inst-1/input",
             }
         ],
     }
@@ -44,7 +44,7 @@ def test_compact_wizard_inspect_default_shape() -> None:
     assert payload["waiting_for_child"] is True
     assert payload["child"]["instance_id"] == "inst-child"
     assert payload["answers_keys"] == ["goal", "intro"]
-    assert payload["next_actions"] == ["resume_child_wait"]
+    assert payload["next_actions"] == ["session_input"]
     assert len(payload["answers_preview"]["goal"]) == 2001
 
 

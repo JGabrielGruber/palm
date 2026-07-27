@@ -620,24 +620,11 @@ def wizard_child_wizards_section(wizard: dict[str, Any], *, instance_id: str = "
             ]
         )
 
-    resume_html = ""
-    if instance_id and any(child.get("active") for child in children):
-        action = f"/explorer/instances/{escape(instance_id)}/resume-child-wait"
-        resume_html = (
-            '<form action="' + escape(action) + '" method="POST" '
-            'hx-post="' + escape(action) + '" '
-            'hx-target="#wizard-workspace" hx-swap="outerHTML" '
-            'hx-indicator="#wizard-loading" style="margin-top:0.75rem">'
-            '<button type="submit" class="btn btn-primary">Check nested wizard / resume parent</button>'
-            "</form>"
-        )
-
     return (
         '<section class="panel"><h3>Waiting for nested wizard</h3>'
         '<p class="muted">Parent wizard is suspended until the child flow completes. '
         "Open the child to provide input; the parent resumes automatically when the child succeeds.</p>"
         f'{data_table(["Parent step", "Child status", "Child job", "Child instance"], rows)}'
-        f"{resume_html}"
         "</section>"
     )
 

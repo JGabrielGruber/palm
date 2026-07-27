@@ -68,7 +68,7 @@ class _Phase5FakeClient:
                 "child_status": "WAITING_FOR_INPUT",
             },
             "answers": {"goal": "Compose docs", "menu_action": "capture_knowledge"},
-            "next_actions": [{"action": "resume_child_wait"}],
+            "next_actions": [{"action": "session_input"}],
         }
 
     def list_waiting_jobs(self, *, limit: int = 50) -> dict[str, Any]:

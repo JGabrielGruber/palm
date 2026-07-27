@@ -27,7 +27,7 @@ def test_build_compose_status_merges_tree_and_inspect() -> None:
         "answers_preview": {"goal": "Compose docs"},
         "waiting_for_child": True,
         "child": {"instance_id": "inst-child", "status": "WAITING_FOR_INPUT"},
-        "next_actions": ["resume_child_wait"],
+        "next_actions": ["session_input"],
         "operator_hint": "drive child inst-child",
         "collection_phase": "menu",
     }
@@ -37,7 +37,7 @@ def test_build_compose_status_merges_tree_and_inspect() -> None:
     assert payload["instance_id"] == "inst-root"
     assert payload["active_child"]["flow"] == "capture-knowledge"
     assert payload["answers_keys"] == ["goal", "menu_action"]
-    assert payload["next_actions"] == ["resume_child_wait"]
+    assert payload["next_actions"] == ["session_input"]
     assert payload["operator_hint"] == "drive child inst-child"
     assert payload["collection_phase"] == "menu"
     assert payload["links"]["explorer"].endswith("inst-root")

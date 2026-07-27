@@ -81,17 +81,6 @@ class _FakeRestClient:
         self.calls.append(("provide_wizard_input", instance_id, value))
         return self.get_wizard(instance_id) | {"answers": {"step_1": value}}
 
-    def flows_session_resume_child_wait(
-        self,
-        flow_id: str,
-        session_id: str,
-    ) -> dict[str, Any]:
-        self.calls.append(("flows_session_resume_child_wait", flow_id, session_id))
-        return self.flows_get_session(flow_id, session_id)
-
-    def resume_child_wait(self, instance_id: str) -> dict[str, Any]:
-        return self.flows_session_resume_child_wait("onboard", instance_id)
-
     def get_instance_tree(self, instance_id: str) -> dict[str, Any]:
         self.calls.append(("get_instance_tree", instance_id))
         return {"instance_id": instance_id, "root": {"flow": "onboard"}}
@@ -290,25 +279,6 @@ async def test_palm_flows_session_drive_requires_inputs_or_payload(mcp_server) -
     async with Client(server) as client:
         with pytest.raises(Exception, match="inputs or payload"):
             await client.call_tool("palm_flows_session_drive", {"session_id": "inst-1"})
-
-
-@pytest.mark.asyncio
-async def test_palm_flows_session_resume_child_wait_skips_when_not_waiting(mcp_server) -> None:
-    server, fake = mcp_server
-
-    def flows_session_resume_child_wait(flow_id: str, session_id: str) -> dict[str, Any]:
-        raise PalmRestError(400, "Instance 'inst-1' is not waiting for a nested child")
-
-    fake.flows_session_resume_child_wait = flows_session_resume_child_wait  # type: ignore[method-assign]
-
-    async with Client(server) as client:
-        result = await client.call_tool(
-            "palm_flows_session_resume_child_wait",
-            {"session_id": "inst-1", "flow_id": "onboard"},
-        )
-    payload = result.data
-    assert payload["resume_child_wait"] == "skipped_not_waiting"
-    assert payload["instance_id"] == "inst-1"
 
 
 @pytest.mark.asyncio

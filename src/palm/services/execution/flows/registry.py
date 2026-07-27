@@ -39,11 +39,6 @@ _registry: list[CommandSpec] = [
         "Resume a waiting interactive flow",
     ),
     CommandSpec(
-        "session_resume_child_wait",
-        ("flows", "{flow_id}", "session", "{session_id}", "resume-child-wait"),
-        "Resume after nested child wait",
-    ),
-    CommandSpec(
         "session_cancel",
         ("flows", "{flow_id}", "session", "{session_id}", "cancel"),
         "Cancel the session job",

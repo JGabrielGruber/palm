@@ -182,29 +182,6 @@ def session_resume(
     return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, session_id=session_id))
 
 
-def session_resume_child_wait(
-    ctx: ServerContext,
-    request: ServerRequest,
-    *,
-    flow_id: str,
-    session_id: str,
-) -> ServerResponse:
-    auth_error = require_auth(ctx, request)
-    if auth_error is not None:
-        return auth_error
-
-    try:
-        ctx_obj = ctx.execution.flows.dispatch(
-            ["flows", flow_id, "session", session_id, "resume-child-wait"],
-        )
-    except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
-    except RuntimeError as exc:
-        return errors.input_rejected(str(exc))
-
-    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, session_id=session_id))
-
-
 def session_cancel(
     ctx: ServerContext,
     request: ServerRequest,
@@ -285,5 +262,4 @@ __all__ = [
     "session_cancel",
     "session_input",
     "session_resume",
-    "session_resume_child_wait",
 ]

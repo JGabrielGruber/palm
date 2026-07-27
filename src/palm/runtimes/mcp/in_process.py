@@ -216,21 +216,6 @@ class PalmInProcessBackend:
             raise PalmRestError(400, str(exc)) from exc
         return session_context_dict(ctx)
 
-    def flows_session_resume_child_wait(
-        self,
-        flow_id: str,
-        session_id: str,
-    ) -> dict[str, Any]:
-        try:
-            ctx = self._ctx.execution.flows.dispatch(
-                ["flows", flow_id, "session", session_id, "resume-child-wait"],
-            )
-        except InstanceNotFoundError as exc:
-            raise _wizard_not_found(session_id) from exc
-        except RuntimeError as exc:
-            raise PalmRestError(400, str(exc)) from exc
-        return session_context_dict(ctx)
-
     def get_wizard(self, instance_id: str) -> dict[str, Any]:
         return flatten_session_view(self.flows_get_session(None, instance_id))
 
@@ -240,14 +225,6 @@ class PalmInProcessBackend:
         if not flow_id:
             raise PalmRestError(400, f"could not resolve flow_id for session {instance_id!r}")
         return flatten_session_view(self.flows_session_input(flow_id, instance_id, value))
-
-    def resume_child_wait(self, instance_id: str) -> dict[str, Any]:
-        inspect = self.get_wizard(instance_id)
-        flow_id = resolve_flow_id_from_inspect(inspect)
-        if not flow_id:
-            raise PalmRestError(400, f"could not resolve flow_id for session {instance_id!r}")
-        view = self.flows_session_resume_child_wait(flow_id, instance_id)
-        return flatten_session_view(view)
 
     def get_instance_tree(self, instance_id: str) -> dict[str, Any]:
         try:

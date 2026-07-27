@@ -78,7 +78,7 @@ definitions → create session → inspect → input → wait on children → re
 4. `palm_flows_create_session(flow_id=…)` → `session_id`
 5. `palm_flows_session(session_id)` → step, prompt, choices
 6. `palm_flows_session_input(session_id, input="…")` — **plain strings**, not JSON
-7. Compositional parent: `palm_flows_session_resume_child_wait` when `waiting_for_child`
+7. Compositional parent: drive the **child** session; parent unparks via continue plane
 
 ### Conventions (do not skip)
 

@@ -69,14 +69,6 @@ def derive_wizard_next_actions(
     if status == JobStatus.WAITING_FOR_INPUT.value:
         actions.append(
             {
-                "action": "resume_child_wait",
-                "method": "POST",
-                "path": f"{session_base}/resume-child-wait",
-                "description": "Re-check nested child wizard and advance when complete",
-            }
-        )
-        actions.append(
-            {
                 "action": "session_input",
                 "method": "POST",
                 "path": f"{session_base}/input",
