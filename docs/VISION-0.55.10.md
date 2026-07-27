@@ -75,6 +75,7 @@
 | **0.55.11** (follow) | Single open path via plane + index discipline — see STATUS |
 | **0.55.12** (follow) | Collapse dual nested state / naming docs for three waits — **done** |
 | **0.55.13** | Slash `set_child_wait` → `open_nested_park` / interest-only resource phase — **done** |
+| **0.55.14** | Plane delivers nested completion; matcher always closes interest — **done** |
 
 Adjust boundaries with STATUS note.
 

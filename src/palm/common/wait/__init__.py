@@ -12,6 +12,11 @@ from palm.common.wait.access import (
     open_interest_for_state,
     open_interest_on_job,
 )
+from palm.common.wait.deliver import (
+    NESTED_WIZARD_SOURCE,
+    deliver_nested_wizard_completion,
+    is_nested_wizard_interest,
+)
 from palm.common.wait.index import WaitOwnerIndex
 from palm.common.wait.matcher import MatchDisposition, WaitMatcher
 from palm.common.wait.plane import WaitPlaneService, bind_wait_plane_to_runtime
@@ -76,7 +81,9 @@ __all__ = [
     "bind_wait_plane_to_runtime",
     "close_interest_for_state",
     "close_interest_on_job",
+    "NESTED_WIZARD_SOURCE",
     "close_tracked_wait",
+    "deliver_nested_wizard_completion",
     "emit_workload_completed",
     "emit_workload_failed",
     "emit_workload_ready",
@@ -84,6 +91,7 @@ __all__ = [
     "extract_target_signal",
     "find_job_for_state",
     "get_wait_plane",
+    "is_nested_wizard_interest",
     "open_interest_for_state",
     "open_interest_on_job",
     "open_tracked_wait",

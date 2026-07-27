@@ -140,7 +140,12 @@ class WizardResourceLeaf(LeafNode):
     def _tick_impl(self, state: BaseState) -> PatternStatus:
         pending = nested_park_for_step(state, self._ctx.step.slug)
         if pending is not None:
+            # Interest still open → child not finished (or matcher not run).
             return self._poll_nested_park(state, pending)
+
+        # Plane delivered nested success (interest closed; output written).
+        if self._nested_output_delivered(state):
+            return self._finish_nested_delivered(state)
 
         enter_wizard_step(
             state,
@@ -172,6 +177,34 @@ class WizardResourceLeaf(LeafNode):
             return self._complete_success(state)
 
         return self._handle_resource_failure(state)
+
+    def _nested_output_delivered(self, state: BaseState) -> bool:
+        """True when WaitPlaneService wrote child success onto output_key."""
+        raw = state.get(self._inner.output_key)
+        if not isinstance(raw, dict):
+            return False
+        if raw.get("waiting_for_child_wizard"):
+            return False
+        status = str(raw.get("status") or "").upper()
+        return status == JobStatus.SUCCEEDED.value
+
+    def _finish_nested_delivered(self, state: BaseState) -> PatternStatus:
+        raw = state.get(self._inner.output_key)
+        child_id = None
+        child_status = JobStatus.SUCCEEDED.value
+        if isinstance(raw, dict):
+            child_id = raw.get("job_id")
+            child_status = str(raw.get("status") or child_status)
+        emit_wizard_event(
+            self._ctx.emit,
+            self._ctx.wizard_name,
+            WizardEventType.CHILD_COMPLETED,
+            slug=self._ctx.step.slug,
+            step_index=self._ctx.step_index,
+            child_job_id=child_id,
+            child_status=child_status,
+        )
+        return self._complete_success(state)
 
     def _enter_nested_park(self, state: BaseState) -> PatternStatus:
         result_value = state.get(self._inner.output_key)

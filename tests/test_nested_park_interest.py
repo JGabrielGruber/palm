@@ -39,7 +39,7 @@ def test_clear_nested_park() -> None:
     open_nested_park(
         state,
         target_id="c-1",
-        meta={"source": NESTED_SOURCE, "pattern_park": True, "step_slug": "s"},
+        meta={"source": NESTED_SOURCE, "step_slug": "s", "output_key": "o"},
     )
     clear_nested_park(state, target_id="c-1")
     assert nested_park_interest(state) is None

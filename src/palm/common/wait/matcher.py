@@ -205,16 +205,14 @@ class WaitMatcher:
             # Same owner/target/action already applied (duplicate event types).
             return None
 
-        # Close before side effects for idempotency — except pattern-owned parks
-        # (nested wizard): keep interest until the pattern polls and clear_child_wait.
-        keep_open = action == ACTION_RESUME_OWNER and _pattern_park_keeps_interest(interest)
-        if not keep_open:
-            self._close_interest(owner_job_id, interest)
-
+        # Deliver + resume while interest is still visible to resume_owner, then
+        # always close (0.55.14 — no pattern_park keep-open).
         if action == ACTION_RESUME_OWNER and self.resume_owner is not None:
             self.resume_owner(owner_job_id, interest, signal)
         elif action == ACTION_FAIL_OWNER and self.fail_owner is not None:
             self.fail_owner(owner_job_id, interest, signal)
+
+        self._close_interest(owner_job_id, interest)
 
         return MatchDisposition(
             owner_job_id=owner_job_id,
@@ -257,12 +255,6 @@ class WaitMatcher:
         if job is None:
             return
         close_wait_on_job(job, kind=interest.kind, target_id=interest.target_id)
-
-
-def _pattern_park_keeps_interest(interest: WaitInterest) -> bool:
-    """Nested pattern parks need interest until clear_child_wait (0.55.12)."""
-    meta = interest.meta or {}
-    return bool(meta.get("pattern_park")) or meta.get("source") == "nested_wizard"
 
 
 __all__ = [

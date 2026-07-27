@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from palm.common.wait.deliver import deliver_nested_wizard_completion
 from palm.common.wait.index import WaitOwnerIndex
 from palm.common.wait.matcher import MatchDisposition, WaitMatcher
 from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
@@ -70,11 +71,20 @@ class WaitPlaneService:
 
         def resume_owner(
             owner_id: str,
-            _interest: WaitInterest,
+            interest: WaitInterest,
             _signal: TargetSignal,
         ) -> None:
             job = get_job(owner_id)
-            if job is None or job.status != JobStatus.WAITING_FOR_INPUT:
+            if job is None:
+                return
+            # Nested wizard: write child result, drop interest, then resume so
+            # the pattern sees delivered output (not re-poll).
+            deliver_nested_wizard_completion(job, interest, get_job)
+            close_wait_on_job(job, kind=interest.kind, target_id=interest.target_id)
+            self._index.unregister(
+                owner_id, kind=interest.kind, target_id=interest.target_id
+            )
+            if job.status != JobStatus.WAITING_FOR_INPUT:
                 return
             orch.resume_job(owner_id)
 

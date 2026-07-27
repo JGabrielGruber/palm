@@ -9,11 +9,12 @@ from __future__ import annotations
 from typing import Any
 
 from palm.common.wait.access import close_interest_for_state, open_interest_for_state
+from palm.common.wait.deliver import NESTED_WIZARD_SOURCE
 from palm.core.orchestration import Job, JobStatus
 from palm.core.resource.result import ProviderResult
 from palm.core.wait import WAIT_KIND_JOB, WaitInterest, find_wait_interests, make_job_wait
 
-NESTED_SOURCE = "nested_wizard"
+NESTED_SOURCE = NESTED_WIZARD_SOURCE
 
 
 def should_park_for_child(result: ProviderResult) -> bool:
@@ -39,7 +40,6 @@ def park_meta_from_result(
         raise ValueError("nested park requires child_job_id / job_id on result")
     meta: dict[str, Any] = {
         "source": NESTED_SOURCE,
-        "pattern_park": True,
         "step_slug": step_slug,
         "output_key": output_key,
         "resource_ref": resource_ref,

@@ -34,6 +34,14 @@ Legacy **display** fields remain: `waiting_for_child`, `waiting_for_child_job_id
 
 Do **not** encode resume as a WorkIntent kind. Do **not** reintroduce parent-resume from completers.
 
+## Nested delivery (0.55.14)
+
+On child success, **WaitPlaneService** writes the child payload to the owner's
+`meta.output_key`, closes the interest, then resumes. The resource phase
+completes from delivered output — no `pattern_park` keep-open, no re-poll
+required after match. Poll remains only while the interest is still open
+(child not finished).
+
 ## Nested park slash (post-0.55.12)
 
 **Breaking for custom callers:** `set_child_wait` / `get_child_wait` / `clear_child_wait` are **gone**.
