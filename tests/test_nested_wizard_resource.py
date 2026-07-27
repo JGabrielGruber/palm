@@ -88,10 +88,10 @@ def test_palm_provider_wait_mode_until_input(runtime: EmbeddedRuntime) -> None:
     assert result.success is True
     assert result.data["status"] == JobStatus.WAITING_FOR_INPUT.value
     assert result.data["job_id"]
-    assert result.data.get("waiting_for_child_wizard") is True
+    assert result.data.get("nested_park") is True
     assert result.data.get("child_job_id") == result.data["job_id"]
     assert result.metadata["wait_mode"] == "until_input"
-    assert result.metadata.get("waiting_for_child_wizard") is True
+    assert result.metadata.get("nested_park") is True
 
 
 def test_palm_provider_until_terminal_timeout_message(runtime: EmbeddedRuntime) -> None:

@@ -27,7 +27,7 @@ def test_deliver_writes_output_key() -> None:
     out = owner.state.get("child_job")
     assert isinstance(out, dict)
     assert out["status"] == "SUCCEEDED"
-    assert out["waiting_for_child_wizard"] is False
+    assert out["nested_park"] is False
     assert out["result"] == {"answer": 1}
     assert out["delivered_by"] == "wait_plane"
 

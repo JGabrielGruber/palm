@@ -17,11 +17,12 @@ from palm.core.wait import WAIT_KIND_JOB, WaitInterest, find_wait_interests, mak
 NESTED_SOURCE = NESTED_WIZARD_SOURCE
 
 
-def should_park_for_child(result: ProviderResult) -> bool:
-    if result.metadata.get("waiting_for_child_wizard"):
+def should_open_nested_park(result: ProviderResult) -> bool:
+    """True when a provider result asks the parent to open a continue-plane park."""
+    if result.metadata.get("nested_park"):
         return True
     data = result.data
-    return isinstance(data, dict) and bool(data.get("waiting_for_child_wizard"))
+    return isinstance(data, dict) and bool(data.get("nested_park"))
 
 
 def park_meta_from_result(
@@ -106,5 +107,5 @@ __all__ = [
     "nested_park_interest",
     "open_nested_park",
     "park_meta_from_result",
-    "should_park_for_child",
+    "should_open_nested_park",
 ]

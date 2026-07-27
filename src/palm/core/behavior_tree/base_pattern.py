@@ -20,7 +20,6 @@ class PatternStatus(StrEnum):
     FAILURE = "failure"
     RUNNING = "running"
     WAITING_FOR_INPUT = "waiting_for_input"
-    WAITING_FOR_CHILD = "waiting_for_child"
 
 
 def is_yielding_status(status: PatternStatus) -> bool:
@@ -28,7 +27,6 @@ def is_yielding_status(status: PatternStatus) -> bool:
     return status in (
         PatternStatus.RUNNING,
         PatternStatus.WAITING_FOR_INPUT,
-        PatternStatus.WAITING_FOR_CHILD,
     )
 
 

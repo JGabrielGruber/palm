@@ -76,7 +76,7 @@ palm_assist(alias="assist/doctor")               → health / resource preflight
 4. **Resources = read, tools = write** — `palm://definitions/*` via FetchMcpResource; invoke definitions via `palm_providers_invoke` (never pass `palm://` to invoke).
 5. **Collection steps** — `palm_wizard_collection_action` or `palm_assist(params={session_id, flow_id, collection_action, value})`; **0.21.11+** `params.edit={item_index, …}`; fuzzy tokens `add`/`edit`/`done`/`continue`.
 6. **Interactive entry** — `palm_assist` / `palm_flows_create_session`. Never `palm_processes_submit` on processes with `entry_flow`.
-7. **Compositional wizards** — check `waiting_for_child` / `waiting_on`, drive the **child**; parent unparks on completion.
+7. **Compositional wizards** — check `waiting_on`, drive the **child**; parent unparks on completion.
 8. **Prefer `actions` block** (0.21.4) — structured `path`/`alias` over parsing `hint`.
 9. **Catalog writes** — use `palm_design_*` (not `palm_definitions_*` create/update) unless docs say otherwise.
 10. **Flow names are slugs** — `foo-bar` not `foo bar`; hyphens, lowercase, no spaces.

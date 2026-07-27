@@ -78,7 +78,6 @@ class PhaseTransitionLoopNode(DecoratorNode):
 
             if status in (
                 PatternStatus.WAITING_FOR_INPUT,
-                PatternStatus.WAITING_FOR_CHILD,
                 PatternStatus.SUCCESS,
                 PatternStatus.FAILURE,
             ):

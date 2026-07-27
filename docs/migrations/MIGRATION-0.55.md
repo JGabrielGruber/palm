@@ -23,7 +23,9 @@ Nested flows **must** open wait interest when parking (wizard `set_child_wait` d
 | Doctor | **`reactive_interests`** |
 | State key | **`palm.wait.interests`** |
 
-Operator inspect / Assist use **`waiting_on`** (interest rows). Prompt park projection also uses `waiting_on`. Provider signal `waiting_for_child_wizard` remains on nested submit payloads (when to open park), not as durable park state.
+Operator inspect / Assist use **`waiting_on`** (interest rows). Prompt park projection also uses `waiting_on`.
+
+Provider signal to open a nested park is **`nested_park: true`** on the invoke payload (was `waiting_for_child_wizard`). Pattern status is only **`WAITING_FOR_INPUT`** while parked — no separate `WAITING_FOR_CHILD` enum value.
 
 ## Law
 

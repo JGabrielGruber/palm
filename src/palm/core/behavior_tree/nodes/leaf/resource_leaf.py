@@ -115,13 +115,13 @@ class ResourceLeaf(LeafNode):
             "parent_job_id": result.metadata.get("parent_job_id"),
             "mode": result.metadata.get("mode"),
             "wait_mode": result.metadata.get("wait_mode"),
-            "waiting_for_child_wizard": result.metadata.get("waiting_for_child_wizard"),
+            "nested_park": result.metadata.get("nested_park"),
             "child_job_id": result.metadata.get("child_job_id"),
             "child_instance_id": result.metadata.get("child_instance_id"),
         }
         if isinstance(result.data, dict):
             for key in (
-                "waiting_for_child_wizard",
+                "nested_park",
                 "child_job_id",
                 "child_instance_id",
                 "child_job_href",
@@ -137,8 +137,9 @@ class ResourceLeaf(LeafNode):
         state.set(self._output_key, result.data)
         if self._error_key:
             state.delete(self._error_key)
-        if _should_wait_for_child(result):
-            return PatternStatus.WAITING_FOR_CHILD
+        if _should_open_nested_park(result):
+            # Same yield as human input: job parks WAITING_FOR_INPUT; interest is the fact.
+            return PatternStatus.WAITING_FOR_INPUT
         return PatternStatus.SUCCESS
 
     def _fail(self, state: BaseState, message: str) -> PatternStatus:
@@ -151,11 +152,11 @@ class ResourceLeaf(LeafNode):
         return PatternStatus.FAILURE
 
 
-def _should_wait_for_child(result: ProviderResult) -> bool:
-    if result.metadata.get("waiting_for_child_wizard"):
+def _should_open_nested_park(result: ProviderResult) -> bool:
+    if result.metadata.get("nested_park"):
         return True
     data = result.data
-    return isinstance(data, dict) and bool(data.get("waiting_for_child_wizard"))
+    return isinstance(data, dict) and bool(data.get("nested_park"))
 
 
 def _invoke_chain(result: Any) -> list[str] | None:

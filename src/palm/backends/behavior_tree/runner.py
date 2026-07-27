@@ -41,7 +41,7 @@ class BehaviorTreeRunner(JobRunner):
             except Exception as exc:
                 return RunResult(status=JobStatus.FAILED, error=exc, propagate=True)
 
-            if status in (PatternStatus.WAITING_FOR_INPUT, PatternStatus.WAITING_FOR_CHILD):
+            if status == PatternStatus.WAITING_FOR_INPUT:
                 return RunResult(status=JobStatus.WAITING_FOR_INPUT)
 
             if status == PatternStatus.SUCCESS:

@@ -77,7 +77,7 @@ def invoke_action(
         invoke_depth=payload.get("invoke_depth"),
         parent_job_id=invoke_params.parent_job_id,
         wait_mode=invoke_params.resolved_wait_mode.value,
-        waiting_for_child_wizard=payload.get("waiting_for_child_wizard"),
+        nested_park=payload.get("nested_park"),
         child_job_id=payload.get("child_job_id"),
         child_instance_id=payload.get("child_instance_id"),
     )

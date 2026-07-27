@@ -145,7 +145,7 @@ just mcp-inspector                  # MCP Inspector UI
 
 4. **Read vs write** — Use **resources** for catalogs and guides; use **tools** for create, input, resume, cancel. Service REST lives under `/v1/api/…`.
 
-5. **Compositional nesting** — Parent wizards waiting on child flows are normal. Check `waiting_for_child` in inspect, read `palm://instances/{id}/tree`, drive/inspect the **child** session (parent unparks on completion).
+5. **Compositional nesting** — Parent wizards waiting on child flows are normal. Check `waiting_on` in inspect, read `palm://instances/{id}/tree`, drive/inspect the **child** session (parent unparks on completion).
 
 6. **Collection steps** — Branch on `collection_phase` from inspect (or `operator_hint` on compact responses):
    - `menu` → `palm_wizard_collection_action` (`add`, `edit`, `remove`, `done`, …) **or** `palm_flows_session_input` with choice label/number
@@ -161,7 +161,7 @@ just mcp-inspector                  # MCP Inspector UI
 
 9. **Session map** — Prefer `palm_flows_compose_status(session_id)` when navigating compositional stacks.
 
-10. **Sequential driving** — Drive one session at a time. When `waiting_for_child`, drive the child — do not poke the parent.
+10. **Sequential driving** — Drive one session at a time. When `waiting_on` is set, drive that target — do not poke the parent.
 
 ### Mutation guard (0.22.1+)
 
@@ -230,8 +230,8 @@ Assistant turns include an optional `actions` block (0.21.4) — structured next
 2. palm_flows_compose_status(session_id)  # invoke stack + operator_hint
 3. palm_flows_session_input(session_id, input="<plain answer>")
    — or palm_flows_session_drive(session_id, inputs=["yes", "value", …]) for multi-step bursts
-4. Repeat 2–3 until status is terminal or waiting_for_child
-5. If waiting_for_child:
+4. Repeat 2–3 until status is terminal or waiting_on is set
+5. If waiting_on:
      # drive child session_id from waiting_on / tree
      or palm_flows_session(child.instance_id)
 ```

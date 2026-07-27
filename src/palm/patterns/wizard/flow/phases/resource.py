@@ -129,8 +129,8 @@ class WizardResourceLeaf(LeafNode):
     def _tick_impl(self, state: BaseState) -> PatternStatus:
         pending = nested_park_for_step(state, self._ctx.step.slug)
         if pending is not None:
-            # Interest still open → child not finished (or matcher not run).
-            return self._poll_nested_park(state, pending)
+            # Interest still open → wait for continue plane.
+            return self._hold_nested_park(state, pending)
 
         # Plane delivered nested success (interest closed; output written).
         if self._nested_output_delivered(state):
@@ -159,8 +159,12 @@ class WizardResourceLeaf(LeafNode):
         self._promote_answers_for_binding(state)
         status = self._inner.tick(state)
 
-        if status == PatternStatus.WAITING_FOR_CHILD:
-            return self._enter_nested_park(state)
+        if status == PatternStatus.WAITING_FOR_INPUT:
+            raw = state.get(self._inner.output_key)
+            if isinstance(raw, dict) and raw.get("nested_park"):
+                return self._enter_nested_park(state)
+            # Unexpected yield from resource leaf — stay parked with prompt.
+            return PatternStatus.WAITING_FOR_INPUT
 
         if status == PatternStatus.SUCCESS:
             return self._complete_success(state)
@@ -172,7 +176,7 @@ class WizardResourceLeaf(LeafNode):
         raw = state.get(self._inner.output_key)
         if not isinstance(raw, dict):
             return False
-        if raw.get("waiting_for_child_wizard"):
+        if raw.get("nested_park"):
             return False
         status = str(raw.get("status") or "").upper()
         return status == JobStatus.SUCCEEDED.value
@@ -234,9 +238,9 @@ class WizardResourceLeaf(LeafNode):
             )
             + " · waiting for nested wizard",
         )
-        return PatternStatus.WAITING_FOR_CHILD
+        return PatternStatus.WAITING_FOR_INPUT
 
-    def _poll_nested_park(self, state: BaseState, interest: WaitInterest) -> PatternStatus:
+    def _hold_nested_park(self, state: BaseState, interest: WaitInterest) -> PatternStatus:
         """Interest still open: wait for continue plane (no poll completion path)."""
         child_job_id = interest.target_id
 
@@ -250,7 +254,7 @@ class WizardResourceLeaf(LeafNode):
             prompt_key=self.prompt_key(),
             bundle=self._prompt_bundle(state, prompt=default_nested_prompt(interest)),
         )
-        return PatternStatus.WAITING_FOR_CHILD
+        return PatternStatus.WAITING_FOR_INPUT
 
     def _complete_success(self, state: BaseState) -> PatternStatus:
         result_value = state.get(self._inner.output_key)

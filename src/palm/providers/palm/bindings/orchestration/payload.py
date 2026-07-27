@@ -67,7 +67,8 @@ def enrich_wait_metadata(
     instance_id = enriched.get("instance_id")
 
     if wait_mode == WaitMode.UNTIL_INPUT and status == JobStatus.WAITING_FOR_INPUT.value:
-        enriched["waiting_for_child_wizard"] = True
+        # Signal parent resource step to open a continue-plane interest.
+        enriched["nested_park"] = True
         enriched["child_job_id"] = job_id
         enriched["child_instance_id"] = instance_id
         if job_id:

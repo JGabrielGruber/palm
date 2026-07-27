@@ -74,7 +74,7 @@ def deliver_nested_wizard_completion(
             "instance_id": child_meta.get("instance_id"),
             "status": str(status),
             "result": result,
-            "waiting_for_child_wizard": False,
+            "nested_park": False,
             "delivered_by": "wait_plane",
         }
     )

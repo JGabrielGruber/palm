@@ -590,8 +590,8 @@ def wizard_child_wizards_section(wizard: dict[str, Any], *, instance_id: str = "
         for step_key, value in answers.items():
             if not isinstance(value, dict):
                 continue
-            # Legacy: answer still carries until_input park payload (not delivered yet).
-            if not value.get("waiting_for_child_wizard"):
+            # Answer still carries until_input park payload (not delivered yet).
+            if not value.get("nested_park"):
                 continue
             children.append(
                 {
