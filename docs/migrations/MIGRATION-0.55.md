@@ -55,6 +55,18 @@ Package root `palm.common.wait` is a **slim door** — not a barrel of internals
 
 Pure types stay on `palm.core.wait`. Operator present helpers remain on the package root.
 
+## Kind-generic delivery (0.55.16)
+
+On positive continue match, the plane calls **`deliver_wait_completion`** (registry), not a hardcoded nested helper.
+
+| Use | API |
+|-----|-----|
+| Default nested write | still registered as `nested_wizard` |
+| Custom kind/source | `register_wait_deliverer(name, fn, kind=… / source=… / matches=…)` |
+| Module | `palm.common.wait.deliver` |
+
+`deliver_nested_wizard_completion` remains as the nested implementation + unit-test helper.
+
 ## Nested park slash (post-0.55.12)
 
 **Breaking for custom callers:** `set_child_wait` / `get_child_wait` / `clear_child_wait` are **gone**.
@@ -82,6 +94,7 @@ Module: `palm.patterns.wizard.bindings.resource.nested_park`.
 - [ ] Prefer `waiting_on` / `nested_park_interest` over deleted dual-key helpers
 - [ ] Workload stub: `from palm.common.wait.workload_stub import open_workload_wait, emit_workload_*` (full engine → 0.56)
 - [ ] Custom open/match: plane or `access.open_interest_*` — not deleted tracked/runtime_bind helpers
+- [ ] Custom completion shape: `register_wait_deliverer` — do not edit `WaitPlaneService.resume_owner`
 
 ## References
 

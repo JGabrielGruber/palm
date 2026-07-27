@@ -95,7 +95,7 @@ Public/composition sets: `palm.common.events.catalog` (`PUBLIC_EVENT_TYPES`, `CO
 ### Wait interest (durable)
 
 Owner job/instance state key **`palm.wait.interests`** (list). Shape: `kind`, `target_id`, `opened_at`, `policy.on_target_failed`, `meta`, `v`.  
-Pure types: `palm.core.wait`. Continue plane: `WaitPlaneService` (package root); matcher/policy/stub as **submodules**. Surfaces: `waiting_on` on inspect / list-waiting / doctor.
+Pure types: `palm.core.wait`. Continue plane: `WaitPlaneService` (package root); matcher/policy/stub as **submodules**. Completion delivery is pluggable via `register_wait_deliverer` / `deliver_wait_completion` (`palm.common.wait.deliver`, 0.55.16). Surfaces: `waiting_on` on inspect / list-waiting / doctor.
 
 ### Workload stub events (0.55.7)
 

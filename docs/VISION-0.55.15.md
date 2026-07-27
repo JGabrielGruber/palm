@@ -33,7 +33,7 @@ Law and nested delivery are fine. Maturity needs a **small public surface**.
 
 ### Non-goals
 
-- Kind deliver registry (P2)  
+- Kind deliver registry (P2) — **done in [0.55.16](VISION-0.55.16.md)**  
 - Kill resource poll fallback (P3)  
 - Host workplane peer (P4)  
 - Test folder tidy (P4)  

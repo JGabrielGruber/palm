@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.common.wait.deliver import deliver_nested_wizard_completion
+from palm.common.wait.deliver import deliver_wait_completion
 from palm.common.wait.index import WaitOwnerIndex
 from palm.common.wait.matcher import MatchDisposition, WaitMatcher
 from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
@@ -77,9 +77,8 @@ class WaitPlaneService:
             job = get_job(owner_id)
             if job is None:
                 return
-            # Nested wizard: write child result, drop interest, then resume so
-            # the pattern sees delivered output (not re-poll).
-            deliver_nested_wizard_completion(job, interest, get_job)
+            # Kind/source-pluggable delivery (0.55.16); nested is default register.
+            deliver_wait_completion(job, interest, get_job)
             close_wait_on_job(job, kind=interest.kind, target_id=interest.target_id)
             self._index.unregister(
                 owner_id, kind=interest.kind, target_id=interest.target_id
@@ -223,7 +222,7 @@ class WaitPlaneService:
             "index_size": len(self._index),
             "note": (
                 "start = trigger → WorkIntent; continue = WaitPlaneService "
-                "(VISION-0.55.10 / 0.55.15 public door)"
+                "(VISION-0.55.10 / 0.55.16 deliver registry)"
             ),
         }
 

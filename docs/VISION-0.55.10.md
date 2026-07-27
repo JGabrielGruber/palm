@@ -77,6 +77,7 @@
 | **0.55.13** | Slash `set_child_wait` → `open_nested_park` / interest-only resource phase — **done** |
 | **0.55.14** | Plane delivers nested completion; matcher always closes interest — **done** |
 | **0.55.15** | Slim public API door; delete tracked/runtime_bind kit — [VISION-0.55.15](VISION-0.55.15.md) — **done** |
+| **0.55.16** | Kind-generic deliver registry — [VISION-0.55.16](VISION-0.55.16.md) — **done** |
 
 Adjust boundaries with STATUS note.
 
