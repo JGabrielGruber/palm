@@ -1,4 +1,10 @@
-"""Nested wizard child-wait state — suspend parent until a child job finishes."""
+"""Nested wizard child-wait state — suspend parent until a child job finishes.
+
+0.55.3: when a parent parks on a nested child, also open a durable
+:class:`~palm.core.wait.WaitInterest` (``kind=job``) so the wait plane and
+matcher (0.55.2+) can see the interest. Legacy ``ChildCompletionHook`` resume
+remains dual-path until 0.55.4 cutover.
+"""
 
 from __future__ import annotations
 
@@ -6,6 +12,14 @@ from typing import Any
 
 from palm.core.orchestration import Job, JobStatus
 from palm.core.resource.result import ProviderResult
+from palm.core.wait import (
+    WAIT_KIND_JOB,
+    WaitInterest,
+    close_wait_interest,
+    find_wait_interests,
+    make_job_wait,
+    open_wait_interest,
+)
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 
 
@@ -53,11 +67,59 @@ def get_child_wait(state: Any) -> dict[str, Any] | None:
     return dict(raw) if isinstance(raw, dict) else None
 
 
+def wait_interest_from_child_wait(waiting: dict[str, Any]) -> WaitInterest | None:
+    """Build a job wait interest from legacy nested-wizard wait payload."""
+    child_job_id = child_job_id_from_wait(waiting)
+    if not child_job_id:
+        return None
+    meta: dict[str, Any] = {
+        "source": "nested_wizard",
+        "step_slug": waiting.get("step_slug"),
+        "output_key": waiting.get("output_key"),
+        "resource_ref": waiting.get("resource_ref"),
+        "child_instance_id": waiting.get("child_instance_id"),
+        "child_status": waiting.get("child_status"),
+    }
+    # Drop Nones so serialized interest stays compact.
+    meta = {k: v for k, v in meta.items() if v is not None}
+    return make_job_wait(child_job_id, meta=meta)
+
+
+def open_wait_interest_for_child(state: Any, waiting: dict[str, Any]) -> WaitInterest | None:
+    """Open (or refresh) reactive wait interest for a parked nested child."""
+    interest = wait_interest_from_child_wait(waiting)
+    if interest is None:
+        return None
+    return open_wait_interest(state, interest, replace_same_target=True)
+
+
+def close_wait_interest_for_child(state: Any, *, child_job_id: str | None = None) -> None:
+    """Close job wait interest for the nested child (idempotent)."""
+    target = child_job_id
+    if not target:
+        waiting = get_child_wait(state)
+        target = child_job_id_from_wait(waiting)
+    if not target:
+        # Fall back: close any nested_wizard job interests still open.
+        for w in find_wait_interests(state, kind=WAIT_KIND_JOB):
+            if (w.meta or {}).get("source") == "nested_wizard":
+                close_wait_interest(state, kind=w.kind, target_id=w.target_id)
+        return
+    close_wait_interest(state, kind=WAIT_KIND_JOB, target_id=str(target))
+
+
 def set_child_wait(state: Any, payload: dict[str, Any]) -> None:
-    _state_set(state, WizardKeys.WAITING_FOR_CHILD, dict(payload))
+    """Park nested-child linkage and open reactive wait interest (0.55.3)."""
+    body = dict(payload)
+    _state_set(state, WizardKeys.WAITING_FOR_CHILD, body)
+    open_wait_interest_for_child(state, body)
 
 
 def clear_child_wait(state: Any) -> None:
+    """Clear nested-child linkage and close reactive wait interest."""
+    waiting = get_child_wait(state)
+    child_id = child_job_id_from_wait(waiting)
+    close_wait_interest_for_child(state, child_job_id=child_id)
     deleter = getattr(state, "delete", None)
     if callable(deleter):
         deleter(WizardKeys.WAITING_FOR_CHILD)

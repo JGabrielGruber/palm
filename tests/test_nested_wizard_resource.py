@@ -108,6 +108,13 @@ def test_palm_provider_until_terminal_timeout_message(runtime: EmbeddedRuntime) 
 
 
 def test_parent_wizard_suspends_until_child_completes(runtime: EmbeddedRuntime) -> None:
+    from palm.core.wait import (
+        STATE_KEY_WAIT_INTERESTS,
+        WAIT_KIND_JOB,
+        has_open_waits,
+        list_wait_interests,
+    )
+
     parent_job = runtime.submit_flow("parent-wizard")
     runtime.wait_until_idle(timeout=5)
 
@@ -118,6 +125,17 @@ def test_parent_wizard_suspends_until_child_completes(runtime: EmbeddedRuntime) 
     assert isinstance(waiting, dict)
     child_job_id = waiting["child_job_id"]
     assert child_job_id
+
+    # 0.55.3: nested park also opens reactive wait interest (dual-path with hook).
+    assert has_open_waits(parent_job.state)
+    interests = list_wait_interests(parent_job.state)
+    assert len(interests) == 1
+    assert interests[0].kind == WAIT_KIND_JOB
+    assert interests[0].target_id == str(child_job_id)
+    assert interests[0].meta.get("source") == "nested_wizard"
+    assert interests[0].meta.get("step_slug") == "spawn_child"
+    raw = parent_job.state.get(STATE_KEY_WAIT_INTERESTS)
+    assert isinstance(raw, list) and raw[0]["target_id"] == str(child_job_id)
 
     child_job = runtime.get_job(str(child_job_id))
     assert child_job.status == JobStatus.WAITING_FOR_INPUT
@@ -138,3 +156,5 @@ def test_parent_wizard_suspends_until_child_completes(runtime: EmbeddedRuntime) 
     assert isinstance(answers.get("child_job"), dict)
     assert answers["child_job"]["status"] == JobStatus.SUCCEEDED.value
     assert parent_job.state.get(WizardKeys.WAITING_FOR_CHILD) is None
+    # Interest closed when nested wait clears (hook path still drove resume).
+    assert not has_open_waits(parent_job.state)

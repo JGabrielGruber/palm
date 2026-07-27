@@ -123,7 +123,7 @@ rule / inbound / schedule → WorkIntent → drain → new job
 | **0.55.0** | This VISION + ADR-025 accepted; STATUS/AGENTS/Grove links; session plane parked in VISION-SESSION-PLANE | Theme open |
 | **0.55.1** | Wait interest type + open/close on job/state helpers + unit tests — **done** (`palm.core.wait`) | Contract |
 | **0.55.2** | Matcher on `runtime.event` + resume/fail policy + contract tests — **done** (`palm.common.wait`) | Reaction |
-| **0.55.3** | Nested flow **opens wait** when child starts; dual-path OK with existing hook | Migration |
+| **0.55.3** | Nested flow **opens wait** when child starts; dual-path OK with existing hook — **done** | Migration |
 | **0.55.4** | Normative unpark = matcher; ChildCompletionHook thin/compat; characterization green | Cutover |
 | **0.55.5** | Inspect / Assist / list-waiting / doctor expose `waiting_on` | Surfaces |
 | **0.55.6** | Instance rehydrate + restart mid-wait test; double-event idempotency | Durability |
