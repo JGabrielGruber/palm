@@ -60,7 +60,6 @@ class WizardApp(PatternApp):
         "instance_sync",
         "submission_metadata",
         "interactive_runtime",
-        "child_wait",
         "read_model_builder",
         "projection_factory",
         "cqrs_contributor",

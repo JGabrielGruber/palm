@@ -7,12 +7,9 @@ from __future__ import annotations
 from typing import Any
 
 from palm.common.operator.resource_remediation import resource_invoke_remediation
-from palm.common.providers._registry import get_bound_runtime
 from palm.common.resource.binding import promote_binding_keys
 from palm.common.resource.builder import build_resource_leaf
 from palm.common.resource.compensation import is_mutating_action, track_resource_invocation
-from palm.common.wait.access import find_job_for_state
-from palm.common.wait.deliver import deliver_nested_wizard_completion
 from palm.core.behavior_tree import LeafNode, PatternStatus
 from palm.core.context import BaseState
 from palm.core.orchestration import JobStatus
@@ -35,8 +32,6 @@ from palm.patterns.wizard.bindings.resource.nested_park import (
     nested_park_for_step,
     open_nested_park,
     park_meta_from_result,
-    poll_child_job,
-    refresh_nested_park_status,
 )
 from palm.patterns.wizard.flow.phases._base import WizardPhaseContext, wizard_prompt_key
 from palm.patterns.wizard.flow.validation import (
@@ -240,43 +235,13 @@ class WizardResourceLeaf(LeafNode):
         return PatternStatus.WAITING_FOR_CHILD
 
     def _poll_nested_park(self, state: BaseState, interest: WaitInterest) -> PatternStatus:
-        """Interest still open: wait, fail, or fallback-deliver (same write as plane)."""
+        """Interest still open: wait for continue plane (no poll completion path)."""
         child_job_id = interest.target_id
 
-        # Plane already wrote success; interest lag / manual resume race.
+        # Plane already delivered + interest lag.
         if self._nested_output_delivered(state):
             clear_nested_park(state, target_id=child_job_id)
             return self._finish_nested_delivered(state)
-
-        runtime = get_bound_runtime()
-        child_job = poll_child_job(runtime, child_job_id) if runtime is not None else None
-        if child_job is None:
-            publish_prompt(
-                state,
-                prompt_key=self.prompt_key(),
-                bundle=self._prompt_bundle(
-                    state,
-                    prompt=default_nested_prompt(interest),
-                ),
-            )
-            return PatternStatus.WAITING_FOR_CHILD
-
-        interest = refresh_nested_park_status(state, interest, child_job.status.value)
-
-        if child_job.status == JobStatus.SUCCEEDED:
-            # Fallback only — happy path is plane deliver + interest close.
-            owner = find_job_for_state(state)
-            if owner is not None and runtime is not None:
-                deliver_nested_wizard_completion(owner, interest, runtime.get_job)
-            clear_nested_park(state, target_id=child_job_id)
-            return self._finish_nested_delivered(state)
-
-        if child_job.status in {JobStatus.FAILED, JobStatus.CANCELLED}:
-            clear_nested_park(state, target_id=child_job_id)
-            return self._fail_step(
-                state,
-                message=f"Nested wizard {child_job_id!r} ended with {child_job.status.value}",
-            )
 
         publish_prompt(
             state,

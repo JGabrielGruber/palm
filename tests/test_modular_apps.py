@@ -109,7 +109,6 @@ def test_wizard_handler_exports() -> None:
 
 def test_wizard_bridge_hooks_register() -> None:
     from palm.common.patterns._registry import (
-        get_child_wait_hooks,
         get_cqrs_contributor,
         get_interactive_runtime,
         get_projection_factory,
@@ -118,8 +117,6 @@ def test_wizard_bridge_hooks_register() -> None:
 
     interactive = get_interactive_runtime("wizard")
     assert interactive is not None
-    child_wait = get_child_wait_hooks("wizard")
-    assert child_wait is not None
     read_model = get_read_model_builder("wizard")
     assert read_model is not None
     assert get_projection_factory("wizard") is not None

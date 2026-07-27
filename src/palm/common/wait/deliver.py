@@ -30,9 +30,7 @@ _entries: list[tuple[str, WaitDeliverMatchFn, WaitDeliverFn]] = []
 
 def is_nested_wizard_interest(interest: WaitInterest) -> bool:
     meta = interest.meta or {}
-    return interest.kind == WAIT_KIND_JOB and (
-        meta.get("source") == NESTED_WIZARD_SOURCE or bool(meta.get("pattern_park"))
-    )
+    return interest.kind == WAIT_KIND_JOB and meta.get("source") == NESTED_WIZARD_SOURCE
 
 
 def deliver_nested_wizard_completion(

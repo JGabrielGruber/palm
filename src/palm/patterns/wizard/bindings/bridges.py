@@ -9,19 +9,11 @@ from __future__ import annotations
 from typing import Any
 
 from palm.common.patterns._registry import (
-    ChildWaitHooks,
     InteractiveRuntimeHooks,
-    register_child_wait,
     register_interactive_runtime,
     register_read_model_builder,
 )
-from palm.common.providers._registry import get_bound_runtime
-from palm.core.orchestration import Job
 from palm.patterns.wizard.bindings.behavior_tree.backtrack import can_backtrack_to
-from palm.patterns.wizard.bindings.resource.nested_park import (
-    nested_park_interest,
-    poll_child_job,
-)
 from palm.patterns.wizard.pattern import WizardPattern
 
 
@@ -50,17 +42,6 @@ def _wizard_previous_step(executable: Any, state: Any) -> str:
     return target
 
 
-def _wizard_parent_is_waiting(job: Job) -> bool:
-    return nested_park_interest(job.state) is not None
-
-
-def _wizard_poll_child_for_parent(_state: Any, child_job_id: str) -> Job | None:
-    runtime = get_bound_runtime()
-    if runtime is None:
-        return None
-    return poll_child_job(runtime, child_job_id)
-
-
 def register_wizard_bridges() -> None:
     """Wire wizard runtime bridges into the global pattern extension registry."""
     register_interactive_runtime(
@@ -68,13 +49,6 @@ def register_wizard_bridges() -> None:
         InteractiveRuntimeHooks(
             is_executable=_is_wizard_executable,
             previous_step=_wizard_previous_step,
-        ),
-    )
-    register_child_wait(
-        "wizard",
-        ChildWaitHooks(
-            parent_is_waiting=_wizard_parent_is_waiting,
-            poll_child_for_parent=_wizard_poll_child_for_parent,
         ),
     )
     from palm.patterns.wizard.bindings.read_model import build_wizard_view

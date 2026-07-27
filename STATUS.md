@@ -98,6 +98,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.55.16** Kind-generic deliver registry — [VISION-0.55.16](docs/VISION-0.55.16.md) | ✅ |
 | **0.55.17** Nested success via deliver (poll fallback); host `wait_plane`; tests/wait/ | ✅ |
 | **0.55.18** Remove `resume_child_wait` operator verb (plane owns unpark) | ✅ |
+| **0.55.19** Drop ChildWaitHooks + poll completion; park waits for plane only | ✅ |
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 

@@ -10,7 +10,7 @@ from typing import Any
 
 from palm.common.wait.access import close_interest_for_state, open_interest_for_state
 from palm.common.wait.deliver import NESTED_WIZARD_SOURCE
-from palm.core.orchestration import Job, JobStatus
+from palm.core.orchestration import JobStatus
 from palm.core.resource.result import ProviderResult
 from palm.core.wait import WAIT_KIND_JOB, WaitInterest, find_wait_interests, make_job_wait
 
@@ -81,13 +81,6 @@ def nested_park_for_step(state: Any, step_slug: str) -> WaitInterest | None:
     return interest
 
 
-def refresh_nested_park_status(state: Any, interest: WaitInterest, child_status: str) -> WaitInterest:
-    """Update child_status in meta and re-open (replace same target)."""
-    meta = dict(interest.meta or {})
-    meta["child_status"] = child_status
-    return open_nested_park(state, target_id=interest.target_id, meta=meta)
-
-
 def clear_nested_park(state: Any, *, target_id: str | None = None) -> None:
     if target_id:
         close_interest_for_state(state, kind=WAIT_KIND_JOB, target_id=str(target_id))
@@ -95,16 +88,6 @@ def clear_nested_park(state: Any, *, target_id: str | None = None) -> None:
     for w in list(find_wait_interests(state, kind=WAIT_KIND_JOB)):
         if (w.meta or {}).get("source") == NESTED_SOURCE:
             close_interest_for_state(state, kind=w.kind, target_id=w.target_id)
-
-
-def poll_child_job(runtime: Any, child_job_id: str) -> Job | None:
-    getter = getattr(runtime, "get_job", None)
-    if not callable(getter):
-        return None
-    try:
-        return getter(child_job_id)
-    except Exception:
-        return None
 
 
 def default_nested_prompt(interest: WaitInterest) -> str:
@@ -123,7 +106,5 @@ __all__ = [
     "nested_park_interest",
     "open_nested_park",
     "park_meta_from_result",
-    "poll_child_job",
-    "refresh_nested_park_status",
     "should_park_for_child",
 ]

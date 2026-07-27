@@ -59,18 +59,6 @@ class InteractiveRuntimeHooks:
 
 
 @dataclass(frozen=True)
-class ChildWaitHooks:
-    """Pattern bridge for nested child-job wait coordination (poll / inspect).
-
-    Unpark is **not** pattern-owned: :class:`~palm.common.wait.WaitMatcher`
-    resumes owners from ``runtime.event`` when wait interest matches.
-    """
-
-    parent_is_waiting: Callable[[Job], bool]
-    poll_child_for_parent: Callable[[Any, str], Any | None]
-
-
-@dataclass(frozen=True)
 class CqrsContributor:
     """Pattern-owned CQRS command/query types and handler dispatch."""
 
@@ -111,7 +99,6 @@ _instance_fields: dict[str, InstanceFieldsFn] = {}
 _resume_handlers: dict[str, ResumeStateFn] = {}
 _submission_metadata: dict[str, SubmissionMetadataFn] = {}
 _interactive_runtime: dict[str, InteractiveRuntimeHooks] = {}
-_child_wait: dict[str, ChildWaitHooks] = {}
 _read_model_builders: dict[str, ReadModelBuilderFn] = {}
 _pattern_apps: dict[str, Any] = {}
 _projection_factories: dict[str, ProjectionFactoryFn] = {}
@@ -227,20 +214,6 @@ def get_interactive_runtime(name: str) -> InteractiveRuntimeHooks | None:
         return _interactive_runtime.get(name)
 
 
-def register_child_wait(name: str, hooks: ChildWaitHooks) -> None:
-    """Register nested child-job wait hooks for pattern ``name``."""
-    with _lock:
-        if _child_wait.get(name) is hooks:
-            return
-        _child_wait[name] = hooks
-
-
-def get_child_wait_hooks(name: str) -> ChildWaitHooks | None:
-    """Return child-wait hooks for pattern ``name``, if registered."""
-    with _lock:
-        return _child_wait.get(name)
-
-
 def register_read_model_builder(name: str, fn: ReadModelBuilderFn) -> None:
     """Register a pattern-specific REST read-model builder."""
     with _lock:
@@ -259,12 +232,6 @@ def clear_interactive_runtime() -> None:
     """Remove interactive-runtime registrations (primarily for tests)."""
     with _lock:
         _interactive_runtime.clear()
-
-
-def clear_child_wait() -> None:
-    """Remove child-wait registrations (primarily for tests)."""
-    with _lock:
-        _child_wait.clear()
 
 
 def clear_read_model_builders() -> None:

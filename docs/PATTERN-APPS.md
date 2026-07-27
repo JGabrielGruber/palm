@@ -89,7 +89,7 @@ patterns/<name>/
 
 | Pattern | `bindings/` | `flow/` | `PatternApp` hooks |
 |---------|-------------|---------|-------------------|
-| **wizard** | Full (definitions, instances, context, BT, resource, events, compensation, CQRS, read model) | `flow/collection/`, `flow/extensions/`, `phases/` | builder, instance_sync, submission_metadata, interactive_runtime, child_wait, read_model_builder, projection_factory, cqrs_contributor |
+| **wizard** | Full (definitions, instances, context, BT, resource, events, compensation, CQRS, read model) | `flow/collection/`, `flow/extensions/`, `phases/` | builder, instance_sync, submission_metadata, interactive_runtime, read_model_builder, projection_factory, cqrs_contributor |
 | **parallel** | definitions, instances, context, behavior_tree | branch, scope, merge | builder, instance_sync, submission_metadata |
 | **pipeline** | definitions, behavior_tree | — | builder |
 | **dag** | definitions (placeholder builder) | scaffold | builder |
@@ -107,7 +107,7 @@ Patterns extend the host without editing `palm.app` internals:
 | `register_instance_sync` | `registry.py` | `InstancePersistenceHook`, resume |
 | `register_submission_metadata` | `registry.py` | Job metadata enrichment |
 | `register_interactive_runtime` | `ready()` | Interactive CLI/SSR flows |
-| `register_child_wait_hooks` | `ready()` | Parent jobs waiting on child wizards |
+
 | `register_read_model_builder` | `ready()` | `build_pattern_read_model()` |
 | `register_projection_factory` | `ready()` | `ApplicationHost` CQRS projections |
 | `register_cqrs_contributor` | `ready()` | `cqrs_wiring.py` command/query dispatch |
@@ -124,7 +124,7 @@ Wizard is the reference implementation for projection and CQRS hooks. Other patt
 |--------------------------|-----------------------------------|
 | `PatternBuildContext`, generic `build_pattern()` | `build()` for a specific pattern's flow options |
 | `interactive_runtime.py` (generic wait/input loop) | Wizard-specific prompt/read-model assembly |
-| `child_wait.py` (generic parent/child job wait) | Wizard child-wizard bridge wiring |
+
 | `pattern_read_model.py` (dispatch by pattern name) | `build_wizard_view()`, wizard CQRS types |
 | CQRS buses, projection rebuild policy | `SubmitWizardCommand`, `WizardProgressProjection` |
 | `InstancePersistenceHook` (generic) | `extract_instance_fields_from_job` per pattern |

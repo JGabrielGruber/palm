@@ -34,13 +34,12 @@ Legacy **display** fields remain: `waiting_for_child`, `waiting_for_child_job_id
 
 Do **not** encode resume as a WorkIntent kind. Do **not** reintroduce parent-resume from completers.
 
-## Nested delivery (0.55.14)
+## Nested delivery (0.55.14+)
 
 On child success, **WaitPlaneService** writes the child payload to the owner's
-`meta.output_key`, closes the interest, then resumes. The resource phase
-completes from delivered output — no `pattern_park` keep-open, no re-poll
-required after match. Poll remains only while the interest is still open
-(child not finished).
+`meta.output_key`, closes the interest, then resumes. Resource phase does **not**
+complete nested success by polling the child — open interest means wait for the
+plane.
 
 ## Public API collapse (0.55.15)
 
@@ -95,6 +94,7 @@ Module: `palm.patterns.wizard.bindings.resource.nested_park`.
 - [ ] Workload stub: `from palm.common.wait.workload_stub import open_workload_wait, emit_workload_*` (full engine → 0.56)
 - [ ] Custom open/match: plane or `access.open_interest_*` — not deleted tracked/runtime_bind helpers
 - [ ] Custom completion shape: `register_wait_deliverer` — do not edit `WaitPlaneService.resume_owner`
+- [ ] No `resume_child_wait` / `ChildWaitHooks` / poll-based parent completion
 
 ## References
 

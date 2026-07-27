@@ -656,7 +656,7 @@ flowchart TB
 | `DefinitionService` | `host.definitions`, `ctx.definitions` | Flow/process/resource catalog + CRUD + `validate_flow` |
 | `FlowExecutionService` | `host.execution.flows` | `dispatch()`, `FlowSession`, session REPL |
 | `ProviderExecutionService` | `host.execution.providers` | `invoke(provider, resource_ref, params)` |
-| `FlowSession` | `execution.flows` session handle | `input`, `backtrack`, `resume`, `resume_child_wait`, `status` |
+| `FlowSession` | `execution.flows` session handle | `input`, `backtrack`, `resume`, `status` |
 | `ReplSession` | `CliContext.repl` | REPL active-instance handle (metaphor C) |
 
 **Runtime adapter rule:** Handlers and MCP tools map transport args → `service.method()` → serialize view dicts. Business branching (pattern-aware inspect, interactive input) lives in services + `palm.common.interactive_runtime`, not in route tables.

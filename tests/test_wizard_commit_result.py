@@ -177,9 +177,11 @@ def test_parent_merge_main_extracts_child_commit_result(runtime: EmbeddedRuntime
     parent = runtime.get_job(parent.id)
     assert parent.state.get(WizardKeys.CURRENT_STEP) == "capture_main"
 
-    waiting = parent.state.get(WizardKeys.WAITING_FOR_CHILD)
-    assert isinstance(waiting, dict)
-    child_job_id = str(waiting["child_job_id"])
+    from palm.patterns.wizard.bindings.resource.nested_park import nested_park_interest
+
+    park = nested_park_interest(parent.state)
+    assert park is not None
+    child_job_id = str(park.target_id)
 
     runtime.provide_input(child_job_id, "Main Topic")
     runtime.wait_until_idle(timeout=5)
