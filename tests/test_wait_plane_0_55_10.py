@@ -1,0 +1,116 @@
+"""0.55.10 — WaitPlaneService continue plane."""
+
+from __future__ import annotations
+
+from palm.common.wait import WaitPlaneService
+from palm.common.wait.plane import bind_wait_plane_to_runtime
+from palm.core.event import EventEngine
+from palm.core.orchestration import Job, JobStatus
+from palm.core.wait import has_open_waits, make_job_wait
+from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
+from palm.runtimes.embedded import EmbeddedRuntime
+
+
+def test_wait_plane_attach_and_resume() -> None:
+    engine = EventEngine()
+    engine.initialize()
+    owner = Job(id="owner-plane", executable=None)
+    owner.status = JobStatus.WAITING_FOR_INPUT
+
+    class _Orch:
+        def get_job(self, job_id: str) -> Job | None:
+            return owner if job_id == owner.id else None
+
+        @property
+        def jobs(self) -> dict[str, Job]:
+            return {owner.id: owner}
+
+        def resume_job(self, job_id: str) -> None:
+            if job_id == owner.id:
+                owner.status = JobStatus.RUNNING
+
+        def apply_result(self, job: Job, result: object) -> None:
+            pass
+
+    class _Rt:
+        event = engine
+        orchestration = _Orch()
+
+    plane = WaitPlaneService()
+    plane.open_on_job(owner, make_job_wait("child-p"))
+    plane.attach(_Rt())
+    assert plane.matcher is not None
+    plane.handle_payload(
+        "job.completed",
+        {"job_id": "child-p", "status": "SUCCEEDED"},
+        event_id="e1",
+    )
+    assert owner.status == JobStatus.RUNNING
+    assert not has_open_waits(owner.state)
+    plane.detach()
+
+
+def test_embedded_runtime_exposes_wait_plane() -> None:
+    rt = EmbeddedRuntime()
+    rt.start()
+    try:
+        assert rt.wait_plane is not None
+        assert rt.wait_matcher is not None
+        assert rt.wait_plane.matcher is rt.wait_matcher
+        snap = rt.wait_plane.doctor_snapshot()
+        assert snap["wait_plane_attached"] is True
+        assert "continue" in snap["verbs"]
+    finally:
+        rt.stop()
+        clear_palm_runtime()
+
+
+def test_bind_wait_plane_helper() -> None:
+    engine = EventEngine()
+    engine.initialize()
+
+    class _Orch:
+        def get_job(self, job_id: str) -> None:
+            return None
+
+        @property
+        def jobs(self) -> dict[str, Job]:
+            return {}
+
+        def resume_job(self, job_id: str) -> None:
+            pass
+
+        def apply_result(self, job: Job, result: object) -> None:
+            pass
+
+    class _Rt:
+        event = engine
+        orchestration = _Orch()
+        _wait_plane = None
+
+    plane = bind_wait_plane_to_runtime(_Rt())
+    assert plane.matcher is not None
+    plane.detach()
+
+
+def test_doctor_uses_wait_plane_snapshot() -> None:
+    from palm.common.runtimes.server.diagnostics import build_doctor_report
+
+    rt = EmbeddedRuntime()
+    rt.start()
+    try:
+        owner = Job(id="doc-owner", executable=None)
+        owner.status = JobStatus.WAITING_FOR_INPUT
+        assert rt.wait_plane is not None
+        rt.wait_plane.open_on_job(owner, make_job_wait("child-doc"))
+        snap = rt.wait_plane.doctor_snapshot([owner])
+        assert snap["wait_plane_attached"] is True
+        assert snap["open_wait_owners"] == 1
+        assert snap["wait_kinds"].get("job") == 1
+
+        report = build_doctor_report(rt)
+        assert report["reactive_interests"]["wait_matcher_wired"] is True
+        assert report["reactive_interests"].get("wait_plane_attached") is True
+    finally:
+        rt.stop()
+        clear_palm_runtime()

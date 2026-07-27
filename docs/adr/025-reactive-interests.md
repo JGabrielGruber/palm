@@ -108,7 +108,7 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 
 ## Theme status
 
-**Closed** with **0.55.9**. Post-exit cleanup: **`ChildCompletionHook` and inverted `resume_parent_after_child` removed** — WaitMatcher is the sole continue path ([MIGRATION-0.55](../migrations/MIGRATION-0.55.md)).
+**Law closed** with **0.55.9** (inverted unpark removed). **0.55.10** seats structure as **`WaitPlaneService`** (continue plane peer of work-drain) — [VISION-0.55.10](../VISION-0.55.10.md).
 
 ## References
 

@@ -1,6 +1,7 @@
-"""Wire :class:`WaitMatcher` onto a runtime's orchestration event bus.
+"""Compatibility wire entry — prefer :class:`~palm.common.wait.plane.WaitPlaneService`.
 
-Register-downward: the runtime attaches the matcher; completers never import it.
+0.55.10: :func:`bind_wait_matcher_to_runtime` delegates to the continue plane and
+returns the matcher for callers that still expect a :class:`WaitMatcher`.
 """
 
 from __future__ import annotations
@@ -8,64 +9,21 @@ from __future__ import annotations
 from typing import Any
 
 from palm.common.wait.matcher import WaitMatcher
-from palm.common.wait.signals import TargetSignal
-from palm.core.orchestration.job import JobStatus
-from palm.core.orchestration.run_result import RunResult
-from palm.core.wait import WaitInterest
+from palm.common.wait.plane import WaitPlaneService, bind_wait_plane_to_runtime
 
 
 def bind_wait_matcher_to_runtime(runtime: Any) -> WaitMatcher:
-    """Create a matcher bound to ``runtime.event`` / orchestration jobs.
-
-    Sole continue path: completer events → resume or fail owner.
-    """
-    orch = runtime.orchestration
-
-    def get_job(job_id: str) -> Any:
-        try:
-            return orch.get_job(job_id)
-        except Exception:
-            return None
-
-    def list_jobs() -> list[Any]:
-        return list(orch.jobs.values())
-
-    def resume_owner(
-        owner_id: str,
-        _interest: WaitInterest,
-        _signal: TargetSignal,
-    ) -> None:
-        job = get_job(owner_id)
-        if job is None or job.status != JobStatus.WAITING_FOR_INPUT:
-            return
-        orch.resume_job(owner_id)
-
-    def fail_owner(
-        owner_id: str,
-        _interest: WaitInterest,
-        signal: TargetSignal,
-    ) -> None:
-        job = get_job(owner_id)
-        if job is None or job.is_terminal:
-            return
-        msg = (
-            f"Wait target {signal.kind}:{signal.target_id} ended with "
-            f"{signal.outcome}"
-        )
-        orch.apply_result(
-            job,
-            RunResult(status=JobStatus.FAILED, error=RuntimeError(msg)),
-        )
-
-    matcher = WaitMatcher(
-        get_job=get_job,
-        list_jobs=list_jobs,
-        resume_owner=resume_owner,
-        fail_owner=fail_owner,
-    )
-    event = getattr(runtime, "event", None)
-    if event is not None:
-        matcher.attach_events(event)
+    """Attach continue plane; return its matcher (legacy signature)."""
+    existing = getattr(runtime, "wait_plane", None)
+    if isinstance(existing, WaitPlaneService) and existing.matcher is not None:
+        return existing.matcher
+    plane = bind_wait_plane_to_runtime(runtime)
+    # Stash when runtime supports the slot (BaseRuntime).
+    if hasattr(runtime, "_wait_plane"):
+        runtime._wait_plane = plane
+    matcher = plane.matcher
+    if matcher is None:
+        raise RuntimeError("WaitPlaneService.attach did not produce a matcher")
     return matcher
 
 

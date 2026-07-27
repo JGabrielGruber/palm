@@ -1,11 +1,12 @@
-"""Wait coordination — index, matcher, policy (0.55 Reactive Interests).
+"""Continue plane — wait interest match / present (0.55 Reactive Interests).
 
-Pure interest types live in :mod:`palm.core.wait`. This package owns match /
-resume policy and bus-facing helpers (no pattern-specific logic).
+Pure interest types live in :mod:`palm.core.wait`. Coordination and
+:class:`~palm.common.wait.plane.WaitPlaneService` live here (0.55.10).
 """
 
 from palm.common.wait.index import WaitOwnerIndex
 from palm.common.wait.matcher import MatchDisposition, WaitMatcher
+from palm.common.wait.plane import WaitPlaneService, bind_wait_plane_to_runtime
 from palm.common.wait.policy import (
     ACTION_FAIL_OWNER,
     ACTION_NOOP,
@@ -62,7 +63,9 @@ __all__ = [
     "TargetSignal",
     "WaitMatcher",
     "WaitOwnerIndex",
+    "WaitPlaneService",
     "bind_wait_matcher_to_runtime",
+    "bind_wait_plane_to_runtime",
     "close_tracked_wait",
     "emit_workload_completed",
     "emit_workload_failed",

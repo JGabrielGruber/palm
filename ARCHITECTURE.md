@@ -943,31 +943,31 @@ New production code must not import from `archive/`.
 
 ---
 
-## Reactive Interests (0.55) — start and continue
+## Reactive Interests (0.55) — start and continue planes
 
-Palm’s orchestration bus carries **two peer verbs** under one law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-interests.md), [VISION-0.55](docs/VISION-0.55.md)):
+Palm’s orchestration bus carries **two peer verbs** under one law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-interests.md), [VISION-0.55](docs/VISION-0.55.md)). **0.55.10** seats continue as a first-class plane ([VISION-0.55.10](docs/VISION-0.55.10.md)):
 
-| Verb | Interest | Action |
-|------|----------|--------|
-| **Start** | Trigger / inbound / schedule | **WorkIntent** → work drain → new job |
-| **Continue** | Wait interest on parked owner job/instance | **resume_job** or fail owner |
+| Verb | Plane | Action |
+|------|-------|--------|
+| **Start** | Work drain (`WorkDrainService` / workplane) | **WorkIntent** → drain → new job |
+| **Continue** | **WaitPlaneService** (`runtime.wait_plane`) | match interest → **resume_job** / fail owner |
 
 ```text
-runtime.event  ──►  WaitMatcher (continue)  ──►  resume / fail owner
-               └──►  Triggers / inbound (start) ──►  WorkIntent → drain
+runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail owner
+               └──►  WorkDrainService (start)     ──►  WorkIntent → drain
 ```
 
 | Concern | Location |
 |---------|----------|
 | Pure interest + state helpers | `palm/core/wait/` (`palm.wait.interests` on state) |
 | Pure WorkIntent | `palm/core/work/` |
-| Matcher, policy, index, workload stub emit | `palm/common/wait/` |
+| **WaitPlaneService** + matcher/policy/present | `palm/common/wait/` (`plane.py` is the façade) |
 | Work drain / trigger registry | `palm/app/host/workplane/`, `palm/common/work/` |
-| Runtime wire | `BaseRuntime` (`wait_matcher`, default on) |
-| Nested wizard park | `set_child_wait` opens `kind=job` interest; matcher unparks on child terminal events |
-| Operator surfaces | `waiting_on` on inspect / list-waiting; doctor `reactive_interests` |
+| Runtime wire | `BaseRuntime.wait_plane` always attached at start |
+| Nested wizard park | `set_child_wait` opens `kind=job` interest; plane unparks on child terminal events |
+| Operator surfaces | `waiting_on` via `present`; doctor `reactive_interests` from plane snapshot |
 
-**Rules:** completers emit self-events only; **no** inverted parent-resume hooks; do not fold resume into WorkIntent kinds; new async parks open a wait kind and register downward into the matcher plane. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).
+**Rules:** completers emit self-events only; **no** inverted parent-resume hooks; do not fold resume into WorkIntent kinds; new async parks open a wait kind into the continue plane. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).
 
 ---
 

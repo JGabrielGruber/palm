@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from palm.common.interactive_runtime import resolve_interactive_job
 from palm.common.patterns._registry import ChildWaitHooks, get_child_wait_hooks
 from palm.common.providers._registry import get_bound_runtime
 from palm.core.orchestration import Job
@@ -43,8 +44,6 @@ def parent_is_waiting_for_child(job: Job) -> bool:
 
 def resume_child_wait_for_instance(runtime: BaseRuntime, instance_id: str) -> Job:
     """Manually re-poll the nested child and advance the parent flow if ready."""
-    from palm.common.interactive_runtime import resolve_interactive_job
-
     job = resolve_interactive_job(runtime, instance_id)
     if not parent_is_waiting_for_child(job):
         raise RuntimeError(f"Instance {instance_id!r} is not waiting for a nested child")

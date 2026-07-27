@@ -75,7 +75,7 @@ Law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-i
 | **Continue** | Wait interest on parked owner | resume / fail owner | `palm.core.wait`, `palm.common.wait.WaitMatcher` |
 
 - State key: **`palm.wait.interests`** (list). Nested wizards open `kind=job` when parking; workload stub uses `kind=workload` ([VISION-0.56](docs/VISION-0.56.md) socket).
-- Wire: `BaseRuntime` **always** attaches `WaitMatcher` on `runtime.event` (sole continue path). Completers do not resume parents.
+- Wire: `BaseRuntime` **always** attaches **`WaitPlaneService`** (`runtime.wait_plane`) on `runtime.event` (sole continue path). Completers do not resume parents.
 - Surfaces: inspect / list-waiting / doctor expose **`waiting_on`**; doctor `reactive_interests`.
 - Catalog: [EVENT-PLANE](docs/EVENT-PLANE.md) trigger ↔ wait table. Do **not** invent private resume paths or inverted completer→waiter hooks.
 
@@ -147,7 +147,7 @@ Follow these patterns. They exist so growth remains orderly.
 | MCP tool, resource, or prompt | `palm/runtimes/mcp/` + pattern or app `app.py` | Pattern: `register_mcp_contributor()`. App: `register_app_mcp_contributor()`. See [docs/MCP.md](docs/MCP.md) |
 | Cross-cutting coordination | `palm/common/<area>/` | executions, plans, hooks, persistence, etc. |
 | Wait interest (pure) | `palm/core/wait/` | `WaitInterest`, open/close on state — no I/O |
-| Wait matcher / policy / workload stub | `palm/common/wait/` | Match `runtime.event` → resume/fail; stub emit for 0.56 |
+| **Continue plane** | `palm/common/wait/` (`WaitPlaneService`) | Match `runtime.event` → resume/fail; present/doctor; [VISION-0.55.10](docs/VISION-0.55.10.md) |
 | Definition revisioning (0.24+) | `palm/common/persistence/definition_repository.py`, `palm/definitions/`, `palm/instances/` | Append-only `publish_flow_revision`; instance `flow_revision` pin; see [VISION-0.24](docs/VISION-0.24.md) |
 | Definition migration rules (0.24.2+) | `palm/common/persistence/definition_migration.py` | `register_migration_rule()` / `resolve_migration_rule()`; see [ADR-007](docs/adr/007-definition-revisioning.md) |
 | Instance migration execution (0.24.3+) | `palm/common/persistence/instance_migration.py` | `migrate_instance()`; preserve `migration_*` in `instance_sync.py`; REST `POST …/instances/{id}/migrate` |

@@ -5,6 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 from palm import __version__
+from palm.common.runtimes.doctor_contributors import collect_doctor_extensions
+from palm.common.wait.plane import WaitPlaneService
+from palm.common.wait.present import waiting_on_from_job
 from palm.core.registry import pattern_registry, provider_registry, storage_registry
 from palm.core.transform.registry import transform_registry
 
@@ -31,12 +34,17 @@ def build_doctor_report(
     orch = getattr(runtime, "orchestration", None)
     jobs = orch.list_jobs() if orch is not None else []
     waiting = sum(1 for job in jobs if job.status.value == "WAITING_FOR_INPUT")
-    open_wait_owners = 0
-    open_wait_interests = 0
-    wait_kind_counts: dict[str, int] = {}
-    try:
-        from palm.common.wait.present import waiting_on_from_job
-
+    plane = getattr(runtime, "wait_plane", None)
+    if isinstance(plane, WaitPlaneService):
+        reactive = plane.doctor_snapshot(jobs)
+        open_wait_owners = int(reactive.get("open_wait_owners") or 0)
+        open_wait_interests = int(reactive.get("open_wait_interests") or 0)
+        wait_kind_counts = dict(reactive.get("wait_kinds") or {})
+        wait_matcher_wired = bool(reactive.get("wait_matcher_wired"))
+    else:
+        open_wait_owners = 0
+        open_wait_interests = 0
+        wait_kind_counts: dict[str, int] = {}
         for job in jobs:
             rows = waiting_on_from_job(job)
             if not rows:
@@ -46,9 +54,18 @@ def build_doctor_report(
             for row in rows:
                 kind = str(row.get("kind") or "unknown")
                 wait_kind_counts[kind] = wait_kind_counts.get(kind, 0) + 1
-    except Exception:
-        pass
-    wait_matcher_wired = getattr(runtime, "wait_matcher", None) is not None
+        wait_matcher_wired = getattr(runtime, "wait_matcher", None) is not None
+        reactive = {
+            "wait_matcher_wired": wait_matcher_wired,
+            "open_wait_owners": open_wait_owners,
+            "open_wait_interests": open_wait_interests,
+            "wait_kinds": wait_kind_counts,
+            "verbs": ["start", "continue"],
+            "note": (
+                "start = trigger → WorkIntent; continue = WaitPlaneService "
+                "(VISION-0.55.10)"
+            ),
+        }
 
     from palm.common.transforms import autoload as autoload_transforms
 
@@ -101,32 +118,12 @@ def build_doctor_report(
                 if lag > 100:
                     issues.append(f"journal consumer {name!r} lag={lag}")
 
-    # 0.53.6 — Sovereign Runners (NeonRoot) surface
-    neonroot: dict[str, Any] = {}
-    composition_has_neonroot: bool | None = None
-    for attr in ("application_host", "host_bridge", "_host_bridge", "host"):
-        host = getattr(runtime, attr, None)
-        if host is None:
-            continue
-        composition = getattr(host, "composition", None)
-        if composition is not None and hasattr(composition, "has"):
-            try:
-                composition_has_neonroot = bool(composition.has("neonroot"))
-            except Exception:
-                composition_has_neonroot = None
-            break
-    try:
-        from palm.providers.neonroot.doctor import (
-            neonroot_doctor_issues,
-            neonroot_doctor_section,
-        )
-
-        neonroot = neonroot_doctor_section(
-            composition_has_neonroot=composition_has_neonroot,
-        )
-        issues.extend(neonroot_doctor_issues(neonroot))
-    except Exception as exc:
-        neonroot = {"available": False, "error": f"neonroot doctor probe failed: {exc}"}
+    # Provider/app doctor sections register downward (e.g. neonroot).
+    ext_sections, ext_issues = collect_doctor_extensions(runtime)
+    issues.extend(ext_issues)
+    neonroot = ext_sections.get("neonroot")
+    if not isinstance(neonroot, dict):
+        neonroot = {}
 
     return {
         "status": "ok" if not issues else "degraded",
@@ -154,17 +151,7 @@ def build_doctor_report(
             "open_wait_interests": open_wait_interests,
             "wait_kinds": wait_kind_counts,
         },
-        "reactive_interests": {
-            "wait_matcher_wired": wait_matcher_wired,
-            "open_wait_owners": open_wait_owners,
-            "open_wait_interests": open_wait_interests,
-            "wait_kinds": wait_kind_counts,
-            "verbs": ["start", "continue"],
-            "note": (
-                "start = trigger → WorkIntent; continue = wait interest → resume "
-                "(VISION-0.55 / ADR-025)"
-            ),
-        },
+        "reactive_interests": reactive,
         "issues": issues,
     }
 

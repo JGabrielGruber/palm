@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from palm.common.wait.present import waiting_on_from_job
 from palm.core.orchestration import Job
 from palm.core.orchestration.input_capable import JobInspectable
 
@@ -150,15 +151,10 @@ def inspect_job_json(job: Job) -> dict[str, Any]:
         payload["waiting_for_child_job_id"] = ctx.waiting_for_child_job_id
         payload["waiting_for_child_instance_id"] = ctx.waiting_for_child_instance_id
         payload["child_status"] = ctx.child_status
-    # 0.55.5 — reactive wait interest (pattern-agnostic; peers with waiting_for_child)
-    try:
-        from palm.common.wait.present import waiting_on_from_job
-
-        waiting_on = waiting_on_from_job(job)
-        if waiting_on:
-            payload["waiting_on"] = waiting_on
-    except Exception:
-        pass
+    # Continue plane — pattern-agnostic open wait interests
+    waiting_on = waiting_on_from_job(job)
+    if waiting_on:
+        payload["waiting_on"] = waiting_on
     if ctx.transform_rule:
         payload["transform_rule"] = ctx.transform_rule
         payload["transform_source_key"] = ctx.transform_source_key

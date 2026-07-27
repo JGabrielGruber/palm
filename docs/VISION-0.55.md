@@ -1,6 +1,6 @@
 # VISION 0.55 — Reactive Interests (wait + trigger law)
 
-**Status:** ✅ **Closed** — theme exit `0.55.9` (plan [ADR-025](adr/025-reactive-interests.md); migration [MIGRATION-0.55](migrations/MIGRATION-0.55.md)).  
+**Status:** ✅ **Law closed** at `0.55.9` · 📋 **Continue plane seating** [VISION-0.55.10](VISION-0.55.10.md) · ADR [025](adr/025-reactive-interests.md) · [MIGRATION-0.55](migrations/MIGRATION-0.55.md).  
 **Theme:** Make **start** and **continue** first-class under one reactive law — completers emit self-events; Palm matches **trigger interest** → WorkIntent and **wait interest** → resume. Nested flow cutover; second wait kind stub; inspect/doctor. Grove-shaped foundation.
 
 > *Two verbs, one bus. Completers speak of themselves. Palm starts or continues.*

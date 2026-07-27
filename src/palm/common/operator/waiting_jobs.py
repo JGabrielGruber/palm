@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
+from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
 from palm.core.orchestration.exceptions import JobNotFoundError
 
 
@@ -113,8 +114,6 @@ def _enrich_job_list_row(
     if job_id and "waiting_on" not in payload:
         live = _live_job(runtime, job_id)
         if live is not None:
-            from palm.common.wait.present import summarize_waiting_on, waiting_on_from_job
-
             waiting_on = waiting_on_from_job(live)
             if waiting_on:
                 payload["waiting_on"] = waiting_on

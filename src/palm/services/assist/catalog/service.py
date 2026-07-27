@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from palm.common.operator.waiting_jobs import enrich_job_list_rows, slim_waiting_job_row
+from palm.core.orchestration import JobStatus
 from palm.services.assist.catalog.discover import discover as run_discover
 from palm.services.assist.catalog.menu import menu_for_assist
 from palm.services.assist.catalog.open import open_from_params
@@ -26,9 +28,6 @@ class AssistCatalogService:
 
     def list_waiting(self, *, limit: int = 50) -> list[dict[str, Any]]:
         """Jobs/instances waiting for interactive input (assist-only friendly)."""
-        from palm.common.operator.waiting_jobs import enrich_job_list_rows, slim_waiting_job_row
-        from palm.core.orchestration import JobStatus
-
         rows = self._assist.system.list_jobs(
             status=JobStatus.WAITING_FOR_INPUT.value,
             limit=limit,

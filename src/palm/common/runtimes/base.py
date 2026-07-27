@@ -29,7 +29,7 @@ from palm.common.runtimes.hooks import (
 from palm.common.runtimes.schedulers import QueuedScheduler
 from palm.common.runtimes.wiring import SchedulerPolicy, resolve_scheduler
 from palm.common.storage import StorageFactory
-from palm.common.wait.runtime_bind import bind_wait_matcher_to_runtime
+from palm.common.wait.plane import WaitPlaneService
 from palm.core import (
     AuthEngine,
     BehaviorTreeEngine,
@@ -85,7 +85,7 @@ class BaseRuntime:
         self._auth_enforce = False
         self._outbox_store: OutboxStore | None = None
         self._outbox_processor: OutboxProcessor | None = None
-        self._wait_matcher: Any = None
+        self._wait_plane: WaitPlaneService | None = None
 
     @property
     def is_started(self) -> bool:
@@ -111,9 +111,14 @@ class BaseRuntime:
         return self._outbox_processor
 
     @property
+    def wait_plane(self) -> WaitPlaneService | None:
+        """Continue plane (wait interest match on ``runtime.event``), or ``None``."""
+        return self._wait_plane
+
+    @property
     def wait_matcher(self) -> Any:
-        """Reactive wait matcher on ``runtime.event`` (0.55.4+), or ``None``."""
-        return self._wait_matcher
+        """Matcher inside the continue plane (0.55.4+), or ``None``."""
+        return None if self._wait_plane is None else self._wait_plane.matcher
 
     def start(self, **options: Any) -> None:
         """Initialize engines, wire orchestration, and begin accepting jobs."""
@@ -205,8 +210,9 @@ class BaseRuntime:
 
         self.orchestration.start()
 
-        # Reactive continue path — always wired (Palm philosophy: one law).
-        self._wait_matcher = bind_wait_matcher_to_runtime(self)
+        # Continue plane — peer of work-drain (start); always wired.
+        self._wait_plane = WaitPlaneService()
+        self._wait_plane.attach(self)
 
         self._started = True
 
@@ -223,11 +229,9 @@ class BaseRuntime:
         if unbind_runtime is not None:
             unbind_runtime()
 
-        if self._wait_matcher is not None:
-            detach = getattr(self._wait_matcher, "detach_events", None)
-            if callable(detach):
-                detach()
-            self._wait_matcher = None
+        if self._wait_plane is not None:
+            self._wait_plane.detach()
+            self._wait_plane = None
 
         self.orchestration.stop()
         if self._owns_instance_manager:
