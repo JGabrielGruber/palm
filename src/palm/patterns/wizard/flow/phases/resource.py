@@ -7,13 +7,15 @@ from __future__ import annotations
 from typing import Any
 
 from palm.common.operator.resource_remediation import resource_invoke_remediation
+from palm.common.providers._registry import get_bound_runtime
 from palm.common.resource.binding import promote_binding_keys
 from palm.common.resource.builder import build_resource_leaf
 from palm.common.resource.compensation import is_mutating_action, track_resource_invocation
+from palm.common.wait.access import find_job_for_state
+from palm.common.wait.deliver import deliver_nested_wizard_completion
 from palm.core.behavior_tree import LeafNode, PatternStatus
 from palm.core.context import BaseState
 from palm.core.orchestration import JobStatus
-from palm.common.providers._registry import get_bound_runtime
 from palm.core.wait import WaitInterest
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 from palm.patterns.wizard.bindings.context.state import get_answers, set_answers
@@ -41,16 +43,6 @@ from palm.patterns.wizard.flow.validation import (
     clear_validation_feedback,
     publish_validation_feedback,
 )
-
-
-def _child_job_result(child_job: Any) -> Any:
-    """Return compositional child payload data, preferring ``job.result``."""
-    if child_job.result is not None:
-        return child_job.result
-    commit_result = child_job.state.get(WizardKeys.COMMIT_RESULT)
-    if commit_result is not None:
-        return commit_result
-    return None
 
 
 def default_resource_prompt(step: WizardStepConfig) -> str:
@@ -248,7 +240,14 @@ class WizardResourceLeaf(LeafNode):
         return PatternStatus.WAITING_FOR_CHILD
 
     def _poll_nested_park(self, state: BaseState, interest: WaitInterest) -> PatternStatus:
+        """Interest still open: wait, fail, or fallback-deliver (same write as plane)."""
         child_job_id = interest.target_id
+
+        # Plane already wrote success; interest lag / manual resume race.
+        if self._nested_output_delivered(state):
+            clear_nested_park(state, target_id=child_job_id)
+            return self._finish_nested_delivered(state)
+
         runtime = get_bound_runtime()
         child_job = poll_child_job(runtime, child_job_id) if runtime is not None else None
         if child_job is None:
@@ -263,31 +262,14 @@ class WizardResourceLeaf(LeafNode):
             return PatternStatus.WAITING_FOR_CHILD
 
         interest = refresh_nested_park_status(state, interest, child_job.status.value)
-        meta = interest.meta or {}
 
         if child_job.status == JobStatus.SUCCEEDED:
-            payload = dict(meta.get("child_payload") or {})
-            payload.update(
-                {
-                    "job_id": child_job.id,
-                    "instance_id": child_job.metadata.get("instance_id"),
-                    "status": child_job.status.value,
-                    "result": _child_job_result(child_job),
-                    "waiting_for_child_wizard": False,
-                }
-            )
-            state.set(self._inner.output_key, payload)
+            # Fallback only — happy path is plane deliver + interest close.
+            owner = find_job_for_state(state)
+            if owner is not None and runtime is not None:
+                deliver_nested_wizard_completion(owner, interest, runtime.get_job)
             clear_nested_park(state, target_id=child_job_id)
-            emit_wizard_event(
-                self._ctx.emit,
-                self._ctx.wizard_name,
-                WizardEventType.CHILD_COMPLETED,
-                slug=self._ctx.step.slug,
-                step_index=self._ctx.step_index,
-                child_job_id=child_job.id,
-                child_status=child_job.status.value,
-            )
-            return self._complete_success(state)
+            return self._finish_nested_delivered(state)
 
         if child_job.status in {JobStatus.FAILED, JobStatus.CANCELLED}:
             clear_nested_park(state, target_id=child_job_id)

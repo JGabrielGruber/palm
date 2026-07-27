@@ -1,4 +1,8 @@
-"""Operator helpers for parents parked on nested child jobs (interest-based)."""
+"""Operator re-poll / manual resume for parents with open wait interests.
+
+Not the continue plane authority — that is ``WaitPlaneService``. These helpers
+only re-drive a parked parent (list/resume) when an operator acts.
+"""
 
 from __future__ import annotations
 

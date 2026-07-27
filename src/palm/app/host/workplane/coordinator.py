@@ -46,6 +46,15 @@ class WorkPlaneCoordinator:
     def event_journal(self) -> Any | None:
         return self._event_journal
 
+    @property
+    def wait_plane(self) -> Any | None:
+        """Continue plane on the bound runtime (0.55), if started."""
+        try:
+            runtime = self._host._app.runtime()
+        except Exception:
+            return None
+        return getattr(runtime, "wait_plane", None)
+
     # ── wiring (called during host start) ────────────────────────────────────
 
     def wire_work_drain(self) -> None:

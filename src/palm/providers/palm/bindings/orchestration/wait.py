@@ -1,4 +1,7 @@
-"""Local job wait helpers for compositional invocations."""
+"""Blocking poll until a local job satisfies wait_mode (invoke path).
+
+Unrelated to continue-plane wait interests (``palm.wait.interests``).
+"""
 
 from __future__ import annotations
 
