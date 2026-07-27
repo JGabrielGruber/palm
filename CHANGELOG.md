@@ -20,6 +20,7 @@ Vision: [VISION-0.55](docs/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-i
 - **Start** = WorkIntent drain; **continue** = wait interest (not WorkIntent kinds)  
 - **Cleanup:** inverted `ChildCompletionHook` / `resume_parent_after_child` removed — matcher is sole unpark  
 - **0.55.10 Continue plane:** `WaitPlaneService` seats continue next to work-drain; doctor extensions register downward  
+- **0.55.11–12:** single open path + index; nested park interest-only (no dual key)  
 - Session plane remains queued: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)
 
 ## [0.54.10] — 2026-07-26

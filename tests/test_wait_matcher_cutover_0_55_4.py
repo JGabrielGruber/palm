@@ -86,7 +86,9 @@ def test_nested_unpark_via_matcher_only(runtime: EmbeddedRuntime) -> None:
     runtime.wait_until_idle(timeout=5)
 
     assert parent_job.status == JobStatus.WAITING_FOR_INPUT
-    waiting = parent_job.state.get(WizardKeys.WAITING_FOR_CHILD)
+    from palm.patterns.wizard.bindings.resource.child_wait import get_child_wait
+
+    waiting = get_child_wait(parent_job.state)
     assert isinstance(waiting, dict)
     child_job_id = waiting["child_job_id"]
     assert has_open_waits(parent_job.state)
@@ -104,7 +106,7 @@ def test_nested_unpark_via_matcher_only(runtime: EmbeddedRuntime) -> None:
     answers = parent_job.state.get(WizardKeys.ANSWERS) or {}
     assert isinstance(answers.get("child_job"), dict)
     assert not has_open_waits(parent_job.state)
-    assert parent_job.state.get(WizardKeys.WAITING_FOR_CHILD) is None
+    assert get_child_wait(parent_job.state) is None
 
 
 def test_matcher_scan_discovers_owner_without_index() -> None:

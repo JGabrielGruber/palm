@@ -73,7 +73,7 @@
 |-------|-------------|
 | **0.55.10** (this) | Plan + WaitPlaneService + BaseRuntime wire + hoist deferred imports + doctor contributor for neonroot — **done** |
 | **0.55.11** (follow) | Single open path via plane + index discipline — see STATUS |
-| **0.55.12** (follow) | Collapse dual nested state / naming docs for three waits |
+| **0.55.12** (follow) | Collapse dual nested state / naming docs for three waits — **done** |
 
 Adjust boundaries with STATUS note.
 

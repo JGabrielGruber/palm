@@ -34,10 +34,28 @@ Legacy **display** fields remain: `waiting_for_child`, `waiting_for_child_job_id
 
 Do **not** encode resume as a WorkIntent kind. Do **not** reintroduce parent-resume from completers.
 
+## Nested state collapse (0.55.12)
+
+| Before | After |
+|--------|--------|
+| Dual keys: `WizardKeys.WAITING_FOR_CHILD` **and** `palm.wait.interests` | **Interest only** for new parks (`meta.source=nested_wizard`) |
+| `get_child_wait` read dual key | Projects from interest; **reads dual key only for pre-0.55.12 snapshots** |
+
+Do not write `WAITING_FOR_CHILD` for new parks. Operator fields (`waiting_for_child` in prompts) remain as **projections** of interest.
+
+### Three “waits” (naming)
+
+| Name | Meaning | Home |
+|------|---------|------|
+| **Interest wait** | Continue plane park | `palm.wait.interests` / WaitPlaneService |
+| **Child-wait UX** | Prompt/inspect fields | derived from interest via `get_child_wait` |
+| **Invoke wait** | Blocking poll until job ready | `providers/palm/.../wait.py` (`wait_for_job`) — not interest |
+
 ## Upgrade checklist
 
 - [ ] Nested custom parks call `open_wait_interest` / `make_job_wait` (or wizard `set_child_wait`)
 - [ ] Remove any use of `ChildCompletionHook` or `resume_parent_after_child`
+- [ ] Do not depend on `state[WAITING_FOR_CHILD]` for new parks — use `get_child_wait` or `waiting_on`
 - [ ] Operators: `waiting_on` explains *why* parked; matcher continues when the target completes
 - [ ] Workload stub: `open_workload_wait` + `emit_workload_*` (full engine → 0.56)
 

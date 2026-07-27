@@ -16,7 +16,6 @@ from palm.core.wait import (
     open_wait_on_job,
 )
 from palm.definitions import FlowDefinition, ResourceDefinition
-from palm.patterns.wizard import WizardKeys
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
 from palm.storages import memory  # noqa: F401
@@ -145,6 +144,8 @@ def _nested_flows() -> tuple[FlowDefinition, FlowDefinition, ResourceDefinition]
 
 def test_nested_mid_wait_survives_runtime_restart() -> None:
     """Park parent mid-child-wait, restart runtime, rehydrate interest, complete."""
+    from palm.patterns.wizard.bindings.resource.child_wait import get_child_wait
+
     storage = StorageEngine()
     storage.initialize(backend="memory")
     child_def, parent_def, res_def = _nested_flows()
@@ -161,7 +162,7 @@ def test_nested_mid_wait_survives_runtime_restart() -> None:
         assert parent_job.status == JobStatus.WAITING_FOR_INPUT
         assert has_open_waits(parent_job.state)
 
-        waiting = parent_job.state.get(WizardKeys.WAITING_FOR_CHILD)
+        waiting = get_child_wait(parent_job.state)
         assert isinstance(waiting, dict)
         child_job_id = str(waiting["child_job_id"])
         child_job = rt1.get_job(child_job_id)
@@ -198,7 +199,7 @@ def test_nested_mid_wait_survives_runtime_restart() -> None:
         assert child_done.status == JobStatus.SUCCEEDED
         assert parent_done.status == JobStatus.SUCCEEDED
         assert not has_open_waits(parent_done.state)
-        assert parent_done.state.get(WizardKeys.WAITING_FOR_CHILD) is None
+        assert get_child_wait(parent_done.state) is None
     finally:
         rt2.stop()
         storage.shutdown()

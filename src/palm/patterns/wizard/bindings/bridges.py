@@ -20,7 +20,6 @@ from palm.common.patterns._registry import (
     register_read_model_builder,
 )
 from palm.core.orchestration import Job
-from palm.core.wait import WAIT_KIND_JOB, find_wait_interests
 from palm.patterns.wizard.bindings.behavior_tree.backtrack import can_backtrack_to
 from palm.patterns.wizard.bindings.resource.child_wait import (
     get_child_wait,
@@ -55,9 +54,7 @@ def _wizard_previous_step(executable: Any, state: Any) -> str:
 
 
 def _wizard_parent_is_waiting(job: Job) -> bool:
-    """Parked on nested child: wait interest and/or wizard child-wait payload."""
-    if find_wait_interests(job.state, kind=WAIT_KIND_JOB):
-        return True
+    """Parked on nested child — interest authority (get_child_wait projects it)."""
     waiting = get_child_wait(job.state)
     return isinstance(waiting, dict) and bool(waiting.get("child_job_id"))
 

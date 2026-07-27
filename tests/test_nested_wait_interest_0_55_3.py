@@ -13,6 +13,8 @@ from palm.patterns.wizard.bindings.resource.child_wait import (
 
 
 def test_set_child_wait_opens_job_interest() -> None:
+    from palm.patterns.wizard.bindings.context.keys import WizardKeys
+
     state = JobState()
     payload = {
         "step_slug": "spawn",
@@ -27,6 +29,8 @@ def test_set_child_wait_opens_job_interest() -> None:
     waiting = get_child_wait(state)
     assert waiting is not None
     assert waiting["child_job_id"] == "child-abc"
+    # Dual key not written — interest is authority (0.55.12).
+    assert state.get(WizardKeys.WAITING_FOR_CHILD) is None
 
     interests = list_wait_interests(state)
     assert len(interests) == 1
@@ -75,3 +79,17 @@ def test_set_child_wait_refresh_replaces_same_target() -> None:
 
 def test_wait_interest_from_child_wait_requires_child_id() -> None:
     assert wait_interest_from_child_wait({"step_slug": "x"}) is None
+
+
+def test_legacy_waiting_for_child_key_still_readable() -> None:
+    """Pre-0.55.12 snapshots with dual key still project via get_child_wait."""
+    from palm.patterns.wizard.bindings.context.keys import WizardKeys
+
+    state = JobState()
+    state.set(
+        WizardKeys.WAITING_FOR_CHILD,
+        {"child_job_id": "legacy-c", "step_slug": "old", "output_key": "o"},
+    )
+    waiting = get_child_wait(state)
+    assert waiting is not None
+    assert waiting["child_job_id"] == "legacy-c"

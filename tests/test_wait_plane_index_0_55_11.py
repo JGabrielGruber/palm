@@ -7,7 +7,6 @@ from palm.common.wait import WaitPlaneService
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import WAIT_KIND_JOB, has_open_waits, list_wait_interests, make_job_wait
 from palm.definitions import FlowDefinition, ResourceDefinition
-from palm.patterns.wizard import WizardKeys
 from palm.providers.palm.bindings.runtimes.wiring import bind_palm_runtime, clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
 
@@ -98,7 +97,9 @@ def test_nested_park_registers_on_bound_plane() -> None:
         parent_job = rt.submit_flow("parent-idx-flow")
         rt.wait_until_idle(timeout=5)
         assert parent_job.status == JobStatus.WAITING_FOR_INPUT
-        waiting = parent_job.state.get(WizardKeys.WAITING_FOR_CHILD)
+        from palm.patterns.wizard.bindings.resource.child_wait import get_child_wait
+
+        waiting = get_child_wait(parent_job.state)
         assert isinstance(waiting, dict)
         child_id = str(waiting["child_job_id"])
 
