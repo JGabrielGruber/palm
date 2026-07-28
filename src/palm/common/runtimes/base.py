@@ -12,6 +12,7 @@ from typing import Any, ClassVar
 
 import palm.patterns  # — register patterns
 import palm.providers  # — register providers
+import palm.runners  # register WorkloadRuntime adapters
 import palm.storages  # noqa: F401 — register core backends
 from palm import __version__
 from palm.common import DefinitionExecutor, DefinitionRepository, InstanceRepository
@@ -30,6 +31,7 @@ from palm.common.runtimes.schedulers import QueuedScheduler
 from palm.common.runtimes.wiring import SchedulerPolicy, resolve_scheduler
 from palm.common.storage import StorageFactory
 from palm.common.wait.plane import WaitPlaneService
+from palm.common.workload.bootstrap import initialize_workload_engine
 from palm.core import (
     AuthEngine,
     BehaviorTreeEngine,
@@ -41,6 +43,7 @@ from palm.core import (
     StorageEngine,
 )
 from palm.core.context import BaseState
+from palm.core.workload import WorkloadEngine
 from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
@@ -68,6 +71,7 @@ class BaseRuntime:
         self.event = EventEngine()
         self.behavior_tree = BehaviorTreeEngine()
         self.resource = ResourceEngine()
+        self.workload = WorkloadEngine()
         self.auth = AuthEngine()
         self.orchestration = OrchestrationEngine()
         self._owns_storage = storage is None
@@ -135,6 +139,18 @@ class BaseRuntime:
         if cache_options is not None:
             resource_options["resource_cache"] = cache_options
         self.resource.initialize(**resource_options)
+
+        def _publish_workload(event_type: str, payload: dict[str, Any]) -> None:
+            self.event.emit(event_type, **payload)
+
+        initialize_workload_engine(
+            self.workload,
+            host_enabled=bool(options.get("workload_host_enabled", False)),
+            work_root=options.get("workload_work_root") or options.get("data_dir"),
+            default_runtime=options.get("workload_default_runtime"),
+            publish_event=_publish_workload,
+        )
+
         self.auth.initialize()
         authenticate_runtime(self.auth, options.get("credentials"))
 
@@ -240,6 +256,8 @@ class BaseRuntime:
             self.storage.shutdown()
         self.orchestration.shutdown()
         self.behavior_tree.shutdown()
+        if self.workload.is_initialized:
+            self.workload.shutdown()
         self.resource.shutdown()
         self.auth.shutdown()
         self.context.shutdown()

@@ -68,6 +68,10 @@ class PalmSettings(BaseSettings):
     # 0.53.8 — declare composition capability "neonroot" (hermetic runners). Does not
     # install the CLI; doctor soft-flags when declared but neonroot is missing on PATH.
     enable_neonroot_runners: bool = True
+    # 0.56 — Workload plane: host subprocess runtime (default OFF; not multi-tenant safe)
+    workload_host_enabled: bool = False
+    # Optional default WorkloadRuntime name when Spec.placement.runtime is unset
+    workload_default_runtime: str | None = None
     webhook_urls: list[str] = Field(default_factory=list)
     webhook_event_types: list[str] = Field(default_factory=list)
     worker_ready_timeout: float = 5.0

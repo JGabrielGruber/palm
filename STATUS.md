@@ -112,11 +112,11 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 | Slice | Status |
 |-------|--------|
-| **0.56.0–0.56.2** ADR-024 + core engine + Spec/Result/status/registry + WorkloadLeaf contract tests | ✅ foundation landed (coherent cut) |
-| **0.56.3** host runtime default OFF + doctor | 📋 next |
-| **0.56.4+** neonroot adapter, warm workspace, execution.workloads CQRS, placement, events dogfood, mesh | 📋 queued |
+| **0.56.0–0.56.2** ADR-024 + core engine + Spec/Result/status/registry + WorkloadLeaf contract tests | ✅ foundation landed |
+| **0.56.3–0.56.4** `palm/runners/` host (default **OFF**) + neonroot WorkloadRuntime; BaseRuntime wires engine; doctor `workloads` / host warning; settings `workload_host_enabled` | ✅ runners cut landed |
+| **0.56.5+** warm workspace, execution.workloads CQRS, placement hosts, events dogfood, provider façade collapse, mesh | 📋 queued |
 
-**Package law:** `palm/core/workload/` (pure) · `palm/common/workload/` (placement/ownership helpers later) · `palm/runners/*` · `services/execution/workloads/` · wait kind socket already from 0.55.
+**Package law:** `palm/core/workload/` (pure) · `palm/common/workload/` (wire/doctor helpers) · `palm/runners/*` · `services/execution/workloads/` · wait kind socket already from 0.55.
 
 ## Horizon
 

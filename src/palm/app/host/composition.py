@@ -31,6 +31,7 @@ Capability = Literal[
     "analytics",
     "projections",
     "neonroot",  # 0.53.8 — hermetic runners available (provider optional at CLI)
+    "workloads",  # 0.56 — WorkloadEngine plane (host OFF by default)
 ]
 
 #: The full service set the host builds today (pinned to CORE_SERVICE_PROVIDERS by tests).
@@ -48,7 +49,15 @@ CORE_SERVICES: tuple[ServiceName, ...] = ("system", "definitions", "execution")
 SERVER_SURFACES: tuple[SurfaceName, ...] = ("rest", "websocket", "mcp", "explorer", "studio")
 #: Background/optional capabilities on for a full host by default.
 DEFAULT_CAPABILITIES: frozenset[Capability] = frozenset(
-    {"outbox", "compensation", "journal", "analytics", "projections", "neonroot"}
+    {
+        "outbox",
+        "compensation",
+        "journal",
+        "analytics",
+        "projections",
+        "neonroot",
+        "workloads",
+    }
 )
 
 

@@ -526,8 +526,8 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 | Patch | Deliverable | Hardens against |
 |-------|-------------|-----------------|
 | **0.56.0–0.56.2** | ADR-024 accepted; core engine + Spec/Result/status + registry; **WorkloadLeaf** + contract tests; glossary | Naming drift · core purity · divergent pattern APIs — **landed as one coherent foundation** |
-| **0.56.3** | **host** runtime default **OFF** + settings + doctor | Accidental exec |
-| **0.56.4** | neonroot adapter + resource façade | Dogfood break |
+| **0.56.3–0.56.4** | **host** runtime default **OFF** + settings + doctor; **neonroot** WorkloadRuntime (`palm/runners/`); BaseRuntime wires engine | Accidental exec · dual isolation model — **runners cut landed** (provider façade dogfood still until CQRS/collapse) |
+| **0.56.4b** | resource façade → engine (optional collapse) | Dogfood break |
 | **0.56.5** | Warm workspace start+exec | Cold-only UX |
 | **0.56.6** | **`execution.workloads`** + **CQRS** + REST | Edge→engine bypass; wrong domain |
 | **0.56.7** | Host registry v0 + placement + capability flag | Ad-hoc host strings |

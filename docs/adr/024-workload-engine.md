@@ -172,7 +172,7 @@ Existing 0.54 definitions remain valid through façades until explicit deprecati
 - [x] No neonroot/docker/k8s imports under `palm/core/`  
 - [ ] Product start path uses **execution** CQRS (`workload.*`)  
 - [x] WorkloadLeaf contract tests (engine + fake runtime) green  
-- [ ] Host runtime default off  
+- [x] Host runtime default off (settings + engine policy + doctor warn when on)  
 - [x] Hermetic policy cannot select host (engine unit test)  
 - [x] Cancel/compensation stops owned workloads (engine `stop_owned` + leaf contract test)  
 - [x] `workload.*` events small (unit test); trigger path dogfood later  

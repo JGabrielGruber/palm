@@ -118,12 +118,31 @@ def build_doctor_report(
                 if lag > 100:
                     issues.append(f"journal consumer {name!r} lag={lag}")
 
-    # Provider/app doctor sections register downward (e.g. neonroot).
+    # Provider/app doctor sections register downward (e.g. neonroot, host workload).
     ext_sections, ext_issues = collect_doctor_extensions(runtime)
     issues.extend(ext_issues)
     neonroot = ext_sections.get("neonroot")
     if not isinstance(neonroot, dict):
         neonroot = {}
+    workload_host = ext_sections.get("workload_host")
+    if not isinstance(workload_host, dict):
+        workload_host = {}
+
+    from palm.common.workload.bootstrap import workload_doctor_section
+
+    try:
+        workloads = workload_doctor_section(runtime)
+        issues.extend(str(i) for i in (workloads.get("issues") or []))
+    except Exception as exc:
+        workloads = {"error": f"workload doctor failed: {exc}"}
+
+    # Also expose workload runtimes in registries snapshot
+    try:
+        from palm.core.workload.registry import workload_runtime_registry
+
+        registries["workload_runtimes"] = sorted(workload_runtime_registry.names())
+    except Exception:
+        registries["workload_runtimes"] = []
 
     return {
         "status": "ok" if not issues else "degraded",
@@ -138,6 +157,8 @@ def build_doctor_report(
         "resource_count": resource_count,
         "resource_preflight": resource_preflight,
         "neonroot": neonroot,
+        "workload_host": workload_host,
+        "workloads": workloads,
         "control_plane": cp or {
             "work_pending": 0,
             "work_drain_running": False,

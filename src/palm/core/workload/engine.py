@@ -165,6 +165,11 @@ class WorkloadEngine(BasePalmEngine):
 
             runtime_name = self._select_runtime_name(spec)
             runtime = self._resolve_runtime(runtime_name)
+            if not runtime.is_enabled():
+                raise WorkloadPolicyError(
+                    f"Runtime {runtime_name!r} is disabled "
+                    f"(host runtime requires workload_host_enabled / PALM_WORKLOAD_HOST_ENABLED)"
+                )
             self._enforce_isolation_policy(spec, runtime)
 
             wid = workload_id or str(uuid.uuid4())

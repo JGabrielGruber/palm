@@ -74,6 +74,10 @@ class WorkloadRuntime(ABC):
     def capabilities(self) -> RuntimeCapabilities:
         """Return isolation modes and kinds this runtime can honor."""
 
+    def is_enabled(self) -> bool:
+        """Whether this runtime instance may accept starts (host default off)."""
+        return True
+
     @abstractmethod
     def start(
         self,

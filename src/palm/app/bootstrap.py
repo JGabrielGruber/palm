@@ -12,6 +12,7 @@ from typing import Any
 import palm.common.transforms  # autoload common transform rules
 import palm.patterns  # — autoload pattern apps
 import palm.providers  # — autoload provider apps
+import palm.runners  # noqa: F401 — autoload WorkloadRuntime runners
 import palm.storages  # noqa: F401 — autoload core storage apps
 from palm.app.host.composition import CompositionProfile
 from palm.app.host.roles import DeploymentProfile
@@ -218,6 +219,10 @@ def runtime_start_options(settings: PalmSettings, **overrides: Any) -> dict[str,
         "ttl_seconds": settings.resource_cache_ttl_seconds,
         "max_entries": settings.resource_cache_max_entries,
     }
+    options["workload_host_enabled"] = settings.workload_host_enabled
+    options["workload_default_runtime"] = settings.workload_default_runtime
+    if settings.data_dir is not None:
+        options["data_dir"] = settings.data_dir
     options.update(overrides)
     return options
 
