@@ -16,6 +16,7 @@ from palm.patterns.wizard.flow.phases.input import build_input_phase
 from palm.patterns.wizard.flow.phases.resource import build_resource_phase
 from palm.patterns.wizard.flow.phases.summary import build_summary_phase
 from palm.patterns.wizard.flow.phases.transform import build_transform_phase
+from palm.patterns.wizard.flow.phases.workload import build_workload_phase
 
 WizardStepFactory = Callable[[WizardPhaseContext], BaseNode]
 
@@ -84,6 +85,7 @@ def register_builtin_wizard_step_kinds(
     target.register("collection", build_collection_phase)
     target.register("resource", build_resource_phase)
     target.register("transform", build_transform_phase)
+    target.register("workload", build_workload_phase)
 
     from palm.patterns.wizard.flow.branch.phases.step import build_branch_phase
 

@@ -86,25 +86,24 @@ options:
 
 One ready node per tick (stable order among ready); state under `dag.*`.
 
-### Assist run-code (0.54.9) — basic NeonRoot loop
+### run-python (0.56) — Workload plane dogfood
 
-Persisted wizard (like todo-builder). Textbook resource-action flow::
+Simple wizard on the **workload** contract (not a special resource loop)::
 
-    palm flow start hermetic-run-code
-    # or palm_assist(params={flow_id: "hermetic-run-code"})
+    palm flow start run-python
+    # alias: palm flow start hermetic-run-code
+    # host:  PALM_WORKLOAD_HOST_ENABLED=1
+    # neonroot: CLI + palm-ci image
 
 | Step | What happens |
 |------|----------------|
-| **image** | Operator picks allowlisted NeonRoot image (`palm-ci` / `palm-docs`) |
-| **code** | Operator writes `payload/main.py` content (`print(...)` for stdout) |
-| **run** | Resource `hermetic-run-script` → `neonroot.run_script` (stage + spawn) |
-| **remember_*** | Transform extracts `stdout` / `exit_code` into wizard memory |
-| **result** | Display binds `{{ state.stdout }}` / `{{ state.exit_code }}` to the turn |
-| **summary** | Confirm answers (includes full `run_result`) |
+| **runtime** | `auto` \| `host` \| `neonroot` — same Spec language, different placement |
+| **code** | Python source for `python -c …` |
+| **run** | `step_kind: workload` → WorkloadEngine → host or neonroot runtime |
+| **result** | Display `exit_code` + stdout |
 
-Staging uses [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md). Not in-engine `exec`.  
-**Definitions (v0):** flow + process + resource `hermetic-run-script`.  
-**Later (optional):** multi-file projects, snippet catalog, `list_images`, saved artifacts.
+`auto` prefers neonroot when the CLI is present, else host (must be enabled).  
+Heavy multi-file CI dogfood remains the hermetic job / DAG flows above.
 
 ### DAG ready-set (0.54.8)
 

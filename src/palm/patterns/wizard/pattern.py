@@ -11,6 +11,7 @@ from palm.core.context import BaseState, ContextEngine
 from palm.core.event import EventContext, EventEngine
 from palm.core.orchestration.input_capable import JobInspectable
 from palm.core.resource import ResourceEngine
+from palm.core.workload import WorkloadEngine
 from palm.patterns.wizard.bindings.behavior_tree.backtrack import (
     WizardSequenceNode,
     request_backtrack,
@@ -34,8 +35,8 @@ class WizardPattern(BasePattern, JobInspectable):
     """
     Interactive wizard driven entirely by its behavior tree.
 
-    Phase logic (input, collection, summary, commit, resource, transform,
-    backtrack, completion) lives under ``palm.patterns.wizard.flow.phases``.
+    Phase logic (input, collection, summary, commit, resource, workload,
+    transform, backtrack, completion) lives under ``palm.patterns.wizard.flow.phases``.
     """
 
     def __init__(
@@ -46,6 +47,7 @@ class WizardPattern(BasePattern, JobInspectable):
         steps: int | None = None,
         event_engine: EventEngine | None = None,
         resource_engine: ResourceEngine | None = None,
+        workload_engine: WorkloadEngine | None = None,
         commit_registry: CommitRegistry | None = None,
         context_engine: ContextEngine | None = None,
     ) -> None:
@@ -56,6 +58,7 @@ class WizardPattern(BasePattern, JobInspectable):
         self._config = config
         self._event_engine = event_engine
         self._resource_engine = resource_engine
+        self._workload_engine = workload_engine
         self._commit_registry = commit_registry or default_commit_registry()
         self._context_engine = context_engine
         self._root: RootNode
@@ -66,6 +69,7 @@ class WizardPattern(BasePattern, JobInspectable):
             emit=self._bridge_emit,
             commit_registry=self._commit_registry,
             resource_engine=self._resource_engine,
+            workload_engine=self._workload_engine,
             context_engine=self._context_engine,
         )
 

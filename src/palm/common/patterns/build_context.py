@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Any
 from palm.core.context import ContextEngine, StateSchema
 from palm.core.event import EventEngine
 from palm.core.resource import ResourceEngine
+from palm.core.workload import WorkloadEngine
 
 if TYPE_CHECKING:
     from palm.common.persistence.definition_repository import DefinitionRepository
@@ -26,6 +27,7 @@ class PatternBuildContext:
     event_engine: EventEngine | None = None
     context_engine: ContextEngine | None = None
     resource_engine: ResourceEngine | None = None
+    workload_engine: WorkloadEngine | None = None
     commit_registry: Any | None = None
     definition_repository: DefinitionRepository | None = None
 

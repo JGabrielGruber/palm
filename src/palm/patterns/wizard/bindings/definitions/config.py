@@ -65,6 +65,11 @@ class WizardStepConfig:
             raise ValueError(f"Transform step {self.slug!r} requires transform configuration")
         if self.step_kind == "resource" and not self.resource_ref:
             raise ValueError(f"Resource step {self.slug!r} requires resource_ref")
+        if self.step_kind == "workload" and not self.params:
+            raise ValueError(
+                f"Workload step {self.slug!r} requires params "
+                "(Spec fields or run-python sugar: code/runtime)"
+            )
         if self.step_kind == "branch":
             from palm.patterns.wizard.flow.branch.predicate import validate_when_clause
 

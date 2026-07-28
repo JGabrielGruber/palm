@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from palm.core.behavior_tree import RootNode
 from palm.core.resource import ResourceEngine
+from palm.core.workload import WorkloadEngine
 from palm.patterns.wizard.bindings.definitions.config import WizardConfig
 from palm.patterns.wizard.bindings.compensation.handler import CommitRegistry
 from palm.patterns.wizard.flow.phases._base import EventEmitter, WizardPhaseContext
@@ -32,6 +33,7 @@ def build_wizard_tree(
     *,
     commit_registry: CommitRegistry | None = None,
     resource_engine: ResourceEngine | None = None,
+    workload_engine: WorkloadEngine | None = None,
     context_engine: ContextEngine | None = None,
     step_registry: WizardStepKindRegistry | None = None,
 ) -> tuple[RootNode, WizardSequenceNode]:
@@ -58,6 +60,7 @@ def build_wizard_tree(
                 emit=emit,
                 commit_registry=commit_registry,
                 resource_engine=resource_engine,
+                workload_engine=workload_engine,
                 context_engine=context_engine,
             )
         )

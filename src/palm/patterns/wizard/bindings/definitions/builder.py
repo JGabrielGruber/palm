@@ -42,6 +42,7 @@ def build(
         "name": flow.name,
         "event_engine": context.event_engine,
         "resource_engine": context.resource_engine,
+        "workload_engine": getattr(context, "workload_engine", None),
         "commit_registry": commit_registry,
     }
 

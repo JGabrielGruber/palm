@@ -5,9 +5,17 @@ from palm.common.workload.bootstrap import (
     initialize_workload_engine,
     workload_doctor_section,
 )
+from palm.common.workload.run_python import (
+    build_run_python_spec,
+    resolve_runtime_choice,
+    spec_from_bound_params,
+)
 
 __all__ = [
     "build_bound_runtimes",
+    "build_run_python_spec",
     "initialize_workload_engine",
+    "resolve_runtime_choice",
+    "spec_from_bound_params",
     "workload_doctor_section",
 ]

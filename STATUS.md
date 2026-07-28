@@ -115,6 +115,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.56.0–0.56.2** ADR-024 + core engine + Spec/Result/status/registry + WorkloadLeaf contract tests | ✅ foundation landed |
 | **0.56.3–0.56.4** `palm/runners/` host (default **OFF**) + neonroot WorkloadRuntime; BaseRuntime wires engine; doctor `workloads` / host warning; settings `workload_host_enabled` | ✅ runners cut landed |
 | **0.56.5–0.56.6** host warm **workspace** + exec; **`ExecutionService.workloads`** + CQRS (`workload.start|exec|stop|…`); host registry v0 | ✅ product path landed |
+| **0.56.dogfood** wizard **`step_kind: workload`** + **run-python** flow (host \| neonroot \| auto); hermetic-run-code alias | ✅ simple contract dogfood |
 | **0.56.7+** full placement, events dogfood, provider façade collapse, neonroot warm, mesh | 📋 queued |
 
 **Package law:** `palm/core/workload/` (pure) · `palm/common/workload/` (wire/doctor helpers) · `palm/runners/*` · `services/execution/workloads/` · wait kind socket already from 0.55.
