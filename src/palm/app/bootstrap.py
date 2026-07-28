@@ -160,7 +160,8 @@ def _capabilities_from_settings(settings: PalmSettings) -> frozenset[str]:
     the host assembles, so they are always available on a settings-composed host (a lean
     *explicit* composition can still omit them). See VISION-0.51 / ADR-020.
     """
-    capabilities: set[str] = {"journal", "projections"}
+    # journal, projections, workloads: always wired on settings-composed hosts
+    capabilities: set[str] = {"journal", "projections", "workloads"}
     if settings.enable_compensation:
         capabilities.add("compensation")
     if settings.enable_event_outbox:
@@ -171,7 +172,7 @@ def _capabilities_from_settings(settings: PalmSettings) -> frozenset[str]:
         capabilities.add("work_drain")
     if settings.analytics_enabled:
         capabilities.add("analytics")
-    # 0.53.8 — soft composition flag for hermetic runners (does not load NeonRoot).
+    # NeonRoot WorkloadRuntime availability (CLI optional; does not install binary).
     if getattr(settings, "enable_neonroot_runners", True):
         capabilities.add("neonroot")
     return frozenset(capabilities)

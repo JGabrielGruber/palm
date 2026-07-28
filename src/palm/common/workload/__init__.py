@@ -5,7 +5,6 @@ from palm.common.workload.bootstrap import (
     initialize_workload_engine,
     workload_doctor_section,
 )
-from palm.common.workload.neonroot_facade import spawn_params_to_spec, try_spawn_via_workload
 from palm.common.workload.run_python import (
     build_run_python_spec,
     resolve_runtime_choice,
@@ -17,8 +16,6 @@ __all__ = [
     "build_run_python_spec",
     "initialize_workload_engine",
     "resolve_runtime_choice",
-    "spawn_params_to_spec",
     "spec_from_bound_params",
-    "try_spawn_via_workload",
     "workload_doctor_section",
 ]

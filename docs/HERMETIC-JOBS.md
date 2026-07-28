@@ -12,18 +12,22 @@
 | **WorkloadRuntime** | Adapter (host, neonroot, ssh, palm, …) under `palm/runners/` |
 | **WorkloadSpec** | Portable JSON intent (argv lists, image, isolation, placement) |
 | **Provider** | ResourceEngine backend (kv, rest, …) — **speak**, not long-term isolation home |
-| **NeonRoot (today)** | Still a **provider** façade for 0.54 dogfood; becomes a **WorkloadRuntime** in 0.56 |
+| **NeonRoot** | **WorkloadRuntime** only (`palm.runners.neonroot`) — provider removed 0.56 |
 
 Product path (0.56+): **allocate** with WorkloadEngine · **speak** with providers · **react** with events.  
 Wait interest kind `workload` is already live from 0.55; engine emits `workload.*` lifecycle events.
 
-## Contract (resource node — 0.54 dogfood path)
+## Contract (0.56+ — WorkloadSpec / neonroot **runtime**)
 
-| Field | Provider / action | Role |
-|-------|-------------------|------|
-| provider | `neonroot` | Hermetic runner (façade until workload runtime lands) |
-| action | `health` \| `spawn` | Preflight or job |
-| params | see below | Job specification |
+Isolation is **not** a ResourceEngine provider. Use:
+
+| Surface | How |
+|---------|-----|
+| Wizard | `step_kind: workload` + Spec / sugar |
+| DAG | node `workload: { kind, image, command, placement.runtime: neonroot, … }` |
+| API | `ExecutionService.workloads` / CQRS `workload.*` |
+
+Legacy spawn param shape still validated by `palm.runners.neonroot.contract` (maps to Spec).
 
 ### `spawn` params
 
@@ -41,7 +45,7 @@ Wait interest kind `workload` is already live from 0.55; engine emits `workload.
 
 Run-dir + bind notes: [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md).
 
-Python validation: `palm.providers.neonroot.contract.validate_hermetic_job_params`.
+Python validation: `palm.runners.neonroot.contract.validate_hermetic_job_params`.
 
 NeonRoot workspaces run on **tmpfs** (fast, disposable). Promote results with
 `--output` or Palm post-steps — not whole-tree sync.

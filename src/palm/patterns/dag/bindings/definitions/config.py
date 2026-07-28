@@ -8,7 +8,7 @@ from typing import Any
 
 @dataclass(frozen=True)
 class DagNodeSpec:
-    """One DAG node that invokes a resource (definition ref or provider)."""
+    """One DAG node: resource invoke **or** workload Spec (0.56)."""
 
     id: str
     resource_ref: str | None = None
@@ -16,14 +16,24 @@ class DagNodeSpec:
     action: str | None = None
     resource_id: str | None = None
     params: dict[str, Any] = field(default_factory=dict)
+    #: WorkloadSpec mapping (or run-python sugar). Exclusive of resource_ref/provider.
+    workload: dict[str, Any] | None = None
     output_key: str | None = None
     depends_on: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.id or not str(self.id).strip():
             raise ValueError("DAG node id must be non-empty")
-        if not self.resource_ref and not self.provider:
-            raise ValueError(f"DAG node {self.id!r} requires resource_ref or provider")
+        has_resource = bool(self.resource_ref or self.provider)
+        has_workload = bool(self.workload)
+        if has_resource and has_workload:
+            raise ValueError(
+                f"DAG node {self.id!r} cannot set both resource and workload"
+            )
+        if not has_resource and not has_workload:
+            raise ValueError(
+                f"DAG node {self.id!r} requires resource_ref/provider or workload"
+            )
 
     @classmethod
     def from_mapping(cls, data: dict[str, Any]) -> DagNodeSpec:
@@ -38,6 +48,9 @@ class DagNodeSpec:
         params = data.get("params")
         if params is not None and not isinstance(params, dict):
             raise ValueError(f"DAG node {node_id!r}: params must be a dict")
+        workload = data.get("workload")
+        if workload is not None and not isinstance(workload, dict):
+            raise ValueError(f"DAG node {node_id!r}: workload must be a dict (Spec)")
         return cls(
             id=node_id,
             resource_ref=str(data["resource_ref"]) if data.get("resource_ref") else None,
@@ -45,6 +58,7 @@ class DagNodeSpec:
             action=str(data["action"]) if data.get("action") else None,
             resource_id=str(data["resource_id"]) if data.get("resource_id") else None,
             params=dict(params or {}),
+            workload=dict(workload) if isinstance(workload, dict) else None,
             output_key=str(data["output_key"]) if data.get("output_key") else None,
             depends_on=deps,
         )
@@ -106,6 +120,7 @@ def _apply_implicit_chain(nodes: tuple[DagNodeSpec, ...]) -> tuple[DagNodeSpec, 
                 action=n.action,
                 resource_id=n.resource_id,
                 params=dict(n.params),
+                workload=dict(n.workload) if n.workload else None,
                 output_key=n.output_key,
                 depends_on=deps,
             )

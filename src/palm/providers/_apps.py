@@ -13,7 +13,7 @@ INSTALLED_PROVIDERS: tuple[str, ...] = (
     "palm",
     "kv",
     "file",
-    "neonroot",  # 0.53 — optional host CLI; health is honest when missing
+    # neonroot removed 0.56 — isolation is WorkloadRuntime under palm.runners.neonroot
 )
 
 

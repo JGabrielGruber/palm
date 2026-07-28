@@ -6,10 +6,8 @@ from examples.definitions.workload_followup import WORKLOAD_FOLLOWUP_FLOW
 from palm.app.host.workplane.work_drain_service import WorkDrainService
 from palm.common.triggers import parse_triggers
 from palm.common.triggers.registry import TriggerRegistry
-from palm.common.workload.neonroot_facade import spawn_params_to_spec
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
-from palm.core.workload import IsolationPolicy, WorkloadKind
 
 
 def test_parse_on_workload_trigger() -> None:
@@ -103,18 +101,24 @@ def test_work_drain_enqueues_on_workload_stopped() -> None:
     engine.shutdown()
 
 
-def test_spawn_params_to_spec_hermetic() -> None:
-    spec = spawn_params_to_spec(
-        {
-            "image": "palm-ci",
-            "command": ["true"],
-            "seed": "none",
-            "isolated": True,
-            "timeout": 30,
-        }
+def test_hermetic_workload_spec_shape() -> None:
+    from palm.core.workload import (
+        IsolationPolicy,
+        LifecyclePolicy,
+        WorkloadKind,
+        WorkloadPlacement,
+        WorkloadSpec,
     )
-    assert spec.kind is WorkloadKind.RUN
-    assert spec.isolation is IsolationPolicy.HERMETIC
+
+    spec = WorkloadSpec(
+        kind=WorkloadKind.RUN,
+        isolation=IsolationPolicy.HERMETIC,
+        lifecycle=LifecyclePolicy.JOB,
+        image="palm-ci",
+        command=("true",),
+        seed={"type": "none"},
+        placement=WorkloadPlacement(runtime="neonroot"),
+        timeout_s=30,
+    )
     assert spec.placement.runtime == "neonroot"
-    assert spec.image == "palm-ci"
-    assert spec.command == ("true",)
+    assert spec.isolation is IsolationPolicy.HERMETIC

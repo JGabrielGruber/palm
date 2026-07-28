@@ -1,18 +1,21 @@
 """
-DAG pattern — execute resource nodes with dependencies (0.54.3 v0).
+DAG pattern — execute resource **or workload** nodes with dependencies.
 
-v0: one ready node per tick (sequential). Nodes invoke ResourceEngine
-(resource_ref or provider). State keys under ``dag.*``.
+v0: one ready node / drain_ready batch per tick. Resource nodes use
+ResourceEngine; workload nodes use WorkloadEngine (0.56). State under ``dag.*``.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from palm.common.workload.run_python import spec_from_bound_params
 from palm.core.behavior_tree import BasePattern, PatternStatus
 from palm.core.context import BaseState
 from palm.core.resource.engine import ResourceEngine
+from palm.core.resource.invocation import bind_resource_params
 from palm.core.resource.observability import resource_correlation
+from palm.core.workload import WorkloadEngine, WorkloadOwner, WorkloadStatus
 from palm.patterns.dag.bindings.definitions.config import DagConfig, DagNodeSpec
 
 _DAG_KEY = "dag"
@@ -22,7 +25,7 @@ _STATUS_FAILED = "failed"
 
 
 class DagPattern(BasePattern):
-    """Run a DAG of resource invokes; linear or explicit depends_on."""
+    """Run a DAG of resource/workload steps; linear or explicit depends_on."""
 
     def __init__(
         self,
@@ -30,12 +33,14 @@ class DagPattern(BasePattern):
         name: str = "dag",
         config: DagConfig | None = None,
         resource_engine: ResourceEngine | None = None,
+        workload_engine: WorkloadEngine | None = None,
     ) -> None:
         super().__init__(name=name)
         if config is None:
             raise ValueError("DagPattern requires a DagConfig")
         self._config = config
         self._resource_engine = resource_engine
+        self._workload_engine = workload_engine
         self._seeded = False
 
     @property
@@ -160,6 +165,11 @@ class DagPattern(BasePattern):
         dag["current"] = node.id
         state.set(_DAG_KEY, dag)
 
+        output_key = node.output_key or node.id
+
+        if node.workload is not None:
+            return self._run_workload_node(state, dag, node, nodes_state, output_key)
+
         if self._resource_engine is None:
             return self._fail_node(state, dag, node, "ResourceEngine is not configured")
         if not self._resource_engine.is_initialized:
@@ -175,24 +185,92 @@ class DagPattern(BasePattern):
             correlation=resource_correlation(state, wizard=self.name, step_slug=node.id),
         )
 
-        output_key = node.output_key or node.id
         if result.success:
             state.set(output_key, result.data)
-            entry = dict(nodes_state.get(node.id) or {})
-            entry["status"] = _STATUS_SUCCEEDED
-            entry["output_key"] = output_key
-            nodes_state[node.id] = entry
-            dag["nodes"] = nodes_state
-            if self._all_succeeded(dag):
-                dag["status"] = _STATUS_SUCCEEDED
-                dag.pop("current", None)
-                state.set(_DAG_KEY, dag)
-                return PatternStatus.SUCCESS
-            state.set(_DAG_KEY, dag)
-            return PatternStatus.RUNNING
+            return self._succeed_node(state, dag, node, nodes_state, output_key)
 
         err = result.error or "resource invoke failed"
         return self._fail_node(state, dag, node, err)
+
+    def _run_workload_node(
+        self,
+        state: BaseState,
+        dag: dict[str, Any],
+        node: DagNodeSpec,
+        nodes_state: dict[str, Any],
+        output_key: str,
+    ) -> PatternStatus:
+        engine = self._workload_engine
+        if engine is None:
+            return self._fail_node(state, dag, node, "WorkloadEngine is not configured")
+        if not engine.is_initialized:
+            engine.initialize()
+        try:
+            bound = bind_resource_params(dict(node.workload or {}), state)
+            # Merge node.params into workload if present (legacy style)
+            if node.params:
+                bound = {**bound, **bind_resource_params(dict(node.params), state)}
+            # Default hermetic neonroot when isolation/runtime omitted
+            if "kind" not in bound and "command" in bound:
+                bound.setdefault("kind", "run")
+                bound.setdefault("isolation", "hermetic")
+                bound.setdefault("lifecycle", "job")
+                placement = dict(bound.get("placement") or {})
+                placement.setdefault("runtime", "neonroot")
+                bound["placement"] = placement
+            from palm.core.workload import WorkloadSpec
+
+            if bound.get("kind"):
+                spec = WorkloadSpec.from_dict(bound)
+            else:
+                spec = spec_from_bound_params(bound)
+            wl = engine.start(spec, owner=WorkloadOwner(created_by_palm=True))
+        except Exception as exc:
+            return self._fail_node(state, dag, node, str(exc))
+
+        payload = wl.to_dict()
+        state.set(output_key, payload)
+        if wl.status is WorkloadStatus.STOPPED and (
+            wl.result is None or wl.result.success
+        ):
+            return self._succeed_node(state, dag, node, nodes_state, output_key)
+        if wl.status is WorkloadStatus.FAILED or (
+            wl.result is not None and not wl.result.success
+        ):
+            err = (
+                (wl.result.error if wl.result else None)
+                or wl.message
+                or f"workload {wl.status}"
+            )
+            return self._fail_node(state, dag, node, str(err))
+        # RUNNING/READY — treat as success for fire-and-forget workspace; fail closed for v0 runs
+        return self._fail_node(
+            state,
+            dag,
+            node,
+            f"workload not terminal (status={wl.status}); async DAG wait later",
+        )
+
+    def _succeed_node(
+        self,
+        state: BaseState,
+        dag: dict[str, Any],
+        node: DagNodeSpec,
+        nodes_state: dict[str, Any],
+        output_key: str,
+    ) -> PatternStatus:
+        entry = dict(nodes_state.get(node.id) or {})
+        entry["status"] = _STATUS_SUCCEEDED
+        entry["output_key"] = output_key
+        nodes_state[node.id] = entry
+        dag["nodes"] = nodes_state
+        if self._all_succeeded(dag):
+            dag["status"] = _STATUS_SUCCEEDED
+            dag.pop("current", None)
+            state.set(_DAG_KEY, dag)
+            return PatternStatus.SUCCESS
+        state.set(_DAG_KEY, dag)
+        return PatternStatus.RUNNING
 
     def _fail_node(
         self,

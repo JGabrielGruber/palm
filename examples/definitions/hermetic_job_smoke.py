@@ -1,61 +1,28 @@
 """
-Hermetic job smoke — multi-step resource graph (0.54.2).
+Hermetic job smoke — multi-step **workload** graph (0.56; was neonroot provider).
 
-Uses **only** the general ``neonroot`` provider (no domain library provider).
-
-    preflight (health) → hermetic true (spawn)
+    preflight note → hermetic true (WorkloadEngine + neonroot runtime)
 
 Live spawn needs NeonRoot + ``palm-ci`` image (``just ci-image``).
-Health alone works when the CLI is on PATH.
 
     palm flow start hermetic-job-smoke
-    palm resource invoke neonroot-health
+    palm flow start hermetic-job-dag
 """
 
 from __future__ import annotations
 
-from palm.definitions import FlowDefinition, ProcessDefinition, ResourceDefinition
+from palm.definitions import FlowDefinition, ProcessDefinition
 
-# Re-declare thin aliases so this pack is self-contained if load order varies.
-# Canonical copies also live in neonroot_runners.py.
-
-HERMETIC_PREFLIGHT = ResourceDefinition(
-    id="resource-hermetic-preflight",
-    name="hermetic-preflight",
-    provider="neonroot",
-    action="health",
-    params={},
-    output_key="hermetic_preflight",
-    metadata={
-        "example": True,
-        "description": "Hermetic job preflight (neonroot CLI)",
-        "tags": ["hermetic-job", "neonroot", "0.54"],
-        "theme": "0.54",
-        "contract": "hermetic_job",
-    },
-)
-
-HERMETIC_TRUE_JOB = ResourceDefinition(
-    id="resource-hermetic-true-job",
-    name="hermetic-true-job",
-    provider="neonroot",
-    action="spawn",
-    params={
-        "image": "palm-ci",
-        "vault": "palm-ci",
-        "seed": "git-archive",
-        "command": ["true"],
-        "sandbox": True,
-    },
-    output_key="hermetic_true_job",
-    metadata={
-        "example": True,
-        "description": "Minimal hermetic job (spawn true in palm-ci)",
-        "tags": ["hermetic-job", "neonroot", "0.54"],
-        "theme": "0.54",
-        "contract": "hermetic_job",
-    },
-)
+_TRUE_WORKLOAD = {
+    "kind": "run",
+    "isolation": "hermetic",
+    "lifecycle": "job",
+    "image": "palm-ci",
+    "command": ["true"],
+    "seed": {"type": "git_archive"},
+    "placement": {"runtime": "neonroot"},
+    "timeout_s": 120,
+}
 
 HERMETIC_JOB_SMOKE_FLOW = FlowDefinition(
     id="flow-hermetic-job-smoke",
@@ -67,20 +34,22 @@ HERMETIC_JOB_SMOKE_FLOW = FlowDefinition(
         "allow_backtrack": False,
         "steps": [
             {
-                "slug": "preflight",
-                "title": "Hermetic preflight",
-                "prompt": "Probe NeonRoot CLI",
-                "step_kind": "resource",
-                "resource_ref": "hermetic-preflight",
-                "output_key": "hermetic_preflight",
+                "slug": "intro",
+                "title": "Hermetic smoke",
+                "step_kind": "introduction",
+                "required": False,
+                "prompt": (
+                    "Runs a hermetic ``true`` via WorkloadEngine + neonroot runtime "
+                    "(not ResourceEngine). Needs NeonRoot CLI + palm-ci image."
+                ),
             },
             {
                 "slug": "run_true",
                 "title": "Run hermetic true",
-                "prompt": "Spawn palm-ci with command true (needs image)",
-                "step_kind": "resource",
-                "resource_ref": "hermetic-true-job",
+                "prompt": "Spawn palm-ci with command true",
+                "step_kind": "workload",
                 "output_key": "hermetic_true_job",
+                "params": dict(_TRUE_WORKLOAD),
             },
         ],
     },
@@ -92,11 +61,10 @@ HERMETIC_JOB_SMOKE_PROCESS = ProcessDefinition(
     flows=[HERMETIC_JOB_SMOKE_FLOW],
     metadata={
         "example": True,
-        "description": "0.54 purpose-test: multi-step hermetic jobs via neonroot only",
+        "description": "Hermetic true via workload plane (neonroot runtime)",
     },
 )
 
-# 0.54.3 — same graph as a real DAG pattern (resource nodes, implicit linear chain)
 HERMETIC_JOB_DAG_FLOW = FlowDefinition(
     id="flow-hermetic-job-dag",
     name="hermetic-job-dag",
@@ -104,13 +72,8 @@ HERMETIC_JOB_DAG_FLOW = FlowDefinition(
     options={
         "nodes": [
             {
-                "id": "preflight",
-                "resource_ref": "hermetic-preflight",
-                "output_key": "hermetic_preflight",
-            },
-            {
                 "id": "run_true",
-                "resource_ref": "hermetic-true-job",
+                "workload": dict(_TRUE_WORKLOAD),
                 "output_key": "hermetic_true_job",
             },
         ],
@@ -121,13 +84,10 @@ HERMETIC_JOB_DAG_PROCESS = ProcessDefinition(
     id="proc-hermetic-job-dag",
     name="hermetic-job-dag",
     flows=[HERMETIC_JOB_DAG_FLOW],
-    metadata={
-        "example": True,
-        "description": "0.54.3 DAG pattern dogfood: same neonroot nodes as hermetic-job-smoke",
-    },
+    metadata={"example": True, "description": "DAG with workload node (neonroot)"},
 )
 
-# 0.54.4 — fan-out: preflight → (branch_a || branch_b) → join  (v0 runs ready nodes one-at-a-time)
+# Fan-out keeps same true job twice after a linear preflight true
 HERMETIC_JOB_FANOUT_FLOW = FlowDefinition(
     id="flow-hermetic-job-fanout",
     name="hermetic-job-fanout",
@@ -137,26 +97,26 @@ HERMETIC_JOB_FANOUT_FLOW = FlowDefinition(
         "nodes": [
             {
                 "id": "preflight",
-                "resource_ref": "hermetic-preflight",
-                "output_key": "hermetic_preflight",
+                "workload": dict(_TRUE_WORKLOAD),
+                "output_key": "preflight",
             },
             {
                 "id": "branch_a",
-                "resource_ref": "hermetic-true-job",
-                "depends_on": ["preflight"],
+                "workload": dict(_TRUE_WORKLOAD),
                 "output_key": "branch_a",
+                "depends_on": ["preflight"],
             },
             {
                 "id": "branch_b",
-                "resource_ref": "hermetic-true-job",
-                "depends_on": ["preflight"],
+                "workload": dict(_TRUE_WORKLOAD),
                 "output_key": "branch_b",
+                "depends_on": ["preflight"],
             },
             {
                 "id": "join",
-                "resource_ref": "hermetic-true-job",
-                "depends_on": ["branch_a", "branch_b"],
+                "workload": dict(_TRUE_WORKLOAD),
                 "output_key": "join",
+                "depends_on": ["branch_a", "branch_b"],
             },
         ],
     },
@@ -166,25 +126,24 @@ HERMETIC_JOB_FANOUT_PROCESS = ProcessDefinition(
     id="proc-hermetic-job-fanout",
     name="hermetic-job-fanout",
     flows=[HERMETIC_JOB_FANOUT_FLOW],
-    metadata={
-        "example": True,
-        "description": "0.54.4 DAG fan-out dogfood: preflight then two hermetic jobs then join",
-    },
+    metadata={"example": True, "description": "DAG fan-out with workload nodes"},
 )
 
 
 def register_definitions(repository: object) -> None:
-    save_resource = getattr(repository, "save_resource", None)
     save_flow = getattr(repository, "save_flow", None)
     save_process = getattr(repository, "save_process", None)
-    if callable(save_resource):
-        save_resource(HERMETIC_PREFLIGHT)
-        save_resource(HERMETIC_TRUE_JOB)
     if callable(save_flow):
-        save_flow(HERMETIC_JOB_SMOKE_FLOW)
-        save_flow(HERMETIC_JOB_DAG_FLOW)
-        save_flow(HERMETIC_JOB_FANOUT_FLOW)
+        for flow in (
+            HERMETIC_JOB_SMOKE_FLOW,
+            HERMETIC_JOB_DAG_FLOW,
+            HERMETIC_JOB_FANOUT_FLOW,
+        ):
+            save_flow(flow)
     if callable(save_process):
-        save_process(HERMETIC_JOB_SMOKE_PROCESS)
-        save_process(HERMETIC_JOB_DAG_PROCESS)
-        save_process(HERMETIC_JOB_FANOUT_PROCESS)
+        for proc in (
+            HERMETIC_JOB_SMOKE_PROCESS,
+            HERMETIC_JOB_DAG_PROCESS,
+            HERMETIC_JOB_FANOUT_PROCESS,
+        ):
+            save_process(proc)

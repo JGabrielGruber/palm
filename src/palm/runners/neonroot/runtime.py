@@ -1,7 +1,6 @@
 """NeonRoot WorkloadRuntime — hermetic isolation via NeonRoot CLI.
 
-Maps WorkloadSpec → existing spawn helpers (still under providers until a later
-extract). kind=run only in this cut; warm workspace is a later slice.
+Sole NeonRoot integration path (provider removed 0.56). kind=run; warm later.
 """
 
 from __future__ import annotations
@@ -78,8 +77,8 @@ class NeonrootWorkloadRuntime(WorkloadRuntime):
                 result=WorkloadResult.fail("empty command", runtime=self.name),
             )
 
-        from palm.providers.neonroot.cli import probe_neonroot
-        from palm.providers.neonroot.spawn import resolve_repo_root, run_spawn
+        from palm.runners.neonroot.cli import probe_neonroot
+        from palm.runners.neonroot.spawn import resolve_repo_root, run_spawn
 
         probe = probe_neonroot()
         if not probe.available:

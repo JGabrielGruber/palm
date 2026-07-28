@@ -196,7 +196,7 @@ def run_doctor(ctx: CliContext) -> int:
 
     # 0.53.6 — NeonRoot / Sovereign Runners
     try:
-        from palm.providers.neonroot.doctor import (
+        from palm.runners.neonroot.doctor import (
             neonroot_doctor_issues,
             neonroot_doctor_section,
         )
@@ -207,11 +207,11 @@ def run_doctor(ctx: CliContext) -> int:
             has_nr = bool(composition.has("neonroot"))
         nr = neonroot_doctor_section(composition_has_neonroot=has_nr)
         issues.extend(neonroot_doctor_issues(nr))
-        nr_table = Table(title="NeonRoot (Sovereign Runners)", show_lines=True)
+        nr_table = Table(title="NeonRoot (WorkloadRuntime)", show_lines=True)
         nr_table.add_column("Item", style="cyan")
         nr_table.add_column("Value")
         nr_table.add_row(
-            "provider registered",
+            "runtime registered",
             "[green]yes[/]" if nr.get("registered") else "[red]no[/]",
         )
         nr_table.add_row(

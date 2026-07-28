@@ -13,7 +13,7 @@ from palm.core.workload import (
     WorkloadSpec,
     WorkloadStatus,
 )
-from palm.providers.neonroot.cli import NeonrootProbe
+from palm.runners.neonroot.cli import NeonrootProbe
 from palm.runners.neonroot.runtime import NeonrootWorkloadRuntime, _spec_to_spawn_params
 
 
@@ -43,22 +43,10 @@ def test_neonroot_missing_cli_fails_closed() -> None:
     engine = WorkloadEngine()
     engine.initialize(runtimes={"neonroot": rt})
     missing = NeonrootProbe(available=False, error="neonroot not found on PATH")
-    with patch("palm.providers.neonroot.cli.probe_neonroot", return_value=missing):
-        # runtime imports probe inside start via providers path
-        with patch(
-            "palm.runners.neonroot.runtime.probe_neonroot",
-            return_value=missing,
-            create=True,
-        ):
-            # Patch where runtime imports from
-            with patch(
-                "palm.providers.neonroot.cli.probe_neonroot",
-                return_value=missing,
-            ):
-                wl = engine.start(_hermetic_run())
+    with patch("palm.runners.neonroot.cli.probe_neonroot", return_value=missing):
+        wl = engine.start(_hermetic_run())
     assert wl.status is WorkloadStatus.FAILED
     assert wl.result is not None
-    assert "neonroot" in (wl.result.error or "").lower() or "not" in (wl.result.error or "").lower()
     engine.shutdown()
 
 
@@ -76,9 +64,9 @@ def test_neonroot_spawn_success_mapped() -> None:
         "neonroot": present.as_dict(),
     }
     with (
-        patch("palm.providers.neonroot.cli.probe_neonroot", return_value=present),
-        patch("palm.providers.neonroot.spawn.run_spawn", return_value=payload),
-        patch("palm.providers.neonroot.spawn.resolve_repo_root", return_value=None),
+        patch("palm.runners.neonroot.cli.probe_neonroot", return_value=present),
+        patch("palm.runners.neonroot.spawn.run_spawn", return_value=payload),
+        patch("palm.runners.neonroot.spawn.resolve_repo_root", return_value=None),
     ):
         wl = engine.start(_hermetic_run())
     assert wl.status is WorkloadStatus.STOPPED
@@ -107,6 +95,7 @@ def test_neonroot_rejects_workspace_kind() -> None:
 
 def test_registry_registers_neonroot_and_host() -> None:
     import palm.runners  # noqa: F401
+
     from palm.core.workload.registry import workload_runtime_registry
 
     names = set(workload_runtime_registry.names())

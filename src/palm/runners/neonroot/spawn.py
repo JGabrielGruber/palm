@@ -30,7 +30,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from palm.providers.neonroot.cli import find_neonroot_binary, probe_neonroot
+from palm.runners.neonroot.cli import find_neonroot_binary, probe_neonroot
 
 # Captured stream tails — enough for doctor / Assist, not full log dumps.
 _DEFAULT_TAIL = 8000

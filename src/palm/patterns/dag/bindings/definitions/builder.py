@@ -28,6 +28,7 @@ def build(
         name=str(flow.options.get("name") or flow.name),
         config=config,
         resource_engine=context.resource_engine,
+        workload_engine=getattr(context, "workload_engine", None),
     )
 
 

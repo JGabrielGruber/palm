@@ -529,7 +529,7 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 | **0.56.3–0.56.4** | **host** runtime default **OFF** + settings + doctor; **neonroot** WorkloadRuntime (`palm/runners/`); BaseRuntime wires engine | Accidental exec · dual isolation model — **runners cut landed** (provider façade dogfood still until CQRS/collapse) |
 | **0.56.5–0.56.6** | Host warm **workspace**+exec; **`execution.workloads`** + CQRS commands/queries; hosts v0 | Cold-only UX · edge→engine bypass — **product path landed** (REST/MCP aliases later) |
 | **dogfood** | Wizard `step_kind: workload` + **run-python** (host/neonroot/auto); replaces complex run_script loop | Divergent dogfood contracts |
-| **0.56.4b** | neonroot `spawn` → WorkloadEngine when runtime bound (legacy CLI fallback) | Dual isolation — **thin façade landed** |
+| **0.56.4b** | **Delete neonroot provider** — runner + WorkloadEngine only; hermetic dogfood retargeted | Dual isolation — **cut** |
 | **0.56.7** | Richer host registry + placement + capability flag | Ad-hoc host strings |
 | **0.56.8** | Session cancel hooks / ownership product wiring | Blind long runs |
 | **0.56.9** | Trigger dogfood: `on_workload` + workload.stopped → follow-up flow | Missing reactive path — **landed** |

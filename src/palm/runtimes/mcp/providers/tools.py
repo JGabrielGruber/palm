@@ -14,13 +14,12 @@ _PALM_PROVIDERS_INVOKE_DESC = tool_description(
     examples=[
         'palm_providers_invoke(resource_ref="check-health", params={"base_url": "http://127.0.0.1:8080"})',
         'palm_providers_invoke(resource_ref="fetch-customer", action="fetch", params={"customer_id": "42", "base_url": "http://api"})',
-        'palm_providers_invoke(resource_ref="neonroot-health")',
-        'palm_providers_invoke(resource_ref="neonroot-spawn-true")',
     ],
     notes=(
         "Failures include remediation hints (e.g. missing base_url). "
         "Run palm_system_doctor() resource_preflight before first invoke. "
-        "NeonRoot examples need the neonroot CLI (and images for spawn)."
+        "Hermetic isolation uses WorkloadEngine / run-python / hermetic-job-* flows, "
+        "not a neonroot provider."
     ),
 )
 

@@ -32,7 +32,7 @@ def resolve_runtime_choice(choice: str | None) -> str:
 def _auto_runtime() -> str:
     """Prefer neonroot when CLI present; otherwise host (caller must enable host)."""
     try:
-        from palm.providers.neonroot.cli import probe_neonroot
+        from palm.runners.neonroot.cli import probe_neonroot
 
         if probe_neonroot().available:
             return "neonroot"

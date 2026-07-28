@@ -39,14 +39,24 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
-        {"outbox", "compensation", "journal", "analytics", "projections", "neonroot"}
+        {
+            "outbox",
+            "compensation",
+            "journal",
+            "analytics",
+            "projections",
+            "neonroot",
+            "workloads",
+        }
     )
 
 
 def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
     """for_tests default (full_recovery=False): compensation + outbox off, analytics on,
     journal + projections always available; neonroot declared by default (0.53.8)."""
-    assert _caps() == frozenset({"journal", "projections", "analytics", "neonroot"})
+    assert _caps() == frozenset(
+        {"journal", "projections", "analytics", "neonroot", "workloads"}
+    )
 
 
 def test_neonroot_capability_toggles() -> None:
@@ -96,8 +106,8 @@ def test_services_not_gated_by_capabilities_yet() -> None:
     try:
         # lean test settings derive {journal, projections, analytics} ...
         assert host.composition.capabilities == frozenset(
-        {"journal", "projections", "analytics", "neonroot"}
-    )
+            {"journal", "projections", "analytics", "neonroot", "workloads"}
+        )
         # ... yet every service is still built (services are a separate axis)
         for name in ("system", "definitions", "execution", "assist", "design", "analytics"):
             assert getattr(host, name) is not None

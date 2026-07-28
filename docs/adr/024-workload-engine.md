@@ -54,7 +54,8 @@ A small **host registry** describes places (`local`, ssh, peer palm, k8s context
 
 ### D5 — NeonRoot is a runtime; façade is temporary
 
-NeonRoot is a **WorkloadRuntime**. ResourceEngine may retain a **thin façade** (`provider: neonroot`) that delegates to **WorkloadExecutionService**/Engine for compatibility. Long-term conceptual model: runtime, not peer of `kv`/`rest`.
+NeonRoot is a **WorkloadRuntime** only (`palm.runners.neonroot`). The ResourceEngine
+**provider was removed in 0.56** — isolation is not a peer of `kv`/`rest`.
 
 ### D6 — Host runtime default off
 
