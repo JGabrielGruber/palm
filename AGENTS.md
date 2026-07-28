@@ -151,7 +151,7 @@ Follow these patterns. They exist so growth remains orderly.
 | **Workload plane (pure)** | `palm/core/workload/` | `WorkloadEngine`, `WorkloadSpec`, `WorkloadRuntime` protocol + registry — no runner SDKs |
 | Workload adapters | `palm/runners/<name>/` | **host** (default OFF) · **neonroot** · later ssh/palm — `INSTALLED_RUNNERS`; not `palm.runtimes` surfaces |
 | Workload wire/doctor | `palm/common/workload/` | Bind instances on `BaseRuntime.workload`; doctor `workloads` section |
-| Workload product CQRS | `palm/services/execution/workloads/` | `ExecutionService.workloads` — not a top-level service domain |
+| Workload product CQRS | `palm/services/execution/workloads/` | `ExecutionService.workloads` + `StartWorkloadCommand` / queries — not a top-level service domain |
 | Definition revisioning (0.24+) | `palm/common/persistence/definition_repository.py`, `palm/definitions/`, `palm/instances/` | Append-only `publish_flow_revision`; instance `flow_revision` pin; see [VISION-0.24](docs/VISION-0.24.md) |
 | Definition migration rules (0.24.2+) | `palm/common/persistence/definition_migration.py` | `register_migration_rule()` / `resolve_migration_rule()`; see [ADR-007](docs/adr/007-definition-revisioning.md) |
 | Instance migration execution (0.24.3+) | `palm/common/persistence/instance_migration.py` | `migrate_instance()`; preserve `migration_*` in `instance_sync.py`; REST `POST …/instances/{id}/migrate` |

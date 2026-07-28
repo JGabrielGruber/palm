@@ -165,7 +165,7 @@ class ApplicationHost:
 
     @property
     def execution(self):
-        """Execution service API (flows, providers, processes)."""
+        """Execution service API (flows, providers, processes, workloads)."""
         return self._execution
 
     @property
@@ -566,6 +566,7 @@ class ApplicationHost:
             repository=self._app.repository(),
             instance_manager=self._app.instance_manager,
             design=self._design,
+            execution=self._execution,
         )
 
     def _attach_projections(self) -> None:

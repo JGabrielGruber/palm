@@ -94,3 +94,28 @@ def test_host_doctor_warns_when_enabled() -> None:
     assert any("ENABLED" in i for i in issues)
     off = host_workload_doctor_section(enabled=False)
     assert host_workload_doctor_issues(off) == []
+
+
+def test_host_workspace_ready_and_exec() -> None:
+    rt = HostWorkloadRuntime(enabled=True)
+    engine = WorkloadEngine()
+    engine.initialize(runtimes={"host": rt})
+    wl = engine.start(
+        WorkloadSpec(
+            kind=WorkloadKind.WORKSPACE,
+            isolation=IsolationPolicy.HOST,
+            lifecycle=LifecyclePolicy.SESSION,
+            placement=WorkloadPlacement(runtime="host"),
+        )
+    )
+    assert wl.status is WorkloadStatus.READY
+    assert wl.handle is not None
+    result = engine.exec(
+        wl.workload_id,
+        [sys.executable, "-c", "print('ws')"],
+    )
+    assert result.success
+    assert "ws" in result.stdout_tail
+    stopped = engine.stop(wl.workload_id)
+    assert stopped.status is WorkloadStatus.STOPPED
+    engine.shutdown()

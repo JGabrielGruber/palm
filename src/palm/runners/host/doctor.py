@@ -41,11 +41,12 @@ def host_workload_doctor_section(
         "enabled": bound_enabled,
         "default_enabled": False,
         "isolation_modes": ["host", "best_effort"],
-        "kinds": ["run"],
+        "kinds": ["run", "workspace", "service"],
         "issues": issues,
         "note": (
             "Host runtime runs argv via subprocess on the Palm machine. "
-            "Default OFF. Hermetic isolation cannot select host."
+            "Supports kind=run and warm workspace+exec. Default OFF. "
+            "Hermetic isolation cannot select host."
         ),
     }
 

@@ -170,7 +170,7 @@ Existing 0.54 definitions remain valid through façades until explicit deprecati
 ## Compliance checklist (review / merge)
 
 - [x] No neonroot/docker/k8s imports under `palm/core/`  
-- [ ] Product start path uses **execution** CQRS (`workload.*`)  
+- [x] Product start path uses **execution** CQRS (`workload.*` commands/queries)  
 - [x] WorkloadLeaf contract tests (engine + fake runtime) green  
 - [x] Host runtime default off (settings + engine policy + doctor warn when on)  
 - [x] Hermetic policy cannot select host (engine unit test)  
@@ -179,6 +179,7 @@ Existing 0.54 definitions remain valid through façades until explicit deprecati
 - [ ] Provider blueprint does not skip provider for business I/O  
 - [ ] Peer palm allowlisted  
 - [x] Glossary updated (HERMETIC-JOBS / AGENTS)  
+- [x] Host warm workspace + exec (local dogfood)
 
 ## References
 

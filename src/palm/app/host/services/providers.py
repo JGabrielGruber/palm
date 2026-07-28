@@ -26,6 +26,7 @@ from palm.services.execution import ExecutionService
 from palm.services.execution.flows import FlowExecutionService
 from palm.services.execution.processes import ProcessExecutionService
 from palm.services.execution.providers import ProviderExecutionService
+from palm.services.execution.workloads import WorkloadExecutionService
 from palm.services.system import SystemService
 
 
@@ -53,7 +54,16 @@ def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
         **ctx.bus_kwargs,
         runtime_resolver=ctx.resolve_execution_runtime,
     )
-    return ExecutionService(flows=flows, providers=providers, processes=processes)
+    workloads = WorkloadExecutionService(
+        **ctx.bus_kwargs,
+        runtime_resolver=ctx.resolve_execution_runtime,
+    )
+    return ExecutionService(
+        flows=flows,
+        providers=providers,
+        processes=processes,
+        workloads=workloads,
+    )
 
 
 def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:

@@ -1,4 +1,4 @@
-"""Execution service — coordinates flows, providers, and processes."""
+"""Execution service — coordinates flows, providers, processes, and workloads."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from palm.services.execution.flows.service import FlowExecutionService
     from palm.services.execution.processes.service import ProcessExecutionService
     from palm.services.execution.providers.service import ProviderExecutionService
+    from palm.services.execution.workloads.service import WorkloadExecutionService
 
 
 class ExecutionService:
@@ -19,10 +20,12 @@ class ExecutionService:
         flows: FlowExecutionService,
         providers: ProviderExecutionService,
         processes: ProcessExecutionService,
+        workloads: WorkloadExecutionService | None = None,
     ) -> None:
         self._flows = flows
         self._providers = providers
         self._processes = processes
+        self._workloads = workloads
 
     @property
     def flows(self) -> FlowExecutionService:
@@ -35,6 +38,12 @@ class ExecutionService:
     @property
     def processes(self) -> ProcessExecutionService:
         return self._processes
+
+    @property
+    def workloads(self) -> WorkloadExecutionService:
+        if self._workloads is None:
+            raise RuntimeError("ExecutionService has no WorkloadExecutionService bound")
+        return self._workloads
 
 
 __all__ = ["ExecutionService"]

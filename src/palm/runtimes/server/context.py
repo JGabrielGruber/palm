@@ -147,6 +147,7 @@ class ServerContext:
             self._query_bus,
             runtime,
             design=self._design,
+            execution=self._execution,
         )
 
     @property
