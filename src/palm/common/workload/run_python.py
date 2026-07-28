@@ -18,9 +18,11 @@ from palm.core.workload.spec import (
 
 
 def resolve_runtime_choice(choice: str | None) -> str:
-    """Normalize host | neonroot | auto → concrete runtime name."""
+    """Normalize local | host | neonroot | auto → concrete runtime name."""
     text = str(choice or "auto").strip().lower()
-    if text in ("host", "local"):
+    if text in ("local", "palm", "palm-local"):
+        return "local"
+    if text in ("host",):
         return "host"
     if text in ("neonroot", "nr", "hermetic"):
         return "neonroot"
@@ -30,7 +32,7 @@ def resolve_runtime_choice(choice: str | None) -> str:
 
 
 def _auto_runtime() -> str:
-    """Prefer neonroot when CLI present; otherwise host (caller must enable host)."""
+    """Prefer neonroot when CLI present; otherwise always-on **local**."""
     try:
         from palm.runners.neonroot.cli import probe_neonroot
 
@@ -38,7 +40,7 @@ def _auto_runtime() -> str:
             return "neonroot"
     except Exception:
         pass
-    return "host"
+    return "local"
 
 
 def build_run_python_spec(
@@ -49,25 +51,30 @@ def build_run_python_spec(
     python: str | None = None,
     timeout_s: float = 120.0,
 ) -> WorkloadSpec:
-    """One-shot ``python -c <code>`` Spec for host or neonroot."""
+    """One-shot ``python -c <code>`` Spec for local, host, or neonroot."""
     source = str(code or "")
     if not source.strip():
         raise ValueError("run-python requires non-empty code")
 
     runtime_name = resolve_runtime_choice(runtime)
-    if runtime_name == "host":
+    if runtime_name in ("local", "host"):
         exe = python or sys.executable or "python3"
+        isolation = (
+            IsolationPolicy.HOST
+            if runtime_name == "host"
+            else IsolationPolicy.BEST_EFFORT
+        )
         return WorkloadSpec(
             kind=WorkloadKind.RUN,
-            isolation=IsolationPolicy.BEST_EFFORT,
+            isolation=isolation,
             lifecycle=LifecyclePolicy.JOB,
             command=(exe, "-c", source),
             timeout_s=timeout_s,
-            placement=WorkloadPlacement(runtime="host"),
+            placement=WorkloadPlacement(runtime=runtime_name),
             labels={"dogfood": "run-python"},
         )
 
-    # neonroot (and unknown hermetic-capable runtimes)
+    # neonroot (and other hermetic-capable runtimes)
     exe = python or "python3"
     return WorkloadSpec(
         kind=WorkloadKind.RUN,

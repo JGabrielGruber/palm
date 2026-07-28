@@ -26,9 +26,33 @@ class RuntimeCapabilities:
     kinds: frozenset[str]
     description: str = ""
     default_enabled: bool = False
+    #: Trust class for doctor / placement (local always-on vs host opt-in vs external CLI)
+    trust: str = "external"  # local | host | hermetic | mesh | external
 
     def supports_isolation(self, isolation: IsolationPolicy) -> bool:
         return isolation in self.isolation_modes
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeHealth:
+    """Standard runner probe — every WorkloadRuntime reports this shape."""
+
+    name: str
+    available: bool
+    enabled: bool
+    message: str = ""
+    detail: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        out: dict[str, Any] = {
+            "name": self.name,
+            "available": self.available,
+            "enabled": self.enabled,
+            "message": self.message,
+        }
+        if self.detail:
+            out["detail"] = dict(self.detail)
+        return out
 
 
 @dataclass(frozen=True, slots=True)
@@ -77,6 +101,16 @@ class WorkloadRuntime(ABC):
     def is_enabled(self) -> bool:
         """Whether this runtime instance may accept starts (host default off)."""
         return True
+
+    def health(self) -> RuntimeHealth:
+        """Probe runner readiness (doctor / placement). Override for CLI checks."""
+        enabled = self.is_enabled()
+        return RuntimeHealth(
+            name=self.name,
+            available=enabled,
+            enabled=enabled,
+            message="enabled" if enabled else "disabled",
+        )
 
     @abstractmethod
     def start(

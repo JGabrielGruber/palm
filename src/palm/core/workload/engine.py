@@ -338,7 +338,7 @@ class WorkloadEngine(BasePalmEngine):
             return [self._stop_unlocked(wid) for wid in targets]
 
     def runtimes(self) -> list[dict[str, Any]]:
-        """Doctor-oriented view of bound + registered runtime names."""
+        """Doctor-oriented view of bound + registered runtimes (incl. health)."""
         with self._lock:
             names = set(self._runtimes) | set(workload_runtime_registry.names())
             rows: list[dict[str, Any]] = []
@@ -346,21 +346,74 @@ class WorkloadEngine(BasePalmEngine):
                 try:
                     rt = self._resolve_runtime(name)
                     caps = rt.capabilities()
+                    health = rt.health()
                     rows.append(
                         {
                             "name": name,
                             "bound": name in self._runtimes,
+                            "enabled": rt.is_enabled(),
                             "isolation_modes": [
                                 str(m) for m in sorted(caps.isolation_modes, key=str)
                             ],
                             "kinds": sorted(caps.kinds),
                             "default_enabled": caps.default_enabled,
+                            "trust": caps.trust,
                             "description": caps.description,
+                            "health": health.to_dict(),
                         }
                     )
                 except Exception as exc:
                     rows.append({"name": name, "error": str(exc)})
             return rows
+
+    def doctor(self) -> dict[str, Any]:
+        """Structured workload-plane doctor snapshot (engine + runners)."""
+        if not self.is_initialized:
+            return {
+                "engine_initialized": False,
+                "active_workloads": 0,
+                "runtimes": [],
+                "issues": ["WorkloadEngine is not initialized"],
+            }
+        rows = self.runtimes()
+        issues: list[str] = []
+        enabled_any = False
+        for row in rows:
+            if row.get("error"):
+                issues.append(f"runtime {row.get('name')}: {row['error']}")
+                continue
+            health = row.get("health") or {}
+            if row.get("enabled"):
+                enabled_any = True
+            if row.get("enabled") and not health.get("available"):
+                issues.append(
+                    f"runtime {row.get('name')!r} is enabled but unavailable: "
+                    f"{health.get('message') or 'unknown'}"
+                )
+            if row.get("name") == "host" and row.get("enabled"):
+                issues.append(
+                    "host WorkloadRuntime is ENABLED — not multi-tenant safe "
+                    "(PALM_WORKLOAD_HOST_ENABLED)"
+                )
+        if not enabled_any:
+            issues.append("no WorkloadRuntime is enabled")
+        with self._lock:
+            active = sum(
+                1 for wl in self._workloads.values() if not is_terminal(wl.status)
+            )
+            total = len(self._workloads)
+        return {
+            "engine_initialized": True,
+            "default_runtime": self._default_runtime,
+            "active_workloads": active,
+            "tracked_workloads": total,
+            "runtimes": rows,
+            "issues": issues,
+            "note": (
+                "local = always-on Palm process runner; host = opt-in unsafe; "
+                "neonroot = hermetic external CLI"
+            ),
+        }
 
     # --- internals ----------------------------------------------------------
 

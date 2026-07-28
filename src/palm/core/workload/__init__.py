@@ -27,6 +27,7 @@ from palm.core.workload.handle import WorkloadHandle
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.protocol import (
     RuntimeCapabilities,
+    RuntimeHealth,
     RuntimePollOutcome,
     RuntimeStartOutcome,
     RuntimeStopOutcome,
@@ -64,6 +65,7 @@ __all__ = [
     "IsolationPolicy",
     "LifecyclePolicy",
     "RuntimeCapabilities",
+    "RuntimeHealth",
     "RuntimePollOutcome",
     "RuntimeStartOutcome",
     "RuntimeStopOutcome",

@@ -118,7 +118,8 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 | **0.56.dogfood** wizard **`step_kind: workload`** + **run-python** flow (host \| neonroot \| auto); hermetic-run-code alias | ✅ simple contract dogfood |
 | **0.56.9** **`on_workload`** trigger + work-drain on `workload.*`; **workload-followup** dogfood | ✅ reactive start path |
 | **0.56 dual-path cut** **Removed neonroot ResourceEngine provider** — isolation is **only** `palm.runners.neonroot`; hermetic dogfood → workload/DAG workload nodes | ✅ cleaner plane |
-| **0.56.7+** full placement, session cancel hooks, blueprints, neonroot warm, mesh | 📋 queued |
+| **0.56 trust** **`local` WorkloadRuntime** always on; runner **`health()`** + **`engine.doctor()`**; host remains opt-in; neonroot CLI probe via health | ✅ plane is real by default |
+| **0.56.7+** full placement, session cancel hooks, blueprints, neonroot warm, peer mesh | 📋 queued |
 
 **Package law:** `palm/core/workload/` (pure) · `palm/common/workload/` (wire/doctor helpers) · `palm/runners/*` · `services/execution/workloads/` · wait kind socket already from 0.55.
 

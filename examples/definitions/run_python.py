@@ -28,7 +28,7 @@ RUN_PYTHON_FLOW = FlowDefinition(
         "properties": {
             "runtime": {
                 "type": "string",
-                "enum": ["auto", "host", "neonroot"],
+                "enum": ["auto", "local", "host", "neonroot"],
             },
             "code": {"type": "string", "minLength": 1},
             "run_result": {"type": "object"},
@@ -47,12 +47,13 @@ RUN_PYTHON_FLOW = FlowDefinition(
                 "title": "Runtime",
                 "prompt": (
                     "Where should this Python run?\n"
-                    "• auto — neonroot if available, else host\n"
-                    "• host — local subprocess (enable with PALM_WORKLOAD_HOST_ENABLED=1)\n"
+                    "• auto — neonroot if CLI present, else Palm **local** (always on)\n"
+                    "• local — Palm process runner under data_dir (trusted default)\n"
+                    "• host — full-machine subprocess (PALM_WORKLOAD_HOST_ENABLED=1)\n"
                     "• neonroot — hermetic image spawn (CLI + palm-ci)"
                 ),
                 "field_type": "choice",
-                "choices": ["auto", "host", "neonroot"],
+                "choices": ["auto", "local", "host", "neonroot"],
                 "validation": [{"rule": "not_empty"}],
             },
             {

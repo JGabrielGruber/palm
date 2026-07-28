@@ -22,11 +22,16 @@ def test_embedded_runtime_wires_workload_engine() -> None:
     try:
         assert rt.workload.is_initialized
         names = {row["name"] for row in rt.workload.runtimes()}
+        assert "local" in names
         assert "host" in names
         assert "neonroot" in names
+        assert rt.workload._runtimes["local"].is_enabled() is True
         # host instance must be disabled
         host = rt.workload._runtimes["host"]
         assert host.is_enabled() is False
+        doc = rt.workload.doctor()
+        assert doc["default_runtime"] == "local"
+        assert any(r.get("health") for r in doc["runtimes"] if r.get("name") == "local")
     finally:
         rt.stop()
 

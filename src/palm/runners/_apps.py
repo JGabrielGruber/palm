@@ -5,7 +5,8 @@ from __future__ import annotations
 import importlib
 
 INSTALLED_RUNNERS: tuple[str, ...] = (
-    "host",  # subprocess; default OFF — opt-in only
+    "local",  # Palm-managed process runner — always on (trusted default)
+    "host",  # full-machine subprocess; default OFF — opt-in only
     "neonroot",  # hermetic spawn via NeonRoot CLI
 )
 

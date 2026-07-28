@@ -10,6 +10,7 @@ from typing import Any
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.protocol import (
     RuntimeCapabilities,
+    RuntimeHealth,
     RuntimePollOutcome,
     RuntimeStartOutcome,
     RuntimeStopOutcome,
@@ -39,11 +40,28 @@ class NeonrootWorkloadRuntime(WorkloadRuntime):
             kinds=frozenset({"run"}),
             description="NeonRoot CLI hermetic spawn (image + argv)",
             default_enabled=True,
+            trust="hermetic",
         )
 
     def is_enabled(self) -> bool:
-        # Soft: available when CLI present; start fails clearly if missing.
+        # Soft-enabled; health.available reflects CLI presence.
         return True
+
+    def health(self) -> RuntimeHealth:
+        from palm.runners.neonroot.cli import probe_neonroot
+
+        probe = probe_neonroot()
+        return RuntimeHealth(
+            name=self.name,
+            available=bool(probe.available),
+            enabled=True,
+            message=probe.version or probe.error or ("ready" if probe.available else "missing"),
+            detail={
+                "path": probe.path,
+                "version": probe.version,
+                "error": probe.error,
+            },
+        )
 
     def start(
         self,

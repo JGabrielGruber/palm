@@ -12,11 +12,19 @@ from palm.patterns.wizard.pattern import WizardPattern
 from palm.states import BlackboardState
 
 
+def test_build_run_python_spec_local() -> None:
+    spec = build_run_python_spec(code="print(1)", runtime="local")
+    assert spec.kind is WorkloadKind.RUN
+    assert spec.placement.runtime == "local"
+    assert spec.isolation is IsolationPolicy.BEST_EFFORT
+    assert spec.command[-1] == "print(1)"
+
+
 def test_build_run_python_spec_host() -> None:
     spec = build_run_python_spec(code="print(1)", runtime="host")
     assert spec.kind is WorkloadKind.RUN
     assert spec.placement.runtime == "host"
-    assert spec.isolation is IsolationPolicy.BEST_EFFORT
+    assert spec.isolation is IsolationPolicy.HOST
     assert spec.command[-1] == "print(1)"
 
 
@@ -29,9 +37,10 @@ def test_build_run_python_spec_neonroot() -> None:
 
 
 def test_resolve_runtime_auto_prefers_string() -> None:
+    assert resolve_runtime_choice("local") == "local"
     assert resolve_runtime_choice("host") == "host"
     assert resolve_runtime_choice("neonroot") == "neonroot"
-    assert resolve_runtime_choice("auto") in ("host", "neonroot")
+    assert resolve_runtime_choice("auto") in ("local", "neonroot")
 
 
 def test_wizard_workload_step_host_run() -> None:

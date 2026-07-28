@@ -1,11 +1,12 @@
-"""Host WorkloadRuntime — local subprocess isolation (default OFF).
+"""Local WorkloadRuntime — Palm's always-on trusted process runner.
 
-Supports:
-* kind=run — one-shot argv → STOPPED/FAILED
-* kind=workspace / service — READY warm box; exec runs argv in workdir
+Unlike **host** (default OFF, full-machine, multi-tenant unsafe), **local** is:
 
-Unsupported as multi-tenant isolation. Dogfood / slim Compose only.
-See ADR-024 D6 · VISION-0.56 §7.
+* always enabled
+* constrained under a Palm-managed work root when provided
+* isolation ``best_effort`` only (not claimed hermetic)
+
+This makes WorkloadEngine real without NeonRoot CLI or host opt-in.
 """
 
 from __future__ import annotations
@@ -35,49 +36,64 @@ from palm.core.workload.status import WorkloadStatus
 _DEFAULT_TAIL = 8000
 
 
-class HostWorkloadRuntime(WorkloadRuntime):
-    """Run argv on the Palm host process machine via subprocess."""
+class LocalWorkloadRuntime(WorkloadRuntime):
+    """Palm-managed subprocess runner (default ON)."""
 
     def __init__(
         self,
         *,
-        name: str = "host",
-        enabled: bool = False,
+        name: str = "local",
         work_root: Path | str | None = None,
     ) -> None:
         super().__init__(name=name)
-        self._enabled = bool(enabled)
         self._work_root = Path(work_root).resolve() if work_root else None
         self._live: dict[str, dict[str, Any]] = {}
 
-    def set_enabled(self, enabled: bool) -> None:
-        self._enabled = bool(enabled)
-
     def is_enabled(self) -> bool:
-        return self._enabled
+        return True
 
     def capabilities(self) -> RuntimeCapabilities:
         return RuntimeCapabilities(
             name=self.name,
-            isolation_modes=frozenset({IsolationPolicy.HOST, IsolationPolicy.BEST_EFFORT}),
+            isolation_modes=frozenset({IsolationPolicy.BEST_EFFORT}),
             kinds=frozenset({"run", "workspace", "service"}),
-            description="Full-machine subprocess (default OFF; not multi-tenant safe)",
-            default_enabled=False,
-            trust="host",
+            description=(
+                "Palm-local process runner (always on; work under palm data_dir when set)"
+            ),
+            default_enabled=True,
+            trust="local",
         )
 
     def health(self) -> RuntimeHealth:
-        enabled = self.is_enabled()
+        root = self._work_root
+        detail: dict[str, Any] = {}
+        if root is not None:
+            detail["work_root"] = str(root)
+            try:
+                root.mkdir(parents=True, exist_ok=True)
+                writable = os.access(root, os.W_OK)
+            except OSError as exc:
+                return RuntimeHealth(
+                    name=self.name,
+                    available=False,
+                    enabled=True,
+                    message=f"work_root not usable: {exc}",
+                    detail=detail,
+                )
+            if not writable:
+                return RuntimeHealth(
+                    name=self.name,
+                    available=False,
+                    enabled=True,
+                    message="work_root not writable",
+                    detail=detail,
+                )
         return RuntimeHealth(
             name=self.name,
-            available=enabled,
-            enabled=enabled,
-            message=(
-                "enabled (unsafe multi-tenant)"
-                if enabled
-                else "disabled (set PALM_WORKLOAD_HOST_ENABLED=1)"
-            ),
-            detail={"work_root": str(self._work_root) if self._work_root else None},
+            available=True,
+            enabled=True,
+            message="ready",
+            detail=detail,
         )
 
     def start(
@@ -87,15 +103,25 @@ class HostWorkloadRuntime(WorkloadRuntime):
         *,
         owner: WorkloadOwner | None = None,
     ) -> RuntimeStartOutcome:
-        if not self._enabled:
+        if spec.isolation is IsolationPolicy.HERMETIC:
             return RuntimeStartOutcome(
                 status=WorkloadStatus.FAILED,
                 result=WorkloadResult.fail(
-                    "host runtime is disabled "
-                    "(set PALM_WORKLOAD_HOST_ENABLED=1 / workload_host_enabled)",
+                    "local runtime cannot honor isolation=hermetic "
+                    "(use neonroot or peer)",
                     runtime=self.name,
                 ),
-                message="host runtime disabled",
+                message="hermetic not supported on local",
+            )
+        if spec.isolation is IsolationPolicy.HOST:
+            return RuntimeStartOutcome(
+                status=WorkloadStatus.FAILED,
+                result=WorkloadResult.fail(
+                    "local runtime uses best_effort only; "
+                    "use host runtime (opt-in) for isolation=host",
+                    runtime=self.name,
+                ),
+                message="host isolation not supported on local",
             )
 
         if spec.kind in (WorkloadKind.WORKSPACE, WorkloadKind.SERVICE):
@@ -105,10 +131,9 @@ class HostWorkloadRuntime(WorkloadRuntime):
             return RuntimeStartOutcome(
                 status=WorkloadStatus.FAILED,
                 result=WorkloadResult.fail(
-                    f"host runtime unsupported kind={spec.kind}",
+                    f"local runtime unsupported kind={spec.kind}",
                     runtime=self.name,
                 ),
-                message="unsupported kind",
             )
         if not spec.command:
             return RuntimeStartOutcome(
@@ -116,7 +141,7 @@ class HostWorkloadRuntime(WorkloadRuntime):
                 result=WorkloadResult.fail("empty command", runtime=self.name),
             )
 
-        workdir = self._resolve_workdir(spec, create_temp=False)
+        workdir = self._resolve_workdir(spec, create_temp=True)
         result = self._run_argv(
             list(spec.command),
             workdir=workdir,
@@ -124,13 +149,14 @@ class HostWorkloadRuntime(WorkloadRuntime):
             timeout_s=spec.timeout_s,
         )
         status = WorkloadStatus.STOPPED if result.success else WorkloadStatus.FAILED
+        owned = workdir is not None and self._is_under_root(workdir)
         self._live[workload_id] = {
             "kind": "run",
             "result": result,
             "status": status,
             "owner": owner,
             "workdir": workdir,
-            "owned_temp": False,
+            "owned_temp": owned and not (spec.workdir),
         }
         return RuntimeStartOutcome(status=status, result=result)
 
@@ -157,7 +183,6 @@ class HostWorkloadRuntime(WorkloadRuntime):
             "workdir": workdir,
             "owned_temp": owned_temp,
             "env": dict(spec.env),
-            "spec": spec,
             "handle": handle,
         }
         return RuntimeStartOutcome(status=WorkloadStatus.READY, handle=handle)
@@ -172,24 +197,19 @@ class HostWorkloadRuntime(WorkloadRuntime):
     ) -> WorkloadResult:
         entry = self._live.get(workload_id)
         if entry is None:
-            return WorkloadResult.fail("unknown host workload", runtime=self.name)
+            return WorkloadResult.fail("unknown local workload", runtime=self.name)
         if entry.get("kind") != "workspace":
             return WorkloadResult.fail(
-                "exec only valid on workspace/service host workloads",
+                "exec only valid on workspace/service",
                 runtime=self.name,
             )
-        if entry.get("status") is not WorkloadStatus.READY:
-            return WorkloadResult.fail(
-                f"workspace not READY (status={entry.get('status')})",
-                runtime=self.name,
-            )
-        merged_env = dict(entry.get("env") or {})
+        merged = dict(entry.get("env") or {})
         if env:
-            merged_env.update(env)
+            merged.update(env)
         return self._run_argv(
             list(command),
             workdir=entry.get("workdir"),
-            env=merged_env,
+            env=merged,
             timeout_s=timeout_s,
         )
 
@@ -198,7 +218,7 @@ class HostWorkloadRuntime(WorkloadRuntime):
         if entry is None:
             return RuntimePollOutcome(
                 status=WorkloadStatus.FAILED,
-                message="unknown host workload",
+                message="unknown local workload",
             )
         return RuntimePollOutcome(
             status=entry["status"],
@@ -225,11 +245,15 @@ class HostWorkloadRuntime(WorkloadRuntime):
             if not path.is_absolute() and self._work_root is not None:
                 path = self._work_root / path
             path = path.resolve()
+            if self._work_root is not None and not self._is_under_root(path):
+                # Force under palm root
+                path = self._work_root / "ws" / path.name
             path.mkdir(parents=True, exist_ok=True)
             return path, False
         base = self._work_root if self._work_root is not None else Path(tempfile.gettempdir())
+        base = base / "palm-local"
         base.mkdir(parents=True, exist_ok=True)
-        path = Path(tempfile.mkdtemp(prefix="palm-host-ws-", dir=str(base)))
+        path = Path(tempfile.mkdtemp(prefix="ws-", dir=str(base)))
         return path, True
 
     def _resolve_workdir(
@@ -239,12 +263,29 @@ class HostWorkloadRuntime(WorkloadRuntime):
             path = Path(spec.workdir)
             if not path.is_absolute() and self._work_root is not None:
                 path = self._work_root / path
-            return path.resolve()
+            path = path.resolve()
+            if self._work_root is not None and not self._is_under_root(path):
+                path = (self._work_root / "run" / path.name).resolve()
+                path.mkdir(parents=True, exist_ok=True)
+            return path
         if self._work_root is not None:
-            return self._work_root
+            d = self._work_root / "run"
+            d.mkdir(parents=True, exist_ok=True)
+            if create_temp:
+                return Path(tempfile.mkdtemp(prefix="run-", dir=str(d)))
+            return d
         if create_temp:
-            return Path(tempfile.mkdtemp(prefix="palm-host-run-"))
+            return Path(tempfile.mkdtemp(prefix="palm-local-run-"))
         return None
+
+    def _is_under_root(self, path: Path) -> bool:
+        if self._work_root is None:
+            return True
+        try:
+            path.resolve().relative_to(self._work_root.resolve())
+            return True
+        except ValueError:
+            return False
 
     def _run_argv(
         self,
@@ -278,7 +319,7 @@ class HostWorkloadRuntime(WorkloadRuntime):
                 stdout_tail=_tail(stdout),
                 stderr_tail=_tail(stderr or f"timeout after {timeout}s"),
                 duration_s=round(duration, 3),
-                error=f"host run timed out after {timeout}s",
+                error=f"local run timed out after {timeout}s",
                 runtime_meta={"runtime": self.name, "argv": argv},
             )
         except OSError as exc:
@@ -305,4 +346,4 @@ def _tail(text: str, limit: int = _DEFAULT_TAIL) -> str:
     return text[-limit:]
 
 
-__all__ = ["HostWorkloadRuntime"]
+__all__ = ["LocalWorkloadRuntime"]

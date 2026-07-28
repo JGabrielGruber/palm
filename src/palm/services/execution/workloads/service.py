@@ -162,14 +162,22 @@ class WorkloadExecutionService(BaseService):
                 "kind": "local",
                 "enabled": True,
                 "health": "ok",
-                "allowed_runtimes": ["host", "neonroot"],
+                "allowed_runtimes": ["local", "host", "neonroot"],
                 "labels": {},
             }
         ]
 
     def runtimes(self, *, runtime_name: str | None = None) -> list[dict[str, Any]]:
-        """Doctor-oriented runtime catalog from the engine."""
+        """Doctor-oriented runtime catalog from the engine (includes health)."""
         return list(self._engine(runtime_name).runtimes())
+
+    def doctor(self, *, runtime_name: str | None = None) -> dict[str, Any]:
+        """Workload-plane doctor snapshot (engine + runner health)."""
+        engine = self._engine(runtime_name)
+        doctor = getattr(engine, "doctor", None)
+        if callable(doctor):
+            return doctor()
+        return {"engine_initialized": engine.is_initialized, "runtimes": engine.runtimes()}
 
     def stop_owned(
         self,

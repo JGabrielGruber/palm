@@ -530,6 +530,7 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 | **0.56.5–0.56.6** | Host warm **workspace**+exec; **`execution.workloads`** + CQRS commands/queries; hosts v0 | Cold-only UX · edge→engine bypass — **product path landed** (REST/MCP aliases later) |
 | **dogfood** | Wizard `step_kind: workload` + **run-python** (host/neonroot/auto); replaces complex run_script loop | Divergent dogfood contracts |
 | **0.56.4b** | **Delete neonroot provider** — runner + WorkloadEngine only; hermetic dogfood retargeted | Dual isolation — **cut** |
+| **trust base** | **`local` always-on runner**; `WorkloadRuntime.health()`; `engine.doctor()` | Engine not trusted without neonroot/host — **landed** |
 | **0.56.7** | Richer host registry + placement + capability flag | Ad-hoc host strings |
 | **0.56.8** | Session cancel hooks / ownership product wiring | Blind long runs |
 | **0.56.9** | Trigger dogfood: `on_workload` + workload.stopped → follow-up flow | Missing reactive path — **landed** |
