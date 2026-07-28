@@ -5,6 +5,7 @@ from palm.core.behavior_tree.nodes.leaf.condition_node import ConditionNode
 from palm.core.behavior_tree.nodes.leaf.interactive_leaf import InteractiveLeaf
 from palm.core.behavior_tree.nodes.leaf.resource_leaf import ResourceLeaf
 from palm.core.behavior_tree.nodes.leaf.transform_leaf import TransformLeaf
+from palm.core.behavior_tree.nodes.leaf.workload_leaf import WorkloadLeaf
 
 __all__ = [
     "ActionNode",
@@ -12,4 +13,5 @@ __all__ = [
     "InteractiveLeaf",
     "ResourceLeaf",
     "TransformLeaf",
+    "WorkloadLeaf",
 ]

@@ -2,8 +2,11 @@
 
 ## Status
 
-**Proposed** — July 2026 (canonical plan: [VISION-0.56](../VISION-0.56.md)).  
-**Accept with 0.56.0.** Supplements [ADR-022](022-neonroot-provider.md) and [ADR-023](023-hermetic-jobs.md); does not renumber them.
+**Accepted** — July 2026 (canonical plan: [VISION-0.56](../VISION-0.56.md)).  
+Supplements [ADR-022](022-neonroot-provider.md) and [ADR-023](023-hermetic-jobs.md); does not renumber them.
+
+**Landed foundation (coherent cut):** pure `palm.core.workload` + `WorkloadLeaf` contract tests.  
+Runners, CQRS, and neonroot adapter follow remaining 0.56 slices.
 
 ## Context
 
@@ -166,16 +169,16 @@ Existing 0.54 definitions remain valid through façades until explicit deprecati
 
 ## Compliance checklist (review / merge)
 
-- [ ] No neonroot/docker/k8s imports under `palm/core/`  
+- [x] No neonroot/docker/k8s imports under `palm/core/`  
 - [ ] Product start path uses **execution** CQRS (`workload.*`)  
-- [ ] WorkloadLeaf contract tests (engine + fake runtime) green  
+- [x] WorkloadLeaf contract tests (engine + fake runtime) green  
 - [ ] Host runtime default off  
-- [ ] Hermetic policy cannot select host  
-- [ ] Cancel/compensation stops owned workloads (test)  
-- [ ] `workload.*` events small; trigger path documented or dogfooded  
+- [x] Hermetic policy cannot select host (engine unit test)  
+- [x] Cancel/compensation stops owned workloads (engine `stop_owned` + leaf contract test)  
+- [x] `workload.*` events small (unit test); trigger path dogfood later  
 - [ ] Provider blueprint does not skip provider for business I/O  
 - [ ] Peer palm allowlisted  
-- [ ] Glossary updated (HERMETIC-JOBS / AGENTS)  
+- [x] Glossary updated (HERMETIC-JOBS / AGENTS)  
 
 ## References
 

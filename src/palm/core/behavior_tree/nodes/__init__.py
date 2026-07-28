@@ -13,6 +13,7 @@ from palm.core.behavior_tree.nodes.leaf import (
     InteractiveLeaf,
     ResourceLeaf,
     TransformLeaf,
+    WorkloadLeaf,
 )
 
 __all__ = [
@@ -25,6 +26,7 @@ __all__ = [
     "InteractiveLeaf",
     "ResourceLeaf",
     "TransformLeaf",
+    "WorkloadLeaf",
     "InverterNode",
     "RepeatNode",
     "RetryNode",

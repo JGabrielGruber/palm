@@ -1,6 +1,6 @@
 # VISION 0.56 — Workload plane (WorkloadEngine + runtimes)
 
-**Status:** 📋 **Queued** — after [VISION-0.55](VISION-0.55.md) **Reactive Interests** (wait kind socket + matcher). Session watches: [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) (may overlap late).  
+**Status:** 🚧 **In progress** — foundation landed (core engine + WorkloadLeaf contract). After [VISION-0.55](VISION-0.55.md) **Reactive Interests**. Session watches: [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) (may overlap late).  
 **Theme:** First-class **isolated workloads** — one-shot **runs** and long-lived **services** — via pure **WorkloadEngine**, pluggable **WorkloadRuntimes**, **hosts**, **execution-domain CQRS** (`ExecutionService.workloads`), **WorkloadLeaf** (opens **wait interest**), optional resource **blueprints**, and **event-driven composition** (pipelines). NeonRoot becomes one runtime, not the product.
 
 > *Palm orchestrates life. Workloads are where foreign work lives. Providers are how we speak to systems. CQRS is how edges ask. Events are how the graph continues. Never collapse those layers.*
@@ -525,9 +525,7 @@ All CQRS errors map to stable codes for Assist CTAs (resume, doctor, open host c
 
 | Patch | Deliverable | Hardens against |
 |-------|-------------|-----------------|
-| **0.56.0** | ADR-024 accepted; glossary HERMETIC-JOBS + AGENTS | Naming drift |
-| **0.56.1** | Core engine + Spec/Result/status + registry + unit tests | Core purity |
-| **0.56.2** | **WorkloadLeaf** + contract tests (leaf + fake runtime + engine) | Divergent pattern APIs |
+| **0.56.0–0.56.2** | ADR-024 accepted; core engine + Spec/Result/status + registry; **WorkloadLeaf** + contract tests; glossary | Naming drift · core purity · divergent pattern APIs — **landed as one coherent foundation** |
 | **0.56.3** | **host** runtime default **OFF** + settings + doctor | Accidental exec |
 | **0.56.4** | neonroot adapter + resource façade | Dogfood break |
 | **0.56.5** | Warm workspace start+exec | Cold-only UX |

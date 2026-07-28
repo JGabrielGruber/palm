@@ -12,6 +12,9 @@ Engines:
 - ``event`` — observability bus
 - ``auth`` — authentication primitives
 - ``transform`` — data transformation rules and pipelines
+- ``wait`` — pure continue-interest vocabulary
+- ``work`` — start-plane intent types
+- ``workload`` — pure workload lifecycle (WorkloadEngine)
 """
 
 from palm.core.auth import AuthEngine, Principal
@@ -83,6 +86,19 @@ from palm.core.transform import (
     TransformResult,
     transform_registry,
 )
+from palm.core.workload import (
+    IsolationPolicy,
+    LifecyclePolicy,
+    WorkloadEngine,
+    WorkloadHandle,
+    WorkloadKind,
+    WorkloadOwner,
+    WorkloadResult,
+    WorkloadRuntime,
+    WorkloadSpec,
+    WorkloadStatus,
+    workload_runtime_registry,
+)
 
 __all__ = [
     "AuthEngine",
@@ -149,4 +165,15 @@ __all__ = [
     "StateNotConfiguredError",
     "StateSchema",
     "StateValidationError",
+    "IsolationPolicy",
+    "LifecyclePolicy",
+    "WorkloadEngine",
+    "WorkloadHandle",
+    "WorkloadKind",
+    "WorkloadOwner",
+    "WorkloadResult",
+    "WorkloadRuntime",
+    "WorkloadSpec",
+    "WorkloadStatus",
+    "workload_runtime_registry",
 ]

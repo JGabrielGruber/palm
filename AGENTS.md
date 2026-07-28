@@ -6,7 +6,7 @@ For AI coding agents and human developers
 *“Palm grows where the sun meets the sea.”*  
 Orchestration should feel alive, truthful, and humane. Structure must serve clarity and longevity, never become a cage.
 
-**Last updated:** July 2026 (0.55 Reactive Interests **closed** — [VISION-0.55](docs/VISION-0.55.md) · [MIGRATION-0.55](docs/migrations/MIGRATION-0.55.md); next [VISION-0.56](docs/VISION-0.56.md) Workload; law in [EVENT-PLANE](docs/EVENT-PLANE.md) · [WORK-DRAIN](docs/WORK-DRAIN.md); north star [VISION-GROVE](docs/VISION-GROVE.md); session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
+**Last updated:** July 2026 (0.56 Workload **in progress** — core `WorkloadEngine` + WorkloadLeaf foundation; [VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md); 0.55 law closed — [EVENT-PLANE](docs/EVENT-PLANE.md) · [WORK-DRAIN](docs/WORK-DRAIN.md); north star [VISION-GROVE](docs/VISION-GROVE.md); session plane → [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
 
 ---
 
@@ -148,6 +148,9 @@ Follow these patterns. They exist so growth remains orderly.
 | Cross-cutting coordination | `palm/common/<area>/` | executions, plans, hooks, persistence, etc. |
 | Wait interest (pure) | `palm/core/wait/` | `WaitInterest`, open/close on state — no I/O |
 | **Continue plane** | `palm/common/wait/` (`WaitPlaneService` — door [0.55.15](docs/VISION-0.55.15.md); deliver registry [0.55.16](docs/VISION-0.55.16.md)) | Match `runtime.event` → deliver → resume/fail; present/doctor; [VISION-0.55.10](docs/VISION-0.55.10.md) |
+| **Workload plane (pure)** | `palm/core/workload/` | `WorkloadEngine`, `WorkloadSpec`, `WorkloadRuntime` protocol + registry — no runner SDKs |
+| Workload adapters | `palm/runners/<name>/` | host / neonroot / ssh / palm — register at bootstrap ([VISION-0.56](docs/VISION-0.56.md)) |
+| Workload product CQRS | `palm/services/execution/workloads/` | `ExecutionService.workloads` — not a top-level service domain |
 | Definition revisioning (0.24+) | `palm/common/persistence/definition_repository.py`, `palm/definitions/`, `palm/instances/` | Append-only `publish_flow_revision`; instance `flow_revision` pin; see [VISION-0.24](docs/VISION-0.24.md) |
 | Definition migration rules (0.24.2+) | `palm/common/persistence/definition_migration.py` | `register_migration_rule()` / `resolve_migration_rule()`; see [ADR-007](docs/adr/007-definition-revisioning.md) |
 | Instance migration execution (0.24.3+) | `palm/common/persistence/instance_migration.py` | `migrate_instance()`; preserve `migration_*` in `instance_sync.py`; REST `POST …/instances/{id}/migrate` |

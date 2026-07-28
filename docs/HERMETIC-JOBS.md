@@ -3,11 +3,25 @@
 **Purpose test:** Palm schedules work as **definitions**; foreign tools run only via
 **NeonRoot** (tmpfs workspaces). See [VISION-0.54](VISION-0.54.md) · [ADR-023](adr/023-hermetic-jobs.md).
 
-## Contract (resource node)
+## Glossary (0.56 workload plane)
+
+| Term | Meaning |
+|------|---------|
+| **Hermetic** | **Isolation policy** (`isolation=hermetic`) — not a synonym for NeonRoot |
+| **WorkloadEngine** | Pure core lifecycle: start / exec / status / stop ([ADR-024](adr/024-workload-engine.md)) |
+| **WorkloadRuntime** | Adapter (host, neonroot, ssh, palm, …) under `palm/runners/` |
+| **WorkloadSpec** | Portable JSON intent (argv lists, image, isolation, placement) |
+| **Provider** | ResourceEngine backend (kv, rest, …) — **speak**, not long-term isolation home |
+| **NeonRoot (today)** | Still a **provider** façade for 0.54 dogfood; becomes a **WorkloadRuntime** in 0.56 |
+
+Product path (0.56+): **allocate** with WorkloadEngine · **speak** with providers · **react** with events.  
+Wait interest kind `workload` is already live from 0.55; engine emits `workload.*` lifecycle events.
+
+## Contract (resource node — 0.54 dogfood path)
 
 | Field | Provider / action | Role |
 |-------|-------------------|------|
-| provider | `neonroot` | Hermetic runner |
+| provider | `neonroot` | Hermetic runner (façade until workload runtime lands) |
 | action | `health` \| `spawn` | Preflight or job |
 | params | see below | Job specification |
 

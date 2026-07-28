@@ -1,9 +1,9 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme:** **`0.55` Reactive Interests** (law closed; continue plane **0.55.10–0.55.16** seated) · **Next minor plan:** **`0.56` Workload** · **Prior:** **`0.54` Hermetic Jobs**  
-**Last Updated:** July 27, 2026  
+**Current Version:** `0.54.10` · **Theme:** **`0.56` Workload** (foundation in progress) · **Prior:** **`0.55` Reactive Interests** (closed) · **`0.54` Hermetic Jobs**  
+**Last Updated:** July 28, 2026  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane + deliver registry · north star [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane + deliver registry · **WorkloadEngine core** · north star [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -104,12 +104,26 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 **Replan:** former Session plane content → [docs/VISION-SESSION-PLANE.md](docs/VISION-SESSION-PLANE.md) (queued after 0.55).
 
+## 0.56 — Workload plane (**in progress**)
+
+**Vision:** [docs/VISION-0.56.md](docs/VISION-0.56.md) · **ADR:** [docs/adr/024-workload-engine.md](docs/adr/024-workload-engine.md) (**Accepted**)
+
+**Theme:** First-class **place** — pure `WorkloadEngine`, pluggable `WorkloadRuntime` adapters (`palm/runners/`), execution CQRS, WorkloadLeaf, events on the reactive plane. NeonRoot becomes a runtime, not “just another provider.”
+
+| Slice | Status |
+|-------|--------|
+| **0.56.0–0.56.2** ADR-024 + core engine + Spec/Result/status/registry + WorkloadLeaf contract tests | ✅ foundation landed (coherent cut) |
+| **0.56.3** host runtime default OFF + doctor | 📋 next |
+| **0.56.4+** neonroot adapter, warm workspace, execution.workloads CQRS, placement, events dogfood, mesh | 📋 queued |
+
+**Package law:** `palm/core/workload/` (pure) · `palm/common/workload/` (placement/ownership helpers later) · `palm/runners/*` · `services/execution/workloads/` · wait kind socket already from 0.55.
+
 ## Horizon
 
 **North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
 
-- **0.55** Reactive Interests — law closed; continue plane through **0.55.16** deliver registry ([VISION-0.55.10](docs/VISION-0.55.10.md) · [VISION-0.55.16](docs/VISION-0.55.16.md))  
-- **0.56** Workload plane ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
+- **0.55** Reactive Interests — law closed; continue plane through deliver registry  
+- **0.56** Workload plane — foundation green; runners + CQRS next ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
 - **Session plane** (queued) — [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
 - Docs dogfood domain (post session + workload)  
 - Adapter runners via workloads (PD-022)  
