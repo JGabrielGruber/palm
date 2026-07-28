@@ -1,8 +1,10 @@
-"""Neonroot WorkloadRuntime — Spec→spawn mapping (CLI optional)."""
+"""Neonroot WorkloadRuntime — Spec→SpawnRequest→CLI (Spec-native)."""
 
 from __future__ import annotations
 
 from unittest.mock import patch
+
+import pytest
 
 from palm.core.workload import (
     IsolationPolicy,
@@ -14,10 +16,11 @@ from palm.core.workload import (
     WorkloadStatus,
 )
 from palm.runners.neonroot.cli import NeonrootProbe
-from palm.runners.neonroot.runtime import NeonrootWorkloadRuntime, _spec_to_spawn_params
+from palm.runners.neonroot.runtime import NeonrootWorkloadRuntime
+from palm.runners.neonroot.spec_map import spawn_request_from_spec
 
 
-def _hermetic_run(*, image: str = "palm-ci") -> WorkloadSpec:
+def _hermetic_run(*, image: str = "palm-ci", seed: dict | None = None) -> WorkloadSpec:
     return WorkloadSpec(
         kind=WorkloadKind.RUN,
         isolation=IsolationPolicy.HERMETIC,
@@ -25,17 +28,72 @@ def _hermetic_run(*, image: str = "palm-ci") -> WorkloadSpec:
         image=image,
         command=("true",),
         placement=WorkloadPlacement(runtime="neonroot"),
-        seed={"type": "none"},
+        seed=seed if seed is not None else {"type": "none"},
     )
 
 
-def test_spec_to_spawn_params_seed_none() -> None:
-    spec = _hermetic_run()
-    params = _spec_to_spawn_params(spec)
-    assert params["image"] == "palm-ci"
-    assert params["command"] == ["true"]
-    assert params["seed"] == "none"
-    assert params["isolated"] is True
+def test_spawn_request_from_spec_seed_none() -> None:
+    req = spawn_request_from_spec(_hermetic_run())
+    assert req.image == "palm-ci"
+    assert req.command == ("true",)
+    assert req.seed == "none"
+    assert req.isolated is True
+    assert req.sandbox is True
+
+
+def test_spawn_request_default_seed_hermetic_is_git_archive() -> None:
+    spec = WorkloadSpec(
+        kind=WorkloadKind.RUN,
+        isolation=IsolationPolicy.HERMETIC,
+        lifecycle=LifecyclePolicy.JOB,
+        image="palm-ci",
+        command=("true",),
+        placement=WorkloadPlacement(runtime="neonroot"),
+        seed=None,
+    )
+    req = spawn_request_from_spec(spec)
+    assert req.seed == "git-archive"
+
+
+def test_spawn_request_path_and_outputs() -> None:
+    spec = WorkloadSpec(
+        kind=WorkloadKind.RUN,
+        isolation=IsolationPolicy.HERMETIC,
+        lifecycle=LifecyclePolicy.JOB,
+        image="palm-ci",
+        command=("ruff", "check"),
+        seed={"type": "path", "path": "docs/", "exclude": [".venv/"]},
+        resources={
+            "outputs": [{"host": "out/a.css", "container": "a.css"}],
+            "vault": "palm-ci",
+        },
+        labels={"name": "docs-job"},
+        placement=WorkloadPlacement(runtime="neonroot"),
+        timeout_s=90,
+    )
+    req = spawn_request_from_spec(spec)
+    assert req.seed == "docs/"
+    assert req.seed_mode == "copy"
+    assert ".venv/" in req.seed_exclude
+    assert req.vault == "palm-ci"
+    assert req.name == "docs-job"
+    assert req.timeout == 90.0
+    assert any("a.css" in o for o in req.outputs)
+
+
+def test_spawn_request_bind_rejects_exclude() -> None:
+    with pytest.raises(ValueError, match="bind"):
+        spawn_request_from_spec(
+            WorkloadSpec(
+                kind=WorkloadKind.RUN,
+                isolation=IsolationPolicy.BEST_EFFORT,
+                lifecycle=LifecyclePolicy.JOB,
+                image="palm-ci",
+                command=("true",),
+                seed={"type": "bind", "path": "/tmp/ws", "exclude": ["x"]},
+                placement=WorkloadPlacement(runtime="neonroot"),
+            )
+        )
 
 
 def test_neonroot_missing_cli_fails_closed() -> None:
@@ -47,6 +105,9 @@ def test_neonroot_missing_cli_fails_closed() -> None:
         wl = engine.start(_hermetic_run())
     assert wl.status is WorkloadStatus.FAILED
     assert wl.result is not None
+    assert (wl.result.runtime_meta or {}).get("error_class") == "runtime_unavailable" or (
+        "neonroot" in (wl.result.error or "").lower()
+    )
     engine.shutdown()
 
 
@@ -65,7 +126,7 @@ def test_neonroot_spawn_success_mapped() -> None:
     }
     with (
         patch("palm.runners.neonroot.cli.probe_neonroot", return_value=present),
-        patch("palm.runners.neonroot.spawn.run_spawn", return_value=payload),
+        patch("palm.runners.neonroot.spawn.run_spawn_request", return_value=payload),
         patch("palm.runners.neonroot.spawn.resolve_repo_root", return_value=None),
     ):
         wl = engine.start(_hermetic_run())
@@ -93,11 +154,18 @@ def test_neonroot_rejects_workspace_kind() -> None:
     engine.shutdown()
 
 
-def test_registry_registers_neonroot_and_host() -> None:
+def test_neonroot_health_and_doctor_shape() -> None:
     import palm.runners  # noqa: F401
 
     from palm.core.workload.registry import workload_runtime_registry
+    from palm.runners.neonroot.doctor import neonroot_doctor_section
 
-    names = set(workload_runtime_registry.names())
-    assert "host" in names
-    assert "neonroot" in names
+    assert "neonroot" in workload_runtime_registry.names()
+    present = NeonrootProbe(available=True, path="/bin/neonroot", version="0.2")
+    with patch("palm.runners.neonroot.cli.probe_neonroot", return_value=present):
+        h = NeonrootWorkloadRuntime().health()
+        assert h.available is True
+        section = neonroot_doctor_section(composition_has_neonroot=True)
+    assert section["role"] == "workload_runtime"
+    assert section["trust"] == "hermetic"
+    assert "health" in section

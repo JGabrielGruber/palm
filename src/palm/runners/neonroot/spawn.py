@@ -260,17 +260,16 @@ def build_spawn_argv(
     return argv
 
 
-def run_spawn(
-    params: dict[str, Any],
+def run_spawn_request(
+    req: SpawnRequest,
     *,
     repo_root: Path | None = None,
 ) -> dict[str, Any]:
-    """Execute spawn; return a serializable result dict (success via exit_code)."""
+    """Execute a validated :class:`SpawnRequest`; return serializable result dict."""
     probe = probe_neonroot()
     if not probe.available or not probe.path:
         raise RuntimeError(probe.error or "neonroot not available")
 
-    req = parse_spawn_params(params)
     root = Path(req.cwd) if req.cwd else (repo_root or Path.cwd())
     root = root.resolve()
 
@@ -328,10 +327,20 @@ def run_spawn(
             "stderr_tail": _tail(stderr or f"timeout after {req.timeout}s"),
             "neonroot": probe.as_dict(),
             "error": f"spawn timed out after {req.timeout}s",
+            "error_class": "timeout",
         }
     finally:
         if cleanup is not None:
             shutil.rmtree(cleanup, ignore_errors=True)
+
+
+def run_spawn(
+    params: dict[str, Any],
+    *,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Execute spawn from a loose param dict (tests / tooling). Prefer Spec path."""
+    return run_spawn_request(parse_spawn_params(params), repo_root=repo_root)
 
 
 def resolve_repo_root() -> Path:
@@ -351,4 +360,5 @@ __all__ = [
     "parse_spawn_params",
     "resolve_repo_root",
     "run_spawn",
+    "run_spawn_request",
 ]

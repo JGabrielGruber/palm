@@ -27,25 +27,26 @@ Isolation is **not** a ResourceEngine provider. Use:
 | DAG | node `workload: { kind, image, command, placement.runtime: neonroot, … }` |
 | API | `ExecutionService.workloads` / CQRS `workload.*` |
 
-Legacy spawn param shape still validated by `palm.runners.neonroot.contract` (maps to Spec).
+### WorkloadSpec seed (portable)
 
-### `spawn` params
+| `seed` | Meaning |
+|--------|---------|
+| omitted + `isolation=hermetic` | `git_archive` |
+| omitted + `best_effort` | `none` |
+| `{type: none}` | no seed |
+| `{type: git_archive}` | `git archive HEAD` |
+| `{type: path, path, exclude?}` | host dir, copy seed |
+| `{type: bind, path}` | live mount (not hermetic) |
 
-| Param | Required | Notes |
-|-------|----------|--------|
-| `image` | yes | e.g. `palm-ci`, `palm-docs` |
-| `command` | yes | argv list |
-| `seed` | no (default `git-archive`) | `git-archive` \| path \| `none` |
-| `seed_mode` | no (default `copy`) | `copy` (hermetic) \| `bind` (live host; NeonRoot 0.2+; needs path seed) |
-| `seed_exclude` | no | list of paths/globs (**not** with `bind`) |
-| `outputs` | no | success-only `host:container` maps (prefer with `copy`) |
-| `vault` | no | vault name |
-| `sandbox` / `isolated` | no | defaults sandbox on |
-| `timeout` | no | seconds |
+Extras in `resources`: `vault`, `outputs`, `sandbox`, `isolated`, `keep`.  
+`labels.name` → neonroot workspace name. Mapping: `palm.runners.neonroot.spec_map`.
+
+### Legacy spawn param shape (tooling / contract tests)
+
+Still validated by `palm.runners.neonroot.contract.validate_hermetic_job_params`
+(`image`, `command`, `seed`, `seed_mode`, `outputs`, …). Prefer Spec in definitions.
 
 Run-dir + bind notes: [HERMETIC-RUN-DIR.md](HERMETIC-RUN-DIR.md).
-
-Python validation: `palm.runners.neonroot.contract.validate_hermetic_job_params`.
 
 NeonRoot workspaces run on **tmpfs** (fast, disposable). Promote results with
 `--output` or Palm post-steps — not whole-tree sync.
