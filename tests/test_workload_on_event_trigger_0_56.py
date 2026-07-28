@@ -1,0 +1,120 @@
+"""0.56.9 — on_workload triggers: workload.stopped → WorkIntent → drain."""
+
+from __future__ import annotations
+
+from examples.definitions.workload_followup import WORKLOAD_FOLLOWUP_FLOW
+from palm.app.host.workplane.work_drain_service import WorkDrainService
+from palm.common.triggers import parse_triggers
+from palm.common.triggers.registry import TriggerRegistry
+from palm.common.workload.neonroot_facade import spawn_params_to_spec
+from palm.core.event import EventEngine
+from palm.core.storage import StorageEngine
+from palm.core.workload import IsolationPolicy, WorkloadKind
+
+
+def test_parse_on_workload_trigger() -> None:
+    specs = parse_triggers(WORKLOAD_FOLLOWUP_FLOW.options)
+    assert len(specs) == 1
+    spec = specs[0]
+    assert spec.kind == "on_workload"
+    assert spec.work_flow_id == "workload-followup"
+    assert spec.workload_when == "stopped"
+    assert spec.workload_labels.get("dogfood") == "run-python"
+
+
+def test_trigger_registry_matches_workload_stopped() -> None:
+    reg = TriggerRegistry()
+    reg.reload_from_flow_rows(
+        [
+            {
+                "name": "workload-followup",
+                "metadata": WORKLOAD_FOLLOWUP_FLOW.options,
+            }
+        ]
+    )
+    intents = reg.on_event(
+        "workload.stopped",
+        {
+            "workload_id": "w1",
+            "status": "STOPPED",
+            "runtime": "host",
+            "exit_code": 0,
+            "labels": {"dogfood": "run-python"},
+        },
+    )
+    assert len(intents) == 1
+    assert intents[0].target == "workload-followup"
+    assert intents[0].payload.get("trigger") == "on_workload"
+
+
+def test_trigger_registry_label_filter() -> None:
+    reg = TriggerRegistry()
+    reg.reload_from_flow_rows(
+        [
+            {
+                "name": "workload-followup",
+                "metadata": WORKLOAD_FOLLOWUP_FLOW.options,
+            }
+        ]
+    )
+    intents = reg.on_event(
+        "workload.stopped",
+        {
+            "workload_id": "w2",
+            "labels": {"dogfood": "other"},
+        },
+    )
+    assert intents == []
+
+
+def test_work_drain_enqueues_on_workload_stopped() -> None:
+    storage = StorageEngine()
+    storage.initialize()
+    storage.select("memory")
+    submitted: list[str] = []
+    engine = EventEngine()
+    engine.initialize()
+    drain = WorkDrainService(
+        storage,
+        submit_flow=lambda f, _p: submitted.append(f),
+        event_engine=engine,
+    )
+    drain.attach_events(engine)
+    drain.reload_triggers(
+        [
+            {
+                "name": "workload-followup",
+                "metadata": WORKLOAD_FOLLOWUP_FLOW.options,
+            }
+        ]
+    )
+    engine.emit(
+        "workload.stopped",
+        workload_id="w-dog",
+        status="STOPPED",
+        runtime="host",
+        exit_code=0,
+        labels={"dogfood": "run-python"},
+    )
+    assert drain.store.pending_count() == 1
+    n = drain.tick()
+    assert n == 1
+    assert submitted == ["workload-followup"]
+    engine.shutdown()
+
+
+def test_spawn_params_to_spec_hermetic() -> None:
+    spec = spawn_params_to_spec(
+        {
+            "image": "palm-ci",
+            "command": ["true"],
+            "seed": "none",
+            "isolated": True,
+            "timeout": 30,
+        }
+    )
+    assert spec.kind is WorkloadKind.RUN
+    assert spec.isolation is IsolationPolicy.HERMETIC
+    assert spec.placement.runtime == "neonroot"
+    assert spec.image == "palm-ci"
+    assert spec.command == ("true",)

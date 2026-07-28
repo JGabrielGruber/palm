@@ -89,30 +89,21 @@ def test_provider_run_script_action() -> None:
 
 
 def test_hermetic_run_code_definitions() -> None:
-    from examples.definitions.hermetic_run_code import (
-        HERMETIC_RUN_CODE_FLOW,
-        HERMETIC_RUN_SCRIPT,
+    """0.56 — hermetic-run-code is an alias of run-python (workload plane)."""
+    from examples.definitions.run_python import (
+        HERMETIC_RUN_CODE_ALIAS,
+        RUN_PYTHON_FLOW,
         register_definitions,
     )
 
-    assert HERMETIC_RUN_SCRIPT.provider == "neonroot"
-    assert HERMETIC_RUN_SCRIPT.action == "run_script"
-    assert "{{ state.code }}" in str(HERMETIC_RUN_SCRIPT.params.get("code"))
-    assert HERMETIC_RUN_CODE_FLOW.pattern == "wizard"
-    steps = [s["slug"] for s in HERMETIC_RUN_CODE_FLOW.options["steps"]]
-    # image → code → run (resource) → remember → display
-    assert steps == [
-        "image",
-        "code",
-        "run",
-        "remember_stdout",
-        "remember_exit",
-        "result",
-    ]
-    run_step = next(s for s in HERMETIC_RUN_CODE_FLOW.options["steps"] if s["slug"] == "run")
-    assert run_step["step_kind"] == "resource"
-    assert run_step["resource_ref"] == "hermetic-run-script"
+    assert RUN_PYTHON_FLOW.pattern == "wizard"
+    assert HERMETIC_RUN_CODE_ALIAS.name == "hermetic-run-code"
+    steps = [s["slug"] for s in RUN_PYTHON_FLOW.options["steps"]]
+    assert steps == ["runtime", "code", "run", "result"]
+    run_step = next(s for s in RUN_PYTHON_FLOW.options["steps"] if s["slug"] == "run")
+    assert run_step["step_kind"] == "workload"
     assert run_step["output_key"] == "run_result"
+    assert "{{ state.code }}" in str(run_step["params"].get("code"))
 
     class _Repo:
         def __init__(self) -> None:

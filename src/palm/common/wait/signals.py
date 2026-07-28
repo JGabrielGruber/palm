@@ -25,6 +25,7 @@ MATCHER_EVENT_TYPES: tuple[str, ...] = (
     "workload.ready",
     "workload.failed",
     "workload.completed",
+    "workload.stopped",  # 0.56 engine terminal success for kind=run
 )
 
 
@@ -125,14 +126,19 @@ def extract_target_signal(
             status=str(data.get("status") or "FAILED"),
         )
 
-    if et in ("workload.completed",):
+    if et in ("workload.completed", "workload.stopped"):
         wid = data.get("workload_id") or data.get("target_id") or data.get("id")
         if not wid:
             return None
         status = data.get("status")
         outcome = _status_outcome(str(status) if status is not None else None)
         if outcome is None:
-            outcome = OUTCOME_SUCCEEDED
+            # STOPPED with exit 0 (or no code) is positive completion
+            exit_code = data.get("exit_code")
+            if exit_code is not None and int(exit_code) != 0:
+                outcome = OUTCOME_FAILED
+            else:
+                outcome = OUTCOME_SUCCEEDED
         return TargetSignal(
             kind=WAIT_KIND_WORKLOAD,
             target_id=str(wid),

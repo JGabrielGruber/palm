@@ -83,10 +83,12 @@ Also emitted: `job.status_changed`, `job.completed` (terminal).
 | `job.status_changed` | Rare | **Yes** if status terminal |
 | `flow.session.succeeded` | Common reaction trigger | **Yes** — job kind |
 | `flow.session.failed` | Optional | **Yes** — fail owner per policy |
-| `resource.changed` | Common analytics / reaction | No (unless a wait kind is added later) |
-| `workload.ready` | Future | **Yes** — `kind=workload` (0.55.7 stub) |
-| `workload.failed` | Future | **Yes** — fail / leave policy |
-| `workload.completed` | Future | **Yes** — terminal via status |
+| `resource.changed` | Common analytics / reaction (`on_resource`) | No (unless a wait kind is added later) |
+| `workload.started` | Optional `on_workload` | No |
+| `workload.ready` | Optional `on_workload` | **Yes** — `kind=workload` |
+| `workload.failed` | Optional `on_workload` | **Yes** — fail / leave policy |
+| `workload.stopped` | **`on_workload` dogfood** (0.56.9) | **Yes** — terminal success (exit 0) |
+| `workload.completed` | Legacy stub alias | **Yes** — terminal via status |
 | `inbound.received` | Enqueue path | No |
 | `work.intent.*` | Observability | No |
 
@@ -97,9 +99,11 @@ Public/composition sets: `palm.common.events.catalog` (`PUBLIC_EVENT_TYPES`, `CO
 Owner job/instance state key **`palm.wait.interests`** (list). Shape: `kind`, `target_id`, `opened_at`, `policy.on_target_failed`, `meta`, `v`.  
 Pure types: `palm.core.wait`. Continue plane: `WaitPlaneService` (package root); matcher/policy/stub as **submodules**. Completion delivery is pluggable via `register_wait_deliverer` / `deliver_wait_completion` (`palm.common.wait.deliver`, 0.55.16). Surfaces: `waiting_on` on inspect / list-waiting / doctor.
 
-### Workload stub events (0.55.7)
+### Workload events (0.55.7 stub → 0.56 engine)
 
-`emit_workload_ready` / `emit_workload_failed` / `emit_workload_completed` in `palm.common.wait.workload_stub` — prove grammar for 0.56 WorkloadEngine. Real engine emits the same type names.
+`WorkloadEngine` emits `workload.started|ready|failed|stopped` on `runtime.event` (small payloads).  
+Wait matcher continues owners; work-drain **`on_workload`** triggers start new flows (e.g. `workload-followup`).  
+Stub helpers remain in `palm.common.wait.workload_stub` for unit tests.
 
 ## Doctor / ops
 

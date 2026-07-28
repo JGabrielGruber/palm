@@ -85,6 +85,14 @@ class WorkDrainService:
             return
         self._sub = event_engine.subscribe("resource.changed", self._on_resource_event)
         event_engine.subscribe("flow.session.succeeded", self._on_flow_event)
+        # 0.56 — workload plane self-events → start path (on_workload triggers)
+        for et in (
+            "workload.started",
+            "workload.ready",
+            "workload.failed",
+            "workload.stopped",
+        ):
+            event_engine.subscribe(et, self._on_workload_event)
 
     def reload_triggers(
         self,
@@ -168,6 +176,13 @@ class WorkDrainService:
             self.enqueue(intent)
 
     def _on_flow_event(self, event: Event) -> None:
+        payload = event.enriched_payload() if hasattr(event, "enriched_payload") else dict(
+            event.payload or {}
+        )
+        for intent in self._triggers.on_event(event.type, payload):
+            self.enqueue(intent)
+
+    def _on_workload_event(self, event: Event) -> None:
         payload = event.enriched_payload() if hasattr(event, "enriched_payload") else dict(
             event.payload or {}
         )

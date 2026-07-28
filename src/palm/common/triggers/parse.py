@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-TriggerKind = Literal["schedule", "on_flow", "on_resource"]
+TriggerKind = Literal["schedule", "on_flow", "on_resource", "on_workload"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -21,6 +21,10 @@ class TriggerSpec:
     # on_resource
     resource: str | None = None
     actions: tuple[str, ...] = ()
+    # on_workload (0.56) — when maps to workload.stopped|failed|ready|started
+    workload_when: str = "stopped"
+    workload_labels: dict[str, str] = field(default_factory=dict)
+    workload_runtime: str | None = None
     debounce_seconds: float = 0.0
     raw: dict[str, Any] = field(default_factory=dict)
 
@@ -122,6 +126,35 @@ def _parse_one(item: dict[str, Any]) -> TriggerSpec | None:
             coalesce_key=coalesce_s or f"on_resource:{resource}:{flow_id}",
             resource=resource,
             actions=actions or ("put",),
+            debounce_seconds=debounce,
+            raw=dict(item),
+        )
+
+    if kind == "on_workload":
+        if not flow_id:
+            return None
+        when = str(item.get("when") or "stopped").strip().lower()
+        if when.startswith("workload."):
+            when = when.removeprefix("workload.")
+        labels_raw = item.get("labels") or {}
+        labels = (
+            {str(k): str(v) for k, v in dict(labels_raw).items()}
+            if isinstance(labels_raw, dict)
+            else {}
+        )
+        runtime = item.get("runtime") or item.get("workload_runtime")
+        runtime_s = str(runtime).strip() if runtime else None
+        try:
+            debounce = float(item.get("debounce") or item.get("debounce_seconds") or 0)
+        except (TypeError, ValueError):
+            debounce = 0.0
+        return TriggerSpec(
+            kind="on_workload",
+            work_flow_id=flow_id,
+            coalesce_key=coalesce_s or f"on_workload:{when}:{flow_id}",
+            workload_when=when or "stopped",
+            workload_labels=labels,
+            workload_runtime=runtime_s or None,
             debounce_seconds=debounce,
             raw=dict(item),
         )

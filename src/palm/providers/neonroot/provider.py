@@ -84,6 +84,24 @@ class NeonrootProvider(BaseProvider):
         )
 
     def _spawn_result(self, merged: dict[str, Any], *, action: str) -> ProviderResult:
+        # 0.56 — prefer WorkloadEngine + neonroot WorkloadRuntime when a Palm
+        # runtime is bound (one isolation plane). Else classic CLI spawn.
+        from palm.common.workload.neonroot_facade import try_spawn_via_workload
+
+        via_engine = try_spawn_via_workload(merged)
+        if via_engine is not None:
+            # Preserve action name from invoke (spawn vs run_script path)
+            if via_engine.metadata.get("action") != action:
+                meta = dict(via_engine.metadata)
+                meta["action"] = action
+                via_engine = ProviderResult(
+                    success=via_engine.success,
+                    data=via_engine.data,
+                    error=via_engine.error,
+                    metadata=meta,
+                )
+            return via_engine
+
         try:
             payload = run_spawn(merged, repo_root=resolve_repo_root())
         except (ValueError, RuntimeError) as exc:

@@ -170,6 +170,41 @@ class TriggerRegistry:
                 depth=depth,
             )
 
+        if spec.kind == "on_workload":
+            # Public plane: workload.started|ready|failed|stopped (ADR-024 / EVENT-PLANE)
+            if not event_type.startswith("workload."):
+                return None
+            suffix = event_type.removeprefix("workload.")
+            want = (spec.workload_when or "stopped").lower()
+            if want not in (suffix, event_type, f"workload.{suffix}"):
+                # allow when="stopped" matching workload.stopped
+                if want != suffix:
+                    return None
+            if spec.workload_runtime:
+                runtime = str(payload.get("runtime") or "")
+                if runtime != spec.workload_runtime:
+                    return None
+            labels = payload.get("labels") if isinstance(payload.get("labels"), dict) else {}
+            for key, value in (spec.workload_labels or {}).items():
+                if str(labels.get(key) or "") != str(value):
+                    return None
+            return WorkIntent(
+                kind="run_flow",
+                target=spec.work_flow_id,
+                payload={
+                    "trigger": "on_workload",
+                    "event_type": event_type,
+                    "workload_id": payload.get("workload_id"),
+                    "status": payload.get("status"),
+                    "runtime": payload.get("runtime"),
+                    "exit_code": payload.get("exit_code"),
+                    "labels": dict(labels) if labels else {},
+                    "depth": depth,
+                },
+                coalesce_key=spec.coalesce_key,
+                depth=depth,
+            )
+
         return None
 
 
