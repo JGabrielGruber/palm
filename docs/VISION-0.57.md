@@ -1,8 +1,10 @@
 # VISION 0.57 — Palm System (name the kernel)
 
-**Status:** 📋 **Plan open** — high-level only. Execution starts at `0.57.1` after review.  
+**Status:** 🚧 **In progress** — map + ADR landed; **0.57.1** debt archive + low-level design done.  
 **Language:** ASD-STE100 Simplified Technical English.  
-**Map:** [docs/PALM.md](PALM.md) — read first.  
+**Map:** [PALM.md](PALM.md) — read first.  
+**Low-level:** [SYSTEM-LOW-LEVEL.md](SYSTEM-LOW-LEVEL.md)  
+**Debt (live):** [TECH-DEBT.md](../TECH-DEBT.md) · archive [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md)  
 **ADR:** [026-palm-system-layer.md](adr/026-palm-system-layer.md).  
 **North star:** [VISION-GROVE](VISION-GROVE.md).  
 **Prior scout:** [VISION-0.56](VISION-0.56.md) workload foundation (direction only; rewrites allowed).
@@ -110,16 +112,16 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
-| **0** | Plan + map + ADR | This file, [PALM.md](PALM.md), ADR-026 — **you are here** |
-| **1** | Debt archive rule | Close or archive the 0.45-era register story; open a **new** debt book for post-system work |
-| **2** | Name the system boundary in code | Package or module façade; guards know system vs shared |
+| **0** | Plan + map + ADR | [PALM.md](PALM.md), this file, ADR-026 — ✅ |
+| **1** | Debt archive + low-level | Live SD register; era archive; [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md) — ✅ **0.57.1** |
+| **2** | Name the system boundary in code | `palm.system` package; system vs shared visible — **next** |
 | **3** | Execution port v1 | Named interface; resource + workload methods |
 | **4** | Rebind graphs | `PatternBuildContext` (or successor) uses the port |
 | **5** | Rebind product | `ExecutionService` paths use the same port |
 | **6** | Deflate shared | Move system-shaped code out of the dump; leave true shared |
 | **7** | Edge policy | No new engine shortcuts; list residual bypass as debt |
-| **8** | Docs pass | ARCHITECTURE / AGENTS point at PALM.md; STE for touched text |
-| **9** | Theme exit | Workload and session can grow **on** the map without a new split |
+| **8** | Docs pass | ARCHITECTURE tracks map; STE for touched text |
+| **9** | Theme exit | Workload and session grow **on** the map without a new split |
 
 **Rule:** Do not ship more dual-path policy (e.g. “workload only through CQRS”) as the main fix.
 
@@ -139,17 +141,12 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 
 ## 8. Debt
 
-**Archive** the narrative of the old technical-debt era as history.  
-Many items are already closed. Do not pretend the old register is the live program.
+| Register | Role |
+|----------|------|
+| [TECH-DEBT.md](../TECH-DEBT.md) | **Live** — SD-* system debt + CF-* carry-forward |
+| [docs/audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md) | **Archive** — PD era history |
 
-**Open** a new debt register for:
-
-- residual edge → engine calls,
-- leftover misplacement after moves,
-- STE rewrite backlog for old docs,
-- any temporary shim during port cutover.
-
-New IDs should not fight old PD numbers without a clear archive header.
+Add SD rows for shims and new bypasses. Do not reopen closed PD IDs without new evidence.
 
 ---
 
@@ -177,16 +174,19 @@ Theme **0.57** may close when:
 
 ---
 
-## 11. First human review
+## 11. Review and next
 
-Approve or correct:
+High-level map and spine are in use.  
+**Next code slice:** **0.57.2** — `palm.system` boundary per [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md) §8.
 
-1. [PALM.md](PALM.md) as the **single high-level map**.  
-2. This vision as the **theme spine**.  
-3. ADR-026 as the **structural decision**.  
-4. Slice order in §6.
+---
 
-After approval, execution starts at **0.57.1** (debt archive or system boundary — pick in the first implement session).
+## 12. Patch log
+
+| Patch | What |
+|-------|------|
+| **0.57.0** | Plan + [PALM.md](PALM.md) + ADR-026 (map era) |
+| **0.57.1** | Archive PD-era debt; live SD register; [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md); AGENTS slim |
 
 ---
 

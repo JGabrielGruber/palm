@@ -12,6 +12,8 @@ For AI coding agents and human developers who change code.
 | Need | Open |
 |------|------|
 | **What Palm is** (layers, job path, ports, planes, laws) | **[docs/PALM.md](docs/PALM.md)** |
+| **System low-level** (package, port, moves) | [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) |
+| **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [docs/STUBS.md](docs/STUBS.md) intentions · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) |
 | How to write docs | [docs/WRITING.md](docs/WRITING.md) (ASD-STE100) |
 | Theme in progress | [STATUS.md](STATUS.md) · [docs/VISION-0.57.md](docs/VISION-0.57.md) |
 | Multi-Palm horizon | [docs/VISION-GROVE.md](docs/VISION-GROVE.md) |
@@ -143,7 +145,9 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 - **System map:** [docs/PALM.md](docs/PALM.md) — update when layers/ports/planes change.  
 - **ADR or waive** for significant decisions ([docs/adr/](docs/adr/), index; or `ADR: waived — …` on VISION/STATUS). Numbers append-only.  
 - **Theme plan:** `docs/VISION-0.X.md` · versioning [docs/VERSIONING.md](docs/VERSIONING.md).  
-- **Status / debt:** [STATUS.md](STATUS.md) · [TECH-DEBT.md](TECH-DEBT.md) (era may archive under 0.57).  
+- **Status / debt:** [STATUS.md](STATUS.md) · live [TECH-DEBT.md](TECH-DEBT.md) · intentions [docs/STUBS.md](docs/STUBS.md); PD-era archive under `docs/audit/`.  
+- **Surfaces:** stay thin; no new `runtime.resource` / `runtime.orchestration` access from surfaces (SU-001 / SD-005).  
+- **Stubs:** do not add fake-success providers/storages; record purpose in STUBS.md (ST-001+).  
 - **STE:** new/revised docs per [WRITING.md](docs/WRITING.md).  
 - Major public API change: also README, ARCHITECTURE, DEVELOPMENT, migrations as needed.  
 - `just docs-check` when docs/version surfaces change.  

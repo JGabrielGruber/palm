@@ -1,305 +1,586 @@
-# Palm — Technical-Debt Register
+# Palm — Technical debt (live)
 
-**Audited commit:** `8413d0e` (v0.45.8, master, clean worktree) · **Date:** 2026-07-15 ·
-**Tools:** radon/xenon/vulture/bandit/pip-audit (via `uvx`), ruff, mypy, pytest-cov, `scripts/guard_core.py`.
-**Regenerate:** re-run the commands in [§ Methodology](#methodology--reproducibility) on this SHA; raw
-artifacts live in [`docs/audit/`](docs/audit/). This document **catalogs** debt and suggests directions
-only — refactor design & execution are out of scope ([§ Non-goals](#non-goals)).
-
-> Scope: comprehensive audit, weighted toward **architecture/coupling**, **tests/coverage/CI**, and
-> **dead-code/dupes/hygiene**; docs-drift, conventions, and dependency/security are cataloged at lower priority.
+**Status:** Live register from **0.57.1**.  
+**Language:** ASD-STE100 Simplified Technical English.  
+**Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
+**Theme:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)
 
 ---
 
-## Executive summary
+## 1. How to use this file
 
-Palm has an **intact foundation** but **eroding enforcement and composition seams**. Graded against its own
-constitution (`AGENTS.md` §1):
+| Rule | Meaning |
+|------|---------|
+| **This file is live** | Open work and residual risk after 0.57.1 |
+| **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
+| **IDs** | **SD-** system · **SU-** surface · **ST-** stub/intention lie · **CS-** code smell · **CF-** carry from PD era |
+| **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |
+| **Stubs catalog** | Purpose without fake implementation: [docs/STUBS.md](docs/STUBS.md) |
+| **Close** | Mark `✅ done` with theme patch; do not delete rows |
+| **Victory path** | Name debt before workaround; fix by [PALM.md](docs/PALM.md) purpose, not by more dual paths |
 
-| 🟢 healthy | 🟡 eroding | 🔴 breached |
-|---|---|---|
-| Core Purity · Registry Extension | Explicit Boundaries · Truth-Seeking · Minimal Magic | **Single Responsibility · Documentation-as-Code · Testability First** |
-
-The three 🔴s are the story: the code that was supposed to keep everything else honest — **tests, CI, and
-docs** — fell behind the 0.45.x *feature-per-patch* cadence, and the **composition root** (`ApplicationHost`)
-plus the **assist/MCP surface** absorbed most of the growth.
-
-**Top findings (by priority):**
-
-1. **No CI runs tests/lint/typecheck/guards** — only `publish.yml`. Nothing gates quality. *(PD-001)*
-2. **The test suite fails on master** — 19 genuine failures (incl. a `guard-common` fitness test), from tests & fakes that lagged production API changes. Invisible because of #1. *(PD-002, PD-003)*
-3. **Known-vuln runtime dependency** — `pydantic-settings 2.14.1` (GHSA-4xgf-cpjx-pc3j), fixed in 2.14.2. *(PD-028)*
-4. **`ApplicationHost` god-object** — 1170 LOC, 89 methods, 29 `@property`; #1 churn hotspot. Breaks the project's own SRP rule. *(PD-009)*
-5. **595 deferred (function-local) imports** used to dodge circular deps — a systemic layering escape valve. *(PD-012)*
-6. **Three overlapping observability APIs** (`event_plane`/`ops`/`control_plane`) with magic-string bus IDs and a live deprecated alias. *(PD-018)*
-7. ~~**Docs stamp / ADR gap**~~ — PD-019 and PD-020 closed in 0.52.4–0.52.5.
-
-**Headline metrics:** 814 src files / 75.5k LOC (tests 265 / 30.9k) · overall coverage **80.2%** (runtimes
-69.6%, core 92.8%) · **19 tests failing** on master · lint **RED**, xenon **RED**, guard-common **RED**,
-guard-core **GREEN** · 595 deferred imports · 48 functions rank D–F complexity · largest file 1170 LOC.
+**Add a row when:** you leave a shim, find an edge→engine bypass, discover a purpose lie, or ship a surface that bypasses product/ports.  
+**Do not add:** fixed bugs that are not structural.
 
 ---
 
-## Themes
+## 2. Master table (system debt)
 
-- **T1 — No CI, and a red master.** The absence of any quality gate (publish-only CI) let the suite, the lint, the complexity gate, and a fitness test all go red on master unnoticed. → PD-001…008. *(The 🔴 for Testability.)*
-- **T2 — The composition root is a god-object.** `ApplicationHost` + `cqrs_wiring` + `inbound_service` concentrate lifecycle, wiring, execution, and status on one class/seam. → PD-009…011. *(The 🔴 for SRP.)*
-- **T3 — Deferred imports as a layering escape valve.** 595 function-local palm imports (registration-by-side-effect + circular-dep avoidance) hide the true dependency graph. → PD-012, PD-013.
-- **T4 — The assist/MCP + CLI surfaces are the complexity & coverage sink.** Highest complexity (CC up to 112) meets lowest coverage (6–35%) here. → PD-014…017.
-- **T5 — Three observability vocabularies.** `event_plane`/`ops`/`control_plane` overlap, nest, and speak in magic strings. → PD-018.
-- **T6 — Docs-as-code is unenforced.** Version stamps and ADRs lag the code by dozens of releases despite it being a stated invariant. → PD-019…021. *(The 🔴 for Docs-as-Code.)*
-- **T7 — Placeholders & untested adapters shipped as installed.** Postgres/Mongo/GraphQL adapters and parquet/dag/etl scaffolds are registered but empty/untested. → PD-022, PD-023.
-- **T8 — Navigability & convention drift.** Broad error-swallowing, pervasive filename reuse, magic constants, inconsistent module naming. → PD-024…027.
-- **T9 — Dependency & security hygiene.** A CVE'd dep, unguarded `urlopen` schemes, empty extras. → PD-028…030.
+| ID | Title | Sev | Effort | Theme slice | Status |
+|----|-------|:---:|:------:|-------------|--------|
+| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | open |
+| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open |
+| [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open |
+| [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | open |
+| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open |
+| [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | open |
+| [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
+| [SD-008](#sd-008) | Session plane has no system home | S2 | M | after system boundary | open |
+| [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5 | open |
+| [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
+| [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.6+ | open |
+| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | during 0.57 | open (empty list) |
+| [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | gate + STUBS | open |
 
----
+### Surface debt (SU)
 
-## Debt register (master table)
+| ID | Title | Sev | Effort | Status |
+|----|-------|:---:|:------:|--------|
+| [SU-001](#su-001) | Explorer SSR bypasses product (engine fields) | S2 | M | open |
+| [SU-002](#su-002) | Explorer / forms god-files (size + mixed roles) | S2 | L | open |
+| [SU-003](#su-003) | MCP dual stack (assist meta + domain tools + fat in_process) | S2 | L | open |
+| [SU-004](#su-004) | MCP legacy module names still in tree | S3 | S | open |
+| [SU-005](#su-005) | CLI legacy alias forest locks old phrases | S3 | M | open |
+| [SU-006](#su-006) | Surface transport kit split (`common.runtimes.server` vs `runtimes.server`) | S2 | L | open |
+| [SU-007](#su-007) | WebSocket / Portal maturity vs dual frame homes | S3 | M | open |
+| [SU-008](#su-008) | Surface weight vs thin-adapter law (~14k server LOC) | S2 | XL | open |
 
-Sorted by **Priority = (Severity × Reach) / Effort**, primary-dimension items nudged up. Severity S1(critical)…S4(cosmetic).
-Effort XS/S/M/L/XL. Conf = confidence. Full evidence in the per-item blocks below.
+### Stub / intention debt (ST)
 
-| ID | Title | Theme | Cat | Sev | Reach | Effort | Prio | Conf |
-|----|-------|:---:|-----|:---:|-------|:---:|:---:|------|
-| PD-001 | No test/lint/typecheck/guard CI (publish-only) | T1 | ci-tooling | S1 | systemic | S | 16 | confirmed |
-| PD-028 | `pydantic-settings 2.14.1` known vuln (runtime dep) | T9 | dependency-security | S3 | systemic | XS | 12 | confirmed |
-| PD-002 | Test suite fails on master (19 genuine failures) | T1 | test-coverage | S1 | systemic | M | 11 | confirmed |
-| PD-004 | Lint gate RED on master (~133 ruff findings) | T1 | ci-tooling | S3 | layer | XS | 9 | confirmed |
-| PD-003 | Test doubles drift from prod signatures | T1 | test-coverage | S2 | layer | S | 8 | confirmed |
-| PD-018 | Three overlapping observability APIs + magic-string buses | T5 | architecture | S2 | layer | M | 5 | confirmed |
-| PD-009 | `ApplicationHost` god-object (1170 LOC / 89 methods) | T2 | architecture | S1 | systemic | XL | 4 | confirmed |
-| PD-012 | ~~~35 upward import cycles~~ **closed 0.47** — upward 35→5 via dependency inversion; 5 sanctioned seams ([ADR-017](docs/adr/017-import-seams.md)) | T3 | architecture | S2 | systemic | M | 5 | ✅ done |
-| PD-010 | `cqrs_wiring` composition-root coupling | T2 | architecture | S2 | layer | L | 3 | confirmed |
-| PD-013 | ~~Dual `server/` trees~~ **closed 0.48.7** — relocated the misplaced `ServerContext`/`ServerApp` composition roots common→runtimes; infra stays in common ([MIGRATION-0.48](docs/migrations/MIGRATION-0.48.md)) | T3→T2 | architecture | S3 | layer | M | 3 | ✅ done |
-| PD-014 | assist/MCP + CLI complexity hotspots (CC≤112) | T4 | complexity | S2 | layer | L | 3 | confirmed |
-| PD-022 | DB adapters untested (postgres/mongo/graphql) | T7 | test-coverage | S2 | layer | L | 3 | confirmed |
-| PD-024 | 163 broad `except Exception`, several swallow errors | T8 | convention | S3 | layer | M | 3 | confirmed |
-| PD-029 | `urllib.urlopen` with no scheme allowlist (9 sites) | T9 | dependency-security | S3 | layer | M | 3 | confirmed |
-| PD-030 | Empty extras `postgres=[]`/`mongodb=[]` (drivers unpinned) | T7/T9 | dependency-security | S3 | module | S | 3 | confirmed |
-| PD-019 | ~~~Doc version stamps ~30 minors behind~~~ **closed 0.52.4** — ARCHITECTURE/DEVELOPMENT/SCOPE in SYNC_TARGETS + docs-check | T6 | doc-drift | S3 | layer | M | 3 | ✅ done |
-| PD-020 | ~~~ADR discipline broken (013 missing, stops at 014)~~~ **closed 0.52.5** — index + 013 reserved + ADR-or-waive rule | T6 | doc-drift | S3 | layer | M | 3 | ✅ done |
-| PD-031 | ~~~`docs-check` gate RED on master (skill/mcp-data mirror drift)~~~ **closed 0.52.1** — mirrors sync via `docs_mirrors` + `sync_version` | T6 | ci-tooling | S3 | module | S | 3 | ✅ done |
-| PD-006 | `.pre-commit-config.yaml` missing (half-wired) | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
-| PD-007 | Audit tools referenced but undeclared in pyproject | T1 | ci-tooling | S3 | module | S | 3 | confirmed |
-| PD-015 | `mcp/in_process.py` 871 LOC / 35% cov / churn 20 | T4 | complexity | S2 | module | L | 2 | confirmed |
-| PD-016 | Large SSR explorer files (992/941 LOC) | T4 | complexity | S3 | module | M | 2 | confirmed |
-| PD-023 | Placeholder features registered as installed | T7 | placeholder | S3 | module | M | 2 | confirmed |
-| PD-008 | No coverage threshold (`--cov-fail-under`) | T1 | ci-tooling | S4 | module | XS | 2 | confirmed |
-| PD-005 | xenon gate RED + only scans `core/` in `just complexity` | T1 | ci-tooling | S3 | layer | L | 2 | confirmed |
-| PD-017 | runtimes layer 69.6% cov; coldest files near-0% | T4 | test-coverage | S3 | layer | L | 2 | confirmed |
-| PD-011 | `inbound_service.py` 725 LOC mixed responsibilities | T2 | complexity | S3 | module | L | 1 | confirmed |
-| PD-026 | Magic numbers (24) + hardcoded hosts/ports (15) | T8 | convention | S4 | layer | S | 1 | confirmed |
-| PD-027 | Inconsistent leading-underscore module naming | T8 | convention | S4 | layer | S | 1 | confirmed |
-| PD-021 | ~~~Root markdown sprawl (28 RELEASE + 14 MIGRATION)~~~ **closed 0.52.2** — under `docs/releases/` + `docs/migrations/` | T6 | doc-drift | S4 | layer | M | 0.7 | ✅ done |
-| PD-025 | Pervasive filename reuse hurts navigability | T8 | convention | S4 | systemic | M | 0.7 | confirmed |
+| ID | Title | Sev | Effort | Status |
+|----|-------|:---:|:------:|--------|
+| [ST-001](#st-001) | Fake-success providers (graphql, postgres) | S1 | S | open |
+| [ST-002](#st-002) | No-op storage backends listed as installed | S1 | S | open |
+| [ST-003](#st-003) | ETL pattern is a phase ticker, still installed | S2 | S | open |
+| [ST-004](#st-004) | Transform `parquet_load` registered, always errors | S3 | XS | open |
+| [ST-005](#st-005) | Tests freeze lying install sets (`test_modular_apps`) | S1 | S | open |
+| [ST-006](#st-006) | Phase-named tests become eternal contracts | S3 | M | open |
 
----
+### Code smell (CS)
 
-## Per-item detail
-
-### T1 — No CI, and a red master
-
-**PD-001 — No test/lint/typecheck/guard CI (publish-only).** `S1 · systemic · Effort S · Testability(§1), Review-Checklist(§6)`
-- Evidence: `.github/workflows/` contains only `publish.yml` (build+publish). No job runs `pytest`, `ruff`, `mypy`, `guard-core`, or `guard-common`. `ls .github/workflows/` (06-tooling.txt).
-- Risk: every gate below (PD-002/004/005 + guard-common) is red on master and nobody is alerted. No Python matrix despite advertising 3.11/3.12/3.13.
-- Blocks: PD-002, PD-004, PD-005 (a gate only matters once CI enforces it). **Root quick-win.**
-- Direction: add a CI workflow running `just check` (lint+typecheck+test-quick+guards) on push/PR; matrix the 3 Pythons.
-
-**PD-002 — Test suite fails on master (19 genuine failures).** `S1 · systemic · Effort M · Testability`
-- Evidence: `uv run --with pytest-cov pytest` → exit 1, **19 failed** (05-pytest-cov.log). All fail **in isolation** too (05-isolation-experiment.txt) → not ordering artifacts. Spans server-wizard, MCP, design-dispatch, flows-dispatch, studio, rest-routes, docs, palm-provider tests. Includes `test_modular_apps.py::test_palm_provider_app_manifest` — a **guard-common** test → `just check` is red.
-- Risk: no green baseline; refactoring is unsafe; the fitness functions the project relies on are themselves failing.
-- Direction: fix/retire the 19; then wire PD-001 so it can't recur.
-
-**PD-003 — Test doubles drift from production signatures.** `S2 · layer · Effort S · Testability`
-- Evidence (verified tracebacks, 05-tests-ci.md): `_FakeRestClient.flows_session_input() got an unexpected keyword argument 'input_token'` (prod `runtimes/mcp/flows/tools.py:194` added the param); `KeyError: 'propose_dashboard'` (new design command absent from the test's `_CONCRETE_PATHS`); palm manifest 4-vs-9 actions.
-- Risk: hand-maintained fakes/expected-maps silently rot as prod APIs evolve — the root pattern behind PD-002.
-- Direction: derive fakes from the real interface (Protocol/ABC) or contract-test the fake against the real signature.
-
-**PD-004 — Lint gate RED on master (~133 ruff findings).** `S3 · layer · Effort XS`
-- Evidence: `uv run ruff check src/palm tests examples` → exit 1; `--statistics`: 61 I001 (unsorted), 25 F401 (`datetime.UTC` unused), 15 RUF100 (unused `noqa: BLE001`), 3 F841, … (09-conventions.txt). Mostly `--fix`-able.
-- Direction: `just lint-fix` + `just format`; then enforce via PD-001.
-
-**PD-005 — xenon gate RED + `just complexity` only scans `core/`.** `S3 · layer · Effort L`
-- Evidence: `uvx xenon --max-average A --max-modules B src/palm` → exit 1, ~40 modules rank C/D/E (03-xenon.txt). The `justfile complexity` recipe runs `radon cc` on `src/palm/core/` only, so the failing modules are never surfaced locally.
-- Direction: fix the worst modules (overlaps PD-014) or set an honest threshold; run radon repo-wide.
-
-**PD-006 — `.pre-commit-config.yaml` missing.** `S3 · module · Effort S` — `just setup` runs `pre-commit install` and `pre-commit` is a dev dep, but no config file exists → nothing runs (06-tooling.txt).
-
-**PD-007 — Audit tools referenced but undeclared.** `S3 · module · Effort S` — `justfile` `audit`/`complexity`/`security`/`refactor` call vulture/radon/xenon/bandit/pip-audit/autoflake, none declared in `pyproject.toml` → recipes fail on a fresh checkout (00-baseline.txt). Direction: add a `dev`/`audit` dependency group.
-
-**PD-008 — No coverage threshold.** `S4 · module · Effort XS` — no `--cov-fail-under` in `pyproject`/`justfile`; coverage can silently regress.
-
-### T2 — The composition root is a god-object
-
-**PD-009 — `ApplicationHost` god-object.** `S1 · systemic · Effort XL · SRP(§1), no-god-classes(§6)`
-- Evidence: `src/palm/app/host/application_host.py` = **1170 LOC, 89 `def`, 29 `@property`, 5 `_wire_*`, 1 class** (01, 02). **#1 churn** (38 touches / 400 commits, 10-churn.txt). 13 `except Exception` (09). Mixes lifecycle, CQRS wiring, execution (`execute`/`ask`/`submit_*`/`invoke_resource`), lazy service accessors, and 3 status methods.
-- Risk: every new surface/feature accretes here; the instability magnet of the codebase.
-- Depends-on: PD-012 (breaking import cycles enables clean extraction).
-- Direction: extract role/subsystem objects (CQRS wiring, host-profile roles, status/observability, inbound) off the class.
-
-**PD-010 — `cqrs_wiring` composition-root coupling.** `S2 · layer · Effort L` — `app/host/cqrs_wiring.py` churn 21, 55% cov; `ApplicationHost._wire_cqrs` is a 123-line root with many function-local imports (02, 10-hotspots.csv). Direction: declarative contributor registration instead of a hand-wired root.
-
-**PD-011 — `inbound_service.py` mixed responsibilities.** `S3 · module · Effort L` — 725 LOC, 9 `except Exception`, polling+dispatch+http in one module (01, 09).
-
-### T3 — Deferred imports as a layering escape valve
-
-**PD-012 — 595 deferred imports masking circular deps.** `S2 · systemic · Effort L · Explicit-Boundaries, Minimal-Magic`
-- Evidence (**refined during 0.47 planning, AST-verified**): the raw 595 grep = **310 `TYPE_CHECKING`** imports (the *correct* cross-layer-type pattern, not debt) + **287 runtime function-local**; of the 287, only **~35 are upward / cycle-forcing** across ~8 seams. `common/__init__.py`'s "12" and `patterns/_registry.py`'s "9" are all `TYPE_CHECKING` — the exemplars, not debt. One 81-module SCC sits above `core` (guard-core holds). Full analysis + slice plan: [docs/VISION-0.47.md](docs/VISION-0.47.md).
-- Risk: the real dependency graph is hidden; import order is load-bearing; **blocks the T2 `ApplicationHost` decomposition** (its 29 wiring imports must hoist first).
-- Direction: relocate registry *data* below `common`; explicit `ready()`/autoload instead of `import`-for-side-effect; move misplaced `common/runtimes/server/*` (also fixes PD-013); a `scripts/guard_deferred.py` ratchet + no-new-upward-edge fitness function. Metric to drive to 0 = **upward function-local imports (35)**.
-
-**PD-013 — Dual `server/` trees.** `S3 · layer · Effort M` — both `src/palm/common/runtimes/server/` and `src/palm/runtimes/server/` exist (two `transport/`, `ssr/`, `surface.py`, `cqrs.py`) (04-duplicate-basenames.txt), blurring the "thin surface vs shared infra" boundary. Direction: document the split crisply or consolidate.
-
-### T4 — assist/MCP + CLI complexity & coverage sink
-
-**PD-014 — assist/MCP + CLI complexity hotspots.** `S2 · layer · Effort L · Minimal-Magic, Testability`
-- Evidence (03-complexity-summary.txt, 10-hotspots.csv): 48 blocks rank D–F; worst `shape_dispatch_result` **CC 112** (`mcp/assist/shape/result.py`, 52% cov), `map_dispatch_to_rest` 65 (`mcp/assist/rest_map.py`, 6.5% cov), `render_status_dashboard` 62 (`cli/commands/dashboard.py`), `menu_for_assist` 49 (`assist/catalog/menu.py`, 41% cov), `run_doctor` 44, `dispatch_system` 44. High complexity ∩ low coverage ∩ high churn.
-- Direction: decompose the dispatch/shape/render mega-functions; add unit tests as they shrink.
-
-**PD-015 — `mcp/in_process.py` big+cold+churned.** `S2 · module · Effort L` — 871 LOC, 35% cov, churn 20, 34 deferred imports, 6 broad excepts (01, 02, 05). The single worst-conditioned file after `application_host.py`.
-
-**PD-016 — Large SSR explorer files.** `S3 · module · Effort M` — `ssr/explorer/components.py` 992, `forms.py` 941 (01); HTML-string builders that could be templated/split.
-
-**PD-017 — runtimes coverage 69.6%; coldest files near-0%.** `S3 · layer · Effort L` — coldest: `mcp/assist/rest_map.py` 6.5%, `cli/tui/prompt.py` 11%, `cli/tui/completion.py` 15%, `mcp/assist/operator.py` 17%, `rest/design/handlers.py` 18% (05-coverage-by-layer.txt).
-
-### T5 — Three observability vocabularies
-
-**PD-018 — Overlapping status APIs + magic-string buses + live deprecated alias.** `S2 · layer · Effort M · SRP, Minimal-Magic`
-- Evidence (02-architecture.txt): `event_plane_status()` (l.899), `ops_status()` (l.939), `control_plane_status()` (l.987) on `ApplicationHost`; bus identity as string literals `"host_fallback"/"runtime"/"host"/"internal"` (l.901-924); `work_drain_background` emitted as a "deprecated alias" (l.1026) alongside `work_drain_running`.
-- Direction: one observability model with typed bus identities; fold the three status methods into a single report with sub-views; drop the deprecated alias on the next minor.
-
-### T6 — Docs-as-code is unenforced
-
-**PD-019 — Version stamps ~30 minors behind.** `S3 · layer · Effort M · Docs-as-Code(§5)` — **✅ closed 0.52.4**
-- Was: ARCHITECTURE / DEVELOPMENT / SCOPE header stamps lagged dozens of minors (audit 08-docs).
-- Fix: `SYNC_TARGETS` + `docs-check` surfaces include those three; `just bump-version` / `sync_version` keep headers on the package version.
-
-**PD-020 — ADR discipline broken.** `S3 · layer · Effort M` — **✅ closed 0.52.5**
-- Was: gap at 013; no living index; “must have ADR” without a waive path → silent debt.
-- Fix: [`docs/adr/README.md`](docs/adr/README.md) index (001–021); [013 reserved](docs/adr/013-number-reserved.md); AGENTS §5 **ADR or explicit waive**; review checklist item.
-
-**PD-021 — Root markdown sprawl.** `S4 · layer · Effort M` — **✅ closed 0.52.2** — `RELEASE-*` → `docs/releases/`, `MIGRATION-*` → `docs/migrations/`; links rewritten. Root is constitution-scale.
-
-**PD-031 — `docs-check` gate RED on master.** `S3 · module · Effort S · Docs-as-Code, ci-tooling` *(found while opening 0.46.0)* — **✅ closed 0.52.1**
-- Was: skill/MCP mirrors drifted from `docs/`; bump stamped `docs/llms.txt`/`mcp.txt` without copying into `mcp/data/`.
-- Fix: `scripts/docs_mirrors.py` + `sync_version` / `just docs-sync-mirrors` / `bump-version` copy canonical sources into MCP package + `.grok` mirrors; `just docs-check` green.
-
-### T7 — Placeholders & untested adapters
-
-**PD-022 — DB adapters untested.** `S2 · layer · Effort L · Testability` — `providers/postgres`, `providers/graphql`, `storages/postgres`, `storages/mongodb` have only registry-presence assertions; no behavioral round-trips (05-adapter-gaps.txt). Ties to PD-030.
-- **Future direction:** real round-trips **inside NeonRoot images**, orchestrated by Palm resource/DAG graphs ([VISION-0.54](docs/VISION-0.54.md) hermetic jobs). Host thin; pin extras when honest (PD-030).
-
-**PD-023 — Placeholder features registered as installed.** `S3 · module · Effort M · Truth-Seeking` — `common/transforms/rules/parquet_load.py` raises "not implemented yet"; `providers/graphql`/`providers/postgres` docstrings say "(placeholder)"; `patterns/dag`/`patterns/etl` are single-pass scaffolds (04-placeholders.txt). *Note:* dag/etl are STATUS-documented "honest placeholders" (partially accepted); the sharper concern is advertised-but-empty providers. Direction: gate placeholders behind an explicit "experimental" flag or don't register them.
-
-### T8 — Navigability & convention drift
-
-**PD-024 — Broad `except Exception` swallowing.** `S3 · layer · Effort M · Truth-Seeking` — 163 occurrences; densest `application_host.py` 13, `inbound_service.py` 9, `ssr/explorer/actions.py` 7 (09-conventions.txt); several degrade-to-fallback blocks discard the error, hiding failures in exactly the observability/wiring paths. Direction: narrow exception types; log-and-reraise or record structured errors.
-
-**PD-025 — Pervasive filename reuse.** `S4 · systemic · Effort M` — 100+ basenames reused across layers (04-duplicate-basenames.txt). **Verified NOT logic duplication:** `job_state`×2, `observability`×3, `state_snapshot`×3 are distinct-responsibility modules (e.g. `state_snapshot` = model / persistence-helper / hook across three layers) — coherent per SRP but hard to navigate. Direction: convention for disambiguating names; rely on the (legitimate, expected) `app.py`/`registry.py`/`provider.py` plugin uniformity but rename genuine ambiguities.
-
-**PD-026 — Magic numbers + hardcoded hosts/ports.** `S4 · layer · Effort S` — 24 `limit=200/100/50` literals, 15 `127.0.0.1`/`:8080`/`localhost:8080` (09-conventions.txt). Direction: pull into settings/constants.
-
-**PD-027 — Inconsistent leading-underscore module naming.** `S4 · layer · Effort S` — 20 `_*.py` modules (`_apps.py`, `_registry.py`, `_params.py`, `_view_meta.py`, `_dates.py`, …) while structurally similar files elsewhere are not underscored (09-conventions.txt).
-
-### T9 — Dependency & security hygiene
-
-**PD-028 — `pydantic-settings 2.14.1` known vuln.** `S3(security) · systemic · Effort XS` — `pip-audit`: GHSA-4xgf-cpjx-pc3j, fixed 2.14.2 (07-pip-audit.txt). It's a **runtime** dep (`pyproject` `pydantic-settings>=2.2,<3`), so shipped installs are exposed. Direction: bump floor to `>=2.14.2` and refresh `uv.lock`. **Quick-win.**
-
-**PD-029 — `urllib.urlopen` without scheme allowlist.** `S3 · layer · Effort M` — 9 `urlopen` sites (webhook `common/events/external.py:76`, `app/host/inbound_service.py:452`, palm `events_client`/`flow/remote/client`, `providers/rest/.../http.py`, `mcp/rest_client.py`); no scheme guard found (bandit B310 Medium, 05-adapter-gaps.txt). For config/user-supplied URLs this is an SSRF / `file://`-read surface. Direction: validate `http(s)` scheme before `urlopen`.
-
-**PD-030 — Empty extras / unpinned drivers.** `S3 · module · Effort S` — `pyproject` `postgres = []`, `mongodb = []` while those providers/storages ship — drivers are neither pinned nor installable; ties to PD-022.
+| ID | Title | Sev | Effort | Status |
+|----|-------|:---:|:------:|--------|
+| [CS-001](#cs-001) | Layer bulk: `runtimes` + `common` dominate LOC | S2 | — | open (metric) |
+| [CS-002](#cs-002) | Triple observability names on host | S2 | M | open (= CF-001) |
+| [CS-003](#cs-003) | Core leaves take concrete engines (not protocols) | S2 | M | open |
+| [CS-004](#cs-004) | Definition `from_dict` forever-legacy shapes | S3 | M | open |
+| [CS-005](#cs-005) | Broad swallow `except` / empty `pass` in hot paths | S3 | M | open (= CF-007) |
 
 ---
 
-## Prioritization view
+## 3. System debt detail
 
-**Quick wins (high impact / low effort) — do these first; several are the dependency roots that unblock the rest:**
-- PD-001 add a CI `just check` gate · PD-028 bump `pydantic-settings` · PD-004 `just lint-fix` · PD-003 refresh drifted fakes → PD-002 green suite · PD-006/007 pre-commit + audit deps · PD-008 coverage floor · PD-019 run the existing `sync_version.py`.
+### SD-001 — No unified execution port
 
-**Strategic refactors (high impact / high effort) — schedule after the suite is green & CI enforces it:**
-- PD-009 decompose `ApplicationHost` · PD-012 break the deferred-import cycles (unblocks PD-009) · PD-014/PD-015 tame the assist/MCP complexity+coverage sink · PD-018 unify observability · PD-022 adapter test suite · PD-013 consolidate server trees.
+**Severity:** S1 · **Effort:** L · **Slices:** 0.57.3 (port), 0.57.4–5 (rebind)
 
-**Fill-ins (low/low):** PD-026, PD-027, PD-021. **Defer (low impact / high effort):** PD-025 mass rename, `archive/` migration, SSR SPA relocation.
+**Observation:** Graphs bind `ResourceEngine` / `WorkloadEngine` via `PatternBuildContext`.  
+Product binds the same engines via `ExecutionService` after `resolve_runtime()`.  
+There is no single named type for “effects a running Palm may perform.”
 
-**Dependency roots:** PD-001 → (PD-002, PD-004, PD-005); PD-012 → PD-009. Fix roots first.
+**Why it hurts:** Every new effect (workload, later session acts) must pick a side or duplicate both.  
+Selective “CQRS only for X” hardens the split.
 
----
+**Target:** `ExecutionPort` (name in [SYSTEM-LOW-LEVEL](docs/SYSTEM-LOW-LEVEL.md)) on the system instance.  
+Graphs and product both call it.
 
-## Roadmap — themes → minors (0.46+)
-
-Executed **one theme per minor** per [`docs/VERSIONING.md`](docs/VERSIONING.md): each minor opens with a
-`VISION-0.X.md` plan (`0.X.0`) and ships its PD items as feature patches (`0.X.1…`). This table is the **live
-tracker** — flip items as they close. Order follows the dependency roots above, **not** strict T-numbers.
-
-| Minor | Theme | Status | Notes |
-|---|---|---|---|
-| **0.46** | **T1 — Safety net (green suite + CI)** | ✅ done · [VISION-0.46](docs/VISION-0.46.md) | Dependency root, landed 0.46.0–0.46.5. Green suite + lint + hermetic CI + coverage floor |
-| **0.47** | T3 — import-cycle cleanup (upward 35→5) | ✅ done · [VISION-0.47](docs/VISION-0.47.md) · [ADR-017](docs/adr/017-import-seams.md) | PD-012 closed via dependency inversion (registries register downward); 5 remaining edges sanctioned as composition-root/lazy seams. PD-013 (`ServerContext` relocation) deferred to 0.48 |
-| **0.48** | T2 — ApplicationHost decomposition (6 seams → host <350 LOC) | 🚧 in progress · [VISION-0.48](docs/VISION-0.48.md) · [ADR-018](docs/adr/018-application-host-decomposition.md) | 8 slices landed (1164→662 LOC); **PD-013 closed** (0.48.7). Remaining: facades + dead-accessor shrink |
-| **0.49** | **Naming** — profile vocabulary for the composition/deployment split | ✅ done · [MIGRATION-0.49](docs/migrations/MIGRATION-0.49.md) | `HostProfile → DeploymentProfile`, `PalmApp → PalmKernel`; anchored `CompositionProfile` |
-| **0.50** | **Composition Profiles** — declare the app's shape; profile-driven services + surfaces | 🟢 landed (0.50.0–0.50.5f) · [VISION-0.50](docs/VISION-0.50.md) · [ADR-019](docs/adr/019-composition-profiles.md) | services (5e: both roots build via one `core_service_registry()`) + surfaces profile-driven; embedded/lean shapes real. **Reframed (0.50.5f):** `ServerContext` **retained** (surface-facing context + lean phenotype), not dissolved — the fold-in needs projections-as-capability first (→ 0.51) |
-| **0.51** | **Living Capabilities** — the profile's third axis comes alive; projections-as-capability | ✅ landed (0.51.0–0.51.6) · [VISION-0.51](docs/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md) | `composition.capabilities` now authoritative (resolver-derived, pinned; settings/deployment refine). Lean `ApplicationHost` is real — projection-less, submit + read complete. Scout ([SCOUT-0.51.6](docs/SCOUT-0.51.6-serverctx-foldin.md)) confirmed `ServerContext` stays (fold-in = churn, not simplification) |
-| **0.52** | **T6 — The Living Library** (docs-as-code) | 🟡 open · [VISION-0.52](docs/VISION-0.52.md) · [ADR-021](docs/adr/021-living-library.md) | SOURCE/BUILD/SURFACE; T6 PDs closed through 0.52.5; builder+deploy 0.52.6 |
-| **0.53** | **Sovereign Runners** — NeonRoot as provider | ✅ landed (0.53.0–0.53.8) · [VISION-0.53](docs/VISION-0.53.md) · [ADR-022](docs/adr/022-neonroot-provider.md) | provider + palm-ci/docs images + doctor/assist + composition flag |
-| **0.54** | **Hermetic Jobs** — definition graphs + neonroot; DAG v0 | 🟡 open (0.54.0 replan) · [VISION-0.54](docs/VISION-0.54.md) · [ADR-023](docs/adr/023-hermetic-jobs.md) | Purpose test; docs product deferred |
-| **0.55** | **Reactive Interests** | open · [VISION-0.55](docs/VISION-0.55.md) · [ADR-025](docs/adr/025-reactive-interests.md) | Wait + trigger law; Grove foundation |
-| **post-0.56** | **Docs dogfood domain** (optional) | queued · after session + workload | Living Library as business process on hermetic jobs |
-| later | **Adapter runners** (T7 / PD-022) | queued | Postgres/Mongo/GraphQL real tests in NeonRoot images; pin extras; gate placeholders |
-| next | T5 — observability unification | queued | Likely breaks API → `MIGRATION` doc |
-| later | T4 — assist/MCP complexity + coverage | queued | |
-| later | T7 — adapters & placeholders | queued | |
-| later | T8 / T9 — conventions, security hygiene | queued | Fold quick-wins opportunistically |
-
-Exact minor numbers beyond 0.46 are assigned when each theme starts. Security / one-line quick-wins may land
-early regardless of theme.
-
-**Closed:** PD-028 (0.46.1 — CVE bump) · **PD-002, PD-003** (0.46.2 — full test suite green, 22→0; +2 latent prod bugs fixed: session_input 404, non-wizard inspect guard) · **PD-004** (0.46.3 — ruff lint gate green) · **PD-001, PD-006, PD-007** (0.46.4 — CI gate via NeonRoot hermetic sandbox `just ci-sandbox`, pre-commit hooks, audit dep group; ADR-016; mypy stays report-only pending T2) · **PD-008** (0.46.5 — coverage floor `fail_under=78`, current 80.33%). **T1 complete.**
+**Evidence:** `common/patterns/build_context.py`; `services/execution/providers/service.py`; `services/execution/workloads/service.py`; wizard/dag leaves.
 
 ---
 
-## Accepted trade-offs (logged, not defects)
+### SD-002 — System mixed into `palm.common`
 
-Verified as deliberate; documented here so the audit doesn't re-flag them:
-- **SHA1 in `common/websocket/frames.py:28`** — RFC 6455 `Sec-WebSocket-Accept` handshake (protocol-mandated, not security-sensitive). Bandit B324 false positive; optionally silence with `usedforsecurity=False`.
-- **E501 line-length ignored** — deliberate ruff policy (`pyproject`); **`B008`** likewise.
-- **`patterns/wizard/** I001` isort waiver** — intentional import order for circular-import safety (documented in `pyproject`).
-- **`patterns/dag` & `patterns/etl` placeholders** — STATUS-documented "honest placeholders."
-- **`archive/` (104 files)** — AGENTS.md §7 archive policy; import-guarded, reference-only.
-- **common→patterns registry bridges (11)** — documented autoload seam; `test_common_boundary.py` accepts it. (Latent coupling-direction risk; watch, don't fix.)
-- **Hand-rolled stdlib HTTP/WS server & client** — deliberate zero-web-framework philosophy. Not debt per se; its costs surface as PD-029 (scheme hardening) and part of PD-014/PD-024.
-- **`repomix-output.xml` (5.4 MB) & `.coverage` on disk** — **untracked/gitignored**; local hygiene only, *not* repo debt (verified via `git ls-files`).
+**Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary), 0.57.6 (deflate)
 
----
+**Observation:** `common` holds true shared libraries **and** the running kernel:
 
-## Methodology & reproducibility
+| Area | Class |
+|------|--------|
+| `common/runtimes/base.py` (`BaseRuntime`) | System |
+| `common/wait/` | System (continue plane) |
+| `common/work/` | System (start plane) |
+| `common/workload/` | System-adjacent |
+| `common/executions/` | System-adjacent |
+| `common/hooks/` | System-adjacent |
+| `common/transforms/` | Shared |
+| `common/cqrs/` | Shared primitive (+ host wiring) |
+| `common/services/` | Shared product base |
 
-Pinned to `8413d0e`. Missing tools run via `uvx` / `uv run --with` (never installed into the project). Full raw
-outputs in [`docs/audit/`](docs/audit/). Guard scripts are authoritative and override heuristic tools.
+**Why it hurts:** Session and new planes have no clean home. Shared becomes a dump.
 
-| Step | Command | Artifact |
-|------|---------|----------|
-| 0 Baseline | `git rev-parse HEAD`; `uv run python --version`; tool `--version` probes | `00-baseline.txt` |
-| 1 Inventory | `find src/palm -name '*.py' -exec wc -l {} + \| sort -rn` | `01-inventory.txt` |
-| 2 Architecture | `python scripts/guard_core.py`; `just guard-common`; deferred-import grep; boundary greps; method census | `02-*.txt` |
-| 3 Complexity | `uvx radon cc src/palm -s -a`; `uvx radon mi`; `uvx xenon --max-average A --max-modules B src/palm` | `03-*.txt` |
-| 4 Dead/dupe | `uvx vulture src/palm --min-confidence 80`; `uvx autoflake --check`; placeholder & basename greps | `04-*.txt` |
-| 5 Tests/cov | `uv run --with pytest-cov pytest --cov=src/palm --cov-report=json`; isolation experiment | `05-*.{md,txt,json}` |
-| 6 CI/tooling | inspect `.github/workflows/`, pre-commit, coverage-gate, pyproject | `06-tooling.txt` |
-| 7 Deps/sec | `uv run --with pip-audit pip-audit`; `uvx bandit -r src/palm -ll -ii` | `07-*.txt` |
-| 8 Docs | `scripts/docs_check.py`; version-stamp & ADR greps | `08-docs.txt` |
-| 9 Conventions | `ruff check --statistics`; magic-value & cruft greps | `09-*.txt` |
-| 10 Hotspots | churn × LOC × max-CC × coverage join | `10-hotspots.csv`, `10-churn.txt` |
-| 11 Scorecard | synthesize 2–10 vs AGENTS.md §1 | `11-principle-scorecard.md` |
-
-Verification gate applied to every `confirmed` item: one automated signal **plus** a live re-derived `path:line`;
-plugin dynamic-dispatch false-positives excluded (vulture vs `INSTALLED_*`); guard scripts trump heuristics
-(guard-core PASS → no core-purity item filed); deliberate trade-offs moved to the section above.
+**Target:** Visible `palm.system` (or equivalent) per [SYSTEM-LOW-LEVEL](docs/SYSTEM-LOW-LEVEL.md).  
+Shared stays libraries only.
 
 ---
 
-## Non-goals
+### SD-003 — `RuntimeHost` incomplete
 
-- **No refactor design or implementation, and no edits to `src/`.** This document catalogs debt and suggests
-  directions only; the fixes are a separate, later effort.
-- Audit tools are run ephemerally, not added to project deps as part of the analysis (though "add them + a CI
-  gate" is itself a register item — PD-001/PD-007).
+**Severity:** S2 · **Effort:** M
+
+**Observation:** Protocol exposes `orchestration`, `event`, `resource`, `is_started`.  
+Live `BaseRuntime` also has `workload`, `context`, `wait_plane`, auth, storage, executor.
+
+**Why it hurts:** The “contract of a running Palm” lags the real machine. Workload is already on the runtime but not on the protocol story.
+
+**Target:** System protocol = ports + lifecycle, not a partial engine list.  
+See low-level design §3.
+
+**Evidence:** `common/runtimes/host.py` vs `common/runtimes/base.py`.
+
+---
+
+### SD-004 — `PatternBuildContext` is an engine bag
+
+**Severity:** S1 · **Effort:** M · **Slice:** 0.57.4
+
+**Observation:** Build context fields are raw engines (`resource_engine`, `workload_engine`, …).  
+`DefinitionExecutor._build_context()` uses `getattr` on the runtime.
+
+**Target:** Context holds an **execution port** (and any pure helpers).  
+Leaves accept the port or narrow views of it.
+
+**Evidence:** `common/executions/executor.py` `_build_context`; pattern builders.
+
+---
+
+### SD-005 — Edge and product call engines by field
+
+**Severity:** S2 · **Effort:** L · **Slices:** 0.57.5, 0.57.7
+
+**Observation (sample, not exhaustive):**
+
+| Site | Access |
+|------|--------|
+| `services/execution/providers/service.py` | `runtime.resource` |
+| `services/execution/workloads/service.py` | `runtime.workload` |
+| `services/execution/flows/session.py` | `runtime.orchestration.resume_job` |
+| `app/kernel.py` | `runtime.resource.invoke` |
+| `runtimes/server/.../explorer/fetch.py` | `runtime.resource` |
+| `runtimes/server/.../explorer/actions.py` | `orchestration.resume_job` |
+| `providers/palm/.../local.py` | `runtime.resource.invoke` |
+| `providers/palm/.../system_inspect.py` | `runtime.orchestration.list_jobs` |
+| `common/interactive_runtime.py` | `orchestration.resume_job` |
+
+**Target:** Product → port. Surfaces → product (or thin system entry).  
+List remaining bypasses here when found; do not add new ones without an SD row.
+
+---
+
+### SD-006 — `PalmKernel` name vs system instance
+
+**Severity:** S3 · **Effort:** S
+
+**Observation:** `PalmKernel` is infra (storage, instance manager, runtime registry).  
+Readers may think it is the effect kernel.
+
+**Target:** Docs tell the truth (done in PALM.md). Code comments and public docstrings match.  
+Optional rename only if it reduces confusion without theater.
+
+---
+
+### SD-007 — Product `SystemService` vs system layer
+
+**Severity:** S3 · **Effort:** S
+
+**Observation:** `palm.services.system` is doctor/health product.  
+**System layer** is the kernel shape. Same English word, two purposes.
+
+**Target:** Speech and docs: “product SystemService” vs “system layer”.  
+Rename product only if needed after system package lands.
+
+---
+
+### SD-008 — Session plane has no system home
+
+**Severity:** S2 · **Effort:** M
+
+**Observation:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) is queued.  
+Without a system layer, session tends to fall into product or common.
+
+**Target:** Seat under system after 0.57.2 boundary. Full session theme later.
+
+---
+
+### SD-009 — Workload dual bind
+
+**Severity:** S1 · **Effort:** M · **Slices:** 0.57.3–5
+
+**Observation:** WorkloadLeaf / wizard workload phase take `WorkloadEngine`.  
+`WorkloadExecutionService` takes runtime → engine.  
+0.56 vision still describes both paths.
+
+**Target:** Same execution port methods for start/exec/stop/status.  
+Rewrite leaf and service together; do not “CQRS-only” the leaf.
+
+---
+
+### SD-010 — STE rewrite backlog
+
+**Severity:** S4 · **Effort:** L
+
+**Observation:** New map/theme text uses STE.  
+ARCHITECTURE, README, many VISION files remain dense legacy.
+
+**Target:** Rewrite when a file is touched for substance. No big-bang rewrite required for 0.57 exit.
+
+---
+
+### SD-011 — Server transport under `common.runtimes`
+
+**Severity:** S2 · **Effort:** L
+
+**Observation:** HTTP protocol helpers, route types, and related server glue live under `palm.common.runtimes.server`.  
+Surfaces import them heavily (~many files). This is surface **infra**, not pure shared, and not the system port table.
+
+**Target:** After system extract, classify: stay shared transport kit, or move next to `palm.runtimes.server`.  
+Do not block execution port on this move.
+
+---
+
+### SD-012 — Cutover shims
+
+**Severity:** S3 · **List:** empty at 0.57.1 open
+
+When a temporary compatibility import or façade exists during 0.57, **add a bullet here** with path and remove-by slice.
+
+| Shim | Path | Remove by |
+|------|------|-----------|
+| *(none yet)* | | |
+
+---
+
+### SD-013 — Installed placeholders that lie
+
+**Severity:** S1 · **Effort:** M · **Related:** ST-001…005, CF-006 (PD-023)
+
+**Observation:** Several plugins **register as installed** and return **fake success** or **no-op persistence**.  
+Doctor, modular-app tests, and agent discovery treat them as real capabilities.
+
+**Policy (normative):**
+
+1. Keep **intention** (name + purpose) in [docs/STUBS.md](docs/STUBS.md).  
+2. Do **not** keep a fake implementation that looks healthy.  
+3. Gate experimental apps: not in default `INSTALLED_*`, or mark maturity `stub` and fail loudly on use.  
+4. Tests assert **intention sets**, not “fake providers return data.”
+
+**Target:** Capability catalog is truthful. Stubs do not hold Palm to legacy contracts.
+
+---
+
+## 3b. Surface debt detail
+
+Surfaces must stay **thin** ([PALM.md](docs/PALM.md)). Today `palm.runtimes` is the largest tree (~22k LOC Python). Most weight is **server** (~14k) then **MCP** (~4.7k) then **CLI** (~3.8k). Embedded/daemon stay small.
+
+### SU-001 — Explorer SSR bypasses product
+
+**Severity:** S2 · **Effort:** M · **Related:** SD-005
+
+**Observation:** Explorer fetch/actions touch system fields:
+
+| Path | Access |
+|------|--------|
+| `runtimes/server/surfaces/ssr/explorer/fetch.py` | `runtime.resource` invoke |
+| `runtimes/server/surfaces/ssr/explorer/actions.py` | `orchestration.resume_job` |
+
+**Why it hurts:** Surfaces invent a second execution path. Port work will miss this unless listed.
+
+**Target:** Explorer → product services or execution port only.
+
+---
+
+### SU-002 — Explorer / forms god-files
+
+**Severity:** S2 · **Effort:** L · **Related:** CF-004 (PD-016)
+
+**Observation:**
+
+| File | ~LOC |
+|------|-----:|
+| `ssr/explorer/components.py` | 988 |
+| `ssr/explorer/forms.py` | 942 |
+| `ssr/explorer/actions.py` | 382 |
+| `rest/doc_examples.py` | 642 |
+
+Mixed HTML, forms, and orchestration concerns.
+
+**Target:** Split present vs drive; drive through product.
+
+---
+
+### SU-003 — MCP dual stack
+
+**Severity:** S2 · **Effort:** L · **Related:** CF-003 (PD-014/015)
+
+**Observation:**
+
+- Assist-first meta-tool is the **law** for agents.  
+- Full domain tool packs still exist (`flows/`, `design/`, …).  
+- `mcp/in_process.py` ~816 LOC — bridge + catalog + surface glue.
+
+**Why it hurts:** Two mental models for agents; fat process entry resists “thin surface.”
+
+**Target:** Assist path complete; domain tools optional or generated from same dispatch; shrink in_process.
+
+---
+
+### SU-004 — MCP legacy module names
+
+**Severity:** S3 · **Effort:** S
+
+**Observation:** Tiny re-export stubs still named as if they were eras:
+
+- `mcp/tools.py` — “legacy tool registration”  
+- `mcp/debug_tools.py`  
+- `mcp/phase5_tools.py`
+
+**Target:** Delete or one `mcp/legacy.py` with explicit deprecation; stop phase numbers in module names.
+
+---
+
+### SU-005 — CLI legacy alias forest
+
+**Severity:** S3 · **Effort:** M
+
+**Observation:** CLI keeps primary commands **and** shorter legacy phrases (`registry.py`, `catalog.py`, help text).  
+Pre-1.0 is free to cut aliases; keeping them freezes old product language.
+
+**Target:** One phrase set; migration note if needed; drop aliases that only exist for comfort.
+
+---
+
+### SU-006 — Surface transport kit split
+
+**Severity:** S2 · **Effort:** L · **Related:** SD-011
+
+**Observation:** ~80 surface modules import `palm.common.runtimes.server` (protocol, routes, middleware).  
+Concrete surfaces live under `palm.runtimes.server`. Two homes for one HTTP story.
+
+**Target:** One home after system extract (kit next to surfaces **or** named shared transport package).
+
+---
+
+### SU-007 — WebSocket / Portal dual homes
+
+**Severity:** S3 · **Effort:** M
+
+**Observation:** WS frames re-export from `common.websocket`; session logic under `runtimes/server/surfaces/websocket/`.  
+Portal client direction is still thin vs Assist law.
+
+**Target:** One frame module path; Portal stays a client of Assist dispatch only.
+
+---
+
+### SU-008 — Surface weight vs thin-adapter law
+
+**Severity:** S2 · **Effort:** XL
+
+**Observation (approx. Python LOC under `src/palm/runtimes/`):**
+
+| Surface | ~LOC | Note |
+|---------|-----:|------|
+| server | 14100 | REST + SSR + WS |
+| mcp | 4700 | tools + in_process |
+| cli | 3800 | commands + TUI |
+| daemon | 50 | thin OK |
+| embedded | 30 | thin OK |
+
+**Why it hurts:** “Thin surface” is a law surfaces currently fail by bulk. Not all LOC is wrong (HTML/OpenAPI is heavy), but bypass and dual stacks are.
+
+**Target:** Metric + policy: new surface code must call product/ports; no new engine field access (SD-005/SU-001).
+
+---
+
+## 3c. Stub / intention debt detail
+
+Full intention table: [docs/STUBS.md](docs/STUBS.md).
+
+### ST-001 — Fake-success providers
+
+**Severity:** S1 · **Effort:** S
+
+| Provider | Behavior today |
+|----------|----------------|
+| `graphql` | `fetch` returns `{"source": "graphql", ...}` — **not** GraphQL |
+| `postgres` | same pattern — **not** SQL |
+
+Both sit in `INSTALLED_PROVIDERS`.
+
+**Target:** Intention only in STUBS.md; remove from default install **or** raise `NotImplemented` / doctor `maturity=stub`.
+
+---
+
+### ST-002 — No-op storage backends
+
+**Severity:** S1 · **Effort:** S
+
+| Backend | Behavior |
+|---------|----------|
+| `storages/postgres` | `get` → always `None`; `set` no-op |
+| `storages/mongodb` | placeholder client |
+
+Listed in `INSTALLED_STORAGES` / optional set; modular tests require the names.
+
+**Target:** Same as ST-001. Do not claim durable storage.
+
+---
+
+### ST-003 — ETL pattern phase ticker
+
+**Severity:** S2 · **Effort:** S
+
+**Observation:** `EtlPattern.tick` only sets `etl_phase` extract/transform/load. No real ETL.  
+Still in `INSTALLED_PATTERNS` next to wizard/dag.
+
+**Target:** Intention “ETL pattern” reserved; demote install or label scaffold. DAG is real enough to keep.
+
+---
+
+### ST-004 — `parquet_load` always errors
+
+**Severity:** S3 · **Effort:** XS
+
+**Observation:** Registered transform; `apply` always raises. Honest error, but catalog still lists it as a rule.
+
+**Target:** Optional extra or intention-only; doctor marks stub.
+
+---
+
+### ST-005 — Tests freeze lying install sets
+
+**Severity:** S1 · **Effort:** S
+
+**Observation:** `tests/test_modular_apps.py` asserts exact equality with:
+
+- patterns including `etl`  
+- providers including `graphql`, `postgres`  
+- storages including no-op backends  
+
+**Why it hurts:** Truthful demotion of stubs **breaks CI** until tests change. Tests protect the lie.
+
+**Target:** Assert **core** install sets + separate **stub intention** registry. Do not require fake providers to load as full apps unless gated.
+
+---
+
+### ST-006 — Phase-named tests
+
+**Severity:** S3 · **Effort:** M
+
+**Observation:** Names like `test_cqrs_phase5.py`, `test_mcp_phase3.py`, `test_resource_phase5.py` encode temporary program phases as permanent contracts.
+
+**Target:** Rename to capability (`test_cqrs_schemas.py`, …) when touched; no new `phaseN` files.
+
+---
+
+## 3d. Code smell detail
+
+### CS-001 — Layer bulk
+
+**Severity:** S2 · **Metric**
+
+Approx. Python LOC under `src/palm/`:
+
+| Package | ~LOC |
+|---------|-----:|
+| runtimes (surfaces) | 22700 |
+| common | 20500 |
+| services | 11200 |
+| patterns | 9900 |
+| core | 7800 |
+| app | 5000 |
+
+**Use:** Track after system extract; surfaces and common should both fall or reclassify.
+
+---
+
+### CS-002 — Triple observability names
+
+See **CF-001** / PD-018. Host exposes `event_plane_status`, `ops_status`, `control_plane_status`.  
+Align with [EVENT-PLANE](docs/EVENT-PLANE.md) vocabulary (runtime vs host bus).
+
+---
+
+### CS-003 — Core leaves take concrete engines
+
+**Severity:** S2 · **Related:** SD-001, SYSTEM-LOW-LEVEL P2
+
+`ResourceLeaf` (and similar) take `ResourceEngine` type in **core**.  
+Blocks a clean port without a core **protocol** for invoke.
+
+**Target:** Small invoker protocol in core; engines and ports implement it.
+
+---
+
+### CS-004 — Definition forever-legacy shapes
+
+**Severity:** S3
+
+`from_dict` paths accept legacy shapes across definitions. Pre-1.0 can drop dead branches once fixtures update.
+
+---
+
+### CS-005 — Broad swallow / empty pass
+
+See **CF-007**. Prefer explicit error or documented ignore.
+
+---
+
+## 4. Carry-forward (old era, still real)
+
+These are **not** closed by the archive. Full text: [TECH-DEBT-ERA-0.45](docs/audit/TECH-DEBT-ERA-0.45.md).
+
+| ID | Old | Title | Notes |
+|----|-----|-------|-------|
+| CF-001 | PD-018 | Overlapping observability vocabularies | Host vs runtime bus is clearer; magic strings may remain |
+| CF-002 | PD-009 / PD-010 | Host composition residual | Host smaller than 1170 LOC; watch god-object creep |
+| CF-003 | PD-014 / PD-015 | Assist/MCP complexity + coverage | Product/surface debt |
+| CF-004 | PD-016 | Large SSR explorer files | Surface debt; also SD-005 call sites |
+| CF-005 | PD-022 / PD-030 | DB adapters + empty extras | Runner/provider maturity |
+| CF-006 | PD-023 | Placeholders registered as installed | Gate experimental |
+| CF-007 | PD-024 | Broad `except Exception` | Hygiene |
+| CF-008 | PD-029 | `urlopen` scheme allowlist | Security hygiene |
+| CF-009 | PD-005 | Complexity gate scope | Tooling |
+| CF-010 | PD-017 | Runtimes coverage cold spots | Tests |
+| CF-011 | PD-011 | Inbound mixed responsibilities | Host/work plane |
+| CF-012 | PD-025–027 | Naming / magic numbers | Low priority |
+
+**Closed in old era (do not reopen without new evidence):**  
+PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and theme-closed work through 0.55 — see archive roadmap tables.
+
+---
+
+## 5. 0.57 slice ↔ debt
+
+| Slice | Closes or reduces |
+|------:|-------------------|
+| 0.57.1 | Archive + SD register + low-level + **STUBS / surface debt** |
+| 0.57.2 | SD-002 (start), SD-003, SD-006 |
+| 0.57.3 | SD-001 (port exists), SD-009 (start) |
+| 0.57.4 | SD-004 |
+| 0.57.5 | SD-001, SD-005, SD-009 (product rebind) |
+| 0.57.6 | SD-002 (deflate), SD-011 / SU-006 classify |
+| 0.57.7 | SD-005 + **SU-001** residual; no new surface engine access |
+| parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
+| later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |
+
+---
+
+## 6. Accepted trade-offs (not defects)
+
+- **Core purity** — absolute; never “fix” by importing product into core.  
+- **Register downward** — absolute.  
+- **Pre-1.0 breaks** — allowed when structure needs truth; record SD/CF, ship migration note if public API breaks.  
+- **Archive era PD numbers** — frozen history; no renumber.
+
+---
+
+*Name the debt. Then pay it in order. Do not paper it.*

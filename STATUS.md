@@ -1,10 +1,11 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme (plan):** **`0.57` Palm System** · **Scout:** **`0.56` Workload** (foundation) · **Prior:** **`0.55` Reactive Interests** · **`0.54` Hermetic Jobs**  
+**Current Version:** `0.54.10` · **Theme:** **`0.57` Palm System** (in progress) · **Scout:** **`0.56` Workload** · **Prior:** **`0.55` Reactive Interests** · **`0.54` Hermetic Jobs**  
 **Last Updated:** July 29, 2026  
-**System map (read first):** [docs/PALM.md](docs/PALM.md) · [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)  
-**Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane · **WorkloadEngine** scout · **0.57** names the system layer · north star [Grove](docs/VISION-GROVE.md).
+**System map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) · [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **0.57** system layer · [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -30,18 +31,26 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry. |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.57 — Palm System (**plan open**)
+## 0.57 — Palm System (**in progress**)
 
-**Vision:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · **ADR:** [docs/adr/026-palm-system-layer.md](docs/adr/026-palm-system-layer.md) · **Map:** [docs/PALM.md](docs/PALM.md)
+**Vision:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · **ADR:** [docs/adr/026-palm-system-layer.md](docs/adr/026-palm-system-layer.md)  
+**Map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
+**Debt:** [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [STUBS.md](docs/STUBS.md) · [era archive](docs/audit/TECH-DEBT-ERA-0.45.md)
 
-**Theme:** Name the system layer. Shared vs system. One execution port for graphs and product. Archive old debt era. Docs in Simplified Technical English.
+**Theme:** Name the system layer. Shared vs system. One execution port. Document debt; pay in order.
 
 | Patch | Status |
 |-------|--------|
-| 0.57.0 Plan + map + ADR | 📋 plan open (this status) |
-| 0.57.1+ Execute slices | pending |
+| 0.57.0 Plan + map + ADR | ✅ |
+| 0.57.1 Debt archive + low-level design | ✅ |
+| 0.57.2 System boundary in code (`palm.system`) | next |
+| 0.57.3 Execution port v1 | pending |
+| 0.57.4 Rebind graphs | pending |
+| 0.57.5 Rebind product | pending |
+| 0.57.6 Deflate common | pending |
+| 0.57.7 Edge policy | pending |
 
-**Docs rule:** New theme text uses **ASD-STE100** Simplified Technical English.
+**Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
 
 ## 0.52 — The Living Library (tooling)
 

@@ -85,9 +85,10 @@ Package paths may move in later slices. **Purposes in PALM.md are normative now.
 
 ## Follow-up
 
-- Execute [VISION-0.57](../VISION-0.57.md) slices.  
+- Execute [VISION-0.57](../VISION-0.57.md) slices per [SYSTEM-LOW-LEVEL](../SYSTEM-LOW-LEVEL.md).  
+- Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SD-*). Era archive under `docs/audit/`.  
 - Promote this ADR to **Accepted** when the system boundary and execution port land in code.  
-- Update ARCHITECTURE and AGENTS to **link** PALM.md; avoid a second full map.
+- Update ARCHITECTURE to **link** PALM.md; AGENTS stays rules-only.
 
 ---
 

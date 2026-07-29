@@ -8,6 +8,9 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 |------|------|
 | Repo root constitution | `README`, `AGENTS`, `PHILOSOPHY`, `STATUS`, `TECH-DEBT`, `ARCHITECTURE`, `DEVELOPMENT`, `SCOPE`, `CHANGELOG` — header version stamps on ARCHITECTURE / DEVELOPMENT / SCOPE sync via `scripts/sync_version.py` (0.52.4) |
 | **`docs/PALM.md`** | **Canonical high-level system map** (0.57+) — read first for layer purpose |
+| **`docs/SYSTEM-LOW-LEVEL.md`** | Low-level system design (package, ports, moves) for 0.57 |
+| **`TECH-DEBT.md` (root)** | Live debt (SD/SU/ST/CS/CF-*); archive era in `docs/audit/TECH-DEBT-ERA-0.45.md` |
+| **`docs/STUBS.md`** | Intention catalog — purpose without fake implementations |
 | `docs/wiki/` | Human narrative — guides & concepts |
 | `docs/adr/` | Decisions — index [adr/README.md](adr/README.md); **ADR or explicit waive** (AGENTS §5) |
 | `docs/migrations/`, `docs/releases/` | Point-in-time notes |

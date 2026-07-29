@@ -454,7 +454,11 @@ From theme **0.57** onward:
 | Need | Open |
 |------|------|
 | **This map** | `docs/PALM.md` |
-| Theme to name system in code | [VISION-0.57](VISION-0.57.md) |
+| System low-level (package, ports, moves) | [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md) |
+| Live debt (SD/SU/ST/CS) | [TECH-DEBT.md](../TECH-DEBT.md) |
+| Intention stubs | [STUBS.md](STUBS.md) |
+| Debt archive (PD era) | [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md) |
+| Theme plan | [VISION-0.57](VISION-0.57.md) |
 | Structural ADR | [ADR-026](adr/026-palm-system-layer.md) |
 | Start / continue law | [VISION-0.55](VISION-0.55.md) · [ADR-025](adr/025-reactive-interests.md) |
 | Event buses | [EVENT-PLANE](EVENT-PLANE.md) |
@@ -463,7 +467,7 @@ From theme **0.57** onward:
 | Session (queued) | [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
-| Agent rules (extend, MCP, checklist) | [AGENTS.md](../AGENTS.md) — points here for structure |
+| Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
 | Version and theme status | [STATUS.md](../STATUS.md) |
 | Spirit | [PHILOSOPHY.md](../PHILOSOPHY.md) |
 
@@ -485,9 +489,11 @@ A map that only names **ideals** without today is also incomplete.
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
 | Workload pure engine + leaf direction | **Scout** (0.56) — enough to force this map |
-| Named system layer in packages | **Missing** — 0.57 |
-| Unified execution port | **Missing** — 0.57 |
-| Shared vs system split in tree | **Missing** — 0.57 |
+| Named system layer in packages | **Missing in code** — designed in [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md); 0.57.2+ |
+| Unified execution port | **Missing in code** — contract in low-level §3; 0.57.3+ |
+| Shared vs system split in tree | **Named in debt** (SD-002); moves 0.57.2–6 |
+| Live debt register | **Real** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
+| Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC) |
 | Session plane | **Queued** — needs system home first |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
