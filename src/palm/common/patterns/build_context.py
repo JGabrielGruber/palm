@@ -4,8 +4,9 @@ Build context — dependencies passed when materializing patterns from definitio
 Pattern-specific defaults (e.g. wizard commit registries) are resolved inside
 each ``palm.patterns.<name>`` builder, not here.
 
-0.57+: prefer ``execution`` (ExecutionPort). Engine fields remain for core leaves
-that still take ResourceEngine / WorkloadEngine (SD-004) until graph rebind.
+0.57.4+: prefer ``execution`` (ExecutionPort). Builders resolve ResourceInvoker /
+WorkloadDriver via ``palm.common.patterns.effects``. Engine fields remain for
+unit tests that inject engines only (no full runtime).
 """
 
 from __future__ import annotations

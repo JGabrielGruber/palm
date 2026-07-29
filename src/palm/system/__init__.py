@@ -14,10 +14,20 @@ Rules (enforced by ``scripts/guard_system.py``):
 
 from __future__ import annotations
 
+from palm.system.effects import (
+    PortResourceInvoker,
+    PortWorkloadDriver,
+    resource_invoker_from_port,
+    workload_driver_from_port,
+)
 from palm.system.instance import SystemInstance
 from palm.system.ports.execution import ExecutionPort
 
 __all__ = [
     "ExecutionPort",
+    "PortResourceInvoker",
+    "PortWorkloadDriver",
     "SystemInstance",
+    "resource_invoker_from_port",
+    "workload_driver_from_port",
 ]

@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from palm.core.behavior_tree import BasePattern, PatternStatus, RootNode, SequenceNode
 from palm.core.context import BaseState
-from palm.core.resource.engine import ResourceEngine
+from palm.core.resource.invoker import ResourceInvoker
 from palm.core.transform.engine import TransformEngine
 from palm.patterns.pipeline.bindings.behavior_tree.tree import build_pipeline_tree
 from palm.patterns.pipeline.bindings.definitions.config import PipelineConfig
@@ -25,7 +25,7 @@ class PipelinePattern(BasePattern):
         name: str = "pipeline",
         config: PipelineConfig | None = None,
         transform_engine: TransformEngine | None = None,
-        resource_engine: ResourceEngine | None = None,
+        resource_engine: ResourceInvoker | None = None,
     ) -> None:
         super().__init__(name=name)
         if config is None:

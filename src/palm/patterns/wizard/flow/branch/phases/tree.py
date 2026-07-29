@@ -66,6 +66,7 @@ def _build_nested_phase(
         emit=parent_ctx.emit,
         commit_registry=parent_ctx.commit_registry,
         resource_engine=parent_ctx.resource_engine,
+        workload_engine=parent_ctx.workload_engine,
         context_engine=parent_ctx.context_engine,
     )
     build = getattr(registry, "build", None)

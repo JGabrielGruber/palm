@@ -11,6 +11,7 @@ from palm.core.resource.exceptions import (
     ResourceInvokeError,
     ResourceResolutionError,
 )
+from palm.core.resource.invoker import ResourceInvoker
 from palm.core.resource.invocation import (
     ResolvedResourceSpec,
     ResourceWaitOptions,
@@ -39,6 +40,7 @@ __all__ = [
     "parse_wait_mode",
     "ResourceEngine",
     "ResourceError",
+    "ResourceInvoker",
     "ResourceInvokeError",
     "ResourceResolutionError",
     "bind_resource_id",

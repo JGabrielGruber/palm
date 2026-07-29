@@ -78,7 +78,7 @@ def test_execution_port_fake_is_usable() -> None:
     from palm.system import ExecutionPort
 
     class FakePort:
-        def invoke_resource(self, resource_ref: str, **kwargs: object) -> dict:
+        def invoke_resource(self, resource_ref: str | None = None, **kwargs: object) -> dict:
             return {"ref": resource_ref, "ok": True}
 
         def start_workload(self, spec: object, **kwargs: object) -> dict:
@@ -98,6 +98,75 @@ def test_execution_port_fake_is_usable() -> None:
     fake = FakePort()
     assert isinstance(fake, ExecutionPort)
     assert fake.invoke_resource("kv://x")["ok"] is True
+
+
+def test_port_bridges_to_core_protocols() -> None:
+    """ExecutionPort adapters satisfy ResourceInvoker / WorkloadDriver for graphs."""
+    from palm.core.resource.invoker import ResourceInvoker
+    from palm.core.resource.result import ProviderResult
+    from palm.core.workload.driver import WorkloadDriver
+    from palm.system.effects import resource_invoker_from_port, workload_driver_from_port
+
+    class FakePort:
+        def invoke_resource(self, resource_ref: str | None = None, **kwargs: object) -> ProviderResult:
+            return ProviderResult.ok({"ref": resource_ref})
+
+        def start_workload(self, spec: object, **kwargs: object) -> object:
+            raise NotImplementedError
+
+        def exec_workload(self, workload_id: str, command: object, **kwargs: object) -> object:
+            raise NotImplementedError
+
+        def stop_workload(self, workload_id: str, **kwargs: object) -> object:
+            raise NotImplementedError
+
+        def workload_status(self, workload_id: str, *, refresh: bool = False) -> object:
+            raise NotImplementedError
+
+    port = FakePort()
+    invoker = resource_invoker_from_port(port)
+    assert isinstance(invoker, ResourceInvoker)
+    assert invoker.invoke("x").success is True
+    # driver construction does not require live workloads
+    driver = workload_driver_from_port(port)
+    assert isinstance(driver, WorkloadDriver)
+
+
+def test_resolve_effects_prefers_execution_port() -> None:
+    from palm.common.patterns.build_context import PatternBuildContext
+    from palm.common.patterns.effects import resolve_resource_invoker
+    from palm.core.resource.result import ProviderResult
+    from palm.system.effects import PortResourceInvoker
+
+    class FakePort:
+        def invoke_resource(self, resource_ref: str | None = None, **kwargs: object) -> ProviderResult:
+            return ProviderResult.ok({"via": "port", "ref": resource_ref})
+
+        def start_workload(self, spec: object, **kwargs: object) -> object:
+            raise NotImplementedError
+
+        def exec_workload(self, workload_id: str, command: object, **kwargs: object) -> object:
+            raise NotImplementedError
+
+        def stop_workload(self, workload_id: str, **kwargs: object) -> object:
+            raise NotImplementedError
+
+        def workload_status(self, workload_id: str, *, refresh: bool = False) -> object:
+            raise NotImplementedError
+
+    class EngineStub:
+        is_initialized = True
+
+        def initialize(self) -> None:
+            return None
+
+        def invoke(self, *a: object, **k: object) -> ProviderResult:
+            return ProviderResult.ok({"via": "engine"})
+
+    ctx = PatternBuildContext(execution=FakePort(), resource_engine=EngineStub())  # type: ignore[arg-type]
+    invoker = resolve_resource_invoker(ctx)
+    assert isinstance(invoker, PortResourceInvoker)
+    assert invoker.invoke("r").data["via"] == "port"
 
 
 @pytest.mark.parametrize(

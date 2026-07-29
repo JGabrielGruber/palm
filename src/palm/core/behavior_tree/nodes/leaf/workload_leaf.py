@@ -1,8 +1,8 @@
-"""WorkloadLeaf — BT contract with WorkloadEngine (start / poll / stop).
+"""WorkloadLeaf — BT contract with WorkloadDriver (start / poll / stop).
 
 Freezes how graphs wait, fail, and complete before patterns invent divergent
-shapes. Production paths may later call ``execution.workloads`` CQRS; tests
-bind the pure engine + fake runtime directly.
+shapes. Concrete WorkloadEngine and system ExecutionPort adapters both satisfy
+WorkloadDriver (0.57.4 P2). Tests may bind the pure engine + fake runtime.
 
 See docs/VISION-0.56.md §11 and ADR-024 D8b.
 """
@@ -14,7 +14,7 @@ from typing import Any
 from palm.core.behavior_tree.base_pattern import PatternStatus
 from palm.core.behavior_tree.leaf import LeafNode
 from palm.core.context import BaseState
-from palm.core.workload.engine import WorkloadEngine
+from palm.core.workload.driver import WorkloadDriver
 from palm.core.workload.exceptions import WorkloadError
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.spec import WorkloadSpec
@@ -27,12 +27,12 @@ class WorkloadLeaf(LeafNode):
 
     Tick model
     ----------
-    * First tick: ``engine.start(spec)``.
+    * First tick: ``driver.start(spec)``.
     * If status is terminal SUCCESS (STOPPED + exit 0): ``SUCCESS``.
     * If FAILED or STOPPED with non-zero exit: ``FAILURE``.
     * If RUNNING / STARTING / READY (when waiting for stop): ``RUNNING`` and
       re-poll on subsequent ticks (no infinite spin — job runner budgets ticks).
-    * Optional ``stop_on_success`` / cancel: call ``engine.stop``.
+    * Optional ``stop_on_success`` / cancel: call ``driver.stop``.
 
     State keys
     ----------
@@ -49,7 +49,7 @@ class WorkloadLeaf(LeafNode):
         self,
         name: str,
         *,
-        workload_engine: WorkloadEngine | None = None,
+        workload_engine: WorkloadDriver | None = None,
         spec: WorkloadSpec | dict[str, Any] | None = None,
         owner: WorkloadOwner | dict[str, Any] | None = None,
         output_key: str | None = None,
@@ -95,7 +95,7 @@ class WorkloadLeaf(LeafNode):
     def _tick_impl(self, state: BaseState) -> PatternStatus:
         engine = self._workload_engine
         if engine is None:
-            return self._fail(state, "WorkloadEngine is not configured")
+            return self._fail(state, "WorkloadDriver is not configured")
         if not engine.is_initialized:
             engine.initialize()
 

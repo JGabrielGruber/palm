@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 from palm.core.context import BaseState
 
 if TYPE_CHECKING:
-    from palm.core.resource import ResourceEngine
+    from palm.core.resource.invoker import ResourceInvoker
 
 CommitHandler = Callable[["CommitContext"], "CommitResult"]
 
@@ -42,15 +42,28 @@ class CommitContext:
     state: BaseState
     answers: dict[str, Any]
     hook_name: str
-    resource_engine: ResourceEngine | None = None
+    resource_engine: ResourceInvoker | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def fetch_resource(self, provider_name: str, resource_id: str, **params: Any) -> Any:
-        """Helper for handlers that need ``ResourceEngine`` access."""
+        """Helper for handlers that need resource access (engine or invoker)."""
         if self.resource_engine is None:
-            raise RuntimeError("ResourceEngine is not configured for this commit")
-        provider = self.resource_engine.use(provider_name)
-        return provider.fetch(resource_id, **params)
+            raise RuntimeError("ResourceInvoker is not configured for this commit")
+        use = getattr(self.resource_engine, "use", None)
+        if callable(use):
+            provider = use(provider_name)
+            return provider.fetch(resource_id, **params)
+        if not self.resource_engine.is_initialized:
+            self.resource_engine.initialize()
+        result = self.resource_engine.invoke(
+            provider=provider_name,
+            action="fetch",
+            resource_id=resource_id,
+            params=params,
+        )
+        if not result.success:
+            raise RuntimeError(result.error or "resource fetch failed")
+        return result.data
 
 
 class CommitRegistry:

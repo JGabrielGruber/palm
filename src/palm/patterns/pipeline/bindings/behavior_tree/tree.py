@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from palm.common.transforms.builder import build_transform_leaves
 from palm.core.behavior_tree import BaseNode, RootNode, SequenceNode
-from palm.core.resource.engine import ResourceEngine
+from palm.core.resource.invoker import ResourceInvoker
 from palm.core.transform.engine import TransformEngine
 from palm.patterns.pipeline.bindings.definitions.config import PipelineConfig
 
@@ -14,7 +14,7 @@ def build_pipeline_tree(
     config: PipelineConfig,
     *,
     engine: TransformEngine | None = None,
-    resource_engine: ResourceEngine | None = None,
+    resource_engine: ResourceInvoker | None = None,
 ) -> tuple[RootNode, SequenceNode]:
     """Return ``(root, sequence)`` for the given pipeline configuration."""
     shared = engine if engine is not None else TransformEngine()

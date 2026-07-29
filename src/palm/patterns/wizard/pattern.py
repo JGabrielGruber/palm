@@ -10,8 +10,8 @@ from palm.core.behavior_tree import BasePattern, PatternStatus, RootNode
 from palm.core.context import BaseState, ContextEngine
 from palm.core.event import EventContext, EventEngine
 from palm.core.orchestration.input_capable import JobInspectable
-from palm.core.resource import ResourceEngine
-from palm.core.workload import WorkloadEngine
+from palm.core.resource.invoker import ResourceInvoker
+from palm.core.workload.driver import WorkloadDriver
 from palm.patterns.wizard.bindings.behavior_tree.backtrack import (
     WizardSequenceNode,
     request_backtrack,
@@ -46,8 +46,8 @@ class WizardPattern(BasePattern, JobInspectable):
         config: WizardConfig | None = None,
         steps: int | None = None,
         event_engine: EventEngine | None = None,
-        resource_engine: ResourceEngine | None = None,
-        workload_engine: WorkloadEngine | None = None,
+        resource_engine: ResourceInvoker | None = None,
+        workload_engine: WorkloadDriver | None = None,
         commit_registry: CommitRegistry | None = None,
         context_engine: ContextEngine | None = None,
     ) -> None:

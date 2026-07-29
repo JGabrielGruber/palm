@@ -2,7 +2,7 @@
 DAG pattern — execute resource **or workload** nodes with dependencies.
 
 v0: one ready node / drain_ready batch per tick. Resource nodes use
-ResourceEngine; workload nodes use WorkloadEngine (0.56). State under ``dag.*``.
+ResourceInvoker; workload nodes use WorkloadDriver (0.56 / 0.57.4). State under ``dag.*``.
 """
 
 from __future__ import annotations
@@ -12,10 +12,10 @@ from typing import Any
 from palm.common.workload.run_python import spec_from_bound_params
 from palm.core.behavior_tree import BasePattern, PatternStatus
 from palm.core.context import BaseState
-from palm.core.resource.engine import ResourceEngine
 from palm.core.resource.invocation import bind_resource_params
+from palm.core.resource.invoker import ResourceInvoker
 from palm.core.resource.observability import resource_correlation
-from palm.core.workload import WorkloadEngine, WorkloadOwner, WorkloadStatus
+from palm.core.workload import WorkloadDriver, WorkloadOwner, WorkloadStatus
 from palm.patterns.dag.bindings.definitions.config import DagConfig, DagNodeSpec
 
 _DAG_KEY = "dag"
@@ -32,8 +32,8 @@ class DagPattern(BasePattern):
         *,
         name: str = "dag",
         config: DagConfig | None = None,
-        resource_engine: ResourceEngine | None = None,
-        workload_engine: WorkloadEngine | None = None,
+        resource_engine: ResourceInvoker | None = None,
+        workload_engine: WorkloadDriver | None = None,
     ) -> None:
         super().__init__(name=name)
         if config is None:
@@ -171,7 +171,7 @@ class DagPattern(BasePattern):
             return self._run_workload_node(state, dag, node, nodes_state, output_key)
 
         if self._resource_engine is None:
-            return self._fail_node(state, dag, node, "ResourceEngine is not configured")
+            return self._fail_node(state, dag, node, "ResourceInvoker is not configured")
         if not self._resource_engine.is_initialized:
             self._resource_engine.initialize()
 
@@ -202,7 +202,7 @@ class DagPattern(BasePattern):
     ) -> PatternStatus:
         engine = self._workload_engine
         if engine is None:
-            return self._fail_node(state, dag, node, "WorkloadEngine is not configured")
+            return self._fail_node(state, dag, node, "WorkloadDriver is not configured")
         if not engine.is_initialized:
             engine.initialize()
         try:

@@ -8,6 +8,7 @@ from typing import Any
 
 from palm.common.exceptions import DefinitionBuildError
 from palm.common.patterns.build_context import PatternBuildContext
+from palm.common.patterns.effects import resolve_resource_invoker, resolve_workload_driver
 from palm.core.behavior_tree import BasePattern
 from palm.definitions.flow import FlowDefinition
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
@@ -41,8 +42,8 @@ def build(
     kwargs: dict[str, Any] = {
         "name": flow.name,
         "event_engine": context.event_engine,
-        "resource_engine": context.resource_engine,
-        "workload_engine": getattr(context, "workload_engine", None),
+        "resource_engine": resolve_resource_invoker(context),
+        "workload_engine": resolve_workload_driver(context),
         "commit_registry": commit_registry,
     }
 

@@ -9,8 +9,8 @@ from typing import Any
 
 from palm.core.behavior_tree.nodes.leaf.interactive_leaf import InteractiveLeaf
 from palm.core.context import BaseState, ContextEngine
-from palm.core.resource import ResourceEngine
-from palm.core.workload import WorkloadEngine
+from palm.core.resource.invoker import ResourceInvoker
+from palm.core.workload.driver import WorkloadDriver
 from palm.patterns.wizard.bindings.compensation.handler import CommitRegistry
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 from palm.patterns.wizard.bindings.definitions.config import WizardStepConfig
@@ -47,8 +47,8 @@ class WizardPhaseContext:
     step: WizardStepConfig
     emit: EventEmitter | None = None
     commit_registry: CommitRegistry | None = None
-    resource_engine: ResourceEngine | None = None
-    workload_engine: WorkloadEngine | None = None
+    resource_engine: ResourceInvoker | None = None
+    workload_engine: WorkloadDriver | None = None
     context_engine: ContextEngine | None = None
 
 

@@ -1,5 +1,8 @@
 """
-ResourceLeaf — invoke a registered resource via :class:`~palm.core.resource.ResourceEngine`.
+ResourceLeaf — invoke a registered resource via :class:`~palm.core.resource.invoker.ResourceInvoker`.
+
+Concrete :class:`~palm.core.resource.ResourceEngine` and system ExecutionPort
+adapters both satisfy ResourceInvoker (0.57.4 P2).
 """
 
 from __future__ import annotations
@@ -9,7 +12,7 @@ from typing import Any
 from palm.core.behavior_tree.base_pattern import PatternStatus
 from palm.core.behavior_tree.leaf import LeafNode
 from palm.core.context import BaseState
-from palm.core.resource.engine import ResourceEngine
+from palm.core.resource.invoker import ResourceInvoker
 from palm.core.resource.observability import resource_correlation
 from palm.core.resource.result import ProviderResult
 
@@ -29,7 +32,7 @@ class ResourceLeaf(LeafNode):
         self,
         name: str,
         *,
-        resource_engine: ResourceEngine | None = None,
+        resource_engine: ResourceInvoker | None = None,
         resource_ref: str | None = None,
         provider: str | None = None,
         action: str | None = None,
@@ -80,7 +83,7 @@ class ResourceLeaf(LeafNode):
 
     def _tick_impl(self, state: BaseState) -> PatternStatus:
         if self._resource_engine is None:
-            return self._fail(state, "ResourceEngine is not configured")
+            return self._fail(state, "ResourceInvoker is not configured")
         if not self._resource_engine.is_initialized:
             self._resource_engine.initialize()
 

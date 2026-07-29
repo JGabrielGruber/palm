@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from palm.common.exceptions import DefinitionBuildError
 from palm.common.patterns.build_context import PatternBuildContext
+from palm.common.patterns.effects import resolve_resource_invoker
 from palm.core.behavior_tree import BasePattern
 from palm.definitions.flow import FlowDefinition
 from palm.patterns.pipeline.bindings.definitions.config import PipelineConfig
@@ -27,5 +28,5 @@ def build(
     return pattern_cls(
         name=flow.name,
         config=config,
-        resource_engine=context.resource_engine,
+        resource_engine=resolve_resource_invoker(context),
     )

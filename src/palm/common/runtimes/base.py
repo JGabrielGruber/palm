@@ -416,6 +416,7 @@ class BaseRuntime:
         params: dict[str, Any] | None = None,
         state: Any = None,
         resource_id: str | None = None,
+        correlation: dict[str, Any] | None = None,
     ) -> Any:
         """Invoke a resource via the resource engine (ExecutionPort)."""
         engine = self.resource
@@ -428,6 +429,7 @@ class BaseRuntime:
             params=params,
             state=state,
             resource_id=resource_id,
+            correlation=correlation,
         )
 
     def start_workload(

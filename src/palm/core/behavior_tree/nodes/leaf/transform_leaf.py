@@ -11,7 +11,7 @@ from palm.core.behavior_tree.base_pattern import PatternStatus
 from palm.core.behavior_tree.leaf import LeafNode
 from palm.core.context import BaseState
 from palm.core.exceptions import StateValidationError, TransformApplicationError, TransformError
-from palm.core.resource.engine import ResourceEngine
+from palm.core.resource.invoker import ResourceInvoker
 from palm.core.transform.base import TransformContext, TransformMode, TransformResult
 from palm.core.transform.engine import _MISSING, TransformEngine
 
@@ -52,7 +52,7 @@ class TransformLeaf(LeafNode):
         skip_if_missing: bool = False,
         trace_key: str | None = None,
         error_key: str | None = None,
-        resource_engine: ResourceEngine | None = None,
+        resource_engine: ResourceInvoker | None = None,
     ) -> None:
         super().__init__(name)
         if not source_key:

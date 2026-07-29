@@ -11,7 +11,6 @@ from typing import Any
 
 from palm.common.exceptions import DefinitionBuildError
 from palm.core.behavior_tree.nodes.leaf.transform_leaf import TransformLeaf
-from palm.core.resource.engine import ResourceEngine
 from palm.core.transform.engine import TransformEngine
 
 
@@ -98,7 +97,7 @@ def build_transform_leaf(
     spec: TransformStepSpec,
     *,
     engine: TransformEngine | None = None,
-    resource_engine: ResourceEngine | None = None,
+    resource_engine: Any | None = None,
 ) -> TransformLeaf:
     """Materialize a :class:`TransformLeaf` from ``spec``."""
     return TransformLeaf(
@@ -125,7 +124,7 @@ def build_transform_leaves(
     steps: Sequence[TransformStepSpec | Mapping[str, Any]],
     *,
     engine: TransformEngine | None = None,
-    resource_engine: ResourceEngine | None = None,
+    resource_engine: Any | None = None,
 ) -> list[TransformLeaf]:
     """Build transform leaves from specs or mapping dicts."""
     shared = engine if engine is not None else TransformEngine()

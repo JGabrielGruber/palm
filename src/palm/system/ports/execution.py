@@ -28,6 +28,7 @@ class ExecutionPort(Protocol):
         params: dict[str, Any] | None = None,
         state: Any = None,
         resource_id: str | None = None,
+        correlation: dict[str, Any] | None = None,
     ) -> Any:
         """Invoke a resource definition or direct provider action."""
         ...

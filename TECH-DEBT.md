@@ -28,10 +28,10 @@
 
 | ID | Title | Sev | Effort | Theme slice | Status |
 |----|-------|:---:|:------:|-------------|--------|
-| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | open (port+product ✅; graphs residual) |
+| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | ✅ mostly (list/doctor residual) |
 | [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open (boundary ✅) |
 | [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open (SystemInstance ✅; host residual) |
-| [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | open |
+| [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
@@ -87,16 +87,15 @@
 **Observation:** Graphs bind `ResourceEngine` / `WorkloadEngine` via `PatternBuildContext`.  
 Product binds the same engines via `ExecutionService` after `resolve_runtime()`.  
 
-**Progress (0.57.2):** `ExecutionPort` exists; BaseRuntime implements it.  
-Product providers/workloads effect methods + `PalmKernel.invoke_resource` use the port.  
-`PatternBuildContext.execution` is filled. Graph leaves and list/doctor still use engines.
+**Progress (0.57.2–4):** `ExecutionPort` on BaseRuntime; product effect methods use it.  
+Graphs: builders resolve `ResourceInvoker` / `WorkloadDriver` from the port first
+(`palm.system.effects` + `palm.common.patterns.effects`). Leaves typed to core protocols (P2).
 
-**Why it hurts:** Every new effect (workload, later session acts) must pick a side or duplicate both.  
-Selective “CQRS only for X” hardens the split.
+**Residual:** workload list/doctor catalog still touch `WorkloadEngine`; some edges (SD-005).
 
-**Target:** Graphs and product both call `execution` on the system instance.
+**Why it hurt:** Every new effect picked a side or duplicated both.
 
-**Evidence:** `common/patterns/build_context.py`; `services/execution/providers/service.py`; `services/execution/workloads/service.py`; wizard/dag leaves.
+**Target:** Graphs and product both call `execution` on the system instance — **met for primary effect paths**.
 
 ---
 
@@ -148,15 +147,13 @@ Live `BaseRuntime` also has `workload`, `context`, `wait_plane`, auth, storage, 
 
 ### SD-004 — `PatternBuildContext` is an engine bag
 
-**Severity:** S1 · **Effort:** M · **Slice:** 0.57.4
+**Severity:** S1 · **Effort:** M · **Slice:** 0.57.4 · **Status:** ✅ done
 
-**Observation:** Build context fields are raw engines (`resource_engine`, `workload_engine`, …).  
-`DefinitionExecutor._build_context()` uses `getattr` on the runtime.
+**Observation:** Build context fields were raw engines only.
 
-**Target:** Context holds an **execution port** (and any pure helpers).  
-Leaves accept the port or narrow views of it.
-
-**Evidence:** `common/executions/executor.py` `_build_context`; pattern builders.
+**Resolution:** Context carries `execution` plus optional engines for unit tests.  
+Builders call `resolve_resource_invoker` / `resolve_workload_driver` (port first).  
+Core leaves accept `ResourceInvoker` / `WorkloadDriver`. Engine fields remain for engine-only tests.
 
 ---
 
@@ -177,7 +174,7 @@ Leaves accept the port or narrow views of it.
 | `providers/palm/.../local.py` | `runtime.resource.invoke` |
 | `providers/palm/.../system_inspect.py` | `runtime.orchestration.list_jobs` |
 | `common/interactive_runtime.py` | `orchestration.resume_job` |
-| Pattern leaves (wizard/dag/pipeline) | engines via build context (0.57.4) |
+| Pattern leaves (wizard/dag/pipeline) | ✅ port→invoker/driver via builders (0.57.4) |
 
 **Target:** Product → port. Surfaces → product (or thin system entry).  
 List remaining bypasses here when found; do not add new ones without an SD row.

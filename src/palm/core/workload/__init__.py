@@ -7,6 +7,7 @@ via :data:`workload_runtime_registry` from outside core (``palm.runners``).
 See docs/VISION-0.56.md and ADR-024.
 """
 
+from palm.core.workload.driver import WorkloadDriver
 from palm.core.workload.engine import WorkloadEngine
 from palm.core.workload.events import (
     WORKLOAD_EVENT_FAILED,
@@ -70,6 +71,7 @@ __all__ = [
     "RuntimeStartOutcome",
     "RuntimeStopOutcome",
     "Workload",
+    "WorkloadDriver",
     "WorkloadEngine",
     "WorkloadError",
     "WorkloadHandle",

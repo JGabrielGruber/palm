@@ -256,8 +256,9 @@ Options:
 | **P2** Leaf takes a small Protocol defined in core | Best long-term; core defines `ResourceInvoker` protocol |
 | **P3** Leaf moves out of core | Large; avoid in 0.57 |
 
-**Choose P2 if small:** core protocol for invoke only; system port implements it; engine implements it.  
-**Choose P1** if P2 expands 0.57 too far — record as residual SD.
+**Chose P2 (0.57.4):** core `ResourceInvoker` + `WorkloadDriver`; system
+`PortResourceInvoker` / `PortWorkloadDriver` map ExecutionPort; engines implement
+the protocols structurally.
 
 ### 6.2 Product (0.57.5)
 
@@ -311,13 +312,16 @@ Options:
 - [x] `ExecutionPort` implemented by BaseRuntime (methods + property) — landed with 0.57.2  
 - [x] Unit tests with a fake port (`tests/test_system_boundary.py`)  
 - [x] Product paths use port (providers, workloads start/exec/stop/status, PalmKernel.invoke_resource)  
-- [ ] Graph leaves still use engines (0.57.4)  
+- [x] Graph materialization prefers port via ResourceInvoker / WorkloadDriver bridges (0.57.4)  
 
 ### 0.57.4 — Graphs rebind
 
 - [x] PatternBuildContext carries `execution` (filled by DefinitionExecutor)  
-- [ ] Wizard + dag (+ pipeline) resource/workload path use port (leaves still engine-typed)  
-- [ ] Tests green for leaf rebind  
+- [x] Core **P2**: `ResourceInvoker` + `WorkloadDriver` protocols; leaves typed to them  
+- [x] System bridges: `PortResourceInvoker` / `PortWorkloadDriver`  
+- [x] Builders (wizard, dag, pipeline) resolve via `palm.common.patterns.effects` (port first)  
+- [x] Engine-only inject still works for unit tests without a full runtime  
+- [x] Correlation on `ExecutionPort.invoke_resource` for graph audit parity
 
 ### 0.57.5 — Product rebind
 
@@ -350,7 +354,7 @@ Options:
 | Port name `ExecutionPort` | Yes for v1 |
 | Break pre-1.0 | Yes |
 | No CQRS-only unification | Yes |
-| P1 vs P2 for ResourceLeaf | Prefer **P2** (core protocol); fall back P1 with SD note |
+| P1 vs P2 for ResourceLeaf | **P2 locked** (0.57.4) — ResourceInvoker / WorkloadDriver |
 | Move all of common in one PR | **No** — waves A–H |
 
 ---

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from palm.common.exceptions import DefinitionBuildError
 from palm.common.patterns.build_context import PatternBuildContext
+from palm.common.patterns.effects import resolve_resource_invoker, resolve_workload_driver
 from palm.core.behavior_tree import BasePattern
 from palm.definitions.flow import FlowDefinition
 from palm.patterns.dag.bindings.definitions.config import DagConfig
@@ -27,8 +28,8 @@ def build(
     return pattern_cls(
         name=str(flow.options.get("name") or flow.name),
         config=config,
-        resource_engine=context.resource_engine,
-        workload_engine=getattr(context, "workload_engine", None),
+        resource_engine=resolve_resource_invoker(context),
+        workload_engine=resolve_workload_driver(context),
     )
 
 
