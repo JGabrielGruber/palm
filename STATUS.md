@@ -24,11 +24,11 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | Layer | Role (short) |
 |-------|----------------|
 | `palm/core/` | Pure engines. No external Palm imports. |
-| **System** (0.57 target) | Running Palm: engines, ports, planes. Today split across `BaseRuntime` + parts of `common`. |
-| `palm/common/` | Shared + undeclared system — split is the 0.57 work ([VISION-0.57](docs/VISION-0.57.md)). |
+| **`palm/system/`** | Running Palm: `BaseRuntime`, ports, wait/work/workload planes ([PALM.md](docs/PALM.md)). |
+| `palm/common/` | Shared libraries + residual (executions, job hooks, server transport kit). SD-012 shims only for cutover. |
 | `palm/services/` | Product (userland): definitions, execution, assist, design, … |
 | `palm/app/` | Host + composition / deployment profiles. |
-| `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry. |
+| `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
 ## 0.57 — Palm System (**in progress**)
@@ -51,6 +51,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | 0.57.7 Edge policy | ✅ port resume_job; SD-005 effect samples; residual list/inspect named |
 | 0.57.8 SD-012 import sweep | ✅ src/tests import palm.system; shims remain for external |
 | 0.57.9 Capability catalog truth | ✅ ST-001…005 gated; INTENTION_* vs INSTALLED_* |
+| 0.57.10 Docs/notes coherence | ✅ kill dead pre-system notes in living docs |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
 

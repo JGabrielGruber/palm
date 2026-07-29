@@ -2,8 +2,8 @@
 Palm system layer — running machine: ports, planes, system instance.
 
 Holds :class:`~palm.system.runtime.base.BaseRuntime`, continue/start planes,
-and effect ports (0.57.6 deflate). Compatibility re-exports under
-``palm.common.*`` are listed in TECH-DEBT SD-012.
+and effect ports. Prefer imports from this package. Optional re-exports under
+``palm.common.*`` are SD-012 cutover shims only.
 
 Rules (enforced by ``scripts/guard_system.py``):
 

@@ -1,6 +1,6 @@
 # VISION 0.57 — Palm System (name the kernel)
 
-**Status:** 🚧 **In progress** — **0.57.4** graphs rebind (port bridges); next deflate common / edge policy.  
+**Status:** 🚧 **In progress** — base system work **0.57.0–0.57.9** landed; residual debt cleanup and theme exit remain.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **Low-level:** [SYSTEM-LOW-LEVEL.md](SYSTEM-LOW-LEVEL.md)  
@@ -101,7 +101,7 @@ App host = boot and composition (not a second kernel API)
 | **Product** | Calls ports on a resolved system instance |
 | **Patterns** | Build against ports, not engine bags |
 
-Exact package path (`palm.system` vs rename of `common.runtimes`) is an **execution slice**.  
+Package path is **`palm.system`** (landed). Residual modules and shims are debt, not an open naming debate.  
 The purpose is fixed here. The path is not holy.
 
 ---
@@ -120,8 +120,8 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 | **5** | Rebind product | Effect methods on port — ✅ (list/doctor residual) |
 | **6** | Deflate shared | BaseRuntime + planes under `palm.system`; SD-012 shims — ✅ **0.57.6** |
 | **7** | Edge policy | No new engine shortcuts; list residual bypass as debt — ✅ **0.57.7** |
-| **8** | Docs pass | ARCHITECTURE tracks map; STE for touched text |
-| **9** | Theme exit | Workload and session grow **on** the map without a new split |
+| **8+** | Debt cleanup | Import sweep, catalog truth, living-docs coherence — ✅ **0.57.8–10** |
+| **exit** | Theme exit | Residual debt honest; ADR-026 Accepted; workload/session grow **on** the map |
 
 **Rule:** Do not ship more dual-path policy (e.g. “workload only through CQRS”) as the main fix.
 
@@ -177,8 +177,8 @@ Theme **0.57** may close when:
 ## 11. Review and next
 
 High-level map and spine are in use.  
-**Next:** theme exit path — residual honesty (SD-001 list, SD-011 server, SD-012 shims);
-optional docs pass; ADR-026 → Accepted when exit criteria hold.
+**Next:** residual structure (executions move, SD-011 server kit, shim delete) and
+theme exit (ADR-026 Accepted when [§10](#10-exit-criteria) holds).
 
 ---
 
@@ -191,6 +191,9 @@ optional docs pass; ADR-026 → Accepted when exit criteria hold.
 | **0.57.2–5** | `palm.system` boundary; ExecutionPort; product/graph rebind (P2) |
 | **0.57.6** | Deflate: BaseRuntime + wait/work/workload → `palm.system`; SD-012 shims; `ensure_core_plugins` |
 | **0.57.7** | Edge policy: `resume_job` on port; rebind SD-005 effect samples; no-shortcut law in AGENTS/PALM |
+| **0.57.8** | SD-012 import sweep — src/tests import system |
+| **0.57.9** | Capability catalog truth — INSTALLED_* vs INTENTION_* |
+| **0.57.10** | Living docs/notes match code (kill pre-system dead notes) |
 
 ---
 

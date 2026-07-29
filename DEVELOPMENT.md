@@ -147,14 +147,15 @@ Mypy runs in **strict** mode on all of `src/palm/` (`pyproject.toml` → `[tool.
 src/palm/
 ├── app/               # ApplicationHost, PalmKernel (infra), settings, host roles
 ├── core/              # Pure engines — no external palm imports
-├── patterns/          # Wizard, DAG, ETL (+ commit registry, validation)
-├── providers/         # REST, GraphQL, Postgres
-├── storages/          # Memory, Postgres, MongoDB, filesystem
+├── system/            # System instance, ports, planes (BaseRuntime, wait/work/workload)
+├── patterns/          # Wizard, DAG, parallel, pipeline (etl = intention only)
+├── providers/         # rest, palm, kv, file (graphql/postgres = intention only)
+├── storages/          # memory, filesystem core; postgres/mongodb optional intention
 ├── definitions/       # FlowDefinition, ProcessDefinition
-├── common/            # Shared coordination (executions/, plans/, hooks/, persistence/, managers/, storage/, runtimes/)
-│   └── runtimes/      # BaseRuntime, RuntimeHost, wiring, schedulers, runtime hooks
+├── common/            # Shared libs + residual (executions, hooks, server transport)
+│   └── runtimes/      # SD-012 re-exports + server/ kit (canonical runtime is palm.system)
 ├── instances/         # ProcessInstance, StateSnapshot, status history
-├── runtimes/          # Concrete surfaces (thin packages on common.runtimes)
+├── runtimes/          # Concrete surfaces (thin packages on system BaseRuntime)
 │   ├── embedded/      # EmbeddedRuntime
 │   ├── daemon/        # DaemonRuntime
 │   ├── server/        # ServerRuntime + HTTP surfaces (REST, Explorer SSR, MCP)
@@ -168,8 +169,9 @@ archive/               # Legacy — do not import
 tests/
 ```
 
-Runtime imports: `palm.common.runtimes` for shared infrastructure;
-`palm.runtimes.<name>` for concrete surfaces; `palm.runtimes.cli.commands` / `.tui` / `.shared` for CLI layers.
+Runtime imports: prefer `palm.system` for the system instance and ports;
+`palm.runtimes.<name>` for concrete surfaces; `palm.runtimes.cli.commands` / `.tui` / `.shared` for CLI layers.  
+Map: [docs/PALM.md](docs/PALM.md).
 
 ## Working with the CLI
 

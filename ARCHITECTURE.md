@@ -35,13 +35,18 @@ flowchart TB
         daemon[DaemonRuntime]
     end
 
-    subgraph Common["palm.common — shared coordination"]
+    subgraph System["palm.system — running machine"]
+        rtbase[BaseRuntime + ports + planes]
+        syshooks[runtime hooks / schedulers]
+    end
+
+    subgraph Common["palm.common — shared + residual"]
         exec[DefinitionExecutor]
         plans[ExecutionPlan / PlanRegistry]
         hooks[Job hooks — persistence, snapshots]
         persist[Definition + Instance repos]
         builder[Pattern materialization]
-        rtbase[common/runtimes — BaseRuntime, wiring, schedulers]
+        serverkit[runtimes.server transport kit]
     end
 
     subgraph Plugins["Extensible plugins"]
@@ -67,8 +72,11 @@ flowchart TB
         reg[Registries]
     end
 
+    Runtimes --> System
     Runtimes --> Common
     Runtimes --> instances
+    System --> Common
+    System --> Core
     Common --> definitions
     Common --> patterns
     Common --> instances
@@ -82,7 +90,8 @@ flowchart TB
     orch --> evt
 ```
 
-**Dependency rule:** arrows point inward toward core. Core never points outward.
+**Dependency rule:** arrows point inward toward core. Core never points outward.  
+**Canonical map:** [docs/PALM.md](docs/PALM.md) (0.57 system layer). This file trails the map when dense; prefer PALM.md on conflict.
 
 ### `palm.common` layout
 
@@ -101,9 +110,15 @@ Shared, non-plugin coordination lives under `palm.common/`:
 | `common/compensation/` | Optional saga-style undo on commit failure |
 | `common/patterns/` | Materialize definitions via `pattern_registry` (not new patterns) |
 | `common/transforms/` | Built-in transform rules, `TransformExecutor`, and `register_transform()` helpers |
-| `common/runtimes/` | `BaseRuntime`, `RuntimeHost`, scheduler resolution, runtime middleware hooks |
+| `common/runtimes/` | **Residual:** SD-012 re-exports + `server/` transport kit (SD-011). Canonical runtime: `palm.system.runtime` |
 
-Import shared coordination from **`palm.common`** (and its subpackages). Pattern-specific APIs (e.g. wizard commit handlers, CQRS commands, read models) live in the owning pattern app under `palm.patterns`.
+| System (`palm.system`) | Responsibility |
+|------------------------|----------------|
+| `system/runtime/` | `BaseRuntime`, `RuntimeHost`, wiring, schedulers, runtime hooks |
+| `system/ports/` | `ExecutionPort` (effects: resource, workload, `resume_job`) |
+| `system/planes/` | wait (continue), work (start intents), workload glue |
+
+Import the **system instance and ports** from **`palm.system`**. Shared coordination stays under **`palm.common`**. Pattern-specific APIs live in the owning pattern app under `palm.patterns`.
 
 ### Pattern apps (`palm/patterns/`)
 
@@ -114,7 +129,8 @@ Each pattern is a **Django-style app** with a `PatternApp` manifest (`app.py`), 
 | wizard | Full (definitions, instances, context, BT, CQRS, compensation, read model) | collection, extensions, phases | projection, CQRS, interactive runtime, child wait |
 | parallel | definitions, instances, context, behavior_tree | branch, scope, merge | instance sync, submission metadata |
 | pipeline | definitions, behavior_tree | — | builder |
-| dag, etl | definitions (scaffold) | scaffold | builder |
+| dag | definitions + resource/workload leaves | graph | builder |
+| etl | intention only (not default install) | phase ticker | ST-003 gated |
 
 Canonical guide: [docs/PATTERN-APPS.md](docs/PATTERN-APPS.md) · ADR: [docs/adr/002-pattern-apps-and-common-boundaries.md](docs/adr/002-pattern-apps-and-common-boundaries.md)
 
@@ -586,7 +602,7 @@ sequenceDiagram
 | `snapshot_on_status` | `WAITING_FOR_INPUT`, `SUCCEEDED`, `FAILED` | Statuses that trigger a capture |
 | `max_snapshots_per_instance` | `10` | Ring buffer size per instance |
 
-Wiring path: `PalmSettings` → `runtime_start_options()` → `palm.common.runtimes.BaseRuntime.start()` → hook list on `OrchestrationEngine`.
+Wiring path: `PalmSettings` → `runtime_start_options()` → `palm.system.runtime.BaseRuntime.start()` → hook list on `OrchestrationEngine`.
 
 **Trade-offs:**
 
@@ -769,21 +785,16 @@ Low-level job helpers (`resume_job`, `persist_job`) stay on `CliContext` for wiz
 ### Layout
 
 ```
-palm/common/runtimes/     # shared infrastructure (single source of truth)
-├── base.py               # BaseRuntime — engine wiring, submission surface
-├── host.py               # RuntimeHost protocol (executions layer contract)
+palm/system/runtime/      # system instance (canonical — 0.57)
+├── base.py               # BaseRuntime — engines, ports, planes
+├── host.py               # RuntimeHost (legacy thin protocol)
 ├── wiring.py             # Scheduler policy resolution
 ├── hooks/                # AuthMiddleware, DriveObservabilityHook
-├── schedulers/           # InlineScheduler, QueuedScheduler
-└── server/               # ServerApp, protocol, transport registry, CQRS bridge
-    ├── app.py            # ServerApp — mounts explicitly registered surfaces
-    ├── context.py        # ServerContext — runtime + optional ApplicationHost
-    ├── protocol.py       # ServerRequest/Response, ServerSurface protocol
-    ├── registry.py       # RouteRegistry, SurfaceRegistry
-    ├── surface.py        # BaseSurface abstract base
-    ├── transport.py      # BaseTransport protocol, TransportRegistry
-    ├── responses.py      # Shared error envelopes
-    └── webhooks.py       # ServerWebhookBridge — outbox integration
+└── schedulers/           # InlineScheduler, QueuedScheduler
+
+palm/common/runtimes/     # residual: SD-012 re-exports + server transport kit
+├── base.py, host.py, …   # thin re-exports → palm.system.runtime
+└── server/               # ServerApp, protocol, transport, CQRS bridge (SD-011)
 
 palm/runtimes/            # concrete surfaces (thin packages)
 ├── embedded/runtime.py   # EmbeddedRuntime — inline default
@@ -813,7 +824,9 @@ palm/runtimes/            # concrete surfaces (thin packages)
 
 **Import conventions:**
 
-- Shared runtime infrastructure → `palm.common.runtimes` (and subpackages)
+- System instance / ports / planes → `palm.system` (preferred)
+- Compatibility shims → `palm.common.runtimes` (SD-012; re-exports only)
+- Server transport kit → `palm.common.runtimes.server` (residual SD-011)
 - Concrete runtimes → `palm.runtimes.embedded`, `.daemon`, `.server`
 - CLI command mode → `palm.runtimes.cli.commands`
 - CLI TUI/REPL → `palm.runtimes.cli.tui`
@@ -822,7 +835,7 @@ palm/runtimes/            # concrete surfaces (thin packages)
 
 | Runtime | Status | Role |
 |---------|--------|------|
-| **BaseRuntime** (`common/runtimes`) | Shipped | Shared engine wiring, hooks, auth, plan registry |
+| **BaseRuntime** (`palm.system.runtime`) | Shipped | System instance: engines, ExecutionPort, planes |
 | **EmbeddedRuntime** | Shipped | Inline scheduler; libraries, tests, CLI |
 | **DaemonRuntime** | Shipped | Queued scheduler; long-lived background process |
 | **ServerRuntime** | Shipped | Queued scheduler + registry-driven surfaces + pluggable transport |
@@ -832,7 +845,7 @@ palm/runtimes/            # concrete surfaces (thin packages)
 | **MCP (native HTTP)** | Shipped (0.14) | Streamable HTTP on `McpSurface` at `/mcp` when `mcp` extra installed |
 | **WebSocket** | Planned | `runtimes/server/surfaces/websocket/`; live job/wizard events |
 
-All runtimes build on `palm.common.runtimes.BaseRuntime` and the `palm.common` execution API — no duplicated orchestration logic.
+All runtimes build on `palm.system.runtime.BaseRuntime` and shared execution helpers — no duplicated orchestration logic.
 
 ### Type strategy (beta)
 

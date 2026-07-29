@@ -368,17 +368,18 @@ Each top-level part has **one purpose**.
 | **App host** | Boot and compose phenotypes | Replace system ports |
 | **Definitions / instances** | Contracts and durable records | Execute effects |
 
-### 6.1 Names today → target
+### 6.1 Names (current truth)
 
-| Name today | Role today | Target role |
-|------------|------------|-------------|
-| `PalmKernel` | Storage + runtime registry | Infra multi-runtime host |
-| `BaseRuntime` | De-facto system instance | Explicit system instance (or clear owner) |
-| `RuntimeHost` | Partial protocol | Ports (or completed system protocol) |
-| `PatternBuildContext` | Bag of engines | Port handle for graphs |
-| `ExecutionService.*` | Product over engines | Product over **same ports** |
-| `palm.common` | Shared + undeclared system | Shared only; system extracted |
-| `services.system` | Doctor/health product | Keep name; do not call it the kernel |
+| Name | Role now | Residual |
+|------|----------|----------|
+| `PalmKernel` | Infra: storage + system-instance registry | Not the effect API |
+| `BaseRuntime` | **System instance** under `palm.system.runtime` | Common re-export (SD-012) |
+| `RuntimeHost` | Thin legacy protocol for executions | Prefer `SystemInstance` + ports |
+| `PatternBuildContext` | Carries `execution` port (+ engines for unit tests) | Engine fields for tests only |
+| `ExecutionService.*` | Product over **ports** for effects | list/doctor residual |
+| `palm.system` | System home: runtime, planes, ports | — |
+| `palm.common` | Shared libraries + residual (executions, hooks, server kit) | SD-002 / SD-011 |
+| `services.system` | Doctor/health **product** | Do not call it the kernel |
 
 ---
 

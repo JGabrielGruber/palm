@@ -61,7 +61,7 @@ Behavior Trees are the control-flow foundation. Steps are nodes. Cross-cutting c
 | **Core** | Behavior tree, orchestration, context, storage, resource, event, auth, **TransformEngine** |
 | **State** | `DictStateSchema`, scoped state, schema-aware snapshots (`__palm:meta`) |
 | **Transforms** | **22 built-in rules** — field shaping, JSONPath, dates, conditionals, serialization, `enrich_resource` |
-| **Patterns** | **PatternApp** manifests + `bindings/`/`flow/` layout; **Wizard** (full CQRS/REST); **parallel** (scoped branches + merge); **pipeline** (transform sequences); DAG/ETL scaffolds — see [docs/PATTERN-APPS.md](docs/PATTERN-APPS.md) |
+| **Patterns** | **PatternApp** manifests + `bindings/`/`flow/` layout; **Wizard**, **parallel**, **pipeline**, **dag** (installed); **etl** intention-only — see [docs/PATTERN-APPS.md](docs/PATTERN-APPS.md) · [docs/STUBS.md](docs/STUBS.md) |
 | **Persistence** | Filesystem backend, `InstanceManager`, durable resume across restarts |
 | **Runtimes** | `EmbeddedRuntime`, `DaemonRuntime`, `ServerRuntime` (HTTP), **CLI + REPL** (host-backed) |
 | **Palm Explorer** | SSR hub at `/explorer` — flows, jobs, instances, **wizard workspace** (HTMX + collection editor), **resources**; `/` redirects here |

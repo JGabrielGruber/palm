@@ -5,10 +5,10 @@ The ``palm`` package is organized in layers:
 
 - ``palm.app`` — :class:`~palm.app.host.ApplicationHost` (recommended), :class:`~palm.app.PalmKernel` (infra)
 - ``palm.core`` — pure foundational engines (no imports from outside core)
-- ``palm.system`` — system contracts (SystemInstance, ExecutionPort); concrete runtime still partly in common
-- ``palm.common`` — shared libraries + residual system wiring (deflating under 0.57)
+- ``palm.system`` — system instance, ports, planes (:class:`~palm.system.runtime.base.BaseRuntime`, ExecutionPort)
+- ``palm.common`` — shared libraries; residual executions/hooks/server kit; optional SD-012 re-exports
 - ``palm.instances`` — durable process instance snapshots
-- ``palm.patterns`` / ``palm.providers`` / ``palm.storages`` — extensible plugin apps
+- ``palm.patterns`` / ``palm.providers`` / ``palm.storages`` — extensible plugin apps (truthful install sets)
 - ``palm.definitions`` — flow and process definition models
 - ``palm.runtimes`` — CLI, embedded, server, and daemon surfaces
 

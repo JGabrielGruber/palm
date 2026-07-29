@@ -61,7 +61,7 @@
 |----|-------|:---:|:------:|--------|
 | [ST-001](#st-001) | Fake-success providers (graphql, postgres) | S1 | S | ✅ gated 0.57.9 |
 | [ST-002](#st-002) | No-op storage backends listed as installed | S1 | S | ✅ gated 0.57.9 |
-| [ST-003](#st-003) | ETL pattern is a phase ticker, still installed | S2 | S | ✅ gated 0.57.9 |
+| [ST-003](#st-003) | ETL pattern is a phase ticker (gated off install) | S2 | S | ✅ gated 0.57.9 |
 | [ST-004](#st-004) | Transform `parquet_load` registered, always errors | S3 | XS | ✅ gated 0.57.9 |
 | [ST-005](#st-005) | Tests freeze lying install sets (`test_modular_apps`) | S1 | S | ✅ fixed 0.57.9 |
 | [ST-006](#st-006) | Phase-named tests become eternal contracts | S3 | M | open |
@@ -300,16 +300,13 @@ Surfaces must stay **thin** ([PALM.md](docs/PALM.md)). Today `palm.runtimes` is 
 
 **Severity:** S2 · **Effort:** M · **Related:** SD-005
 
-**Observation:** Explorer fetch/actions touch system fields:
+**Observation (updated 0.57.7):** Explorer **effects** use the port
+(`execution.invoke_resource`, `execution.resume_job`). Residual risk is
+**bulk / mixed roles** (SU-002) and any new bypasses, not those two call sites.
 
-| Path | Access |
-|------|--------|
-| `runtimes/server/surfaces/ssr/explorer/fetch.py` | `runtime.resource` invoke |
-| `runtimes/server/surfaces/ssr/explorer/actions.py` | `orchestration.resume_job` |
+**Why it still hurts:** Surface code remains thick; easy to re-introduce engine fields.
 
-**Why it hurts:** Surfaces invent a second execution path. Port work will miss this unless listed.
-
-**Target:** Explorer → product services or execution port only.
+**Target:** Explorer → product services where possible; keep port-only for effects.
 
 ---
 
@@ -571,6 +568,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | 0.57.7 | SD-005 effects ✅ (`resume_job` on port); list residual; AGENTS no-shortcut |
 | 0.57.8 | SD-012 import sweep — src/tests use palm.system; shim modules remain |
 | 0.57.9 | SD-013 / ST-001…005 — truthful INSTALLED_*; INTENTION_* + loud refuse |
+| 0.57.10 | Living docs/notes match system layer (STATUS, ARCHITECTURE, PALM, …) |
 | parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
 | later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |
 
