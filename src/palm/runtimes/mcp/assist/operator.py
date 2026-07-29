@@ -8,7 +8,16 @@ from palm.common.operator.invoke_tree import build_invoke_tree
 from palm.common.services.errors import InstanceNotFoundServiceError
 
 _DELEGATED_PREFIXES = frozenset(
-    {"assist", "flows", "processes", "definitions", "design", "system", "providers"},
+    {
+        "assist",
+        "flows",
+        "processes",
+        "definitions",
+        "design",
+        "system",
+        "providers",
+        "workloads",
+    },
 )
 
 
@@ -39,6 +48,8 @@ def dispatch_operator_path(
         return dispatch_system(ctx, path, params)
     if prefix == "providers":
         return dispatch_providers(ctx, path, params)
+    if prefix == "workloads":
+        return dispatch_workloads(ctx, path, params)
     raise ValueError(f"unhandled dispatch prefix: {prefix!r}")
 
 
@@ -160,6 +171,63 @@ def dispatch_providers(ctx: Any, path: list[str], params: dict[str, Any]) -> Any
             resource_id=body.get("resource_id"),
         )
     raise ValueError(f"unrecognized providers dispatch path: {'/'.join(path)}")
+
+
+def dispatch_workloads(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
+    """Assist/MCP path dispatch for execution.workloads (0.56 small surface)."""
+    params = params or {}
+    body = dict(params.get("body") or params)
+    svc = ctx.execution.workloads
+
+    # workloads / workloads/start
+    if path in (["workloads"], ["workloads", "start"]) and (
+        "spec" in body or "spec" in params
+    ):
+        return svc.start(
+            body.get("spec") or params.get("spec"),
+            owner=body.get("owner") or params.get("owner"),
+            workload_id=body.get("workload_id") or params.get("workload_id"),
+            idempotency_key=body.get("idempotency_key") or params.get("idempotency_key"),
+            host_id=body.get("host_id") or params.get("host_id"),
+            runtime_name=body.get("runtime_name") or params.get("runtime_name"),
+        )
+    if path == ["workloads"] or path == ["workloads", "list"]:
+        return {
+            "workloads": svc.list(
+                job_id=params.get("job_id"),
+                instance_id=params.get("instance_id"),
+                session_id=params.get("session_id"),
+                status=params.get("status"),
+                runtime=params.get("runtime"),
+                runtime_name=params.get("runtime_name"),
+            )
+        }
+    if path == ["workloads", "runtimes"]:
+        return {"runtimes": svc.runtimes(runtime_name=params.get("runtime_name"))}
+    if path == ["workloads", "hosts"]:
+        return {"hosts": svc.hosts(runtime_name=params.get("runtime_name"))}
+    if path == ["workloads", "doctor"]:
+        return svc.doctor(runtime_name=params.get("runtime_name"))
+    if len(path) == 2 and path[0] == "workloads":
+        return svc.get(
+            path[1],
+            refresh=bool(params.get("refresh", False)),
+            runtime_name=params.get("runtime_name"),
+        )
+    if len(path) == 3 and path[0] == "workloads" and path[2] == "stop":
+        return svc.stop(path[1], runtime_name=body.get("runtime_name") or params.get("runtime_name"))
+    if len(path) == 3 and path[0] == "workloads" and path[2] == "exec":
+        command = body.get("command") or params.get("command")
+        if not command:
+            raise ValueError("command (argv list) is required")
+        return svc.exec(
+            path[1],
+            command,
+            timeout_s=body.get("timeout_s") or params.get("timeout_s"),
+            env=body.get("env") or params.get("env"),
+            runtime_name=body.get("runtime_name") or params.get("runtime_name"),
+        )
+    raise ValueError(f"unrecognized workloads dispatch path: {'/'.join(path)}")
 
 
 __all__ = ["dispatch_operator_path"]

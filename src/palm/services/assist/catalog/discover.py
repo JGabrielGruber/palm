@@ -35,9 +35,27 @@ def discover(query: str = "", *, limit: int = 12) -> dict[str, Any]:
         },
         {
             "kind": "params",
-            "summary": "Run Python via WorkloadEngine (host | neonroot | auto)",
+            "summary": "Run Python via WorkloadEngine (local | host | neonroot | auto)",
             "call": 'palm_assist(params={flow_id: "run-python"})',
             "alias": "run-python",
+        },
+        {
+            "kind": "alias",
+            "summary": "Workload plane doctor (local/host/neonroot health)",
+            "call": 'palm_assist(alias="workloads/doctor")',
+            "alias": "workloads/doctor",
+        },
+        {
+            "kind": "alias",
+            "summary": "List WorkloadRuntimes",
+            "call": 'palm_assist(alias="workloads/runtimes")',
+            "alias": "workloads/runtimes",
+        },
+        {
+            "kind": "alias",
+            "summary": "Start a workload from Spec (params.spec)",
+            "call": 'palm_assist(alias="workloads/start", params={spec: {…}})',
+            "alias": "workloads/start",
         },
         {
             "kind": "params",

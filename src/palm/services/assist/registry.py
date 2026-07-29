@@ -126,6 +126,15 @@ _BUILTIN_MCP_ALIASES: dict[str, tuple[str, ...]] = {
     "system/waiting": ("system", "waiting"),
     "design/publish": ("design", "publish"),
     "design/publish-resource": ("design", "publish-resource"),
+    # 0.56 — workload product surface (assist-only friendly)
+    "workloads/start": ("workloads", "start"),
+    "workloads/list": ("workloads", "list"),
+    "workloads/runtimes": ("workloads", "runtimes"),
+    "workloads/hosts": ("workloads", "hosts"),
+    "workloads/doctor": ("workloads", "doctor"),
+    "workloads/get": ("workloads", "{workload_id}"),
+    "workloads/stop": ("workloads", "{workload_id}", "stop"),
+    "workloads/exec": ("workloads", "{workload_id}", "exec"),
 }
 
 _lock = threading.RLock()

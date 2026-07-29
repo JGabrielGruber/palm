@@ -10,6 +10,7 @@ from palm.runtimes.server.surfaces.rest.design import routes as design_routes
 from palm.runtimes.server.surfaces.rest.execution.flows import routes as flows_routes
 from palm.runtimes.server.surfaces.rest.execution.processes import routes as processes_routes
 from palm.runtimes.server.surfaces.rest.execution.providers import routes as providers_routes
+from palm.runtimes.server.surfaces.rest.execution.workloads import routes as workloads_routes
 from palm.runtimes.server.surfaces.rest.route_table import RouteDefinition
 from palm.runtimes.server.surfaces.rest.system import routes as system_routes
 from palm.services.assist.registry import assist_commands
@@ -26,6 +27,7 @@ _SERVICE_GROUPS = {
     "flows": "Flows",
     "processes": "Processes",
     "providers": "Providers",
+    "workloads": "Workloads",
     "system": "System",
 }
 
@@ -234,6 +236,7 @@ def collect_service_routes() -> tuple[RouteDefinition, ...]:
         ("flows", flows_routes.ROUTES),
         ("processes", processes_routes.ROUTES),
         ("providers", providers_routes.ROUTES),
+        ("workloads", workloads_routes.ROUTES),
         ("system", system_routes.ROUTES),
     )
     routes: list[RouteDefinition] = []
