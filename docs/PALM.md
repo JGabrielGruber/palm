@@ -373,7 +373,7 @@ Each top-level part has **one purpose**.
 | Name | Role now | Residual |
 |------|----------|----------|
 | `PalmKernel` | Infra: storage + system-instance registry | Not the effect API |
-| `BaseRuntime` | **System instance** under `palm.system.runtime` | Common re-export (SD-012) |
+| `BaseRuntime` | **System instance** under `palm.system.runtime` | Import from `palm.system` |
 | `RuntimeHost` | Thin legacy protocol for executions | Prefer `SystemInstance` + ports |
 | `PatternBuildContext` | Carries `execution` port (+ engines for unit tests) | Engine fields for tests only |
 | `ExecutionService.*` | Product over **ports** for effects | list/doctor residual |
@@ -490,12 +490,12 @@ A map that only names **ideals** without today is also incomplete.
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
 | Workload pure engine + leaf direction | **Scout** (0.56) — enough to force this map |
-| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks; common has SD-012 shims |
-| Unified execution port | **Live** — product + graphs + edges for effects (incl. `resume_job`); inspect list residual |
-| Shared vs system split in tree | **Mostly deflated** (0.57.6–11); residual: server stack (SD-011), plans DTO shared |
+| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks |
+| Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
+| Shared vs system split in tree | **Deflated** (0.57.6–12); residual: server transport kit (SD-011); plans DTO shared |
 | Live debt register | **Real** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC) |
-| Session plane | **Queued** — needs system home first |
+| Session plane | **Queued as a theme** — not a 0.57 residual slice |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  
