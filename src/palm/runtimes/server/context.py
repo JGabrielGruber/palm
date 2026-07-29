@@ -18,7 +18,7 @@ from palm.common.runtimes.server.cqrs import wire_standalone_buses
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
     from palm.services.analytics import AnalyticsService
     from palm.services.assist import AssistService
     from palm.services.definitions import DefinitionService

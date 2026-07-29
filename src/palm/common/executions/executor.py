@@ -30,7 +30,7 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.host import RuntimeHost
+    from palm.system.runtime.host import RuntimeHost
     from palm.core.context import BaseState
 
 

@@ -15,7 +15,7 @@ from palm.core.orchestration import Job
 from palm.services.execution.processes.grammar import ProcessCommandKind, parse_process_command
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 class ProcessExecutionService(BaseService):

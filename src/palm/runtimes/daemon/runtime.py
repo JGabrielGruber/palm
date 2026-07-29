@@ -8,15 +8,15 @@ import signal
 import threading
 from typing import Any, ClassVar
 
-from palm.common.runtimes.base import BaseRuntime
-from palm.common.runtimes.wiring import SchedulerPolicy
+from palm.system.runtime.base import BaseRuntime
+from palm.system.runtime.wiring import SchedulerPolicy
 
 
 class DaemonRuntime(BaseRuntime):
     """
     Long-lived runtime with background job driving by default.
 
-    Uses :class:`~palm.common.runtimes.schedulers.queued.QueuedScheduler` so callers
+    Uses :class:`~palm.system.runtime.schedulers.queued.QueuedScheduler` so callers
     return immediately after submission while a worker thread advances jobs.
     """
 

@@ -12,7 +12,7 @@ from palm.core.resource.result import ProviderResult
 from palm.states import BlackboardState
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 class ProviderExecutionService(BaseService):

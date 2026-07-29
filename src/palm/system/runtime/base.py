@@ -3,7 +3,7 @@ BaseRuntime — concrete **system instance** for a running Palm.
 
 Holds engines, planes, and the :class:`~palm.system.ports.execution.ExecutionPort`
 surface for graphs and product. Lives under :mod:`palm.system.runtime`
-(SYSTEM-LOW-LEVEL wave D). Compatibility re-export: ``palm.common.runtimes.base``
+(SYSTEM-LOW-LEVEL wave D). Compatibility re-export: ``palm.system.runtime.base``
 (SD-012).
 
 Concrete surfaces (:class:`~palm.runtimes.embedded.runtime.EmbeddedRuntime`,

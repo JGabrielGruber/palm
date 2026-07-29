@@ -34,7 +34,7 @@ from palm.services.definitions.resources import resource_catalog_row
 
 if TYPE_CHECKING:
     from palm.common.persistence.definition_repository import DefinitionRepository
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 class DefinitionService(BaseService):

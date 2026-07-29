@@ -39,7 +39,7 @@
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5 | open |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.6+ | open |
-| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | during 0.57 | open (empty list) |
+| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–8 | open (import sweep ✅; modules remain) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | gate + STUBS | open |
 
 ### Surface debt (SU)
@@ -255,20 +255,21 @@ Do not block execution port on this move.
 
 ### SD-012 — Cutover shims
 
-**Severity:** S3 · **List:** active after 0.57.6
+**Severity:** S3 · **List:** active after 0.57.6 · **Import sweep:** ✅ 0.57.8
 
 When a temporary compatibility import or façade exists during 0.57, **add a bullet here** with path and remove-by slice.
 
-| Shim | Path | Remove by |
-|------|------|-----------|
-| BaseRuntime | `palm.common.runtimes.base` → `palm.system.runtime.base` | theme exit / import sweep |
+| Shim | Path | Status |
+|------|------|--------|
+| BaseRuntime | `palm.common.runtimes.base` → `palm.system.runtime.base` | modules remain; **src/tests import system** (0.57.8) |
 | RuntimeHost | `palm.common.runtimes.host` → `palm.system.runtime.host` | same |
 | wiring / hooks / schedulers | `palm.common.runtimes.{wiring,hooks,schedulers}` → `palm.system.runtime.*` | same |
 | Wait package | `palm.common.wait.*` → `palm.system.planes.wait.*` | same |
 | Work package | `palm.common.work.*` → `palm.system.planes.work.*` | same |
 | Workload glue | `palm.common.workload.*` → `palm.system.planes.workload.*` | same |
 
-**Policy:** One implementation (system). Common paths are re-export only — not dual wiring.
+**Policy:** One implementation (system). Common paths are re-export only — not dual wiring.  
+**Next:** delete shim modules when no external callers need them (theme exit).
 
 ---
 
@@ -582,6 +583,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | 0.57.5 | SD-001, SD-005, SD-009 (product rebind) |
 | 0.57.6 | SD-002 deflate bulk ✅, SD-012 shims listed; SD-011 residual |
 | 0.57.7 | SD-005 effects ✅ (`resume_job` on port); list residual; AGENTS no-shortcut |
+| 0.57.8 | SD-012 import sweep — src/tests use palm.system; shim modules remain |
 | parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
 | later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |
 

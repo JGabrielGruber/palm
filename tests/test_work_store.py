@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.common.work import WorkIntentStore
+from palm.system.planes.work import WorkIntentStore
 from palm.core.storage import StorageEngine
 from palm.core.work import WorkIntent
 

@@ -39,7 +39,7 @@ def _drive_pending_job_slice(runtime: Any, job: Job) -> None:
     """
     Advance a pending child job inline while the parent blocks in ``wait_for_job``.
 
-    Without this, :class:`~palm.common.runtimes.schedulers.queued.QueuedScheduler`
+    Without this, :class:`~palm.system.runtime.schedulers.queued.QueuedScheduler`
     deadlocks: the worker thread driving the parent cannot dequeue the child until
     the parent slice finishes, but the parent slice waits for the child.
     """

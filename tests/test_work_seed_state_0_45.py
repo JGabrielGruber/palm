@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from palm.common.resource.inbound import parse_inbound_spec
-from palm.common.work.seed_state import resolve_seed_state
+from palm.system.planes.work.seed_state import resolve_seed_state
 
 
 def test_parse_inbound_seed_state() -> None:

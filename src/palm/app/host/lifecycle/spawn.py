@@ -14,7 +14,7 @@ from palm.app.host.events import HostEventType
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 class RuntimeSpawner:

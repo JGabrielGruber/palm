@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from palm.backends.behavior_tree import BehaviorTreeRunner
-from palm.common.runtimes.schedulers import QueuedScheduler
+from palm.system.runtime.schedulers import QueuedScheduler
 from palm.core.context import ContextEngine
 from palm.core.event import EventEngine
 from palm.core.orchestration import JobStatus, OrchestrationEngine

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
-from palm.common.work.schedule import ScheduleRegistry
-from palm.common.work.store import WorkIntentStore
+from palm.system.planes.work.schedule import ScheduleRegistry
+from palm.system.planes.work.store import WorkIntentStore
 from palm.core.storage import StorageEngine
 
 

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from palm.common.wait import WaitPlaneService
-from palm.common.wait.plane import bind_wait_plane_to_runtime
+from palm.system.planes.wait import WaitPlaneService
+from palm.system.planes.wait.plane import bind_wait_plane_to_runtime
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import has_open_waits, make_job_wait

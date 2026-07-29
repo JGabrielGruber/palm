@@ -10,7 +10,7 @@ from palm.common.job_context import instance_id_for_job
 from palm.core.orchestration.exceptions import JobNotFoundError
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 def build_invoke_tree(

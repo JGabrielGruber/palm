@@ -68,7 +68,7 @@ from palm.services._cqrs_wiring import wire_all_service_cqrs
 from palm.services.design.contributors import wire_builtin_design_contributors
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
     from palm.core.orchestration import Job
     from palm.core.resource import ProviderResult
     from palm.definitions.flow import FlowDefinition

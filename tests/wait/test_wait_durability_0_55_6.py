@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import palm.providers  # noqa: F401
 from palm.common.persistence.state_snapshot import snapshot_state, state_from_snapshot
-from palm.common.wait.index import WaitOwnerIndex
-from palm.common.wait.matcher import WaitMatcher
-from palm.common.wait.rehydrate import rehydrate_wait_interests
+from palm.system.planes.wait.index import WaitOwnerIndex
+from palm.system.planes.wait.matcher import WaitMatcher
+from palm.system.planes.wait.rehydrate import rehydrate_wait_interests
 from palm.core import StorageEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import (

@@ -15,7 +15,7 @@ from palm.services.assist.sessions.service import AssistSessionService
 from palm.services.assist.views import resolve_view_format
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
     from palm.services.definitions.service import DefinitionService
     from palm.services.execution.service import ExecutionService
     from palm.services.system.service import SystemService

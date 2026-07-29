@@ -6,8 +6,8 @@ from typing import Any
 
 from palm import __version__
 from palm.common.runtimes.doctor_contributors import collect_doctor_extensions
-from palm.common.wait.plane import WaitPlaneService
-from palm.common.wait.present import waiting_on_from_job
+from palm.system.planes.wait.plane import WaitPlaneService
+from palm.system.planes.wait.present import waiting_on_from_job
 from palm.core.registry import pattern_registry, provider_registry, storage_registry
 from palm.core.transform.registry import transform_registry
 
@@ -128,7 +128,7 @@ def build_doctor_report(
     if not isinstance(workload_host, dict):
         workload_host = {}
 
-    from palm.common.workload.bootstrap import workload_doctor_section
+    from palm.system.planes.workload.bootstrap import workload_doctor_section
 
     try:
         workloads = workload_doctor_section(runtime)

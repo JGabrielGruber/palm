@@ -10,12 +10,12 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 from palm.common.exceptions import PlanNotFoundError
 from palm.common.plans import ExecutionPlan, ProcessPlan, StoredPlan
-from palm.common.runtimes.base import BaseRuntime
+from palm.system.runtime.base import BaseRuntime
 from palm.common.runtimes.server.middleware import current_principal_id
 from palm.common.runtimes.server.plans import prepare_flow_from_body, prepare_process_from_body
 from palm.common.runtimes.server.transport import BaseTransport
 from palm.common.runtimes.server.webhooks import ServerWebhookBridge
-from palm.common.runtimes.wiring import SchedulerPolicy
+from palm.system.runtime.wiring import SchedulerPolicy
 from palm.core.orchestration import Job
 from palm.runtimes.server.factory import create_app
 from palm.runtimes.server.transport import DEFAULT_TRANSPORT, create_transport
@@ -29,7 +29,7 @@ class ServerRuntime(BaseRuntime):
     """
     Long-lived runtime exposing Palm over registered server surfaces.
 
-    Defaults to :class:`~palm.common.runtimes.schedulers.queued.QueuedScheduler` so
+    Defaults to :class:`~palm.system.runtime.schedulers.queued.QueuedScheduler` so
     request handlers return promptly while a worker thread drives jobs.
     """
 

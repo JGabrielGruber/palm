@@ -34,7 +34,7 @@ from palm.services.design.proposal import (
 from palm.services.design.registry import run_design_validators
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
     from palm.services.definitions.service import DefinitionService
 
 

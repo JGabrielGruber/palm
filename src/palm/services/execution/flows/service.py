@@ -19,7 +19,7 @@ from palm.services.execution.flows.schemas import SessionContext, build_session_
 from palm.services.execution.flows.session import FlowSession
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
     from palm.services.system.service import SystemService
 
 

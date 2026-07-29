@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from palm.common.providers.app import ProviderApp
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 RuntimeBindingFn = Callable[["BaseRuntime"], None]
 RuntimeUnbindingFn = Callable[[], None]

@@ -15,7 +15,7 @@ from palm.core.orchestration import Job, JobStatus
 from palm.core.orchestration.exceptions import JobNotFoundError
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 def _pattern_name(job: Job) -> str:

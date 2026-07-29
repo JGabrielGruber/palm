@@ -7,8 +7,8 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from palm.common.triggers.registry import TriggerRegistry
-from palm.common.work.schedule import ScheduleRegistry
-from palm.common.work.store import WorkIntentStore
+from palm.system.planes.work.schedule import ScheduleRegistry
+from palm.system.planes.work.store import WorkIntentStore
 from palm.core.event import Event
 from palm.core.work import WorkIntent
 

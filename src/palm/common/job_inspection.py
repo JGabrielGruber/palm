@@ -15,7 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from palm.common.wait.present import waiting_on_from_job
+from palm.system.planes.wait.present import waiting_on_from_job
 from palm.core.orchestration import Job
 from palm.core.orchestration.input_capable import JobInspectable
 

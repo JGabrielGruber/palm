@@ -43,7 +43,7 @@ from palm.common.runtimes.server.plans import prepare_flow_from_body, prepare_pr
 from palm.core.orchestration.exceptions import JobNotFoundError
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 class StandaloneCommandHandlers:

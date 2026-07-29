@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from palm.common.runtimes.hooks import AuthMiddleware
+from palm.system.runtime.hooks import AuthMiddleware
 from palm.core.auth import AuthEngine, Principal
 from palm.core.orchestration import JobStatus, OrchestrationEngine
 from palm.core.orchestration.exceptions import JobAuthorizationError

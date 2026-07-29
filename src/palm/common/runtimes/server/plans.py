@@ -11,7 +11,7 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 def prepare_flow_from_body(runtime: BaseRuntime, body: dict[str, object]) -> ExecutionPlan:

@@ -10,7 +10,7 @@ from palm.common.operator.resource_remediation import resource_invoke_remediatio
 from palm.common.resource.binding import promote_binding_keys
 from palm.common.resource.builder import build_resource_leaf
 from palm.common.resource.compensation import is_mutating_action, track_resource_invocation
-from palm.common.wait.present import waiting_on_row
+from palm.system.planes.wait.present import waiting_on_row
 from palm.core.behavior_tree import LeafNode, PatternStatus
 from palm.core.context import BaseState
 from palm.core.orchestration import JobStatus

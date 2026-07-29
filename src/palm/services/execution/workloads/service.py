@@ -16,7 +16,7 @@ from palm.core.workload.spec import WorkloadSpec
 from palm.core.workload.status import WorkloadStatus
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 
 class WorkloadExecutionService(BaseService):

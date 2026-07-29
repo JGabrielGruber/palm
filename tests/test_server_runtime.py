@@ -9,8 +9,8 @@ from typing import Any
 
 import pytest
 
-from palm.common.runtimes.host import RuntimeHost
-from palm.common.runtimes.schedulers import QueuedScheduler
+from palm.system.runtime.host import RuntimeHost
+from palm.system.runtime.schedulers import QueuedScheduler
 from palm.core.orchestration import JobStatus
 from palm.runtimes.server import ServerRuntime
 

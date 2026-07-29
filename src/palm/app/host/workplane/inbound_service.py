@@ -625,7 +625,7 @@ class InboundBindingService:
             **meta,
         }
         if spec.work.seed_state:
-            from palm.common.work.seed_state import resolve_seed_state
+            from palm.system.planes.work.seed_state import resolve_seed_state
 
             seeded = resolve_seed_state(spec.work.seed_state, payload)
             if seeded:

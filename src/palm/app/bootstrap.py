@@ -191,7 +191,7 @@ def composition_profile_from_settings(settings: PalmSettings) -> CompositionProf
 
 
 def runtime_start_options(settings: PalmSettings, **overrides: Any) -> dict[str, Any]:
-    """Build keyword arguments for :meth:`~palm.common.runtimes.base.BaseRuntime.start`."""
+    """Build keyword arguments for :meth:`~palm.system.runtime.base.BaseRuntime.start`."""
     options: dict[str, Any] = {
         "storage_backend": settings.storage_backend,
         "backend_options": StorageFactory.backend_options(settings=settings),

@@ -8,7 +8,7 @@ from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
 
 PALM_SUBJECT_HEADER = "X-Palm-Subject"
 

@@ -5,8 +5,8 @@ from __future__ import annotations
 import pytest
 
 from palm.common import DefinitionExecutor
-from palm.common.runtimes.host import RuntimeHost
-from palm.common.runtimes.schedulers import InlineScheduler
+from palm.system.runtime.host import RuntimeHost
+from palm.system.runtime.schedulers import InlineScheduler
 from palm.core.event import EventEngine
 from palm.core.orchestration import OrchestrationEngine
 from palm.definitions.flow import FlowDefinition

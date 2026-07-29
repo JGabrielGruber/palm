@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from palm.app import ApplicationHost, DeploymentProfile
 from palm.app.settings import PalmSettings
-from palm.common.workload.run_python import build_run_python_spec, resolve_runtime_choice
+from palm.system.planes.workload.run_python import build_run_python_spec, resolve_runtime_choice
 from palm.core.behavior_tree import PatternStatus
 from palm.core.workload import IsolationPolicy, WorkloadKind
 from palm.patterns.wizard.bindings.definitions.config import WizardConfig, WizardStepConfig

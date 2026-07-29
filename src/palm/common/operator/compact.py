@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.common.wait.present import child_projection_from_waiting_on
+from palm.system.planes.wait.present import child_projection_from_waiting_on
 
 _DEFAULT_INCLUDE = frozenset(
     {
