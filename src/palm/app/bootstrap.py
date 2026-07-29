@@ -9,22 +9,17 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-import palm.common.transforms  # autoload common transform rules
-import palm.patterns  # — autoload pattern apps
-import palm.providers  # — autoload provider apps
-import palm.runners  # noqa: F401 — autoload WorkloadRuntime runners
-import palm.storages  # noqa: F401 — autoload core storage apps
 from palm.app.host.composition import CompositionProfile
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
 from palm.common.persistence.definition_repository import DefinitionRepository
+from palm.common.plugins import ensure_core_plugins
 from palm.common.storage import StorageFactory
 
 
 def ensure_plugins() -> None:
     """Import extensible plugin packages so registries are populated."""
-    # Side-effect imports above register transforms, patterns, providers, and storages.
-    return None
+    ensure_core_plugins()
 
 
 def hydrate_definitions_from_storage(repository: DefinitionRepository) -> int:

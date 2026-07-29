@@ -13,8 +13,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
 
-import palm.patterns  # autoload plugin apps for the whole test session
-import palm.providers  # noqa: F401 — (0.47.5: common no longer triggers this side-effect)
+from palm.common.plugins import ensure_core_plugins
+
+# Patterns, providers, runners, storages, transforms (system start uses same helper).
+ensure_core_plugins()
 from palm.app import ApplicationHost, DeploymentProfile
 from palm.app.settings import PalmSettings
 from palm.core.event import EventEngine

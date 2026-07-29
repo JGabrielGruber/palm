@@ -118,7 +118,7 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 | **3** | Execution port v1 | Named interface on BaseRuntime — ✅ type+impl |
 | **4** | Rebind graphs | P2 invoker/driver + port bridges — ✅ **0.57.4** |
 | **5** | Rebind product | Effect methods on port — ✅ (list/doctor residual) |
-| **6** | Deflate shared | Move system-shaped code out of the dump; leave true shared |
+| **6** | Deflate shared | BaseRuntime + planes under `palm.system`; SD-012 shims — ✅ **0.57.6** |
 | **7** | Edge policy | No new engine shortcuts; list residual bypass as debt |
 | **8** | Docs pass | ARCHITECTURE tracks map; STE for touched text |
 | **9** | Theme exit | Workload and session grow **on** the map without a new split |
@@ -177,7 +177,7 @@ Theme **0.57** may close when:
 ## 11. Review and next
 
 High-level map and spine are in use.  
-**Next code slice:** **0.57.6** — deflate system out of `common` (BaseRuntime / planes move waves), or **0.57.7** edge policy.
+**Next code slice:** **0.57.7** — edge policy (SD-005 samples); optional further residual moves (executions / SD-011).
 
 ---
 
@@ -187,6 +187,8 @@ High-level map and spine are in use.
 |-------|------|
 | **0.57.0** | Plan + [PALM.md](PALM.md) + ADR-026 (map era) |
 | **0.57.1** | Archive PD-era debt; live SD register; [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md); AGENTS slim |
+| **0.57.2–5** | `palm.system` boundary; ExecutionPort; product/graph rebind (P2) |
+| **0.57.6** | Deflate: BaseRuntime + wait/work/workload → `palm.system`; SD-012 shims; `ensure_core_plugins` |
 
 ---
 

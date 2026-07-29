@@ -34,15 +34,16 @@ src/palm/system/
     execution.py           # ExecutionPort protocol + types
   runtime/
     __init__.py
-    base.py                # moved from common.runtimes.base (when ready)
-    host.py                # system host protocol (replaces thin RuntimeHost)
-    wiring.py              # scheduler resolve helpers (from common if system-owned)
-    hooks/                 # runtime job hooks that are system
+    base.py                # BaseRuntime (wave D ✅)
+    host.py                # RuntimeHost legacy protocol
+    wiring.py              # scheduler resolve helpers
+    hooks/                 # runtime job hooks
+    schedulers/            # inline / queued
   planes/
-    wait/                  # from common.wait (continue)
-    work/                  # from common.work (start) — or keep stage moves
-    workload/              # bootstrap + doctor glue (not runners)
-  executions/              # DefinitionExecutor + plan submit (system-adjacent)
+    wait/                  # continue plane (wave E ✅)
+    work/                  # start intents (wave E ✅)
+    workload/              # bootstrap + doctor glue (wave G ✅)
+  executions/              # still common — residual wave F
 ```
 
 **Rules:**
@@ -74,11 +75,11 @@ src/palm/system/
 | **A — boundary** | New package + re-export façades | `palm.system` | SD-002 start |
 | **B — host contract** | `common/runtimes/host.py` | `system/.../host.py` or ports | SD-003 |
 | **C — port** | new | `system/ports/execution.py` | SD-001 |
-| **D — BaseRuntime** | `common/runtimes/base.py` | `system/runtime/base.py` | SD-002 |
-| **E — planes** | `common/wait`, `common/work` | `system/planes/...` | SD-002 |
-| **F — executions** | `common/executions` | `system/executions` | SD-002 |
-| **G — workload glue** | `common/workload` | `system/planes/workload` | SD-009 |
-| **H — classify** | `common/runtimes/server` | keep or `runtimes` | SD-011 |
+| **D — BaseRuntime** | `common/runtimes/base.py` | `system/runtime/base.py` | SD-002 ✅ 0.57.6 |
+| **E — planes** | `common/wait`, `common/work` | `system/planes/...` | SD-002 ✅ 0.57.6 |
+| **F — executions** | `common/executions` | `system/executions` | SD-002 residual |
+| **G — workload glue** | `common/workload` | `system/planes/workload` | SD-009 ✅ 0.57.6 |
+| **H — classify** | `common/runtimes/server` | keep or `runtimes` | SD-011 residual |
 
 **Compatibility:** During cutover, `palm.common.runtimes.base` may re-export from `palm.system` (list under SD-012).  
 Remove re-exports before theme exit when guards allow.
@@ -331,8 +332,12 @@ the protocols structurally.
 
 ### 0.57.6 — Deflate common
 
-- [ ] At least BaseRuntime + wait plane live under system **or** documented residual with SD-002 update  
-- [ ] common classification matches reality  
+- [x] BaseRuntime + host/wiring/hooks/schedulers live under `palm.system.runtime`  
+- [x] Wait + work + workload glue live under `palm.system.planes.*`  
+- [x] `common` re-exports only (SD-012) — not dual implementations  
+- [x] Plugin side-effects via `palm.common.plugins.ensure_core_plugins` (system purity)  
+- [x] Residual documented: executions, common/hooks, server stack (SD-002 / SD-011)  
+- [x] common classification matches reality (SYSTEM-LOW-LEVEL §5 still true for residuals)  
 
 ### 0.57.7 — Edge policy
 
@@ -368,13 +373,15 @@ the protocols structurally.
 | Debt | [TECH-DEBT.md](../TECH-DEBT.md) (SD/SU/ST/CS) |
 | Intentions (no fake body) | [STUBS.md](STUBS.md) |
 | Surfaces | Thin only; SU-* for bypass/bulk; samples in debt |
-| Runtime today | `src/palm/common/runtimes/base.py` |
-| Host protocol today | `src/palm/common/runtimes/host.py` |
+| Runtime (canonical) | `src/palm/system/runtime/base.py` |
+| Host protocol (canonical) | `src/palm/system/runtime/host.py` |
+| Wait plane (canonical) | `src/palm/system/planes/wait/plane.py` |
+| Work / workload planes | `src/palm/system/planes/work/`, `…/workload/` |
+| Compatibility shims | `src/palm/common/runtimes/*`, `common/wait`, `common/work`, `common/workload` (SD-012) |
 | Build context | `src/palm/common/patterns/build_context.py` |
-| Executor | `src/palm/common/executions/executor.py` |
+| Executor | `src/palm/common/executions/executor.py` (residual in common) |
 | Provider product | `src/palm/services/execution/providers/service.py` |
 | Workload product | `src/palm/services/execution/workloads/service.py` |
-| Wait plane | `src/palm/common/wait/plane.py` |
 
 ---
 

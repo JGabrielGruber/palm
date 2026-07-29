@@ -15,7 +15,7 @@ class ExecutionPort(Protocol):
     """
     Effects a started system instance may perform for graphs and product.
 
-    Implementations: live system runtime (:class:`~palm.common.runtimes.base.BaseRuntime`)
+    Implementations: live system runtime (:class:`~palm.system.runtime.base.BaseRuntime`)
     and test doubles. Do not treat CQRS or product services as the only truth of effects.
     """
 

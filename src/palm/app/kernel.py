@@ -21,7 +21,7 @@ from palm.core.storage import StorageEngine
 
 if TYPE_CHECKING:
     from palm.common.persistence.definition_repository import DefinitionRepository
-    from palm.common.runtimes.base import BaseRuntime
+    from palm.system.runtime.base import BaseRuntime
     from palm.core.orchestration import Job
     from palm.core.resource import ProviderResult
     from palm.definitions.flow import FlowDefinition
@@ -35,7 +35,7 @@ class PalmKernel:
     Infrastructure layer — shared storage, instance manager, and system-instance registry.
 
     PalmKernel is **not** the system layer. It boots infra and registers started
-    system instances (today :class:`~palm.common.runtimes.base.BaseRuntime`).
+    system instances (today :class:`~palm.system.runtime.base.BaseRuntime`).
     Effects for graphs and product use ports on those instances
     (``runtime.execution``), not this class as a second kernel API (SD-006).
 

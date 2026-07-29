@@ -64,13 +64,22 @@ def test_public_exports() -> None:
 
 
 def test_base_runtime_is_system_instance_and_execution_port() -> None:
-    from palm.common.runtimes.base import BaseRuntime
-    from palm.system import ExecutionPort, SystemInstance
+    from palm.system import BaseRuntime, ExecutionPort, SystemInstance
+    from palm.system.runtime.base import BaseRuntime as CanonicalBaseRuntime
 
+    assert BaseRuntime is CanonicalBaseRuntime
     runtime = BaseRuntime()
     assert isinstance(runtime, SystemInstance)
     assert isinstance(runtime, ExecutionPort)
     assert runtime.execution is runtime
+
+
+def test_common_reexports_system_base_runtime() -> None:
+    """SD-012 cutover shim — same object, not a dual implementation."""
+    from palm.common.runtimes.base import BaseRuntime as ShimBaseRuntime
+    from palm.system.runtime.base import BaseRuntime as CanonicalBaseRuntime
+
+    assert ShimBaseRuntime is CanonicalBaseRuntime
 
 
 def test_execution_port_fake_is_usable() -> None:

@@ -1,10 +1,9 @@
 """
 Palm system layer — running machine: ports, planes, system instance.
 
-This package is the named home for system contracts (0.57+).
-Concrete runtime wiring still lives partly in ``palm.common`` until deflate
-waves (SYSTEM-LOW-LEVEL move waves A-H). Import **ports** and
-:class:`~palm.system.instance.SystemInstance` from here.
+Holds :class:`~palm.system.runtime.base.BaseRuntime`, continue/start planes,
+and effect ports (0.57.6 deflate). Compatibility re-exports under
+``palm.common.*`` are listed in TECH-DEBT SD-012.
 
 Rules (enforced by ``scripts/guard_system.py``):
 
@@ -22,8 +21,10 @@ from palm.system.effects import (
 )
 from palm.system.instance import SystemInstance
 from palm.system.ports.execution import ExecutionPort
+from palm.system.runtime.base import BaseRuntime
 
 __all__ = [
+    "BaseRuntime",
     "ExecutionPort",
     "PortResourceInvoker",
     "PortWorkloadDriver",

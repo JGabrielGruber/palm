@@ -1,21 +1,6 @@
-"""Workload coordination helpers (placement/ownership/wire) — no driver SDKs."""
+"""Shim (SD-012) — canonical: :mod:`palm.system.planes.workload`."""
 
-from palm.common.workload.bootstrap import (
-    build_bound_runtimes,
-    initialize_workload_engine,
-    workload_doctor_section,
-)
-from palm.common.workload.run_python import (
-    build_run_python_spec,
-    resolve_runtime_choice,
-    spec_from_bound_params,
-)
+from palm.system.planes.workload import *  # noqa: F403
+from palm.system.planes import workload as _mod
 
-__all__ = [
-    "build_bound_runtimes",
-    "build_run_python_spec",
-    "initialize_workload_engine",
-    "resolve_runtime_choice",
-    "spec_from_bound_params",
-    "workload_doctor_section",
-]
+__all__ = getattr(_mod, "__all__", [])

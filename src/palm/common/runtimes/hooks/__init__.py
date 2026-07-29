@@ -1,10 +1,10 @@
-"""Runtime middleware hooks for orchestration jobs."""
+"""Shim (SD-012) — canonical: :mod:`palm.system.runtime.hooks`."""
 
-from palm.common.runtimes.hooks.execution_context import JobExecutionContextHook
-from palm.common.runtimes.hooks.middleware import (
+from palm.system.runtime.hooks import (
     AuthMiddleware,
     DriveObservabilityHook,
     DriveSlice,
+    JobExecutionContextHook,
     authenticate_runtime,
 )
 

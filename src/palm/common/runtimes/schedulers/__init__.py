@@ -1,6 +1,5 @@
-"""Job scheduling policies shared across Palm runtimes."""
+"""Shim (SD-012) — canonical: :mod:`palm.system.runtime.schedulers`."""
 
-from palm.common.runtimes.schedulers.inline import InlineScheduler
-from palm.common.runtimes.schedulers.queued import QueuedScheduler
+from palm.system.runtime.schedulers import InlineScheduler, QueuedScheduler
 
 __all__ = ["InlineScheduler", "QueuedScheduler"]

@@ -489,9 +489,9 @@ A map that only names **ideals** without today is also incomplete.
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
 | Workload pure engine + leaf direction | **Scout** (0.56) — enough to force this map |
-| Named system layer in packages | **Started** — `palm.system` (SystemInstance, ExecutionPort); BaseRuntime still under common until wave D |
+| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, wait/work/workload planes; common has SD-012 shims |
 | Unified execution port | **Live** — product + graph builders use port; core leaves on ResourceInvoker/WorkloadDriver (P2) |
-| Shared vs system split in tree | **Boundary named** (SD-002); deflate moves 0.57.6 |
+| Shared vs system split in tree | **Mostly deflated** (0.57.6); residual: executions, job hooks, server stack (SD-002/SD-011) |
 | Live debt register | **Real** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC) |
 | Session plane | **Queued** — needs system home first |

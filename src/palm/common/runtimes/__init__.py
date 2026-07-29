@@ -1,4 +1,9 @@
-"""Shared runtime infrastructure — base wiring, schedulers, and hooks."""
+"""Runtime compatibility façade (SD-012).
+
+Canonical implementations live under :mod:`palm.system.runtime`.
+This package re-exports for import stability during 0.57 cutover.
+Server transport helpers remain here under ``.server`` (SD-011).
+"""
 
 from palm.common.runtimes.base import BaseRuntime
 from palm.common.runtimes.hooks import (

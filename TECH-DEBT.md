@@ -29,7 +29,7 @@
 | ID | Title | Sev | Effort | Theme slice | Status |
 |----|-------|:---:|:------:|-------------|--------|
 | [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | ✅ mostly (list/doctor residual) |
-| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open (boundary ✅) |
+| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open (deflate bulk ✅; residual) |
 | [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open (SystemInstance ✅; host residual) |
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open |
@@ -101,29 +101,25 @@ Graphs: builders resolve `ResourceInvoker` / `WorkloadDriver` from the port firs
 
 ### SD-002 — System mixed into `palm.common`
 
-**Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary ✅), 0.57.6 (deflate)
+**Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary ✅), 0.57.6 (deflate ✅ bulk)
 
-**Progress (0.57.2):** Package `palm.system` holds `SystemInstance` + `ExecutionPort`.  
-Concrete `BaseRuntime` / planes still under `common` until move waves D–G.
+**Progress (0.57.6):** Canonical homes under `palm.system`:
 
-**Observation:** `common` holds true shared libraries **and** the running kernel:
+| Area | Canonical | Residual in common |
+|------|-----------|--------------------|
+| `BaseRuntime` + host/wiring/hooks/schedulers | `palm.system.runtime` | SD-012 re-export shims |
+| Wait (continue) | `palm.system.planes.wait` | SD-012 shims |
+| Work (start intents) | `palm.system.planes.work` | SD-012 shims |
+| Workload glue | `palm.system.planes.workload` | SD-012 shims |
+| `executions/` | still common | system-adjacent — later wave |
+| job hooks (`common/hooks`) | still common | system-adjacent — later |
+| `runtimes/server` | still common | SD-011 |
+| transforms / cqrs / services base | shared (stay) | — |
 
-| Area | Class |
-|------|--------|
-| `common/runtimes/base.py` (`BaseRuntime`) | System |
-| `common/wait/` | System (continue plane) |
-| `common/work/` | System (start plane) |
-| `common/workload/` | System-adjacent |
-| `common/executions/` | System-adjacent |
-| `common/hooks/` | System-adjacent |
-| `common/transforms/` | Shared |
-| `common/cqrs/` | Shared primitive (+ host wiring) |
-| `common/services/` | Shared product base |
+**Why it still hurts residual:** executions, persistence-adjacent job hooks, and server transport remain in `common`.  
+Session plane still has no dedicated system seat (SD-008).
 
-**Why it hurts:** Session and new planes have no clean home. Shared becomes a dump.
-
-**Target:** Visible `palm.system` (or equivalent) per [SYSTEM-LOW-LEVEL](docs/SYSTEM-LOW-LEVEL.md).  
-Shared stays libraries only.
+**Target:** Residual system-shaped modules move or stay classified; shims drop before theme exit when safe.
 
 ---
 
@@ -254,15 +250,20 @@ Do not block execution port on this move.
 
 ### SD-012 — Cutover shims
 
-**Severity:** S3 · **List:** none required for 0.57.2
+**Severity:** S3 · **List:** active after 0.57.6
 
 When a temporary compatibility import or façade exists during 0.57, **add a bullet here** with path and remove-by slice.
 
 | Shim | Path | Remove by |
 |------|------|-----------|
-| *(none)* — BaseRuntime not moved; no re-export façade yet | | |
+| BaseRuntime | `palm.common.runtimes.base` → `palm.system.runtime.base` | theme exit / import sweep |
+| RuntimeHost | `palm.common.runtimes.host` → `palm.system.runtime.host` | same |
+| wiring / hooks / schedulers | `palm.common.runtimes.{wiring,hooks,schedulers}` → `palm.system.runtime.*` | same |
+| Wait package | `palm.common.wait.*` → `palm.system.planes.wait.*` | same |
+| Work package | `palm.common.work.*` → `palm.system.planes.work.*` | same |
+| Workload glue | `palm.common.workload.*` → `palm.system.planes.workload.*` | same |
 
-**Note:** When wave D moves `BaseRuntime` to `palm.system.runtime`, list `palm.common.runtimes.base` re-export here.
+**Policy:** One implementation (system). Common paths are re-export only — not dual wiring.
 
 ---
 
@@ -574,7 +575,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | 0.57.3 | SD-001 (port exists), SD-009 (start) |
 | 0.57.4 | SD-004 |
 | 0.57.5 | SD-001, SD-005, SD-009 (product rebind) |
-| 0.57.6 | SD-002 (deflate), SD-011 / SU-006 classify |
+| 0.57.6 | SD-002 deflate bulk ✅, SD-012 shims listed; SD-011 residual |
 | 0.57.7 | SD-005 + **SU-001** residual; no new surface engine access |
 | parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
 | later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |

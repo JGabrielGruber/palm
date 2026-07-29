@@ -1,7 +1,5 @@
-"""Deferred work queue (common) — store + schedules + drain helpers."""
+"""Shim (SD-012) — canonical: :mod:`palm.system.planes.work`."""
 
-from palm.common.work.schedule import ScheduleRegistry
-from palm.common.work.seed_state import resolve_seed_state
-from palm.common.work.store import WorkIntentStore
+from palm.system.planes.work import ScheduleRegistry, WorkIntentStore, resolve_seed_state
 
 __all__ = ["ScheduleRegistry", "WorkIntentStore", "resolve_seed_state"]

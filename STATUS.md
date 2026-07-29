@@ -47,7 +47,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | 0.57.3 Execution port v1 + product effect rebind | ✅ |
 | 0.57.4 Rebind graphs (P2 invoker/driver + builders) | ✅ |
 | 0.57.5 Rebind product | ✅ effect paths (list/doctor residual) |
-| 0.57.6 Deflate common | pending |
+| 0.57.6 Deflate common | ✅ BaseRuntime + wait/work/workload planes under `palm.system`; SD-012 shims |
 | 0.57.7 Edge policy | pending |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
