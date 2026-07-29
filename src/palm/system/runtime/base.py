@@ -3,7 +3,7 @@ BaseRuntime — concrete **system instance** for a running Palm.
 
 Holds engines, planes, and the :class:`~palm.system.ports.execution.ExecutionPort`
 surface for graphs and product. Canonical home: :mod:`palm.system.runtime`.
-Compatibility re-export (SD-012): ``palm.common.runtimes.base``.
+
 
 Concrete surfaces (:class:`~palm.runtimes.embedded.runtime.EmbeddedRuntime`,
 :class:`~palm.runtimes.daemon.runtime.DaemonRuntime`) differ only in default scheduling
@@ -498,6 +498,46 @@ class BaseRuntime:
         """List orchestration jobs (ExecutionPort inspect)."""
         self._require_started()
         return self.orchestration.list_jobs(status=status)
+
+    def list_workloads(
+        self,
+        *,
+        job_id: str | None = None,
+        instance_id: str | None = None,
+        session_id: str | None = None,
+        status: Any = None,
+        runtime: str | None = None,
+    ) -> list[Any]:
+        """List tracked workloads (ExecutionPort catalog)."""
+        return self._require_workload_engine().list(
+            job_id=job_id,
+            instance_id=instance_id,
+            session_id=session_id,
+            status=status,
+            runtime=runtime,
+        )
+
+    def list_workload_runtimes(self) -> list[Any]:
+        """Workload runtime catalog with health (ExecutionPort)."""
+        return self._require_workload_engine().runtimes()
+
+    def doctor_workloads(self) -> dict[str, Any]:
+        """Workload-plane doctor snapshot (ExecutionPort)."""
+        return self._require_workload_engine().doctor()
+
+    def stop_owned_workloads(
+        self,
+        *,
+        job_id: str | None = None,
+        instance_id: str | None = None,
+        session_id: str | None = None,
+    ) -> list[Any]:
+        """Stop owned workloads (ExecutionPort cancel path)."""
+        return self._require_workload_engine().stop_owned(
+            job_id=job_id,
+            instance_id=instance_id,
+            session_id=session_id,
+        )
 
     def _require_workload_engine(self) -> WorkloadEngine:
         engine = self.workload

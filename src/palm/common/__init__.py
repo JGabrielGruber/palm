@@ -1,9 +1,12 @@
 """
-Shared coordination logic for Palm (non-plugin, non-core).
+Shared libraries for Palm (non-plugin, non-core).
 
-``palm.common`` holds definition-driven submission, plan staging, persistence
-helpers, orchestration hooks, and pattern materialization — the glue between
-``palm.core`` engines, ``palm.definitions``, and extensible ``palm.patterns``.
+``palm.common`` holds plans, persistence, CQRS, transforms, pattern builders,
+and residual server transport — glue used by system and product.
+
+The **system instance**, executions, job hooks, and planes live under
+``palm.system`` (0.57). Package-root lazy exports may still surface a few
+system types for import convenience; prefer ``palm.system`` for new code.
 
 Extensible plugins live elsewhere:
 
@@ -18,9 +21,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from palm.common.executions.executor import DefinitionExecutor
-    from palm.common.executions.flow_submission import FlowSubmission
-    from palm.common.hooks.instance_persistence import InstancePersistenceHook
+    from palm.system.executions.executor import DefinitionExecutor
+    from palm.system.executions.flow_submission import FlowSubmission
+    from palm.system.runtime.job_hooks.instance_persistence import InstancePersistenceHook
     from palm.common.patterns.build_context import PatternBuildContext
     from palm.common.persistence.definition_repository import DefinitionRepository
     from palm.common.persistence.instance_repository import InstanceRepository
@@ -67,15 +70,18 @@ _LAZY_EXPORTS: dict[str, tuple[str, str]] = {
     "InstanceResumeError": ("palm.common.exceptions", "InstanceResumeError"),
     "PlanNotFoundError": ("palm.common.exceptions", "PlanNotFoundError"),
     "PlanValidationError": ("palm.common.exceptions", "PlanValidationError"),
-    "DefinitionExecutor": ("palm.common.executions.executor", "DefinitionExecutor"),
-    "FlowSubmission": ("palm.common.executions.flow_submission", "FlowSubmission"),
+    "DefinitionExecutor": ("palm.system.executions.executor", "DefinitionExecutor"),
+    "FlowSubmission": ("palm.system.executions.flow_submission", "FlowSubmission"),
     "prepare_flow_submission": (
-        "palm.common.executions.flow_submission",
+        "palm.system.executions.flow_submission",
         "prepare_flow_submission",
     ),
-    "prepare_process_plans": ("palm.common.executions.process_submission", "prepare_process_plans"),
+    "prepare_process_plans": (
+        "palm.system.executions.process_submission",
+        "prepare_process_plans",
+    ),
     "InstancePersistenceHook": (
-        "palm.common.hooks.instance_persistence",
+        "palm.system.runtime.job_hooks.instance_persistence",
         "InstancePersistenceHook",
     ),
     "PatternBuildContext": ("palm.common.patterns.build_context", "PatternBuildContext"),

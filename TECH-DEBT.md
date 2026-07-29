@@ -28,18 +28,18 @@
 
 | ID | Title | Sev | Effort | Theme slice | Status |
 |----|-------|:---:|:------:|-------------|--------|
-| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5, 0.57.11 | ✅ mostly (workload list/doctor residual) |
-| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6, 0.57.11 | open (wave F ✅; server kit residual) |
-| [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open (SystemInstance ✅; host residual) |
+| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5, 0.57.11–12 | ✅ done (job + workload catalog on port) |
+| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6, 0.57.11–12 | open (system-shaped code moved; server kit residual) |
+| [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3, 0.57.12 | ✅ clarified (submit contract + execution) |
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
-| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7, 0.57.11 | open (effects + job list ✅; workload list residual) |
+| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5–7, 0.57.11–12 | ✅ done for known product edges |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
-| [SD-008](#sd-008) | Session plane has no system home | S2 | M | after system boundary | open |
-| [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5 | open |
+| [SD-008](#sd-008) | Session plane has no system home | S2 | M | **future theme** (not 0.57 slice) | open (deferred) |
+| [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5, 0.57.12 | ✅ service path on port; leaves already port-driver |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.6+ | open |
-| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–8, 0.57.11 | open (import sweep ✅; modules remain) |
+| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 
 ### Surface debt (SU)
@@ -91,12 +91,11 @@ Product binds the same engines via `ExecutionService` after `resolve_runtime()`.
 Graphs: builders resolve `ResourceInvoker` / `WorkloadDriver` from the port first
 (`palm.system.effects` + `palm.common.patterns.effects`). Leaves typed to core protocols (P2).
 
-**Residual:** workload list/doctor catalog may still touch `WorkloadEngine`
-(job inspect `list_jobs` is on the port as of 0.57.11).
+**Residual:** none for the port contract itself (0.57.12 adds workload catalog methods).
 
 **Why it hurt:** Every new effect picked a side or duplicated both.
 
-**Target:** Graphs and product both call `execution` on the system instance — **met for primary effect paths and job list**.
+**Target:** Graphs and product both call `execution` on the system instance — **met**.
 
 ---
 
@@ -132,14 +131,15 @@ Session plane still has no dedicated system seat (SD-008). Plans stay shared by 
 **Observation:** Protocol exposes `orchestration`, `event`, `resource`, `is_started`.  
 Live `BaseRuntime` also has `workload`, `context`, `wait_plane`, auth, storage, executor.
 
-**Progress (0.57.2):** `SystemInstance` + `ExecutionPort` are the forward contracts.  
-`RuntimeHost` remains a thin legacy subset for the executions layer; docstring points at system.
+**Progress (0.57.12):** `RuntimeHost` is the **submit contract** (orchestration + event +
+resource + `execution` + `is_started`). Effects still go through `execution`.  
+`SystemInstance` remains the edge-facing “ports only” contract.
 
-**Why it hurts:** Callers that type only `RuntimeHost` miss ports and workload.
+**Why it was incomplete:** submit needs engines; edges must not type only engines.
 
-**Target:** New code types `SystemInstance` / ports. Remove or shrink `RuntimeHost` when executor rebinds.
+**Target:** ✅ documented and typed honestly — not deleted (executor still needs it).
 
-**Evidence:** `palm/system/instance.py`; `common/runtimes/host.py` vs `base.py`.
+**Evidence:** `palm/system/runtime/host.py`; `palm/system/instance.py`.
 
 ---
 
@@ -159,28 +159,12 @@ Core leaves accept `ResourceInvoker` / `WorkloadDriver`. Engine fields remain fo
 
 **Severity:** S2 · **Effort:** L · **Slices:** 0.57.5, 0.57.7 (effects ✅)
 
-**Progress (0.57.7 + 0.57.11):** Effect samples and job list use `runtime.execution`
-(`resume_job`, `list_jobs` on the port). Workload catalog/doctor may still touch engines.
-
-| Site | Access |
-|------|--------|
-| `services/execution/providers/service.py` | ✅ port |
-| `services/execution/workloads/service.py` | ✅ effect methods on port; list/doctor still engine residual |
-| `services/execution/flows/session.py` | ✅ `execution.resume_job` |
-| `app/kernel.py` | ✅ invoke + resume on port |
-| `runtimes/server/.../explorer/fetch.py` | ✅ `execution.invoke_resource` |
-| `runtimes/server/.../explorer/actions.py` | ✅ `execution.resume_job` |
-| `providers/palm/.../local.py` | ✅ `execution.invoke_resource` |
-| `providers/palm/.../system_inspect.py` | ✅ `execution.list_jobs` (0.57.11) |
-| `common/interactive_runtime.py` | ✅ `execution.resume_job` |
-| `common/runtimes/server/cqrs.py` | ✅ `execution.list_jobs` (0.57.11) |
-| `common/runtimes/server/diagnostics.py` | ✅ prefers `execution.list_jobs` |
-| Wait plane internal | system-internal `orch.resume_job` — not an edge |
-| Pattern leaves (wizard/dag/pipeline) | ✅ port→invoker/driver (0.57.4) |
+**Progress (0.57.12):** Product workload list/doctor/stop_owned use the port.
+Job list and effects already did. Known dual-field edges closed.
 
 **Policy:** Product → port. Surfaces → product or thin system entry.  
 **No new** `runtime.resource` / `runtime.orchestration.*` effect shortcuts
-without adding a residual row here.
+without adding a residual row here. Status: ✅ for catalogued sites.
 
 ---
 
@@ -200,35 +184,38 @@ PALM.md and SYSTEM-LOW-LEVEL already draw the line. No rename required.
 
 **Severity:** S3 · **Effort:** S
 
-**Observation:** `palm.services.system` is doctor/health product.  
+**Observation:** `palm.services.system` is doctor/health/inspect product.  
 **System layer** is the kernel shape. Same English word, two purposes.
 
-**Target:** Speech and docs: “product SystemService” vs “system layer”.  
-Rename product only if needed after system package lands.
+**Not the same as:**
+- **`InstanceManager`** (`palm.common.managers`) — infra cache over `InstanceRepository`, not a product service domain.
+- There is **no** product “ManagerService” today.
+
+**Target:** Speech: “product SystemService (ops/inspect)” vs “system layer”.  
+Optional rename to `OpsService` / `InspectService` only if product API churn is worth it — not required for 0.57 exit.
 
 ---
 
 ### SD-008 — Session plane has no system home
 
-**Severity:** S2 · **Effort:** M
+**Severity:** S2 · **Effort:** M · **Status:** deferred to a **session theme** (not a 0.57 slice)
 
 **Observation:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) is queued.  
-Without a system layer, session tends to fall into product or common.
+Session is product+surface heavy; forcing a system seat without a theme map
+creates dual paths.
 
-**Target:** Seat under system after 0.57.2 boundary. Full session theme later.
+**Target:** Dedicated theme after 0.57 exit — plane home designed there.
 
 ---
 
 ### SD-009 — Workload dual bind
 
-**Severity:** S1 · **Effort:** M · **Slices:** 0.57.3–5
+**Severity:** S1 · **Effort:** M · **Slices:** 0.57.3–5, 0.57.12 · **Status:** ✅ done
 
-**Observation:** WorkloadLeaf / wizard workload phase take `WorkloadEngine`.  
-`WorkloadExecutionService` takes runtime → engine.  
-0.56 vision still describes both paths.
+**Observation:** Leaves used engine; product used service → engine.
 
-**Target:** Same execution port methods for start/exec/stop/status.  
-Rewrite leaf and service together; do not “CQRS-only” the leaf.
+**Resolution:** Leaves use port→driver (0.57.4). Product effects + list/doctor/
+stop_owned use ExecutionPort (0.57.12). Engine remains inside the system instance.
 
 ---
 
@@ -250,28 +237,30 @@ ARCHITECTURE, README, many VISION files remain dense legacy.
 **Observation:** HTTP protocol helpers, route types, and related server glue live under `palm.common.runtimes.server`.  
 Surfaces import them heavily (~many files). This is surface **infra**, not pure shared, and not the system port table.
 
-**Target:** After system extract, classify: stay shared transport kit, or move next to `palm.runtimes.server`.  
-Do not block execution port on this move.
+**Why it is here:** before multi-kit design, “shared server glue” had nowhere else to live.
+
+**Target (kits — compatibility without parking lots):**
+1. Keep **one implementation** per kit (no dual trees).  
+2. Place kits under a **named home** that matches purpose, e.g.  
+   `palm.kits.server` / `palm.kits.cli` *or* `palm.runtimes._kits.server` — not under  
+   “system” and not as anonymous bulk in `common`.  
+3. Register kits at bootstrap (`register_kit` / `INSTALLED_KITS`) so more kits  
+   (websocket, MCP transport, future portal) share the **same extension law** as  
+   patterns/providers — install list is truth.  
+4. Surfaces import **kits**, not invent private protocol copies.
+
+**0.57 exit:** may leave kit under `common.runtimes.server` if classified and documented;  
+full multi-kit registry can be a small follow slice or early next theme.
 
 ---
 
 ### SD-012 — Cutover shims
 
-**Severity:** S3 · **List:** active after 0.57.6 · **Import sweep:** ✅ 0.57.8
+**Severity:** S3 · **Status:** ✅ deleted (0.57.12)
 
-When a temporary compatibility import or façade exists during 0.57, **add a bullet here** with path and remove-by slice.
-
-| Shim | Path | Status |
-|------|------|--------|
-| BaseRuntime | `palm.common.runtimes.base` → `palm.system.runtime.base` | modules remain; **src/tests import system** (0.57.8) |
-| RuntimeHost | `palm.common.runtimes.host` → `palm.system.runtime.host` | same |
-| wiring / hooks / schedulers | `palm.common.runtimes.{wiring,hooks,schedulers}` → `palm.system.runtime.*` | same |
-| Wait package | `palm.common.wait.*` → `palm.system.planes.wait.*` | same |
-| Work package | `palm.common.work.*` → `palm.system.planes.work.*` | same |
-| Workload glue | `palm.common.workload.*` → `palm.system.planes.workload.*` | same |
-
-**Policy:** One implementation (system). Common paths are re-export only — not dual wiring.  
-**Next:** delete shim modules when no external callers need them (theme exit).
+Temporary re-export packages under `palm.common` (runtimes base/host, wait, work,
+workload, executions, hooks) removed. Canonical imports are `palm.system.*`.  
+`palm.common.runtimes` retains **only** `server/` kit + doctor contributor registry.
 
 ---
 

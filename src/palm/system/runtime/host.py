@@ -1,9 +1,12 @@
 """
-RuntimeHost — thin legacy contract for definition-driven job submission.
+RuntimeHost — structural contract for definition-driven job submission.
 
-Prefer :class:`~palm.system.instance.SystemInstance` + ports for new code (0.57+).
-This protocol remains so :class:`~palm.system.executions.executor.DefinitionExecutor`
-stays decoupled from a single runtime class during cutover (SD-003).
+Prefer :class:`~palm.system.instance.SystemInstance` + ports for **effects**
+(product edges, graphs). Submission still needs orchestration/event engines
+to materialize patterns and drive jobs — that is this protocol's purpose.
+
+Not an edge bypass: :class:`~palm.system.executions.executor.DefinitionExecutor`
+is system-internal and types against this subset (SD-003).
 """
 
 from __future__ import annotations
@@ -14,15 +17,16 @@ if TYPE_CHECKING:
     from palm.core.event import EventEngine
     from palm.core.orchestration import OrchestrationEngine
     from palm.core.resource import ResourceEngine
+    from palm.system.ports.execution import ExecutionPort
 
 
 @runtime_checkable
 class RuntimeHost(Protocol):
     """
-    Minimal structural subset for the executions layer (legacy).
+    Engines the definition executor needs to submit and resume jobs.
 
-    Prefer :class:`~palm.system.instance.SystemInstance` and
-    :class:`~palm.system.ports.execution.ExecutionPort` for effects.
+    Live system instances also expose :attr:`execution` (preferred for effects).
+    New product code should not type only this protocol when calling effects.
     """
 
     @property
@@ -40,3 +44,7 @@ class RuntimeHost(Protocol):
     @property
     def is_started(self) -> bool:
         """Whether the host has completed startup and accepts submissions."""
+
+    @property
+    def execution(self) -> ExecutionPort:
+        """Effect/inspect port (same surface as SystemInstance.execution)."""

@@ -45,16 +45,6 @@ class WorkloadExecutionService(BaseService):
     def _port(self, runtime_name: str | None = None) -> Any:
         return self.resolve_runtime(runtime_name).execution
 
-    def _engine(self, runtime_name: str | None = None) -> Any:
-        """WorkloadEngine for list/doctor catalog paths not yet on ExecutionPort v1."""
-        runtime = self.resolve_runtime(runtime_name)
-        engine = getattr(runtime, "workload", None)
-        if engine is None:
-            raise RuntimeError("Runtime has no WorkloadEngine")
-        if not engine.is_initialized:
-            engine.initialize()
-        return engine
-
     def start(
         self,
         spec: WorkloadSpec | dict[str, Any],
@@ -146,7 +136,7 @@ class WorkloadExecutionService(BaseService):
             status_enum = (
                 status if isinstance(status, WorkloadStatus) else WorkloadStatus(str(status))
             )
-        rows = self._engine(runtime_name).list(
+        rows = self._port(runtime_name).list_workloads(
             job_id=job_id,
             instance_id=instance_id,
             session_id=session_id,
@@ -170,16 +160,12 @@ class WorkloadExecutionService(BaseService):
         ]
 
     def runtimes(self, *, runtime_name: str | None = None) -> list[dict[str, Any]]:
-        """Doctor-oriented runtime catalog from the engine (includes health)."""
-        return list(self._engine(runtime_name).runtimes())
+        """Doctor-oriented runtime catalog from the port (includes health)."""
+        return list(self._port(runtime_name).list_workload_runtimes())
 
     def doctor(self, *, runtime_name: str | None = None) -> dict[str, Any]:
-        """Workload-plane doctor snapshot (engine + runner health)."""
-        engine = self._engine(runtime_name)
-        doctor = getattr(engine, "doctor", None)
-        if callable(doctor):
-            return doctor()
-        return {"engine_initialized": engine.is_initialized, "runtimes": engine.runtimes()}
+        """Workload-plane doctor snapshot (engine + runner health via port)."""
+        return dict(self._port(runtime_name).doctor_workloads())
 
     def stop_owned(
         self,
@@ -190,7 +176,7 @@ class WorkloadExecutionService(BaseService):
         runtime_name: str | None = None,
     ) -> list[dict[str, Any]]:
         """Cancel path: stop workloads owned by job/session/instance."""
-        rows = self._engine(runtime_name).stop_owned(
+        rows = self._port(runtime_name).stop_owned_workloads(
             job_id=job_id,
             instance_id=instance_id,
             session_id=session_id,

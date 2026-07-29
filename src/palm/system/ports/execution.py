@@ -71,3 +71,33 @@ class ExecutionPort(Protocol):
     def list_jobs(self, status: Any = None) -> list[Any]:
         """List orchestration jobs (inspect on the same port; optional status filter)."""
         ...
+
+    def list_workloads(
+        self,
+        *,
+        job_id: str | None = None,
+        instance_id: str | None = None,
+        session_id: str | None = None,
+        status: Any = None,
+        runtime: str | None = None,
+    ) -> list[Any]:
+        """List tracked workloads (catalog inspect on the same port)."""
+        ...
+
+    def list_workload_runtimes(self) -> list[Any]:
+        """Doctor-oriented workload runtime catalog (bound runners + health)."""
+        ...
+
+    def doctor_workloads(self) -> dict[str, Any]:
+        """Workload-plane doctor snapshot (engine + runner health)."""
+        ...
+
+    def stop_owned_workloads(
+        self,
+        *,
+        job_id: str | None = None,
+        instance_id: str | None = None,
+        session_id: str | None = None,
+    ) -> list[Any]:
+        """Stop non-terminal workloads matching owner filters (cancel path)."""
+        ...

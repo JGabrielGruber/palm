@@ -378,7 +378,7 @@ Each top-level part has **one purpose**.
 | `PatternBuildContext` | Carries `execution` port (+ engines for unit tests) | Engine fields for tests only |
 | `ExecutionService.*` | Product over **ports** for effects | list/doctor residual |
 | `palm.system` | System home: runtime, planes, ports | — |
-| `palm.common` | Shared libraries + residual server kit; SD-012 shims | SD-011 · SD-012 |
+| `palm.common` | Shared libraries + residual server kit | SD-011 |
 | `services.system` | Doctor/health **product** | Do not call it the kernel |
 
 ---

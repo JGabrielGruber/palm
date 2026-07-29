@@ -23,10 +23,21 @@ class _MinimalHost:
         self.event = EventEngine()
         self.resource = None
         self._started = False
+        self._execution = self  # thin double: port methods on self where needed
 
     @property
     def is_started(self) -> bool:
         return self._started
+
+    @property
+    def execution(self) -> object:
+        return self._execution
+
+    def resume_job(self, job_id: str) -> object:
+        return self.orchestration.resume_job(job_id)
+
+    def list_jobs(self, status: object = None) -> list:
+        return self.orchestration.list_jobs(status=status)
 
     def start(self) -> None:
         self.event.initialize()

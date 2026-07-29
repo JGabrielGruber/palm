@@ -1,28 +1,24 @@
-"""Runtime compatibility façade (SD-012).
+"""Shared runtime *infrastructure* that is not the system instance.
 
-Canonical implementations live under :mod:`palm.system.runtime`.
-This package re-exports for import stability during 0.57 cutover.
-Server transport helpers remain here under ``.server`` (SD-011).
+System instance, ports, and schedulers live under :mod:`palm.system.runtime`.
+This package holds:
+
+- :mod:`palm.common.runtimes.server` — transport kit (SD-011 residual)
+- :mod:`palm.common.runtimes.doctor_contributors` — doctor section registry
+
+Import ``BaseRuntime`` from :mod:`palm.system` or :mod:`palm.system.runtime.base`.
 """
 
-from palm.system.runtime.base import BaseRuntime
-from palm.system.runtime.hooks import (
-    AuthMiddleware,
-    DriveObservabilityHook,
-    DriveSlice,
-    authenticate_runtime,
+from palm.common.runtimes.doctor_contributors import (
+    DoctorContributor,
+    clear_doctor_contributors,
+    collect_doctor_extensions,
+    register_doctor_contributor,
 )
-from palm.system.runtime.host import RuntimeHost
-from palm.system.runtime.wiring import SchedulerPolicy, resolve_runner, resolve_scheduler
 
 __all__ = [
-    "AuthMiddleware",
-    "BaseRuntime",
-    "DriveObservabilityHook",
-    "DriveSlice",
-    "RuntimeHost",
-    "SchedulerPolicy",
-    "authenticate_runtime",
-    "resolve_runner",
-    "resolve_scheduler",
+    "DoctorContributor",
+    "clear_doctor_contributors",
+    "collect_doctor_extensions",
+    "register_doctor_contributor",
 ]

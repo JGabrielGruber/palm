@@ -74,14 +74,6 @@ def test_base_runtime_is_system_instance_and_execution_port() -> None:
     assert runtime.execution is runtime
 
 
-def test_common_reexports_system_base_runtime() -> None:
-    """SD-012 cutover shim — same object, not a dual implementation."""
-    from palm.common.runtimes.base import BaseRuntime as ShimBaseRuntime
-    from palm.system.runtime.base import BaseRuntime as CanonicalBaseRuntime
-
-    assert ShimBaseRuntime is CanonicalBaseRuntime
-
-
 def test_execution_port_fake_is_usable() -> None:
     """Test doubles can implement ExecutionPort without a full host."""
     from palm.system import ExecutionPort
@@ -108,6 +100,18 @@ def test_execution_port_fake_is_usable() -> None:
             return None
 
         def list_jobs(self, status: object = None) -> list:
+            return []
+
+        def list_workloads(self, **kwargs: object) -> list:
+            return []
+
+        def list_workload_runtimes(self) -> list:
+            return []
+
+        def doctor_workloads(self) -> dict:
+            return {}
+
+        def stop_owned_workloads(self, **kwargs: object) -> list:
             return []
 
     fake = FakePort()
@@ -142,6 +146,18 @@ def test_port_bridges_to_core_protocols() -> None:
             raise NotImplementedError
 
         def list_jobs(self, status: object = None) -> list:
+            return []
+
+        def list_workloads(self, **kwargs: object) -> list:
+            return []
+
+        def list_workload_runtimes(self) -> list:
+            return []
+
+        def doctor_workloads(self) -> dict:
+            return {}
+
+        def stop_owned_workloads(self, **kwargs: object) -> list:
             return []
 
     port = FakePort()
@@ -181,6 +197,18 @@ def test_resolve_effects_prefers_execution_port() -> None:
         def list_jobs(self, status: object = None) -> list:
             return []
 
+        def list_workloads(self, **kwargs: object) -> list:
+            return []
+
+        def list_workload_runtimes(self) -> list:
+            return []
+
+        def doctor_workloads(self) -> dict:
+            return {}
+
+        def stop_owned_workloads(self, **kwargs: object) -> list:
+            return []
+
     class EngineStub:
         is_initialized = True
 
@@ -206,6 +234,10 @@ def test_resolve_effects_prefers_execution_port() -> None:
         "workload_status",
         "resume_job",
         "list_jobs",
+        "list_workloads",
+        "list_workload_runtimes",
+        "doctor_workloads",
+        "stop_owned_workloads",
     ],
 )
 def test_execution_port_protocol_names(name: str) -> None:

@@ -1,6 +1,6 @@
 # VISION 0.57 — Palm System (name the kernel)
 
-**Status:** 🚧 **In progress** — base system work **0.57.0–0.57.11** landed; residual debt (server kit, shims, surfaces) and theme exit remain.  
+**Status:** 🚧 **In progress** — system work **0.57.0–0.57.12** landed; residual SD-011 kits classification, surface SU-*, theme exit docs remain.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **Low-level:** [SYSTEM-LOW-LEVEL.md](SYSTEM-LOW-LEVEL.md)  
@@ -120,7 +120,7 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 | **5** | Rebind product | Effect methods on port — ✅ (list/doctor residual) |
 | **6** | Deflate shared | BaseRuntime + planes under `palm.system`; SD-012 shims — ✅ **0.57.6** |
 | **7** | Edge policy | No new engine shortcuts; list residual bypass as debt — ✅ **0.57.7** |
-| **8+** | Debt cleanup | Import sweep, catalog truth, docs, wave F executions — ✅ **0.57.8–11** |
+| **8+** | Debt cleanup | Import sweep, catalog truth, docs, wave F, shim delete — ✅ **0.57.8–12** |
 | **exit** | Theme exit | Residual debt honest; ADR-026 Accepted; workload/session grow **on** the map |
 
 **Rule:** Do not ship more dual-path policy (e.g. “workload only through CQRS”) as the main fix.
@@ -177,8 +177,8 @@ Theme **0.57** may close when:
 ## 11. Review and next
 
 High-level map and spine are in use.  
-**Next:** residual structure (SD-011 server kit, shim delete policy, surface SU-*) and
-theme exit (ADR-026 Accepted when [§10](#10-exit-criteria) holds).
+**Next:** optional SD-011 multi-kit home (or classify in place); surface SU-* later;
+theme exit as **docs + version dump** (slices stay separate commits). Session = **theme**, not residual.
 
 ---
 
@@ -195,6 +195,7 @@ theme exit (ADR-026 Accepted when [§10](#10-exit-criteria) holds).
 | **0.57.9** | Capability catalog truth — INSTALLED_* vs INTENTION_* |
 | **0.57.10** | Living docs/notes match code (kill pre-system dead notes) |
 | **0.57.11** | Wave F: executions + job_hooks → system; `list_jobs` on ExecutionPort; SD-012 shims |
+| **0.57.12** | Delete SD-012 shims; workload catalog on port; RuntimeHost = submit + execution |
 
 ---
 

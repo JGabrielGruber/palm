@@ -1,9 +1,8 @@
 """
-Palm system layer — running machine: ports, planes, system instance.
+Palm system layer — running machine: ports, planes, executions, system instance.
 
 Holds :class:`~palm.system.runtime.base.BaseRuntime`, continue/start planes,
-and effect ports. Prefer imports from this package. Optional re-exports under
-``palm.common.*`` are SD-012 cutover shims only.
+effect ports, definition executor, and job hooks. Prefer imports from this package.
 
 Rules (enforced by ``scripts/guard_system.py``):
 
