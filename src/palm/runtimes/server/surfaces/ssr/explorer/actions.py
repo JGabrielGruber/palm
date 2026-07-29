@@ -127,7 +127,7 @@ class ExplorerActions:
                     f"Instance {instance_id!r} is not waiting for input "
                     f"(status={job.status.value})"
                 )
-            self._ctx.runtime.orchestration.resume_job(job.id)
+            self._ctx.runtime.execution.resume_job(job.id)
         except (InstanceNotFoundError, RuntimeError) as exc:
             return self._wizard_action_response(
                 request,

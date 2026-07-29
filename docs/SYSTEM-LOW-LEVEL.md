@@ -143,9 +143,8 @@ class ExecutionPort(Protocol):
 
     def workload_status(self, workload_id: str) -> Any: ...
 
-    # --- job drive (system-owned; product may wrap) ---
-    # v1 may expose a narrow JobPort or keep orchestration on the instance
-    # until 0.57.5. Do not leave resource/workload on engines only.
+    # --- job drive (Option A — on ExecutionPort since 0.57.7) ---
+    def resume_job(self, job_id: str) -> Any: ...
 ```
 
 ### 3.2 Implementation
@@ -171,13 +170,13 @@ class ExecutionPort(Protocol):
 ### 3.4 Job drive note
 
 Definition submit and `resume_job` are system-owned.  
-v1 may:
 
-- **Option A:** methods on `ExecutionPort`, or  
-- **Option B:** `SystemInstance.orchestration` / `JobPort` sibling.
+**Locked (0.57.7) — Option A:** `resume_job` lives on `ExecutionPort`.  
+Edges and product re-drive jobs via `runtime.execution.resume_job`, not
+`runtime.orchestration.resume_job`.  
 
-**Prefer Option A or a clear `JobPort`** before theme exit so edges stop importing engine types.  
-Record choice in 0.57.3 notes; update this file.
+**Still residual (not on port v1):** `list_jobs` / doctor / workload catalog
+list paths (inspection, not effect). Name them under SD-001 / SD-005 residual.
 
 ---
 
@@ -341,8 +340,10 @@ the protocols structurally.
 
 ### 0.57.7 — Edge policy
 
-- [ ] SD-005 sample sites fixed or explicitly residual  
-- [ ] AGENTS/PALM say no new engine shortcuts  
+- [x] `resume_job` on ExecutionPort (Option A)  
+- [x] SD-005 effect samples rebind to port (session, interactive, explorer, palm local invoke, PalmKernel)  
+- [x] Inspection residuals named (`list_jobs`, workload list/doctor)  
+- [x] AGENTS/PALM: no new engine shortcuts without SD row  
 
 ### Theme exit
 

@@ -121,7 +121,7 @@ class FlowSession:
                     f"Session {self.session_id!r} is not waiting for input "
                     f"(status={job.status.value})"
                 )
-            runtime.orchestration.resume_job(job.id)
+            runtime.execution.resume_job(job.id)
         except InstanceNotFoundError as exc:
             raise exc
         except RuntimeError as exc:

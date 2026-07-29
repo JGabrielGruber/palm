@@ -196,11 +196,8 @@ class ExplorerFetcher:
         state: Any = None,
         resource_id: str | None = None,
     ) -> Any:
-        """Invoke a resource definition on the hosting runtime."""
-        engine = self._ctx.runtime.resource
-        if not engine.is_initialized:
-            engine.initialize()
-        return engine.invoke(
+        """Invoke a resource definition via the system ExecutionPort."""
+        return self._ctx.runtime.execution.invoke_resource(
             resource_ref,
             action=action,
             params=params,

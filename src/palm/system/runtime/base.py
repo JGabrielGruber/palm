@@ -485,6 +485,11 @@ class BaseRuntime:
             return engine.status(str(workload_id), refresh=True)
         return engine.get(str(workload_id))
 
+    def resume_job(self, job_id: str) -> Any:
+        """Re-drive a registered orchestration job (ExecutionPort)."""
+        self._require_started()
+        return self.orchestration.resume_job(str(job_id))
+
     def _require_workload_engine(self) -> WorkloadEngine:
         engine = self.workload
         if not engine.is_initialized:

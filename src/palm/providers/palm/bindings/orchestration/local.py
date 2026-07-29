@@ -41,7 +41,7 @@ class LocalPalmInvoker:
                 "action", None
             )
             child_resource_id = child_params.pop("resource_id", None)
-            result = runtime.resource.invoke(
+            result = runtime.execution.invoke_resource(
                 target.ref,
                 provider=child_provider,
                 action=child_action,

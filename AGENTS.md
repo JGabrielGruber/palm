@@ -49,8 +49,9 @@ Full layer laws: [PALM.md §9](docs/PALM.md).
 Palm is layered: **core → system (target) / shared → plugins → product → surfaces**, with **app host** for boot.
 
 - **Job path** is the spine (definition → pattern → job → effects → events).  
-- **Ports** are the shared effect contract (graphs + product): ``palm.system.ExecutionPort``.  
-- **`palm.system`** holds system contracts; concrete runtime still partly in ``common`` (0.57 deflate).  
+- **Ports** are the shared effect contract (graphs + product): ``palm.system.ExecutionPort``  
+  (`invoke_resource`, workload methods, `resume_job`).  
+- **`palm.system`** holds BaseRuntime, planes, ports (0.57.6+); common may re-export (SD-012).  
 - **Product** `services.system` ≠ **system layer** (kernel shape).
 
 Detail, engines, planes, growth table: **[docs/PALM.md](docs/PALM.md)** only.
@@ -61,7 +62,10 @@ Detail, engines, planes, growth table: **[docs/PALM.md](docs/PALM.md)** only.
 - Extension via registries; registries use `threading.RLock`; populate at bootstrap.  
 - Job transitions only through `RunResult` + `OrchestrationEngine.apply_result()`.  
 - Persistence and resume are first-class.  
-- No imports from `archive/`.
+- No imports from `archive/`.  
+- **No new engine shortcuts** for effects: use ``runtime.execution`` (or product that does).  
+  Do not add edge/product calls to ``runtime.resource`` / ``runtime.orchestration`` for
+  invoke/resume/workload effects without an SD-005 residual row.
 
 ---
 

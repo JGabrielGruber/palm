@@ -83,7 +83,7 @@ def request_interactive_backtrack_for_instance(
     target = to_step if to_step is not None else hooks.previous_step(executable, job.state)
 
     executable.request_backtrack(job.state, target)
-    runtime.orchestration.resume_job(job.id)
+    runtime.execution.resume_job(job.id)
     job = runtime.get_job(job.id)
     runtime.executor.persist_job(job)
     return job, target

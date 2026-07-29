@@ -32,7 +32,7 @@
 | [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open (deflate bulk ✅; residual) |
 | [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open (SystemInstance ✅; host residual) |
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
-| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open |
+| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open (effects ✅; list residual) |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
 | [SD-008](#sd-008) | Session plane has no system home | S2 | M | after system boundary | open |
@@ -91,7 +91,8 @@ Product binds the same engines via `ExecutionService` after `resolve_runtime()`.
 Graphs: builders resolve `ResourceInvoker` / `WorkloadDriver` from the port first
 (`palm.system.effects` + `palm.common.patterns.effects`). Leaves typed to core protocols (P2).
 
-**Residual:** workload list/doctor catalog still touch `WorkloadEngine`; some edges (SD-005).
+**Residual:** workload list/doctor catalog still touch `WorkloadEngine`;
+orchestration `list_jobs` inspect paths (SD-005 residual).
 
 **Why it hurt:** Every new effect picked a side or duplicated both.
 
@@ -155,25 +156,29 @@ Core leaves accept `ResourceInvoker` / `WorkloadDriver`. Engine fields remain fo
 
 ### SD-005 — Edge and product call engines by field
 
-**Severity:** S2 · **Effort:** L · **Slices:** 0.57.5, 0.57.7
+**Severity:** S2 · **Effort:** L · **Slices:** 0.57.5, 0.57.7 (effects ✅)
 
-**Observation (sample, not exhaustive):**
+**Progress (0.57.7):** Effect samples use `runtime.execution` (including
+`resume_job` on the port). Inspection/list paths remain residual.
 
 | Site | Access |
 |------|--------|
-| `services/execution/providers/service.py` | ✅ port (`runtime.execution`) since 0.57.2 |
+| `services/execution/providers/service.py` | ✅ port |
 | `services/execution/workloads/service.py` | ✅ effect methods on port; list/doctor still engine |
-| `services/execution/flows/session.py` | `runtime.orchestration.resume_job` |
-| `app/kernel.py` | ✅ `runtime.execution.invoke_resource` since 0.57.2 |
-| `runtimes/server/.../explorer/fetch.py` | `runtime.resource` |
-| `runtimes/server/.../explorer/actions.py` | `orchestration.resume_job` |
-| `providers/palm/.../local.py` | `runtime.resource.invoke` |
-| `providers/palm/.../system_inspect.py` | `runtime.orchestration.list_jobs` |
-| `common/interactive_runtime.py` | `orchestration.resume_job` |
-| Pattern leaves (wizard/dag/pipeline) | ✅ port→invoker/driver via builders (0.57.4) |
+| `services/execution/flows/session.py` | ✅ `execution.resume_job` |
+| `app/kernel.py` | ✅ invoke + resume on port |
+| `runtimes/server/.../explorer/fetch.py` | ✅ `execution.invoke_resource` |
+| `runtimes/server/.../explorer/actions.py` | ✅ `execution.resume_job` |
+| `providers/palm/.../local.py` | ✅ `execution.invoke_resource` |
+| `providers/palm/.../system_inspect.py` | residual — `orchestration.list_jobs` (inspect) |
+| `common/interactive_runtime.py` | ✅ `execution.resume_job` |
+| `common/runtimes/server/cqrs.py` | residual — `list_jobs` (inspect) |
+| Wait plane internal | system-internal `orch.resume_job` — not an edge |
+| Pattern leaves (wizard/dag/pipeline) | ✅ port→invoker/driver (0.57.4) |
 
-**Target:** Product → port. Surfaces → product (or thin system entry).  
-List remaining bypasses here when found; do not add new ones without an SD row.
+**Policy:** Product → port. Surfaces → product or thin system entry.  
+**No new** `runtime.resource` / `runtime.orchestration.*` effect shortcuts
+without adding a residual row here.
 
 ---
 
@@ -576,7 +581,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | 0.57.4 | SD-004 |
 | 0.57.5 | SD-001, SD-005, SD-009 (product rebind) |
 | 0.57.6 | SD-002 deflate bulk ✅, SD-012 shims listed; SD-011 residual |
-| 0.57.7 | SD-005 + **SU-001** residual; no new surface engine access |
+| 0.57.7 | SD-005 effects ✅ (`resume_job` on port); list residual; AGENTS no-shortcut |
 | parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
 | later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |
 

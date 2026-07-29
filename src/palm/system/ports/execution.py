@@ -63,3 +63,7 @@ class ExecutionPort(Protocol):
     def workload_status(self, workload_id: str, *, refresh: bool = False) -> Any:
         """Return workload snapshot; optionally poll the runtime."""
         ...
+
+    def resume_job(self, job_id: str) -> Any:
+        """Re-drive a registered orchestration job (job-drive on the same port)."""
+        ...

@@ -270,8 +270,8 @@ class PalmKernel:
         return self.runtime(runtime_name).current_wizard_step(job_id)
 
     def resume_job(self, job_id: str, *, runtime_name: str | None = None) -> None:
-        """Resume orchestration for a registered job."""
-        self.runtime(runtime_name).orchestration.resume_job(job_id)
+        """Resume orchestration for a registered job via the system ExecutionPort."""
+        self.runtime(runtime_name).execution.resume_job(job_id)
 
     def persist_job(self, job: Job, *, runtime_name: str | None = None) -> None:
         """Persist job state through a registered runtime executor."""
