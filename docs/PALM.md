@@ -491,12 +491,12 @@ A map that only names **ideals** without today is also incomplete.
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
 | Workload pure engine + leaf direction | **Scout** (0.56) — enough to force this map |
-| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks |
+| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks (**0.57 closed**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
-| Live debt register | **Real** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
-| Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC) |
-| Session plane | **Queued as a theme** — not a 0.57 residual slice |
+| Live debt register | **Real** — residual **SU-*** / **SD-008** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
+| Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
+| Session plane | **Queued as a theme** — [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

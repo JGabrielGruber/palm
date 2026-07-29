@@ -1,11 +1,12 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme:** **`0.57` Palm System** (in progress) · **Scout:** **`0.56` Workload** · **Prior:** **`0.55` Reactive Interests** · **`0.54` Hermetic Jobs**  
+**Current Version:** `0.57.14` · **Last theme:** **`0.57` Palm System** (**closed**) · **Prior:** **`0.56` Workload** scout · **`0.55` Reactive Interests** · **`0.54` Hermetic Jobs**  
 **Last Updated:** July 29, 2026  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) · [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) · [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**  
+**Migration / release:** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) (residual **SU-***, **SD-008** session) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **0.57** system layer · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -32,13 +33,14 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.57 — Palm System (**in progress**)
+## 0.57 — Palm System (**closed** · theme exit `0.57.14`)
 
-**Vision:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · **ADR:** [docs/adr/026-palm-system-layer.md](docs/adr/026-palm-system-layer.md)  
+**Vision:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · **ADR:** [docs/adr/026-palm-system-layer.md](docs/adr/026-palm-system-layer.md) **Accepted**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
-**Debt:** [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [STUBS.md](docs/STUBS.md) · [era archive](docs/audit/TECH-DEBT-ERA-0.45.md)
+**Migration:** [docs/migrations/MIGRATION-0.57.md](docs/migrations/MIGRATION-0.57.md) · **Release:** [docs/releases/RELEASE-0.57.14.md](docs/releases/RELEASE-0.57.14.md)  
+**Debt residual:** [TECH-DEBT.md](TECH-DEBT.md) **SU-*** (optional) · **SD-008** session → future theme · [STUBS.md](docs/STUBS.md) · [era archive](docs/audit/TECH-DEBT-ERA-0.45.md)
 
-**Theme:** Name the system layer. Shared vs system. One execution port. Document debt; pay in order.
+**Theme:** Name the system layer. Shared vs system. One execution port. Kits exposed. Document debt; pay structure in order.
 
 | Patch | Status |
 |-------|--------|
@@ -47,15 +49,17 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | 0.57.2 System boundary in code (`palm.system`) | ✅ |
 | 0.57.3 Execution port v1 + product effect rebind | ✅ |
 | 0.57.4 Rebind graphs (P2 invoker/driver + builders) | ✅ |
-| 0.57.5 Rebind product | ✅ effect paths (list/doctor residual) |
-| 0.57.6 Deflate common | ✅ BaseRuntime + wait/work/workload planes under `palm.system`; SD-012 shims |
-| 0.57.7 Edge policy | ✅ port resume_job; SD-005 effect samples; residual list/inspect named |
-| 0.57.8 SD-012 import sweep | ✅ src/tests import palm.system; shims remain for external |
-| 0.57.9 Capability catalog truth | ✅ ST-001…005 gated; INTENTION_* vs INSTALLED_* |
-| 0.57.10 Docs/notes coherence | ✅ kill dead pre-system notes in living docs |
-| 0.57.11 Wave F + job list on port | ✅ executions + job_hooks → system; `list_jobs` on ExecutionPort |
-| 0.57.12 Shim delete + port catalog | ✅ SD-012 gone; workload list/doctor on port; RuntimeHost honest |
-| 0.57.13 Kits package | ✅ `palm.kits` + `palm.kits.server`; INSTALLED_KITS truth |
+| 0.57.5 Rebind product | ✅ |
+| 0.57.6 Deflate common | ✅ BaseRuntime + planes under `palm.system` |
+| 0.57.7 Edge policy | ✅ `resume_job` on port |
+| 0.57.8 SD-012 import sweep | ✅ |
+| 0.57.9 Capability catalog truth | ✅ ST-001…005 gated |
+| 0.57.10 Docs/notes coherence | ✅ |
+| 0.57.11 Wave F + job list on port | ✅ |
+| 0.57.12 Shim delete + port catalog | ✅ |
+| 0.57.13 Kits package | ✅ `palm.kits` + `palm.kits.server` |
+| **0.57.14** Theme exit + version dump | ✅ ADR-026 Accepted · MIGRATION-0.57 · stamp `0.57.14` |
+| **0.57 structure** | ✅ closed — SU-* optional; session = next theme when opened |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
 

@@ -1,8 +1,9 @@
 # ADR-026 — Palm system layer and module purposes
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-07-29  
-**Theme:** [VISION-0.57](../VISION-0.57.md)  
+**Accepted:** 2026-07-29 with theme exit **0.57.14**  
+**Theme:** [VISION-0.57](../VISION-0.57.md) · [MIGRATION-0.57](../migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](../releases/RELEASE-0.57.14.md)  
 **Map:** [PALM.md](../PALM.md)
 
 ---
@@ -83,12 +84,13 @@ Package paths may move in later slices. **Purposes in PALM.md are normative now.
 
 ---
 
-## Follow-up
+## Follow-up (closed with 0.57.14)
 
-- Execute [VISION-0.57](../VISION-0.57.md) slices per [SYSTEM-LOW-LEVEL](../SYSTEM-LOW-LEVEL.md).  
-- Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SD-*). Era archive under `docs/audit/`.  
-- Promote this ADR to **Accepted** when the system boundary and execution port land in code.  
-- Update ARCHITECTURE to **link** PALM.md; AGENTS stays rules-only.
+- [x] Execute [VISION-0.57](../VISION-0.57.md) structure slices per [SYSTEM-LOW-LEVEL](../SYSTEM-LOW-LEVEL.md).  
+- [x] Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SD-* largely paid; **SU-*** optional; **SD-008** session → future theme). Era archive under `docs/audit/`.  
+- [x] System boundary + ExecutionPort + kits in code (`palm.system`, `palm.kits`).  
+- [x] ARCHITECTURE / STATUS link [PALM.md](../PALM.md); AGENTS stays rules-only.  
+- Residual: surface SU-* when product needs it; session plane as its own theme.
 
 ---
 

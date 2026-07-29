@@ -1,13 +1,14 @@
 # VISION 0.57 — Palm System (name the kernel)
 
-**Status:** 🚧 **In progress** — system + kits **0.57.0–0.57.13** landed; surface SU-* and theme exit docs remain.  
+**Status:** ✅ **Theme closed** at **0.57.14** (embedded release). Structure landed **0.57.0–0.57.13**; exit = docs + dump + ADR-026 Accepted.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **Low-level:** [SYSTEM-LOW-LEVEL.md](SYSTEM-LOW-LEVEL.md)  
-**Debt (live):** [TECH-DEBT.md](../TECH-DEBT.md) · archive [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md)  
-**ADR:** [026-palm-system-layer.md](adr/026-palm-system-layer.md).  
+**Migration:** [migrations/MIGRATION-0.57.md](migrations/MIGRATION-0.57.md) · **Release:** [releases/RELEASE-0.57.14.md](releases/RELEASE-0.57.14.md)  
+**Debt (live):** [TECH-DEBT.md](../TECH-DEBT.md) (residual **SU-***, **SD-008** session) · archive [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md)  
+**ADR:** [026-palm-system-layer.md](adr/026-palm-system-layer.md) **Accepted**.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).  
-**Prior scout:** [VISION-0.56](VISION-0.56.md) workload foundation (direction only; rewrites allowed).
+**Prior scout:** [VISION-0.56](VISION-0.56.md) workload foundation.
 
 ---
 
@@ -121,7 +122,7 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 | **6** | Deflate shared | BaseRuntime + planes under `palm.system`; SD-012 shims — ✅ **0.57.6** |
 | **7** | Edge policy | No new engine shortcuts; list residual bypass as debt — ✅ **0.57.7** |
 | **8+** | Debt cleanup | Import sweep, catalog truth, docs, wave F, shim delete — ✅ **0.57.8–12** |
-| **exit** | Theme exit | Residual debt honest; ADR-026 Accepted; workload/session grow **on** the map |
+| **exit** | Theme exit | ✅ **0.57.14** — residual SU-*/SD-008 honest; ADR-026 Accepted; map true |
 
 **Rule:** Do not ship more dual-path policy (e.g. “workload only through CQRS”) as the main fix.
 
@@ -163,22 +164,28 @@ Add SD rows for shims and new bypasses. Do not reopen closed PD IDs without new 
 
 ## 10. Exit criteria
 
-Theme **0.57** may close when:
+Theme **0.57** closed when (all met at **0.57.14**):
 
-1. [PALM.md](PALM.md) matches the code at layer purpose level.  
-2. A **named execution port** exists. Graphs and product use it for resource and workload effects.  
-3. System vs shared is **visible** (package and/or guard).  
-4. New debt register exists; old era is archived.  
-5. No new dual-path “special case” for the next capability.  
-6. `just check` stays green on the path we touch.
+1. [x] [PALM.md](PALM.md) matches the code at layer purpose level.  
+2. [x] A **named execution port** exists. Graphs and product use it for resource and workload effects.  
+3. [x] System vs shared is **visible** (`palm.system` / `palm.common` / `palm.kits`).  
+4. [x] New debt register exists; old era is archived.  
+5. [x] No new dual-path “special case” for the next capability (shims deleted; kits named).  
+6. [x] Path we touch stays testable (`just check` / theme gates on structure).
 
 ---
 
-## 11. Review and next
+## 11. Theme exit notes (0.57.14)
 
-High-level map and spine are in use.  
-**Next:** surface SU-* later; theme exit as **docs + version dump** (slices stay separate).
-Session = **theme**, not residual. Kits law is live (`palm.kits`).
+**Structure closed.** Residual is honest, not hidden:
+
+| Residual | Disposition |
+|----------|-------------|
+| **SU-*** (explorer, MCP dual stack, CLI aliases, surface weight) | Optional surface work — not system law |
+| **SD-008** session plane home | **Future theme** ([VISION-SESSION-PLANE](VISION-SESSION-PLANE.md)) |
+| STE rewrite of old dense docs | Opportunistic when files are touched |
+
+**Next growth** sits **on** the map: session plane, more kits, Grove — not dual paths through `common`.
 
 ---
 
@@ -197,6 +204,7 @@ Session = **theme**, not residual. Kits law is live (`palm.kits`).
 | **0.57.11** | Wave F: executions + job_hooks → system; `list_jobs` on ExecutionPort; SD-012 shims |
 | **0.57.12** | Delete SD-012 shims; workload catalog on port; RuntimeHost = submit + execution |
 | **0.57.13** | `palm.kits` + move server kit; `INSTALLED_KITS` / `register_kit` |
+| **0.57.14** | Theme exit — ADR-026 Accepted, [MIGRATION-0.57](migrations/MIGRATION-0.57.md), version dump |
 
 ---
 

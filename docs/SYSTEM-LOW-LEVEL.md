@@ -1,6 +1,6 @@
 # Palm System — low-level design (0.57)
 
-**Status:** Normative for theme **0.57** execution.  
+**Status:** Normative map for **0.57** structure (**theme closed** at 0.57.14). Keep true when system packages move.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map (high level):** [PALM.md](PALM.md)  
 **Plan:** [VISION-0.57.md](VISION-0.57.md) · **ADR:** [026-palm-system-layer.md](adr/026-palm-system-layer.md)  
@@ -82,8 +82,7 @@ src/palm/system/
 | **G — workload glue** | `common/workload` | `system/planes/workload` | SD-009 ✅ 0.57.6 |
 | **H — kits** | `common/runtimes/server` | `palm.kits.server` | SD-011 ✅ 0.57.13 |
 
-**Compatibility:** During cutover, `palm.common.runtimes.base` may re-export from `palm.system` (list under SD-012).  
-Remove re-exports before theme exit when guards allow.
+**Compatibility:** SD-012 cutover shims **deleted** (0.57.12). Import system and kits directly — [MIGRATION-0.57](migrations/MIGRATION-0.57.md).
 
 ### 2.4 `PalmKernel` and `ApplicationHost`
 
@@ -348,7 +347,7 @@ the protocols structurally.
 
 ### Theme exit
 
-- [ ] [VISION-0.57 §10](VISION-0.57.md) exit criteria  
+- [x] [VISION-0.57 §10](VISION-0.57.md) exit criteria — met at **0.57.14**  
 - [ ] ADR-026 → Accepted  
 
 ---

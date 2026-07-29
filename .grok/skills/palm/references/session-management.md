@@ -6,7 +6,7 @@
 2. **Check `mutation` block** — if `mutations_allowed` is false, read-only tools only; at `confirm_step`, wait for explicit user yes/no.
 3. Track `session_id`, `job_id`, and current `step`.
 4. Use `format=assistant` when presenting state to the user.
-5. Drive one session at a time; resume child wait only when `waiting_for_child` is true.
+5. Drive one session at a time; when `waiting_on` is set, drive that target (parent unparks on completion).
 6. **Plain strings only** — `input="yes"`, choice slugs, text. Never JSON answer blobs.
 
 ## After every input
@@ -40,7 +40,7 @@ When `PALM_MCP_REQUIRE_INPUT_TOKEN=1`, pass `mutation.input_token` from the last
 | Send answer | `palm_flows_session_input(session_id, input="…")` |
 | Stack summary | `palm_flows_compose_status(session_id)` |
 | Stuck resource | `palm_flows_session_resume(session_id)` |
-| Child wait | `palm_flows_session_resume_child_wait(session_id)` |
+| Nested child | Drive child; parent auto-unparks |
 | Only job_id known | `palm_system_inspect_job(job_id)` |
 | Start custom flow | `palm_flows_create_session(flow_id="my-flow")` after design commit |
 

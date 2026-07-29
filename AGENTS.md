@@ -15,7 +15,7 @@ For AI coding agents and human developers who change code.
 | **System low-level** (package, port, moves) | [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) |
 | **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [docs/STUBS.md](docs/STUBS.md) intentions · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) |
 | How to write docs | [docs/WRITING.md](docs/WRITING.md) (ASD-STE100) |
-| Theme in progress | [STATUS.md](STATUS.md) · [docs/VISION-0.57.md](docs/VISION-0.57.md) |
+| Project status / last theme | [STATUS.md](STATUS.md) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed**) |
 | Multi-Palm horizon | [docs/VISION-GROVE.md](docs/VISION-GROVE.md) |
 | MCP operate | [docs/MCP.md](docs/MCP.md) · skill [docs/skills/palm/SKILL.md](docs/skills/palm/SKILL.md) |
 
@@ -23,7 +23,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** July 2026 · map [PALM.md](docs/PALM.md) · plan [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)
+**Last updated:** July 2026 · map [PALM.md](docs/PALM.md) · system theme [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted
 
 ---
 

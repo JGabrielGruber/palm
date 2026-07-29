@@ -1,9 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**.  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14** — residual **SU-*** (optional) and **SD-008** (session theme).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
-**Theme:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)
+**Theme (closed):** [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
 
 ---
 
@@ -11,7 +11,7 @@
 
 | Rule | Meaning |
 |------|---------|
-| **This file is live** | Open work and residual risk after 0.57.1 |
+| **This file is live** | Residual after 0.57 close: SU-*, SD-008, CS/CF as listed |
 | **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
 | **IDs** | **SD-** system · **SU-** surface · **ST-** stub/intention lie · **CS-** code smell · **CF-** carry from PD era |
 | **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |

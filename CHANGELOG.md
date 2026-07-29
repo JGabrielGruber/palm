@@ -4,23 +4,66 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### 0.55 — Reactive Interests (**theme closed**)
+## [0.57.14] — 2026-07-29
 
-Logical slices **0.55.0–0.55.9** (code version still `0.54.10` until embedded release).  
+Embedded release covering **0.55–0.57** (previous stamp `0.54.10`).  
+**0.57 Palm System closed.** Map: [PALM.md](docs/PALM.md) · ADR: [026](docs/adr/026-palm-system-layer.md) **Accepted** · migration: [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · notes: [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)
+
+### 0.57 — Palm System (**theme closed**)
+
+Logical slices **0.57.0–0.57.14**. Vision: [VISION-0.57](docs/VISION-0.57.md)
+
+#### Added
+- **`palm.system`** — system instance: `BaseRuntime`, **ExecutionPort**, wait/work/workload **planes**, executions, job hooks  
+- **`palm.kits`** — surface kits registry; **`palm.kits.server`** transport kit (from `common.runtimes.server`)  
+- **P2 graph bind** — `ResourceInvoker` / `WorkloadDriver` over the execution port  
+- **Capability catalog truth** — default `INSTALLED_*` vs gated `INTENTION_*` ([STUBS.md](docs/STUBS.md))  
+- Living map [PALM.md](docs/PALM.md) · [SYSTEM-LOW-LEVEL](docs/SYSTEM-LOW-LEVEL.md) · live [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST)
+
+#### Changed
+- **`palm.common`** is shared libraries only — system deflated; **SD-012 shims deleted**  
+- Product workload list/doctor/stop and job resume use **ExecutionPort**  
+- `RuntimeHost` = submit contract + execution (honest scope)
+
+#### Breaking
+- Import homes for BaseRuntime, planes, executions, server kit — see [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md). No dual-path shims.
+
+#### Residual (not blocking close)
+- **SU-*** surface debt (explorer, MCP dual stack, CLI weight) — optional  
+- **SD-008** session plane — future theme ([VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
+
+#### Slice log
+- **0.57.0–1** — Plan, map, ADR, debt archive, low-level  
+- **0.57.2–5** — Boundary, port, product/graph rebind  
+- **0.57.6–8** — Deflate, edge policy, import sweep  
+- **0.57.9–10** — Catalog truth, docs coherence  
+- **0.57.11–12** — Executions/hooks, shim delete, port catalog  
+- **0.57.13** — Kits package  
+- **0.57.14** — Theme exit + version dump (**closed**)
+
+### 0.56 — Workload (**scout embedded**)
+
+Vision: [VISION-0.56](docs/VISION-0.56.md) · ADR: [024](docs/adr/024-workload-engine.md)
+
+- WorkloadEngine + leaf foundation; host/neonroot runners  
+- Product `execution.workloads` over port (0.57 rebind)  
+- Direction only for later runner growth — structure sits on 0.57 map
+
+### 0.55 — Reactive Interests (**theme closed · embedded**)
+
+Logical slices **0.55.0–0.55.16** (was unstamped until this release).  
 Vision: [VISION-0.55](docs/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-interests.md) · migration: [MIGRATION-0.55](docs/migrations/MIGRATION-0.55.md)
 
 #### Added
 - **Wait interest** (`palm.core.wait`) — durable `palm.wait.interests` on job/instance state  
-- **WaitMatcher** (`palm.common.wait`) on `runtime.event` — resume/fail owners; job scan + idempotency  
-- Nested wizards open `kind=job` interest on park; workload **stub** emit `workload.*` (0.56 socket)  
-- Operator **`waiting_on`** on inspect / list-waiting / Assist; doctor **`reactive_interests`**  
-- Constitution: [EVENT-PLANE](docs/EVENT-PLANE.md) trigger↔wait catalog · [WORK-DRAIN](docs/WORK-DRAIN.md) start peer · AGENTS/ARCHITECTURE Grove §4  
+- **Continue plane** — `WaitPlaneService` / matcher on `runtime.event`  
+- Nested wizards open `kind=job` interest; workload wait kind socket  
+- Operator **`waiting_on`**; doctor **`reactive_interests`**  
+- [EVENT-PLANE](docs/EVENT-PLANE.md) · [WORK-DRAIN](docs/WORK-DRAIN.md)
 
 #### Notes
-- **Start** = WorkIntent drain; **continue** = wait interest (not WorkIntent kinds)  
-- **Cleanup:** inverted `ChildCompletionHook` / `resume_parent_after_child` removed — matcher is sole unpark  
-- **0.55.10 Continue plane:** `WaitPlaneService` seats continue next to work-drain; doctor extensions register downward  
-- **0.55.11–13:** continue plane open path + index; nested park interest-only; **removed `set_child_wait` façade** (`open_nested_park`)  
+- **Start** = WorkIntent drain; **continue** = wait interest  
+- Inverted completer→parent resume removed  
 - Session plane remains queued: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)
 
 ## [0.54.10] — 2026-07-26
