@@ -1,9 +1,10 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.54.10` · **Theme:** **`0.56` Workload** (foundation in progress) · **Prior:** **`0.55` Reactive Interests** (closed) · **`0.54` Hermetic Jobs**  
-**Last Updated:** July 28, 2026  
+**Current Version:** `0.54.10` · **Theme (plan):** **`0.57` Palm System** · **Scout:** **`0.56` Workload** (foundation) · **Prior:** **`0.55` Reactive Interests** · **`0.54` Hermetic Jobs**  
+**Last Updated:** July 29, 2026  
+**System map (read first):** [docs/PALM.md](docs/PALM.md) · [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md)  
 **Library (0.52 tooling):** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane + deliver registry · **WorkloadEngine core** · north star [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition profiles · **0.52–0.55** law · continue plane · **WorkloadEngine** scout · **0.57** names the system layer · north star [Grove](docs/VISION-GROVE.md).
 
 ## Quick Overview
 
@@ -15,16 +16,32 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 
 ## Architecture Snapshot
 
-Palm follows a **layered, registry-driven** model with a strictly pure core:
+**Canonical map:** [docs/PALM.md](docs/PALM.md) — whole organism (job path, engines, ports, planes, product). Dense detail: [ARCHITECTURE.md](ARCHITECTURE.md) · agent rules: [AGENTS.md](AGENTS.md).
 
-- `palm/core/` — Pure foundational engines. **Zero external Palm imports.**
-- `palm/services/` — User-facing domain API (definitions, execution, system, assist, design, analytics).
-- `palm/common/` — Shared coordination (not product domains).
-- `palm/app/` — ApplicationHost + composition/deployment profiles.
-- `palm/patterns/`, `palm/providers/`, `palm/storages/` — Registry extension.
-- `palm/runtimes/` — Thin surfaces.
+Palm is layered and registry-driven. Core stays pure. The **job path** is the spine (definition → pattern → job → effects → events).
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) and [AGENTS.md](AGENTS.md).
+| Layer | Role (short) |
+|-------|----------------|
+| `palm/core/` | Pure engines. No external Palm imports. |
+| **System** (0.57 target) | Running Palm: engines, ports, planes. Today split across `BaseRuntime` + parts of `common`. |
+| `palm/common/` | Shared + undeclared system — split is the 0.57 work ([VISION-0.57](docs/VISION-0.57.md)). |
+| `palm/services/` | Product (userland): definitions, execution, assist, design, … |
+| `palm/app/` | Host + composition / deployment profiles. |
+| `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry. |
+| `palm/runtimes/` | Thin surfaces. |
+
+## 0.57 — Palm System (**plan open**)
+
+**Vision:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · **ADR:** [docs/adr/026-palm-system-layer.md](docs/adr/026-palm-system-layer.md) · **Map:** [docs/PALM.md](docs/PALM.md)
+
+**Theme:** Name the system layer. Shared vs system. One execution port for graphs and product. Archive old debt era. Docs in Simplified Technical English.
+
+| Patch | Status |
+|-------|--------|
+| 0.57.0 Plan + map + ADR | 📋 plan open (this status) |
+| 0.57.1+ Execute slices | pending |
+
+**Docs rule:** New theme text uses **ASD-STE100** Simplified Technical English.
 
 ## 0.52 — The Living Library (tooling)
 
