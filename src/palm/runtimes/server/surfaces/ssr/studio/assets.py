@@ -6,7 +6,7 @@ import mimetypes
 from dataclasses import dataclass
 from pathlib import Path
 
-from palm.common.runtimes.server.protocol import ServerResponse
+from palm.kits.server.protocol import ServerResponse
 
 _STATIC_ROOT = Path(__file__).resolve().parent / "static"
 

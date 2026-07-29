@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 from urllib.parse import quote
 
-from palm.common.runtimes.server.protocol import ServerRequest
+from palm.kits.server.protocol import ServerRequest
 from palm.definitions.flow import FlowDefinition
 
 

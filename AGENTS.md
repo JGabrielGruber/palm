@@ -46,12 +46,12 @@ Full layer laws: [PALM.md §9](docs/PALM.md).
 
 ## 2. Structure (pointer only)
 
-Palm is layered: **core → system / shared → plugins → product → surfaces**, with **app host** for boot.
+Palm is layered: **core → system / shared / kits → plugins → product → surfaces**, with **app host** for boot.
 
 - **Job path** is the spine (definition → pattern → job → effects → events).  
-- **Ports** are the shared effect contract (graphs + product): ``palm.system.ExecutionPort``  
-  (`invoke_resource`, workload methods, `resume_job`).  
-- **`palm.system`** is the system home (BaseRuntime, planes, ports). Prefer it over ``palm.common`` shims.  
+- **Ports** are the shared effect contract (graphs + product): ``palm.system.ExecutionPort``.  
+- **`palm.system`** is the system home (BaseRuntime, planes, ports, executions, job hooks).  
+- **`palm.kits`** is exposed surface infrastructure (``INSTALLED_KITS``; server kit first).  
 - **Product** `services.system` ≠ **system layer** (kernel shape).  
 - **Capability catalog is truthful:** default ``INSTALLED_*`` only; intentions use ``INTENTION_*`` / [STUBS.md](docs/STUBS.md).
 

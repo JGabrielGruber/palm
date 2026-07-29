@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.common.runtimes.server.protocol import ServerRequest
+from palm.kits.server.protocol import ServerRequest
 from palm.runtimes.server.surfaces.rest.docs import build_docs_html
 from palm.runtimes.server.surfaces.rest.openapi import build_openapi_spec
 from palm.runtimes.server.surfaces.rest.responses import ok

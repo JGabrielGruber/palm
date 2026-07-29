@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from palm.common.runtimes.server.middleware import PALM_SUBJECT_HEADER
+from palm.kits.server.middleware import PALM_SUBJECT_HEADER
 from palm.runtimes.mcp.config import PalmMcpConfig
 
 

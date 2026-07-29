@@ -58,7 +58,7 @@ from palm.common.cqrs.query import (
 )
 from palm.common.cqrs.schemas import build_schema_registry
 from palm.common.events.external import WebhookDispatcher
-from palm.common.runtimes.server.cqrs import wire_standalone_query_bus
+from palm.kits.server.cqrs import wire_standalone_query_bus
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
 from palm.patterns.wizard.bindings.cqrs.projection import (

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.common.runtimes.server.responses import error_response
+from palm.kits.server.responses import error_response
 from palm.core.workload.exceptions import (
     WorkloadError,
     WorkloadNotFoundError,
@@ -17,7 +17,7 @@ from palm.runtimes.server.surfaces.rest.handlers.base import require_auth
 from palm.runtimes.server.surfaces.rest.responses import created, ok
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+    from palm.kits.server.protocol import ServerRequest, ServerResponse
     from palm.runtimes.server.context import ServerContext
 
 

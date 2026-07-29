@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.middleware import authenticate_request
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.middleware import authenticate_request
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.runtimes.server.surfaces.rest import errors
 
 if TYPE_CHECKING:

@@ -8,8 +8,8 @@ from palm.common.cqrs.command import ProvideInputCommand, SubmitFlowCommand
 from palm.common.exceptions import InstanceNotFoundError
 from palm.common.interactive_runtime import resolve_interactive_job
 from palm.common.operator.collection_input import resolve_wizard_form_input
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.ssr.render import html_response, redirect
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.ssr.render import html_response, redirect
 from palm.core.orchestration import JobStatus
 from palm.core.orchestration.exceptions import JobNotFoundError
 from palm.patterns.wizard.bindings.cqrs.commands import (

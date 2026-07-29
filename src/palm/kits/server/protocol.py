@@ -14,7 +14,7 @@ from enum import StrEnum
 from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
 
 RouteHandler = Callable[["ServerRequest"], "ServerResponse | Awaitable[ServerResponse]"]
 

@@ -6,7 +6,7 @@ import json
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from palm.common.runtimes.server.ssr.render import escape
+from palm.kits.server.ssr.render import escape
 from palm.core.context.state_schema import DictStateSchema
 from palm.runtimes.server.surfaces.ssr.explorer.schemas import build_flow_submit_schema
 

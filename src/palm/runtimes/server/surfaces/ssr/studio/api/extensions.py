@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.common.runtimes.server.protocol import ServerResponse
+from palm.kits.server.protocol import ServerResponse
 
 _BUILTIN_EVENTS = (
     "canvas:node:added",

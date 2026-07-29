@@ -29,7 +29,7 @@
 | ID | Title | Sev | Effort | Theme slice | Status |
 |----|-------|:---:|:------:|-------------|--------|
 | [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5, 0.57.11–12 | ✅ done (job + workload catalog on port) |
-| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6, 0.57.11–12 | open (system-shaped code moved; server kit residual) |
+| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2–13 | ✅ system/kits extracted; common = shared libs |
 | [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3, 0.57.12 | ✅ clarified (submit contract + execution) |
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5–7, 0.57.11–12 | ✅ done for known product edges |
@@ -38,7 +38,7 @@
 | [SD-008](#sd-008) | Session plane has no system home | S2 | M | **future theme** (not 0.57 slice) | open (deferred) |
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5, 0.57.12 | ✅ service path on port; leaves already port-driver |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
-| [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.6+ | open |
+| [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.13 | ✅ kits package (`palm.kits.server`) |
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 
@@ -51,7 +51,7 @@
 | [SU-003](#su-003) | MCP dual stack (assist meta + domain tools + fat in_process) | S2 | L | open |
 | [SU-004](#su-004) | MCP legacy module names still in tree | S3 | S | open |
 | [SU-005](#su-005) | CLI legacy alias forest locks old phrases | S3 | M | open |
-| [SU-006](#su-006) | Surface transport kit split (`common.runtimes.server` vs `runtimes.server`) | S2 | L | open |
+| [SU-006](#su-006) | Surface transport kit split (`common.runtimes.server` vs `runtimes.server`) | S2 | L | ✅ kit home (`palm.kits.server`) |
 | [SU-007](#su-007) | WebSocket / Portal maturity vs dual frame homes | S3 | M | open |
 | [SU-008](#su-008) | Surface weight vs thin-adapter law (~14k server LOC) | S2 | XL | open |
 
@@ -103,24 +103,21 @@ Graphs: builders resolve `ResourceInvoker` / `WorkloadDriver` from the port firs
 
 **Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary ✅), 0.57.6 (deflate ✅ bulk)
 
-**Progress (0.57.6 + 0.57.11 wave F):** Canonical homes under `palm.system`:
+**Progress (0.57.6–0.57.13):** System-shaped code under `palm.system`; surface kit under `palm.kits`.
 
-| Area | Canonical | Residual in common |
-|------|-----------|--------------------|
-| `BaseRuntime` + host/wiring/middleware hooks/schedulers | `palm.system.runtime` | SD-012 re-export shims |
-| Wait (continue) | `palm.system.planes.wait` | SD-012 shims |
-| Work (start intents) | `palm.system.planes.work` | SD-012 shims |
-| Workload glue | `palm.system.planes.workload` | SD-012 shims |
-| `executions/` | `palm.system.executions` | SD-012 shims |
-| job hooks (persist/outbox/snapshot) | `palm.system.runtime.job_hooks` | SD-012 shims |
-| `plans/` | still common | shared DTO + PlanRegistry (stay unless server forces move) |
-| `runtimes/server` | still common | SD-011 |
-| transforms / cqrs / services base | shared (stay) | — |
+| Area | Canonical | Notes |
+|------|-----------|-------|
+| `BaseRuntime` + host/wiring/middleware hooks/schedulers | `palm.system.runtime` | SD-012 deleted |
+| Wait / work / workload glue | `palm.system.planes.*` | SD-012 deleted |
+| `executions/` + job hooks | `palm.system.executions` / `runtime.job_hooks` | wave F |
+| Server transport kit | `palm.kits.server` | SD-011 ✅ 0.57.13 |
+| `plans/` | `palm.common.plans` | shared DTO + PlanRegistry |
+| transforms / cqrs / services base | `palm.common` | shared (stay) |
 
-**Why it still hurts residual:** server transport kit remains in `common` (SD-011).  
-Session plane still has no dedicated system seat (SD-008). Plans stay shared by design for now.
+**Residual for this ID:** mostly closed; plans and shared libs intentionally remain in common.  
+Session plane is a **future theme** (SD-008).  
 
-**Target:** Residual system-shaped modules move or stay classified; shims drop before theme exit when safe.
+**Target:** ✅ system vs shared vs kits visible in the tree.
 
 ---
 
@@ -232,25 +229,19 @@ ARCHITECTURE, README, many VISION files remain dense legacy.
 
 ### SD-011 — Server transport under `common.runtimes`
 
-**Severity:** S2 · **Effort:** L
+**Severity:** S2 · **Effort:** L · **Slice:** 0.57.13 · **Status:** ✅ done
 
-**Observation:** HTTP protocol helpers, route types, and related server glue live under `palm.common.runtimes.server`.  
-Surfaces import them heavily (~many files). This is surface **infra**, not pure shared, and not the system port table.
+**Observation:** Server glue lived under `palm.common.runtimes.server` as a parking lot.
 
-**Why it is here:** before multi-kit design, “shared server glue” had nowhere else to live.
+**Why it was there:** no named place for multi-surface shared transport before kits.
 
-**Target (kits — compatibility without parking lots):**
-1. Keep **one implementation** per kit (no dual trees).  
-2. Place kits under a **named home** that matches purpose, e.g.  
-   `palm.kits.server` / `palm.kits.cli` *or* `palm.runtimes._kits.server` — not under  
-   “system” and not as anonymous bulk in `common`.  
-3. Register kits at bootstrap (`register_kit` / `INSTALLED_KITS`) so more kits  
-   (websocket, MCP transport, future portal) share the **same extension law** as  
-   patterns/providers — install list is truth.  
-4. Surfaces import **kits**, not invent private protocol copies.
+**Resolution:**
+- Package **`palm.kits`** — exposed kits, install-list truth (`INSTALLED_KITS`, `register_kit`).
+- Server kit **`palm.kits.server`** — one implementation; all former common paths rebound.
+- Surfaces (`palm.runtimes.server`) import the kit; composition roots stay in runtimes.
+- Future kits (cli helpers, websocket transport, …) register the same way; intentions stay off install until real.
 
-**0.57 exit:** may leave kit under `common.runtimes.server` if classified and documented;  
-full multi-kit registry can be a small follow slice or early next theme.
+**Law retained:** one implementation per kit; not system; not anonymous common bulk.
 
 ---
 
@@ -363,12 +354,12 @@ Pre-1.0 is free to cut aliases; keeping them freezes old product language.
 
 ### SU-006 — Surface transport kit split
 
-**Severity:** S2 · **Effort:** L · **Related:** SD-011
+**Severity:** S2 · **Effort:** L · **Related:** SD-011 · **Status:** ✅ done (0.57.13)
 
-**Observation:** ~80 surface modules import `palm.common.runtimes.server` (protocol, routes, middleware).  
-Concrete surfaces live under `palm.runtimes.server`. Two homes for one HTTP story.
+**Observation:** Protocol lived under common; composition under runtimes — two homes for one HTTP story.
 
-**Target:** One home after system extract (kit next to surfaces **or** named shared transport package).
+**Resolution:** Kit **`palm.kits.server`** owns protocol/routes/transport/SSR helpers.  
+Surfaces under `palm.runtimes.server` stay thin composers. That split is intentional (kit vs surface).
 
 ---
 

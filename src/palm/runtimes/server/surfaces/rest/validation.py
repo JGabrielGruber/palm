@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.common.surfaces.pagination import DEFAULT_LIMIT, MAX_LIMIT, PaginationParams
 from palm.runtimes.server.surfaces.rest import errors
 from palm.runtimes.server.surfaces.rest.schema_validation import validate_query_dict

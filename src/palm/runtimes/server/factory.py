@@ -12,7 +12,7 @@ from palm.runtimes.server.surfaces import default_surfaces
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
-    from palm.common.runtimes.server.webhooks import ServerWebhookBridge
+    from palm.kits.server.webhooks import ServerWebhookBridge
     from palm.runtimes.server.runtime import ServerRuntime
 
 

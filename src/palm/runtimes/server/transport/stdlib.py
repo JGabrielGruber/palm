@@ -10,15 +10,15 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import TYPE_CHECKING, Any
 from urllib.parse import parse_qs, urlparse
 
-from palm.common.runtimes.server.protocol import ServerRequest
-from palm.common.runtimes.server.responses import error_response
+from palm.kits.server.protocol import ServerRequest
+from palm.kits.server.responses import error_response
 
 if TYPE_CHECKING:
     from palm.runtimes.server.app import ServerApp
 
 
 class StdlibHttpTransport:
-    """Threading stdlib HTTP binding implementing :class:`~palm.common.runtimes.server.transport.BaseTransport`."""
+    """Threading stdlib HTTP binding implementing :class:`~palm.kits.server.transport.BaseTransport`."""
 
     name = "stdlib"
 
@@ -69,7 +69,7 @@ class StdlibHttpTransport:
 
 
 def create_stdlib_transport(app: ServerApp, host: str, port: int) -> StdlibHttpTransport:
-    """Factory registered on :data:`~palm.common.runtimes.server.transport.transport_registry`."""
+    """Factory registered on :data:`~palm.kits.server.transport.transport_registry`."""
     return StdlibHttpTransport(app, host, port)
 
 

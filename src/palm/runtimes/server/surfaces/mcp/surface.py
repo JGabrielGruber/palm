@@ -6,11 +6,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.surface import BaseSurface
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.surface import BaseSurface
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 

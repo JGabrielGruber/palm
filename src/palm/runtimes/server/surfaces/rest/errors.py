@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.common.runtimes.server.protocol import ServerResponse
-from palm.common.runtimes.server.responses import error_response
-from palm.common.runtimes.server.responses import unauthorized as _unauthorized
+from palm.kits.server.protocol import ServerResponse
+from palm.kits.server.responses import error_response
+from palm.kits.server.responses import unauthorized as _unauthorized
 
 
 def bad_request(
@@ -35,7 +35,7 @@ def empty_body() -> ServerResponse:
 
 
 def unauthorized() -> ServerResponse:
-    from palm.common.runtimes.server.middleware import PALM_SUBJECT_HEADER
+    from palm.kits.server.middleware import PALM_SUBJECT_HEADER
 
     return _unauthorized(f"missing or invalid {PALM_SUBJECT_HEADER} header")
 

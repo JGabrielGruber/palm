@@ -9,8 +9,8 @@ from typing import Any
 
 import pytest
 
-from palm.common.runtimes.server.registry import RouteRegistry, SurfaceRegistry
-from palm.common.runtimes.server.transport import transport_registry
+from palm.kits.server.registry import RouteRegistry, SurfaceRegistry
+from palm.kits.server.transport import transport_registry
 from palm.runtimes.server import ServerRuntime, create_app, create_transport
 from palm.runtimes.server.app import create_server_app
 from palm.runtimes.server.context import ServerContext

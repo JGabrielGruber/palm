@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.ssr.render import html_response
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.ssr.render import html_response
 from palm.runtimes.server.surfaces.ssr.studio.assets import (
     file_response,
     index_asset,

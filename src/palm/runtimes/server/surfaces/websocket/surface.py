@@ -10,8 +10,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.surface import BaseSurface
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.surface import BaseSurface
 from palm.runtimes.server.surfaces.websocket.events_session import EVENTS_WS_PATH
 from palm.runtimes.server.surfaces.websocket.session import (
     ASSIST_WS_PATH,
@@ -20,7 +20,7 @@ from palm.runtimes.server.surfaces.websocket.session import (
 from palm.runtimes.server.surfaces.websocket.static import portal_file_response
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 

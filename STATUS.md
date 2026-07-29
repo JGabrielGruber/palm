@@ -25,7 +25,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 |-------|----------------|
 | `palm/core/` | Pure engines. No external Palm imports. |
 | **`palm/system/`** | Running Palm: `BaseRuntime`, ports, wait/work/workload planes ([PALM.md](docs/PALM.md)). |
-| `palm/common/` | Shared libraries + residual server transport kit (`common.runtimes.server`). No SD-012 shims. |
+| `palm/common/` | Shared libraries (plans, CQRS, transforms, persistence). No system shims. |
+| `palm/kits/` | Surface infrastructure kits (`server`, …) — install-list truth. |
 | `palm/services/` | Product (userland): definitions, execution, assist, design, … |
 | `palm/app/` | Host + composition / deployment profiles. |
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
@@ -54,6 +55,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | 0.57.10 Docs/notes coherence | ✅ kill dead pre-system notes in living docs |
 | 0.57.11 Wave F + job list on port | ✅ executions + job_hooks → system; `list_jobs` on ExecutionPort |
 | 0.57.12 Shim delete + port catalog | ✅ SD-012 gone; workload list/doctor on port; RuntimeHost honest |
+| 0.57.13 Kits package | ✅ `palm.kits` + `palm.kits.server`; INSTALLED_KITS truth |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
 

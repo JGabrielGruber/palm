@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.ssr.render import escape, html_response
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.ssr.render import escape, html_response
 from palm.runtimes.server.surfaces.ssr.explorer.components import (
     action_button,
     action_catalog,

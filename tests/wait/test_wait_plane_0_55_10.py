@@ -94,7 +94,7 @@ def test_bind_wait_plane_helper() -> None:
 
 
 def test_doctor_uses_wait_plane_snapshot() -> None:
-    from palm.common.runtimes.server.diagnostics import build_doctor_report
+    from palm.kits.server.diagnostics import build_doctor_report
 
     rt = EmbeddedRuntime()
     rt.start()

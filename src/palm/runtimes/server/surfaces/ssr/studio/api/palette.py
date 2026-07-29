@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.runtimes.server.surfaces.ssr.studio.fetch import StudioFetcher
 
 if TYPE_CHECKING:

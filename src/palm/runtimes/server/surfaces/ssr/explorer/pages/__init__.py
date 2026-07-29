@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 
 from .assist import AssistPages
 from .base import PageContext

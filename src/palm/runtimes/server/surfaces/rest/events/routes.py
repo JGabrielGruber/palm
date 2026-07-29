@@ -6,14 +6,14 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 from palm.common.events.catalog import PUBLIC_EVENT_TYPES, catalog_dict, is_public_event_type
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.runtimes.server.surfaces.rest.bindings import bind_handler
 from palm.runtimes.server.surfaces.rest.handlers.base import require_auth
 from palm.runtimes.server.surfaces.rest.prefix import API_PREFIX
 from palm.runtimes.server.surfaces.rest.responses import ok
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 

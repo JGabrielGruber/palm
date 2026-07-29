@@ -7,7 +7,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 
 _store_lock = threading.RLock()
 _drafts: dict[str, dict[str, Any]] = {}

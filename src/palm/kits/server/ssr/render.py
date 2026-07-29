@@ -6,7 +6,7 @@ import html
 import json
 from typing import Any
 
-from palm.common.runtimes.server.protocol import ServerResponse
+from palm.kits.server.protocol import ServerResponse
 
 
 def escape(text: object | None) -> str:

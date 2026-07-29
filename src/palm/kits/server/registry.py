@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 from palm.core.exceptions import RegistryError
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.protocol import RouteHandler, ServerSurface
+    from palm.kits.server.protocol import RouteHandler, ServerSurface
 
 
 @dataclass(frozen=True)
@@ -76,7 +76,7 @@ class RouteRegistry:
 
 
 class SurfaceRegistry:
-    """Thread-safe registry of :class:`~palm.common.runtimes.server.protocol.ServerSurface` implementations."""
+    """Thread-safe registry of :class:`~palm.kits.server.protocol.ServerSurface` implementations."""
 
     def __init__(self) -> None:
         self._entries: dict[str, ServerSurface] = {}

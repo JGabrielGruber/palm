@@ -80,7 +80,7 @@ src/palm/system/
 | **E — planes** | `common/wait`, `common/work` | `system/planes/...` | SD-002 ✅ 0.57.6 |
 | **F — executions** | `common/executions` + job hooks | `system/executions` + `runtime/job_hooks` | SD-002 ✅ 0.57.11 |
 | **G — workload glue** | `common/workload` | `system/planes/workload` | SD-009 ✅ 0.57.6 |
-| **H — classify** | `common/runtimes/server` | keep or `runtimes` | SD-011 residual |
+| **H — kits** | `common/runtimes/server` | `palm.kits.server` | SD-011 ✅ 0.57.13 |
 
 **Compatibility:** During cutover, `palm.common.runtimes.base` may re-export from `palm.system` (list under SD-012).  
 Remove re-exports before theme exit when guards allow.
@@ -210,7 +210,7 @@ During cutover, `RuntimeHost` may remain as a structural subset for old type hin
 |------------|:------:|:------:|:---------------:|--------|
 | `runtimes/base`, wiring, hooks | ● | | | → system |
 | `runtimes/host` | ● | | | → system ports |
-| `runtimes/server` | | ◐ | ● | classify SD-011 |
+| kits/server | | | ● | surface kit (SD-011 ✅) |
 | `runtimes/schedulers` | ● | | | → system |
 | `wait` | ● | | | → system planes |
 | `work` | ● | | | → system planes |
@@ -336,7 +336,7 @@ the protocols structurally.
 - [x] Wait + work + workload glue live under `palm.system.planes.*`  
 - [x] `common` re-exports only (SD-012) — not dual implementations  
 - [x] Plugin side-effects via `palm.common.plugins.ensure_core_plugins` (system purity)  
-- [x] Residual documented: executions, common/hooks, server stack (SD-002 / SD-011)  
+- [x] Residual documented then paid: executions/hooks (0.57.11), kits (0.57.13) 
 - [x] common classification matches reality (SYSTEM-LOW-LEVEL §5 still true for residuals)  
 
 ### 0.57.7 — Edge policy

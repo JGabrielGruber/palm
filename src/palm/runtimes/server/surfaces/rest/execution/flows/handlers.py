@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 from palm.common.exceptions import InstanceNotFoundError, MutationRejectedError
 from palm.common.operator.flow_session_view import shape_flow_session_view
 from palm.common.operator.invoke_tree import build_invoke_tree
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.common.services.errors import DefinitionNotFoundServiceError, InstanceNotFoundServiceError
 from palm.common.surfaces.pagination import list_envelope
 from palm.patterns.wizard.bindings.cqrs.commands import (

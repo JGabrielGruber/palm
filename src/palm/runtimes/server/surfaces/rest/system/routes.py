@@ -10,7 +10,7 @@ from palm.runtimes.server.surfaces.rest.prefix import API_PREFIX
 from palm.runtimes.server.surfaces.rest.system import handlers
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 

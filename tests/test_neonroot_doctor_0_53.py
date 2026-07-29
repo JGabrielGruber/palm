@@ -31,7 +31,7 @@ def test_neonroot_doctor_soft_issue_when_declared_but_missing() -> None:
 
 def test_build_doctor_report_includes_neonroot() -> None:
     import palm.runners  # noqa: F401
-    from palm.common.runtimes.server.diagnostics import build_doctor_report
+    from palm.kits.server.diagnostics import build_doctor_report
 
     class _RT:
         runtime_name = "test"

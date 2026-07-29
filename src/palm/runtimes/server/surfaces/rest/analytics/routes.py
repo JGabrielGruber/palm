@@ -5,14 +5,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.runtimes.server.surfaces.rest.analytics import handlers
 from palm.runtimes.server.surfaces.rest.analytics.static import analytics_file_response
 from palm.runtimes.server.surfaces.rest.bindings import bind_handler
 from palm.runtimes.server.surfaces.rest.prefix import API_PREFIX
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 

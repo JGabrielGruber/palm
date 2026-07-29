@@ -40,13 +40,14 @@ flowchart TB
         syshooks[runtime hooks / schedulers]
     end
 
-    subgraph Common["palm.common — shared + residual"]
-        exec[DefinitionExecutor]
+    subgraph Common["palm.common — shared libraries"]
         plans[ExecutionPlan / PlanRegistry]
-        hooks[Job hooks — persistence, snapshots]
         persist[Definition + Instance repos]
         builder[Pattern materialization]
-        serverkit[runtimes.server transport kit]
+    end
+
+    subgraph Kits["palm.kits — surface kits"]
+        serverkit[kits.server transport]
     end
 
     subgraph Plugins["Extensible plugins"]
@@ -155,7 +156,9 @@ Patterns register custom rules at bootstrap with `register_transform("my_rule", 
 
 Use in **pipelines** (`pattern: pipeline`), **wizard** steps (`step_kind: transform`), or programmatically via `TransformExecutor` / `TransformLeaf`. `enrich_resource` receives `ResourceEngine` from the hosting runtime automatically.
 
-Runtime **infrastructure** (engine wiring, schedulers, auth/observability hooks) lives in **`palm.common.runtimes`**. Concrete surfaces (CLI, embedded, daemon, server) live in **`palm.runtimes.<name>`** subpackages.
+System **runtime** (engine wiring, schedulers, auth/observability hooks) lives in **`palm.system.runtime`**.  
+Surface **kits** (HTTP protocol, routes, transport) live in **`palm.kits`** (e.g. `palm.kits.server`).  
+Concrete surfaces (CLI, embedded, daemon, server) live in **`palm.runtimes.<name>`** subpackages.
 
 ### `palm.app` — application layer
 
@@ -824,9 +827,9 @@ palm/runtimes/            # concrete surfaces (thin packages)
 
 **Import conventions:**
 
-- System instance / ports / planes → `palm.system` (preferred)
-- Compatibility shims → `palm.common.runtimes` (SD-012; re-exports only)
-- Server transport kit → `palm.common.runtimes.server` (residual SD-011)
+- System instance / ports / planes / executions → `palm.system`
+- Surface kits → `palm.kits` (`INSTALLED_KITS`; server = `palm.kits.server`)
+- Shared libs → `palm.common` (plans, CQRS, transforms, persistence)
 - Concrete runtimes → `palm.runtimes.embedded`, `.daemon`, `.server`
 - CLI command mode → `palm.runtimes.cli.commands`
 - CLI TUI/REPL → `palm.runtimes.cli.tui`

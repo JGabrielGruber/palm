@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.transport import BaseTransport, transport_registry
+from palm.kits.server.transport import BaseTransport, transport_registry
 from palm.runtimes.server.transport.stdlib import (
     StdlibHttpTransport,
     create_stdlib_transport,

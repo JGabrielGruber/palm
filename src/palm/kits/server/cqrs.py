@@ -39,7 +39,7 @@ from palm.common.exceptions import DefinitionNotFoundError, InstanceNotFoundErro
 from palm.common.job_context import build_job_context, instance_id_for_job
 from palm.common.patterns._registry import iter_cqrs_contributors
 from palm.common.plans import PlanRegistry
-from palm.common.runtimes.server.plans import prepare_flow_from_body, prepare_process_from_body
+from palm.kits.server.plans import prepare_flow_from_body, prepare_process_from_body
 from palm.core.orchestration.exceptions import JobNotFoundError
 
 if TYPE_CHECKING:
@@ -150,7 +150,7 @@ class StandaloneCommandHandlers:
         }
 
     def _store_plan(self, plan: Any) -> Any:
-        from palm.common.runtimes.server.middleware import current_principal_id
+        from palm.kits.server.middleware import current_principal_id
 
         return self._plan_registry.store(plan, principal_id=current_principal_id(self._runtime))
 

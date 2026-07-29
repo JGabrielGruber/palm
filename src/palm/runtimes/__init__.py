@@ -3,8 +3,8 @@ Execution runtimes — surfaces that host Palm engines.
 
 Use ``palm.runtimes.cli:main`` as the CLI entry point. Library code should
 import concrete runtimes from their subpackages (``embedded``, ``daemon``, ``server``).
-System instance and ports live in ``palm.system``; shared server transport kit
-remains under ``palm.common.runtimes.server`` (SD-011 residual).
+System instance and ports live in ``palm.system``. Shared server transport
+lives in the exposed kit :mod:`palm.kits.server`.
 """
 
 from palm.system.runtime.base import BaseRuntime

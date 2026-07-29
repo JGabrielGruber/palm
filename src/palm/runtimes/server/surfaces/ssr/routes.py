@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.common.runtimes.server.ssr.render import redirect
+from palm.kits.server.ssr.render import redirect
 from palm.runtimes.server.surfaces.ssr.example_pages import ExamplePages
 from palm.runtimes.server.surfaces.ssr.explorer import ExplorerPages
 from palm.runtimes.server.surfaces.ssr.explorer.actions import ExplorerActions
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 _SURFACE = "explorer"
@@ -237,7 +237,7 @@ def _redirect_to(location: str):
 
 
 def _surface_info(request: object) -> object:
-    from palm.common.runtimes.server.protocol import ServerResponse
+    from palm.kits.server.protocol import ServerResponse
 
     return ServerResponse(
         status=200,

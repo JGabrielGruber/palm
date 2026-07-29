@@ -51,8 +51,8 @@ from palm.common.cqrs.resolvers import resolve_flow, resolve_process, resolve_sn
 from palm.common.exceptions import DefinitionNotFoundError, InstanceNotFoundError, PlanNotFoundError
 from palm.common.job_context import build_job_context, instance_id_for_job
 from palm.common.patterns._registry import iter_cqrs_contributors
-from palm.common.runtimes.server.middleware import current_principal_id
-from palm.common.runtimes.server.plans import prepare_flow_from_body, prepare_process_from_body
+from palm.kits.server.middleware import current_principal_id
+from palm.kits.server.plans import prepare_flow_from_body, prepare_process_from_body
 from palm.core.orchestration.exceptions import JobNotFoundError
 from palm.patterns.wizard.bindings.cqrs.queries import GetWizardProgressQuery
 

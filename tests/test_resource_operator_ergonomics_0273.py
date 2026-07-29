@@ -16,7 +16,7 @@ from palm.common.resource.preflight import (
     resource_preflight_issues,
     rest_resource_has_base_url,
 )
-from palm.common.runtimes.server.diagnostics import build_doctor_report
+from palm.kits.server.diagnostics import build_doctor_report
 from palm.core.behavior_tree import PatternStatus
 from palm.core.resource import ResourceEngine
 from palm.definitions import ResourceDefinition

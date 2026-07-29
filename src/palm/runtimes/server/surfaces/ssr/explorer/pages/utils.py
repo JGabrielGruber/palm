@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from urllib.parse import quote
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.ssr.render import escape, html_response
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.ssr.render import escape, html_response
 from palm.runtimes.server.surfaces.ssr.explorer.components import badge
 from palm.runtimes.server.surfaces.ssr.explorer.layout import explorer_page
 

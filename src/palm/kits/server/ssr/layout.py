@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from palm.common.runtimes.server.ssr.render import escape
+from palm.kits.server.ssr.render import escape
 
 PALM_SSR_CSS = """
 :root {

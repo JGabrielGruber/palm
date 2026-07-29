@@ -6,8 +6,8 @@ import json
 import threading
 from typing import TYPE_CHECKING, Any
 
-from palm.common.runtimes.server.middleware import PALM_SUBJECT_HEADER
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.middleware import PALM_SUBJECT_HEADER
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.runtimes.mcp.config import PalmMcpConfig
 
 if TYPE_CHECKING:

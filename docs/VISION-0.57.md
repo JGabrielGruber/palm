@@ -1,6 +1,6 @@
 # VISION 0.57 — Palm System (name the kernel)
 
-**Status:** 🚧 **In progress** — system work **0.57.0–0.57.12** landed; residual SD-011 kits classification, surface SU-*, theme exit docs remain.  
+**Status:** 🚧 **In progress** — system + kits **0.57.0–0.57.13** landed; surface SU-* and theme exit docs remain.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **Low-level:** [SYSTEM-LOW-LEVEL.md](SYSTEM-LOW-LEVEL.md)  
@@ -177,8 +177,8 @@ Theme **0.57** may close when:
 ## 11. Review and next
 
 High-level map and spine are in use.  
-**Next:** optional SD-011 multi-kit home (or classify in place); surface SU-* later;
-theme exit as **docs + version dump** (slices stay separate commits). Session = **theme**, not residual.
+**Next:** surface SU-* later; theme exit as **docs + version dump** (slices stay separate).
+Session = **theme**, not residual. Kits law is live (`palm.kits`).
 
 ---
 
@@ -196,6 +196,7 @@ theme exit as **docs + version dump** (slices stay separate commits). Session = 
 | **0.57.10** | Living docs/notes match code (kill pre-system dead notes) |
 | **0.57.11** | Wave F: executions + job_hooks → system; `list_jobs` on ExecutionPort; SD-012 shims |
 | **0.57.12** | Delete SD-012 shims; workload catalog on port; RuntimeHost = submit + execution |
+| **0.57.13** | `palm.kits` + move server kit; `INSTALLED_KITS` / `register_kit` |
 
 ---
 

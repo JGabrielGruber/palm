@@ -8,7 +8,7 @@ from palm.runtimes.server.surfaces.ssr.studio.api.handlers import StudioApiHandl
 from palm.runtimes.server.surfaces.ssr.studio.pages import StudioPages
 
 if TYPE_CHECKING:
-    from palm.common.runtimes.server.registry import RouteRegistry
+    from palm.kits.server.registry import RouteRegistry
     from palm.runtimes.server.context import ServerContext
 
 _SURFACE = "studio"
@@ -89,7 +89,7 @@ def register_studio_routes(registry: RouteRegistry, ctx: ServerContext) -> None:
 
 
 def _surface_info(request: object) -> object:
-    from palm.common.runtimes.server.protocol import ServerResponse
+    from palm.kits.server.protocol import ServerResponse
 
     return ServerResponse(
         status=200,

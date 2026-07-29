@@ -10,7 +10,7 @@ import json
 from typing import Any
 
 from palm import __version__
-from palm.common.runtimes.server.middleware import PALM_SUBJECT_HEADER
+from palm.kits.server.middleware import PALM_SUBJECT_HEADER
 from palm.runtimes.server.surfaces.rest.route_table import RouteDefinition, rest_routes
 
 DEFAULT_BASE_URL = "http://localhost:8080"

@@ -12,7 +12,7 @@ from palm.common.events.consumers import (
     mark_work_drain_caught_up,
 )
 from palm.common.events.journal import EventJournal
-from palm.common.runtimes.server.diagnostics import build_doctor_report
+from palm.kits.server.diagnostics import build_doctor_report
 from palm.core.storage import StorageEngine
 
 

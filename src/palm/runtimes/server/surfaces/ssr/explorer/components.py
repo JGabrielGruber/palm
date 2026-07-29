@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.common.runtimes.server.ssr.render import escape, pretty_json
+from palm.kits.server.ssr.render import escape, pretty_json
 
 
 def _session_api_href(wizard: dict[str, Any], instance_id: str) -> str:

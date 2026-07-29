@@ -1,6 +1,6 @@
 """Network-hosted Palm runtime with extensible server surfaces."""
 
-from palm.common.runtimes.server import (
+from palm.kits.server import (
     PALM_SUBJECT_HEADER,
     BaseSurface,
     BaseTransport,

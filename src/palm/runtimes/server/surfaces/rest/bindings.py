@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from palm.common.runtimes.server.protocol import RouteHandler
+from palm.kits.server.protocol import RouteHandler
 
 
 def bind_handler(ctx: Any, fn: Callable[..., Any]) -> RouteHandler:

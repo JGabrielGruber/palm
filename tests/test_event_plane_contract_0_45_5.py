@@ -26,7 +26,7 @@ def test_event_plane_status_on_host() -> None:
 
 
 def test_doctor_report_includes_event_plane() -> None:
-    from palm.common.runtimes.server.diagnostics import build_doctor_report
+    from palm.kits.server.diagnostics import build_doctor_report
 
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(settings=settings)

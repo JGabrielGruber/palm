@@ -378,7 +378,8 @@ Each top-level part has **one purpose**.
 | `PatternBuildContext` | Carries `execution` port (+ engines for unit tests) | Engine fields for tests only |
 | `ExecutionService.*` | Product over **ports** for effects | list/doctor residual |
 | `palm.system` | System home: runtime, planes, ports | — |
-| `palm.common` | Shared libraries + residual server kit | SD-011 |
+| `palm.common` | Shared libraries (plans, CQRS, transforms, …) | — |
+| `palm.kits` | Surface kits (`server`, …) | SD-011 ✅ |
 | `services.system` | Doctor/health **product** | Do not call it the kernel |
 
 ---
@@ -492,7 +493,7 @@ A map that only names **ideals** without today is also incomplete.
 | Workload pure engine + leaf direction | **Scout** (0.56) — enough to force this map |
 | Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
-| Shared vs system split in tree | **Deflated** (0.57.6–12); residual: server transport kit (SD-011); plans DTO shared |
+| Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
 | Live debt register | **Real** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC) |
 | Session plane | **Queued as a theme** — not a 0.57 residual slice |

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.common.runtimes.server.ssr.layout import page_shell
+from palm.kits.server.ssr.layout import page_shell
 
 _EXPLORER_NAV = (
     ("Home", "/explorer"),

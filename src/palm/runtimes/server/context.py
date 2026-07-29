@@ -14,7 +14,7 @@ from palm.common.cqrs.command import Command
 from palm.common.cqrs.query import Query
 from palm.common.cqrs.schemas import CqrsSchemaRegistry, build_schema_registry
 from palm.common.plans import PlanRegistry
-from palm.common.runtimes.server.cqrs import wire_standalone_buses
+from palm.kits.server.cqrs import wire_standalone_buses
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost

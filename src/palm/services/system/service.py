@@ -13,7 +13,7 @@ from palm.common.cqrs.query import (
     ListInstancesQuery,
     ListJobStatusQuery,
 )
-from palm.common.runtimes.server.diagnostics import build_doctor_report
+from palm.kits.server.diagnostics import build_doctor_report
 from palm.common.services.base import BaseService
 from palm.common.services.errors import InstanceNotFoundServiceError
 

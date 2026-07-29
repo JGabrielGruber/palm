@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from palm.app.bootstrap import runtime_start_options
 from palm.app.settings import PalmSettings
-from palm.common.runtimes.server.diagnostics import build_doctor_report
+from palm.kits.server.diagnostics import build_doctor_report
 from palm.core.workload import (
     IsolationPolicy,
     LifecyclePolicy,

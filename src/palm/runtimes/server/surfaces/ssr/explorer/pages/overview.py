@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
-from palm.common.runtimes.server.ssr.render import html_response
+from palm.kits.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.ssr.render import html_response
 from palm.runtimes.server.surfaces.ssr.explorer.components import link_card, stat_card
 from palm.runtimes.server.surfaces.ssr.explorer.layout import explorer_page
 

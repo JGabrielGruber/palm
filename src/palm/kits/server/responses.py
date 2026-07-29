@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.common.runtimes.server.protocol import ServerResponse
+from palm.kits.server.protocol import ServerResponse
 
 
 def error_response(

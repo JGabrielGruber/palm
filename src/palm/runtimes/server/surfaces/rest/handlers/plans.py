@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from palm.common.cqrs.command import PreparePlansCommand, SubmitPlansCommand
 from palm.common.exceptions import PlanNotFoundError
-from palm.common.runtimes.server.protocol import ServerRequest, ServerResponse
+from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.runtimes.server.surfaces.rest import errors
 from palm.runtimes.server.surfaces.rest.handlers.base import require_auth
 from palm.runtimes.server.surfaces.rest.responses import accepted, created
