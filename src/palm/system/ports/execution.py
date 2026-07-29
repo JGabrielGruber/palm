@@ -67,3 +67,7 @@ class ExecutionPort(Protocol):
     def resume_job(self, job_id: str) -> Any:
         """Re-drive a registered orchestration job (job-drive on the same port)."""
         ...
+
+    def list_jobs(self, status: Any = None) -> list[Any]:
+        """List orchestration jobs (inspect on the same port; optional status filter)."""
+        ...

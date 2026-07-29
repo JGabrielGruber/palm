@@ -1,7 +1,13 @@
-"""Orchestration hooks — cross-cutting job lifecycle coordination."""
+"""Shim (SD-012) — canonical: :mod:`palm.system.runtime.job_hooks`."""
 
-from palm.common.hooks.instance_persistence import InstancePersistenceHook
-from palm.common.hooks.outbox_drain import OutboxDrainHook
-from palm.common.hooks.state_snapshot import StateSnapshotHook
+from palm.system.runtime.job_hooks import (
+    InstancePersistenceHook,
+    OutboxDrainHook,
+    StateSnapshotHook,
+)
 
-__all__ = ["InstancePersistenceHook", "OutboxDrainHook", "StateSnapshotHook"]
+__all__ = [
+    "InstancePersistenceHook",
+    "OutboxDrainHook",
+    "StateSnapshotHook",
+]

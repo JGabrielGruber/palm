@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from palm.common import DefinitionNotFoundError, DefinitionRepository
-from palm.common.executions.flow_submission import prepare_flow_submission
+from palm.system.executions.flow_submission import prepare_flow_submission
 from palm.common.patterns import PatternBuildContext
 from palm.core import StorageEngine, StorageNotConfiguredError
 from palm.definitions import (

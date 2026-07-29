@@ -242,7 +242,7 @@ class StandaloneQueryHandlers:
         )
 
     def _list_jobs(self, query: ListJobStatusQuery) -> list[dict[str, Any]]:
-        jobs = self._runtime.orchestration.list_jobs()
+        jobs = self._runtime.execution.list_jobs()
         rows = [
             {
                 "job_id": job.id,

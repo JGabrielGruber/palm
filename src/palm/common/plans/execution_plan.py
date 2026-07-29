@@ -22,8 +22,8 @@ class ExecutionPlan:
     """
     Immutable description of work ready for orchestration.
 
-    Produced by :func:`~palm.common.executions.flow_submission.prepare_flow_submission`
-    and consumed by :meth:`~palm.common.executions.executor.DefinitionExecutor.submit_plan`
+    Produced by :func:`~palm.system.executions.flow_submission.prepare_flow_submission`
+    and consumed by :meth:`~palm.system.executions.executor.DefinitionExecutor.submit_plan`
     or :meth:`submit_to`.
     """
 

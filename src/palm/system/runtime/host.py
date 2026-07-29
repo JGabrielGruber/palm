@@ -2,7 +2,7 @@
 RuntimeHost — thin legacy contract for definition-driven job submission.
 
 Prefer :class:`~palm.system.instance.SystemInstance` + ports for new code (0.57+).
-This protocol remains so :class:`~palm.common.executions.executor.DefinitionExecutor`
+This protocol remains so :class:`~palm.system.executions.executor.DefinitionExecutor`
 stays decoupled from a single runtime class during cutover (SD-003).
 """
 

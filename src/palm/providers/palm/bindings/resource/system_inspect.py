@@ -101,7 +101,7 @@ def _local_list(action: str, params: PalmInvokeParams) -> list[dict[str, Any]]:
     status = _status_filter(params)
 
     if action == "list_jobs":
-        jobs = runtime.orchestration.list_jobs()
+        jobs = runtime.execution.list_jobs()
         rows = [job_payload(j) for j in jobs]
         if status:
             rows = [r for r in rows if r.get("status") == status]
@@ -121,7 +121,7 @@ def _local_list(action: str, params: PalmInvokeParams) -> list[dict[str, Any]]:
         return out[:limit] if limit is not None else out
 
     if action == "list_waiting":
-        jobs = runtime.orchestration.list_jobs(status=JobStatus.WAITING_FOR_INPUT)
+        jobs = runtime.execution.list_jobs(status=JobStatus.WAITING_FOR_INPUT)
         out = []
         for j in jobs:
             meta = dict(j.metadata or {})

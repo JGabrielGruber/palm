@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from palm.app import PalmKernel, PalmSettings
-from palm.common.hooks.state_snapshot import StateSnapshotHook
+from palm.system.runtime.job_hooks.state_snapshot import StateSnapshotHook
 from palm.common.persistence.instance_repository import InstanceRepository
 from palm.core import StorageEngine
 from palm.core.orchestration import Job, JobStatus, OrchestrationEngine

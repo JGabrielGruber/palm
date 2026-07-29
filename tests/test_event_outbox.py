@@ -8,7 +8,7 @@ from palm.common.events import (
     OutboxStore,
     wire_reliable_events,
 )
-from palm.common.hooks import InstancePersistenceHook
+from palm.system.runtime.job_hooks import InstancePersistenceHook
 from palm.core.event import Event, EventContext, EventEngine
 from palm.core.orchestration import Job, OrchestrationEngine
 from palm.core.orchestration.events import OrchestrationEventType

@@ -378,7 +378,7 @@ Each top-level part has **one purpose**.
 | `PatternBuildContext` | Carries `execution` port (+ engines for unit tests) | Engine fields for tests only |
 | `ExecutionService.*` | Product over **ports** for effects | list/doctor residual |
 | `palm.system` | System home: runtime, planes, ports | — |
-| `palm.common` | Shared libraries + residual (executions, hooks, server kit) | SD-002 / SD-011 |
+| `palm.common` | Shared libraries + residual server kit; SD-012 shims | SD-011 · SD-012 |
 | `services.system` | Doctor/health **product** | Do not call it the kernel |
 
 ---
@@ -490,9 +490,9 @@ A map that only names **ideals** without today is also incomplete.
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
 | Workload pure engine + leaf direction | **Scout** (0.56) — enough to force this map |
-| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, wait/work/workload planes; common has SD-012 shims |
+| Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks; common has SD-012 shims |
 | Unified execution port | **Live** — product + graphs + edges for effects (incl. `resume_job`); inspect list residual |
-| Shared vs system split in tree | **Mostly deflated** (0.57.6); residual: executions, job hooks, server stack (SD-002/SD-011) |
+| Shared vs system split in tree | **Mostly deflated** (0.57.6–11); residual: server stack (SD-011), plans DTO shared |
 | Live debt register | **Real** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC) |
 | Session plane | **Queued** — needs system home first |

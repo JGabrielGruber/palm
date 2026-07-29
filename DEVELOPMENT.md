@@ -152,7 +152,7 @@ src/palm/
 ├── providers/         # rest, palm, kv, file (graphql/postgres = intention only)
 ├── storages/          # memory, filesystem core; postgres/mongodb optional intention
 ├── definitions/       # FlowDefinition, ProcessDefinition
-├── common/            # Shared libs + residual (executions, hooks, server transport)
+├── common/            # Shared libs + residual server transport; SD-012 shims
 │   └── runtimes/      # SD-012 re-exports + server/ kit (canonical runtime is palm.system)
 ├── instances/         # ProcessInstance, StateSnapshot, status history
 ├── runtimes/          # Concrete surfaces (thin packages on system BaseRuntime)

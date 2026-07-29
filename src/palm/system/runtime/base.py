@@ -15,9 +15,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, ClassVar
 
 from palm import __version__
-from palm.common import DefinitionExecutor, DefinitionRepository, InstanceRepository
+from palm.common import DefinitionRepository, InstanceRepository
 from palm.common.events import OutboxProcessor, OutboxStore, wire_reliable_events
-from palm.common.hooks import InstancePersistenceHook, OutboxDrainHook, StateSnapshotHook
+from palm.system.executions import DefinitionExecutor
+from palm.system.runtime.job_hooks import (
+    InstancePersistenceHook,
+    OutboxDrainHook,
+    StateSnapshotHook,
+)
 from palm.common.managers import InstanceManager
 from palm.common.plugins import ensure_core_plugins
 from palm.common.providers._registry import get_runtime_binding, get_runtime_unbinding
@@ -488,6 +493,11 @@ class BaseRuntime:
         """Re-drive a registered orchestration job (ExecutionPort)."""
         self._require_started()
         return self.orchestration.resume_job(str(job_id))
+
+    def list_jobs(self, status: Any = None) -> list[Any]:
+        """List orchestration jobs (ExecutionPort inspect)."""
+        self._require_started()
+        return self.orchestration.list_jobs(status=status)
 
     def _require_workload_engine(self) -> WorkloadEngine:
         engine = self.workload

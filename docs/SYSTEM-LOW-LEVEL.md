@@ -43,7 +43,8 @@ src/palm/system/
     wait/                  # continue plane (wave E ✅)
     work/                  # start intents (wave E ✅)
     workload/              # bootstrap + doctor glue (wave G ✅)
-  executions/              # still common — residual wave F
+  executions/              # wave F ✅ — DefinitionExecutor + submission
+  runtime/job_hooks/       # wave F ✅ — persist / outbox / snapshot
 ```
 
 **Rules:**
@@ -77,7 +78,7 @@ src/palm/system/
 | **C — port** | new | `system/ports/execution.py` | SD-001 |
 | **D — BaseRuntime** | `common/runtimes/base.py` | `system/runtime/base.py` | SD-002 ✅ 0.57.6 |
 | **E — planes** | `common/wait`, `common/work` | `system/planes/...` | SD-002 ✅ 0.57.6 |
-| **F — executions** | `common/executions` | `system/executions` | SD-002 residual |
+| **F — executions** | `common/executions` + job hooks | `system/executions` + `runtime/job_hooks` | SD-002 ✅ 0.57.11 |
 | **G — workload glue** | `common/workload` | `system/planes/workload` | SD-009 ✅ 0.57.6 |
 | **H — classify** | `common/runtimes/server` | keep or `runtimes` | SD-011 residual |
 
@@ -380,7 +381,7 @@ the protocols structurally.
 | Work / workload planes | `src/palm/system/planes/work/`, `…/workload/` |
 | Compatibility shims | `src/palm/common/runtimes/*`, `common/wait`, `common/work`, `common/workload` (SD-012) |
 | Build context | `src/palm/common/patterns/build_context.py` |
-| Executor | `src/palm/common/executions/executor.py` (residual in common) |
+| Executor | `src/palm/system/executions/executor.py` (shims under common) |
 | Provider product | `src/palm/services/execution/providers/service.py` |
 | Workload product | `src/palm/services/execution/workloads/service.py` |
 

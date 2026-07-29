@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.common.executions.flow_submission import (
+from palm.system.executions.flow_submission import (
     prepare_flow_submission,
     prepare_resume_submission,
 )

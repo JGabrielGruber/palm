@@ -107,6 +107,9 @@ def test_execution_port_fake_is_usable() -> None:
         def resume_job(self, job_id: str) -> None:
             return None
 
+        def list_jobs(self, status: object = None) -> list:
+            return []
+
     fake = FakePort()
     assert isinstance(fake, ExecutionPort)
     assert fake.invoke_resource("kv://x")["ok"] is True
@@ -137,6 +140,9 @@ def test_port_bridges_to_core_protocols() -> None:
 
         def resume_job(self, job_id: str) -> object:
             raise NotImplementedError
+
+        def list_jobs(self, status: object = None) -> list:
+            return []
 
     port = FakePort()
     invoker = resource_invoker_from_port(port)
@@ -172,6 +178,9 @@ def test_resolve_effects_prefers_execution_port() -> None:
         def resume_job(self, job_id: str) -> object:
             raise NotImplementedError
 
+        def list_jobs(self, status: object = None) -> list:
+            return []
+
     class EngineStub:
         is_initialized = True
 
@@ -189,7 +198,15 @@ def test_resolve_effects_prefers_execution_port() -> None:
 
 @pytest.mark.parametrize(
     "name",
-    ["invoke_resource", "start_workload", "exec_workload", "stop_workload", "workload_status", "resume_job"],
+    [
+        "invoke_resource",
+        "start_workload",
+        "exec_workload",
+        "stop_workload",
+        "workload_status",
+        "resume_job",
+        "list_jobs",
+    ],
 )
 def test_execution_port_protocol_names(name: str) -> None:
     from palm.system.ports.execution import ExecutionPort

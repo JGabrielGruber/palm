@@ -28,18 +28,18 @@
 
 | ID | Title | Sev | Effort | Theme slice | Status |
 |----|-------|:---:|:------:|-------------|--------|
-| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | ✅ mostly (list/doctor residual) |
-| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open (deflate bulk ✅; residual) |
+| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5, 0.57.11 | ✅ mostly (workload list/doctor residual) |
+| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6, 0.57.11 | open (wave F ✅; server kit residual) |
 | [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open (SystemInstance ✅; host residual) |
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
-| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open (effects ✅; list residual) |
+| [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7, 0.57.11 | open (effects + job list ✅; workload list residual) |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
 | [SD-008](#sd-008) | Session plane has no system home | S2 | M | after system boundary | open |
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5 | open |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.6+ | open |
-| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–8 | open (import sweep ✅; modules remain) |
+| [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–8, 0.57.11 | open (import sweep ✅; modules remain) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 
 ### Surface debt (SU)
@@ -91,12 +91,12 @@ Product binds the same engines via `ExecutionService` after `resolve_runtime()`.
 Graphs: builders resolve `ResourceInvoker` / `WorkloadDriver` from the port first
 (`palm.system.effects` + `palm.common.patterns.effects`). Leaves typed to core protocols (P2).
 
-**Residual:** workload list/doctor catalog still touch `WorkloadEngine`;
-orchestration `list_jobs` inspect paths (SD-005 residual).
+**Residual:** workload list/doctor catalog may still touch `WorkloadEngine`
+(job inspect `list_jobs` is on the port as of 0.57.11).
 
 **Why it hurt:** Every new effect picked a side or duplicated both.
 
-**Target:** Graphs and product both call `execution` on the system instance — **met for primary effect paths**.
+**Target:** Graphs and product both call `execution` on the system instance — **met for primary effect paths and job list**.
 
 ---
 
@@ -104,21 +104,22 @@ orchestration `list_jobs` inspect paths (SD-005 residual).
 
 **Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary ✅), 0.57.6 (deflate ✅ bulk)
 
-**Progress (0.57.6):** Canonical homes under `palm.system`:
+**Progress (0.57.6 + 0.57.11 wave F):** Canonical homes under `palm.system`:
 
 | Area | Canonical | Residual in common |
 |------|-----------|--------------------|
-| `BaseRuntime` + host/wiring/hooks/schedulers | `palm.system.runtime` | SD-012 re-export shims |
+| `BaseRuntime` + host/wiring/middleware hooks/schedulers | `palm.system.runtime` | SD-012 re-export shims |
 | Wait (continue) | `palm.system.planes.wait` | SD-012 shims |
 | Work (start intents) | `palm.system.planes.work` | SD-012 shims |
 | Workload glue | `palm.system.planes.workload` | SD-012 shims |
-| `executions/` | still common | system-adjacent — later wave |
-| job hooks (`common/hooks`) | still common | system-adjacent — later |
+| `executions/` | `palm.system.executions` | SD-012 shims |
+| job hooks (persist/outbox/snapshot) | `palm.system.runtime.job_hooks` | SD-012 shims |
+| `plans/` | still common | shared DTO + PlanRegistry (stay unless server forces move) |
 | `runtimes/server` | still common | SD-011 |
 | transforms / cqrs / services base | shared (stay) | — |
 
-**Why it still hurts residual:** executions, persistence-adjacent job hooks, and server transport remain in `common`.  
-Session plane still has no dedicated system seat (SD-008).
+**Why it still hurts residual:** server transport kit remains in `common` (SD-011).  
+Session plane still has no dedicated system seat (SD-008). Plans stay shared by design for now.
 
 **Target:** Residual system-shaped modules move or stay classified; shims drop before theme exit when safe.
 
@@ -158,21 +159,22 @@ Core leaves accept `ResourceInvoker` / `WorkloadDriver`. Engine fields remain fo
 
 **Severity:** S2 · **Effort:** L · **Slices:** 0.57.5, 0.57.7 (effects ✅)
 
-**Progress (0.57.7):** Effect samples use `runtime.execution` (including
-`resume_job` on the port). Inspection/list paths remain residual.
+**Progress (0.57.7 + 0.57.11):** Effect samples and job list use `runtime.execution`
+(`resume_job`, `list_jobs` on the port). Workload catalog/doctor may still touch engines.
 
 | Site | Access |
 |------|--------|
 | `services/execution/providers/service.py` | ✅ port |
-| `services/execution/workloads/service.py` | ✅ effect methods on port; list/doctor still engine |
+| `services/execution/workloads/service.py` | ✅ effect methods on port; list/doctor still engine residual |
 | `services/execution/flows/session.py` | ✅ `execution.resume_job` |
 | `app/kernel.py` | ✅ invoke + resume on port |
 | `runtimes/server/.../explorer/fetch.py` | ✅ `execution.invoke_resource` |
 | `runtimes/server/.../explorer/actions.py` | ✅ `execution.resume_job` |
 | `providers/palm/.../local.py` | ✅ `execution.invoke_resource` |
-| `providers/palm/.../system_inspect.py` | residual — `orchestration.list_jobs` (inspect) |
+| `providers/palm/.../system_inspect.py` | ✅ `execution.list_jobs` (0.57.11) |
 | `common/interactive_runtime.py` | ✅ `execution.resume_job` |
-| `common/runtimes/server/cqrs.py` | residual — `list_jobs` (inspect) |
+| `common/runtimes/server/cqrs.py` | ✅ `execution.list_jobs` (0.57.11) |
+| `common/runtimes/server/diagnostics.py` | ✅ prefers `execution.list_jobs` |
 | Wait plane internal | system-internal `orch.resume_job` — not an edge |
 | Pattern leaves (wizard/dag/pipeline) | ✅ port→invoker/driver (0.57.4) |
 

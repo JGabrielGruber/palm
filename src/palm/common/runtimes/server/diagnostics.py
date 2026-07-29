@@ -31,8 +31,12 @@ def build_doctor_report(
     if not backend_open:
         issues.append(f"storage backend {backend_name!r} is not open")
 
-    orch = getattr(runtime, "orchestration", None)
-    jobs = orch.list_jobs() if orch is not None else []
+    execution = getattr(runtime, "execution", None)
+    if execution is not None and hasattr(execution, "list_jobs"):
+        jobs = execution.list_jobs()
+    else:
+        orch = getattr(runtime, "orchestration", None)
+        jobs = orch.list_jobs() if orch is not None else []
     waiting = sum(1 for job in jobs if job.status.value == "WAITING_FOR_INPUT")
     plane = getattr(runtime, "wait_plane", None)
     if isinstance(plane, WaitPlaneService):

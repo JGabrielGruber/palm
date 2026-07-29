@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.common.executions.flow_submission import prepare_flow_submission
+from palm.system.executions.flow_submission import prepare_flow_submission
 from palm.common.patterns import PatternBuildContext
 from palm.common.persistence.definition_repository import DefinitionRepository
 from palm.common.persistence.instance_sync import build_instance_from_job

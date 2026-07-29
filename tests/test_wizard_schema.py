@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from palm.common import DefinitionRepository
-from palm.common.executions.flow_submission import prepare_flow_submission
+from palm.system.executions.flow_submission import prepare_flow_submission
 from palm.common.patterns import PatternBuildContext
 from palm.common.persistence.state_snapshot import (
     SNAPSHOT_META_KEY,
