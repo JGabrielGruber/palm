@@ -1,14 +1,18 @@
 """
-BaseRuntime — shared engine wiring and definition submission surface.
+BaseRuntime — concrete **system instance** for a running Palm.
 
-Concrete runtimes (:class:`~palm.runtimes.embedded.runtime.EmbeddedRuntime`,
+Holds engines, planes, and the :class:`~palm.system.ports.execution.ExecutionPort`
+surface for graphs and product. Package path remains under ``palm.common.runtimes``
+until system deflate waves move it (docs/SYSTEM-LOW-LEVEL.md wave D).
+
+Concrete surfaces (:class:`~palm.runtimes.embedded.runtime.EmbeddedRuntime`,
 :class:`~palm.runtimes.daemon.runtime.DaemonRuntime`) differ only in default scheduling
 policy and optional runtime-specific conveniences.
 """
 
 from __future__ import annotations
 
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar
 
 import palm.patterns  # — register patterns
 import palm.providers  # — register providers
@@ -44,18 +48,28 @@ from palm.core import (
 )
 from palm.core.context import BaseState
 from palm.core.workload import WorkloadEngine
+from palm.core.workload.owner import WorkloadOwner
+from palm.core.workload.spec import WorkloadSpec
 from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
 from palm.states import BlackboardState
 
+if TYPE_CHECKING:
+    from palm.system.ports.execution import ExecutionPort
+
 
 class BaseRuntime:
     """
-    Coordinates Palm engines and exposes definition-driven job submission.
+    System instance: coordinates engines, planes, and effect ports.
 
-    Structurally satisfies :class:`~palm.common.runtimes.host.RuntimeHost`. Subclasses
-    set :attr:`default_scheduler_policy` to choose inline vs queued driving.
+    Satisfies :class:`~palm.system.instance.SystemInstance` and
+    :class:`~palm.system.ports.execution.ExecutionPort` structurally.
+    Also satisfies the thin legacy :class:`~palm.common.runtimes.host.RuntimeHost`.
+
+    Subclasses set :attr:`default_scheduler_policy` to choose inline vs queued driving.
+    Prefer ``runtime.execution`` for resource/workload effects (0.57+), not edge
+    field access to engines.
     """
 
     runtime_name: ClassVar[str] = "Runtime"
@@ -94,6 +108,11 @@ class BaseRuntime:
     @property
     def is_started(self) -> bool:
         return self._started
+
+    @property
+    def execution(self) -> ExecutionPort:
+        """Effect port shared by graphs and product (resource + workload)."""
+        return self
 
     @property
     def version(self) -> str:
@@ -386,6 +405,98 @@ class BaseRuntime:
             return scheduler.wait_until_idle(timeout=timeout)
         return True
 
+    # --- ExecutionPort (system effect surface) --------------------------------
+
+    def invoke_resource(
+        self,
+        resource_ref: str | None = None,
+        *,
+        provider: str | None = None,
+        action: str | None = None,
+        params: dict[str, Any] | None = None,
+        state: Any = None,
+        resource_id: str | None = None,
+    ) -> Any:
+        """Invoke a resource via the resource engine (ExecutionPort)."""
+        engine = self.resource
+        if not engine.is_initialized:
+            engine.initialize()
+        return engine.invoke(
+            resource_ref,
+            provider=provider,
+            action=action,
+            params=params,
+            state=state,
+            resource_id=resource_id,
+        )
+
+    def start_workload(
+        self,
+        spec: Any,
+        *,
+        owner: Any = None,
+        workload_id: str | None = None,
+        idempotency_key: str | None = None,
+        host_id: str | None = None,
+    ) -> Any:
+        """Start a workload via the workload engine (ExecutionPort)."""
+        engine = self._require_workload_engine()
+        parsed = (
+            spec if isinstance(spec, WorkloadSpec) else WorkloadSpec.from_dict(dict(spec))
+        )
+        bound_owner = _coerce_workload_owner(owner)
+        return engine.start(
+            parsed,
+            owner=bound_owner,
+            workload_id=workload_id,
+            idempotency_key=idempotency_key,
+            host_id=host_id,
+        )
+
+    def exec_workload(
+        self,
+        workload_id: str,
+        command: list[str] | tuple[str, ...],
+        *,
+        timeout_s: float | None = None,
+        env: dict[str, str] | None = None,
+    ) -> Any:
+        """Exec argv on a READY workload (ExecutionPort)."""
+        return self._require_workload_engine().exec(
+            str(workload_id),
+            command,
+            timeout_s=timeout_s,
+            env=env,
+        )
+
+    def stop_workload(self, workload_id: str, **kwargs: Any) -> Any:
+        """Idempotent stop of a workload (ExecutionPort)."""
+        del kwargs  # reserved for future flags
+        return self._require_workload_engine().stop(str(workload_id))
+
+    def workload_status(self, workload_id: str, *, refresh: bool = False) -> Any:
+        """Workload snapshot; optional runtime refresh (ExecutionPort)."""
+        engine = self._require_workload_engine()
+        if refresh:
+            return engine.status(str(workload_id), refresh=True)
+        return engine.get(str(workload_id))
+
+    def _require_workload_engine(self) -> WorkloadEngine:
+        engine = self.workload
+        if not engine.is_initialized:
+            engine.initialize()
+        return engine
+
     def _require_started(self) -> None:
         if not self._started:
             raise RuntimeError(f"{self.runtime_name} is not started; call start() first")
+
+
+def _coerce_workload_owner(owner: Any) -> WorkloadOwner | None:
+    if owner is None:
+        return None
+    if isinstance(owner, WorkloadOwner):
+        return owner
+    if isinstance(owner, dict):
+        return WorkloadOwner.from_dict(owner)
+    raise TypeError(f"owner must be WorkloadOwner or dict, got {type(owner)!r}")

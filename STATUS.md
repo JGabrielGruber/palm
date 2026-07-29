@@ -43,10 +43,10 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 |-------|--------|
 | 0.57.0 Plan + map + ADR | ✅ |
 | 0.57.1 Debt archive + low-level design | ✅ |
-| 0.57.2 System boundary in code (`palm.system`) | next |
-| 0.57.3 Execution port v1 | pending |
-| 0.57.4 Rebind graphs | pending |
-| 0.57.5 Rebind product | pending |
+| 0.57.2 System boundary in code (`palm.system`) | ✅ |
+| 0.57.3 Execution port v1 + product effect rebind | ✅ (with 0.57.2) |
+| 0.57.4 Rebind graphs (leaves still engines) | next |
+| 0.57.5 Rebind product | ✅ effect paths (list/doctor residual) |
 | 0.57.6 Deflate common | pending |
 | 0.57.7 Edge policy | pending |
 

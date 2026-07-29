@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class ProviderExecutionService(BaseService):
-    """One-shot provider invocation via the hosting runtime ResourceEngine."""
+    """One-shot provider invocation via the system ExecutionPort on the runtime."""
 
     def __init__(
         self,
@@ -72,11 +72,7 @@ class ProviderExecutionService(BaseService):
                     )
 
         runtime = self.resolve_runtime(runtime_name)
-        engine = runtime.resource
-        if not engine.is_initialized:
-            engine.initialize()
-
-        result = engine.invoke(
+        result = runtime.execution.invoke_resource(
             resource_ref,
             provider=provider,
             action=action,

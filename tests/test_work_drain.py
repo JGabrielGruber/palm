@@ -92,6 +92,13 @@ def test_provider_emit_resource_changed() -> None:
                     {"x": 1}, metadata={"action": "put", "provider": "kv"}
                 )
 
+        @property
+        def execution(self):
+            return self
+
+        def invoke_resource(self, resource_ref=None, **kwargs):
+            return self.resource.invoke(resource_ref, **kwargs)
+
     svc = ProviderExecutionService(
         commands=CommandBus(),
         queries=QueryBus(),

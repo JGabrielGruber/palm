@@ -28,12 +28,12 @@
 
 | ID | Title | Sev | Effort | Theme slice | Status |
 |----|-------|:---:|:------:|-------------|--------|
-| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | open |
-| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open |
-| [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open |
+| [SD-001](#sd-001) | No unified execution port | S1 | L | 0.57.3–5 | open (port+product ✅; graphs residual) |
+| [SD-002](#sd-002) | System mixed into `palm.common` | S1 | XL | 0.57.2, 0.57.6 | open (boundary ✅) |
+| [SD-003](#sd-003) | `RuntimeHost` incomplete vs live runtime | S2 | M | 0.57.2–3 | open (SystemInstance ✅; host residual) |
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | open |
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5, 0.57.7 | open |
-| [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | open |
+| [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
 | [SD-008](#sd-008) | Session plane has no system home | S2 | M | after system boundary | open |
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5 | open |
@@ -82,17 +82,19 @@
 
 ### SD-001 — No unified execution port
 
-**Severity:** S1 · **Effort:** L · **Slices:** 0.57.3 (port), 0.57.4–5 (rebind)
+**Severity:** S1 · **Effort:** L · **Slices:** 0.57.2–3 (port type + BaseRuntime), 0.57.4–5 (rebind)
 
 **Observation:** Graphs bind `ResourceEngine` / `WorkloadEngine` via `PatternBuildContext`.  
 Product binds the same engines via `ExecutionService` after `resolve_runtime()`.  
-There is no single named type for “effects a running Palm may perform.”
+
+**Progress (0.57.2):** `ExecutionPort` exists; BaseRuntime implements it.  
+Product providers/workloads effect methods + `PalmKernel.invoke_resource` use the port.  
+`PatternBuildContext.execution` is filled. Graph leaves and list/doctor still use engines.
 
 **Why it hurts:** Every new effect (workload, later session acts) must pick a side or duplicate both.  
 Selective “CQRS only for X” hardens the split.
 
-**Target:** `ExecutionPort` (name in [SYSTEM-LOW-LEVEL](docs/SYSTEM-LOW-LEVEL.md)) on the system instance.  
-Graphs and product both call it.
+**Target:** Graphs and product both call `execution` on the system instance.
 
 **Evidence:** `common/patterns/build_context.py`; `services/execution/providers/service.py`; `services/execution/workloads/service.py`; wizard/dag leaves.
 
@@ -100,7 +102,10 @@ Graphs and product both call it.
 
 ### SD-002 — System mixed into `palm.common`
 
-**Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary), 0.57.6 (deflate)
+**Severity:** S1 · **Effort:** XL · **Slices:** 0.57.2 (boundary ✅), 0.57.6 (deflate)
+
+**Progress (0.57.2):** Package `palm.system` holds `SystemInstance` + `ExecutionPort`.  
+Concrete `BaseRuntime` / planes still under `common` until move waves D–G.
 
 **Observation:** `common` holds true shared libraries **and** the running kernel:
 
@@ -130,12 +135,14 @@ Shared stays libraries only.
 **Observation:** Protocol exposes `orchestration`, `event`, `resource`, `is_started`.  
 Live `BaseRuntime` also has `workload`, `context`, `wait_plane`, auth, storage, executor.
 
-**Why it hurts:** The “contract of a running Palm” lags the real machine. Workload is already on the runtime but not on the protocol story.
+**Progress (0.57.2):** `SystemInstance` + `ExecutionPort` are the forward contracts.  
+`RuntimeHost` remains a thin legacy subset for the executions layer; docstring points at system.
 
-**Target:** System protocol = ports + lifecycle, not a partial engine list.  
-See low-level design §3.
+**Why it hurts:** Callers that type only `RuntimeHost` miss ports and workload.
 
-**Evidence:** `common/runtimes/host.py` vs `common/runtimes/base.py`.
+**Target:** New code types `SystemInstance` / ports. Remove or shrink `RuntimeHost` when executor rebinds.
+
+**Evidence:** `palm/system/instance.py`; `common/runtimes/host.py` vs `base.py`.
 
 ---
 
@@ -161,15 +168,16 @@ Leaves accept the port or narrow views of it.
 
 | Site | Access |
 |------|--------|
-| `services/execution/providers/service.py` | `runtime.resource` |
-| `services/execution/workloads/service.py` | `runtime.workload` |
+| `services/execution/providers/service.py` | ✅ port (`runtime.execution`) since 0.57.2 |
+| `services/execution/workloads/service.py` | ✅ effect methods on port; list/doctor still engine |
 | `services/execution/flows/session.py` | `runtime.orchestration.resume_job` |
-| `app/kernel.py` | `runtime.resource.invoke` |
+| `app/kernel.py` | ✅ `runtime.execution.invoke_resource` since 0.57.2 |
 | `runtimes/server/.../explorer/fetch.py` | `runtime.resource` |
 | `runtimes/server/.../explorer/actions.py` | `orchestration.resume_job` |
 | `providers/palm/.../local.py` | `runtime.resource.invoke` |
 | `providers/palm/.../system_inspect.py` | `runtime.orchestration.list_jobs` |
 | `common/interactive_runtime.py` | `orchestration.resume_job` |
+| Pattern leaves (wizard/dag/pipeline) | engines via build context (0.57.4) |
 
 **Target:** Product → port. Surfaces → product (or thin system entry).  
 List remaining bypasses here when found; do not add new ones without an SD row.
@@ -178,13 +186,13 @@ List remaining bypasses here when found; do not add new ones without an SD row.
 
 ### SD-006 — `PalmKernel` name vs system instance
 
-**Severity:** S3 · **Effort:** S
+**Severity:** S3 · **Effort:** S · **Status:** ✅ done (0.57.2)
 
 **Observation:** `PalmKernel` is infra (storage, instance manager, runtime registry).  
 Readers may think it is the effect kernel.
 
-**Target:** Docs tell the truth (done in PALM.md). Code comments and public docstrings match.  
-Optional rename only if it reduces confusion without theater.
+**Resolution:** Docstrings on `PalmKernel` and `create_runtime` state infra vs system instance.  
+PALM.md and SYSTEM-LOW-LEVEL already draw the line. No rename required.
 
 ---
 
@@ -249,13 +257,15 @@ Do not block execution port on this move.
 
 ### SD-012 — Cutover shims
 
-**Severity:** S3 · **List:** empty at 0.57.1 open
+**Severity:** S3 · **List:** none required for 0.57.2
 
 When a temporary compatibility import or façade exists during 0.57, **add a bullet here** with path and remove-by slice.
 
 | Shim | Path | Remove by |
 |------|------|-----------|
-| *(none yet)* | | |
+| *(none)* — BaseRuntime not moved; no re-export façade yet | | |
+
+**Note:** When wave D moves `BaseRuntime` to `palm.system.runtime`, list `palm.common.runtimes.base` re-export here.
 
 ---
 
@@ -563,7 +573,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | Slice | Closes or reduces |
 |------:|-------------------|
 | 0.57.1 | Archive + SD register + low-level + **STUBS / surface debt** |
-| 0.57.2 | SD-002 (start), SD-003, SD-006 |
+| 0.57.2 | SD-002 (boundary ✅), SD-003 (SystemInstance), SD-006 ✅, SD-001 port type |
 | 0.57.3 | SD-001 (port exists), SD-009 (start) |
 | 0.57.4 | SD-004 |
 | 0.57.5 | SD-001, SD-005, SD-009 (product rebind) |

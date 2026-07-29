@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class WorkloadExecutionService(BaseService):
-    """Thin product API over WorkloadEngine (placement policy + owner bind)."""
+    """Thin product API over the system ExecutionPort (workload methods)."""
 
     def __init__(
         self,
@@ -42,7 +42,11 @@ class WorkloadExecutionService(BaseService):
             raise RuntimeError("WorkloadExecutionService has no bound runtime")
         return self._runtime
 
+    def _port(self, runtime_name: str | None = None) -> Any:
+        return self.resolve_runtime(runtime_name).execution
+
     def _engine(self, runtime_name: str | None = None) -> Any:
+        """WorkloadEngine for list/doctor catalog paths not yet on ExecutionPort v1."""
         runtime = self.resolve_runtime(runtime_name)
         engine = getattr(runtime, "workload", None)
         if engine is None:
@@ -67,7 +71,7 @@ class WorkloadExecutionService(BaseService):
         )
         bound_owner = _parse_owner(owner)
         try:
-            wl = self._engine(runtime_name).start(
+            wl = self._port(runtime_name).start_workload(
                 parsed,
                 owner=bound_owner,
                 workload_id=workload_id,
@@ -88,7 +92,7 @@ class WorkloadExecutionService(BaseService):
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
         """Exec argv on a READY workspace/service."""
-        result = self._engine(runtime_name).exec(
+        result = self._port(runtime_name).exec_workload(
             str(workload_id),
             command,
             timeout_s=timeout_s,
@@ -103,7 +107,7 @@ class WorkloadExecutionService(BaseService):
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
         """Idempotent stop."""
-        wl = self._engine(runtime_name).stop(str(workload_id))
+        wl = self._port(runtime_name).stop_workload(str(workload_id))
         return wl.to_dict()
 
     def cancel(
@@ -122,11 +126,9 @@ class WorkloadExecutionService(BaseService):
         refresh: bool = False,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        engine = self._engine(runtime_name)
-        if refresh:
-            wl = engine.status(str(workload_id), refresh=True)
-        else:
-            wl = engine.get(str(workload_id))
+        wl = self._port(runtime_name).workload_status(
+            str(workload_id), refresh=refresh
+        )
         return wl.to_dict()
 
     def list(

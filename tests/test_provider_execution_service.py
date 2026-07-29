@@ -37,6 +37,13 @@ class _RuntimeStub:
     def __init__(self) -> None:
         self.resource = _EngineStub()
 
+    @property
+    def execution(self) -> _RuntimeStub:
+        return self
+
+    def invoke_resource(self, resource_ref: str | None = None, **kwargs: Any) -> ProviderResult:
+        return self.resource.invoke(resource_ref or "", **kwargs)
+
 
 def test_provider_invoke_validates_provider_name() -> None:
     service = ProviderExecutionService(

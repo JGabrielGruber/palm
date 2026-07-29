@@ -3,6 +3,9 @@ Build context — dependencies passed when materializing patterns from definitio
 
 Pattern-specific defaults (e.g. wizard commit registries) are resolved inside
 each ``palm.patterns.<name>`` builder, not here.
+
+0.57+: prefer ``execution`` (ExecutionPort). Engine fields remain for core leaves
+that still take ResourceEngine / WorkloadEngine (SD-004) until graph rebind.
 """
 
 from __future__ import annotations
@@ -18,6 +21,7 @@ from palm.core.workload import WorkloadEngine
 if TYPE_CHECKING:
     from palm.common.persistence.definition_repository import DefinitionRepository
     from palm.definitions.flow import FlowDefinition
+    from palm.system.ports.execution import ExecutionPort
 
 
 @dataclass
@@ -26,6 +30,7 @@ class PatternBuildContext:
 
     event_engine: EventEngine | None = None
     context_engine: ContextEngine | None = None
+    execution: ExecutionPort | None = None
     resource_engine: ResourceEngine | None = None
     workload_engine: WorkloadEngine | None = None
     commit_registry: Any | None = None

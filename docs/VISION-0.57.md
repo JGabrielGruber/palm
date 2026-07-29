@@ -1,6 +1,6 @@
 # VISION 0.57 — Palm System (name the kernel)
 
-**Status:** 🚧 **In progress** — map + ADR landed; **0.57.1** debt archive + low-level design done.  
+**Status:** 🚧 **In progress** — **0.57.2** `palm.system` boundary + ExecutionPort on BaseRuntime; rebind graphs/product next.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **Low-level:** [SYSTEM-LOW-LEVEL.md](SYSTEM-LOW-LEVEL.md)  
@@ -114,10 +114,10 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 |------:|--------------|--------|
 | **0** | Plan + map + ADR | [PALM.md](PALM.md), this file, ADR-026 — ✅ |
 | **1** | Debt archive + low-level | Live SD register; era archive; [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md) — ✅ **0.57.1** |
-| **2** | Name the system boundary in code | `palm.system` package; system vs shared visible — **next** |
-| **3** | Execution port v1 | Named interface; resource + workload methods |
-| **4** | Rebind graphs | `PatternBuildContext` (or successor) uses the port |
-| **5** | Rebind product | `ExecutionService` paths use the same port |
+| **2** | Name the system boundary in code | `palm.system` package; system vs shared visible — ✅ **0.57.2** |
+| **3** | Execution port v1 | Named interface on BaseRuntime — ✅ type+impl |
+| **4** | Rebind graphs | Context carries port; leaves still engines — **next** |
+| **5** | Rebind product | Effect methods on port — ✅ (list/doctor residual) |
 | **6** | Deflate shared | Move system-shaped code out of the dump; leave true shared |
 | **7** | Edge policy | No new engine shortcuts; list residual bypass as debt |
 | **8** | Docs pass | ARCHITECTURE tracks map; STE for touched text |
@@ -177,7 +177,7 @@ Theme **0.57** may close when:
 ## 11. Review and next
 
 High-level map and spine are in use.  
-**Next code slice:** **0.57.2** — `palm.system` boundary per [SYSTEM-LOW-LEVEL](SYSTEM-LOW-LEVEL.md) §8.
+**Next code slice:** **0.57.4** — rebind graphs (`PatternBuildContext`) to `ExecutionPort` (port lives on BaseRuntime since 0.57.2).
 
 ---
 

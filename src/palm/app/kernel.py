@@ -32,7 +32,12 @@ if TYPE_CHECKING:
 
 class PalmKernel:
     """
-    Infrastructure layer — shared storage, instance manager, and runtime registry.
+    Infrastructure layer — shared storage, instance manager, and system-instance registry.
+
+    PalmKernel is **not** the system layer. It boots infra and registers started
+    system instances (today :class:`~palm.common.runtimes.base.BaseRuntime`).
+    Effects for graphs and product use ports on those instances
+    (``runtime.execution``), not this class as a second kernel API (SD-006).
 
     For role-based orchestration, CQRS, and recovery, prefer
     :class:`~palm.app.host.ApplicationHost`, which wraps ``PalmKernel`` as its
@@ -97,7 +102,7 @@ class PalmKernel:
         **start_options: Any,
     ) -> BaseRuntime:
         """
-        Construct and optionally start a named runtime sharing app storage.
+        Build and optionally start a **system instance** (BaseRuntime) sharing app storage.
 
         Parameters
         ----------
@@ -249,15 +254,15 @@ class PalmKernel:
         runtime_name: str | None = None,
         **kwargs: Any,
     ) -> ProviderResult:
-        """Invoke a resource definition or direct provider action on a runtime."""
-        return self.runtime(runtime_name).resource.invoke(
+        """Invoke a resource via the system ExecutionPort on a registered runtime."""
+        _ = kwargs  # reserved; port v1 does not pass through arbitrary engine kwargs
+        return self.runtime(runtime_name).execution.invoke_resource(
             resource_ref,
             provider=provider,
             action=action,
             params=params,
             state=state,
             resource_id=resource_id,
-            **kwargs,
         )
 
     def current_wizard_step(self, job_id: str, *, runtime_name: str | None = None) -> str | None:

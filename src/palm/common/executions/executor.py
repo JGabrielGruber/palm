@@ -422,12 +422,15 @@ class DefinitionExecutor:
             raise DefinitionBuildError(str(exc)) from exc
 
     def _build_context(self) -> PatternBuildContext:
+        runtime = self._runtime
+        execution = getattr(runtime, "execution", None)
         return PatternBuildContext(
-            event_engine=self._runtime.event,
-            context_engine=getattr(self._runtime, "context", None),
-            resource_engine=getattr(self._runtime, "resource", None),
-            workload_engine=getattr(self._runtime, "workload", None),
-            commit_registry=getattr(self._runtime, "commit_registry", None),
+            event_engine=runtime.event,
+            context_engine=getattr(runtime, "context", None),
+            execution=execution,
+            resource_engine=getattr(runtime, "resource", None),
+            workload_engine=getattr(runtime, "workload", None),
+            commit_registry=getattr(runtime, "commit_registry", None),
             definition_repository=self._repository,
         )
 

@@ -49,8 +49,8 @@ Full layer laws: [PALM.md §9](docs/PALM.md).
 Palm is layered: **core → system (target) / shared → plugins → product → surfaces**, with **app host** for boot.
 
 - **Job path** is the spine (definition → pattern → job → effects → events).  
-- **Ports** are the shared effect contract (graphs + product).  
-- **`palm.common` today** mixes shared and system — 0.57 cleans that.  
+- **Ports** are the shared effect contract (graphs + product): ``palm.system.ExecutionPort``.  
+- **`palm.system`** holds system contracts; concrete runtime still partly in ``common`` (0.57 deflate).  
 - **Product** `services.system` ≠ **system layer** (kernel shape).
 
 Detail, engines, planes, growth table: **[docs/PALM.md](docs/PALM.md)** only.

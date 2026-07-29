@@ -35,7 +35,7 @@ hygiene:
 # -----------------------------------------------------------------------------
 # 2. Quality & Checking (the most used group)
 # -----------------------------------------------------------------------------
-check: lint typecheck test-quick guard-core guard-common guard-deferred
+check: lint typecheck test-quick guard-core guard-common guard-system guard-deferred
 
 full-check: format lint typecheck test-full audit guard-core demo-full
 
@@ -86,6 +86,11 @@ guard-core:
 guard-common:
     @echo "🔒 Checking palm.common pattern boundary..."
     uv run pytest -q tests/test_common_boundary.py tests/test_provider_boundary.py tests/test_modular_apps.py --tb=short
+
+guard-system:
+    @echo "🔒 Checking palm.system import rules (0.57+)..."
+    uv run python scripts/guard_system.py
+    uv run pytest -q tests/test_system_boundary.py --tb=short
 
 # Deferred-import ratchet (T3 / PD-012) — function-local palm imports may only decrease.
 guard-deferred:
@@ -370,6 +375,7 @@ help:
     @echo "   just publish-test     → Build + TestPyPI"
     @echo "   just publish          → Build + PyPI (5s warning)"
     @echo "   just guard-common     → palm.common pattern boundary tests"
+    @echo "   just guard-system     → palm.system import purity + boundary tests"
     @echo "   just docs-check       → Version + documentation surface consistency"
     @echo "   just docs-css         → Rebuild docs site Tailwind CSS (host Node)"
     @echo "   just docs-image       → Build NeonRoot palm-docs image (Tailwind + uv)"

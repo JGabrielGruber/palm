@@ -13,6 +13,8 @@ FORBIDDEN = (
     "runtimes",
     "definitions",
     "common",
+    "system",
+    "services",
     "executions",
     "utils",
 )

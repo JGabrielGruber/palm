@@ -299,28 +299,31 @@ Options:
 
 ### 0.57.2 — System boundary in code
 
-- [ ] `palm.system` package exists with public `__init__`  
-- [ ] `SystemInstance` and/or `ExecutionPort` module stubs (even if BaseRuntime not moved)  
-- [ ] Docstrings: BaseRuntime is system instance  
-- [ ] Guard or test: system package import rules  
-- [ ] SD-012 lists any re-export shims  
+- [x] `palm.system` package exists with public `__init__`  
+- [x] `SystemInstance` + `ExecutionPort` protocols under `palm.system`  
+- [x] Docstrings: BaseRuntime is system instance; PalmKernel is infra registry  
+- [x] Guard + test: `scripts/guard_system.py`, `tests/test_system_boundary.py`, `just guard-system`  
+- [x] SD-012: no re-export shims required for this slice (BaseRuntime not moved)  
+- [x] BaseRuntime implements ExecutionPort methods + `execution` property (port live early; rebind product/graphs is later slices)
 
 ### 0.57.3 — Execution port v1
 
-- [ ] `ExecutionPort` implemented by BaseRuntime (or system runtime)  
-- [ ] Unit tests with a fake port  
-- [ ] Resource + workload methods real  
+- [x] `ExecutionPort` implemented by BaseRuntime (methods + property) — landed with 0.57.2  
+- [x] Unit tests with a fake port (`tests/test_system_boundary.py`)  
+- [x] Product paths use port (providers, workloads start/exec/stop/status, PalmKernel.invoke_resource)  
+- [ ] Graph leaves still use engines (0.57.4)  
 
 ### 0.57.4 — Graphs rebind
 
-- [ ] PatternBuildContext uses port  
-- [ ] Wizard + dag (+ pipeline) resource/workload path use port  
-- [ ] Tests green  
+- [x] PatternBuildContext carries `execution` (filled by DefinitionExecutor)  
+- [ ] Wizard + dag (+ pipeline) resource/workload path use port (leaves still engine-typed)  
+- [ ] Tests green for leaf rebind  
 
 ### 0.57.5 — Product rebind
 
-- [ ] ExecutionService providers + workloads use port  
-- [ ] No new service methods that take raw engines  
+- [x] ExecutionService providers + workloads (effect methods) use port  
+- [x] List/doctor/catalog still touch WorkloadEngine (not on port v1) — residual SD-001  
+- [x] No new service methods that take raw engines
 
 ### 0.57.6 — Deflate common
 

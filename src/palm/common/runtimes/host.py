@@ -1,8 +1,9 @@
 """
-RuntimeHost — minimal contract between runtimes and the executions layer.
+RuntimeHost — thin legacy contract for definition-driven job submission.
 
-Keeps :class:`~palm.common.executions.executor.DefinitionExecutor` decoupled from any
-single runtime implementation (embedded, daemon, server, test doubles).
+Prefer :class:`~palm.system.instance.SystemInstance` + ports for new code (0.57+).
+This protocol remains so :class:`~palm.common.executions.executor.DefinitionExecutor`
+stays decoupled from a single runtime class during cutover (SD-003).
 """
 
 from __future__ import annotations
@@ -18,10 +19,10 @@ if TYPE_CHECKING:
 @runtime_checkable
 class RuntimeHost(Protocol):
     """
-    Services a runtime must expose for definition-driven job submission.
+    Minimal structural subset for the executions layer (legacy).
 
-    Concrete runtimes (:class:`~palm.runtimes.embedded.runtime.EmbeddedRuntime`, future
-    daemon/server hosts) satisfy this protocol structurally — no inheritance required.
+    Prefer :class:`~palm.system.instance.SystemInstance` and
+    :class:`~palm.system.ports.execution.ExecutionPort` for effects.
     """
 
     @property
