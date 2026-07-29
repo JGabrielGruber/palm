@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+import palm.patterns.etl  # intention pattern (not default INSTALLED)
+
 import pytest
 
 from palm.common import ExecutionPlan, PlanNotFoundError, PlanRegistry, PlanValidationError
 from palm.common.plans import ProcessPlan
+
 from palm.definitions import FlowDefinition, ProcessDefinition
+
+
+
 from palm.runtimes.embedded import EmbeddedRuntime
 from palm.states import BlackboardState
 
@@ -47,7 +53,7 @@ def test_server_store_and_submit_stored_plan() -> None:
                 name="pipeline",
                 flows=[
                     FlowDefinition(name="extract", pattern="etl"),
-                    FlowDefinition(name="graph", pattern="dag"),
+                    FlowDefinition(name="graph", pattern="etl"),
                 ],
             )
         )

@@ -20,7 +20,6 @@ from palm.common.transforms.rules.jsonpath_extract import JsonpathExtractRule
 from palm.common.transforms.rules.jsonpath_set import JsonpathSetRule
 from palm.common.transforms.rules.lookup import LookupRule
 from palm.common.transforms.rules.map_fields import MapFieldsRule
-from palm.common.transforms.rules.parquet_load import ParquetLoadRule
 from palm.common.transforms.rules.put_resource import PutResourceRule
 from palm.common.transforms.rules.rename_field import RenameFieldRule
 from palm.common.transforms.rules.string_format import StringFormatRule
@@ -56,7 +55,7 @@ def register_builtin_rules() -> None:
     register_transform("yaml_dump", YamlDumpRule)
     register_transform("toml_load", TomlLoadRule)
     register_transform("xml_load", XmlLoadRule)
-    register_transform("parquet_load", ParquetLoadRule)
+    # parquet_load is intention-only (ST-004); do not register as a live builtin
 
 
 register_builtin_rules()

@@ -7,8 +7,10 @@ from __future__ import annotations
 import importlib
 
 CORE_STORAGES: tuple[str, ...] = ("memory", "filesystem")
+# Intention backends (ST-002) — load only via StorageFactory / explicit opt-in.
 OPTIONAL_STORAGES: tuple[str, ...] = ("postgres", "mongodb")
-INSTALLED_STORAGES: tuple[str, ...] = CORE_STORAGES + OPTIONAL_STORAGES
+# Truthful default install = core only (not optional placeholders).
+INSTALLED_STORAGES: tuple[str, ...] = CORE_STORAGES
 
 
 def autoload(*, include_optional: bool = False) -> None:

@@ -63,8 +63,11 @@ def test_xml_load_simple(executor: TransformExecutor) -> None:
     assert "order" in result.value
 
 
-def test_parquet_load_stub(executor: TransformExecutor) -> None:
-    with pytest.raises(TransformApplicationError, match="not implemented"):
+def test_parquet_load_not_registered(executor: TransformExecutor) -> None:
+    """ST-004: parquet_load is intention-only, not a live builtin."""
+    from palm.core.exceptions import RegistryError
+
+    with pytest.raises(RegistryError):
         executor.apply("parquet_load", b"PAR1")
 
 

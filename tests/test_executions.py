@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import palm.patterns.etl  # intention pattern (not default INSTALLED)
+
 import pytest
 
 from palm.common import (
@@ -13,7 +15,11 @@ from palm.common import (
 from palm.core import StorageEngine
 from palm.core.behavior_tree import BasePattern
 from palm.core.orchestration import Job, JobStatus
+
 from palm.definitions import FlowDefinition, ProcessDefinition
+
+
+
 from palm.patterns.wizard import (
     WizardEventType,
     WizardKeys,
@@ -101,7 +107,7 @@ def test_submit_process_multiple_flows(runtime: EmbeddedRuntime) -> None:
         name="pipeline",
         flows=[
             FlowDefinition(name="extract", pattern="etl"),
-            FlowDefinition(name="graph", pattern="dag"),
+            FlowDefinition(name="graph", pattern="etl"),
         ],
     )
     result = runtime.submit_process(process)

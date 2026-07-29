@@ -8,12 +8,13 @@ import pytest
 
 from palm.common.patterns._registry import get_builder, registered_builders
 from palm.common.storage import StorageFactory
-from palm.common.transforms._apps import INSTALLED_TRANSFORMS
+from palm.common.transforms._apps import INSTALLED_TRANSFORMS, INTENTION_TRANSFORMS
 from palm.common.transforms._apps import autoload as autoload_transforms
+from palm.core.exceptions import RegistryError
 from palm.core.registry import pattern_registry, provider_registry, storage_registry
 from palm.core.transform.registry import transform_registry
-from palm.patterns._apps import INSTALLED_PATTERNS
-from palm.providers._apps import INSTALLED_PROVIDERS
+from palm.patterns._apps import INSTALLED_PATTERNS, INTENTION_PATTERNS
+from palm.providers._apps import INSTALLED_PROVIDERS, INTENTION_PROVIDERS
 from palm.storages._apps import CORE_STORAGES, INSTALLED_STORAGES, OPTIONAL_STORAGES
 
 
@@ -27,14 +28,21 @@ def _reload_apps() -> None:
 
 
 def test_installed_pattern_apps_register() -> None:
-    assert set(INSTALLED_PATTERNS) == {"dag", "etl", "parallel", "pipeline", "wizard"}
+    assert set(INSTALLED_PATTERNS) == {"dag", "parallel", "pipeline", "wizard"}
+    assert set(INTENTION_PATTERNS) == {"etl"}
     for name in INSTALLED_PATTERNS:
         pattern_registry.get(name)
 
     assert get_builder("pipeline") is not None
-    assert set(registered_builders()) == set(INSTALLED_PATTERNS)
+    # Session may also hold intention apps imported by other tests; default set is the contract.
+    assert set(INSTALLED_PATTERNS).issubset(set(registered_builders()))
     for name in INSTALLED_PATTERNS:
         assert get_builder(name) is not None
+
+
+def test_intention_patterns_not_in_default_install() -> None:
+    for name in INTENTION_PATTERNS:
+        assert name not in INSTALLED_PATTERNS
 
 
 def test_installed_provider_apps_register() -> None:
@@ -43,12 +51,11 @@ def test_installed_provider_apps_register() -> None:
 
     assert set(INSTALLED_PROVIDERS) == {
         "rest",
-        "graphql",
-        "postgres",
         "palm",
         "kv",
         "file",
     }
+    assert set(INTENTION_PROVIDERS) == {"graphql", "postgres"}
     for name in INSTALLED_PROVIDERS:
         provider_registry.get(name)
 
@@ -58,6 +65,22 @@ def test_installed_provider_apps_register() -> None:
         assert isinstance(app, ProviderApp)
         assert app.name == name
     assert {app.name for app in installed_provider_apps()} == set(INSTALLED_PROVIDERS)
+
+
+def test_intention_providers_not_in_default_install() -> None:
+    from palm.common.providers._registry import installed_provider_apps
+
+    # Fresh autoload path: intention names must not be in the install list or app set
+    # after default provider autoload alone (other tests may import stubs later).
+    for name in INTENTION_PROVIDERS:
+        assert name not in INSTALLED_PROVIDERS
+    installed = {app.name for app in installed_provider_apps()}
+    assert set(INSTALLED_PROVIDERS).issubset(installed)
+    # Intention providers are not loaded by default autoload; only appear if imported.
+    for name in INTENTION_PROVIDERS:
+        if name not in installed:
+            with pytest.raises(RegistryError):
+                provider_registry.get(name)
 
 
 def test_palm_provider_app_manifest() -> None:
@@ -81,22 +104,27 @@ def test_palm_provider_app_manifest() -> None:
 
 
 def test_installed_storage_apps_register() -> None:
-    assert set(INSTALLED_STORAGES) == {"memory", "postgres", "mongodb", "filesystem"}
+    assert set(INSTALLED_STORAGES) == {"memory", "filesystem"}
     assert set(CORE_STORAGES) == {"memory", "filesystem"}
     assert set(OPTIONAL_STORAGES) == {"postgres", "mongodb"}
     for name in CORE_STORAGES:
         storage_registry.get(name)
+    # Optional backends register on demand via factory (still intention bodies).
     for name in OPTIONAL_STORAGES:
         StorageFactory.ensure_registered(name)
         storage_registry.get(name)
 
 
 def test_installed_transform_apps_register() -> None:
-    assert len(INSTALLED_TRANSFORMS) == 22
+    assert len(INSTALLED_TRANSFORMS) == 21
     assert "json_load" in INSTALLED_TRANSFORMS
     assert "csv_dump" in INSTALLED_TRANSFORMS
+    assert "parquet_load" not in INSTALLED_TRANSFORMS
+    assert set(INTENTION_TRANSFORMS) == {"parquet_load"}
     for name in INSTALLED_TRANSFORMS:
         transform_registry.get(name)
+    with pytest.raises(RegistryError):
+        transform_registry.get("parquet_load")
 
 
 def test_wizard_handler_exports() -> None:
@@ -131,4 +159,4 @@ def test_pattern_app_autoload() -> None:
         assert app is not None
         assert isinstance(app, PatternApp)
         assert app.name == name
-    assert {app.name for app in installed_pattern_apps()} == set(INSTALLED_PATTERNS)
+    assert set(INSTALLED_PATTERNS).issubset({app.name for app in installed_pattern_apps()})

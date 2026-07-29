@@ -1,13 +1,20 @@
 """
-Concrete resource providers — REST, GraphQL, and Postgres (Django-style apps).
+Concrete resource providers (Django-style apps).
 
-Each subpackage registers via its own ``registry.py``.
+Default install is truthful: rest, palm, kv, file. Intention stubs
+(graphql, postgres) are packages only — not auto-loaded (ST-001 / SD-013).
 """
 
-from palm.providers._apps import INSTALLED_PROVIDERS, autoload
+from palm.providers._apps import (
+    INSTALLED_PROVIDERS,
+    INTENTION_PROVIDERS,
+    autoload,
+)
 
 autoload()
 
-from palm.providers import graphql, palm, postgres, rest  # noqa: E402
-
-__all__ = ["INSTALLED_PROVIDERS", "autoload", "graphql", "palm", "postgres", "rest"]
+__all__ = [
+    "INSTALLED_PROVIDERS",
+    "INTENTION_PROVIDERS",
+    "autoload",
+]

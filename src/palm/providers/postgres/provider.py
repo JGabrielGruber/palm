@@ -8,13 +8,19 @@ from palm.core.resource import BaseProvider
 
 
 class PostgresProvider(BaseProvider):
-    """Stub postgres provider."""
+    """Intention stub — not a live SQL provider (docs/STUBS.md ST-001)."""
 
     def connect(self) -> None:
-        pass
+        raise NotImplementedError(
+            "postgres provider is an intention stub (docs/STUBS.md ST-001); "
+            "not in default INSTALLED_PROVIDERS"
+        )
 
     def fetch(self, resource_id: str, **params: Any) -> Any:
-        return {"id": resource_id, "source": "postgres", "params": params}
+        raise NotImplementedError(
+            "postgres provider is an intention stub (docs/STUBS.md ST-001); "
+            f"refused fetch for {resource_id!r}"
+        )
 
     def disconnect(self) -> None:
         pass

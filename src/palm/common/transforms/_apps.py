@@ -31,8 +31,11 @@ INSTALLED_TRANSFORMS: tuple[str, ...] = (
     "yaml_dump",
     "toml_load",
     "xml_load",
-    "parquet_load",
+    # parquet_load is intention-only (ST-004); not auto-registered
 )
+
+# Not in default install — package may still exist for future pyarrow work.
+INTENTION_TRANSFORMS: tuple[str, ...] = ("parquet_load",)
 
 
 def autoload() -> None:

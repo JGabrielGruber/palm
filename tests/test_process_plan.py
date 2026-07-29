@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import palm.patterns.etl  # intention pattern (not default INSTALLED)
+
 from palm.common import ProcessPlan
 from palm.core.orchestration import JobStatus
 from palm.definitions import FlowDefinition, ProcessDefinition
+
+
+
 from palm.runtimes.embedded import EmbeddedRuntime
+
 
 
 def test_prepare_process_plan_without_submit() -> None:
@@ -16,7 +22,7 @@ def test_prepare_process_plan_without_submit() -> None:
             name="pipeline",
             flows=[
                 FlowDefinition(name="extract", pattern="etl"),
-                FlowDefinition(name="graph", pattern="dag"),
+                FlowDefinition(name="graph", pattern="etl"),
             ],
         )
         bundle = rt.executor.prepare_process_plan(process)
@@ -36,7 +42,7 @@ def test_submit_plans_matches_submit_process() -> None:
             name="pipeline",
             flows=[
                 FlowDefinition(name="extract", pattern="etl"),
-                FlowDefinition(name="graph", pattern="dag"),
+                FlowDefinition(name="graph", pattern="etl"),
             ],
         )
         bundle = rt.executor.prepare_process_plan(process)

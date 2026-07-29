@@ -50,6 +50,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | 0.57.6 Deflate common | ✅ BaseRuntime + wait/work/workload planes under `palm.system`; SD-012 shims |
 | 0.57.7 Edge policy | ✅ port resume_job; SD-005 effect samples; residual list/inspect named |
 | 0.57.8 SD-012 import sweep | ✅ src/tests import palm.system; shims remain for external |
+| 0.57.9 Capability catalog truth | ✅ ST-001…005 gated; INTENTION_* vs INSTALLED_* |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
 

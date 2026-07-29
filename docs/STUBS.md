@@ -32,7 +32,7 @@ Palm may **name a future capability** without shipping a lying implementation.
 | **parallel** | Scoped branches + merge | Real | **real** | — |
 | **pipeline** | Transform sequences | Real | **real** | — |
 | **dag** | Resource/workload graph with deps | Real (v0) | **real** | port rebind SD-009 |
-| **etl** | Extract → transform → load product pattern | Phase ticker only | **intention** | ST-003 |
+| **etl** | Extract → transform → load product pattern | Phase ticker; **not** in `INSTALLED_PATTERNS` (0.57.9) | **intention** | ST-003 ✅ gated |
 
 **etl purpose (store this, not the ticker):**  
 Declarative multi-stage data movement: extract from resources, transform, load to resources — composed with Palm job path and compensation later.
@@ -47,8 +47,8 @@ Declarative multi-stage data movement: extract from resources, transform, load t
 | **kv** | Local key-value documents | Real | **real** | — |
 | **file** | Local file resources | Real | **real** | — |
 | **palm** | Palm-to-Palm speak | Real | **real** | SU/port paths |
-| **graphql** | GraphQL API speak | Fake dict fetch | **intention** | ST-001 |
-| **postgres** | Relational SQL speak | Fake dict fetch | **intention** | ST-001 |
+| **graphql** | GraphQL API speak | Package exists; **not** default install; fetch raises (0.57.9) | **intention** | ST-001 ✅ gated |
+| **postgres** | Relational SQL speak | Package exists; **not** default install; fetch raises (0.57.9) | **intention** | ST-001 ✅ gated |
 
 **graphql purpose:** Schema-driven queries/mutations as resource actions.  
 **postgres purpose:** SQL and relational resources as provider actions (not the storage backend).
@@ -61,8 +61,8 @@ Declarative multi-stage data movement: extract from resources, transform, load t
 |----|----------------|--------------|----------|------|
 | **memory** | Ephemeral process storage | Real | **real** | — |
 | **filesystem** | Durable file-backed storage | Real | **real** | — |
-| **postgres** | Durable SQL storage engine backend | No-op get/set | **intention** | ST-002 |
-| **mongodb** | Durable document storage backend | Placeholder client | **intention** | ST-002 |
+| **postgres** | Durable SQL storage engine backend | Optional only; I/O raises (0.57.9) | **intention** | ST-002 ✅ gated |
+| **mongodb** | Durable document storage backend | Optional only; I/O raises (0.57.9) | **intention** | ST-002 ✅ gated |
 
 Do not confuse **provider postgres** (speak) with **storage postgres** (engine backend).
 
@@ -72,7 +72,7 @@ Do not confuse **provider postgres** (speak) with **storage postgres** (engine b
 
 | Id | Purpose (keep) | Current body | Maturity | Debt |
 |----|----------------|--------------|----------|------|
-| **parquet_load** | Load parquet into state | Always raises | **intention** | ST-004 |
+| **parquet_load** | Load parquet into state | **Not** registered as builtin (0.57.9) | **intention** | ST-004 ✅ gated |
 | other builtins | See transform catalog | Real | **real** | — |
 
 ---

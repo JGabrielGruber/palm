@@ -8,13 +8,19 @@ from palm.core.resource import BaseProvider
 
 
 class GraphqlProvider(BaseProvider):
-    """Stub graphql provider."""
+    """Intention stub — not a live GraphQL backend (docs/STUBS.md ST-001)."""
 
     def connect(self) -> None:
-        pass
+        raise NotImplementedError(
+            "graphql provider is an intention stub (docs/STUBS.md ST-001); "
+            "not in default INSTALLED_PROVIDERS"
+        )
 
     def fetch(self, resource_id: str, **params: Any) -> Any:
-        return {"id": resource_id, "source": "graphql", "params": params}
+        raise NotImplementedError(
+            "graphql provider is an intention stub (docs/STUBS.md ST-001); "
+            f"refused fetch for {resource_id!r}"
+        )
 
     def disconnect(self) -> None:
         pass

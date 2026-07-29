@@ -1,8 +1,5 @@
 """
-MongoDB storage backend — connection stub with in-memory fallback.
-
-Uses a placeholder client until the official driver is wired. Connection
-settings are accepted now so callers can configure real deployments later.
+MongoDB storage backend — intention stub (docs/STUBS.md ST-002).
 """
 
 from __future__ import annotations
@@ -11,15 +8,14 @@ from typing import Any
 
 from palm.core.storage import BaseBackend
 
+_STUB_MSG = (
+    "mongodb storage is an intention stub (docs/STUBS.md ST-002); "
+    "not a durable backend — use memory or filesystem"
+)
+
 
 class MongoStorageBackend(BaseBackend):
-    """
-    MongoDB persistence backend (stub).
-
-    ``open`` simulates a connection handshake and stores documents in an
-    in-process dict. Replace ``_client`` wiring with ``pymongo.MongoClient``
-    when the driver dependency is added.
-    """
+    """Intention stub — refuses all I/O (no silent in-memory fake Mongo)."""
 
     def __init__(
         self,
@@ -33,8 +29,6 @@ class MongoStorageBackend(BaseBackend):
         self._connection_uri = connection_uri
         self._database = database
         self._collection = collection
-        self._client: dict[str, str] | None = None
-        self._documents: dict[str, Any] = {}
 
     @property
     def connection_uri(self) -> str:
@@ -49,31 +43,16 @@ class MongoStorageBackend(BaseBackend):
         return self._collection
 
     def open(self) -> None:
-        if self._is_open:
-            return
-        # Placeholder: represent a connected client without pymongo
-        self._client = {
-            "uri": self._connection_uri,
-            "database": self._database,
-            "collection": self._collection,
-        }
-        self._is_open = True
+        raise NotImplementedError(_STUB_MSG)
 
     def get(self, key: str) -> Any | None:
-        self.ensure_open()
-        return self._documents.get(key)
+        raise NotImplementedError(_STUB_MSG)
 
     def set(self, key: str, value: Any) -> None:
-        self.ensure_open()
-        self._documents[key] = value
+        raise NotImplementedError(_STUB_MSG)
 
     def delete(self, key: str) -> None:
-        self.ensure_open()
-        self._documents.pop(key, None)
+        raise NotImplementedError(_STUB_MSG)
 
     def close(self) -> None:
-        if not self._is_open:
-            return
-        self._client = None
-        self._documents.clear()
         self._is_open = False

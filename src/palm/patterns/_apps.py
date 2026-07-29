@@ -9,13 +9,16 @@ from __future__ import annotations
 
 import importlib
 
+# Real patterns only — intention stubs listed separately (ST-003 / SD-013).
 INSTALLED_PATTERNS: tuple[str, ...] = (
     "dag",
-    "etl",
     "parallel",
     "pipeline",
     "wizard",
 )
+
+# Not auto-loaded. Purpose in docs/STUBS.md (phase-ticker body must not look installed).
+INTENTION_PATTERNS: tuple[str, ...] = ("etl",)
 
 
 def autoload() -> None:

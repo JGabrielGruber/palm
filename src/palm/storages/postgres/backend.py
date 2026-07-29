@@ -1,5 +1,5 @@
 """
-Postgres storage backend (placeholder).
+Postgres storage backend — intention stub (docs/STUBS.md ST-002).
 """
 
 from __future__ import annotations
@@ -8,27 +8,29 @@ from typing import Any
 
 from palm.core.storage import BaseBackend
 
+_STUB_MSG = (
+    "postgres storage is an intention stub (docs/STUBS.md ST-002); "
+    "not a durable backend — use memory or filesystem"
+)
+
 
 class PostgresStorageBackend(BaseBackend):
-    """Stub Postgres persistence backend."""
+    """Intention stub — refuses all I/O (no silent no-op persistence)."""
 
     def __init__(self, *, name: str = "postgres") -> None:
         super().__init__(name=name)
 
     def open(self) -> None:
-        if self._is_open:
-            return
-        self._is_open = True
+        raise NotImplementedError(_STUB_MSG)
 
     def get(self, key: str) -> Any | None:
-        self.ensure_open()
-        return None
+        raise NotImplementedError(_STUB_MSG)
 
     def set(self, key: str, value: Any) -> None:
-        self.ensure_open()
+        raise NotImplementedError(_STUB_MSG)
 
     def delete(self, key: str) -> None:
-        self.ensure_open()
+        raise NotImplementedError(_STUB_MSG)
 
     def close(self) -> None:
         self._is_open = False

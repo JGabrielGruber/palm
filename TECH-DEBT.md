@@ -40,7 +40,7 @@
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.6+ | open |
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–8 | open (import sweep ✅; modules remain) |
-| [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | gate + STUBS | open |
+| [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 
 ### Surface debt (SU)
 
@@ -59,11 +59,11 @@
 
 | ID | Title | Sev | Effort | Status |
 |----|-------|:---:|:------:|--------|
-| [ST-001](#st-001) | Fake-success providers (graphql, postgres) | S1 | S | open |
-| [ST-002](#st-002) | No-op storage backends listed as installed | S1 | S | open |
-| [ST-003](#st-003) | ETL pattern is a phase ticker, still installed | S2 | S | open |
-| [ST-004](#st-004) | Transform `parquet_load` registered, always errors | S3 | XS | open |
-| [ST-005](#st-005) | Tests freeze lying install sets (`test_modular_apps`) | S1 | S | open |
+| [ST-001](#st-001) | Fake-success providers (graphql, postgres) | S1 | S | ✅ gated 0.57.9 |
+| [ST-002](#st-002) | No-op storage backends listed as installed | S1 | S | ✅ gated 0.57.9 |
+| [ST-003](#st-003) | ETL pattern is a phase ticker, still installed | S2 | S | ✅ gated 0.57.9 |
+| [ST-004](#st-004) | Transform `parquet_load` registered, always errors | S3 | XS | ✅ gated 0.57.9 |
+| [ST-005](#st-005) | Tests freeze lying install sets (`test_modular_apps`) | S1 | S | ✅ fixed 0.57.9 |
 | [ST-006](#st-006) | Phase-named tests become eternal contracts | S3 | M | open |
 
 ### Code smell (CS)
@@ -275,10 +275,11 @@ When a temporary compatibility import or façade exists during 0.57, **add a bul
 
 ### SD-013 — Installed placeholders that lie
 
-**Severity:** S1 · **Effort:** M · **Related:** ST-001…005, CF-006 (PD-023)
+**Severity:** S1 · **Effort:** M · **Related:** ST-001…005, CF-006 (PD-023)  
+**Status:** ✅ gated (0.57.9) — see ST rows
 
-**Observation:** Several plugins **register as installed** and return **fake success** or **no-op persistence**.  
-Doctor, modular-app tests, and agent discovery treat them as real capabilities.
+**Progress (0.57.9):** Default `INSTALLED_*` is truthful. Intention packages use
+`INTENTION_*` lists + loud refusal on use. Modular tests assert install vs intention.
 
 **Policy (normative):**
 
@@ -287,7 +288,7 @@ Doctor, modular-app tests, and agent discovery treat them as real capabilities.
 3. Gate experimental apps: not in default `INSTALLED_*`, or mark maturity `stub` and fail loudly on use.  
 4. Tests assert **intention sets**, not “fake providers return data.”
 
-**Target:** Capability catalog is truthful. Stubs do not hold Palm to legacy contracts.
+**Residual:** Package trees for graphql/postgres/etl still exist (scaffolds). Full delete optional later.
 
 ---
 
@@ -420,68 +421,53 @@ Full intention table: [docs/STUBS.md](docs/STUBS.md).
 
 ### ST-001 — Fake-success providers
 
-**Severity:** S1 · **Effort:** S
+**Severity:** S1 · **Effort:** S · **Status:** ✅ gated (0.57.9)
 
-| Provider | Behavior today |
-|----------|----------------|
-| `graphql` | `fetch` returns `{"source": "graphql", ...}` — **not** GraphQL |
-| `postgres` | same pattern — **not** SQL |
+| Provider | Resolution |
+|----------|------------|
+| `graphql` | Not in `INSTALLED_PROVIDERS`; `fetch`/`connect` raise `NotImplementedError` |
+| `postgres` | Same |
 
-Both sit in `INSTALLED_PROVIDERS`.
-
-**Target:** Intention only in STUBS.md; remove from default install **or** raise `NotImplemented` / doctor `maturity=stub`.
+Listed in `INTENTION_PROVIDERS`. Purpose remains in STUBS.md.
 
 ---
 
 ### ST-002 — No-op storage backends
 
-**Severity:** S1 · **Effort:** S
+**Severity:** S1 · **Effort:** S · **Status:** ✅ gated (0.57.9)
 
-| Backend | Behavior |
-|---------|----------|
-| `storages/postgres` | `get` → always `None`; `set` no-op |
-| `storages/mongodb` | placeholder client |
+| Backend | Resolution |
+|---------|------------|
+| `storages/postgres` | Not in `INSTALLED_STORAGES` (core only); I/O raises |
+| `storages/mongodb` | Same |
 
-Listed in `INSTALLED_STORAGES` / optional set; modular tests require the names.
-
-**Target:** Same as ST-001. Do not claim durable storage.
+Remain in `OPTIONAL_STORAGES` for lazy discovery; no silent fake durability.
 
 ---
 
 ### ST-003 — ETL pattern phase ticker
 
-**Severity:** S2 · **Effort:** S
+**Severity:** S2 · **Effort:** S · **Status:** ✅ gated (0.57.9)
 
-**Observation:** `EtlPattern.tick` only sets `etl_phase` extract/transform/load. No real ETL.  
-Still in `INSTALLED_PATTERNS` next to wizard/dag.
-
-**Target:** Intention “ETL pattern” reserved; demote install or label scaffold. DAG is real enough to keep.
+**Resolution:** Not in `INSTALLED_PATTERNS`; listed in `INTENTION_PATTERNS`.  
+Package remains for explicit import (tests may opt in). Purpose in STUBS.md.
 
 ---
 
 ### ST-004 — `parquet_load` always errors
 
-**Severity:** S3 · **Effort:** XS
+**Severity:** S3 · **Effort:** XS · **Status:** ✅ gated (0.57.9)
 
-**Observation:** Registered transform; `apply` always raises. Honest error, but catalog still lists it as a rule.
-
-**Target:** Optional extra or intention-only; doctor marks stub.
+**Resolution:** Not in `INSTALLED_TRANSFORMS` / not registered as builtin.  
+Module may remain for future pyarrow work (`INTENTION_TRANSFORMS`).
 
 ---
 
 ### ST-005 — Tests freeze lying install sets
 
-**Severity:** S1 · **Effort:** S
+**Severity:** S1 · **Effort:** S · **Status:** ✅ fixed (0.57.9)
 
-**Observation:** `tests/test_modular_apps.py` asserts exact equality with:
-
-- patterns including `etl`  
-- providers including `graphql`, `postgres`  
-- storages including no-op backends  
-
-**Why it hurts:** Truthful demotion of stubs **breaks CI** until tests change. Tests protect the lie.
-
-**Target:** Assert **core** install sets + separate **stub intention** registry. Do not require fake providers to load as full apps unless gated.
+**Resolution:** `test_modular_apps` asserts truthful `INSTALLED_*` + separate `INTENTION_*` sets.
 
 ---
 
@@ -584,6 +570,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | 0.57.6 | SD-002 deflate bulk ✅, SD-012 shims listed; SD-011 residual |
 | 0.57.7 | SD-005 effects ✅ (`resume_job` on port); list residual; AGENTS no-shortcut |
 | 0.57.8 | SD-012 import sweep — src/tests use palm.system; shim modules remain |
+| 0.57.9 | SD-013 / ST-001…005 — truthful INSTALLED_*; INTENTION_* + loud refuse |
 | parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
 | later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |
 
