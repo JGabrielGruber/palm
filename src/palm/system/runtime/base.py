@@ -46,6 +46,7 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
 from palm.states import BlackboardState
+from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.runtime.hooks import (
@@ -106,6 +107,7 @@ class BaseRuntime:
         self._outbox_store: OutboxStore | None = None
         self._outbox_processor: OutboxProcessor | None = None
         self._wait_plane: WaitPlaneService | None = None
+        self._session_plane: SessionPlaneService | None = None
 
     @property
     def is_started(self) -> bool:
@@ -144,6 +146,11 @@ class BaseRuntime:
     def wait_matcher(self) -> Any:
         """Matcher inside the continue plane (0.55.4+), or ``None``."""
         return None if self._wait_plane is None else self._wait_plane.matcher
+
+    @property
+    def session_plane(self) -> SessionPlaneService | None:
+        """Session plane (outside subject lifecycle), or ``None`` before start."""
+        return self._session_plane
 
     def start(self, **options: Any) -> None:
         """Initialize engines, wire orchestration, and begin accepting jobs."""
@@ -255,6 +262,10 @@ class BaseRuntime:
         self._wait_plane = WaitPlaneService()
         self._wait_plane.attach(self)
 
+        # Session plane — outside subject seat (0.58.1); multi-attach later.
+        self._session_plane = SessionPlaneService()
+        self._session_plane.attach(self)
+
         self._started = True
 
         bind_runtime = get_runtime_binding()
@@ -269,6 +280,10 @@ class BaseRuntime:
         unbind_runtime = get_runtime_unbinding()
         if unbind_runtime is not None:
             unbind_runtime()
+
+        if self._session_plane is not None:
+            self._session_plane.detach()
+            self._session_plane = None
 
         if self._wait_plane is not None:
             self._wait_plane.detach()

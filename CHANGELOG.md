@@ -14,9 +14,13 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - Tech debt **SI-001…014** session impact inventory; **SD-008** theme-active  
 - [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) marked **superseded**
 
+#### Added (0.58.1)
+- **`palm.system.planes.session`** — `SessionRecord`, `SessionStatus`, memory `SessionStore`, `SessionPlaneService`  
+- **`BaseRuntime.session_plane`** — open/get/close/list lifecycle wired at start  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slice **0.58.0** is docs/plan.  
-- Next: **0.58.1** system seat (`palm.system.planes.session`).
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.1**.  
+- Next: **0.58.2** multi-attach + durable store.
 
 ## [0.57.14] — 2026-07-29
 

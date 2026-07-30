@@ -200,12 +200,13 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
-**Observation:** Session lived only as product words (`AssistSession`, `FlowSession`) and
-`session_id == instance_id` aliases. No `palm.system.planes.session`.  
+**Observation:** Product still aliases session≡instance (SI-001). System seat exists
+at **0.58.1** (`palm.system.planes.session`, `runtime.session_plane`) with memory
+lifecycle only — not full plane law (multi-attach, bind, durable).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
-system home, multi-instance attach, bind law, store allowed. Close when plane + multi-attach exist.
+multi-instance attach, bind law, durable store. Close when plane + multi-attach + dogfood bind exist.
 
 **Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
 
@@ -638,11 +639,11 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 **Impact:** Agents re-learn the lie.  
 **Target:** Update when dogfood lands; STE on touch.
 
-### SI-013 — No session store
+### SI-013 — Session store not durable
 
-**Where:** (missing) `palm.system.planes.session` store.  
-**Impact:** Multi-attach and resume across process need persistence.  
-**Target:** 0.58.2 — memory + durable via existing storage patterns (mirror instance manager spirit).
+**Where:** `palm.system.planes.session.store.SessionStore` — **memory only** (0.58.1).  
+**Impact:** Sessions do not survive process restart; multi-attach not persisted.  
+**Target:** 0.58.2 — durable via existing storage patterns (mirror instance manager spirit).
 
 ### SI-014 — Shared plane-store framework
 
@@ -663,8 +664,8 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | Slice | Closes or reduces |
 |------:|-------------------|
 | 0.58.0 | Plan; SI inventory; SD-008 active (not closed) |
-| 0.58.1 | SD-008 home (partial); plane types |
-| 0.58.2 | SI-013; multi-attach foundation; SI-003 start |
+| 0.58.1 | SD-008 home (partial): `palm.system.planes.session` + `runtime.session_plane` lifecycle |
+| 0.58.2 | SI-013 durable; multi-attach API; SI-003 start |
 | 0.58.3–4 | SI-001, SI-007, SI-008 (partial) |
 | 0.58.5–6 | SI-002, SI-005 |
 | 0.58.7 | SI-004 |

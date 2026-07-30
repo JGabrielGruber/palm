@@ -1,8 +1,9 @@
 """
 Palm system layer — running machine: ports, planes, executions, system instance.
 
-Holds :class:`~palm.system.runtime.base.BaseRuntime`, continue/start planes,
-effect ports, definition executor, and job hooks. Prefer imports from this package.
+Holds :class:`~palm.system.runtime.base.BaseRuntime`, continue/start/session
+planes, effect ports, definition executor, and job hooks. Prefer imports from
+this package.
 
 Rules (enforced by ``scripts/guard_system.py``):
 

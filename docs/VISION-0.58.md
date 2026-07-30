@@ -111,8 +111,8 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
-| **0** | Plan + map + ADR + debt impact | This file, ADR-027, PALM/STATUS/TECH-DEBT — **0.58.0** |
-| **1** | System seat | Types + plane module + lifecycle API on system instance |
+| **0** | Plan + map + ADR + debt impact | This file, ADR-027, PALM/STATUS/TECH-DEBT — **0.58.0** ✅ |
+| **1** | System seat | Types + plane module + lifecycle API on system instance — **0.58.1** ✅ |
 | **2** | Store + multi-attach | Session record persists; attach/detach instances (0..N) |
 | **3** | Bind law on entry | Touched surfaces resolve session; kill silent instance-only happy paths where theme touches |
 | **4** | Job path link | Create/attach instance under session; events can filter by session |
@@ -195,6 +195,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | Patch | What |
 |-------|------|
 | **0.58.0** | Plan + ADR-027 Proposed + map/STATUS/debt + supersede VISION-SESSION-PLANE + SI impact inventory |
+| **0.58.1** | System seat: `palm.system.planes.session` types + lifecycle; wired on BaseRuntime |
 
 ---
 
