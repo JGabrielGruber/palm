@@ -33,9 +33,13 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Events** — `EventContext.session_id`; `flow.session.*` / instance events carry session when known  
 - **Host** — `submit_flow(..., session_id=)` merges into job metadata  
 
+#### Added (0.58.5)
+- **Journey inspect** — `SessionPlaneService.inspect` / `list_waiting` (instances + open waits)  
+- **Host** — `inspect_session`; note: inspect only, continue stays wait plane  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.4**.  
-- Next: **0.58.5** wait / inspect by session.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.5**.  
+- Next: **0.58.6** Assist + MCP dogfood.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 
 ## [0.57.14] — 2026-07-29

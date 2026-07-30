@@ -248,6 +248,151 @@ class SessionPlaneService:
         """Reverse lookup: session that owns this instance, if any."""
         return self._store.get_by_instance(instance_id)
 
+    def inspect(self, session_id: str) -> dict[str, Any]:
+        """Journey view for a session: instances + open waits (0.58.5).
+
+        **Inspect only.** Does not resume, input, or cancel jobs. Continue
+        remains the wait plane.
+        """
+        rec = self.require(session_id)
+        instances: list[dict[str, Any]] = []
+        waiting: list[dict[str, Any]] = []
+        for iid in rec.instance_ids:
+            row = self._instance_inspect_row(iid, session_id=rec.session_id)
+            instances.append(row)
+            for w in row.get("waiting_on") or []:
+                if isinstance(w, dict):
+                    waiting.append(
+                        {
+                            **w,
+                            "instance_id": iid,
+                            "job_id": row.get("job_id"),
+                            "session_id": rec.session_id,
+                        }
+                    )
+        return {
+            "kind": "session_inspect",
+            "session_id": rec.session_id,
+            "status": rec.status.value,
+            "metadata": dict(rec.metadata),
+            "created_at": rec.created_at,
+            "updated_at": rec.updated_at,
+            "instance_ids": list(rec.instance_ids),
+            "instances": instances,
+            "waiting_on": waiting,
+            "counts": {
+                "instances": len(rec.instance_ids),
+                "open_waits": len(waiting),
+            },
+            "note": "inspect only; continue via wait plane (not session resume)",
+        }
+
+    def list_waiting(self, session_id: str) -> list[dict[str, Any]]:
+        """Open wait interests across all instances attached to the session."""
+        return list(self.inspect(session_id).get("waiting_on") or [])
+
+    def _instance_inspect_row(
+        self, instance_id: str, *, session_id: str
+    ) -> dict[str, Any]:
+        row: dict[str, Any] = {
+            "instance_id": instance_id,
+            "session_id": session_id,
+        }
+        rt = self._runtime
+        if rt is None:
+            return row
+        inst = None
+        try:
+            manager = getattr(rt, "instance_manager", None)
+            if manager is not None:
+                inst = manager.get(instance_id)
+        except Exception:
+            inst = None
+        if inst is None:
+            row["status"] = "unknown"
+            return row
+        row["status"] = getattr(inst, "status", None)
+        row["job_id"] = getattr(inst, "job_id", None)
+        row["flow_id"] = getattr(inst, "flow_id", None) or getattr(
+            inst, "flow_name", None
+        )
+        row["pattern"] = getattr(inst, "pattern", None)
+        resolved = None
+        if hasattr(inst, "resolved_session_id"):
+            try:
+                resolved = inst.resolved_session_id()
+            except Exception:
+                resolved = getattr(inst, "session_id", None)
+        else:
+            resolved = getattr(inst, "session_id", None)
+        if resolved:
+            row["session_id"] = resolved
+        job = self._resolve_job(rt, getattr(inst, "job_id", None))
+        waits: list[dict[str, Any]] = []
+        if job is not None:
+            waits = self._waiting_on_for_job(rt, job)
+        if not waits:
+            # Fallback: interests on durable instance state (resume-shaped).
+            waits = self._waiting_on_from_instance(inst)
+        if waits:
+            row["waiting_on"] = waits
+            try:
+                from palm.system.planes.wait.present import summarize_waiting_on
+
+                summary = summarize_waiting_on(waits)
+            except Exception:
+                summary = None
+            if summary:
+                row["waiting_summary"] = summary
+        return row
+
+    def _waiting_on_from_instance(self, inst: Any) -> list[dict[str, Any]]:
+        try:
+            from palm.system.planes.wait.present import waiting_on_from_state
+            from palm.common.persistence.state_snapshot import state_from_snapshot
+
+            snap = getattr(inst, "state_snapshot", None)
+            if not snap:
+                return []
+            state = state_from_snapshot(snap)
+            return list(waiting_on_from_state(state) or [])
+        except Exception:
+            return []
+
+    def _resolve_job(self, runtime: Any, job_id: str | None) -> Any | None:
+        if not job_id:
+            return None
+        try:
+            get_job = getattr(runtime, "get_job", None)
+            if callable(get_job):
+                return get_job(str(job_id))
+        except Exception:
+            pass
+        orch = getattr(runtime, "orchestration", None)
+        if orch is None:
+            return None
+        jobs = getattr(orch, "jobs", None)
+        if isinstance(jobs, dict):
+            return jobs.get(str(job_id))
+        try:
+            return orch.get_job(str(job_id))
+        except Exception:
+            return None
+
+    def _waiting_on_for_job(self, runtime: Any, job: Any) -> list[dict[str, Any]]:
+        wait_plane = getattr(runtime, "wait_plane", None)
+        if wait_plane is not None and hasattr(wait_plane, "waiting_on_for_job"):
+            try:
+                return list(wait_plane.waiting_on_for_job(job) or [])
+            except Exception:
+                pass
+        try:
+            from palm.system.planes.wait.present import waiting_on_from_job
+
+            return list(waiting_on_from_job(job) or [])
+        except Exception:
+            return []
+
     def doctor_snapshot(self) -> dict[str, Any]:
         """Small inspect payload for doctor / system diagnostics."""
         open_n = len(self._store.list(status=SessionStatus.OPEN, include_closed=False))
@@ -272,6 +417,8 @@ class SessionPlaneService:
                 "attach_instance",
                 "detach_instance",
                 "session_for_instance",
+                "inspect",
+                "list_waiting",
             ],
             "store": "storage_engine",
             "storage_backend": backend,

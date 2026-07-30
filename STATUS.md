@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.4** job path link  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58.5** wait/inspect  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -18,8 +18,8 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | **Home** | `palm.system.planes.session` (system). Product thin. |
 | **Law** | No outside interaction without a session bind. Surfaces bind (cookie-like OK on server). |
 | **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
-| **Next code** | **0.58.5** wait / inspect by session. |
-| **Done** | **0.58.0–0.58.4** plan · seat · multi-attach · bind law · **job path + event attribution** |
+| **Next code** | **0.58.6** Assist + MCP dogfood bind. |
+| **Done** | **0.58.0–0.58.5** through wait/inspect journey view |
 | **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 
 ## Quick Overview
@@ -47,7 +47,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · through `0.58.4`)
+## 0.58 — Session plane (**open** · through `0.58.5`)
 
 **Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  

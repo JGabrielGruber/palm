@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.4** (job path link).  
+**Status:** 🚧 **Theme open** — through **0.58.5** (wait/inspect).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -117,7 +117,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **2** | Store + multi-attach | Session record persists; attach/detach instances (0..N) — **0.58.2** ✅ |
 | **3** | Bind law on entry | Touched surfaces resolve session; kill silent instance-only happy paths where theme touches — **0.58.3** ✅ |
 | **4** | Job path link | Create/attach instance under session; events can filter by session — **0.58.4** ✅ |
-| **5** | Wait / inspect | Session → open waits / journey view (no private resume hooks) |
+| **5** | Wait / inspect | Session → open waits / journey view (no private resume hooks) — **0.58.5** ✅ |
 | **6** | Assist + MCP dogfood | palm_assist bind path uses system session |
 | **7** | WS / cookie-like bind | Same contract; delete one-off reconnect hacks |
 | **8+** | Watches / fan-in | Multi-type subscribe by session (old watch sketch) |
@@ -200,6 +200,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.2** | Multi-attach: `attach_instance` / `detach_instance` / `session_for_instance`; reverse key `palm:session:by_instance:*`; OPEN→ACTIVE on first attach; one instance → one session |
 | **0.58.3** | Bind law: `SessionPlaneService.bind` / `require_open` / `SessionBind`; `ApplicationHost.bind_session`; CLI `active_system_session_id` distinct from product assist/instance |
 | **0.58.4** | Job path: `ProcessInstance.session_id`; job metadata `session_id`; `SessionOwnershipHook` plane attach; `EventContext.session_id` + `flow.session.*` payload fields |
+| **0.58.5** | Journey: `SessionPlaneService.inspect` / `list_waiting`; host `inspect_session`; no session-resume path |
 
 ---
 

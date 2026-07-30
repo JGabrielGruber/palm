@@ -280,6 +280,16 @@ class ApplicationHost:
             surface=surface,
         )
 
+    def inspect_session(self, session_id: str) -> dict[str, Any]:
+        """Session journey view (instances + open waits). Inspect only (0.58.5)."""
+        self._require_started()
+        plane = self.session_plane
+        if plane is None:
+            raise RuntimeError(
+                "ApplicationHost has no session plane; primary runtime not ready"
+            )
+        return plane.inspect(session_id)
+
     def start(self, **options: Any) -> Self:
         """Bootstrap, spawn role runtimes, wire CQRS, and recover state."""
         if self._started:

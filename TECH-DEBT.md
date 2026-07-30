@@ -745,7 +745,7 @@ Event type names unchanged. Full coverage when all entry paths pass system sessi
 | 0.58.2 | SI-013 multi-attach + reverse index ✅ |
 | 0.58.3 | Bind law on plane + host + CLI; SI-006 partial; SI-001 still product |
 | 0.58.4 | SI-003 ✅; SI-008 partial; job metadata + SessionOwnershipHook |
-| 0.58.5 | Wait / inspect by session |
+| 0.58.5 | Journey inspect / list_waiting ✅ |
 | 0.58.6 | SI-001, SI-002, SI-005 (Assist/MCP dogfood) |
 | 0.58.7 | SI-004 WS bind |
 | later / residual | SI-006, SI-007, SI-009…012, SI-014, SU-* |
