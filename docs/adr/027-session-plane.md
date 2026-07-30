@@ -111,7 +111,11 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + conti
 - Widespread rename and rebind of product/surface APIs.  
 - Tests and dogfood that assumed session ≡ instance must change.  
 - Temporary breakage until slices land (pre-1.0 accepted).  
-- Product **gates** continue when a bound session is present (SI-015 / 0.58.11).
+- Product **gates** continue when a bound session is present (SI-015 / 0.58.11).  
+- **Strict attribution (0.58.15):** when the plane is ready, start always has a
+  system session; continue requires owner (bound session or plane reverse index);
+  bare orphan refuse (`SessionAttributionError`). Compat:
+  `PALM_SESSION_STRICT_ATTRIBUTION=false`.
 
 ### Neutral
 

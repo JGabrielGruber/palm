@@ -125,6 +125,10 @@ def rewrite_system_session_continue(
     product continue/inspect under that subject, the continue ``instance_id``
     must be on the session attach list
     (:meth:`~palm.services.session.SessionService.require_owned_instance`).
+
+    **0.58.15 strict attribution:** continue paths without a system session
+    resolve the owner from the plane; orphan / bare instances raise
+    :class:`~palm.system.planes.session.SessionAttributionError`.
     """
     from palm.kits.server.middleware import resolve_session_plane
     from palm.system.planes.session import looks_like_system_session_id
@@ -195,7 +199,7 @@ def rewrite_system_session_continue(
         if inst:
             out_params["instance_id"] = inst
 
-    # SI-015: bound system session + product continue instance → owner check
+    # SI-015 + 0.58.15: continue attribution (bound session or plane owner)
     _gate_continue_owner(product or plane, out_path, out_params)
 
     return out_path, out_params
@@ -220,17 +224,18 @@ def _is_session_continue_path(path: list[str]) -> bool:
 
 
 def _gate_continue_owner(
-    plane: Any,
+    door: Any,
     path: list[str],
     params: dict[str, Any],
 ) -> None:
-    """Reject continue when bound session does not own the instance (0.58.11)."""
+    """Continue attribution (0.58.11 owner + 0.58.15 strict bare refuse).
+
+    Prefers product :meth:`SessionService.gate_bound_session_owns`. Plane-only
+    fallback uses :meth:`require_continue_attribution` (strict=True).
+    """
     from palm.system.planes.session import looks_like_system_session_id
 
     if not _is_session_continue_path(path):
-        return
-    system_sid = params.get("session_id")
-    if not looks_like_system_session_id(system_sid):
         return
     # Prefer path instance (explicit handle) over param (may be plane focus).
     path_inst = _path_continue_instance(path)
@@ -241,7 +246,26 @@ def _gate_continue_owner(
         candidate = param_inst
     else:
         return
-    plane.require_owned_instance(str(system_sid).strip(), str(candidate).strip())
+
+    if hasattr(door, "gate_bound_session_owns"):
+        # Operator rewrite: refuse bare orphans (do not defer to 404).
+        door.gate_bound_session_owns(
+            str(candidate).strip(), params, allow_unknown=False
+        )
+        return
+
+    # Plane fallback (no product SessionService)
+    system_sid = params.get("session_id")
+    sid = str(system_sid).strip() if looks_like_system_session_id(system_sid) else None
+    if hasattr(door, "require_continue_attribution"):
+        bound = door.require_continue_attribution(
+            str(candidate).strip(), sid, strict=True
+        )
+        if bound and not looks_like_system_session_id(params.get("session_id")):
+            params["session_id"] = bound
+        return
+    if sid is not None:
+        door.require_owned_instance(sid, str(candidate).strip())
 
 
 def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:

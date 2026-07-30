@@ -66,7 +66,13 @@ def maybe_auto_start_handoff_flow(
         return None
     flow_id = intent
     try:
-        raw = dispatch(["flows", flow_id, "create"], {"format": "assistant"})
+        # 0.58.15: inherit system session so the walk stays one subject.
+        create_params: dict[str, Any] = {"format": "assistant"}
+        parent_sid = shaped.get("session_id") or params.get("session_id")
+        if parent_sid and str(parent_sid).startswith("sess-"):
+            create_params["session_id"] = str(parent_sid).strip()
+            create_params["body"] = {"session_id": str(parent_sid).strip()}
+        raw = dispatch(["flows", flow_id, "create"], create_params)
         # Product path keys by instance (SI-001); session_id on envelope is system.
         instance_id = None
         if isinstance(raw, dict):
@@ -124,10 +130,14 @@ def maybe_auto_start_design_entry(
     scenario = CHAT_DESIGN_SCENARIO_ID
     try:
         start_path = ["assist", "scenarios", scenario, "start"]
-        raw = dispatch(
-            start_path,
-            {"format": "assistant", "include_input_schema": True},
-        )
+        start_params: dict[str, Any] = {
+            "format": "assistant",
+            "include_input_schema": True,
+        }
+        parent_sid = shaped.get("session_id") or params.get("session_id")
+        if parent_sid and str(parent_sid).startswith("sess-"):
+            start_params["session_id"] = str(parent_sid).strip()
+        raw = dispatch(start_path, start_params)
         instance_id = None
         if isinstance(raw, dict):
             instance_id = raw.get("instance_id") or (

@@ -102,8 +102,12 @@ class AssistService(BaseService):
         return self._system
 
     @property
-    def session(self) -> SessionService | None:
-        """Product session door when host-wired (0.58.12)."""
+    def product_session(self) -> SessionService | None:
+        """Product session door when host-wired (0.58.12).
+
+        Named distinctly from :meth:`session` (AssistSession handle API) so
+        the product door is never shadowed.
+        """
         return self._session
 
     # --- path dispatch ----------------------------------------------------

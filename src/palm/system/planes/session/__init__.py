@@ -29,6 +29,7 @@ Watches filter events by system session; they do not resume.
 from palm.system.planes.session.plane import (
     InstanceAlreadyAttachedError,
     InstanceNotOwnedError,
+    SessionAttributionError,
     SessionClosedError,
     SessionNotFoundError,
     SessionPlaneError,
@@ -54,6 +55,7 @@ __all__ = [
     "HOST_SESSION_ORIGIN",
     "InstanceAlreadyAttachedError",
     "InstanceNotOwnedError",
+    "SessionAttributionError",
     "SessionBind",
     "SessionClosedError",
     "SessionNotFoundError",

@@ -30,6 +30,7 @@ from palm.system.planes.session import (
     HOST_SESSION_ID,
     HOST_SESSION_ORIGIN,
     WORK_DRAIN_ORIGIN,
+    SessionAttributionError,
     looks_like_system_session_id,
     new_session_id,
     service_session_id,
@@ -77,11 +78,15 @@ class SessionService(BaseService):
         system: SystemService,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
+        strict_attribution: bool = True,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._system = system
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
+        # 0.58.15: when plane ready, continue/start must be attributed.
+        # Set False only for a short compat window (tests / migration).
+        self.strict_attribution = bool(strict_attribution)
 
     # ── runtime / plane ────────────────────────────────────────────────────
 
@@ -389,7 +394,9 @@ class SessionService(BaseService):
 
         * System-shaped ``session_id`` + missing instance → resolve focus.
         * System-shaped value only in ``instance_id`` → treat as session and resolve.
-        * When ``gate`` and both known → :meth:`require_owned_instance`.
+        * When ``gate`` and both known → ownership / attribution (0.58.11–15).
+        * Bare instance without session: under strict attribution, resolve owner
+          from plane or raise :class:`SessionAttributionError`.
         """
         sid = (session_id or "").strip() or None
         iid = (instance_id or "").strip() or None
@@ -406,7 +413,7 @@ class SessionService(BaseService):
                 self.require_owned_instance(sid, iid)
             return ContinueTarget(session_id=sid, instance_id=iid)
 
-        # No system session bound: instance-only (legacy residual).
+        # No system session in args — attribute via plane or refuse (0.58.15).
         if iid and looks_like_system_session_id(iid):
             # Misplaced sess- only in instance slot without session_id handled above.
             resolved = self.resolve_continue_instance(str(iid))
@@ -414,27 +421,81 @@ class SessionService(BaseService):
                 session_id=str(iid),
                 instance_id=str(resolved) if resolved else None,
             )
+        if gate and iid and self.plane_or_none() is not None:
+            params: dict[str, Any] = {"instance_id": iid}
+            bound = self.gate_bound_session_owns(
+                iid, params, allow_unknown=False
+            )
+            return ContinueTarget(
+                session_id=bound or params.get("session_id"),
+                instance_id=iid,
+            )
         return ContinueTarget(session_id=sid, instance_id=iid)
 
     def gate_bound_session_owns(
         self,
         instance_id: str,
         params: dict[str, Any] | None,
-    ) -> None:
-        """SI-015 gate from product params: system ``session_id`` must own instance.
+        *,
+        strict: bool | None = None,
+        allow_unknown: bool = True,
+    ) -> str | None:
+        """Continue attribution gate (SI-015 + 0.58.15 strict policy).
 
-        No-op when params lack a system-shaped ``session_id`` (legacy bare path).
+        When the session plane is ready and *strict* (default
+        :attr:`strict_attribution`):
+
+        * system ``session_id`` in *params* → must own *instance_id*
+        * missing system session → resolve owner from plane reverse index;
+          inject ``session_id`` into *params* when found
+        * no owner + instance **known** → :class:`SessionAttributionError`
+        * no owner + instance **unknown** + *allow_unknown* → no-op
+          (product inspect/input may 404)
+        * no owner + not *allow_unknown* → :class:`SessionAttributionError`
+          (operator rewrite / explicit continue_target)
+
+        When *strict* is False: legacy SI-015 only (gate only if system
+        ``session_id`` is present). Plane missing → no-op.
+
+        Returns the bound system session id, or ``None`` when not enforced.
         """
-        params = params or {}
-        raw = params.get("session_id")
-        if raw is None or not str(raw).strip():
-            return
-        if not looks_like_system_session_id(raw):
-            return
+        params_mut = params if params is not None else {}
         plane = self.plane_or_none()
         if plane is None:
-            return
-        plane.require_owned_instance(str(raw).strip(), str(instance_id).strip())
+            return None
+        use_strict = self.strict_attribution if strict is None else bool(strict)
+        raw = params_mut.get("session_id")
+        sid = str(raw).strip() if looks_like_system_session_id(raw) else None
+        if not use_strict and sid is None:
+            return None
+        iid = str(instance_id).strip()
+        try:
+            bound = plane.require_continue_attribution(iid, sid, strict=use_strict)
+        except SessionAttributionError:
+            # Unknown product instance → optionally defer to not-found (404).
+            # Known job without owner session → always refuse.
+            if (
+                use_strict
+                and sid is None
+                and allow_unknown
+                and not self._instance_known(iid)
+            ):
+                return None
+            raise
+        if bound and not looks_like_system_session_id(params_mut.get("session_id")):
+            params_mut["session_id"] = bound
+        return bound
+
+    def _instance_known(self, instance_id: str) -> bool:
+        """True when system inspect can see the product instance."""
+        iid = str(instance_id or "").strip()
+        if not iid:
+            return False
+        try:
+            view = self._system.inspect_instance(iid)
+            return view is not None
+        except Exception:
+            return False
 
     # ── submit / metadata helpers (for execution and other services) ───────
 
@@ -552,6 +613,14 @@ class SessionService(BaseService):
             if origin_hint:
                 meta.setdefault("session_origin", origin_hint)
             out["metadata"] = meta
+        elif (
+            self.strict_attribution
+            and self.plane_or_none() is not None
+        ):
+            raise SessionAttributionError(
+                "start requires system session when session plane is ready "
+                "(0.58.15 strict attribution)"
+            )
         return out
 
     def system_session_from_instance(self, instance_id: str) -> str | None:
@@ -654,6 +723,7 @@ __all__ = [
     "ContinueTarget",
     "HOST_SESSION_ID",
     "HOST_SESSION_ORIGIN",
+    "SessionAttributionError",
     "SessionService",
     "WORK_DRAIN_ORIGIN",
     "derive_session_kind",

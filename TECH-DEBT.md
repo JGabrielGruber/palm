@@ -637,7 +637,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
-| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 | ✅ done (bare-instance residual → **0.58.15**) |
+| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 · **0.58.15** | ✅ done (strict attribution) |
 | [SI-016](#si-016) | Surfaces invent dual context; walk facts on job meta | product / surfaces | **0.58.14** | partial (seat ✅; dogfood 0.58.17) |
 
 ### SI-001 — product handles still named “session” for instance
@@ -763,9 +763,11 @@ gate when params carry system `session_id`; host
 authoritative (not replaced by plane focus).  
 **Law:** exclusive ownership + active = focus only
 ([VISION-0.58 §4.1](docs/VISION-0.58.md), [ADR-027](docs/adr/027-session-plane.md) D9–D11).  
-**Residual:** bare `instance_id` with **no** bound system session still skips the
-gate — pay at **0.58.15** (strict attribution). Elevated inspect and
-user-plane **impersonation** remain later seeds — not dual-own.
+**Residual:** ✅ **0.58.15 closed** — strict attribution: continue resolves owner
+from plane or refuses bare orphan (`SessionAttributionError`); start requires
+system session when plane ready; compat flag
+`PALM_SESSION_STRICT_ATTRIBUTION=false`. Elevated inspect and user-plane
+**impersonation** remain later seeds — not dual-own.
 
 ### SI-016 — Surfaces invent dual context; walk facts on job meta
 
@@ -809,7 +811,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.13 | Service/origin sessions ✅; SI-011 partial (work-drain + host); workloads inherit |
 | **close plan** | [VISION-0.58 §6.2](docs/VISION-0.58.md) **0.58.14–0.58.20** + exit (docs locked) |
 | 0.58.14 | BoundSurface + session context metadata ✅; SI-016 seat (dogfood residual → 0.58.17) |
-| 0.58.15 | Strict attribution — kill SI-015 bare-instance residual |
+| 0.58.15 | Strict attribution ✅ — SI-015 residual closed |
 | 0.58.16 | Inherit-or-service start — finish SI-011 |
 | 0.58.17 | Single kit door + surface dogfood (SI-005/006) |
 | 0.58.18 | Session operate + surface_view v2 (SI-007 partial) |

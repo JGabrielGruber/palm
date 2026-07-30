@@ -117,8 +117,10 @@ def test_rewrite_rejects_foreign_instance_with_bound_session() -> None:
         host.shutdown()
 
 
-def test_rewrite_bare_instance_without_bound_session_still_passes() -> None:
-    """No system session in params → gate does not fire (legacy residual)."""
+def test_rewrite_bare_orphan_without_bound_session_refused_0_58_15() -> None:
+    """0.58.15: bare orphan continue is refused (strict attribution)."""
+    from palm.system.planes.session import SessionAttributionError
+
     settings = PalmSettings(load_example_definitions=False)
     host = ApplicationHost(
         settings=settings,
@@ -126,15 +128,12 @@ def test_rewrite_bare_instance_without_bound_session_still_passes() -> None:
     )
     host.start()
     try:
-        path, params = rewrite_system_session_continue(
-            host,
-            ["assist", "session", "inst-orphan", "input"],
-            {"value": "legacy"},
-        )
-        assert path[2] == "inst-orphan"
-        assert "session_id" not in params or not str(params.get("session_id", "")).startswith(
-            "sess-"
-        )
+        with pytest.raises(SessionAttributionError, match="no owner session"):
+            rewrite_system_session_continue(
+                host,
+                ["assist", "session", "inst-orphan", "input"],
+                {"value": "legacy"},
+            )
     finally:
         host.shutdown()
 

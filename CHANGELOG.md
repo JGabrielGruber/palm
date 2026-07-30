@@ -116,9 +116,19 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - Session metadata holds walk/surface/attribution facts; job metadata stays run facts (ADR-027 D14)  
 - **SI-016** seat partial; surface dogfood dual-slot cleanup remains **0.58.17**  
 
+#### Added (0.58.15) — strict attribution (SI-015 residual closed)
+- **Plane** — `require_continue_attribution` + `SessionAttributionError`  
+- **SessionService** — `strict_attribution` (default on); gate injects owner from reverse index; bare orphan refuse on rewrite / `continue_target`  
+- **Settings** — `session_strict_attribution` / `PALM_SESSION_STRICT_ATTRIBUTION` (compat off)  
+- **Start** — enrich refuses when plane ready but no system session  
+- **Handoff auto-start** — inherits parent system `session_id` so the walk stays one subject  
+- **Assist** — product door via `_session` / `product_session` (no longer shadowed by handle API)  
+- **WS** — error code `session_attribution`  
+- Product unknown instance defers to not-found (404); known unowned → attribution refuse  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.14** shipped; **0.58.15–20** + exit named.  
-- Theme **exit** after **0.58.15–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.15** shipped; **0.58.16–20** + exit named.  
+- Theme **exit** after **0.58.16–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 

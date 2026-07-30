@@ -55,6 +55,19 @@ class InstanceNotOwnedError(SessionPlaneError):
     """
 
 
+class SessionAttributionError(SessionPlaneError):
+    """Continue or start lacks required system session attribution (0.58.15).
+
+    Raised under **strict attribution** when the session plane is ready and:
+
+    * **continue** has no bound system session and the instance has no owner, or
+    * **start** cannot obtain a system session for the submit body.
+
+    Distinct from :class:`InstanceNotOwnedError` (bound session present but
+    foreign instance).
+    """
+
+
 class SessionPlaneService:
     """Session plane: lifecycle + multi-attach + surface bind law.
 
@@ -66,6 +79,7 @@ class SessionPlaneService:
     * :meth:`set_active_instance` / :attr:`SessionRecord.active_instance_id` (0.58.10)
     * :meth:`session_for_instance` — reverse lookup
     * :meth:`owns_instance` / :meth:`require_owned_instance` — SI-015 gate (0.58.11)
+    * :meth:`require_continue_attribution` — strict attribution (0.58.15)
     * :meth:`bind` / :meth:`require_open` — surface entry law (0.58.3)
     * :meth:`resolve_continue_instance` — active → waiting → last attached
     """
@@ -487,6 +501,57 @@ class SessionPlaneService:
             f"instance {iid!r} is not attached to session {sid!r}"
         )
 
+    def require_continue_attribution(
+        self,
+        instance_id: str,
+        session_id: str | None = None,
+        *,
+        strict: bool = True,
+    ) -> str | None:
+        """Resolve the system session that may continue *instance_id* (0.58.15).
+
+        **Strict (default):** every continue is attributed.
+
+        * System-shaped ``session_id`` present → :meth:`require_owned_instance`
+          and return that id.
+        * Missing session → look up owner via reverse index; if found, return
+          owner id (plane truth is the bind). If no owner →
+          :class:`SessionAttributionError` (bare / orphan refuse).
+        * Resolve of continue instance from a session is separate
+          (:meth:`resolve_continue_instance`); this method only attributes.
+
+        **Compat (``strict=False``):** only gate when ``session_id`` is present
+        (0.58.11 SI-015 behavior). Missing session → return ``None`` (legacy
+        bare-instance path).
+
+        Returns the bound system session id, or ``None`` only when not strict
+        and no session was provided.
+        """
+        from palm.system.planes.session.types import looks_like_system_session_id
+
+        iid = (instance_id or "").strip()
+        if not iid:
+            raise SessionPlaneError(
+                "instance_id is required for continue attribution"
+            )
+        sid = (session_id or "").strip() or None
+        if looks_like_system_session_id(sid):
+            self.require_owned_instance(str(sid), iid)
+            return str(sid)
+
+        if not strict:
+            return None
+
+        owner = self.session_for_instance(iid)
+        if owner is None:
+            raise SessionAttributionError(
+                f"continue instance {iid!r} has no owner session; "
+                "bind a system session_id (0.58.15 strict attribution)"
+            )
+        # Plane reverse index is bind truth — still require open + attach list.
+        self.require_owned_instance(owner.session_id, iid)
+        return owner.session_id
+
     def resolve_continue_instance(self, session_id: str) -> str | None:
         """Pick an instance under the session for continue (0.58.8 + 0.58.10).
 
@@ -794,6 +859,7 @@ class SessionPlaneService:
                 "session_for_instance",
                 "owns_instance",
                 "require_owned_instance",
+                "require_continue_attribution",
                 "resolve_continue_instance",
                 "inspect",
                 "list_waiting",
@@ -806,6 +872,7 @@ class SessionPlaneService:
             "multi_attach": True,
             "active_instance": True,
             "owner_gate": True,
+            "strict_attribution": True,
             "bind_law": True,
             "event_filter": True,
             "counts": {
@@ -849,6 +916,7 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
 __all__ = [
     "InstanceAlreadyAttachedError",
     "InstanceNotOwnedError",
+    "SessionAttributionError",
     "SessionClosedError",
     "SessionNotFoundError",
     "SessionPlaneError",

@@ -42,6 +42,9 @@ def _build_session(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
         **ctx.bus_kwargs,
         system=built["system"],
         runtime_resolver=ctx.resolve_execution_runtime,
+        strict_attribution=bool(
+            getattr(ctx.settings, "session_strict_attribution", True)
+        ),
     )
 
 

@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.14** done · **next 0.58.15** strict attribution  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58.15** done · **next 0.58.16** inherit-or-service  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -18,8 +18,8 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | **Home** | System: `planes.session`. Product door: `SessionService` (`host.session`). |
 | **Law** | Bind session. Exclusive owner. Active = focus only. Continue via wait plane. **Session owns surface context** (BoundSurface). Session metadata ≠ job metadata. Service sessions for automated start. |
 | **Not** | Session ≡ instance. Active as foreign pass. Dual-own. Second resume. Junk-drawer root. Stuff walk facts only into job meta. Surfaces reinvent dual session slots. |
-| **Next code** | **0.58.15** strict attribution → then **16–20** + **exit** ([VISION-0.58 §6.2](docs/VISION-0.58.md)) |
-| **Done** | **0.58.0–0.58.14** (plane through BoundSurface + session metadata) · close plan **named** |
+| **Next code** | **0.58.16** inherit-or-service → then **17–20** + **exit** ([VISION-0.58 §6.2](docs/VISION-0.58.md)) |
+| **Done** | **0.58.0–0.58.15** (plane through strict attribution) · close plan **named** |
 | **Later seed** | User plane **impersonation** / grants — act as owning session; do not break exclusive ownership |
 | **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 
@@ -63,8 +63,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 |-------|--------|---------|
 | **0.58.0–0.58.13** | ✅ | Plane seat → multi-attach → bind → job path → inspect → dogfood → WS → watches → vocabulary → active → owner gate → SessionService → service/origin sessions |
 | **0.58.14** | ✅ | **BoundSurface** + session context metadata API (session owns surface context; SI-016 seat) |
-| **0.58.15** | 📋 next | **Strict attribution** — start always attributed; continue requires bound session (kill bare-instance residual SI-015) |
-| **0.58.16** | 📋 | **Inherit-or-service** reactive start (finish SI-011); workloads inherit only |
+| **0.58.15** | ✅ | **Strict attribution** — start always sessioned; continue requires owner (SI-015 residual closed) |
+| **0.58.16** | 📋 next | **Inherit-or-service** reactive start (finish SI-011); workloads inherit only |
 | **0.58.17** | 📋 | **Single kit door** + CLI/MCP/WS dogfood on BoundSurface (no product plane dual-path) |
 | **0.58.18** | 📋 | **Session operate** + surface_view v2 (focus, list waiting, cancel-owned; SI-007 partial) |
 | **0.58.19** | 📋 | **Product vocabulary rename** SI-001/005 (paths/envelopes; handles may stay thin) |

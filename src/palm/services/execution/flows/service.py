@@ -172,26 +172,31 @@ class FlowExecutionService(BaseService):
     def _gate_bound_session_owns(
         self, instance_id: str, params: dict[str, Any] | None
     ) -> None:
-        """SI-015 / 0.58.11: bound system session must own the continue instance.
+        """Continue attribution: SI-015 owner + 0.58.15 strict (product door).
 
-        Prefers product SessionService (0.58.12). No-op when params lack a
-        system-shaped ``session_id`` (legacy bare instance paths).
+        Prefers product SessionService. Plane fallback uses
+        ``require_continue_attribution`` (strict) when the plane is ready.
         """
         if self._session is not None:
             self._session.gate_bound_session_owns(instance_id, params)
             return
-        params = params or {}
-        raw = params.get("session_id")
-        if raw is None or not str(raw).strip():
-            return
+        params = params if params is not None else {}
         from palm.system.planes.session import looks_like_system_session_id
 
-        if not looks_like_system_session_id(raw):
-            return
         plane = getattr(self.resolve_runtime(), "session_plane", None)
         if plane is None:
             return
-        plane.require_owned_instance(str(raw).strip(), str(instance_id).strip())
+        raw = params.get("session_id")
+        sid = str(raw).strip() if looks_like_system_session_id(raw) else None
+        if hasattr(plane, "require_continue_attribution"):
+            bound = plane.require_continue_attribution(
+                str(instance_id).strip(), sid, strict=True
+            )
+            if bound and not looks_like_system_session_id(params.get("session_id")):
+                params["session_id"] = bound
+            return
+        if sid is not None:
+            plane.require_owned_instance(sid, str(instance_id).strip())
 
     def submit_flow_body(self, body: dict[str, Any]) -> Any:
         """Submit any flow from a REST-shaped body and wait until idle (work drain, triggers)."""

@@ -72,6 +72,9 @@ class PalmSettings(BaseSettings):
     workload_host_enabled: bool = False
     # Optional default WorkloadRuntime name when Spec.placement.runtime is unset
     workload_default_runtime: str | None = None
+    # 0.58.15 — strict session attribution (start always sessioned; continue
+    # requires owner). Set False only for a short compat window.
+    session_strict_attribution: bool = True
     webhook_urls: list[str] = Field(default_factory=list)
     webhook_event_types: list[str] = Field(default_factory=list)
     worker_ready_timeout: float = 5.0

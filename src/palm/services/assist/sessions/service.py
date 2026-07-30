@@ -34,9 +34,13 @@ class AssistSessionService:
             scenario_id=scenario_id,
         )
 
+    def _product_session(self) -> Any | None:
+        """Product SessionService — use private slot (``.session`` is the handle API)."""
+        return getattr(self._assist, "_session", None)
+
     def _resolve_instance_id(self, session_or_instance: str) -> str:
         """Map system session id → continue instance; pass instance ids through."""
-        product = self._assist.session
+        product = self._product_session()
         if product is not None:
             return product.resolve_instance_id(session_or_instance)
         text = str(session_or_instance or "").strip()
@@ -55,24 +59,29 @@ class AssistSessionService:
     def _gate_bound_session_owns(
         self, instance_id: str, params: dict[str, Any] | None
     ) -> None:
-        """SI-015 / 0.58.11: bound system session must own the continue instance."""
-        product = self._assist.session
+        """Continue attribution: SI-015 owner + 0.58.15 strict (product door)."""
+        product = self._product_session()
         if product is not None:
             product.gate_bound_session_owns(instance_id, params)
             return
-        params = params or {}
-        raw = params.get("session_id")
-        if raw is None or not str(raw).strip():
-            return
+        params = params if params is not None else {}
         from palm.system.planes.session import looks_like_system_session_id
 
-        if not looks_like_system_session_id(raw):
-            return
         runtime = self._assist.execution.flows.resolve_runtime()
         plane = getattr(runtime, "session_plane", None)
         if plane is None:
             return
-        plane.require_owned_instance(str(raw).strip(), str(instance_id).strip())
+        raw = params.get("session_id")
+        sid = str(raw).strip() if looks_like_system_session_id(raw) else None
+        if hasattr(plane, "require_continue_attribution"):
+            bound = plane.require_continue_attribution(
+                str(instance_id).strip(), sid, strict=True
+            )
+            if bound and not looks_like_system_session_id(params.get("session_id")):
+                params["session_id"] = bound
+            return
+        if sid is not None:
+            plane.require_owned_instance(sid, str(instance_id).strip())
 
     def inspect(
         self,
