@@ -21,6 +21,7 @@ from palm.system.executions import DefinitionExecutor
 from palm.system.runtime.job_hooks import (
     InstancePersistenceHook,
     OutboxDrainHook,
+    SessionOwnershipHook,
     StateSnapshotHook,
 )
 from palm.common.managers import InstanceManager
@@ -222,6 +223,9 @@ class BaseRuntime:
                 outbox_store=self._outbox_store,
             )
         )
+        # Session plane ownership (0.58.4) — after instance create; plane bound below.
+        session_ownership = SessionOwnershipHook(get_plane=lambda: self._session_plane)
+        hooks.append(session_ownership)
         if self._outbox_processor is not None:
             hooks.append(OutboxDrainHook(self._outbox_processor))
         if options.get("enable_state_snapshot"):

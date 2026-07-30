@@ -310,7 +310,11 @@ class OrchestrationEngine(BasePalmEngine):
             self._emit_flow_session_terminal(job)
 
     def _emit_flow_session_terminal(self, job: Job) -> None:
-        """Publish session terminal events for trigger/on_flow consumers (0.45.5)."""
+        """Publish session terminal events for trigger/on_flow consumers (0.45.5).
+
+        Payload may include ``instance_id`` and system ``session_id`` when known
+        (0.58.4) — event type names stay ``flow.session.*`` for compatibility.
+        """
         if job.status not in (JobStatus.SUCCEEDED, JobStatus.FAILED):
             return
         flow_id = job.metadata.get("flow") or job.metadata.get("flow_name")
@@ -322,6 +326,12 @@ class OrchestrationEngine(BasePalmEngine):
             flow_str = str(flow_id)
             payload["flow_id"] = flow_str
             payload["flow"] = flow_str
+        iid = job.metadata.get("instance_id")
+        if iid is not None:
+            payload["instance_id"] = str(iid)
+        sid = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+        if sid is not None and str(sid).strip():
+            payload["session_id"] = str(sid).strip()
         event_type = (
             OrchestrationEventType.FLOW_SESSION_SUCCEEDED
             if job.status == JobStatus.SUCCEEDED
@@ -358,11 +368,16 @@ class OrchestrationEngine(BasePalmEngine):
             name = wizard_meta.get("name")
             if name is not None:
                 extra["wizard"] = str(name)
+        sid_raw = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+        session_id = str(sid_raw).strip() if sid_raw is not None else None
+        if session_id == "":
+            session_id = None
         return EventContext(
             job_id=job.id,
             instance_id=str(job.metadata["instance_id"])
             if job.metadata.get("instance_id") is not None
             else None,
+            session_id=session_id,
             trace_id=str(job.metadata["trace_id"])
             if job.metadata.get("trace_id") is not None
             else None,

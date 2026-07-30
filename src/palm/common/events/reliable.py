@@ -53,11 +53,16 @@ class ReliableEventPublisher:
 
 def event_context_from_job(job: Job) -> EventContext:
     """Build correlation context from orchestration job metadata."""
+    sid_raw = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+    session_id = str(sid_raw).strip() if sid_raw is not None else None
+    if session_id == "":
+        session_id = None
     return EventContext(
         job_id=job.id,
         instance_id=str(job.metadata["instance_id"])
         if job.metadata.get("instance_id") is not None
         else None,
+        session_id=session_id,
         trace_id=str(job.metadata["trace_id"])
         if job.metadata.get("trace_id") is not None
         else None,

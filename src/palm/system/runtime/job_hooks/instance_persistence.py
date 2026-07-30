@@ -106,13 +106,17 @@ class InstancePersistenceHook(JobHookAdapter):
         iid = job.metadata.get("instance_id")
         if iid is None:
             return
+        payload: dict[str, object] = {
+            "instance_id": str(iid),
+            "job_id": job.id,
+            "status": status,
+        }
+        sid = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+        if sid is not None and str(sid).strip():
+            payload["session_id"] = str(sid).strip()
         event = Event(
             type=event_type,
-            payload={
-                "instance_id": str(iid),
-                "job_id": job.id,
-                "status": status,
-            },
+            payload=payload,
             context=event_context_from_job(job),
         )
         try:

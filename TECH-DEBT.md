@@ -203,9 +203,9 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
 **Observation:** Product still aliases session≡instance (SI-001). System plane has
-seat + multi-attach + **bind law** (**0.58.1–0.58.3**): `bind` / host / CLI
-system subject. Still missing: job-path attach write, MCP/Assist dogfood, WS
-cookie bind (0.58.4+).  
+seat + multi-attach + bind + **job-path link** (**0.58.1–0.58.4**): instance
+`session_id`, plane attach on submit, event attribution when known. Still missing:
+wait/inspect by session, MCP/Assist dogfood, WS cookie bind (0.58.5+).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
@@ -623,12 +623,12 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 |----|-------|------|-------------|--------|
 | [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.3–6 | open |
 | [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–6 | open |
-| [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.3–4 | open |
+| [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | open |
 | [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6 | open |
 | [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | 0.58.3 partial · 0.58.6 | open |
 | [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.3–4 | open |
-| [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4 | open |
+| [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4 | ✅ partial (when metadata has session) |
 | [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.4+ / 0.56 residual | open |
 | [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
 | [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | later | open |
@@ -650,9 +650,11 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 ### SI-003 — ProcessInstance has no session owner
 
-**Where:** `palm/instances/process_instance.py`, instance manager, job hooks.  
-**Impact:** Plane reverse index exists (0.58.2); **ProcessInstance** itself still has no `session_id` field — job-path link is 0.58.3–4.  
-**Target:** Link instance → session_id (metadata or first-class field); write plane attach when instances are created under a session.
+**Where:** `palm/instances/process_instance.py`, instance sync, `SessionOwnershipHook`.  
+**Status:** ✅ **done** at **0.58.4** — first-class `session_id` (+ metadata fallback);
+`build_instance_from_job` / update; `SessionOwnershipHook` attaches on submit when
+job metadata carries `session_id`. Product paths must still **pass** the system
+session id (Assist dogfood 0.58.6).
 
 ### SI-004 — WS bind is surface-local
 
@@ -683,9 +685,11 @@ are first-class and distinct from product assist/instance. Product
 
 ### SI-008 — flow.session.* events
 
-**Where:** orchestration terminal emit; EVENT-PLANE catalog; ingress storm guard.  
-**Impact:** Name says session; payload is job/instance shaped.  
-**Target:** Attribute real `session_id` when known; keep event type names if useful.
+**Where:** orchestration terminal emit; `EventContext`; instance lifecycle events.  
+**Status:** ✅ **partial (0.58.4)** — `EventContext.session_id`; `flow.session.*` and
+instance events include `session_id` / `instance_id` when job metadata has them.
+Event type names unchanged. Full coverage when all entry paths pass system session
+(0.58.6 dogfood).
 
 ### SI-009 — WorkloadOwner.session_id
 
@@ -738,12 +742,13 @@ are first-class and distinct from product assist/instance. Product
 |------:|-------------------|
 | 0.58.0 | Plan; SI inventory; SD-008 active (not closed) |
 | 0.58.1 | SD-008 home (partial): plane + StorageEngine store + lifecycle |
-| 0.58.2 | SI-013 multi-attach + reverse index ✅; SI-003 still open (ProcessInstance field) |
+| 0.58.2 | SI-013 multi-attach + reverse index ✅ |
 | 0.58.3 | Bind law on plane + host + CLI; SI-006 partial; SI-001 still product |
-| 0.58.3–4 | SI-001, SI-007, SI-008 (partial) |
-| 0.58.5–6 | SI-002, SI-005 |
-| 0.58.7 | SI-004 |
-| later / residual | SI-006, SI-009…012, SI-014, SU-* |
+| 0.58.4 | SI-003 ✅; SI-008 partial; job metadata + SessionOwnershipHook |
+| 0.58.5 | Wait / inspect by session |
+| 0.58.6 | SI-001, SI-002, SI-005 (Assist/MCP dogfood) |
+| 0.58.7 | SI-004 WS bind |
+| later / residual | SI-006, SI-007, SI-009…012, SI-014, SU-* |
 
 ---
 

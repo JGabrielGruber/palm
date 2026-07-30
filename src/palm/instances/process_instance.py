@@ -21,6 +21,9 @@ class ProcessInstance:
 
     ``instance_id`` is stable across runtime restarts; ``job_id`` links to the
     active orchestration job (may match ``instance_id`` on first submit).
+
+    ``session_id`` (0.58.4) is the optional **system session** owner — not the
+    same as ``instance_id``. Legacy records may only carry it under metadata.
     """
 
     instance_id: str
@@ -34,6 +37,7 @@ class ProcessInstance:
     flow_name: str | None = None
     process_id: str | None = None
     process_name: str | None = None
+    session_id: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
     version: int = 1
     status_history: list[StatusHistoryEntry] = field(default_factory=list)
@@ -43,6 +47,17 @@ class ProcessInstance:
     current_step_slug: str | None = None
     runtime_position: dict[str, Any] = field(default_factory=dict)
     state_meta: dict[str, Any] = field(default_factory=dict)
+
+    def resolved_session_id(self) -> str | None:
+        """System session owner: first-class field, else metadata fallback."""
+        if self.session_id:
+            return str(self.session_id)
+        meta = self.metadata or {}
+        raw = meta.get("session_id") or meta.get("palm_session_id")
+        if raw is None:
+            return None
+        sid = str(raw).strip()
+        return sid or None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -59,6 +74,7 @@ class ProcessInstance:
             "flow_name": self.flow_name,
             "process_id": self.process_id,
             "process_name": self.process_name,
+            "session_id": self.session_id,
             "metadata": dict(self.metadata),
             "version_number": self.version,
             "status_history": [entry.to_dict() for entry in self.status_history],
@@ -80,6 +96,13 @@ class ProcessInstance:
         snapshots = [
             StateSnapshot.from_dict(item) for item in snapshots_raw if isinstance(item, dict)
         ]
+        meta = dict(data.get("metadata") or {})
+        raw_session = data.get("session_id")
+        if raw_session is None:
+            raw_session = meta.get("session_id") or meta.get("palm_session_id")
+        session_id = str(raw_session).strip() if raw_session is not None else None
+        if session_id == "":
+            session_id = None
         return cls(
             instance_id=str(data["instance_id"]),
             job_id=str(data["job_id"]),
@@ -96,7 +119,8 @@ class ProcessInstance:
             flow_name=data.get("flow_name"),
             process_id=data.get("process_id"),
             process_name=data.get("process_name"),
-            metadata=dict(data.get("metadata") or {}),
+            session_id=session_id,
+            metadata=meta,
             version=int(data.get("version_number", data.get("version", 1))),
             status_history=history,
             state_snapshots=snapshots,

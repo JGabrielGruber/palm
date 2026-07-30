@@ -15,6 +15,7 @@ class EventContext:
 
     job_id: str | None = None
     instance_id: str | None = None
+    session_id: str | None = None
     trace_id: str | None = None
     principal_id: str | None = None
     extra: dict[str, Any] = field(default_factory=dict)
@@ -26,6 +27,7 @@ class EventContext:
         return EventContext(
             job_id=other.job_id or self.job_id,
             instance_id=other.instance_id or self.instance_id,
+            session_id=other.session_id or self.session_id,
             trace_id=other.trace_id or self.trace_id,
             principal_id=other.principal_id or self.principal_id,
             extra={**self.extra, **other.extra},
@@ -37,6 +39,8 @@ class EventContext:
             data["job_id"] = self.job_id
         if self.instance_id is not None:
             data["instance_id"] = self.instance_id
+        if self.session_id is not None:
+            data["session_id"] = self.session_id
         if self.trace_id is not None:
             data["trace_id"] = self.trace_id
         if self.principal_id is not None:
@@ -52,11 +56,13 @@ class EventContext:
         extra = dict(data)
         job_id = extra.pop("job_id", None)
         instance_id = extra.pop("instance_id", None)
+        session_id = extra.pop("session_id", None)
         trace_id = extra.pop("trace_id", None)
         principal_id = extra.pop("principal_id", extra.pop("principal", None))
         return cls(
             job_id=str(job_id) if job_id is not None else None,
             instance_id=str(instance_id) if instance_id is not None else None,
+            session_id=str(session_id) if session_id is not None else None,
             trace_id=str(trace_id) if trace_id is not None else None,
             principal_id=str(principal_id) if principal_id is not None else None,
             extra=extra,

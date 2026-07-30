@@ -29,10 +29,22 @@ from palm.states import BlackboardState
 __all__ = [
     "build_instance_from_job",
     "prepare_resume_state",
+    "session_id_from_job_metadata",
     "snapshot_state",
     "state_from_snapshot",
     "update_instance_from_job",
 ]
+
+
+def session_id_from_job_metadata(metadata: dict[str, Any] | None) -> str | None:
+    """Extract system session id from job metadata (0.58.4)."""
+    if not metadata:
+        return None
+    raw = metadata.get("session_id") or metadata.get("palm_session_id")
+    if raw is None:
+        return None
+    sid = str(raw).strip()
+    return sid or None
 
 
 def build_instance_from_job(
@@ -46,6 +58,10 @@ def build_instance_from_job(
     """Create a new instance record from a submitted job."""
     iid = instance_id or str(job.metadata.get("instance_id") or job.id)
     step_slug, position = _pattern_instance_fields(job, flow.pattern)
+    meta = dict(job.metadata)
+    session_id = session_id_from_job_metadata(meta)
+    if session_id is not None:
+        meta.setdefault("session_id", session_id)
     return ProcessInstance(
         instance_id=iid,
         job_id=job.id,
@@ -58,7 +74,8 @@ def build_instance_from_job(
         flow_name=flow.name,
         process_id=process_id or job.metadata.get("process_id"),
         process_name=process_name or job.metadata.get("process"),
-        metadata=dict(job.metadata),
+        session_id=session_id,
+        metadata=meta,
         status_history=[],
         current_step_slug=step_slug,
         runtime_position=position,
@@ -72,6 +89,10 @@ def update_instance_from_job(instance: ProcessInstance, job: Job) -> ProcessInst
     instance.job_id = job.id
     instance.state_snapshot = snapshot_state(job.state)
     instance.metadata = preserve_migration_metadata(instance.metadata, dict(job.metadata))
+    sid = session_id_from_job_metadata(instance.metadata)
+    if sid is not None:
+        instance.session_id = sid
+        instance.metadata.setdefault("session_id", sid)
     instance.current_step_slug = step_slug
     instance.runtime_position = position
     instance.state_meta = snapshot_meta(job.state)

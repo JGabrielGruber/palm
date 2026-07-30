@@ -461,7 +461,14 @@ class ApplicationHost:
         job_id: str | None = None,
         state: Any = None,
         metadata: dict[str, Any] | None = None,
+        session_id: str | None = None,
     ) -> Job:
+        """Submit a flow. Optional ``session_id`` is the system session owner (0.58.4)."""
+        meta = dict(metadata or {})
+        sid = (session_id or meta.get("session_id") or meta.get("palm_session_id") or "")
+        sid = str(sid).strip() if sid else ""
+        if sid:
+            meta["session_id"] = sid
         return self.execute(
             SubmitFlowCommand(
                 flow=ref,
@@ -469,7 +476,7 @@ class ApplicationHost:
                 by_id=by_id,
                 job_id=job_id,
                 state=state,
-                metadata=dict(metadata or {}),
+                metadata=meta,
             )
         )
 
