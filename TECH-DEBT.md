@@ -200,13 +200,14 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
-**Observation:** Product still aliases session≡instance (SI-001). System seat exists
-at **0.58.1** (`palm.system.planes.session`, `runtime.session_plane`) with memory
-lifecycle only — not full plane law (multi-attach, bind, durable).  
+**Observation:** Product still aliases session≡instance (SI-001). System seat +
+multi-attach exist (**0.58.1–0.58.2**): `planes.session`, `runtime.session_plane`,
+`attach_instance` / reverse index on StorageEngine. Still missing: **bind law**
+on surfaces and dogfood (0.58.3+).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
-multi-instance attach, bind law, durable store. Close when plane + multi-attach + dogfood bind exist.
+bind law + dogfood. Close when plane + multi-attach + dogfood bind exist.
 
 **Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
 
@@ -554,7 +555,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 |----|-------|------|-------------|--------|
 | [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.3–6 | open |
 | [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–6 | open |
-| [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.2–4 | open |
+| [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.3–4 | open |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | open |
 | [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6 | open |
 | [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | later / 0.58.3 | open |
@@ -564,7 +565,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
 | [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | later | open |
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
-| [SI-013](#si-013) | No session store (memory/durable) | system plane | 0.58.2 | open |
+| [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
 
 ### SI-001 — session_id forced equal to instance_id
@@ -582,8 +583,8 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 ### SI-003 — ProcessInstance has no session owner
 
 **Where:** `palm/instances/process_instance.py`, instance manager, job hooks.  
-**Impact:** Cannot list instances by session or cancel by session walk.  
-**Target:** Link instance → session_id (metadata or first-class field); reverse index on session store.
+**Impact:** Plane reverse index exists (0.58.2); **ProcessInstance** itself still has no `session_id` field — job-path link is 0.58.3–4.  
+**Target:** Link instance → session_id (metadata or first-class field); write plane attach when instances are created under a session.
 
 ### SI-004 — WS bind is surface-local
 
@@ -641,10 +642,10 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 ### SI-013 — Session multi-attach not first-class yet
 
-**Where:** `SessionStore` uses **StorageEngine** (0.58.1 fix; same pattern as work intents).  
-Durability follows the host storage backend (memory vs filesystem).  
-**Impact:** Attach/detach instance API and reverse index not built (0.58.2).  
-**Target:** 0.58.2 — multi-attach verbs on plane; optional instance→session index.
+**Where:** `SessionStore` / `SessionPlaneService` (0.58.1–0.58.2).  
+**Status:** ✅ **done** at **0.58.2** — `attach_instance` / `detach_instance` /
+`session_for_instance`; reverse key `palm:session:by_instance:*`; one instance
+→ one session (refuses dual attach). Store remains on StorageEngine.
 
 ### SI-014 — Shared plane-store framework
 
@@ -666,7 +667,7 @@ Durability follows the host storage backend (memory vs filesystem).
 |------:|-------------------|
 | 0.58.0 | Plan; SI inventory; SD-008 active (not closed) |
 | 0.58.1 | SD-008 home (partial): plane + StorageEngine store + lifecycle |
-| 0.58.2 | SI-013 multi-attach API; SI-003 start |
+| 0.58.2 | SI-013 multi-attach + reverse index ✅; SI-003 still open (ProcessInstance field) |
 | 0.58.3–4 | SI-001, SI-007, SI-008 (partial) |
 | 0.58.5–6 | SI-002, SI-005 |
 | 0.58.7 | SI-004 |

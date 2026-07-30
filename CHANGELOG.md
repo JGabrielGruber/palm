@@ -4,7 +4,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### 0.58 — Session plane (**theme open** · plan only)
+### 0.58 — Session plane (**theme open**)
 
 Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-plane.md) **Proposed**
 
@@ -18,9 +18,14 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **`palm.system.planes.session`** — `SessionRecord`, `SessionStatus`, `SessionStore` on **StorageEngine**, `SessionPlaneService`  
 - **`BaseRuntime.session_plane`** — open/get/close/list lifecycle wired at start (same storage as work plane)  
 
+#### Added (0.58.2)
+- **Multi-attach** — `attach_instance` / `detach_instance` / `list_instances` / `session_for_instance`  
+- **Reverse index** — `palm:session:by_instance:{instance_id}` → session_id (one instance → one session)  
+- OPEN → ACTIVE on first attach; refuse attach on closed; refuse dual-session ownership  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.1**.  
-- Next: **0.58.2** multi-attach.
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.2**.  
+- Next: **0.58.3** bind law on entry.
 
 ## [0.57.14] — 2026-07-29
 

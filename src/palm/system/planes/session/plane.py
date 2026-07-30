@@ -1,10 +1,11 @@
-"""SessionPlaneService — system **session** plane seat (0.58.1).
+"""SessionPlaneService — system **session** plane (0.58).
 
 Outside subject: open / get / close / list on :class:`SessionStore`
-(:class:`~palm.core.storage.StorageEngine`). Multi-attach grows in 0.58.2.
-Surfaces bind later (0.58.3+).
+(:class:`~palm.core.storage.StorageEngine`). Multi-attach (0.58.2):
+attach/detach instances; reverse index instance→session.
 
-Does **not** resume jobs. Continue remains the wait plane.
+Surfaces bind later (0.58.3+). Does **not** resume jobs —
+continue remains the wait plane.
 """
 
 from __future__ import annotations
@@ -34,14 +35,19 @@ class SessionClosedError(SessionPlaneError):
     """Session is closed and cannot accept mutations."""
 
 
+class InstanceAlreadyAttachedError(SessionPlaneError):
+    """Instance is already attached to a different session."""
+
+
 class SessionPlaneService:
-    """Session plane: lifecycle of outside subjects on one system instance.
+    """Session plane: lifecycle + multi-instance attach on one system instance.
 
     Lifecycle:
     * construct with :class:`SessionStore` (or storage engine)
-    * :meth:`attach` — bind to a runtime
-    * :meth:`detach` — clear runtime link (store remains on storage backend)
+    * :meth:`attach` / :meth:`detach` — plane↔runtime link (not instances)
     * :meth:`open` / :meth:`get` / :meth:`close` / :meth:`list_sessions`
+    * :meth:`attach_instance` / :meth:`detach_instance` — multi-attach (0.58.2)
+    * :meth:`session_for_instance` — reverse lookup
     """
 
     def __init__(
@@ -104,7 +110,11 @@ class SessionPlaneService:
         return rec
 
     def close(self, session_id: str) -> SessionRecord:
-        """Mark session CLOSED. Idempotent if already closed."""
+        """Mark session CLOSED. Idempotent if already closed.
+
+        Does not detach instances from the record (history stays).
+        Reverse index remains until instances are detached or session deleted.
+        """
         rec = self.require(session_id)
         if rec.status == SessionStatus.CLOSED:
             return rec
@@ -120,23 +130,88 @@ class SessionPlaneService:
     ) -> list[SessionRecord]:
         return self._store.list(status=status, include_closed=include_closed)
 
+    def attach_instance(self, session_id: str, instance_id: str) -> SessionRecord:
+        """Attach an instance to a session (multi-attach; 0..N).
+
+        Idempotent if already on this session. Refuses if another session
+        already owns the instance. Promotes OPEN → ACTIVE on first attach.
+        """
+        iid = (instance_id or "").strip()
+        if not iid:
+            raise SessionPlaneError("instance_id is required")
+        rec = self.require(session_id)
+        if rec.status == SessionStatus.CLOSED:
+            raise SessionClosedError(
+                f"session {session_id!r} is closed; cannot attach instances"
+            )
+        owner = self._store.session_id_for_instance(iid)
+        if owner is not None and owner != rec.session_id:
+            raise InstanceAlreadyAttachedError(
+                f"instance {iid!r} already attached to session {owner!r}"
+            )
+        if iid in rec.instance_ids:
+            return rec
+        rec.instance_ids.append(iid)
+        if rec.status == SessionStatus.OPEN:
+            rec.status = SessionStatus.ACTIVE
+        rec.touch()
+        return self._store.put(rec)
+
+    def detach_instance(self, session_id: str, instance_id: str) -> SessionRecord:
+        """Remove an instance from a session. Idempotent if not attached.
+
+        Closed sessions may still detach (cleanup). Does not reopen closed.
+        """
+        iid = (instance_id or "").strip()
+        if not iid:
+            raise SessionPlaneError("instance_id is required")
+        rec = self.require(session_id)
+        if iid not in rec.instance_ids:
+            return rec
+        rec.instance_ids = [x for x in rec.instance_ids if x != iid]
+        rec.touch()
+        return self._store.put(rec)
+
+    def list_instances(self, session_id: str) -> list[str]:
+        """Return attached instance ids for a session (ordered)."""
+        return list(self.require(session_id).instance_ids)
+
+    def session_for_instance(self, instance_id: str) -> SessionRecord | None:
+        """Reverse lookup: session that owns this instance, if any."""
+        return self._store.get_by_instance(instance_id)
+
     def doctor_snapshot(self) -> dict[str, Any]:
         """Small inspect payload for doctor / system diagnostics."""
         open_n = len(self._store.list(status=SessionStatus.OPEN, include_closed=False))
-        active_n = len(self._store.list(status=SessionStatus.ACTIVE, include_closed=False))
+        active_n = len(
+            self._store.list(status=SessionStatus.ACTIVE, include_closed=False)
+        )
         closed_n = len(self._store.list(status=SessionStatus.CLOSED))
+        attached_instances = 0
+        for rec in self._store.list(include_closed=True):
+            attached_instances += len(rec.instance_ids)
         backend = getattr(self._store.storage, "backend_name", None)
         return {
             "plane": "session",
             "session_plane_attached": self.is_attached,
-            "verbs": ["open", "get", "close", "list"],
+            "verbs": [
+                "open",
+                "get",
+                "close",
+                "list",
+                "attach_instance",
+                "detach_instance",
+                "session_for_instance",
+            ],
             "store": "storage_engine",
             "storage_backend": backend,
+            "multi_attach": True,
             "counts": {
                 "open": open_n,
                 "active": active_n,
                 "closed": closed_n,
                 "total": len(self._store),
+                "attached_instances": attached_instances,
             },
         }
 
@@ -158,6 +233,7 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
 
 
 __all__ = [
+    "InstanceAlreadyAttachedError",
     "SessionClosedError",
     "SessionNotFoundError",
     "SessionPlaneError",

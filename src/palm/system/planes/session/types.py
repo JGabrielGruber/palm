@@ -1,7 +1,7 @@
 """Session plane types — system outside subject (0.58).
 
-Session ≠ instance ≠ job. One session may attach many instances later
-(attach API grows in 0.58.2; the record already holds the list).
+Session ≠ instance ≠ job. One session may attach many instances
+(:meth:`~palm.system.planes.session.plane.SessionPlaneService.attach_instance`).
 """
 
 from __future__ import annotations
@@ -34,8 +34,9 @@ def _now_iso() -> str:
 class SessionRecord:
     """Durable-shaped session subject held by the session plane.
 
-    ``instance_ids`` is ordered attach list (0..N). Empty at open until
-    multi-attach slices bind work under this session.
+    ``instance_ids`` is the ordered attach list (0..N). Empty at open
+    until :meth:`~SessionPlaneService.attach_instance` binds work under
+    this session.
     """
 
     session_id: str

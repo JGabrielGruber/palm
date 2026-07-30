@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** at **0.58.0** (plan only).  
+**Status:** 🚧 **Theme open** — through **0.58.2** (multi-attach).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -113,7 +113,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 |------:|--------------|--------|
 | **0** | Plan + map + ADR + debt impact | This file, ADR-027, PALM/STATUS/TECH-DEBT — **0.58.0** ✅ |
 | **1** | System seat | Types + plane module + lifecycle API on system instance — **0.58.1** ✅ |
-| **2** | Store + multi-attach | Session record persists; attach/detach instances (0..N) |
+| **2** | Store + multi-attach | Session record persists; attach/detach instances (0..N) — **0.58.2** ✅ |
 | **3** | Bind law on entry | Touched surfaces resolve session; kill silent instance-only happy paths where theme touches |
 | **4** | Job path link | Create/attach instance under session; events can filter by session |
 | **5** | Wait / inspect | Session → open waits / journey view (no private resume hooks) |
@@ -196,6 +196,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 |-------|------|
 | **0.58.0** | Plan + ADR-027 Proposed + map/STATUS/debt + supersede VISION-SESSION-PLANE + SI impact inventory |
 | **0.58.1** | System seat: `planes.session` types + lifecycle; **StorageEngine** store; `BaseRuntime.session_plane` |
+| **0.58.2** | Multi-attach: `attach_instance` / `detach_instance` / `session_for_instance`; reverse key `palm:session:by_instance:*`; OPEN→ACTIVE on first attach; one instance → one session |
 
 ---
 
