@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [VISION-0.58](VISION-0.58.md) (session theme **open**) · [ADR-027](adr/027-session-plane.md) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -78,7 +78,8 @@ These words are **stable**. Use them with one meaning only.
 | **Pattern** | How a flow shape runs (wizard, parallel, pipeline, dag, …). Plugin. |
 | **Behavior Tree (BT)** | Control-flow model: nodes tick; composition is explicit. |
 | **Job** | Live unit of execution under the orchestration engine. |
-| **Instance** | Durable process/session record; survives restart when storage is shared. |
+| **Instance** | Durable process record for one definition run; survives restart when storage is shared. |
+| **Session** | Outside subject (system plane): one coherent external walk; may own **many** instances. |
 | **State** | Blackboard data for the run (`BaseState` and schemas). |
 | **Resource** | Named way to **speak** to an external or internal system (provider + action). |
 | **Provider** | Plugin that implements resource speak. |
@@ -245,7 +246,7 @@ A **plane** is system traffic of one kind.
 | **Event** | Signals; completers speak of self | `runtime.event` (orchestration bus) |
 | **Work (start)** | Trigger → WorkIntent → new job | Work drain / start plane |
 | **Wait (continue)** | Interest → resume or fail parked work | Wait plane |
-| **Session** (queued) | Human unit of walk and watch | System; thin product later |
+| **Session** (0.58 open) | Outside subject: bind, multi-instance walk, watch | System (`planes.session`); thin product later |
 | **Workload** | Isolation lifecycle events and placement | Workload engine + runners |
 
 **Host bus** (`host.event`) is for host coordination (start, shutdown, outbox process).  
@@ -466,7 +467,7 @@ From theme **0.57** onward:
 | Event buses | [EVENT-PLANE](EVENT-PLANE.md) |
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
 | Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
-| Session (queued) | [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) |
+| Session plane (theme open) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
@@ -494,9 +495,9 @@ A map that only names **ideals** without today is also incomplete.
 | Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks (**0.57 closed**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
-| Live debt register | **Real** — residual **SU-*** / **SD-008** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
+| Live debt register | **Real** — residual **SU-*** / **SD-008** (in 0.58) / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
-| Session plane | **Queued as a theme** — [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) |
+| Session plane | **Theme open 0.58** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

@@ -1,12 +1,24 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.57.14` · **Last theme:** **`0.57` Palm System** (**closed**) · **Prior:** **`0.56` Workload** scout · **`0.55` Reactive Interests** · **`0.54` Hermetic Jobs**  
-**Last Updated:** July 29, 2026  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) · [VISION-0.57](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**  
-**Migration / release:** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) (residual **SU-***, **SD-008** session) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open** at plan **0.58.0**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
+**Last Updated:** July 30, 2026  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
+**Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** in theme · **SI-*** impact inventory · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane (plan)** · [Grove](docs/VISION-GROVE.md).
+
+### Agent resume (after compact)
+
+Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-027](docs/adr/027-session-plane.md) → [TECH-DEBT.md](TECH-DEBT.md) **SI-*** + **SD-008** → [PALM.md](docs/PALM.md) planes.
+
+| Spirit | Decision |
+|--------|----------|
+| **Goal** | Session is the **outside subject** and **system glue**. Multi-instance capable. Not user plane. |
+| **Home** | `palm.system.planes.session` (system). Product thin. |
+| **Law** | No outside interaction without a session bind. Surfaces bind (cookie-like OK on server). |
+| **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
+| **Next code** | **0.58.1** system seat (types + lifecycle) after this plan lands. |
 
 ## Quick Overview
 
@@ -25,7 +37,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | Layer | Role (short) |
 |-------|----------------|
 | `palm/core/` | Pure engines. No external Palm imports. |
-| **`palm/system/`** | Running Palm: `BaseRuntime`, ports, wait/work/workload planes ([PALM.md](docs/PALM.md)). |
+| **`palm/system/`** | Running Palm: `BaseRuntime`, ports, wait/work/workload planes; **session (0.58)** ([PALM.md](docs/PALM.md)). |
 | `palm/common/` | Shared libraries (plans, CQRS, transforms, persistence). No system shims. |
 | `palm/kits/` | Surface infrastructure kits (`server`, …) — install-list truth. |
 | `palm/services/` | Product (userland): definitions, execution, assist, design, … |
@@ -33,12 +45,40 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
+## 0.58 — Session plane (**open** · plan `0.58.0`)
+
+**Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
+**Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
+**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-008** (active) · **SI-001…** impact inventory · residual **SU-***
+
+**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. Surfaces **bind** (server may use cookie-like transport). Not the user plane. Not a second wait/resume path.
+
+**Spirit:** Capable, not weak. Break `session_id == instance_id`. Prefer truth over shims. Store is allowed for the plane. Do not reinvent identity — bind is enough.
+
+| Patch | Status | Purpose |
+|-------|--------|---------|
+| **0.58.0** | ✅ plan | VISION + ADR-027 + PALM/STATUS/debt + SI inventory |
+| **0.58.1** | 📋 next | System seat: types + lifecycle API |
+| **0.58.2** | 📋 | Store + multi-attach (0..N instances) |
+| **0.58.3** | 📋 | Bind law on entry (touched surfaces) |
+| **0.58.4** | 📋 | Job path link + event attribution |
+| **0.58.5** | 📋 | Wait / inspect by session |
+| **0.58.6** | 📋 | Assist + MCP dogfood |
+| **0.58.7** | 📋 | WS / cookie-like bind |
+| **0.58.8+** | 📋 | Watches / fan-in |
+| **exit** | 📋 | Map true · SD-008 closed · ADR Accepted |
+
+**Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  
+**At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.
+
+---
+
 ## 0.57 — Palm System (**closed** · theme exit `0.57.14`)
 
 **Vision:** [docs/VISION-0.57.md](docs/VISION-0.57.md) · **ADR:** [docs/adr/026-palm-system-layer.md](docs/adr/026-palm-system-layer.md) **Accepted**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Migration:** [docs/migrations/MIGRATION-0.57.md](docs/migrations/MIGRATION-0.57.md) · **Release:** [docs/releases/RELEASE-0.57.14.md](docs/releases/RELEASE-0.57.14.md)  
-**Debt residual:** [TECH-DEBT.md](TECH-DEBT.md) **SU-*** (optional) · **SD-008** session → future theme · [STUBS.md](docs/STUBS.md) · [era archive](docs/audit/TECH-DEBT-ERA-0.45.md)
+**Debt residual:** [TECH-DEBT.md](TECH-DEBT.md) **SU-*** (optional) · **SD-008** → **0.58** · [STUBS.md](docs/STUBS.md) · [era archive](docs/audit/TECH-DEBT-ERA-0.45.md)
 
 **Theme:** Name the system layer. Shared vs system. One execution port. Kits exposed. Document debt; pay structure in order.
 
@@ -59,7 +99,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | 0.57.12 Shim delete + port catalog | ✅ |
 | 0.57.13 Kits package | ✅ `palm.kits` + `palm.kits.server` |
 | **0.57.14** Theme exit + version dump | ✅ ADR-026 Accepted · MIGRATION-0.57 · stamp `0.57.14` |
-| **0.57 structure** | ✅ closed — SU-* optional; session = next theme when opened |
+| **0.57 structure** | ✅ closed — SU-* optional; session opened as **0.58** |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).
 
@@ -166,12 +206,14 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 **North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
 
-- **0.55** Reactive Interests — law closed; continue plane through deliver registry  
-- **0.56** Workload plane — foundation green; runners + CQRS next ([VISION-0.56](docs/VISION-0.56.md) · [ADR-024](docs/adr/024-workload-engine.md))  
-- **Session plane** (queued) — [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
+- **0.58** Session plane — **open** ([VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md))  
+- **0.55** Reactive Interests — law closed  
+- **0.56** Workload plane — scout; session cancel / ownership consume 0.58  
+- **0.57** System layer — closed  
 - Docs dogfood domain (post session + workload)  
 - Adapter runners via workloads (PD-022)  
 - Peer / org dogfood (Grove later seasons)  
-- Payload/artifact registry for registered modules
+- Payload/artifact registry for registered modules  
+- Shared plane-store framework — **ponder later** (each plane may grow a store)
 
 See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-GROVE.md](docs/VISION-GROVE.md).

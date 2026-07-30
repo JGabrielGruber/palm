@@ -141,7 +141,7 @@ Continue:  job opens wait → parks → target emits → matcher → resume owne
 | **Reactive interests (0.55)** | Social contract of every node and of the mesh | Wait plane; event-match resume; WorkIntent as start |
 | **Event plane** | Nervous system | Stable public payloads; runtime bus for lifecycle |
 | **Work plane** | Deferred **start** | Triggers, inbound, schedules, drain — already strong |
-| **Session plane** (queued) | Human unit of walk/watch | Subscribe to journey life + open waits |
+| **Session plane** (**0.58** open) | Outside subject / walk glue (multi-instance) | [VISION-0.58](VISION-0.58.md) · bind + attach + watch |
 | **Workload plane (0.56)** | Place body of work (incl. `runtime=palm`) | Isolation ≠ I/O; peer placement; ownership |
 | **Definitions + revisions** | Shared language of the org | Catalog pin; instance pin; Design evolve |
 | **Providers / blueprints** | **Speak** after READY | Continuous consume, not parallel service APIs |
@@ -197,7 +197,7 @@ Execution order still follows [VERSIONING](VERSIONING.md) minors. This is **comp
 |---------------|----------------------|--------|
 | **Reactive interests** | Local start/continue true; nested flow on event match; second wait kind stub | **[0.55](VISION-0.55.md)** open |
 | **Workload plane** | Place work; peer palm runtime; ownership; real `workload.*` events | **[0.56](VISION-0.56.md)** queued |
-| **Session plane** | Humans watch the same interests; walk is observable | [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) queued |
+| **Session plane** | Humans walk and watch the same subject; multi-instance | [VISION-0.58](VISION-0.58.md) open |
 | **Peer dogfood** | Two Palms: handoff + wait + place | later |
 | **Org catalog + trust** | Named organization, shared definitions, allowlists | later |
 | **User / service phenotypes** | Composition profiles for multi-user and service palms | later |

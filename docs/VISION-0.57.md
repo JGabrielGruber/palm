@@ -135,7 +135,7 @@ Slices stay **one purpose each**. Numbers lock at execution time.
 | **0.55** | Law of start / continue — keep |
 | **0.56** | Workload **scout** — engine + leaf direction; may rewrite bindings |
 | **0.57** | **System name and wiring** — main goal |
-| **Session plane** | After system home exists ([VISION-SESSION-PLANE](VISION-SESSION-PLANE.md)) |
+| **Session plane** | **0.58 open** ([VISION-0.58](VISION-0.58.md)) |
 | **Grove** | Still the multi-Palm north star; local system is the floor |
 
 ---
@@ -182,7 +182,7 @@ Theme **0.57** closed when (all met at **0.57.14**):
 | Residual | Disposition |
 |----------|-------------|
 | **SU-*** (explorer, MCP dual stack, CLI aliases, surface weight) | Optional surface work — not system law |
-| **SD-008** session plane home | **Future theme** ([VISION-SESSION-PLANE](VISION-SESSION-PLANE.md)) |
+| **SD-008** session plane home | **Opened as 0.58** ([VISION-0.58](VISION-0.58.md)) |
 | STE rewrite of old dense docs | Opportunistic when files are touched |
 
 **Next growth** sits **on** the map: session plane, more kits, Grove — not dual paths through `common`.

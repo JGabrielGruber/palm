@@ -1,64 +1,45 @@
-# VISION — Session plane (lifecycle + subscriptions)
+# VISION — Session plane (historical queue note)
 
-**Status:** 📋 **Queued** — after [VISION-0.55](VISION-0.55.md) **Reactive Interests**.  
-**Was:** interim plan for minor 0.55; **replanned** July 2026 so wait/start law lands first ([VISION-GROVE](VISION-GROVE.md)).  
-**Likely minor:** **0.57+** (or late overlap with workload theme) — lock number at that theme’s `X.0`.
-
-**Sequel context:** [VISION-0.56](VISION-0.56.md) Workload · [VISION-GROVE](VISION-GROVE.md) Grove north star.
+**Status:** ⚠️ **Superseded** by **[VISION-0.58](VISION-0.58.md)** (theme open at 0.58.0).  
+**Do not** plan or implement from this file.
 
 ---
 
-## Theme
+## Why this file remains
 
-Treat the **session** as a first-class subject: lifecycle, multi-event subscriptions, optional storage projection — shared by Assist, dashboard, and composition.
+This note was the **queued** session theme after the 0.55 replan (wait law first).  
+It was **watch- and subscription-first**.
 
-> *Hermetic run-code proved the loop. Operators and dashboards both need to watch a session live — without each surface inventing wait/poll hacks.*
+**0.58** reframes session as **system glue**:
 
-**Builds on:** [EVENT-PLANE.md](EVENT-PLANE.md) · [VISION-0.55](VISION-0.55.md) wait interest inspect · public event catalog · Assist bind · events WS.
+- bind law (no outside interaction without a session),  
+- multi-instance ownership,  
+- system home under `palm.system`,  
+- watches as later slices on that plane.
 
----
-
-## Intent
-
-| Do | Notes |
-|----|--------|
-| **Session** = durable subject (`instance_id`) with lifecycle | |
-| Multi-type **subscriptions** filtered by session/job **and open wait interest** | Grove-shaped |
-| One spine for Assist + dashboard + composition | |
-| Thin SessionService if product API needs it | |
-| Optional storage for projection / watch registry | Not second source of truth vs instance/job |
-| Public types + small payloads | |
+Authoritative plan: **[VISION-0.58.md](VISION-0.58.md)** · ADR: **[027-session-plane.md](adr/027-session-plane.md)**.
 
 ---
 
-## Surfaces
+## Historical intent (for archaeology only)
 
-| Surface | Use |
-|---------|-----|
-| Assist / Portal | After bind: fan-in progress; turn remains “what next” |
-| Dashboard / Explorer | Watch many sessions or waiting fleet |
-| Composition / inbound | Precise “when this session finishes” |
-| Events WS | Multi-type + `filter.session_id` / wait targets |
+Treat session as a first-class subject: lifecycle, multi-event subscriptions, optional projection — shared by Assist, dashboard, and composition.
 
----
-
-## Slice sketch (re-lock at theme open)
-
-| Patch | Direction |
-|-------|-----------|
-| **X.0** | Plan + ADR: session lifecycle, subscription filter, storage optional |
-| **X.1** | Events WS / in-process watch: session_id \| job_id \| wait target |
-| **X.2** | SessionWatch registry + tests |
-| **X.3** | Assist bind → progress/event fan-in |
-| **X.4** | Dashboard or REST live waiting dogfood |
-| **X.5** | SessionService compose-in + optional projection |
+| Old slice spirit | Where it goes now |
+|------------------|-------------------|
+| Plan + ADR | **0.58.0** (done as VISION-0.58 + ADR-027) |
+| Events WS / filter by session | **0.58** later watch / WS slices |
+| SessionWatch registry | After bind + multi-attach |
+| Assist fan-in | Assist dogfood slice |
+| Dashboard dogfood | After plane exists (optional) |
+| SessionService product | Thin product only; system plane is truth |
 
 ---
 
-## Deferred further
+## Deferred further (unchanged)
 
 Living Library **docs dogfood domain** (DocsService, corpora as process) → after session + workload foundations.
 
 ---
 
-*Session is the human unit of work. Subscribe to its life — including its waits.* 🌴📡
+*See VISION-0.58. Session is the outside subject. Bind it. Own many instances.* 🌴📡

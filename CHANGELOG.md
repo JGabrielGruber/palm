@@ -4,6 +4,20 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.58 — Session plane (**theme open** · plan only)
+
+Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-plane.md) **Proposed**
+
+#### Added (0.58.0 plan)
+- Theme plan: session as **system glue**, multi-instance, bind law (not user plane)  
+- [ADR-027](docs/adr/027-session-plane.md) Proposed  
+- Tech debt **SI-001…014** session impact inventory; **SD-008** theme-active  
+- [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) marked **superseded**
+
+#### Notes
+- Code stamp remains `0.57.14` until an embedded dump; logical slice **0.58.0** is docs/plan.  
+- Next: **0.58.1** system seat (`palm.system.planes.session`).
+
 ## [0.57.14] — 2026-07-29
 
 Embedded release covering **0.55–0.57** (previous stamp `0.54.10`).  
@@ -30,7 +44,7 @@ Logical slices **0.57.0–0.57.14**. Vision: [VISION-0.57](docs/VISION-0.57.md)
 
 #### Residual (not blocking close)
 - **SU-*** surface debt (explorer, MCP dual stack, CLI weight) — optional  
-- **SD-008** session plane — future theme ([VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
+- **SD-008** session plane — opened as theme **0.58** ([VISION-0.58](docs/VISION-0.58.md))
 
 #### Slice log
 - **0.57.0–1** — Plan, map, ADR, debt archive, low-level  

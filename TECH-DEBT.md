@@ -1,8 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14** — residual **SU-*** (optional) and **SD-008** (session theme).  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane open** at **0.58.0** — **SD-008** active · **SI-*** impact inventory.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
+**Theme (open):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Proposed**  
 **Theme (closed):** [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
 
 ---
@@ -11,9 +12,9 @@
 
 | Rule | Meaning |
 |------|---------|
-| **This file is live** | Residual after 0.57 close: SU-*, SD-008, CS/CF as listed |
+| **This file is live** | Residual + **0.58** session work: SU-*, SD-008, **SI-***, CS/CF |
 | **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
-| **IDs** | **SD-** system · **SU-** surface · **ST-** stub/intention lie · **CS-** code smell · **CF-** carry from PD era |
+| **IDs** | **SD-** system · **SU-** surface · **SI-** session impact (chew later) · **ST-** stub · **CS-** smell · **CF-** carry from PD era |
 | **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |
 | **Stubs catalog** | Purpose without fake implementation: [docs/STUBS.md](docs/STUBS.md) |
 | **Close** | Mark `✅ done` with theme patch; do not delete rows |
@@ -21,6 +22,8 @@
 
 **Add a row when:** you leave a shim, find an edge→engine bypass, discover a purpose lie, or ship a surface that bypasses product/ports.  
 **Do not add:** fixed bugs that are not structural.
+
+**SI-* purpose:** After analysis (0.58.0), list code/docs that **must change** when session becomes multi-instance system glue. Not all are 0.58 slices. Agents resume from SI rows without full chat context.
 
 ---
 
@@ -35,7 +38,7 @@
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5–7, 0.57.11–12 | ✅ done for known product edges |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
-| [SD-008](#sd-008) | Session plane has no system home | S2 | M | **future theme** (not 0.57 slice) | open (deferred) |
+| [SD-008](#sd-008) | Session plane has no system home | S2 | M | **0.58** | open (theme active) |
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5, 0.57.12 | ✅ service path on port; leaves already port-driver |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.13 | ✅ kits package (`palm.kits.server`) |
@@ -195,13 +198,16 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 ### SD-008 — Session plane has no system home
 
-**Severity:** S2 · **Effort:** M · **Status:** deferred to a **session theme** (not a 0.57 slice)
+**Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
-**Observation:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) is queued.  
-Session is product+surface heavy; forcing a system seat without a theme map
-creates dual paths.
+**Observation:** Session lived only as product words (`AssistSession`, `FlowSession`) and
+`session_id == instance_id` aliases. No `palm.system.planes.session`.  
+Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
-**Target:** Dedicated theme after 0.57 exit — plane home designed there.
+**Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
+system home, multi-instance attach, bind law, store allowed. Close when plane + multi-attach exist.
+
+**Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
 
 ---
 
@@ -537,22 +543,132 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 ---
 
-## 5. 0.57 slice ↔ debt
+## 4b. Session impact inventory (SI-* · 0.58.0 analysis)
+
+**Purpose:** Capture **what the session plane will break or rebind** so agents can chew later without chat context.  
+**Law (0.58):** session ≠ instance ≠ job; multi-instance; system home; surfaces bind.  
+**Not all SI rows are 0.58 must-close.** Pay when a slice touches that edge; otherwise leave open.
+
+| ID | Title | Area | Theme touch | Status |
+|----|-------|------|-------------|--------|
+| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.3–6 | open |
+| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–6 | open |
+| [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.2–4 | open |
+| [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | open |
+| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6 | open |
+| [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | later / 0.58.3 | open |
+| [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.3–4 | open |
+| [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4 | open |
+| [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.4+ / 0.56 residual | open |
+| [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
+| [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | later | open |
+| [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
+| [SI-013](#si-013) | No session store (memory/durable) | system plane | 0.58.2 | open |
+| [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
+
+### SI-001 — session_id forced equal to instance_id
+
+**Where:** `palm/services/assist/schemas.py` (and flow session views) set `instance_id = session_id`.  
+**Impact:** Multi-instance impossible; external APIs lie.  
+**Target:** Distinct ids; session record holds attach list.
+
+### SI-002 — FlowSession / AssistSession product-only
+
+**Where:** `services/execution/flows/session.py`, `services/assist/session.py`, `services/assist/sessions/`.  
+**Impact:** Handles are fine; they must resolve **system** session, not invent truth.  
+**Target:** Thin handles over plane; verbs may still target a primary instance for UX.
+
+### SI-003 — ProcessInstance has no session owner
+
+**Where:** `palm/instances/process_instance.py`, instance manager, job hooks.  
+**Impact:** Cannot list instances by session or cancel by session walk.  
+**Target:** Link instance → session_id (metadata or first-class field); reverse index on session store.
+
+### SI-004 — WS bind is surface-local
+
+**Where:** `runtimes/server/surfaces/websocket/session.py` (`op: bind`, `conn.session_id`).  
+**Impact:** Reconnect continuity does not create a system session subject.  
+**Target:** Bind op creates/loads plane session; cookie-like HTTP same contract.
+
+### SI-005 — MCP / palm_assist session = instance
+
+**Where:** `runtimes/mcp/assist/*`, assist grammar paths `session/{id}`.  
+**Impact:** Agents continue “sessions” that are only instances.  
+**Target:** Dogfood: create session, attach flow instance(s), continue via bind.
+
+### SI-006 — CLI / REPL active session id
+
+**Where:** `runtimes/cli/tui/*`, `runtimes/cli/shared/context.py` (`mark_active(session_id)`).  
+**Impact:** CLI treats id as instance manager key.  
+**Target:** Active bind points at system session; instance mark-active via attach list.
+
+### SI-007 — CQRS instance queries as public session
+
+**Where:** host CQRS, `kits/server/cqrs.py`, facades `get_instance`, flows session REST.  
+**Impact:** Operator APIs speak instance only.  
+**Target:** Session inspect queries; instance remains job-path API.
+
+### SI-008 — flow.session.* events
+
+**Where:** orchestration terminal emit; EVENT-PLANE catalog; ingress storm guard.  
+**Impact:** Name says session; payload is job/instance shaped.  
+**Target:** Attribute real `session_id` when known; keep event type names if useful.
+
+### SI-009 — WorkloadOwner.session_id
+
+**Where:** `palm/core/workload/owner.py`, engine stop-by-owner filters.  
+**Impact:** Optional field never filled from a plane.  
+**Target:** Attach workloads to session via owner when job path has session; cancel-owned becomes real.
+
+### SI-010 — Explorer / REST without session bind
+
+**Where:** server explorer SSR, REST flow session routes (SU-001 related).  
+**Impact:** Operator UI bypasses session glue.  
+**Target:** Later surface paydown; cookie bind when HTTP is touched.
+
+### SI-011 — Composition / inbound without session
+
+**Where:** work-drain triggers, inbound composition, schedules.  
+**Impact:** Automated **start** may not need a human session; **operator-facing** composition should.  
+**Target:** Policy: system/automated intents may use a **service session** or explicit “no session” only if ADR allows; do not silently invent dual law. *Decide in a later slice; record here so we do not forget.*
+
+### SI-012 — Docs and skills alias
+
+**Where:** MCP skill, docs/MCP.md, wiki, examples that say session_id is instance.  
+**Impact:** Agents re-learn the lie.  
+**Target:** Update when dogfood lands; STE on touch.
+
+### SI-013 — No session store
+
+**Where:** (missing) `palm.system.planes.session` store.  
+**Impact:** Multi-attach and resume across process need persistence.  
+**Target:** 0.58.2 — memory + durable via existing storage patterns (mirror instance manager spirit).
+
+### SI-014 — Shared plane-store framework
+
+**Observation:** Wait, work, workload, session may each need stores.  
+**Target:** **Ponder later** — not a 0.58 gate. Per-plane store first.
+
+---
+
+## 5. 0.57 slice ↔ debt (closed theme)
 
 | Slice | Closes or reduces |
 |------:|-------------------|
-| 0.57.1 | Archive + SD register + low-level + **STUBS / surface debt** |
-| 0.57.2 | SD-002 (boundary ✅), SD-003 (SystemInstance), SD-006 ✅, SD-001 port type |
-| 0.57.3 | SD-001 (port exists), SD-009 (start) |
-| 0.57.4 | SD-004 |
-| 0.57.5 | SD-001, SD-005, SD-009 (product rebind) |
-| 0.57.6 | SD-002 deflate bulk ✅, SD-012 shims listed; SD-011 residual |
-| 0.57.7 | SD-005 effects ✅ (`resume_job` on port); list residual; AGENTS no-shortcut |
-| 0.57.8 | SD-012 import sweep — src/tests use palm.system; shim modules remain |
-| 0.57.9 | SD-013 / ST-001…005 — truthful INSTALLED_*; INTENTION_* + loud refuse |
-| 0.57.10 | Living docs/notes match system layer (STATUS, ARCHITECTURE, PALM, …) |
-| parallel / soon | **ST-001…005** demote lying stubs; unfreeze tests |
-| later | SU-002…008 bulk; SD-008 session; SD-010 STE; CF-* |
+| 0.57.1–14 | See closed theme; **SD-008** left open → **0.58** |
+| later | SU-* bulk; SD-010 STE; CF-* |
+
+## 5b. 0.58 slice ↔ debt
+
+| Slice | Closes or reduces |
+|------:|-------------------|
+| 0.58.0 | Plan; SI inventory; SD-008 active (not closed) |
+| 0.58.1 | SD-008 home (partial); plane types |
+| 0.58.2 | SI-013; multi-attach foundation; SI-003 start |
+| 0.58.3–4 | SI-001, SI-007, SI-008 (partial) |
+| 0.58.5–6 | SI-002, SI-005 |
+| 0.58.7 | SI-004 |
+| later / residual | SI-006, SI-009…012, SI-014, SU-* |
 
 ---
 
@@ -560,8 +676,10 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 - **Core purity** — absolute; never “fix” by importing product into core.  
 - **Register downward** — absolute.  
-- **Pre-1.0 breaks** — allowed when structure needs truth; record SD/CF, ship migration note if public API breaks.  
-- **Archive era PD numbers** — frozen history; no renumber.
+- **Pre-1.0 breaks** — allowed when structure needs truth; record SD/SI/CF, ship migration note if public API breaks.  
+- **Archive era PD numbers** — frozen history; no renumber.  
+- **Session store without shared plane-store framework** — allowed (SI-014 later).  
+- **Cookie-like bind** — transport only; not a second session model.
 
 ---
 
