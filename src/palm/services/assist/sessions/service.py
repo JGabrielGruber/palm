@@ -49,6 +49,24 @@ class AssistSessionService:
         except Exception:
             return text
 
+    def _gate_bound_session_owns(
+        self, instance_id: str, params: dict[str, Any] | None
+    ) -> None:
+        """SI-015 / 0.58.11: bound system session must own the continue instance."""
+        params = params or {}
+        raw = params.get("session_id")
+        if raw is None or not str(raw).strip():
+            return
+        from palm.system.planes.session import looks_like_system_session_id
+
+        if not looks_like_system_session_id(raw):
+            return
+        runtime = self._assist.execution.flows.resolve_runtime()
+        plane = getattr(runtime, "session_plane", None)
+        if plane is None:
+            return
+        plane.require_owned_instance(str(raw).strip(), str(instance_id).strip())
+
     def inspect(
         self,
         session_id: str,
@@ -75,6 +93,8 @@ class AssistSessionService:
         params = params or {}
         view_format = resolve_view_format(params)
         include_input = want_input_schema(params)
+        instance_id = self._resolve_instance_id(session_id)
+        self._gate_bound_session_owns(instance_id, params)
         handle = self.get(session_id)
         if verb == "input":
             value = params.get("value", params.get("input"))

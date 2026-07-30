@@ -78,8 +78,16 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **ADR-027** D9–D11; **VISION-0.58** §4.1 / §7.1; residual **SI-015** (gate continue when bound)  
 - **Later seed:** user-plane session **impersonation** / grants — act as owner; do not dual-own  
 
+#### Added (0.58.11) — SI-015 owner gate
+- **`owns_instance` / `require_owned_instance` / `InstanceNotOwnedError`** on session plane  
+- **Operator rewrite** refuses continue when bound system `session_id` does not own path/param instance  
+- **Flows + Assist** dispatch gate when params carry system `session_id`  
+- **Host** `require_session_owns_instance`; WS error code `session_owner`  
+- Path product instance is **authoritative** (not replaced by plane focus)  
+- **Residual:** bare instance without bound system session still ungated  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.10**.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.11**.  
 - Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 

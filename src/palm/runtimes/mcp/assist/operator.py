@@ -107,8 +107,13 @@ def rewrite_system_session_continue(
     segments still expect an **instance** id (SI-001/005). When a path or
     param carries ``sess-…`` where product needs an instance, resolve via
     :meth:`~palm.system.planes.session.SessionPlaneService.resolve_continue_instance`
-    (waiting → else last attached). Does **not** invent resume. Does **not**
+    (active → waiting → last attached). Does **not** invent resume. Does **not**
     write the instance back into ``session_id``.
+
+    **0.58.11 SI-015:** when a system ``session_id`` is bound and the path is a
+    product continue/inspect under that subject, the continue ``instance_id``
+    must be on the session attach list
+    (:meth:`~palm.system.planes.session.SessionPlaneService.require_owned_instance`).
     """
     from palm.kits.server.middleware import resolve_session_plane
     from palm.system.planes.session import looks_like_system_session_id
@@ -150,6 +155,13 @@ def rewrite_system_session_continue(
                 out_path[3] = inst
                 _apply_instance(inst, str(raw))
 
+    # Explicit product instance in the path is the continue target (do not
+    # replace it with resolve_continue_instance of the bound session — that
+    # would hide SI-015 foreign-instance attempts).
+    path_inst = _path_continue_instance(out_path)
+    if path_inst and not looks_like_system_session_id(path_inst):
+        out_params["instance_id"] = path_inst
+
     # Params: session_id is system; instance_id is continue (resolve if missing).
     system_sid = out_params.get("session_id")
     inst_param = out_params.get("instance_id")
@@ -169,7 +181,53 @@ def rewrite_system_session_continue(
         if inst:
             out_params["instance_id"] = inst
 
+    # SI-015: bound system session + product continue instance → owner check
+    _gate_continue_owner(plane, out_path, out_params)
+
     return out_path, out_params
+
+
+def _path_continue_instance(path: list[str]) -> str | None:
+    """Extract product instance id from assist/flows session paths."""
+    if len(path) >= 3 and path[0] == "assist" and path[1] == "session":
+        return str(path[2]) if path[2] else None
+    if len(path) >= 4 and path[0] == "flows" and path[2] == "session":
+        return str(path[3]) if path[3] else None
+    return None
+
+
+def _is_session_continue_path(path: list[str]) -> bool:
+    """True for product paths that drive or inspect a flow/assist instance."""
+    if len(path) >= 3 and path[0] == "assist" and path[1] == "session":
+        return True
+    if len(path) >= 4 and path[0] == "flows" and path[2] == "session":
+        return True
+    return False
+
+
+def _gate_continue_owner(
+    plane: Any,
+    path: list[str],
+    params: dict[str, Any],
+) -> None:
+    """Reject continue when bound session does not own the instance (0.58.11)."""
+    from palm.system.planes.session import looks_like_system_session_id
+
+    if not _is_session_continue_path(path):
+        return
+    system_sid = params.get("session_id")
+    if not looks_like_system_session_id(system_sid):
+        return
+    # Prefer path instance (explicit handle) over param (may be plane focus).
+    path_inst = _path_continue_instance(path)
+    param_inst = params.get("instance_id")
+    if path_inst and not looks_like_system_session_id(path_inst):
+        candidate = path_inst
+    elif param_inst and not looks_like_system_session_id(param_inst):
+        candidate = param_inst
+    else:
+        return
+    plane.require_owned_instance(str(system_sid).strip(), str(candidate).strip())
 
 
 def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:

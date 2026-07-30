@@ -92,7 +92,7 @@ Session ≠ instance remains. Active ≠ owner pass.
 Support, admin, or team “act on behalf of” must **not** break D9 by dual-owning instances.  
 Future user-plane maturity should use **impersonation**, **delegate grants**, or **elevated inspect**  
 under the **owning** session (or an explicit grant record). That is a later theme.  
-See [VISION-0.58 §7.1](../VISION-0.58.md). Residual product paths that skip owner checks are **SI-015**.
+See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + continue is **SI-015** (**paid 0.58.11**).
 
 ---
 
@@ -111,7 +111,7 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Residual product paths that skip own
 - Widespread rename and rebind of product/surface APIs.  
 - Tests and dogfood that assumed session ≡ instance must change.  
 - Temporary breakage until slices land (pre-1.0 accepted).  
-- Product must eventually **gate** continue when a bound session is present (SI-015).
+- Product **gates** continue when a bound session is present (SI-015 / 0.58.11).
 
 ### Neutral
 
@@ -136,9 +136,9 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Residual product paths that skip own
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.10** (bind + dogfood + WS + watches + vocabulary + active focus).  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.11** (bind + dogfood + WS + watches + vocabulary + active focus + **owner gate**).  
 - [ ] Close **SD-008** at theme exit when residual SI honest.  
-- [ ] Pay remaining **SI-*** (rename, owner gate SI-015, explorer, docs) when edges are touched.  
+- [ ] Pay remaining **SI-*** (product rename SI-001, explorer, docs) when edges are touched.  
 - [ ] Accept this ADR at theme exit (or earlier if law is stable in code).  
 - [ ] Later theme: user plane + session impersonation / delegate grants (D11) — not 0.58.
 
@@ -148,4 +148,4 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Residual product paths that skip own
 
 - [ADR-025](025-reactive-interests.md) · [ADR-026](026-palm-system-layer.md) · [ADR-024](024-workload-engine.md)  
 - [VISION-0.58](../VISION-0.58.md) (§4.1 ownership vs active; §7.1 growth) · [VISION-GROVE](../VISION-GROVE.md) · [EVENT-PLANE](../EVENT-PLANE.md)  
-- Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SI-015 owner gate; later impersonation seed)
+- Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SI-015 ✅ 0.58.11; later impersonation seed)

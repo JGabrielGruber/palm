@@ -203,9 +203,10 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
 **Observation:** Product `session_id` field name still often means instance (SI-001 residual
-rename). System plane through **0.58.8**: seat, multi-attach, bind, job-path, inspect,
-Assist dogfood, WS/cookie bind, **watches/fan-in**, continue resolve, Events WS session
-filter. Residual: full product rename, explorer bulk (SI-010), docs (SI-012).  
+rename). System plane through **0.58.11**: seat, multi-attach, bind, job-path, inspect,
+Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary, **active focus**, **owner gate**.
+Residual: full product rename, explorer bulk (SI-010), docs (SI-012), bare-instance paths
+without a bound system session.  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
@@ -635,7 +636,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
-| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | residual after 0.58.10 | open |
+| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 | ✅ done (bare-instance residual) |
 
 ### SI-001 — product handles still named “session” for instance
 
@@ -742,17 +743,18 @@ wins. Residual: leaves that never bind event context.
 
 ### SI-015 — Continue paths skip owner check when session is bound
 
-**Where:** Product/MCP/REST continue by bare `instance_id` without verifying the
-bound system session **owns** that instance (plane reverse index / attach list).  
-**Law (0.58.10 docs):** exclusive ownership + active = focus only
+**Where:** Product/MCP/WS continue with bound system `session_id` + `instance_id`.  
+**Status:** ✅ **done** at **0.58.11** — plane `owns_instance` /
+`require_owned_instance` / `InstanceNotOwnedError`; operator
+`rewrite_system_session_continue` gates continue paths; flows/assist dispatch
+gate when params carry system `session_id`; host
+`require_session_owns_instance`; WS maps to `session_owner`. Path instance is
+authoritative (not replaced by plane focus).  
+**Law:** exclusive ownership + active = focus only
 ([VISION-0.58 §4.1](docs/VISION-0.58.md), [ADR-027](docs/adr/027-session-plane.md) D9–D11).  
-**Impact:** Operator with raw instance id can drive work without going through
-the owning session. **Active instance does not authorize this.**  
-**Target:** When a surface has a bound `session_id`, reject continue/input if
-`instance_id` is not attached to that session. Named elevated inspect (later)
-must not dual-own. User-plane **impersonation** is a later theme seed, not a soft
-break of exclusive ownership.  
-**Not:** “session B focuses instance of session A” via `active_instance_id`.
+**Residual:** bare `instance_id` with **no** bound system session still skips the
+gate (legacy tooling / SI-001 surface bind incomplete). Elevated inspect and
+user-plane **impersonation** remain later seeds — not dual-own.
 
 ---
 
@@ -778,7 +780,8 @@ break of exclusive ownership.
 | 0.58.8 | Watches/fan-in; SI-001/005/007/008/009 partial truth |
 | 0.58.9 | Vocabulary slash: session_id=system, instance_id=continue; duals deleted |
 | 0.58.10 | Plane active_instance_id; resolve prefers focus; ownership vs focus documented; SI-015 named |
-| later / residual | SI-001/005 rename, SI-015 owner gate, SI-006/007/010…012, SI-014, SU-* |
+| 0.58.11 | SI-015 owner gate ✅ (`require_owned_instance` + rewrite/product/WS) |
+| later / residual | SI-001/005 rename, SI-006/007/010…012, SI-014, SU-*; SI-015 bare-instance residual |
 | theme exit | SD-008 close when residual SI honest |
 
 ---
@@ -807,7 +810,7 @@ break of exclusive ownership.
 | **System boot + composition truth** | [SD-014](#sd-014), CF-002 | One phase table; profile is membership truth; plugins vs planes stay split |
 | **Session plane (active theme)** | SD-008, SI-* | Outside subject; multi-attach; bind; dogfood — [VISION-0.58](docs/VISION-0.58.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
-| **User plane + session impersonation** | SI-015 residual; D11 | Principal **acts as** owning session (grant, audit, time-bound). **Not** dual-own instances. Support/admin maturity without dissolving ownership — [VISION-0.58 §7.1](docs/VISION-0.58.md) |
+| **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session (grant, audit, time-bound). **Not** dual-own instances. Support/admin maturity without dissolving ownership — [VISION-0.58 §7.1](docs/VISION-0.58.md) |
 | **Delegate / team session membership** | growth | Shared walk under one owner session + many principals, or explicit delegate tokens — same exclusive attach graph |
 
 ---

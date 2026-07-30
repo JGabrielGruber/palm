@@ -9,11 +9,13 @@
 * :meth:`SessionPlaneService.event_matches` / :meth:`~SessionPlaneService.make_event_filter` (0.58.8)
 * :meth:`SessionPlaneService.resolve_continue_instance` (active → waiting → last)
 * :attr:`SessionRecord.active_instance_id` / :meth:`SessionPlaneService.set_active_instance` (0.58.10)
+* :meth:`SessionPlaneService.owns_instance` / :meth:`~SessionPlaneService.require_owned_instance` (0.58.11 SI-015)
 * :func:`require_session_plane`
 
 **Ownership:** one instance → one session (exclusive).  
 **Active:** focus inside that attach list only — not a foreign-session pass.  
-Docs: ``docs/VISION-0.58.md`` §4.1 · ADR-027 D9–D11 · residual SI-015.
+**Owner gate:** bound system session + continue instance must match attach list.  
+Docs: ``docs/VISION-0.58.md`` §4.1 · ADR-027 D9–D11 · SI-015.
 
 Store uses :class:`~palm.core.storage.StorageEngine` (like work plane).
 Surfaces (host, CLI, …) **bind** before driving work.
@@ -23,6 +25,7 @@ Watches filter events by system session; they do not resume.
 
 from palm.system.planes.session.plane import (
     InstanceAlreadyAttachedError,
+    InstanceNotOwnedError,
     SessionClosedError,
     SessionNotFoundError,
     SessionPlaneError,
@@ -41,6 +44,7 @@ from palm.system.planes.session.types import (
 
 __all__ = [
     "InstanceAlreadyAttachedError",
+    "InstanceNotOwnedError",
     "SessionBind",
     "SessionClosedError",
     "SessionNotFoundError",

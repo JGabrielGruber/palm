@@ -46,6 +46,15 @@ class InstanceAlreadyAttachedError(SessionPlaneError):
     """Instance is already attached to a different session."""
 
 
+class InstanceNotOwnedError(SessionPlaneError):
+    """Bound session does not own the instance (SI-015 owner gate).
+
+    Raised when a surface carries a system ``session_id`` and tries to
+    continue/drive an ``instance_id`` that is not on that session's attach
+    list. Active focus never authorizes a foreign instance.
+    """
+
+
 class SessionPlaneService:
     """Session plane: lifecycle + multi-attach + surface bind law.
 
@@ -56,6 +65,7 @@ class SessionPlaneService:
     * :meth:`attach_instance` / :meth:`detach_instance` — multi-attach (0.58.2)
     * :meth:`set_active_instance` / :attr:`SessionRecord.active_instance_id` (0.58.10)
     * :meth:`session_for_instance` — reverse lookup
+    * :meth:`owns_instance` / :meth:`require_owned_instance` — SI-015 gate (0.58.11)
     * :meth:`bind` / :meth:`require_open` — surface entry law (0.58.3)
     * :meth:`resolve_continue_instance` — active → waiting → last attached
     """
@@ -324,6 +334,59 @@ class SessionPlaneService:
     def session_for_instance(self, instance_id: str) -> SessionRecord | None:
         """Reverse lookup: session that owns this instance, if any."""
         return self._store.get_by_instance(instance_id)
+
+    def owns_instance(self, session_id: str, instance_id: str) -> bool:
+        """True when the session's attach list includes the instance (0.58.11).
+
+        Closed sessions may still "own" history for inspect; continue uses
+        :meth:`require_owned_instance` which requires a non-closed session.
+        """
+        sid = (session_id or "").strip()
+        iid = (instance_id or "").strip()
+        if not sid or not iid:
+            return False
+        rec = self._store.get(sid)
+        if rec is None:
+            return False
+        if iid in rec.instance_ids:
+            return True
+        owner = self._store.session_id_for_instance(iid)
+        return owner == sid
+
+    def require_owned_instance(
+        self, session_id: str, instance_id: str
+    ) -> SessionRecord:
+        """Owner gate for continue when a system session is bound (SI-015 / 0.58.11).
+
+        * Session must exist and not be closed.
+        * ``instance_id`` must be on that session's attach list.
+        * Does **not** set active focus. Does **not** resume.
+        * Does **not** authorize foreign instances via ``active_instance_id``.
+
+        Raises:
+            SessionNotFoundError: unknown session
+            SessionClosedError: closed session
+            SessionPlaneError: missing ids
+            InstanceNotOwnedError: instance not attached to this session
+                (orphan or owned by another session)
+        """
+        sid = (session_id or "").strip()
+        iid = (instance_id or "").strip()
+        if not sid:
+            raise SessionPlaneError("session_id is required for owner gate")
+        if not iid:
+            raise SessionPlaneError("instance_id is required for owner gate")
+        rec = self.require_open(sid)
+        if iid in rec.instance_ids:
+            return rec
+        owner = self._store.session_id_for_instance(iid)
+        if owner is not None and owner != sid:
+            raise InstanceNotOwnedError(
+                f"instance {iid!r} is owned by session {owner!r}, not {sid!r}"
+            )
+        raise InstanceNotOwnedError(
+            f"instance {iid!r} is not attached to session {sid!r}"
+        )
 
     def resolve_continue_instance(self, session_id: str) -> str | None:
         """Pick an instance under the session for continue (0.58.8 + 0.58.10).
@@ -630,6 +693,8 @@ class SessionPlaneService:
                 "clear_active_instance",
                 "active_instance",
                 "session_for_instance",
+                "owns_instance",
+                "require_owned_instance",
                 "resolve_continue_instance",
                 "inspect",
                 "list_waiting",
@@ -641,6 +706,7 @@ class SessionPlaneService:
             "storage_backend": backend,
             "multi_attach": True,
             "active_instance": True,
+            "owner_gate": True,
             "bind_law": True,
             "event_filter": True,
             "counts": {
@@ -671,6 +737,7 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
 
 __all__ = [
     "InstanceAlreadyAttachedError",
+    "InstanceNotOwnedError",
     "SessionClosedError",
     "SessionNotFoundError",
     "SessionPlaneError",

@@ -102,17 +102,17 @@ class FlowExecutionService(BaseService):
         if parsed.kind == FlowCommandKind.SESSION:
             assert parsed.flow_id is not None
             assert parsed.session_id is not None
-            return self.session(
-                parsed.flow_id, self._resolve_instance_id(parsed.session_id)
-            ).context(sync_gate=True)
+            instance_id = self._resolve_instance_id(parsed.session_id)
+            self._gate_bound_session_owns(instance_id, params)
+            return self.session(parsed.flow_id, instance_id).context(sync_gate=True)
 
         if parsed.kind == FlowCommandKind.SESSION_VERB:
             assert parsed.flow_id is not None
             assert parsed.session_id is not None
             assert parsed.verb is not None
-            handle = self.session(
-                parsed.flow_id, self._resolve_instance_id(parsed.session_id)
-            )
+            instance_id = self._resolve_instance_id(parsed.session_id)
+            self._gate_bound_session_owns(instance_id, params)
+            handle = self.session(parsed.flow_id, instance_id)
             if parsed.verb == "input":
                 from palm.common.operator.flows_session_input import apply_flows_session_input
 
@@ -156,6 +156,27 @@ class FlowExecutionService(BaseService):
             return str(inst) if inst else text
         except Exception:
             return text
+
+    def _gate_bound_session_owns(
+        self, instance_id: str, params: dict[str, Any] | None
+    ) -> None:
+        """SI-015 / 0.58.11: bound system session must own the continue instance.
+
+        No-op when params lack a system-shaped ``session_id`` (legacy bare
+        instance paths). Plane is the ownership truth.
+        """
+        params = params or {}
+        raw = params.get("session_id")
+        if raw is None or not str(raw).strip():
+            return
+        from palm.system.planes.session import looks_like_system_session_id
+
+        if not looks_like_system_session_id(raw):
+            return
+        plane = getattr(self.resolve_runtime(), "session_plane", None)
+        if plane is None:
+            return
+        plane.require_owned_instance(str(raw).strip(), str(instance_id).strip())
 
     def submit_flow_body(self, body: dict[str, Any]) -> Any:
         """Submit any flow from a REST-shaped body and wait until idle (work drain, triggers)."""

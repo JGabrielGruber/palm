@@ -300,6 +300,18 @@ class ApplicationHost:
             )
         return plane.resolve_continue_instance(session_id)
 
+    def require_session_owns_instance(
+        self, session_id: str, instance_id: str
+    ) -> Any:
+        """SI-015 owner gate (0.58.11): bound session must own instance."""
+        self._require_started()
+        plane = self.session_plane
+        if plane is None:
+            raise RuntimeError(
+                "ApplicationHost has no session plane; primary runtime not ready"
+            )
+        return plane.require_owned_instance(session_id, instance_id)
+
     def session_event_matches(self, session_id: str, event: Any) -> bool:
         """Whether an event belongs to the system session (watch filter)."""
         self._require_started()
