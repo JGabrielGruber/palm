@@ -2,6 +2,9 @@
 
 Session ≠ instance ≠ job. One session may attach many instances
 (:meth:`~palm.system.planes.session.plane.SessionPlaneService.attach_instance`).
+
+Surfaces **bind** a session before they drive work
+(:meth:`~palm.system.planes.session.plane.SessionPlaneService.bind`).
 """
 
 from __future__ import annotations
@@ -78,7 +81,55 @@ class SessionRecord:
         )
 
 
+@dataclass(frozen=True)
+class SessionBind:
+    """Result of a surface bind — proof the outside subject is resolved.
+
+    ``session_id`` is always a system session id (not an instance id).
+    ``created`` is True when bind opened a new record.
+    """
+
+    session_id: str
+    status: SessionStatus
+    created: bool = False
+    surface: str | None = None
+    instance_ids: tuple[str, ...] = ()
+
+    @classmethod
+    def from_record(
+        cls,
+        record: SessionRecord,
+        *,
+        created: bool = False,
+        surface: str | None = None,
+    ) -> SessionBind:
+        surf = surface
+        if surf is None:
+            meta_surf = record.metadata.get("surface") or record.metadata.get(
+                "last_surface"
+            )
+            surf = str(meta_surf) if meta_surf else None
+        return cls(
+            session_id=record.session_id,
+            status=record.status,
+            created=created,
+            surface=surf,
+            instance_ids=tuple(record.instance_ids),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "kind": "session_bind",
+            "session_id": self.session_id,
+            "status": self.status.value,
+            "created": self.created,
+            "surface": self.surface,
+            "instance_ids": list(self.instance_ids),
+        }
+
+
 __all__ = [
+    "SessionBind",
     "SessionRecord",
     "SessionStatus",
     "new_session_id",

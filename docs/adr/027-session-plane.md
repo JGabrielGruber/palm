@@ -107,7 +107,7 @@ Optional opaque metadata on the session record is enough for later phenotypes.
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.2** (seat + multi-attach).  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.3** (seat + multi-attach + bind law).  
 - [ ] Close **SD-008** when plane + multi-attach + **dogfood bind** exist.  
 - [ ] Pay **SI-*** impact rows when each surface/product edge is touched.  
 - [ ] Accept this ADR at theme exit (or earlier if law is stable in code).

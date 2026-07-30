@@ -1,12 +1,12 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.2** multi-attach  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58.3** bind law  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** in theme · **SI-*** impact inventory · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane (multi-attach)** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane (bind law)** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
@@ -18,8 +18,8 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | **Home** | `palm.system.planes.session` (system). Product thin. |
 | **Law** | No outside interaction without a session bind. Surfaces bind (cookie-like OK on server). |
 | **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
-| **Next code** | **0.58.3** bind law on entry (touched surfaces). |
-| **Done** | **0.58.0** plan · **0.58.1** seat + **StorageEngine** store · **0.58.2** multi-attach + reverse index |
+| **Next code** | **0.58.4** job path link + event attribution. |
+| **Done** | **0.58.0** plan · **0.58.1** seat · **0.58.2** multi-attach · **0.58.3** bind law (plane + host + CLI) |
 
 ## Quick Overview
 
@@ -46,7 +46,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · through `0.58.2`)
+## 0.58 — Session plane (**open** · through `0.58.3`)
 
 **Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
@@ -61,8 +61,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.58.0** | ✅ plan | VISION + ADR-027 + PALM/STATUS/debt + SI inventory |
 | **0.58.1** | ✅ | System seat: `planes.session` + **StorageEngine** store; `runtime.session_plane` |
 | **0.58.2** | ✅ | Multi-attach `attach_instance` / `detach_instance` + reverse index `by_instance` |
-| **0.58.3** | 📋 next | Bind law on entry (touched surfaces) |
-| **0.58.4** | 📋 | Job path link + event attribution |
+| **0.58.3** | ✅ | Bind law: `bind` / `require_open` / `SessionBind`; host + CLI entry |
+| **0.58.4** | 📋 next | Job path link + event attribution |
 | **0.58.5** | 📋 | Wait / inspect by session |
 | **0.58.6** | 📋 | Assist + MCP dogfood |
 | **0.58.7** | 📋 | WS / cookie-like bind |

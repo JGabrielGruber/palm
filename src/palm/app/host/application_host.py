@@ -245,6 +245,41 @@ class ApplicationHost:
     def runtime(self, name: str | None = None) -> BaseRuntime:
         return self._app.runtime(name)
 
+    @property
+    def session_plane(self) -> Any | None:
+        """System session plane on the primary runtime (0.58), if started."""
+        try:
+            runtime = self._app.runtime()
+        except Exception:
+            return None
+        return getattr(runtime, "session_plane", None)
+
+    def bind_session(
+        self,
+        session_id: str | None = None,
+        *,
+        create: bool = True,
+        metadata: dict[str, Any] | None = None,
+        surface: str | None = None,
+    ) -> Any:
+        """Bind law entry for host surfaces (0.58.3).
+
+        Resolves or creates a **system** session via the primary runtime's
+        session plane. Returns :class:`~palm.system.planes.session.SessionBind`.
+        """
+        self._require_started()
+        plane = self.session_plane
+        if plane is None:
+            raise RuntimeError(
+                "ApplicationHost has no session plane; primary runtime not ready"
+            )
+        return plane.bind(
+            session_id,
+            create=create,
+            metadata=metadata,
+            surface=surface,
+        )
+
     def start(self, **options: Any) -> Self:
         """Bootstrap, spawn role runtimes, wire CQRS, and recover state."""
         if self._started:

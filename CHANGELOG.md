@@ -23,9 +23,14 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Reverse index** — `palm:session:by_instance:{instance_id}` → session_id (one instance → one session)  
 - OPEN → ACTIVE on first attach; refuse attach on closed; refuse dual-session ownership  
 
+#### Added (0.58.3)
+- **Bind law** — `SessionPlaneService.bind` / `require_open` / `SessionBind` / `require_session_plane`  
+- **Host** — `ApplicationHost.session_plane` + `bind_session`  
+- **CLI** — `active_system_session_id` + `bind_system_session`; assist/job activation binds system subject without equating it to instance id  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.2**.  
-- Next: **0.58.3** bind law on entry.
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.3**.  
+- Next: **0.58.4** job path link + event attribution.
 
 ## [0.57.14] — 2026-07-29
 

@@ -1,11 +1,13 @@
 """SessionPlaneService — system **session** plane (0.58).
 
-Outside subject: open / get / close / list on :class:`SessionStore`
-(:class:`~palm.core.storage.StorageEngine`). Multi-attach (0.58.2):
-attach/detach instances; reverse index instance→session.
+Outside subject on :class:`SessionStore` (:class:`~palm.core.storage.StorageEngine`).
 
-Surfaces bind later (0.58.3+). Does **not** resume jobs —
-continue remains the wait plane.
+* Lifecycle: open / get / close / list
+* Multi-attach (0.58.2): attach/detach instances; reverse index
+* **Bind law (0.58.3):** surfaces call :meth:`bind` / :meth:`require_open`
+  before driving work — no silent instance-only subject
+
+Does **not** resume jobs. Continue remains the wait plane.
 """
 
 from __future__ import annotations
@@ -14,6 +16,7 @@ from typing import TYPE_CHECKING, Any
 
 from palm.system.planes.session.store import SessionStore
 from palm.system.planes.session.types import (
+    SessionBind,
     SessionRecord,
     SessionStatus,
     new_session_id,
@@ -40,7 +43,7 @@ class InstanceAlreadyAttachedError(SessionPlaneError):
 
 
 class SessionPlaneService:
-    """Session plane: lifecycle + multi-instance attach on one system instance.
+    """Session plane: lifecycle + multi-attach + surface bind law.
 
     Lifecycle:
     * construct with :class:`SessionStore` (or storage engine)
@@ -48,6 +51,7 @@ class SessionPlaneService:
     * :meth:`open` / :meth:`get` / :meth:`close` / :meth:`list_sessions`
     * :meth:`attach_instance` / :meth:`detach_instance` — multi-attach (0.58.2)
     * :meth:`session_for_instance` — reverse lookup
+    * :meth:`bind` / :meth:`require_open` — surface entry law (0.58.3)
     """
 
     def __init__(
@@ -99,6 +103,70 @@ class SessionPlaneService:
             metadata=dict(metadata or {}),
         )
         return self._store.put(record)
+
+    def bind(
+        self,
+        session_id: str | None = None,
+        *,
+        create: bool = True,
+        metadata: dict[str, Any] | None = None,
+        surface: str | None = None,
+    ) -> SessionBind:
+        """Surface entry: resolve or create a system session (bind law).
+
+        * No ``session_id`` + ``create=True`` → open a new session.
+        * Known open/active id → rebind (touch surface metadata).
+        * Unknown id + ``create=True`` → open with that id.
+        * Unknown id + ``create=False`` → :class:`SessionNotFoundError`.
+        * Closed id → :class:`SessionClosedError` (never silently reopen).
+
+        Returns :class:`SessionBind` proof. Does **not** attach instances
+        and does **not** resume jobs.
+        """
+        meta = dict(metadata or {})
+        surf = (surface or "").strip() or None
+        if surf:
+            meta.setdefault("surface", surf)
+            meta["last_surface"] = surf
+
+        sid = (session_id or "").strip() or None
+        if sid is None:
+            if not create:
+                raise SessionPlaneError(
+                    "bind requires session_id when create=False (no outside subject)"
+                )
+            rec = self.open(metadata=meta or None)
+            return SessionBind.from_record(rec, created=True, surface=surf)
+
+        existing = self._store.get(sid)
+        if existing is None:
+            if not create:
+                raise SessionNotFoundError(f"session not found: {sid!r}")
+            rec = self.open(session_id=sid, metadata=meta or None)
+            return SessionBind.from_record(rec, created=True, surface=surf)
+
+        if existing.status == SessionStatus.CLOSED:
+            raise SessionClosedError(
+                f"session {sid!r} is closed; bind refused (create a new session)"
+            )
+
+        touched = False
+        if meta:
+            for key, value in meta.items():
+                if existing.metadata.get(key) != value:
+                    existing.metadata[key] = value
+                    touched = True
+        if touched:
+            existing.touch()
+            existing = self._store.put(existing)
+        return SessionBind.from_record(existing, created=False, surface=surf)
+
+    def require_open(self, session_id: str) -> SessionRecord:
+        """Require an existing non-closed session (continue / inspect paths)."""
+        rec = self.require(session_id)
+        if rec.status == SessionStatus.CLOSED:
+            raise SessionClosedError(f"session {session_id!r} is closed")
+        return rec
 
     def get(self, session_id: str) -> SessionRecord | None:
         return self._store.get(session_id)
@@ -195,6 +263,8 @@ class SessionPlaneService:
             "plane": "session",
             "session_plane_attached": self.is_attached,
             "verbs": [
+                "bind",
+                "require_open",
                 "open",
                 "get",
                 "close",
@@ -206,6 +276,7 @@ class SessionPlaneService:
             "store": "storage_engine",
             "storage_backend": backend,
             "multi_attach": True,
+            "bind_law": True,
             "counts": {
                 "open": open_n,
                 "active": active_n,
@@ -239,4 +310,15 @@ __all__ = [
     "SessionPlaneError",
     "SessionPlaneService",
     "bind_session_plane_to_runtime",
+    "require_session_plane",
 ]
+
+
+def require_session_plane(runtime: Any) -> SessionPlaneService:
+    """Return the runtime's session plane or raise (bind law helper)."""
+    plane = getattr(runtime, "session_plane", None)
+    if isinstance(plane, SessionPlaneService):
+        return plane
+    raise SessionPlaneError(
+        "runtime has no session plane; start the system instance first"
+    )

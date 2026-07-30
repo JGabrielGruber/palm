@@ -39,6 +39,8 @@ class CliContext:
     active_instance_id: str | None = None
     active_assist_session_id: str | None = None
     active_assist_scenario_id: str | None = None
+    # System session plane bind (0.58.3) — distinct from product assist/instance id.
+    active_system_session_id: str | None = None
     output_format: str = "table"
     _instance_to_job: dict[str, str] = field(default_factory=dict)
     _repl_session: ReplSession | None = field(default=None, repr=False)
@@ -75,9 +77,48 @@ class CliContext:
         self._instance_to_job[instance_id] = job_id
         self.instance_manager.mark_active(instance_id)
         self.repl.activate(instance_id)
+        # Job-path activation still needs a system outside subject (bind law).
+        self.bind_system_session(surface="cli")
+
+    def bind_system_session(
+        self,
+        session_id: str | None = None,
+        *,
+        create: bool = True,
+        surface: str = "cli",
+        metadata: dict[str, Any] | None = None,
+    ) -> Any:
+        """Bind (or create) a **system** session on the host plane (0.58.3).
+
+        Does **not** treat product assist ``session_id`` as the system subject.
+        Tracks :attr:`active_system_session_id` separately from instance / assist ids.
+        """
+        sid = (session_id or self.active_system_session_id or "").strip() or None
+        bind = self.host.bind_session(
+            sid,
+            create=create,
+            metadata=metadata,
+            surface=surface,
+        )
+        self.active_system_session_id = str(bind.session_id)
+        return bind
 
     def set_active_assist(self, view: dict[str, Any]) -> None:
-        """Track the active assist session from an assistant envelope."""
+        """Track the active assist handle from an assistant envelope.
+
+        Product assist still may use instance-shaped ``session_id`` (SI-001).
+        System bind is always separate (``active_system_session_id``).
+        """
+        # Bind law first: outside subject before product assist tracking.
+        system_from_view = view.get("system_session_id") or view.get(
+            "palm_session_id"
+        )
+        self.bind_system_session(
+            str(system_from_view) if system_from_view else None,
+            surface="cli",
+            metadata={"via": "assist"},
+        )
+
         session_id = view.get("session_id")
         if not session_id:
             return
@@ -87,15 +128,19 @@ class CliContext:
         self.active_assist_scenario_id = str(scenario_id) if scenario_id else None
         refs = view.get("refs") if isinstance(view.get("refs"), dict) else {}
         job_id = refs.get("job_id")
-        self.active_instance_id = session_id
+        # Prefer explicit instance_id when product starts telling the truth (SI-001).
+        instance_id = view.get("instance_id") or refs.get("instance_id") or session_id
+        instance_id = str(instance_id)
+        self.active_instance_id = instance_id
         if job_id:
-            self._instance_to_job[session_id] = str(job_id)
-        self.instance_manager.mark_active(session_id)
-        self.repl.activate(session_id)
+            self._instance_to_job[instance_id] = str(job_id)
+        self.instance_manager.mark_active(instance_id)
+        self.repl.activate(instance_id)
 
     def clear_active_assist(self) -> None:
         self.active_assist_session_id = None
         self.active_assist_scenario_id = None
+        # Keep system session across assist clear (walk continues); clear with host stop.
 
     def list_instance_summaries(self) -> list[InstanceSummary]:
         views = self.host.list_instance_views(include_terminal=True)
