@@ -127,7 +127,7 @@ def test_dispatch_session_context() -> None:
             }
         ),
     )
-    ctx = svc.dispatch(["flows", "approve", "session", "inst-1"])
+    ctx = svc.dispatch(["flows", "approve", "instance", "inst-1"])
     assert isinstance(ctx, SessionContext)
     assert ctx.session_id == "inst-1"
     assert ctx.flow_id == "approve"

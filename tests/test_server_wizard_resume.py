@@ -119,7 +119,7 @@ def test_session_resume_redrives_waiting_wizard(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/resume",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/resume",
     )
     assert status == 200
     assert isinstance(payload, dict)
@@ -143,7 +143,7 @@ def test_session_resume_child_wait_route_gone(server: ServerRuntime) -> None:
     status, _payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/resume-child-wait",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/resume-child-wait",
     )
     assert status == 404
 

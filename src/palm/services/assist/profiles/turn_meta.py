@@ -37,7 +37,7 @@ def flow_id_from_turn(shaped: dict[str, Any]) -> str | None:
     path = shaped.get("path")
     if isinstance(path, list) and len(path) >= 2 and str(path[0]) == "flows":
         candidate = str(path[1])
-        if candidate and candidate not in {"session", "create"}:
+        if candidate and candidate not in {"instance", "session", "create"}:
             return candidate
     refs = shaped.get("refs")
     if isinstance(refs, dict) and refs.get("flow_id"):

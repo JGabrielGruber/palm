@@ -32,7 +32,7 @@ def test_builtin_assist_aliases_resolve() -> None:
     assert resolve_mcp_alias(
         "flows/session-resume",
         params={"flow_id": "foo-bar", "session_id": "inst-1"},
-    ) == ("flows", "foo-bar", "session", "inst-1", "resume")
+    ) == ("flows", "foo-bar", "instance", "inst-1", "resume")
 
 
 def test_assist_doctor_assistant_shape(host: ApplicationHost) -> None:

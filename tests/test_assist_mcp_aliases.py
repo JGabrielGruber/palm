@@ -25,8 +25,8 @@ def test_resolve_alias_with_session_param() -> None:
             contributor_id="demo",
             scenario_id="demo",
             flow_id="flow-demo",
-            mcp_aliases=(("demo/handoff", ("assist", "session", "{session_id}", "handoff")),),
+            mcp_aliases=(("demo/handoff", ("assist", "instance", "{instance_id}", "handoff")),),
         )
     )
     path = resolve_mcp_alias("demo/handoff", params={"session_id": "inst-abc"})
-    assert path == ("assist", "session", "inst-abc", "handoff")
+    assert path == ("assist", "instance", "inst-abc", "handoff")

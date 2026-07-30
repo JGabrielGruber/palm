@@ -97,16 +97,16 @@ class AssistPages:
             )
         )
 
-    def session(self, request: ServerRequest, *, session_id: str) -> ServerResponse:
+    def session(self, request: ServerRequest, *, instance_id: str) -> ServerResponse:
         try:
-            view = self._ctx.fetch.get_assist_session(session_id)
+            view = self._ctx.fetch.get_assist_session(instance_id)
         except Exception:
-            return not_found_page(self._ctx.version, f"Assist session not found: {session_id}")
+            return not_found_page(self._ctx.version, f"Assist session not found: {instance_id}")
 
         from palm.runtimes.server.surfaces.ssr.explorer.pages.utils import query_message
 
         workspace = assist_workspace(
-            session_id,
+            instance_id,
             view,
             notice=query_message(request, "notice"),
             error=query_message(request, "error"),

@@ -330,7 +330,7 @@ def test_to_dict_merges_design_actions_for_create_flow_intent() -> None:
     from palm.services.assist.views import merge_assistant_actions
 
     merged = merge_assistant_actions(
-        [{"label": "Send answer", "path": ["assist", "session", "x", "input"]}],
+        [{"label": "Send answer", "path": ["assist", "instance", "x", "input"]}],
         [{"label": "Propose new flow", "tool": "palm_design_propose_flow"}],
         [{"label": "Propose new flow", "tool": "palm_design_propose_flow"}],
     )
@@ -364,7 +364,7 @@ def test_assistant_handoff_action_uses_alias() -> None:
             scenario_id="operator-entry",
             flow_id="flow-palm-operator-entry",
             mcp_aliases=(
-                ("operator-entry/handoff", ("assist", "session", "{session_id}", "handoff")),
+                ("operator-entry/handoff", ("assist", "instance", "{instance_id}", "handoff")),
             ),
         )
     )

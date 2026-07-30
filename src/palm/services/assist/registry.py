@@ -48,33 +48,33 @@ _registry: list[CommandSpec] = [
         "Start an assist scenario session",
     ),
     CommandSpec(
-        "session_context",
-        ("assist", "session", "{session_id}"),
-        "Inspect an assist session",
+        "instance_context",
+        ("assist", "instance", "{instance_id}"),
+        "Inspect an assist instance (product continue handle)",
     ),
     CommandSpec(
-        "session_input",
-        ("assist", "session", "{session_id}", "input"),
-        "Provide interactive input to an assist session",
+        "instance_input",
+        ("assist", "instance", "{instance_id}", "input"),
+        "Provide interactive input to an assist instance",
     ),
     CommandSpec(
-        "session_backtrack",
-        ("assist", "session", "{session_id}", "backtrack"),
-        "Backtrack an assist session to a prior step",
+        "instance_backtrack",
+        ("assist", "instance", "{instance_id}", "backtrack"),
+        "Backtrack an assist instance to a prior step",
     ),
     CommandSpec(
-        "session_resume",
-        ("assist", "session", "{session_id}", "resume"),
-        "Resume a waiting assist session",
+        "instance_resume",
+        ("assist", "instance", "{instance_id}", "resume"),
+        "Resume a waiting assist instance",
     ),
     CommandSpec(
-        "session_cancel",
-        ("assist", "session", "{session_id}", "cancel"),
-        "Cancel an assist session job",
+        "instance_cancel",
+        ("assist", "instance", "{instance_id}", "cancel"),
+        "Cancel an assist instance job",
     ),
     CommandSpec(
-        "session_handoff",
-        ("assist", "session", "{session_id}", "handoff"),
+        "instance_handoff",
+        ("assist", "instance", "{instance_id}", "handoff"),
         "Emit handoff payload for business flow entry",
     ),
     CommandSpec("doctor", ("assist", "doctor"), "Engine health report shortcut"),
@@ -106,14 +106,35 @@ _registry: list[CommandSpec] = [
 ]
 
 _BUILTIN_MCP_ALIASES: dict[str, tuple[str, ...]] = {
-    "flows/session-input": ("flows", "{flow_id}", "session", "{session_id}", "input"),
-    "flows/session": ("flows", "{flow_id}", "session", "{session_id}"),
-    # 0.31.2 — assist-only happy paths (no peer MCP tools required)
+    # 0.58.19 — instance segment; legacy alias names kept as soft land keys
+    "flows/instance-input": (
+        "flows",
+        "{flow_id}",
+        "instance",
+        "{instance_id}",
+        "input",
+    ),
+    "flows/instance": ("flows", "{flow_id}", "instance", "{instance_id}"),
+    "flows/instance-resume": (
+        "flows",
+        "{flow_id}",
+        "instance",
+        "{instance_id}",
+        "resume",
+    ),
+    "flows/session-input": (
+        "flows",
+        "{flow_id}",
+        "instance",
+        "{instance_id}",
+        "input",
+    ),
+    "flows/session": ("flows", "{flow_id}", "instance", "{instance_id}"),
     "flows/session-resume": (
         "flows",
         "{flow_id}",
-        "session",
-        "{session_id}",
+        "instance",
+        "{instance_id}",
         "resume",
     ),
     "assist/doctor": ("assist", "doctor"),
@@ -198,10 +219,23 @@ def resolve_mcp_alias(
     *,
     params: dict[str, Any] | None = None,
 ) -> tuple[str, ...] | None:
-    """Resolve an alias to a concrete command path, substituting ``params`` tokens."""
+    """Resolve an alias to a concrete command path, substituting ``params`` tokens.
+
+    **0.58.19:** ``{instance_id}`` accepts legacy ``session_id`` as the continue
+    handle when ``instance_id`` is absent. A system subject (``sess-…``) may be
+    placed in the path; :func:`~palm.runtimes.mcp.assist.operator.rewrite_system_session_continue`
+    then resolves it to the owned instance.
+    """
     with _lock:
         pattern = _mcp_aliases.get(alias)
-    return resolve_path_alias(alias, pattern, params=params)
+    enriched = dict(params or {})
+    inst = enriched.get("instance_id")
+    sid = enriched.get("session_id")
+    if (inst is None or not str(inst).strip()) and sid is not None:
+        sid_s = str(sid).strip()
+        if sid_s:
+            enriched["instance_id"] = sid_s
+    return resolve_path_alias(alias, pattern, params=enriched)
 
 
 def register_assistant_enricher(scenario_id: str, fn: AssistantEnricherFn) -> None:

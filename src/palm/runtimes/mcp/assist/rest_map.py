@@ -1,4 +1,8 @@
-"""Map assist command paths to REST method / url / body."""
+"""Map assist command paths to REST method / url / body.
+
+**0.58.19:** product continue URLs use ``/instance/``; legacy ``/session/``
+path *segments* in the command path still map to the new REST shape.
+"""
 
 from __future__ import annotations
 
@@ -34,24 +38,28 @@ def map_dispatch_to_rest(
         if len(path) == 4 and path[1] == "scenarios" and path[3] == "start":
             url = append_format_query(f"/v1/api/assist/scenarios/{path[2]}/start", params)
             return "POST", url, body, True
-        if len(path) == 2 and path[1] == "session":
-            raise ValueError("session_id required")
-        if len(path) == 3 and path[1] == "session":
-            url = append_format_query(f"/v1/api/assist/session/{path[2]}", params)
+        if len(path) == 2 and path[1] in {"instance", "session"}:
+            raise ValueError("instance_id required")
+        if len(path) == 3 and path[1] in {"instance", "session"}:
+            url = append_format_query(f"/v1/api/assist/instance/{path[2]}", params)
             return "GET", url, None, False
-        if len(path) == 4 and path[1] == "session" and path[3] == "input":
-            url = append_format_query(f"/v1/api/assist/session/{path[2]}/input", params)
+        if len(path) == 4 and path[1] in {"instance", "session"} and path[3] == "input":
+            url = append_format_query(f"/v1/api/assist/instance/{path[2]}/input", params)
             return "POST", url, {"value": params.get("value", params.get("input"))}, True
-        if len(path) == 4 and path[1] == "session" and path[3] == "backtrack":
-            url = append_format_query(f"/v1/api/assist/session/{path[2]}/backtrack", params)
+        if len(path) == 4 and path[1] in {"instance", "session"} and path[3] == "backtrack":
+            url = append_format_query(
+                f"/v1/api/assist/instance/{path[2]}/backtrack", params
+            )
             return "POST", url, {"to_step": params.get("to_step")}, True
-        if len(path) == 4 and path[1] == "session" and path[3] == "resume":
-            url = append_format_query(f"/v1/api/assist/session/{path[2]}/resume", params)
+        if len(path) == 4 and path[1] in {"instance", "session"} and path[3] == "resume":
+            url = append_format_query(
+                f"/v1/api/assist/instance/{path[2]}/resume", params
+            )
             return "POST", url, None, True
-        if len(path) == 4 and path[1] == "session" and path[3] == "cancel":
-            return "POST", f"/v1/api/assist/session/{path[2]}/cancel", None, True
-        if len(path) == 4 and path[1] == "session" and path[3] == "handoff":
-            return "POST", f"/v1/api/assist/session/{path[2]}/handoff", None, False
+        if len(path) == 4 and path[1] in {"instance", "session"} and path[3] == "cancel":
+            return "POST", f"/v1/api/assist/instance/{path[2]}/cancel", None, True
+        if len(path) == 4 and path[1] in {"instance", "session"} and path[3] == "handoff":
+            return "POST", f"/v1/api/assist/instance/{path[2]}/handoff", None, False
 
     if prefix == "flows":
         if path == ["flows"]:
@@ -60,29 +68,40 @@ def map_dispatch_to_rest(
             return "GET", f"/v1/api/flows/{path[1]}", None, False
         if len(path) == 3 and path[2] == "create":
             return "POST", f"/v1/api/flows/{path[1]}/create", body, True
-        if len(path) == 4 and path[2] == "session":
-            url = append_format_query(f"/v1/api/flows/{path[1]}/session/{path[3]}", params)
-            return "GET", url, None, False
-        if len(path) == 5 and path[2] == "session" and path[4] == "input":
+        if len(path) == 4 and path[2] in {"instance", "session"}:
             url = append_format_query(
-                f"/v1/api/flows/{path[1]}/session/{path[3]}/input",
+                f"/v1/api/flows/{path[1]}/instance/{path[3]}", params
+            )
+            return "GET", url, None, False
+        if len(path) == 5 and path[2] in {"instance", "session"} and path[4] == "input":
+            url = append_format_query(
+                f"/v1/api/flows/{path[1]}/instance/{path[3]}/input",
                 params,
             )
             return "POST", url, {"value": params.get("value", params.get("input"))}, True
-        if len(path) == 5 and path[2] == "session" and path[4] == "backtrack":
+        if (
+            len(path) == 5
+            and path[2] in {"instance", "session"}
+            and path[4] == "backtrack"
+        ):
             url = append_format_query(
-                f"/v1/api/flows/{path[1]}/session/{path[3]}/backtrack",
+                f"/v1/api/flows/{path[1]}/instance/{path[3]}/backtrack",
                 params,
             )
             return "POST", url, {"to_step": params.get("to_step")}, True
-        if len(path) == 5 and path[2] == "session" and path[4] == "resume":
+        if len(path) == 5 and path[2] in {"instance", "session"} and path[4] == "resume":
             url = append_format_query(
-                f"/v1/api/flows/{path[1]}/session/{path[3]}/resume",
+                f"/v1/api/flows/{path[1]}/instance/{path[3]}/resume",
                 params,
             )
             return "POST", url, None, True
-        if len(path) == 5 and path[2] == "session" and path[4] == "cancel":
-            return "POST", f"/v1/api/flows/{path[1]}/session/{path[3]}/cancel", None, True
+        if len(path) == 5 and path[2] in {"instance", "session"} and path[4] == "cancel":
+            return (
+                "POST",
+                f"/v1/api/flows/{path[1]}/instance/{path[3]}/cancel",
+                None,
+                True,
+            )
 
     if prefix == "processes":
         if len(path) == 3 and path[2] == "prepare":

@@ -125,9 +125,9 @@ def register_flow_tools(mcp: Any, backend: Any) -> None:
             session_id=instance_id,
             flow_id=str(fid) if fid is not None else None,
             path=(
-                ["flows", str(fid), "session", instance_id]
+                ["flows", str(fid), "instance", instance_id]
                 if fid is not None
-                else ["flows", "session", instance_id]
+                else ["assist", "instance", instance_id]
             ),
             invoke_tree=invoke_tree,
             stored_mutation_gate=stored_gate,

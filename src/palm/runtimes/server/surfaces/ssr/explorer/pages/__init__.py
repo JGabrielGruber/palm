@@ -129,6 +129,6 @@ class ExplorerPages:
         self,
         request: ServerRequest,
         *,
-        session_id: str,
+        instance_id: str,
     ) -> ServerResponse:
-        return self._assist.session(request, session_id=session_id)
+        return self._assist.session(request, instance_id=instance_id)

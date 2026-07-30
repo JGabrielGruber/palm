@@ -50,31 +50,31 @@ def register_explorer_routes(registry: RouteRegistry, ctx: ServerContext) -> Non
     )
     registry.register(
         method="GET",
-        path="/explorer/assist/session/{session_id}",
+        path="/explorer/assist/instance/{instance_id}",
         handler=pages.assist_session,
         surface=_SURFACE,
     )
     registry.register(
         method="POST",
-        path="/explorer/assist/session/{session_id}/input",
+        path="/explorer/assist/instance/{instance_id}/input",
         handler=actions.provide_assist_input,
         surface=_SURFACE,
     )
     registry.register(
         method="POST",
-        path="/explorer/assist/session/{session_id}/backtrack",
+        path="/explorer/assist/instance/{instance_id}/backtrack",
         handler=actions.backtrack_assist,
         surface=_SURFACE,
     )
     registry.register(
         method="POST",
-        path="/explorer/assist/session/{session_id}/cancel",
+        path="/explorer/assist/instance/{instance_id}/cancel",
         handler=actions.cancel_assist,
         surface=_SURFACE,
     )
     registry.register(
         method="POST",
-        path="/explorer/assist/session/{session_id}/handoff",
+        path="/explorer/assist/instance/{instance_id}/handoff",
         handler=actions.handoff_assist,
         surface=_SURFACE,
     )

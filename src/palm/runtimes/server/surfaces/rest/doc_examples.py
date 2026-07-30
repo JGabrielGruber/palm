@@ -210,7 +210,7 @@ RESPONSE_EXAMPLES: dict[str, Any] = {
             {
                 "action": "provide_input",
                 "method": "POST",
-                "path": "/v1/api/flows/onboard/session/inst-abc123/input",
+                "path": "/v1/api/flows/onboard/instance/inst-abc123/input",
             }
         ],
     },
@@ -240,7 +240,7 @@ RESPONSE_EXAMPLES: dict[str, Any] = {
             {
                 "action": "provide_input",
                 "method": "POST",
-                "path": "/v1/api/flows/onboard/session/inst-abc123/input",
+                "path": "/v1/api/flows/onboard/instance/inst-abc123/input",
             }
         ],
     },
@@ -318,7 +318,7 @@ RESPONSE_EXAMPLES: dict[str, Any] = {
         "active_child": None,
         "links": {
             "explorer": "http://localhost:8080/explorer/instances/inst-abc123",
-            "session": "/v1/api/flows/parent-wizard/session/inst-abc123",
+            "session": "/v1/api/flows/parent-wizard/instance/inst-abc123",
         },
     },
     "get_instance_tree": {
@@ -338,7 +338,7 @@ RESPONSE_EXAMPLES: dict[str, Any] = {
         },
         "links": {
             "explorer": "http://localhost:8080/explorer/instances/inst-abc123",
-            "session": "/v1/api/flows/parent-wizard/session/inst-abc123",
+            "session": "/v1/api/flows/parent-wizard/instance/inst-abc123",
         },
     },
     "resume_instance": {
@@ -375,33 +375,44 @@ RESPONSE_EXAMPLES: dict[str, Any] = {
     },
     "describe_flow": {"flow_id": "onboard", "pattern": "wizard", "steps": 3},
     "create_session": {
-        "session_id": "inst-abc123",
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
         "job_id": "job-abc123",
         "status": "RUNNING",
     },
-    "get_session": {
-        "session_id": "inst-abc123",
+    "get_instance": {
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
         "flow_id": "onboard",
         "status": "WAITING_FOR_INPUT",
         "step": "name",
     },
-    "session_input": {
-        "session_id": "inst-abc123",
+    "instance_input": {
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
         "status": "RUNNING",
         "step": "email",
     },
-    "session_backtrack": {
-        "session_id": "inst-abc123",
+    "instance_backtrack": {
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
         "status": "WAITING_FOR_INPUT",
         "step": "name",
     },
-    "session_resume": {
-        "session_id": "inst-abc123",
+    "instance_resume": {
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
         "status": "RUNNING",
     },
-    "session_cancel": {
-        "session_id": "inst-abc123",
+    "instance_cancel": {
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
         "status": "CANCELLED",
+    },
+    "instance_handoff": {
+        "session_id": "sess-abc123",
+        "instance_id": "inst-abc123",
+        "handoff": {"kind": "flow", "flow_id": "todo-builder"},
     },
     "prepare_process": {
         "plans": [
@@ -504,7 +515,14 @@ _RESPONSE_ALIASES: dict[str, str] = {
     "prepare_plans": "prepare_process",
     "submit_plans": "submit_process",
     "submit_job": "create_session",
-    "provide_input": "session_input",
+    "provide_input": "instance_input",
+    # 0.58.19 soft land for old route_ids in docs
+    "get_session": "get_instance",
+    "session_input": "instance_input",
+    "session_backtrack": "instance_backtrack",
+    "session_resume": "instance_resume",
+    "session_cancel": "instance_cancel",
+    "session_handoff": "instance_handoff",
     "invoke_resource": "invoke_provider",
     "catalog_flows": "list_flows",
 }

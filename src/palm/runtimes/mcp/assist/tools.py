@@ -79,7 +79,7 @@ def register_assist_tools(mcp: Any, backend: Any) -> None:
                 flow_id = resolved[1]
                 inspect_key = result.get("instance_id") or result.get("session_id")
                 if inspect_key:
-                    inspect_path = ["flows", flow_id, "session", str(inspect_key)]
+                    inspect_path = ["flows", flow_id, "instance", str(inspect_key)]
                     try:
                         result = backend.assist_dispatch(
                             inspect_path,
@@ -97,7 +97,7 @@ def register_assist_tools(mcp: Any, backend: Any) -> None:
             view_format == "assistant"
             and len(resolved) >= 4
             and resolved[0] == "flows"
-            and resolved[2] == "session"
+            and resolved[2] == "instance"
         ):
             try:
                 invoke_tree = backend.get_instance_tree(resolved[3])

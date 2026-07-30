@@ -64,7 +64,7 @@ def test_normalize_infers_flows_session_input() -> None:
             "value": "yes",
         },
     )
-    assert path == ["flows", "todo-builder", "session", "inst-9", "input"]
+    assert path == ["flows", "todo-builder", "instance", "inst-9", "input"]
     assert alias is None
     assert params["value"] == "yes"
     assert used_default is False
@@ -74,7 +74,7 @@ def test_normalize_infers_flows_session_inspect() -> None:
     path, alias, params, _ = normalize_assist_dispatch_args(
         params={"instance_id": "inst-9", "flow_id": "todo-builder"},
     )
-    assert path == ["flows", "todo-builder", "session", "inst-9"]
+    assert path == ["flows", "todo-builder", "instance", "inst-9"]
     assert alias is None
 
 
@@ -87,7 +87,7 @@ def test_normalize_collection_action_params() -> None:
             "value": "X",
         },
     )
-    assert path == ["flows", "todo-builder", "session", "inst-9", "input"]
+    assert path == ["flows", "todo-builder", "instance", "inst-9", "input"]
     assert params.get("collection_action") == "add"
     assert params.get("input") == "add"
 
@@ -99,7 +99,7 @@ def test_resolve_flows_session_input_alias() -> None:
         "flows/session-input",
         params={"flow_id": "onboard", "session_id": "inst-1"},
     )
-    assert path == ("flows", "onboard", "session", "inst-1", "input")
+    assert path == ("flows", "onboard", "instance", "inst-1", "input")
 
 
 def test_assist_routes_include_flows_aliases() -> None:
@@ -113,7 +113,7 @@ def test_normalize_assist_dispatch_args_infers_session_input() -> None:
     path, alias, params, used_default = normalize_assist_dispatch_args(
         params={"session_id": "inst-9", "value": "yes"},
     )
-    assert path == ["assist", "session", "inst-9", "input"]
+    assert path == ["assist", "instance", "inst-9", "input"]
     assert alias is None
     assert params["value"] == "yes"
     assert used_default is False
@@ -141,7 +141,7 @@ def test_resolve_dispatch_format_flows_honors_assistant_tool_format() -> None:
     from palm.runtimes.mcp.assist.dispatch import resolve_dispatch_format
 
     fmt = resolve_dispatch_format(
-        ["flows", "coconut-npc", "session", "inst-1", "input"],
+        ["flows", "coconut-npc", "instance", "inst-1", "input"],
         params={},
         tool_format="assistant",
     )
@@ -257,7 +257,7 @@ async def test_palm_assist_assist_session_returns_assistant(assist_server_ctx) -
         result = await client.call_tool(
             "palm_assist",
             {
-                "path": ["assist", "session", session_id],
+                "path": ["assist", "instance", session_id],
                 "params": {},
             },
         )
@@ -295,7 +295,7 @@ async def test_palm_assist_flows_session_defaults_assistant(assist_server_ctx) -
         result = await client.call_tool(
             "palm_assist",
             {
-                "path": ["flows", flow_id, "session", instance_id],
+                "path": ["flows", flow_id, "instance", instance_id],
                 "params": {},
             },
         )
@@ -389,7 +389,7 @@ async def test_palm_assist_drives_flows_session_via_params(assist_server_ctx) ->
         )
 
     payload = result.data
-    assert payload["path"] == ["flows", "onboard", "session", session_id, "input"]
+    assert payload["path"] == ["flows", "onboard", "instance", session_id, "input"]
     assert payload.get("step") or payload.get("question")
 
 
@@ -422,7 +422,7 @@ async def test_palm_assist_flows_session_input_alias(assist_server_ctx) -> None:
             },
         )
 
-    assert result.data["path"] == ["flows", "onboard", "session", session_id, "input"]
+    assert result.data["path"] == ["flows", "onboard", "instance", session_id, "input"]
 
 
 @pytest.mark.asyncio

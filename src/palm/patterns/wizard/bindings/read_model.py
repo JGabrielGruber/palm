@@ -22,7 +22,7 @@ def build_wizard_view(
     job_id = str(instance.get("job_id") or instance_id)
     status = job_status or instance.get("status")
     flow_id = str(instance.get("flow_name") or instance.get("flow_id") or "flow")
-    session_base = f"/v1/api/flows/{flow_id}/session/{instance_id}"
+    session_base = f"/v1/api/flows/{flow_id}/instance/{instance_id}"
 
     payload: dict[str, Any] = {
         "instance_id": instance_id,
@@ -67,7 +67,7 @@ def derive_wizard_next_actions(
 ) -> list[dict[str, Any]]:
     """Suggest REST actions available for a wizard instance."""
     actions: list[dict[str, Any]] = []
-    session_base = f"/v1/api/flows/{flow_id}/session/{instance_id}"
+    session_base = f"/v1/api/flows/{flow_id}/instance/{instance_id}"
 
     if status == JobStatus.WAITING_FOR_INPUT.value:
         actions.append(

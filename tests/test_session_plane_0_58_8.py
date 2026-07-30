@@ -101,7 +101,7 @@ def test_rewrite_system_session_continue_path() -> None:
         plane.attach_instance(bind.session_id, "inst-continue")
         path, params = rewrite_system_session_continue(
             host,
-            ["assist", "session", bind.session_id, "input"],
+            ["assist", "instance", bind.session_id, "input"],
             {"value": "hi"},
         )
         assert path[2] == "inst-continue"

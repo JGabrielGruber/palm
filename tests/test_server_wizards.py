@@ -88,7 +88,7 @@ def test_get_session_returns_prompt(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "GET",
-        f"/v1/api/flows/{flow_id}/session/{session_id}",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}",
     )
     assert status == 200
     assert isinstance(payload, dict)
@@ -103,7 +103,7 @@ def test_get_session_not_found(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "GET",
-        f"/v1/api/flows/{_flow_id()}/session/missing-instance",
+        f"/v1/api/flows/{_flow_id()}/instance/missing-instance",
     )
     assert status == 404
     assert isinstance(payload, dict)
@@ -135,7 +135,7 @@ def test_session_input_advances_step(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/input",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/input",
         body={"value": "Ada"},
     )
     assert status == 200
@@ -156,7 +156,7 @@ def test_session_input_not_found(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{_flow_id()}/session/missing-instance/input",
+        f"/v1/api/flows/{_flow_id()}/instance/missing-instance/input",
         body={"value": "Ada"},
     )
     assert status == 404
@@ -172,7 +172,7 @@ def test_session_backtrack_returns_to_previous_step(server: ServerRuntime) -> No
     status, after_input = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/input",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/input",
         body={"value": "Ada"},
     )
     assert status == 200
@@ -181,7 +181,7 @@ def test_session_backtrack_returns_to_previous_step(server: ServerRuntime) -> No
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/backtrack",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/backtrack",
         body={},
     )
     assert status == 200
@@ -199,7 +199,7 @@ def test_session_backtrack_rejects_first_step(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/backtrack",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/backtrack",
         body={},
     )
     assert status == 400
@@ -215,13 +215,13 @@ def test_session_backtrack_explicit_target(server: ServerRuntime) -> None:
     _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/input",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/input",
         body={"value": "Ada"},
     )
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/{flow_id}/session/{session_id}/backtrack",
+        f"/v1/api/flows/{flow_id}/instance/{session_id}/backtrack",
         body={"to_step": "step_1"},
     )
     assert status == 200

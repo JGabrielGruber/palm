@@ -136,14 +136,14 @@ def shape_dispatch_result(
         if (
             fmt == "assistant"
             and session_id
-            and (flow_id or looks_like_session(["flows", str(flow_id or "x"), "session", str(session_id)], result)
+            and (flow_id or looks_like_session(["flows", str(flow_id or "x"), "instance", str(session_id)], result)
                  or result.get("status")
                  or result.get("detail")
                  or result.get("question") is not None)
         ):
             # Prefer full flow session shaping when we have enough structure
             if looks_like_session(
-                list(open_path) if isinstance(open_path, list) else ["flows", str(flow_id or "x"), "session", str(session_id)],
+                list(open_path) if isinstance(open_path, list) else ["flows", str(flow_id or "x"), "instance", str(session_id)],
                 result,
             ) or result.get("detail") or result.get("prompt") or result.get("compose"):
                 flat = flatten_session_view(raw)
@@ -151,7 +151,7 @@ def shape_dispatch_result(
                     flat,
                     list(open_path)
                     if isinstance(open_path, list)
-                    else ["flows", str(flow_id or flat.get("flow_name") or "x"), "session", str(session_id)],
+                    else ["flows", str(flow_id or flat.get("flow_name") or "x"), "instance", str(session_id)],
                 )
                 if flow_id:
                     flat.setdefault("flow_name", flow_id)
@@ -164,7 +164,7 @@ def shape_dispatch_result(
                         flow_id=str(flow_id or flat.get("flow_name") or flat.get("flow") or ""),
                         path=list(open_path)
                         if isinstance(open_path, list)
-                        else ["flows", str(flow_id or "x"), "session", str(session_id)],
+                        else ["flows", str(flow_id or "x"), "instance", str(session_id)],
                         invoke_tree=invoke_tree,
                         include_input_schema=include_input_schema,
                     )

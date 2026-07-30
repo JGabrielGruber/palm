@@ -85,7 +85,7 @@ def test_shape_dispatch_result_flows_input_assistant_from_params() -> None:
         detail=_onboard_flat(),
     )
     payload = shape_dispatch_result(
-        ["flows", "onboard", "session", "inst-1", "input"],
+        ["flows", "onboard", "instance", "inst-1", "input"],
         ctx,
         params={"format": "assistant"},
     )
@@ -105,7 +105,7 @@ def test_shape_dispatch_result_flows_assistant_from_params() -> None:
         detail=_onboard_flat(),
     )
     payload = shape_dispatch_result(
-        ["flows", "onboard", "session", "inst-1"],
+        ["flows", "onboard", "instance", "inst-1"],
         ctx,
         params={"format": "assistant"},
     )
@@ -236,7 +236,7 @@ def test_flows_rest_session_assistant_opt_in(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "GET",
-        f"/v1/api/flows/onboard/session/{session_id}?format=assistant",
+        f"/v1/api/flows/onboard/instance/{session_id}?format=assistant",
     )
     assert status == 200
     assert payload.get("question")
@@ -290,7 +290,7 @@ def test_flows_rest_session_input_assistant_opt_in(server: ServerRuntime) -> Non
     status, payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/onboard/session/{session_id}/input?format=assistant",
+        f"/v1/api/flows/onboard/instance/{session_id}/input?format=assistant",
         body={"value": "Ada"},
     )
     assert status == 200
@@ -312,7 +312,7 @@ def test_flows_rest_session_powertool_default(server: ServerRuntime) -> None:
     status, payload = _request(
         server.base_url,
         "GET",
-        f"/v1/api/flows/onboard/session/{session_id}",
+        f"/v1/api/flows/onboard/instance/{session_id}",
     )
     assert status == 200
     assert payload.get("step")

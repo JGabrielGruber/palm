@@ -97,7 +97,7 @@ def test_get_session_context_via_command_path(server: ServerRuntime) -> None:
     status, body = _request(
         server.base_url,
         "GET",
-        f"/v1/api/flows/onboard/session/{instance_id}",
+        f"/v1/api/flows/onboard/instance/{instance_id}",
     )
     assert status == 200
     assert isinstance(body, dict)

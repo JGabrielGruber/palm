@@ -73,7 +73,7 @@ def test_rewrite_uses_product_door_only_no_plane_fallback() -> None:
         # Service present → rewrite works
         ctx = SimpleNamespace(session=host.session, host=host)
         path, params = rewrite_system_session_continue(
-            ctx, ["assist", "session", sid], {}
+            ctx, ["assist", "instance", sid], {}
         )
         assert path[2] == "inst-a"
         assert params["session_id"] == sid
@@ -81,7 +81,7 @@ def test_rewrite_uses_product_door_only_no_plane_fallback() -> None:
         # Plane only (no product door) → no rewrite (0.58.17: no dual path)
         plane_ctx = SimpleNamespace(session_plane=host.session_plane)
         path2, params2 = rewrite_system_session_continue(
-            plane_ctx, ["assist", "session", sid], {}
+            plane_ctx, ["assist", "instance", sid], {}
         )
         assert path2[2] == sid  # untouched system id still in path
         assert "instance_id" not in params2
@@ -188,7 +188,7 @@ def test_ws_gate_still_enforced_via_product_door() -> None:
         with pytest.raises(InstanceNotOwnedError):
             rewrite_system_session_continue(
                 ctx,
-                ["assist", "session", "foreign"],
+                ["assist", "instance", "foreign"],
                 {"session_id": a},
             )
     finally:

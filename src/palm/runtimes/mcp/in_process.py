@@ -146,7 +146,7 @@ class PalmInProcessBackend:
     ) -> dict[str, Any]:
         try:
             fid = flow_id or self._resolve_flow_id(session_id)
-            ctx = self._ctx.execution.flows.dispatch(["flows", fid, "session", session_id])
+            ctx = self._ctx.execution.flows.dispatch(["flows", fid, "instance", session_id])
         except InstanceNotFoundServiceError as exc:
             raise _wizard_not_found(exc.instance_id) from exc
         except InstanceNotFoundError as exc:
@@ -172,7 +172,7 @@ class PalmInProcessBackend:
             params["input_token"] = input_token
         try:
             ctx = self._ctx.execution.flows.dispatch(
-                ["flows", flow_id, "session", session_id, "input"],
+                ["flows", flow_id, "instance", session_id, "input"],
                 params,
             )
         except InstanceNotFoundError as exc:
@@ -194,7 +194,7 @@ class PalmInProcessBackend:
     ) -> dict[str, Any]:
         try:
             ctx = self._ctx.execution.flows.dispatch(
-                ["flows", flow_id, "session", session_id, "backtrack"],
+                ["flows", flow_id, "instance", session_id, "backtrack"],
                 {"to_step": to_step},
             )
         except InstanceNotFoundError as exc:
@@ -208,7 +208,7 @@ class PalmInProcessBackend:
     def flows_session_resume(self, flow_id: str, session_id: str) -> dict[str, Any]:
         try:
             ctx = self._ctx.execution.flows.dispatch(
-                ["flows", flow_id, "session", session_id, "resume"],
+                ["flows", flow_id, "instance", session_id, "resume"],
             )
         except InstanceNotFoundError as exc:
             raise _wizard_not_found(session_id) from exc

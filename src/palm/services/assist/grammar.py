@@ -1,4 +1,10 @@
-"""Assist command-path grammar — parse transport-agnostic assist routes."""
+"""Assist command-path grammar — parse transport-agnostic assist routes.
+
+**0.58.19 vocabulary:** product continue segment is ``instance`` /
+``instance_id``. ``session_id`` is the system subject only (not a path
+segment here). Legacy segment ``session`` is still **parsed** for one
+slice of soft land; emitters always use ``instance``.
+"""
 
 from __future__ import annotations
 
@@ -11,8 +17,9 @@ class AssistCommandKind(Enum):
     DESCRIBE_SCENARIO = "describe_scenario"
     START_SCENARIO = "start_scenario"
     SCENARIO_INSPECT = "scenario_inspect"
-    SESSION = "session"
-    SESSION_VERB = "session_verb"
+    # Product continue (was SESSION / SESSION_VERB before 0.58.19)
+    INSTANCE = "instance"
+    INSTANCE_VERB = "instance_verb"
     DOCTOR = "doctor"
     CATALOG_FLOWS = "catalog_flows"
     CATALOG_WAITING = "catalog_waiting"
@@ -20,18 +27,30 @@ class AssistCommandKind(Enum):
     MENU = "menu"
     OPEN = "open"
 
+    # Thin aliases so mid-theme call sites and tests can migrate.
+    SESSION = "instance"
+    SESSION_VERB = "instance_verb"
 
-_SESSION_VERBS = frozenset(
+
+_INSTANCE_VERBS = frozenset(
     {"input", "backtrack", "resume", "cancel", "handoff"},
 )
+
+# Primary product continue segment + legacy parse-only segment.
+_CONTINUE_SEGMENTS = frozenset({"instance", "session"})
 
 
 @dataclass(frozen=True)
 class ParsedAssistCommand:
     kind: AssistCommandKind
     scenario_id: str | None = None
-    session_id: str | None = None
+    instance_id: str | None = None
     verb: str | None = None
+
+    @property
+    def session_id(self) -> str | None:
+        """Product continue handle — alias of :attr:`instance_id` (SI-002 thin)."""
+        return self.instance_id
 
 
 def normalize_path(path: list[str] | tuple[str, ...]) -> tuple[str, ...]:
@@ -81,20 +100,20 @@ def parse_assist_command(path: list[str] | tuple[str, ...]) -> ParsedAssistComma
         len(segments) == 2 and segments[0] == "catalog" and segments[1] == "open"
     ):
         return ParsedAssistCommand(kind=AssistCommandKind.OPEN)
-    if len(segments) >= 2 and segments[0] == "session":
-        session_id = segments[1]
+    if len(segments) >= 2 and segments[0] in _CONTINUE_SEGMENTS:
+        instance_id = segments[1]
         if len(segments) == 2:
             return ParsedAssistCommand(
-                kind=AssistCommandKind.SESSION,
-                session_id=session_id,
+                kind=AssistCommandKind.INSTANCE,
+                instance_id=instance_id,
             )
         if len(segments) == 3:
             verb = segments[2]
-            if verb not in _SESSION_VERBS:
-                raise ValueError(f"unknown assist session verb: {verb!r}")
+            if verb not in _INSTANCE_VERBS:
+                raise ValueError(f"unknown assist instance verb: {verb!r}")
             return ParsedAssistCommand(
-                kind=AssistCommandKind.SESSION_VERB,
-                session_id=session_id,
+                kind=AssistCommandKind.INSTANCE_VERB,
+                instance_id=instance_id,
                 verb=verb,
             )
     joined = "assist " + " ".join(segments)
@@ -104,15 +123,21 @@ def parse_assist_command(path: list[str] | tuple[str, ...]) -> ParsedAssistComma
 def command_path(
     *,
     scenario_id: str | None = None,
+    instance_id: str | None = None,
     session_id: str | None = None,
     verb: str | None = None,
 ) -> list[str]:
-    """Build a canonical assist command path for next-command hints."""
+    """Build a canonical assist command path for next-command hints.
+
+    Prefer ``instance_id``. ``session_id`` is accepted as a legacy kwarg for the
+    product continue handle (not the system subject).
+    """
     parts = ["assist"]
     if scenario_id is not None:
         parts.extend(["scenarios", scenario_id])
-    if session_id is not None:
-        parts.extend(["session", session_id])
+    continue_id = instance_id if instance_id is not None else session_id
+    if continue_id is not None:
+        parts.extend(["instance", continue_id])
     if verb is not None:
         parts.append(verb)
     return parts

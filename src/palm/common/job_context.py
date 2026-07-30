@@ -72,7 +72,7 @@ def derive_next_actions(
             {
                 "action": "provide_input",
                 "method": "POST",
-                "path": f"/v1/api/flows/{flow_id}/session/{instance_id}/input",
+                "path": f"/v1/api/flows/{flow_id}/instance/{instance_id}/input",
                 "description": "Deliver interactive wizard input",
             }
         )

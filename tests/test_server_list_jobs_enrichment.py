@@ -56,13 +56,14 @@ def test_list_waiting_jobs_resolves_instance_id(server: ServerRuntime) -> None:
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
     assert status in {200, 202}
-    instance_id = submit.get("session_id") or submit["instance_id"]
+    # 0.58.19: product continue is instance_id; session_id is system subject
+    instance_id = submit.get("instance_id") or submit["session_id"]
     job_id = submit.get("job_id")
     if job_id is None:
         status, session = _request(
             server.base_url,
             "GET",
-            f"/v1/api/flows/onboard/session/{instance_id}",
+            f"/v1/api/flows/onboard/instance/{instance_id}",
         )
         assert status == 200
         job_id = session.get("job_id")

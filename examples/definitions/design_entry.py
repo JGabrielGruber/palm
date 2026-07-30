@@ -184,7 +184,7 @@ def register_definitions(repository: object) -> None:
                 ("design-entry/start", ("assist", "scenarios", "design-entry", "start")),
                 (
                     "design-entry/handoff",
-                    ("assist", "session", "{session_id}", "handoff"),
+                    ("assist", "instance", "{instance_id}", "handoff"),
                 ),
             ),
             assistant_enricher=enrich_design_entry,

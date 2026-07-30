@@ -70,8 +70,8 @@ def normalize_assist_dispatch_args(
     if not alias and not path:
         # 0.58.9: session_id = system subject (sess-…); instance_id = continue.
         # Bound system session alone must not steal "flow_id only" → create.
-        # Residual SI-001: instance-shaped session_id is still accepted as continue
-        # handle until product paths rename (no dual system_session_id key).
+        # 0.58.19: product continue paths use segment ``instance``.
+        # Instance-shaped session_id is still accepted as continue handle.
         raw_session = clean_dispatch_str(params.get("session_id"))
         instance_id = clean_dispatch_str(params.get("instance_id"))
         system_sid: str | None = None
@@ -89,19 +89,19 @@ def normalize_assist_dispatch_args(
             system_sid if (mutating or not flow_id) else None
         )
         if continue_key and flow_id and mutating:
-            path = ["flows", flow_id, "session", continue_key, "input"]
+            path = ["flows", flow_id, "instance", continue_key, "input"]
             if collection_action is not None and "input" not in params:
                 action_text = clean_dispatch_str(collection_action) or str(collection_action)
                 params["input"] = action_text
         elif continue_key and mutating:
-            path = ["assist", "session", continue_key, "input"]
+            path = ["assist", "instance", continue_key, "input"]
         elif instance_id and flow_id:
-            path = ["flows", flow_id, "session", instance_id]
+            path = ["flows", flow_id, "instance", instance_id]
         elif instance_id:
-            path = ["assist", "session", instance_id]
+            path = ["assist", "instance", instance_id]
         elif system_sid and not flow_id:
             # Inspect/continue under session (rewrite → primary instance)
-            path = ["assist", "session", system_sid]
+            path = ["assist", "instance", system_sid]
         elif flow_id:
             # Create under bound session (session_id stays in params for job meta)
             path = ["flows", flow_id, "create"]

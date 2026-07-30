@@ -10,7 +10,7 @@ def test_flow_routes_use_command_path_shape() -> None:
     assert "/v1/api/flows" in paths
     assert "/v1/api/flows/{flow_id}" in paths
     assert "/v1/api/flows/{flow_id}/create" in paths
-    assert "/v1/api/flows/{flow_id}/session/{session_id}" in paths
-    assert "/v1/api/flows/{flow_id}/session/{session_id}/input" in paths
+    assert "/v1/api/flows/{flow_id}/instance/{instance_id}" in paths
+    assert "/v1/api/flows/{flow_id}/instance/{instance_id}/input" in paths
     assert "/v1/api/flows/{flow_id}/instances" not in paths
     assert "/v1/api/flows/instances/{instance_id}" not in paths

@@ -62,7 +62,7 @@ class PalmRestClient:
         resolved_flow = flow_id or self._resolve_flow_id(session_id)
         return self._request(
             "GET",
-            f"/v1/api/flows/{resolved_flow}/session/{session_id}",
+            f"/v1/api/flows/{resolved_flow}/instance/{session_id}",
         )
 
     def flows_session_input(
@@ -78,7 +78,7 @@ class PalmRestClient:
             body["input_token"] = input_token
         return self._request(
             "POST",
-            f"/v1/api/flows/{flow_id}/session/{session_id}/input",
+            f"/v1/api/flows/{flow_id}/instance/{session_id}/input",
             body=body,
             auth=True,
         )
@@ -95,7 +95,7 @@ class PalmRestClient:
             body["to_step"] = to_step
         return self._request(
             "POST",
-            f"/v1/api/flows/{flow_id}/session/{session_id}/backtrack",
+            f"/v1/api/flows/{flow_id}/instance/{session_id}/backtrack",
             body=body,
             auth=True,
         )
@@ -103,7 +103,7 @@ class PalmRestClient:
     def flows_session_resume(self, flow_id: str, session_id: str) -> dict[str, Any]:
         self._request(
             "POST",
-            f"/v1/api/flows/{flow_id}/session/{session_id}/resume",
+            f"/v1/api/flows/{flow_id}/instance/{session_id}/resume",
             auth=True,
         )
         return self.flows_get_session(flow_id, session_id)

@@ -195,7 +195,7 @@ def test_browse_menu_actions_on_operator_intent() -> None:
         "scenario_id": "operator-entry",
         "compose": {"step": "intent"},
         "choices": [{"value": "todo-builder"}, {"value": "improve-flow"}],
-        "actions": [{"label": "Cancel session", "path": ["assist", "session", "x", "cancel"]}],
+        "actions": [{"label": "Cancel session", "path": ["assist", "instance", "x", "cancel"]}],
     }
     out = ensure_browse_menu_actions(payload)
     assert any(

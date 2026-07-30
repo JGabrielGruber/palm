@@ -109,7 +109,8 @@ def assist_session_flat(result: dict[str, Any]) -> dict[str, Any]:
 
 
 def looks_like_session(path: list[str], result: dict[str, Any]) -> bool:
-    if "session" not in path:
+    # 0.58.19: product continue segment is ``instance``; legacy ``session`` still ok.
+    if "instance" not in path and "session" not in path:
         return False
     return "session_id" in result or "instance_id" in result or "status" in result
 
@@ -128,7 +129,7 @@ def operator_context_from_assist(result: dict[str, Any]) -> OperatorViewContext:
 
 
 def ensure_flow_session_flat(flat: dict[str, Any], path: list[str]) -> None:
-    if len(path) >= 4 and path[0] == "flows" and path[2] == "session":
+    if len(path) >= 4 and path[0] == "flows" and path[2] == "instance":
         session_id = path[3]
         flat.setdefault("session_id", session_id)
         if not flat.get("instance_id"):
@@ -142,7 +143,7 @@ def operator_context_from_flow_path(
 ) -> OperatorViewContext:
     session_id = flat.get("instance_id") or flat.get("session_id")
     flow_id = flat.get("flow_name") or flat.get("flow")
-    if len(path) >= 4 and path[0] == "flows" and path[2] == "session":
+    if len(path) >= 4 and path[0] == "flows" and path[2] == "instance":
         session_id = session_id or path[3]
         flow_id = flow_id or path[1]
     return OperatorViewContext(

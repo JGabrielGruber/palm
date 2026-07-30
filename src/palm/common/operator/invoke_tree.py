@@ -143,7 +143,7 @@ def _links(
         "instance": f"/v1/api/system/instances/{instance_id}",
     }
     if flow_id:
-        links["session"] = f"/v1/api/flows/{flow_id}/session/{instance_id}"
+        links["session"] = f"/v1/api/flows/{flow_id}/instance/{instance_id}"
     if base_url:
         base = base_url.rstrip("/")
         links["explorer"] = f"{base}/explorer/instances/{instance_id}"

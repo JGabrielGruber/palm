@@ -35,14 +35,14 @@ def test_parse_create_command() -> None:
 
 
 def test_parse_session_context_command() -> None:
-    parsed = parse_flow_command(["flows", "approve", "session", "inst-1"])
+    parsed = parse_flow_command(["flows", "approve", "instance", "inst-1"])
     assert parsed.kind == FlowCommandKind.SESSION
     assert parsed.flow_id == "approve"
     assert parsed.session_id == "inst-1"
 
 
 def test_parse_session_verb_command() -> None:
-    parsed = parse_flow_command(["flows", "approve", "session", "inst-1", "input"])
+    parsed = parse_flow_command(["flows", "approve", "instance", "inst-1", "input"])
     assert parsed.kind == FlowCommandKind.SESSION_VERB
     assert parsed.verb == "input"
 
@@ -56,7 +56,23 @@ def test_command_path_builder() -> None:
     assert command_path(flow_id="approve", session_id="inst-1", verb="input") == [
         "flows",
         "approve",
-        "session",
+        "instance",
         "inst-1",
         "input",
+    ]
+
+def test_parse_legacy_session_segment_still_accepted() -> None:
+    """0.58.19 soft land: segment ``session`` still parses as continue."""
+    parsed = parse_flow_command(["flows", "approve", "session", "inst-1", "input"])
+    assert parsed.kind == FlowCommandKind.INSTANCE_VERB
+    assert parsed.instance_id == "inst-1"
+    assert parsed.session_id == "inst-1"  # thin alias
+
+
+def test_command_path_prefers_instance_id_kwarg() -> None:
+    assert command_path(flow_id="approve", instance_id="inst-2") == [
+        "flows",
+        "approve",
+        "instance",
+        "inst-2",
     ]

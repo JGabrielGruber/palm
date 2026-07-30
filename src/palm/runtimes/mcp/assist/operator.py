@@ -148,23 +148,30 @@ def rewrite_system_session_continue(
         out_params["session_id"] = system_sid
         out_params["instance_id"] = inst
 
-    # Path: assist/session/{id}/… or flows/{flow}/session/{id}/…
-    if len(out_path) >= 3 and out_path[0] == "assist" and out_path[1] == "session":
+    # Path: assist/instance/{id}/… or flows/{flow}/instance/{id}/…
+    # (legacy segment ``session`` still accepted — 0.58.19 soft land)
+    if (
+        len(out_path) >= 3
+        and out_path[0] == "assist"
+        and out_path[1] in {"instance", "session"}
+    ):
         raw = out_path[2]
         if looks_like_system_session_id(raw):
             inst = _resolve(str(raw))
             if inst:
+                out_path[1] = "instance"
                 out_path[2] = inst
                 _apply_instance(inst, str(raw))
     elif (
         len(out_path) >= 4
         and out_path[0] == "flows"
-        and out_path[2] == "session"
+        and out_path[2] in {"instance", "session"}
     ):
         raw = out_path[3]
         if looks_like_system_session_id(raw):
             inst = _resolve(str(raw))
             if inst:
+                out_path[2] = "instance"
                 out_path[3] = inst
                 _apply_instance(inst, str(raw))
 
@@ -201,19 +208,19 @@ def rewrite_system_session_continue(
 
 
 def _path_continue_instance(path: list[str]) -> str | None:
-    """Extract product instance id from assist/flows session paths."""
-    if len(path) >= 3 and path[0] == "assist" and path[1] == "session":
+    """Extract product instance id from assist/flows continue paths."""
+    if len(path) >= 3 and path[0] == "assist" and path[1] in {"instance", "session"}:
         return str(path[2]) if path[2] else None
-    if len(path) >= 4 and path[0] == "flows" and path[2] == "session":
+    if len(path) >= 4 and path[0] == "flows" and path[2] in {"instance", "session"}:
         return str(path[3]) if path[3] else None
     return None
 
 
 def _is_session_continue_path(path: list[str]) -> bool:
     """True for product paths that drive or inspect a flow/assist instance."""
-    if len(path) >= 3 and path[0] == "assist" and path[1] == "session":
+    if len(path) >= 3 and path[0] == "assist" and path[1] in {"instance", "session"}:
         return True
-    if len(path) >= 4 and path[0] == "flows" and path[2] == "session":
+    if len(path) >= 4 and path[0] == "flows" and path[2] in {"instance", "session"}:
         return True
     return False
 

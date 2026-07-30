@@ -90,7 +90,7 @@ def open_target(
                 if raw is not None and not str(raw).startswith("sess-"):
                     instance_id = raw
         if instance_id:
-            inspect_path = ["flows", tid, "session", str(instance_id)]
+            inspect_path = ["flows", tid, "instance", str(instance_id)]
             try:
                 inspected = _as_mapping(
                     assist.execution.flows.dispatch(

@@ -202,12 +202,13 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
-**Observation:** Product `session_id` field name still often means instance (SI-001 residual
-path/handle rename). System plane + product door through **0.58.13**: seat, multi-attach,
+**Observation:** System plane + product door through **0.58.19**: seat, multi-attach,
 bind, job-path, inspect, Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary,
-**active focus**, **owner gate**, **SessionService**, **service/origin sessions** (work drain
-+ host). Residual: product URL/handle rename (SI-001), explorer bulk (SI-010), docs (SI-012),
-bare-instance paths without a bound system session.  
+**active focus**, **owner gate**, **SessionService**, **service/origin sessions**,
+**BoundSurface**, **strict attribution**, **inherit-or-service**, **kit door**,
+**session operate**, **product path rename** (SI-001/005). Residual for exit:
+explorer bulk (SI-010), docs/skill (SI-012), thin handle field names (SI-002),
+CLI assist slot name (SI-006).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
@@ -623,11 +624,11 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 | ID | Title | Area | Theme touch | Status |
 |----|-------|------|-------------|--------|
-| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6–12 | partial (door live; path rename residual) |
+| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6–12 · **0.58.19** | ✅ paths/envelopes (handles thin SI-002) |
 | [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–12 | open (handles OK; resolve via SessionService) |
 | [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | ✅ done |
-| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 · **0.58.17** | partial (door+rewrite; path rename → 0.58.19) |
+| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 · **0.58.17** · **0.58.19** | ✅ path/alias rename |
 | [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | 0.58.3 · **0.58.17** | partial (BoundSurface truth; dual mirrors residual) |
 | [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.8 partial | partial (`system/session`) |
 | [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4+8 | ✅ partial + filter |
@@ -642,16 +643,15 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 ### SI-001 — product handles still named “session” for instance
 
-**Where:** `FlowSession.session_id`, `AssistSession.session_id`, grammar path
-`…/session/{id}`, MCP tool param docs — internal product still keys continue by
-an attribute/path named session.  
-**Impact:** **Partial (0.58.9–12):** public envelopes use `session_id` = system
-subject and `instance_id` = continue. Plane owns ``active_instance_id``;
-product **SessionService** (0.58.12) is the surface door for resolve/gate/submit.
-Residual: rename product handle fields and URL segments to `instance` (not a
-prerequisite for correct surface operation).  
-**Target:** Product APIs and paths name `instance_id` for continue; `session_id`
-only for the system subject; product reads focus via SessionService → plane.
+**Where:** `FlowSession.session_id`, `AssistSession.session_id` (class attrs —
+SI-002 thin), grammar path `…/instance/{id}` (was `…/session/{id}`).  
+**Status:** ✅ **done at path/envelope level (0.58.19)** — product continue
+segment is `instance` / `instance_id`; REST and command paths emit that shape;
+legacy segment `session` still **parsed**. Public envelopes: `session_id` =
+system subject, `instance_id` = continue.  
+**Residual (thin):** product class field `FlowSession.session_id` may still
+name the continue handle (SI-002); CLI `active_assist_session_id` slot name
+(SI-006). Not a dual-path law risk.
 
 ### SI-002 — FlowSession / AssistSession product-only
 
@@ -679,12 +679,12 @@ dispatch resolve system session via plane; cookie-like transport
 
 ### SI-005 — MCP / palm_assist session = instance
 
-**Where:** `runtimes/mcp/assist/*`, assist grammar paths `session/{id}`.  
-**Impact:** **Partial (0.58.6–8 · 0.58.17):** start dogfood + path rewrite when
-`sess-…` is passed; `system/session/{id}` inspect via product door only;
-no plane fallback on operator paths. Grammar still says `session` for
-instance segments in URLs (name residual → **0.58.19**).  
-**Target:** Skills/docs teach system vs instance; URL rename in 0.58.19.
+**Where:** `runtimes/mcp/assist/*`, assist/flows grammar.  
+**Status:** ✅ **done at 0.58.19** (+ door/rewrite **0.58.17**) — product paths
+use `instance`; aliases `flows/instance-*` (legacy `flows/session-*` keys map
+to instance paths); `{instance_id}` accepts legacy `session_id` param when
+continue handle is absent; `system/session/{id}` remains system journey.  
+**Residual:** skill/docs narrative polish → **0.58.20** (SI-012).
 
 ### SI-006 — CLI / REPL active session id
 
@@ -816,7 +816,8 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.15 | Strict attribution ✅ — SI-015 residual closed |
 | 0.58.17 | Single kit door + surface dogfood ✅; SI-005/006/016 partial |
 | 0.58.18 | Session operate + surface_view v2 ✅; SI-007 partial (operator paths) |
-| 0.58.19 | Product vocabulary rename SI-001/005 |
+| 0.58.19 | Product vocabulary rename SI-001/005 ✅ |
+| 0.58.20 | Docs/skill SI-012 + residual honesty |
 | 0.58.20 | Docs/skill SI-012 + residual honesty SI-010/SU |
 | theme exit | SD-008 close; ADR-027 Accept; residual SI honest |
 | later (not 0.58) | SI-014 plane-store; D11 impersonation; full SU-001 explorer bulk |

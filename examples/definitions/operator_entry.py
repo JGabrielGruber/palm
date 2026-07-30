@@ -294,7 +294,7 @@ def register_definitions(repository: object) -> None:
                 ("operator-entry/start", ("assist", "scenarios", "operator-entry", "start")),
                 (
                     "operator-entry/handoff",
-                    ("assist", "session", "{session_id}", "handoff"),
+                    ("assist", "instance", "{instance_id}", "handoff"),
                 ),
                 (
                     "operator-entry/inspect",

@@ -85,7 +85,7 @@ def test_submit_wizard_and_provide_input(server: ServerRuntime) -> None:
     status, input_payload = _request(
         server.base_url,
         "POST",
-        f"/v1/api/flows/onboard/session/{session_id}/input",
+        f"/v1/api/flows/onboard/instance/{session_id}/input",
         body={"value": "Ada"},
     )
     assert status == 200

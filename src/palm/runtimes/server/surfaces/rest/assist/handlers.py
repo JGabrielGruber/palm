@@ -69,27 +69,27 @@ def start_scenario(
     return accepted(_start_body(result))
 
 
-def get_session(
+def get_instance(
     ctx: ServerContext,
     request: ServerRequest,
     *,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     try:
         body = ctx.assist.dispatch(
-            ["assist", "session", session_id],
+            ["assist", "instance", instance_id],
             {"format": _view_format(request)},
         )
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     return ok(body if isinstance(body, dict) else {"value": body})
 
 
-def session_input(
+def instance_input(
     ctx: ServerContext,
     request: ServerRequest,
     *,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -113,11 +113,11 @@ def session_input(
         input_params["input_token"] = raw_body["input_token"]
     try:
         result = ctx.assist.dispatch(
-            ["assist", "session", session_id, "input"],
+            ["assist", "instance", instance_id, "input"],
             input_params,
         )
     except InstanceNotFoundError:
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except MutationRejectedError as exc:
         return errors.input_rejected(str(exc))
     except TypeError as exc:
@@ -128,11 +128,11 @@ def session_input(
     return ok(result if isinstance(result, dict) else {"value": result})
 
 
-def session_backtrack(
+def instance_backtrack(
     ctx: ServerContext,
     request: ServerRequest,
     *,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -149,11 +149,11 @@ def session_backtrack(
 
     try:
         result = ctx.assist.dispatch(
-            ["assist", "session", session_id, "backtrack"],
+            ["assist", "instance", instance_id, "backtrack"],
             {"to_step": body.get("to_step"), "format": _view_format(request)},
         )
     except InstanceNotFoundError:
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except TypeError as exc:
         return errors.bad_request(str(exc))
     except ValueError as exc:
@@ -162,11 +162,11 @@ def session_backtrack(
     return ok(result if isinstance(result, dict) else {"value": result})
 
 
-def session_resume(
+def instance_resume(
     ctx: ServerContext,
     request: ServerRequest,
     *,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -174,47 +174,47 @@ def session_resume(
 
     try:
         result = ctx.assist.dispatch(
-            ["assist", "session", session_id, "resume"],
+            ["assist", "instance", instance_id, "resume"],
             {"format": _view_format(request)},
         )
     except InstanceNotFoundError:
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except RuntimeError as exc:
         return errors.input_rejected(str(exc))
 
     return ok(result if isinstance(result, dict) else {"value": result})
 
 
-def session_cancel(
+def instance_cancel(
     ctx: ServerContext,
     request: ServerRequest,
     *,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
         return auth_error
 
     try:
-        result = ctx.assist.dispatch(["assist", "session", session_id, "cancel"])
+        result = ctx.assist.dispatch(["assist", "instance", instance_id, "cancel"])
     except InstanceNotFoundError:
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except RuntimeError as exc:
         return errors.input_rejected(str(exc))
 
     return ok(result if isinstance(result, dict) else {"result": result})
 
 
-def session_handoff(
+def instance_handoff(
     ctx: ServerContext,
     request: ServerRequest,
     *,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     try:
-        result = ctx.assist.dispatch(["assist", "session", session_id, "handoff"])
+        result = ctx.assist.dispatch(["assist", "instance", instance_id, "handoff"])
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     return ok(result if isinstance(result, dict) else {"value": result})
 
 
@@ -245,12 +245,12 @@ __all__ = [
     "catalog_flows",
     "describe_scenario",
     "doctor",
-    "get_session",
+    "get_instance",
+    "instance_backtrack",
+    "instance_cancel",
+    "instance_handoff",
+    "instance_input",
+    "instance_resume",
     "list_scenarios",
-    "session_backtrack",
-    "session_cancel",
-    "session_handoff",
-    "session_input",
-    "session_resume",
     "start_scenario",
 ]

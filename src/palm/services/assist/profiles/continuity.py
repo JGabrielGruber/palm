@@ -83,7 +83,7 @@ def maybe_auto_start_handoff_flow(
                 else None
             )
         if instance_id:
-            inspect_path = ["flows", flow_id, "session", str(instance_id)]
+            inspect_path = ["flows", flow_id, "instance", str(instance_id)]
             try:
                 raw = dispatch(inspect_path, {"format": "assistant"})
                 resolved = inspect_path
@@ -148,7 +148,7 @@ def maybe_auto_start_design_entry(
             )
         resolved = list(start_path)
         if instance_id:
-            input_path = ["assist", "session", str(instance_id), "input"]
+            input_path = ["assist", "instance", str(instance_id), "input"]
             try:
                 raw = dispatch(
                     input_path,
@@ -163,10 +163,10 @@ def maybe_auto_start_design_entry(
                 logger.debug("design auto-start intent input failed", exc_info=True)
                 try:
                     raw = dispatch(
-                        ["assist", "session", str(instance_id)],
+                        ["assist", "instance", str(instance_id)],
                         {"format": "assistant", "include_input_schema": True},
                     )
-                    resolved = ["assist", "session", str(instance_id)]
+                    resolved = ["assist", "instance", str(instance_id)]
                 except Exception:
                     pass
         next_turn = _shape_turn(shape, resolved, raw)
@@ -218,7 +218,7 @@ def maybe_auto_continue_introduction(
         banner_parts.append(intro_q)
     intro_text = "\n\n".join(banner_parts)
     try:
-        input_path = ["flows", str(flow_id), "session", str(instance_id), "input"]
+        input_path = ["flows", str(flow_id), "instance", str(instance_id), "input"]
         raw = dispatch(
             input_path,
             {"value": "", "format": "assistant", "include_input_schema": True},

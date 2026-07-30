@@ -22,7 +22,7 @@ def test_build_session_context_core_fields() -> None:
     assert ctx.flow_id == "approve"
     assert ctx.pattern == "wizard"
     assert ctx.waiting_for_input is True
-    assert ["flows", "approve", "session", "inst-1", "input"] in ctx.next_commands
+    assert ["flows", "approve", "instance", "inst-1", "input"] in ctx.next_commands
 
 
 def test_session_context_to_dict() -> None:

@@ -79,7 +79,7 @@ def test_rewrite_orphan_bare_instance_refused() -> None:
         with pytest.raises(SessionAttributionError, match="no owner session"):
             rewrite_system_session_continue(
                 host,
-                ["assist", "session", "inst-orphan", "input"],
+                ["assist", "instance", "inst-orphan", "input"],
                 {"value": "legacy"},
             )
     finally:
@@ -95,7 +95,7 @@ def test_rewrite_owned_instance_without_params_session_resolves() -> None:
         host.session.attach_instance(sid, "inst-owned")
         path, params = rewrite_system_session_continue(
             host,
-            ["assist", "session", "inst-owned", "input"],
+            ["assist", "instance", "inst-owned", "input"],
             {"value": "ok"},
         )
         assert path[2] == "inst-owned"
@@ -115,7 +115,7 @@ def test_rewrite_foreign_with_bound_session_still_refused() -> None:
         with pytest.raises(InstanceNotOwnedError):
             rewrite_system_session_continue(
                 host,
-                ["assist", "session", "inst-b", "input"],
+                ["assist", "instance", "inst-b", "input"],
                 {"session_id": a, "value": "nope"},
             )
     finally:
@@ -129,7 +129,7 @@ def test_compat_flag_allows_bare_orphan() -> None:
         assert host.session.strict_attribution is False
         path, params = rewrite_system_session_continue(
             host,
-            ["assist", "session", "inst-orphan", "input"],
+            ["assist", "instance", "inst-orphan", "input"],
             {"value": "compat"},
         )
         assert path[2] == "inst-orphan"

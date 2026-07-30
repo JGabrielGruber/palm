@@ -19,29 +19,29 @@ _registry: list[CommandSpec] = [
     CommandSpec("describe_flow", ("flows", "{flow_id}"), "Describe one flow"),
     CommandSpec("create_session", ("flows", "{flow_id}", "create"), "Start a flow session"),
     CommandSpec(
-        "session_context",
-        ("flows", "{flow_id}", "session", "{session_id}"),
-        "Inspect session context",
+        "instance_context",
+        ("flows", "{flow_id}", "instance", "{instance_id}"),
+        "Inspect flow instance context",
     ),
     CommandSpec(
-        "session_input",
-        ("flows", "{flow_id}", "session", "{session_id}", "input"),
+        "instance_input",
+        ("flows", "{flow_id}", "instance", "{instance_id}", "input"),
         "Provide interactive input",
     ),
     CommandSpec(
-        "session_backtrack",
-        ("flows", "{flow_id}", "session", "{session_id}", "backtrack"),
+        "instance_backtrack",
+        ("flows", "{flow_id}", "instance", "{instance_id}", "backtrack"),
         "Backtrack to a prior step",
     ),
     CommandSpec(
-        "session_resume",
-        ("flows", "{flow_id}", "session", "{session_id}", "resume"),
+        "instance_resume",
+        ("flows", "{flow_id}", "instance", "{instance_id}", "resume"),
         "Resume a waiting interactive flow",
     ),
     CommandSpec(
-        "session_cancel",
-        ("flows", "{flow_id}", "session", "{session_id}", "cancel"),
-        "Cancel the session job",
+        "instance_cancel",
+        ("flows", "{flow_id}", "instance", "{instance_id}", "cancel"),
+        "Cancel the instance job",
     ),
 ]
 

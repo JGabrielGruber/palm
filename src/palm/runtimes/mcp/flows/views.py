@@ -16,11 +16,17 @@ def flatten_session_view(ctx: Any) -> dict[str, Any]:
 
 
 def submission_view(result: dict[str, Any]) -> dict[str, Any]:
-    """Normalize create-session payloads for MCP consumers."""
-    session_id = result.get("session_id")
+    """Normalize create-session payloads for MCP consumers.
+
+    **0.58.19:** keep system ``session_id`` and product ``instance_id`` distinct.
+    Do not copy system subject into ``instance_id``.
+    """
     payload = dict(result)
-    if session_id is not None:
-        payload["instance_id"] = session_id
+    if payload.get("instance_id") is None:
+        # Legacy create payloads that still key continue as session_id (non-sess-).
+        sid = payload.get("session_id")
+        if sid is not None and not str(sid).startswith("sess-"):
+            payload["instance_id"] = sid
     return payload
 
 

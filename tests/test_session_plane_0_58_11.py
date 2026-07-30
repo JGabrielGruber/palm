@@ -92,7 +92,7 @@ def test_rewrite_rejects_foreign_instance_with_bound_session() -> None:
         # Owned path ok
         path, params = rewrite_system_session_continue(
             host,
-            ["assist", "session", "inst-a", "input"],
+            ["assist", "instance", "inst-a", "input"],
             {"session_id": bind_a.session_id, "value": "hi"},
         )
         assert path[2] == "inst-a"
@@ -102,7 +102,7 @@ def test_rewrite_rejects_foreign_instance_with_bound_session() -> None:
         with pytest.raises(InstanceNotOwnedError):
             rewrite_system_session_continue(
                 host,
-                ["assist", "session", "inst-b", "input"],
+                ["assist", "instance", "inst-b", "input"],
                 {"session_id": bind_a.session_id, "value": "nope"},
             )
 
@@ -110,7 +110,7 @@ def test_rewrite_rejects_foreign_instance_with_bound_session() -> None:
         with pytest.raises(InstanceNotOwnedError):
             rewrite_system_session_continue(
                 host,
-                ["flows", "todo", "session", "inst-b", "input"],
+                ["flows", "todo", "instance", "inst-b", "input"],
                 {"session_id": bind_a.session_id, "value": "nope"},
             )
     finally:
@@ -131,7 +131,7 @@ def test_rewrite_bare_orphan_without_bound_session_refused_0_58_15() -> None:
         with pytest.raises(SessionAttributionError, match="no owner session"):
             rewrite_system_session_continue(
                 host,
-                ["assist", "session", "inst-orphan", "input"],
+                ["assist", "instance", "inst-orphan", "input"],
                 {"value": "legacy"},
             )
     finally:
@@ -152,7 +152,7 @@ def test_rewrite_resolved_system_session_is_owned() -> None:
         plane.attach_instance(bind.session_id, "inst-continue")
         path, params = rewrite_system_session_continue(
             host,
-            ["assist", "session", bind.session_id, "input"],
+            ["assist", "instance", bind.session_id, "input"],
             {"value": "hi"},
         )
         assert path[2] == "inst-continue"

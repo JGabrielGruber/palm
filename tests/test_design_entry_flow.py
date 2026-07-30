@@ -71,7 +71,7 @@ def test_design_entry_intent_input_does_not_call_propose(
     started = assist_host.assist.start_scenario("design-entry", {})
     session_id = started["session_id"]
     updated = assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "create-flow"},
     )
     assert calls == []
@@ -86,12 +86,12 @@ def test_design_entry_create_flow_has_design_actions(
     started = assist_host.assist.start_scenario("design-entry", {})
     session_id = started["session_id"]
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "create-flow"},
     )
     # name_or_base → complete (no summary in 0.30.5)
     updated = assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "my-new-flow"},
     )
     assert updated.get("status") == "complete"
@@ -107,11 +107,11 @@ def test_design_entry_handoff_kind_design(assist_host: ApplicationHost) -> None:
     started = assist_host.assist.start_scenario("design-entry", {})
     session_id = started["session_id"]
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "create-flow"},
     )
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "demo-flow"},
     )
     handoff = assist_host.assist.handoff(session_id)
@@ -127,11 +127,11 @@ def test_design_entry_improve_handoff_base_flow_id(
     started = assist_host.assist.start_scenario("design-entry", {})
     session_id = started["session_id"]
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "improve-flow"},
     )
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "todo-builder"},
     )
     handoff = assist_host.assist.handoff(session_id)

@@ -70,7 +70,7 @@ def test_explorer_assist_start_redirects_to_session(server: ServerRuntime) -> No
     )
     assert status == 302
     location = headers.get("location", "")
-    assert "/explorer/assist/session/" in location
+    assert "/explorer/assist/instance/" in location
 
     session_path = urllib.parse.urlparse(location).path
     status, html, _ = _get_html(server.base_url, session_path)
@@ -127,7 +127,7 @@ def test_explorer_assist_htmx_input_advances_turn(server: ServerRuntime) -> None
 
     status, html, _ = _post_form_htmx(
         server.base_url,
-        f"/explorer/assist/session/{session_id}/input",
+        f"/explorer/assist/instance/{session_id}/input",
         {"value": "todo-builder"},
     )
     assert status == 200
@@ -143,18 +143,18 @@ def test_explorer_assist_handoff_htmx(server: ServerRuntime) -> None:
 
     _post_form_htmx(
         server.base_url,
-        f"/explorer/assist/session/{session_id}/input",
+        f"/explorer/assist/instance/{session_id}/input",
         {"value": "todo-builder"},
     )
     _post_form_htmx(
         server.base_url,
-        f"/explorer/assist/session/{session_id}/input",
+        f"/explorer/assist/instance/{session_id}/input",
         {"value": "yes"},
     )
 
     status, html, _ = _post_form_htmx(
         server.base_url,
-        f"/explorer/assist/session/{session_id}/handoff",
+        f"/explorer/assist/instance/{session_id}/handoff",
     )
     assert status == 200
     assert "Handoff" in html

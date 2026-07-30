@@ -559,7 +559,7 @@ def _handle_dispatch(
             flow_id = resolved[1]
             inspect_key = raw.get("instance_id") or raw.get("session_id")
             if inspect_key:
-                inspect_path = ["flows", flow_id, "session", str(inspect_key)]
+                inspect_path = ["flows", flow_id, "instance", str(inspect_key)]
                 try:
                     raw = dispatch_operator_path(
                         ctx,

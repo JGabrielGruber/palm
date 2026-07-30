@@ -43,7 +43,7 @@ def _sample_view() -> dict:
             {
                 "action": "session_input",
                 "method": "POST",
-                "path": "/v1/api/flows/capture/session/inst-1/input",
+                "path": "/v1/api/flows/capture/instance/inst-1/input",
             }
         ],
     }

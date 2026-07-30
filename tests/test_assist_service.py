@@ -298,7 +298,7 @@ def test_operator_entry_enricher_handoff_cta(assist_host: ApplicationHost) -> No
     started = assist_host.assist.start_scenario("operator-entry", {})
     session_id = started["session_id"]
     updated = assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "todo-builder", "format": "assistant"},
     )
     assert updated.get("handoff_ready") is True
@@ -335,7 +335,7 @@ def test_handoff_todo_builder_still_kind_flow(assist_host: ApplicationHost) -> N
     started = assist_host.assist.start_scenario("operator-entry", {})
     session_id = started["session_id"]  # system subject; resolve on product path
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "todo-builder", "format": "assistant"},
     )
     handoff = assist_host.assist.handoff(session_id)
@@ -349,7 +349,7 @@ def test_assist_session_input_and_context(assist_host: ApplicationHost) -> None:
     system_sid = started["session_id"]
     instance_id = started["instance_id"]
     assert str(system_sid).startswith("sess-")
-    ctx = assist_host.assist.dispatch(["assist", "session", system_sid])
+    ctx = assist_host.assist.dispatch(["assist", "instance", system_sid])
     assert ctx.get("session_id") == system_sid
     assert ctx.get("instance_id") == instance_id
     assert ctx.get("status") == "waiting"
@@ -357,13 +357,13 @@ def test_assist_session_input_and_context(assist_host: ApplicationHost) -> None:
     assert "detail" not in ctx
 
     updated = assist_host.assist.dispatch(
-        ["assist", "session", system_sid, "input"],
+        ["assist", "instance", system_sid, "input"],
         {"value": "todo-builder"},
     )
     assert updated.get("session_id") == system_sid or updated.get("instance_id")
     if updated.get("status") == "waiting":
         assist_host.assist.dispatch(
-            ["assist", "session", system_sid, "input"],
+            ["assist", "instance", system_sid, "input"],
             {"value": "yes"},
         )
 

@@ -25,7 +25,7 @@ def _isolate_assist_contributors() -> None:
 def test_assist_commands_include_start_and_handoff() -> None:
     ids = {spec.command_id for spec in assist_commands()}
     assert "start_scenario" in ids
-    assert "session_handoff" in ids
+    assert "instance_handoff" in ids
     assert "list_scenarios" in ids
 
 
@@ -52,7 +52,7 @@ def test_parse_assist_start_scenario() -> None:
 
 
 def test_parse_assist_session_handoff() -> None:
-    parsed = parse_assist_command(["assist", "session", "inst-1", "handoff"])
+    parsed = parse_assist_command(["assist", "instance", "inst-1", "handoff"])
     assert parsed.kind == AssistCommandKind.SESSION_VERB
     assert parsed.session_id == "inst-1"
     assert parsed.verb == "handoff"

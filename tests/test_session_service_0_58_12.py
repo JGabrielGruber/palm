@@ -123,7 +123,7 @@ def test_rewrite_prefers_product_session_service() -> None:
 
         path, params = rewrite_system_session_continue(
             ctx,
-            ["assist", "session", sid],
+            ["assist", "instance", sid],
             {},
         )
         assert path[2] == "inst-x"
@@ -133,7 +133,7 @@ def test_rewrite_prefers_product_session_service() -> None:
         with pytest.raises(InstanceNotOwnedError):
             rewrite_system_session_continue(
                 ctx,
-                ["assist", "session", "foreign-inst"],
+                ["assist", "instance", "foreign-inst"],
                 {"session_id": sid},
             )
     finally:

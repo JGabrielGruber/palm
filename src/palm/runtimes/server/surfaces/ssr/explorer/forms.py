@@ -53,7 +53,7 @@ def assist_input_form(session_id: str, view: Mapping[str, Any]) -> str:
     if view.get("status") != "waiting":
         return ""
 
-    action = f"/explorer/assist/session/{escape(session_id)}/input"
+    action = f"/explorer/assist/instance/{escape(session_id)}/input"
     htmx_attrs = _assist_htmx_attrs(action)
     choices = view.get("choices")
     choice_html = ""
@@ -95,7 +95,7 @@ def assist_input_form(session_id: str, view: Mapping[str, Any]) -> str:
 
 def assist_handoff_form(session_id: str) -> str:
     """HTMX handoff trigger when the session is ready."""
-    action = f"/explorer/assist/session/{escape(session_id)}/handoff"
+    action = f"/explorer/assist/instance/{escape(session_id)}/handoff"
     return (
         f'<form class="schema-form" action="{escape(action)}" method="POST"{_assist_htmx_attrs(action)}>'
         f'<button class="btn-primary" type="submit">Hand off to business flow</button>'
@@ -109,8 +109,8 @@ def assist_session_toolbar(session_id: str, view: Mapping[str, Any]) -> str:
     if view.get("status") not in {"waiting", "running"}:
         return ""
 
-    back_action = f"/explorer/assist/session/{escape(session_id)}/backtrack"
-    cancel_action = f"/explorer/assist/session/{escape(session_id)}/cancel"
+    back_action = f"/explorer/assist/instance/{escape(session_id)}/backtrack"
+    cancel_action = f"/explorer/assist/instance/{escape(session_id)}/cancel"
     return (
         '<section class="panel"><h3>Session controls</h3>'
         f'<div class="wizard-choice-grid">'

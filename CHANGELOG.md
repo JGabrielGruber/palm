@@ -154,9 +154,16 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Operator (SI-007 partial)** — `system/session/{id}/view` · `/focus` · `/focus/clear` · `/cancel` · `/cancel/all`  
 - Full CQRS session contributor still optional residual  
 
+#### Changed (0.58.19) — product vocabulary rename (SI-001 / SI-005)
+- **Grammar emit** — assist/flows command paths use segment `instance` + `instance_id` (legacy segment `session` still **parsed**)  
+- **REST** — `/v1/api/assist/instance/{instance_id}/…` and `/v1/api/flows/{flow_id}/instance/{instance_id}/…`  
+- **MCP** — aliases resolve `{instance_id}` (legacy `session_id` param fills continue when absent); rest_map + normalize + operator rewrite aligned  
+- **Handles** — `FlowSession` / `AssistSession` class field names may stay thin (SI-002); public path/envelope law: `session_id` = system, `instance_id` = continue  
+- **System paths** — `system/session/{id}/…` unchanged (system journey)  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.18** shipped; **0.58.19–20** + exit named.  
-- Theme **exit** after **0.58.19–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.19** shipped; **0.58.20** + exit named.  
+- Theme **exit** after **0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 

@@ -32,7 +32,7 @@ def test_assist_registry_has_command_specs() -> None:
     assert all(isinstance(spec, AssistCommandSpec) for spec in commands)
     ids = {spec.command_id for spec in commands}
     assert "start_scenario" in ids
-    assert "session_handoff" in ids
+    assert "instance_handoff" in ids
 
 
 def test_flow_registry_has_command_specs() -> None:
@@ -41,7 +41,7 @@ def test_flow_registry_has_command_specs() -> None:
     assert all(isinstance(spec, CommandSpec) for spec in commands)
     ids = {spec.command_id for spec in commands}
     assert "create_session" in ids
-    assert "session_input" in ids
+    assert "instance_input" in ids
     assert all("method" not in spec.__dict__ for spec in commands)
     assert all("path" not in spec.__dict__ for spec in commands)
 

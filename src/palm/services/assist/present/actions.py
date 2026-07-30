@@ -139,7 +139,7 @@ def build_assistant_actions(session_ctx: Any) -> list[dict[str, Any]]:
 
     actions: list[dict[str, Any]] = []
     for path in session_ctx.next_commands:
-        if not path or path[0] != "assist" or len(path) < 3 or path[1] != "session":
+        if not path or path[0] != "assist" or len(path) < 3 or path[1] != "instance":
             continue
         verb = path[-1] if len(path) > 3 else None
         if verb == "handoff" and handoff_alias:
@@ -153,7 +153,7 @@ def build_assistant_actions(session_ctx: Any) -> list[dict[str, Any]]:
             continue
         if verb in VERB_ACTION_LABELS:
             label = VERB_ACTION_LABELS[verb]
-        elif len(path) == 3 and path[1] == "session":
+        elif len(path) == 3 and path[1] == "instance":
             label = "Inspect session"
         else:
             label = verb.replace("_", " ").title() if verb else "Continue"
@@ -168,7 +168,7 @@ def build_assistant_actions(session_ctx: Any) -> list[dict[str, Any]]:
                 actions.append(
                     {
                         "label": "Open child session",
-                        "path": ["flows", "session", str(child_id)],
+                        "path": ["assist", "instance", str(child_id)],
                     }
                 )
 

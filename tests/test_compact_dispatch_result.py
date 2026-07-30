@@ -37,12 +37,12 @@ def _sample_session_context() -> SessionContext:
 def test_compact_dispatch_result_flows_session_context_object() -> None:
     ctx = _sample_session_context()
     payload = compact_dispatch_result(
-        ["flows", "onboard", "session", "inst-1"],
+        ["flows", "onboard", "instance", "inst-1"],
         ctx,
     )
 
     expected = compact_wizard_inspect(flatten_session_view(ctx))
-    assert payload["path"] == ["flows", "onboard", "session", "inst-1"]
+    assert payload["path"] == ["flows", "onboard", "instance", "inst-1"]
     assert payload["instance_id"] == "inst-1"
     assert payload["flow"] == "onboard"
     assert payload["step"] == "intro"
@@ -55,7 +55,7 @@ def test_compact_dispatch_result_flows_session_context_object() -> None:
 def test_compact_dispatch_result_flows_session_input_returns_compact() -> None:
     ctx = _sample_session_context()
     payload = compact_dispatch_result(
-        ["flows", "onboard", "session", "inst-1", "input"],
+        ["flows", "onboard", "instance", "inst-1", "input"],
         ctx,
     )
 

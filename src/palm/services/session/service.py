@@ -1064,7 +1064,7 @@ class SessionService(BaseService):
             actions.append(
                 {
                     "verb": "continue",
-                    "path": f"assist/session/{continue_instance_id}",
+                    "path": f"assist/instance/{continue_instance_id}",
                     "params": {"session_id": sid, "instance_id": continue_instance_id},
                     "description": "Continue focus via wait plane (assist/flows)",
                 }

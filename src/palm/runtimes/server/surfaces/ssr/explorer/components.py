@@ -9,7 +9,7 @@ from palm.kits.server.ssr.render import escape, pretty_json
 
 def _session_api_href(wizard: dict[str, Any], instance_id: str) -> str:
     flow_id = wizard.get("flow_name") or wizard.get("flow_id") or "flow"
-    return f"/v1/api/flows/{escape(str(flow_id))}/session/{escape(instance_id)}"
+    return f"/v1/api/flows/{escape(str(flow_id))}/instance/{escape(instance_id)}"
 
 
 def stat_card(label: str, value: str | int, *, hint: str = "") -> str:
@@ -910,7 +910,7 @@ def assist_workspace(
 
     links = (
         '<section class="panel"><h3>Links</h3>'
-        f'<p><a href="/v1/api/assist/session/{escape(session_id)}?format=assistant">REST assist API</a>'
+        f'<p><a href="/v1/api/assist/instance/{escape(session_id)}?format=assistant">REST assist API</a>'
         f' · <a href="/explorer/instances/{escape(session_id)}">Instance (flows view)</a></p></section>'
     )
 

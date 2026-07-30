@@ -36,7 +36,7 @@ def _sample_session_context() -> SessionContext:
 
 def test_resolve_dispatch_format_assist_defaults_assistant() -> None:
     assert (
-        resolve_dispatch_format(["assist", "session", "inst-1"], tool_format="assistant")
+        resolve_dispatch_format(["assist", "instance", "inst-1"], tool_format="assistant")
         == "assistant"
     )
 
@@ -45,7 +45,7 @@ def test_resolve_dispatch_format_flows_honors_assistant_tool_format() -> None:
     """0.30.6+ — palm_assist passes tool_format=assistant for flows paths."""
     assert (
         resolve_dispatch_format(
-            ["flows", "onboard", "session", "inst-1"],
+            ["flows", "onboard", "instance", "inst-1"],
             tool_format="assistant",
         )
         == "assistant"
@@ -55,7 +55,7 @@ def test_resolve_dispatch_format_flows_honors_assistant_tool_format() -> None:
 def test_resolve_dispatch_format_flows_powertool_when_requested() -> None:
     assert (
         resolve_dispatch_format(
-            ["flows", "onboard", "session", "inst-1"],
+            ["flows", "onboard", "instance", "inst-1"],
             params={"format": "powertool"},
             tool_format="assistant",
         )
@@ -71,12 +71,12 @@ def test_shape_dispatch_result_assistant_passthrough() -> None:
         "choices": [{"n": 1, "label": "Yes", "value": "yes"}],
     }
     payload = shape_dispatch_result(
-        ["assist", "session", "inst-1"],
+        ["assist", "instance", "inst-1"],
         envelope,
         format="assistant",
     )
     assert payload["question"] == "Hello?"
-    assert payload["path"] == ["assist", "session", "inst-1"]
+    assert payload["path"] == ["assist", "instance", "inst-1"]
 
 
 def test_shape_dispatch_result_flows_session_assistant_default() -> None:
@@ -87,7 +87,7 @@ def test_shape_dispatch_result_flows_session_assistant_default() -> None:
     ensure_assist_view_registration()
     ctx = _sample_session_context()
     payload = shape_dispatch_result(
-        ["flows", "onboard", "session", "inst-1"],
+        ["flows", "onboard", "instance", "inst-1"],
         ctx,
         tool_format="assistant",
     )
@@ -103,7 +103,7 @@ def test_shape_dispatch_result_flows_session_assistant_opt_in() -> None:
     ensure_assist_view_registration()
     ctx = _sample_session_context()
     payload = shape_dispatch_result(
-        ["flows", "onboard", "session", "inst-1"],
+        ["flows", "onboard", "instance", "inst-1"],
         ctx,
         params={"format": "assistant"},
     )

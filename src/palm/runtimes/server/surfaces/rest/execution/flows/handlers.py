@@ -88,26 +88,26 @@ def create_session(
     return accepted(payload, headers=headers if headers else None)
 
 
-def get_session(
+def get_instance(
     ctx: ServerContext,
     request: ServerRequest,
     *,
     flow_id: str,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     try:
-        ctx_obj = ctx.execution.flows.dispatch(["flows", flow_id, "session", session_id])
+        ctx_obj = ctx.execution.flows.dispatch(["flows", flow_id, "instance", instance_id])
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
-    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, session_id=session_id))
+        return errors.wizard_not_found(instance_id)
+    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))
 
 
-def session_input(
+def instance_input(
     ctx: ServerContext,
     request: ServerRequest,
     *,
     flow_id: str,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -128,11 +128,11 @@ def session_input(
         input_params["input_token"] = raw_body["input_token"]
     try:
         ctx_obj = ctx.execution.flows.dispatch(
-            ["flows", flow_id, "session", session_id, "input"],
+            ["flows", flow_id, "instance", instance_id, "input"],
             input_params,
         )
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except MutationRejectedError as exc:
         return errors.input_rejected(str(exc))
     except TypeError as exc:
@@ -140,15 +140,15 @@ def session_input(
     except (ValueError, RuntimeError) as exc:
         return errors.input_rejected(str(exc))
 
-    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, session_id=session_id))
+    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))
 
 
-def session_backtrack(
+def instance_backtrack(
     ctx: ServerContext,
     request: ServerRequest,
     *,
     flow_id: str,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -165,25 +165,25 @@ def session_backtrack(
 
     try:
         ctx_obj = ctx.execution.flows.dispatch(
-            ["flows", flow_id, "session", session_id, "backtrack"],
+            ["flows", flow_id, "instance", instance_id, "backtrack"],
             {"to_step": body.get("to_step")},
         )
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except TypeError as exc:
         return errors.bad_request(str(exc))
     except ValueError as exc:
         return errors.backtrack_rejected(str(exc))
 
-    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, session_id=session_id))
+    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))
 
 
-def session_resume(
+def instance_resume(
     ctx: ServerContext,
     request: ServerRequest,
     *,
     flow_id: str,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -191,22 +191,22 @@ def session_resume(
 
     try:
         ctx_obj = ctx.execution.flows.dispatch(
-            ["flows", flow_id, "session", session_id, "resume"],
+            ["flows", flow_id, "instance", instance_id, "resume"],
         )
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except RuntimeError as exc:
         return errors.input_rejected(str(exc))
 
-    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, session_id=session_id))
+    return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))
 
 
-def session_cancel(
+def instance_cancel(
     ctx: ServerContext,
     request: ServerRequest,
     *,
     flow_id: str,
-    session_id: str,
+    instance_id: str,
 ) -> ServerResponse:
     auth_error = require_auth(ctx, request)
     if auth_error is not None:
@@ -214,10 +214,10 @@ def session_cancel(
 
     try:
         result = ctx.execution.flows.dispatch(
-            ["flows", flow_id, "session", session_id, "cancel"],
+            ["flows", flow_id, "instance", instance_id, "cancel"],
         )
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
-        return errors.wizard_not_found(session_id)
+        return errors.wizard_not_found(instance_id)
     except RuntimeError as exc:
         return errors.input_rejected(str(exc))
 
@@ -235,26 +235,28 @@ def _session_body(
     ctx_obj: Any,
     *,
     flow_id: str | None = None,
+    instance_id: str | None = None,
     session_id: str | None = None,
 ) -> dict[str, Any]:
     flat = flatten_session_context(ctx_obj)
     view_format = _view_format(request)
-    # Product continue key is instance_id; path may still pass system session.
+    # Product continue key is instance_id (0.58.19); session_id kw is legacy alias.
+    continue_hint = instance_id if instance_id is not None else session_id
     instance_key = (
         flat.get("instance_id")
         or (
-            session_id
-            if session_id and not str(session_id).startswith("sess-")
+            continue_hint
+            if continue_hint and not str(continue_hint).startswith("sess-")
             else None
         )
     )
-    if instance_key is None and session_id and str(session_id).startswith("sess-"):
+    if instance_key is None and continue_hint and str(continue_hint).startswith("sess-"):
         try:
-            instance_key = ctx.execution.flows._resolve_instance_id(str(session_id))
+            instance_key = ctx.execution.flows._resolve_instance_id(str(continue_hint))
         except Exception:
             instance_key = None
     if instance_key is None:
-        raw = session_id or flat.get("session_id")
+        raw = continue_hint or flat.get("session_id")
         if raw is not None and not str(raw).startswith("sess-"):
             instance_key = raw
     invoke_tree = None
@@ -295,10 +297,10 @@ def _create_body(result: Any) -> dict[str, Any]:
 __all__ = [
     "create_session",
     "describe_flow",
-    "get_session",
+    "get_instance",
     "list_flows",
-    "session_backtrack",
-    "session_cancel",
-    "session_input",
-    "session_resume",
+    "instance_backtrack",
+    "instance_cancel",
+    "instance_input",
+    "instance_resume",
 ]

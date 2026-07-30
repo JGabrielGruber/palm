@@ -24,11 +24,11 @@ def test_inspect_only_stays_waiting_after_intent(assist_host: ApplicationHost) -
     started = assist_host.assist.start_scenario("operator-entry", {})
     session_id = started["session_id"]
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "inspect-only"},
     )
     ctx = assist_host.assist.dispatch(
-        ["assist", "session", session_id],
+        ["assist", "instance", session_id],
         {"format": "assistant"},
     )
     assert ctx.get("status") == "waiting"
@@ -44,14 +44,14 @@ def test_inspect_only_exit_completes(assist_host: ApplicationHost) -> None:
     started = assist_host.assist.start_scenario("operator-entry", {})
     session_id = started["session_id"]
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "inspect-only"},
     )
     assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "exit"},
     )
-    ctx = assist_host.assist.dispatch(["assist", "session", session_id])
+    ctx = assist_host.assist.dispatch(["assist", "instance", session_id])
     assert ctx.get("status") in {JobStatus.SUCCEEDED.value, "SUCCEEDED", "complete"}
 
 
@@ -71,7 +71,7 @@ def test_todo_builder_skips_summary_for_human_first(assist_host: ApplicationHost
     started = assist_host.assist.start_scenario("operator-entry", {})
     session_id = started["session_id"]
     ctx = assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "instance", session_id, "input"],
         {"value": "todo-builder", "format": "assistant"},
     )
     assert ctx.get("status") == "complete"

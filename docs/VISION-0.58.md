@@ -1,7 +1,7 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.18** (session operate + surface_view v2).  
-**Close plan:** remaining slices **0.58.19–0.58.20** + **exit** named below (§6).  
+**Status:** 🚧 **Theme open** — through **0.58.19** (product vocabulary rename).  
+**Close plan:** remaining slice **0.58.20** + **exit** named below (§6).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -233,7 +233,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **16** | **Inherit-or-service start** | Reactive WorkIntent: if signal carries session → inherit; else `ensure_service_session(origin)` (`work-drain:…` / `inbound:…` / `schedule:…`). Finish SI-011. Workloads still inherit job session only. | SI-011 ✅; SI-009 edge | ✅ Automated start always attributed; parent walks not stolen when context present |
 | **17** | **Single kit door + surface dogfood** | Kit public helper → **SessionService** only (`resolve_session_service`). CLI / MCP / WS prefer BoundSurface; drop dual plane fallbacks on dogfood paths. | SI-005/006 partial; dual-path debt | ✅ Dogfood surfaces do not call `session_plane` for product verbs |
 | **18** | **Session operate + surface_view v2** | Product verbs under session: focus (`set_active`), list owned waiting, cancel-owned (drive execution under gate — no private resume), richer `surface_view` (kind/origin/waiting/refs). Optional CQRS/catalog session queries (SI-007). | SI-007 partial; multi-instance operable | ✅ Operator can act on a session walk without inventing edge code |
-| **19** | **Product vocabulary rename** | Paths / envelopes / grammar: continue segment is `instance` (or clear `instance_id`); `session_id` only system subject. Assist/MCP tools + REST aligned. Class names `FlowSession` may stay as thin handles (SI-002). | SI-001, SI-005 | Public contracts match 0.58.9 law; no silent instance-as-session on touched paths |
+| **19** | **Product vocabulary rename** | Paths / envelopes / grammar: continue segment is `instance` (or clear `instance_id`); `session_id` only system subject. Assist/MCP tools + REST aligned. Class names `FlowSession` may stay as thin handles (SI-002). | SI-001, SI-005 | ✅ Public contracts match 0.58.9 law; continue segment ``instance`` |
 | **20** | **Docs, skill, residual honesty** | MCP skill + MCP.md + wiki: session ≠ instance; BoundSurface; service sessions. Explorer/SSR bind when cheap (SI-010); else **name residual** for SU-*. | SI-012; SI-010 honesty | Agents learn truth; STATUS residual SI list ready for exit |
 | **exit** | **Theme exit** | Map true; residual SI honest; **SD-008 closed**; **ADR-027 Accepted**; `just check` green. | SD-008; ADR | Theme closed in STATUS/CHANGELOG |
 
@@ -310,7 +310,7 @@ Theme **0.58** closes when:
 1. [x] [PALM.md](PALM.md) shows session plane as **live** (not queued).  
 2. [x] System package owns session plane (types, lifecycle, multi-attach).  
 3. [ ] External entry on dogfood surfaces **requires** bind or create (strict policy **0.58.15**).  
-4. [ ] `session_id` is not a silent alias of `instance_id` on dogfood paths (**0.58.19**).  
+4. [x] `session_id` is not a silent alias of `instance_id` on dogfood paths (**0.58.19**).  
 5. [x] Assist / MCP happy path uses the plane / SessionService.  
 6. [x] BoundSurface + session metadata home live (**0.58.14**); [x] kit single door (**0.58.17**).  
 7. [x] Automated start attributed (inherit-or-service **0.58.16**).  
@@ -356,6 +356,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.16** | **Inherit-or-service reactive start (SI-011):** triggers copy system `session_id` from event signal into WorkIntent; `SessionService.enrich_reactive_start` / `inherit_or_service_session` / `reactive_origin`; work-drain submit inherits parent walk or uses `work-drain:` / `schedule:` / `inbound:` service sessions; never random outside `sess-…` for reactive. Workloads still inherit job session only. |
 | **0.58.17** | **Single kit door + surface dogfood:** kit `resolve_session_service` / `require_session_service` as only product door; `resolve_session_plane` system/tests only. MCP operator, WS assist/events, MCP in-process, CLI use SessionService + BoundSurface; no product plane dual-path. SI-005/006/016 partial (path rename → 0.58.19). |
 | **0.58.18** | **Session operate + surface_view v2:** product `focus` / `clear_focus` / `list_owned_waiting` / `cancel_owned` / `cancel_all_owned` (system cancel under owner gate; no private resume); `surface_view` v2 (waiting, refs.job_id, actions catalog); operator paths `system/session/{id}/view|focus|cancel`. SI-007 partial (full CQRS contributor still optional). |
+| **0.58.19** | **Product vocabulary rename (SI-001/005):** assist/flows grammar emit `instance` + `instance_id`; parse accepts legacy `session` segment; REST `/v1/api/.../instance/{instance_id}`; MCP aliases + rest_map + normalize/operator rewrite; `FlowSession`/`AssistSession` attribute names stay thin (SI-002). System paths remain `system/session/{id}`. |
 
 ---
 
