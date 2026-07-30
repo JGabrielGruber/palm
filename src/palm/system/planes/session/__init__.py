@@ -9,8 +9,11 @@
 * :meth:`SessionPlaneService.event_matches` / :meth:`~SessionPlaneService.make_event_filter` (0.58.8)
 * :meth:`SessionPlaneService.resolve_continue_instance` (active → waiting → last)
 * :attr:`SessionRecord.active_instance_id` / :meth:`SessionPlaneService.set_active_instance` (0.58.10)
-
 * :func:`require_session_plane`
+
+**Ownership:** one instance → one session (exclusive).  
+**Active:** focus inside that attach list only — not a foreign-session pass.  
+Docs: ``docs/VISION-0.58.md`` §4.1 · ADR-027 D9–D11 · residual SI-015.
 
 Store uses :class:`~palm.core.storage.StorageEngine` (like work plane).
 Surfaces (host, CLI, …) **bind** before driving work.

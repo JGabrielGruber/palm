@@ -66,14 +66,45 @@ Bind to [PALM.md](PALM.md) and ADR-027.
 1. **Session is system traffic** — home under `palm.system`, not product as truth.  
 2. **Session ≠ instance ≠ job** — three concepts.  
 3. **Multi-instance is law** — one session may attach many instances over time.  
-4. **Surfaces bind** — cookie-like on HTTP is enough for server; MCP/CLI/WS carry the same bind idea. Do not invent a second identity stack.  
-5. **Product stays thin** — Assist / FlowSession are handles and policy over the plane.  
-6. **Reactive law stays** — start/continue only via work + wait planes.  
-7. **Capable, not weak** — store and multi-attach when needed; no 1:1 permanent trap.  
-8. **Break for truth** — document impact (SI-*); pay in order; no paper over.  
-9. **STE** for theme docs.
+4. **Exclusive ownership** — one instance has at most one owning session (reverse index).  
+5. **Active is focus, not a pass** — `active_instance_id` picks continue **inside** the owner attach list only.  
+6. **Surfaces bind** — cookie-like on HTTP is enough for server; MCP/CLI/WS carry the same bind idea. Do not invent a second identity stack.  
+7. **Product stays thin** — Assist / FlowSession are handles and policy over the plane.  
+8. **Reactive law stays** — start/continue only via work + wait planes.  
+9. **Capable, not weak** — store and multi-attach when needed; no 1:1 permanent trap.  
+10. **Break for truth** — document impact (SI-*); pay in order; no paper over.  
+11. **STE** for theme docs.
 
 **Spirit:** Palm already waited for this seat. Deliver it properly. Do not fear the break.
+
+### 4.1 Ownership vs active focus (0.58.10)
+
+These are **two different laws**. Do not collapse them.
+
+| Concept | Meaning | Enforced where |
+|---------|---------|----------------|
+| **Owner session** | Session that **owns** the instance (attach + reverse index) | Plane: attach refuses dual owner; one instance → one session |
+| **Active instance** | Continue **focus** among instances this session already owns | Plane: `active_instance_id` on the record; resolve prefers it |
+
+```text
+sess-A owns inst-1, inst-2     active → inst-2
+sess-B cannot attach inst-1    (already owned by A)
+sess-B cannot set_active(inst-1)
+resolve(sess-A) → only inst-1 | inst-2
+resolve(sess-B) → never inst-1
+```
+
+**Active is not a workaround** to drive instances under a session that does not own them.  
+Cross-session drive is **out of law**. Residual bare-`instance_id` product paths that skip the owner check are **debt** ([SI-015](../TECH-DEBT.md#si-015)), not a feature.
+
+**Intended continue path:**
+
+1. Surface **binds** `session_id` (system subject).  
+2. Plane **resolves** continue instance: active → open wait → last attached (all on attach list).  
+3. Or client passes `instance_id` that **belongs** to the bound session.  
+4. Continue still goes through the **wait plane** (no session-private resume).
+
+**Refuse:** bound session S + instance I when I is not attached to S (target gate; pay SI-015).
 
 ---
 
@@ -96,10 +127,11 @@ Job path (spine)
 
 | Piece | Target |
 |-------|--------|
-| **Session record** | Stable `session_id`, lifecycle, metadata, list of attached `instance_id`s |
+| **Session record** | Stable `session_id`, lifecycle, metadata, ordered `instance_ids`, **`active_instance_id`** focus (0.58.10) |
+| **Ownership** | Reverse index: instance → owner session; exclusive attach |
 | **Store** | Plane may use a store (memory first; durable when host storage allows). Same idea as instance manager — **not** a second source of job truth |
 | **Bind** | Surface connection / request / client context points at `session_id` |
-| **Product** | Thin SessionService later if needed; Assist stays envelope |
+| **Product** | Thin SessionService later if needed; Assist stays envelope; continue via instance under bound session |
 | **Watches** | Filter events and open waits by session (after bind + multi-attach work) |
 
 **Server surface:** bind may look like a **cookie** (or header / WS bind op). That is transport. The plane is the truth.
@@ -140,6 +172,23 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **Old VISION-SESSION-PLANE** | Watch sketches only; **superseded** |
 | **Grove** | Walk and affinity need this plane first |
 
+### 7.1 Growth later (do not break ownership law)
+
+**0.58 does not ship multi-user identity.** Optional session metadata is enough for now ([ADR-027](adr/027-session-plane.md) D8).
+
+When a **user plane** (or admin product) exists, maturity must **extend** ownership — not dissolve it:
+
+| Need | Wrong approach | Right approach (seed) |
+|------|----------------|------------------------|
+| Support agent helps a human mid-flow | Let agent session drive foreign `instance_id` | **Impersonate / act-as** the **owning** session (or a granted delegate), with audit |
+| Admin inspects any instance | Drop owner checks on product paths | Elevated **inspect** role; write still under owner session or explicit grant |
+| Shared team walk | Two sessions own one instance | Shared **session membership** or **delegate tokens** — still one owner record, many principals |
+| Grove peer affinity | Peer invents a second owner | Peer carries owner `session_id`; local plane is truth |
+
+**Session impersonation (future theme seed):** a principal is allowed to **bind or act as** an existing session under policy (user, role, grant, time bound). The plane still sees one owner session and one attach list. Impersonation is **identity policy**, not “session B owns instance of session A.”
+
+Record: [TECH-DEBT.md](../TECH-DEBT.md) later-theme seeds · **SI-015** owner gate residual.
+
 ---
 
 ## 8. Debt
@@ -159,10 +208,12 @@ Do not hide impact only in chat.
 | Risk | Mitigation |
 |------|------------|
 | Collapse to instance again | Multi-attach in model from slice 2; tests refuse 1:1-only law |
+| Active used as foreign pass | Active only on attach list; document ownership ≠ focus; SI-015 gate |
 | Second resume path | AGENTS / ADR: wait plane only for continue |
 | Theme too large | Hard slice order; watches last |
 | Store over-design | Session store first; shared plane-store framework later |
 | Surface cookie drama | Treat cookie as bind transport; plane owns truth |
+| Soften ownership for “admin UX” | Prefer impersonation / grant themes later; do not dual-own instances |
 
 ---
 
@@ -207,8 +258,8 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.7** | WS/cookie bind: `op: bind` + `X-Palm-Session` / `palm_session` cookie → session plane; flow create Set-Cookie; fix name-vs-id create (`todo-builder`) |
 | **0.58.8** | Watches: plane `event_matches` / `make_event_filter`; Events WS fan-in; `resolve_continue_instance` + path rewrite; `system/session/{id}` inspect; workload owner session from EventContext |
 | **0.58.9** | **Vocabulary slash:** edge + job meta `session_id` = system subject only; continue handle = `instance_id`; delete `system_session_id` / `palm_session_id` duals; plane resolve when only session given; product internal paths still resolve `sess-…` (SI-001 residual class names) |
-| **0.58.10** | **Active instance:** `SessionRecord.active_instance_id`; set on attach; `set_active_instance` / `clear_active_instance`; `resolve_continue_instance` = active → waiting → last; inspect/bind expose focus |
+| **0.58.10** | **Active instance:** `SessionRecord.active_instance_id`; set on attach; `set_active_instance` / `clear_active_instance`; `resolve_continue_instance` = active → waiting → last; inspect/bind expose focus. **Docs:** ownership exclusive; active = focus only; residual bare-instance gate = SI-015; future impersonation seed (user plane) without dual-own |
 
 ---
 
-*Session is the outside subject. Bind it. Own many instances. Grow Palm on one glue.* 🌴📡
+*Session is the outside subject. Bind it. Own many instances. Active is focus, not a pass. Grow Palm on one glue.* 🌴📡

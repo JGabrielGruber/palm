@@ -16,10 +16,11 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 |--------|----------|
 | **Goal** | Session is the **outside subject** and **system glue**. Multi-instance capable. Not user plane. |
 | **Home** | `palm.system.planes.session` (system). Product thin. |
-| **Law** | No outside interaction without a session bind. Surfaces bind (cookie-like OK on server). |
-| **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
-| **Next code** | Product SI-001 rename (handles/paths use `instance_id`); theme **exit** when residual SI honest. |
-| **Done** | **0.58.0–0.58.10** bind → dogfood → WS → watches → vocabulary → **active instance** |
+| **Law** | Bind session. Exclusive owner (instance → one session). Active = focus on attach list only. Continue via wait plane. |
+| **Not** | Session ≡ instance. Active as foreign pass. Dual-own for admin. Second resume path. Long shims. |
+| **Next code** | SI-001 rename; SI-015 owner gate on continue; theme **exit** when residual SI honest. |
+| **Done** | **0.58.0–0.58.10** bind → dogfood → WS → watches → vocabulary → **active instance** + ownership docs |
+| **Later seed** | User plane **impersonation** / grants — act as owning session; do not break exclusive ownership |
 | **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 
 ## Quick Overview
@@ -69,8 +70,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.58.7** | ✅ | WS `op:bind` + cookie/header → plane; product instance separate; create Set-Cookie |
 | **0.58.8** | ✅ | Event filter by session; Events WS fan-in; continue resolve; system/session inspect |
 | **0.58.9** | ✅ | Vocabulary slash: `session_id` = system only; `instance_id` = continue; no dual keys |
-| **0.58.10** | ✅ | Plane `active_instance_id`; attach sets focus; resolve active → waiting → last |
-| **exit** | 📋 next | Product SI-001 residual · Map true · SD-008 closed · ADR Accepted |
+| **0.58.10** | ✅ | Plane `active_instance_id`; ownership ≠ focus documented (ADR D9–D11); SI-015 residual gate |
+| **exit** | 📋 next | SI-001 rename · SI-015 gate · Map true · SD-008 closed · ADR Accepted |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  
 **At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.

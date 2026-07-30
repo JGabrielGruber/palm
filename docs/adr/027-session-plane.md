@@ -69,6 +69,31 @@ No long-lived dual-path shims for comfort.
 No multi-user identity product, org presence, or Grove mesh in this decision.  
 Optional opaque metadata on the session record is enough for later phenotypes.
 
+### D9 — Exclusive instance ownership
+
+An instance is attached to **at most one** session (reverse index on the plane).  
+Another session **must not** attach or claim that instance.  
+Ownership is the graph for cancel, watch, and journey. It is not optional soft metadata.
+
+### D10 — Active instance is continue focus only (0.58.10)
+
+`active_instance_id` on the session record is the plane-owned **continue focus** among  
+instances **already attached** to that session.
+
+- New attach may set focus to the new instance.  
+- `set_active_instance` requires the id on the attach list.  
+- `resolve_continue_instance` prefers active, then open wait, then last attached — all **inside** the owner list.  
+- Active **must not** authorize drive of a foreign (non-owned) instance.
+
+Session ≠ instance remains. Active ≠ owner pass.
+
+### D11 — Elevated access later = policy, not dual ownership
+
+Support, admin, or team “act on behalf of” must **not** break D9 by dual-owning instances.  
+Future user-plane maturity should use **impersonation**, **delegate grants**, or **elevated inspect**  
+under the **owning** session (or an explicit grant record). That is a later theme.  
+See [VISION-0.58 §7.1](../VISION-0.58.md). Residual product paths that skip owner checks are **SI-015**.
+
 ---
 
 ## Consequences
@@ -76,15 +101,17 @@ Optional opaque metadata on the session record is enough for later phenotypes.
 ### Positive
 
 - One glue subject for surfaces, workloads, waits, and future walk.  
-- Honest multi-instance growth.  
+- Honest multi-instance growth with a clear continue focus.  
 - Clear home next to other planes.  
-- Server bind stays simple (cookie-like).
+- Server bind stays simple (cookie-like).  
+- Room for user/admin maturity without dissolving ownership.
 
 ### Negative / cost
 
 - Widespread rename and rebind of product/surface APIs.  
 - Tests and dogfood that assumed session ≡ instance must change.  
-- Temporary breakage until slices land (pre-1.0 accepted).
+- Temporary breakage until slices land (pre-1.0 accepted).  
+- Product must eventually **gate** continue when a bound session is present (SI-015).
 
 ### Neutral
 
@@ -102,20 +129,23 @@ Optional opaque metadata on the session record is enough for later phenotypes.
 | Watch-only theme first | Leaves bind law and multi-attach weak |
 | Full user plane now | Scope explosion; not required for glue |
 | Shared plane-store framework first | Blocks delivery; store per plane is enough now |
+| Soft dual-own for admin UX | Breaks cancel/watch truth; use impersonation/grants later (D11) |
+| Active as cross-session pass | Confuses focus with ownership; reintroduces entropy |
 
 ---
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.8** (bind + dogfood + WS + watches/fan-in).  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.10** (bind + dogfood + WS + watches + vocabulary + active focus).  
 - [ ] Close **SD-008** at theme exit when residual SI honest.  
-- [ ] Pay remaining **SI-*** (rename, explorer, docs) when edges are touched.  
-- [ ] Accept this ADR at theme exit (or earlier if law is stable in code).
+- [ ] Pay remaining **SI-*** (rename, owner gate SI-015, explorer, docs) when edges are touched.  
+- [ ] Accept this ADR at theme exit (or earlier if law is stable in code).  
+- [ ] Later theme: user plane + session impersonation / delegate grants (D11) — not 0.58.
 
 ---
 
 ## References
 
 - [ADR-025](025-reactive-interests.md) · [ADR-026](026-palm-system-layer.md) · [ADR-024](024-workload-engine.md)  
-- [VISION-0.58](../VISION-0.58.md) · [VISION-GROVE](../VISION-GROVE.md) · [EVENT-PLANE](../EVENT-PLANE.md)  
-- Live debt: [TECH-DEBT.md](../../TECH-DEBT.md)
+- [VISION-0.58](../VISION-0.58.md) (§4.1 ownership vs active; §7.1 growth) · [VISION-GROVE](../VISION-GROVE.md) · [EVENT-PLANE](../EVENT-PLANE.md)  
+- Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SI-015 owner gate; later impersonation seed)

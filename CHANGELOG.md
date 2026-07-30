@@ -72,6 +72,12 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **`resolve_continue_instance`** order: active (if attached) → open wait → last attached  
 - **Inspect / SessionBind** expose `active_instance_id`; legacy store rows seed last attached  
 
+#### Documented (0.58.10) — ownership vs focus
+- **Exclusive ownership:** one instance → one owner session (not softened by active)  
+- **Active = focus only** inside the owner attach list; not a cross-session pass  
+- **ADR-027** D9–D11; **VISION-0.58** §4.1 / §7.1; residual **SI-015** (gate continue when bound)  
+- **Later seed:** user-plane session **impersonation** / grants — act as owner; do not dual-own  
+
 #### Notes
 - Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.10**.  
 - Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  

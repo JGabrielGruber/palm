@@ -6,9 +6,12 @@ Outside subject on :class:`SessionStore` (:class:`~palm.core.storage.StorageEngi
 * Multi-attach (0.58.2): attach/detach instances; reverse index
 * **Bind law (0.58.3):** surfaces call :meth:`bind` / :meth:`require_open`
   before driving work — no silent instance-only subject
-* **Active instance (0.58.10):** plane-owned continue focus on the record
+* **Ownership:** one instance → one owner session (exclusive attach)
+* **Active instance (0.58.10):** continue **focus** on the record — only among
+  attached ids. Not a pass to drive foreign instances.
 
 Does **not** resume jobs. Continue remains the wait plane.
+Law detail: docs/VISION-0.58.md §4.1 · ADR-027 D9–D11.
 """
 
 from __future__ import annotations

@@ -52,6 +52,10 @@ class SessionRecord:
     ``active_instance_id`` (0.58.10) is the plane-owned **continue focus**
     among attached instances. Not equal to ``session_id``. None when no
     instance is attached (or after detach of the last).
+
+    Focus is not ownership: only ids on ``instance_ids`` may be active.
+    Another session cannot point active at this session's instances.
+    See VISION-0.58 §4.1 and ADR-027 D9–D10.
     """
 
     session_id: str

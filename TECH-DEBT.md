@@ -635,6 +635,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
+| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | residual after 0.58.10 | open |
 
 ### SI-001 — product handles still named “session” for instance
 
@@ -739,6 +740,20 @@ wins. Residual: leaves that never bind event context.
 **Observation:** Wait, work, workload, session may each need stores.  
 **Target:** **Ponder later** — not a 0.58 gate. Per-plane store first.
 
+### SI-015 — Continue paths skip owner check when session is bound
+
+**Where:** Product/MCP/REST continue by bare `instance_id` without verifying the
+bound system session **owns** that instance (plane reverse index / attach list).  
+**Law (0.58.10 docs):** exclusive ownership + active = focus only
+([VISION-0.58 §4.1](docs/VISION-0.58.md), [ADR-027](docs/adr/027-session-plane.md) D9–D11).  
+**Impact:** Operator with raw instance id can drive work without going through
+the owning session. **Active instance does not authorize this.**  
+**Target:** When a surface has a bound `session_id`, reject continue/input if
+`instance_id` is not attached to that session. Named elevated inspect (later)
+must not dual-own. User-plane **impersonation** is a later theme seed, not a soft
+break of exclusive ownership.  
+**Not:** “session B focuses instance of session A” via `active_instance_id`.
+
 ---
 
 ## 5. 0.57 slice ↔ debt (closed theme)
@@ -762,8 +777,8 @@ wins. Residual: leaves that never bind event context.
 | 0.58.7 | SI-004 ✅ WS/cookie bind; flow create name-vs-id fix |
 | 0.58.8 | Watches/fan-in; SI-001/005/007/008/009 partial truth |
 | 0.58.9 | Vocabulary slash: session_id=system, instance_id=continue; duals deleted |
-| 0.58.10 | Plane active_instance_id; resolve prefers focus |
-| later / residual | SI-001/005 path/class rename, SI-006, SI-007 CQRS, SI-010…012, SI-014, SU-* |
+| 0.58.10 | Plane active_instance_id; resolve prefers focus; ownership vs focus documented; SI-015 named |
+| later / residual | SI-001/005 rename, SI-015 owner gate, SI-006/007/010…012, SI-014, SU-* |
 | theme exit | SD-008 close when residual SI honest |
 
 ---
@@ -776,9 +791,12 @@ wins. Residual: leaves that never bind event context.
 - **Archive era PD numbers** — frozen history; no renumber.  
 - **Session store without shared plane-store framework** — allowed (SI-014 later).  
 - **Cookie-like bind** — transport only; not a second session model.  
+- **Exclusive instance ownership** — one instance → one session; not dual-own for admin UX.  
+- **Active instance is focus only** — not a foreign-session pass ([ADR-027](docs/adr/027-session-plane.md) D10).  
 - **Plugin self-register + `INSTALLED_*` autoload** — keep; not replaced by a second import framework (SD-014).  
 - **Planes are not plugins** — system owns attach; do not put planes on install lists (SD-014).  
-- **0.58 does not pay SD-014** — name it; boot-phase theme later; session dogfood continues.
+- **0.58 does not pay SD-014** — name it; boot-phase theme later; session dogfood continues.  
+- **0.58 does not ship user impersonation** — D11 seed only; do not soften D9 for support UX.
 
 ---
 
@@ -787,8 +805,10 @@ wins. Residual: leaves that never bind event context.
 | Seed | Debt | Spirit |
 |------|------|--------|
 | **System boot + composition truth** | [SD-014](#sd-014), CF-002 | One phase table; profile is membership truth; plugins vs planes stay split |
-| **Session plane (active)** | SD-008, SI-* | Outside subject; multi-attach; bind; dogfood — [VISION-0.58](docs/VISION-0.58.md) |
+| **Session plane (active theme)** | SD-008, SI-* | Outside subject; multi-attach; bind; dogfood — [VISION-0.58](docs/VISION-0.58.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
+| **User plane + session impersonation** | SI-015 residual; D11 | Principal **acts as** owning session (grant, audit, time-bound). **Not** dual-own instances. Support/admin maturity without dissolving ownership — [VISION-0.58 §7.1](docs/VISION-0.58.md) |
+| **Delegate / team session membership** | growth | Shared walk under one owner session + many principals, or explicit delegate tokens — same exclusive attach graph |
 
 ---
 
