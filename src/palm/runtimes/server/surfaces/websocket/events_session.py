@@ -12,9 +12,12 @@ Protocol (JSON text frames)::
 Catch-up: when ``since_offset`` is set and journal is available, replay then live.
 
 0.58.8: optional **system session** filter (fan-in). Events match via
-:meth:`~palm.system.planes.session.SessionPlaneService.event_matches` — context,
-payload, or attached instance. Cookie-like ``X-Palm-Session`` / ``palm_session``
-binds the default filter when subscribe omits session id.
+SessionService.event_matches (product door) — context, payload, or attached
+instance. Cookie-like ``X-Palm-Session`` / ``palm_session`` binds the default
+filter when subscribe omits session id.
+
+0.58.17: product :func:`~palm.kits.server.middleware.resolve_session_service`
+only — no raw session_plane on this path.
 """
 
 from __future__ import annotations
@@ -33,7 +36,7 @@ from palm.common.events.catalog import (
 )
 from palm.kits.server.middleware import (
     extract_system_session_hint,
-    resolve_session_plane,
+    resolve_session_service,
 )
 from palm.runtimes.server.surfaces.websocket.frames import (
     OP_CLOSE,
@@ -85,16 +88,17 @@ def run_events_websocket(
 
     # Cookie-like bind: optional default system session on the connection
     if transport_hint and looks_like_system_session_id(transport_hint):
-        plane = resolve_session_plane(ctx)
-        if plane is not None:
+        svc = resolve_session_service(ctx)
+        if svc is not None:
             try:
-                bind = plane.bind(
+                bound = svc.bind_surface(
                     transport_hint,
                     create=True,
                     surface="websocket-events",
                     metadata={"via": "events_ws_cookie"},
+                    origin="websocket-events",
                 )
-                sub_holder["session_id"] = str(bind.session_id)
+                sub_holder["session_id"] = str(bound.session_id)
             except Exception:
                 logger.debug("events ws cookie bind failed", exc_info=True)
 
@@ -204,9 +208,9 @@ def _event_matches_session(
     event: Any = None,
     payload: dict[str, Any] | None = None,
 ) -> bool:
-    plane = resolve_session_plane(ctx)
-    if plane is None:
-        # No plane: fall back to payload key equality only
+    svc = resolve_session_service(ctx)
+    if svc is None:
+        # No product door: fall back to payload key equality only
         pay = payload
         if event is not None and pay is None:
             raw = getattr(event, "payload", None)
@@ -218,9 +222,7 @@ def _event_matches_session(
         if ctx_obj is not None and str(getattr(ctx_obj, "session_id", "") or "") == session_id:
             return True
         return False
-    return bool(
-        plane.event_matches(session_id, event=event, payload=payload)
-    )
+    return bool(svc.event_matches(session_id, event=event, payload=payload))
 
 
 def _detach(ctx: Any, sub_holder: dict[str, Any]) -> None:
@@ -291,30 +293,23 @@ def _resolve_subscribe_session(
             return None
         text = str(fallback).strip()
 
-    plane = resolve_session_plane(ctx)
-    if plane is None:
+    svc = resolve_session_service(ctx)
+    if svc is None:
         return text
-    # System-shaped or known: bind/load on plane. Instance-shaped: reverse index.
+    # System-shaped: bind via product door. Instance-shaped: reverse index.
     if looks_like_system_session_id(text):
-        bind = plane.bind(
+        bound = svc.bind_surface(
             text,
             create=True,
             surface="websocket-events",
             metadata={"via": "events_ws_subscribe"},
+            origin="websocket-events",
         )
-        return str(bind.session_id)
-    owner = plane.session_for_instance(text)
+        return str(bound.session_id)
+    owner = svc.session_for_instance(text)
     if owner is not None:
-        return owner.session_id
-    # Unknown non-system id: treat as system id open (create) only if create allowed
-    if msg.get("create") not in (False, "false", "0", 0):
-        bind = plane.bind(
-            text,
-            create=True,
-            surface="websocket-events",
-            metadata={"via": "events_ws_subscribe"},
-        )
-        return str(bind.session_id)
+        return str(owner.session_id)
+    # Unknown non-system id: filter by raw text only (do not invent a session).
     return text
 
 

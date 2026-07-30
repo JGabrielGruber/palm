@@ -97,14 +97,10 @@ def dispatch_definitions(ctx: Any, path: list[str], params: dict[str, Any]) -> A
 
 
 def _resolve_session_service(ctx: Any) -> Any | None:
-    """Product SessionService from ServerContext / host (0.58.12)."""
-    svc = getattr(ctx, "session", None)
-    if svc is not None:
-        return svc
-    host = getattr(ctx, "host", None)
-    if host is not None:
-        return getattr(host, "session", None)
-    return None
+    """Product SessionService — kit single door (0.58.17)."""
+    from palm.kits.server.middleware import resolve_session_service
+
+    return resolve_session_service(ctx)
 
 
 def rewrite_system_session_continue(
@@ -117,7 +113,7 @@ def rewrite_system_session_continue(
     **0.58.9 law:** ``session_id`` is always the system subject. Product path
     segments still expect an **instance** id (SI-001/005). When a path or
     param carries ``sess-…`` where product needs an instance, resolve via
-    product :class:`~palm.services.session.SessionService` (or plane fallback)
+    product :class:`~palm.services.session.SessionService`
     ``resolve_continue_instance`` (active → waiting → last). Does **not**
     invent resume. Does **not** write the instance back into ``session_id``.
 
@@ -129,13 +125,13 @@ def rewrite_system_session_continue(
     **0.58.15 strict attribution:** continue paths without a system session
     resolve the owner from the plane; orphan / bare instances raise
     :class:`~palm.system.planes.session.SessionAttributionError`.
+
+    **0.58.17:** product door only — no raw ``session_plane`` fallback.
     """
-    from palm.kits.server.middleware import resolve_session_plane
     from palm.system.planes.session import looks_like_system_session_id
 
     product = _resolve_session_service(ctx)
-    plane = None if product is not None else resolve_session_plane(ctx)
-    if product is None and plane is None:
+    if product is None:
         return path, params
 
     out_params = dict(params)
@@ -143,9 +139,8 @@ def rewrite_system_session_continue(
 
     def _resolve(sid: str) -> str | None:
         try:
-            if product is not None:
-                return product.resolve_continue_instance(sid)
-            return plane.resolve_continue_instance(sid)
+            resolved = product.resolve_continue_instance(sid)
+            return str(resolved) if resolved else None
         except Exception:
             return None
 
@@ -199,8 +194,8 @@ def rewrite_system_session_continue(
         if inst:
             out_params["instance_id"] = inst
 
-    # SI-015 + 0.58.15: continue attribution (bound session or plane owner)
-    _gate_continue_owner(product or plane, out_path, out_params)
+    # SI-015 + 0.58.15: continue attribution via product door only
+    _gate_continue_owner(product, out_path, out_params)
 
     return out_path, out_params
 
@@ -228,11 +223,7 @@ def _gate_continue_owner(
     path: list[str],
     params: dict[str, Any],
 ) -> None:
-    """Continue attribution (0.58.11 owner + 0.58.15 strict bare refuse).
-
-    Prefers product :meth:`SessionService.gate_bound_session_owns`. Plane-only
-    fallback uses :meth:`require_continue_attribution` (strict=True).
-    """
+    """Continue attribution via product SessionService (0.58.11 / 0.58.15 / 0.58.17)."""
     from palm.system.planes.session import looks_like_system_session_id
 
     if not _is_session_continue_path(path):
@@ -253,33 +244,25 @@ def _gate_continue_owner(
             str(candidate).strip(), params, allow_unknown=False
         )
         return
-
-    # Plane fallback (no product SessionService)
+    # Product door without gate helper — still require ownership when system bound
     system_sid = params.get("session_id")
-    sid = str(system_sid).strip() if looks_like_system_session_id(system_sid) else None
-    if hasattr(door, "require_continue_attribution"):
-        bound = door.require_continue_attribution(
-            str(candidate).strip(), sid, strict=True
-        )
-        if bound and not looks_like_system_session_id(params.get("session_id")):
-            params["session_id"] = bound
-        return
-    if sid is not None:
-        door.require_owned_instance(sid, str(candidate).strip())
+    if looks_like_system_session_id(system_sid) and hasattr(
+        door, "require_owned_instance"
+    ):
+        door.require_owned_instance(str(system_sid).strip(), str(candidate).strip())
 
 
 def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
     params = params or {}
     if path == ["system", "doctor"]:
         return ctx.system.doctor(ctx.runtime)
-    # 0.58.8 / 0.58.12 — system session journey (prefer product SessionService)
+    # 0.58.8 / 0.58.12 / 0.58.17 — system session journey (product door only)
     if len(path) >= 3 and path[0] == "system" and path[1] == "session":
-        from palm.kits.server.middleware import resolve_session_plane
-
-        product = _resolve_session_service(ctx)
-        door = product if product is not None else resolve_session_plane(ctx)
+        door = _resolve_session_service(ctx)
         if door is None:
-            raise ValueError("session plane not available")
+            raise ValueError(
+                "SessionService not available (0.58.17 product door required)"
+            )
         sid = path[2]
         if len(path) == 3:
             return door.inspect(sid)

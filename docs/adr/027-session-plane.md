@@ -164,7 +164,7 @@ separate “workload session” type for effects under a job.
 Surfaces do not invent dual identity slots as truth. Product **SessionService** shapes a
 **BoundSurface** (system `session_id`, continue `instance_id`, kind, origin, session metadata).
 Transport (cookie, header, WS, CLI) carries bind proof only. Surface dogfood of the
-handle is **0.58.17**.
+handle is **0.58.17** (kit `resolve_session_service` + dogfood ✅).
 
 ### D14 — Session metadata vs job metadata (0.58.14 ✅ API)
 

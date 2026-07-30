@@ -233,15 +233,17 @@ class PalmInProcessBackend:
             raise _instance_not_found(instance_id) from exc
 
     def resolve_session_continue(self, session_id: str) -> str | None:
-        """Map system session id → primary continue instance (0.58.9)."""
+        """Map system session id → primary continue instance (0.58.9 / 0.58.17)."""
         text = str(session_id or "").strip()
         if not text.startswith("sess-"):
             return text or None
         try:
-            plane = getattr(self._ctx.runtime, "session_plane", None)
-            if plane is None:
+            from palm.kits.server.middleware import resolve_session_service
+
+            svc = resolve_session_service(self._ctx)
+            if svc is None:
                 return None
-            return plane.resolve_continue_instance(text)
+            return svc.resolve_continue_instance(text)
         except Exception:
             return None
 

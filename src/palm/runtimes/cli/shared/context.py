@@ -1,5 +1,9 @@
 """
 CLI session context — ApplicationHost-backed commands and queries.
+
+0.58.17: :attr:`bound_surface` is the session-owned surface context truth.
+``active_system_session_id`` / assist / instance slots remain transport mirrors
+until SI-001 rename (0.58.19). Product door is ``host.session`` only.
 """
 
 from __future__ import annotations
@@ -23,6 +27,7 @@ from palm.services.execution.flows import ReplSession
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
     from palm.app.kernel import PalmKernel
+    from palm.services.session import BoundSurface
 
 
 @dataclass
@@ -39,8 +44,10 @@ class CliContext:
     active_instance_id: str | None = None
     active_assist_session_id: str | None = None
     active_assist_scenario_id: str | None = None
-    # System session plane bind (0.58.3) — distinct from product assist/instance id.
+    # System session plane bind (0.58.3) — mirror of bound_surface.session_id.
     active_system_session_id: str | None = None
+    # Session-owned surface context (0.58.17) — product truth for the walk.
+    bound_surface: BoundSurface | None = None
     output_format: str = "table"
     _instance_to_job: dict[str, str] = field(default_factory=dict)
     _repl_session: ReplSession | None = field(default=None, repr=False)
@@ -88,26 +95,51 @@ class CliContext:
         surface: str = "cli",
         metadata: dict[str, Any] | None = None,
     ) -> Any:
-        """Bind (or create) a **system** session on the host plane (0.58.3).
+        """Bind (or create) a **system** session via product SessionService (0.58.17).
 
+        Installs :attr:`bound_surface` as truth. Mirrors
+        :attr:`active_system_session_id` for legacy CLI slots (SI-006 residual).
         Does **not** treat product assist ``session_id`` as the system subject.
-        Tracks :attr:`active_system_session_id` separately from instance / assist ids.
         """
-        sid = (session_id or self.active_system_session_id or "").strip() or None
+        sid = (
+            session_id
+            or (self.bound_surface.session_id if self.bound_surface else None)
+            or self.active_system_session_id
+            or ""
+        ).strip() or None
+        meta = dict(metadata or {})
+        svc = getattr(self.host, "session", None)
+        if svc is not None and hasattr(svc, "bind_surface"):
+            iid = self.active_instance_id
+            bound = svc.bind_surface(
+                sid,
+                create=create,
+                metadata=meta or None,
+                surface=surface,
+                origin="cli",
+                instance_id=iid,
+                resolve_instance=iid is None,
+            )
+            self.bound_surface = bound
+            self.active_system_session_id = str(bound.session_id)
+            return bound
+        # Host door fallback (bind_session prefers SessionService when wired)
         bind = self.host.bind_session(
             sid,
             create=create,
-            metadata=metadata,
+            metadata=meta or None,
             surface=surface,
         )
         self.active_system_session_id = str(bind.session_id)
+        if svc is not None and hasattr(svc, "surface_from_bind"):
+            self.bound_surface = svc.surface_from_bind(bind)
         return bind
 
     def set_active_assist(self, view: dict[str, Any]) -> None:
         """Track the active assist handle from an assistant envelope.
 
         Product assist still may use instance-shaped ``session_id`` (SI-001).
-        System bind is always separate (``active_system_session_id``).
+        System bind updates :attr:`bound_surface` (0.58.17).
         """
         # Bind law first: outside subject before product assist tracking.
         # 0.58.9: view.session_id is system subject when sess-shaped.
@@ -137,6 +169,8 @@ class CliContext:
         instance_id = view.get("instance_id") or refs.get("instance_id") or session_id
         instance_id = str(instance_id)
         self.active_instance_id = instance_id
+        if self.bound_surface is not None:
+            self.bound_surface = self.bound_surface.with_instance(instance_id)
         if job_id:
             self._instance_to_job[instance_id] = str(job_id)
         self.instance_manager.mark_active(instance_id)

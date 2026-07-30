@@ -4,8 +4,11 @@
 0.32.2: ``dispatch`` → same spine as MCP ``palm_assist`` → ``turn`` frames.
 0.33.2: chat continuity (auto-start / intro / action rewrite) in assist.profiles.
 0.58.7 / 0.58.9: bind law — ``op: bind`` / cookie-like headers resolve **session**
-via the session plane (``session_id`` = system subject). Continue handle is
-``instance_id`` (product path residual SI-001).
+(``session_id`` = system subject). Continue handle is ``instance_id``
+(product path residual SI-001).
+
+0.58.17: product door only — :func:`~palm.kits.server.middleware.resolve_session_service`
++ :class:`~palm.services.session.BoundSurface`. No raw ``session_plane`` on this path.
 """
 
 from __future__ import annotations
@@ -16,7 +19,7 @@ from typing import TYPE_CHECKING, Any
 
 from palm.kits.server.middleware import (
     extract_system_session_hint,
-    resolve_session_plane,
+    resolve_session_service,
 )
 from palm.runtimes.server.surfaces.websocket.frames import (
     OP_CLOSE,
@@ -159,10 +162,12 @@ def run_assist_websocket(
 
 
 class _ConnectionState:
-    """Per-connection bind state (0.32.3 + 0.58.7/0.58.9 session vocabulary)."""
+    """Per-connection bind state (0.32.3 + 0.58.7/0.58.9 + BoundSurface 0.58.17)."""
 
     def __init__(self, *, headers: dict[str, str]) -> None:
-        # System outside subject (session plane) — edge name session_id.
+        # Session-owned surface context (truth). Dual slots below are transport mirrors.
+        self.bound: Any | None = None  # BoundSurface | None
+        # System outside subject — edge name session_id (mirrors bound.session_id).
         self.session_id: str | None = None
         # Product continue handle (instance id) — SI-001 residual.
         self.instance_id: str | None = None
@@ -177,16 +182,35 @@ class _ConnectionState:
         else:
             self.auth_mode = "open"
             self.subject = lower.get("x-palm-subject") or "anonymous"
-        # Cookie / X-Palm-Session hint (plane bind deferred until ctx known)
+        # Cookie / X-Palm-Session hint (product bind deferred until ctx known)
         hint = extract_system_session_hint(headers)
         self._transport_session_hint: str | None = hint
 
+    def apply_bound(self, bound: Any, *, created: bool = False) -> None:
+        """Install a BoundSurface as the connection truth."""
+        self.bound = bound
+        self.session_id = str(bound.session_id) if bound is not None else None
+        if bound is not None and getattr(bound, "instance_id", None):
+            self.instance_id = str(bound.instance_id)
+        self.session_created = bool(created)
+
+    def clear_bound(self) -> None:
+        self.bound = None
+        self.session_id = None
+        self.instance_id = None
+        self.flow_id = None
+        self.session_created = False
+        self._transport_session_hint = None
+
     def bound_snapshot(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "session_id": self.session_id,
             "instance_id": self.instance_id,
             "flow_id": self.flow_id,
         }
+        if self.bound is not None and hasattr(self.bound, "to_dict"):
+            out["bound_surface"] = self.bound.to_dict()
+        return out
 
 
 def handle_client_message(
@@ -246,14 +270,10 @@ def _handle_bind(
     *,
     ctx: object | None = None,
 ) -> dict[str, Any]:
-    """Bind system session (plane) + optional product instance / flow (0.58.9)."""
+    """Bind system session (SessionService) + optional product instance / flow."""
     msg_id = message.get("id")
     if message.get("clear") in (True, "true", "1", 1):
-        conn.session_id = None
-        conn.instance_id = None
-        conn.flow_id = None
-        conn.session_created = False
-        conn._transport_session_hint = None
+        conn.clear_bound()
 
     try:
         _apply_message_bind_fields(message, conn, ctx=ctx, create=_create_flag(message))
@@ -276,7 +296,7 @@ def _handle_bind(
             "error": {"code": "session_bind", "message": str(exc)},
         }
 
-    # Default: ensure a system subject exists when plane is available
+    # Default: ensure a system subject exists when product door is available
     if conn.session_id is None and "session_id" not in message:
         create = _create_flag(message)
         if create is not False:
@@ -313,12 +333,13 @@ def _apply_message_bind_fields(
     if "session_id" in message:
         raw_sid = message.get("session_id")
         if raw_sid is None or str(raw_sid).strip() == "":
+            conn.bound = None
             conn.session_id = None
             conn.session_created = False
         else:
             sid = str(raw_sid).strip()
             if looks_like_system_session_id(sid):
-                _plane_bind_into(conn, sid, ctx=ctx, create=create)
+                _service_bind_into(conn, sid, ctx=ctx, create=create)
             else:
                 # Product lie residual — store as instance, do not bind as system.
                 conn.instance_id = sid
@@ -327,8 +348,13 @@ def _apply_message_bind_fields(
         raw_iid = message.get("instance_id")
         if raw_iid is None or str(raw_iid).strip() == "":
             conn.instance_id = None
+            if conn.bound is not None:
+                conn.bound = conn.bound.with_instance(None)
         else:
-            conn.instance_id = str(raw_iid).strip() or None
+            iid = str(raw_iid).strip() or None
+            conn.instance_id = iid
+            if conn.bound is not None and iid:
+                conn.bound = conn.bound.with_instance(iid)
 
     if "flow_id" in message:
         raw_fid = message.get("flow_id")
@@ -338,28 +364,39 @@ def _apply_message_bind_fields(
             conn.flow_id = str(raw_fid).strip() or None
 
 
-def _plane_bind_into(
+def _service_bind_into(
     conn: _ConnectionState,
     session_id: str | None,
     *,
     ctx: object | None,
     create: bool = True,
+    instance_id: str | None = None,
 ) -> None:
-    """Bind via plane when available; otherwise store the id surface-locally."""
-    plane = resolve_session_plane(ctx)
-    if plane is None:
+    """Bind via product SessionService (0.58.17); store BoundSurface as truth."""
+    svc = resolve_session_service(ctx)
+    if svc is None:
+        # Transport-only mirror when host not fully wired (tests / early boot).
         if session_id:
             conn.session_id = session_id
             conn.session_created = False
+            if instance_id:
+                conn.instance_id = instance_id
         return
-    bind = plane.bind(
-        session_id,
+    iid = instance_id if instance_id is not None else conn.instance_id
+    sid_hint = (session_id or "").strip() or None
+    existed = (
+        looks_like_system_session_id(sid_hint) and svc.get(sid_hint) is not None
+    )
+    bound = svc.bind_surface(
+        sid_hint,
         create=create,
         surface="websocket",
         metadata={"via": "ws_bind"},
+        origin="websocket",
+        instance_id=iid,
+        resolve_instance=iid is None,
     )
-    conn.session_id = str(bind.session_id)
-    conn.session_created = bool(bind.created)
+    conn.apply_bound(bound, created=not existed)
 
 
 def _ensure_system_session(
@@ -368,36 +405,39 @@ def _ensure_system_session(
     ctx: object | None,
     create: bool = True,
 ) -> None:
-    """Ensure connection has a system session when the plane is available."""
+    """Ensure connection has a system session via product door when available."""
+    svc = resolve_session_service(ctx)
     if conn.session_id:
-        plane = resolve_session_plane(ctx)
-        if plane is not None:
+        if svc is not None:
             try:
-                plane.bind(
+                bound = svc.bind_surface(
                     conn.session_id,
                     create=False,
                     surface="websocket",
-                    metadata={"via": "ws_ensure"},
+                    origin="websocket",
+                    instance_id=conn.instance_id,
+                    resolve_instance=conn.instance_id is None,
                 )
+                conn.apply_bound(bound, created=False)
             except SessionNotFoundError:
                 if create:
-                    _plane_bind_into(conn, None, ctx=ctx, create=True)
+                    _service_bind_into(conn, None, ctx=ctx, create=True)
             except SessionClosedError:
                 if create:
-                    _plane_bind_into(conn, None, ctx=ctx, create=True)
+                    _service_bind_into(conn, None, ctx=ctx, create=True)
         return
 
     hint = conn._transport_session_hint
     if hint:
         try:
-            _plane_bind_into(conn, hint, ctx=ctx, create=create)
+            _service_bind_into(conn, hint, ctx=ctx, create=create)
             if conn.session_id:
                 return
         except (SessionClosedError, SessionNotFoundError, SessionPlaneError):
             if not create:
                 raise
     if create:
-        _plane_bind_into(conn, None, ctx=ctx, create=True)
+        _service_bind_into(conn, None, ctx=ctx, create=True)
 
 
 def _handle_dispatch(

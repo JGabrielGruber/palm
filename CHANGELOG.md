@@ -137,9 +137,19 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - Workloads still inherit job session only (no separate workload session type)  
 - **SI-011** closed  
 
+#### Added (0.58.17) — single kit door + surface dogfood
+- **Kit** — `resolve_session_service` / `require_session_service` as the **only** product door (`palm.kits.server`)  
+- **`resolve_session_plane`** — system/tests only; not for product verbs  
+- **MCP operator** — rewrite / system session inspect / owner gate use SessionService only (no plane fallback)  
+- **WS assist** — bind via `bind_surface`; connection holds **BoundSurface**; snapshot includes `bound_surface`  
+- **WS events** — cookie/subscribe bind + event filter via product door  
+- **MCP in-process** — `resolve_session_continue` via SessionService  
+- **CLI** — `CliContext.bound_surface` is truth; dual slots remain mirrors (SI-006 residual until 0.58.19)  
+- **SI-016** dogfood partial ✅; path rename remains **0.58.19** (SI-001/005)  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.16** shipped; **0.58.17–20** + exit named.  
-- Theme **exit** after **0.58.17–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.17** shipped; **0.58.18–20** + exit named.  
+- Theme **exit** after **0.58.18–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 

@@ -20,7 +20,9 @@ from palm.kits.server.middleware import (
     current_principal_id,
     extract_system_session_hint,
     parse_cookie_header,
+    require_session_service,
     resolve_session_plane,
+    resolve_session_service,
     set_cookie_header_value,
 )
 from palm.kits.server.protocol import (
@@ -65,6 +67,8 @@ __all__ = [
     "BaseSurface",
     "BaseTransport",
     "HttpMethod",
+    "PALM_SESSION_COOKIE",
+    "PALM_SESSION_HEADER",
     "PALM_SUBJECT_HEADER",
     "RouteRegistry",
     "RouteSpec",
@@ -77,5 +81,11 @@ __all__ = [
     "authenticate_request",
     "current_principal_id",
     "error_response",
+    "extract_system_session_hint",
+    "parse_cookie_header",
+    "require_session_service",
+    "resolve_session_plane",
+    "resolve_session_service",
+    "set_cookie_header_value",
     "transport_registry",
 ]

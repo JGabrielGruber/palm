@@ -627,8 +627,8 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–12 | open (handles OK; resolve via SessionService) |
 | [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | ✅ done |
-| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 | partial (rewrite live) |
-| [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | 0.58.3 partial · 0.58.6 | open |
+| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 · **0.58.17** | partial (door+rewrite; path rename → 0.58.19) |
+| [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | 0.58.3 · **0.58.17** | partial (BoundSurface truth; dual mirrors residual) |
 | [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.8 partial | partial (`system/session`) |
 | [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4+8 | ✅ partial + filter |
 | [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.8 partial | partial (EventContext) |
@@ -638,7 +638,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
 | [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 · **0.58.15** | ✅ done (strict attribution) |
-| [SI-016](#si-016) | Surfaces invent dual context; walk facts on job meta | product / surfaces | **0.58.14** | partial (seat ✅; dogfood 0.58.17) |
+| [SI-016](#si-016) | Surfaces invent dual context; walk facts on job meta | product / surfaces | **0.58.14** · **0.58.17** | partial (seat+dogfood ✅; job-meta cleanup residual) |
 
 ### SI-001 — product handles still named “session” for instance
 
@@ -680,19 +680,20 @@ dispatch resolve system session via plane; cookie-like transport
 ### SI-005 — MCP / palm_assist session = instance
 
 **Where:** `runtimes/mcp/assist/*`, assist grammar paths `session/{id}`.  
-**Impact:** **Partial (0.58.6–8):** start dogfood + path rewrite when `sess-…` is
-passed; `system/session/{id}` inspect path. Grammar still says `session` for
-instance segments in URLs (name residual).  
-**Target:** Skills/docs teach system vs instance; URL rename optional later.
+**Impact:** **Partial (0.58.6–8 · 0.58.17):** start dogfood + path rewrite when
+`sess-…` is passed; `system/session/{id}` inspect via product door only;
+no plane fallback on operator paths. Grammar still says `session` for
+instance segments in URLs (name residual → **0.58.19**).  
+**Target:** Skills/docs teach system vs instance; URL rename in 0.58.19.
 
 ### SI-006 — CLI / REPL active session id
 
 **Where:** `runtimes/cli/tui/*`, `runtimes/cli/shared/context.py`.  
-**Impact:** **Partial (0.58.3):** `active_system_session_id` + `bind_system_session()`
-are first-class and distinct from product assist/instance. Product
-`active_assist_session_id` may still be instance-shaped until Assist dogfood
-(0.58.6). TUI prompt still shows assist id.  
-**Target:** Prompt / verbs prefer system session; assist handle uses attach list.
+**Impact:** **Partial (0.58.3 · 0.58.17):** `CliContext.bound_surface` is product
+truth; `active_system_session_id` mirrors it. Product
+`active_assist_session_id` may still be instance-shaped (SI-001). TUI prompt
+still shows assist id.  
+**Target:** Prompt / verbs prefer BoundSurface; drop dual mirrors after rename.
 
 ### SI-007 — CQRS instance queries as public session
 
@@ -772,12 +773,11 @@ system session when plane ready; compat flag
 
 **Where:** CLI dual `active_system_session_id` + `active_assist_session_id`; MCP/WS
 private bind assembly; job metadata used as walk/surface store.  
-**Impact:** **Partial (0.58.14):** product **BoundSurface** + session context
-metadata API on plane/SessionService (`bind_surface`, `merge_metadata`, …).
-Surfaces *can* hold one session-shaped context; walk facts have a home that is
-not job meta.  
-**Residual:** CLI/MCP/WS still assemble dual slots until **0.58.17** dogfood;
-job meta cleanup where edges still stuff walk facts.  
+**Impact:** **Partial (0.58.14 · 0.58.17):** product **BoundSurface** + session
+context metadata API; kit `resolve_session_service` single door; CLI/WS hold
+BoundSurface; MCP/WS dogfood no raw plane for product verbs.  
+**Residual:** dual mirror fields on CLI until rename; job meta cleanup where
+edges still stuff walk facts.  
 **Target:** Surfaces hold one **BoundSurface**; walk/surface/attribution facts
 on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 D13–D14).
 
@@ -810,10 +810,10 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.13 | Service/origin sessions ✅; SI-011 partial (work-drain + host); workloads inherit |
 | 0.58.16 | Inherit-or-service reactive start ✅; SI-011 finished |
 | **close plan** | [VISION-0.58 §6.2](docs/VISION-0.58.md) **0.58.14–0.58.20** + exit (docs locked) |
-| 0.58.14 | BoundSurface + session context metadata ✅; SI-016 seat (dogfood residual → 0.58.17) |
+| 0.58.14 | BoundSurface + session context metadata ✅; SI-016 seat |
 | 0.58.15 | Strict attribution ✅ — SI-015 residual closed |
+| 0.58.17 | Single kit door + surface dogfood ✅; SI-005/006/016 partial |
 
-| 0.58.17 | Single kit door + surface dogfood (SI-005/006) |
 | 0.58.18 | Session operate + surface_view v2 (SI-007 partial) |
 | 0.58.19 | Product vocabulary rename SI-001/005 |
 | 0.58.20 | Docs/skill SI-012 + residual honesty SI-010/SU |

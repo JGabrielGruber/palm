@@ -3,6 +3,12 @@ HTTP-layer middleware for server surfaces.
 
 Includes cookie-like **system session** transport (0.58.7): header or cookie
 carry the system ``session_id``; the session plane owns truth.
+
+**0.58.17 — single kit door:** product surfaces resolve
+:func:`resolve_session_service` only. Do **not** call
+:func:`resolve_session_plane` for product verbs (bind, gate, inspect,
+continue resolve, event filter). The plane remains system law behind
+:class:`~palm.services.session.SessionService`.
 """
 
 from __future__ import annotations
@@ -95,8 +101,55 @@ def set_cookie_header_value(
     return "; ".join(parts)
 
 
+def resolve_session_service(ctx: Any) -> Any | None:
+    """Product :class:`~palm.services.session.SessionService` — **single kit door** (0.58.17).
+
+    Surfaces (CLI / MCP / WS / REST) use this for all product session verbs:
+
+    * bind / :meth:`~palm.services.session.SessionService.bind_surface`
+    * continue resolve / owner gate / inspect / event filter
+    * session metadata
+
+    Order: ``ctx.session`` (product slot) → ``ctx.host.session`` →
+    ``ctx._host.session``. Does **not** fall back to the raw session plane.
+    """
+    if ctx is None:
+        return None
+    for holder in (ctx, getattr(ctx, "host", None), getattr(ctx, "_host", None)):
+        if holder is None:
+            continue
+        svc = getattr(holder, "session", None)
+        if svc is None:
+            continue
+        # SessionService has plane(); AssistSessionService / method slots do not.
+        if callable(getattr(svc, "plane", None)) or callable(
+            getattr(svc, "bind_surface", None)
+        ):
+            return svc
+        # ApplicationHost.session may be a property returning the door.
+        if callable(svc) and not isinstance(svc, type):
+            continue
+    return None
+
+
+def require_session_service(ctx: Any) -> Any:
+    """Like :func:`resolve_session_service` but raises when the product door is missing."""
+    svc = resolve_session_service(ctx)
+    if svc is None:
+        raise RuntimeError(
+            "SessionService not available on context; surfaces must use the "
+            "product door (0.58.17), not the raw session plane"
+        )
+    return svc
+
+
 def resolve_session_plane(ctx: Any) -> Any | None:
-    """Find :class:`~palm.system.planes.session.SessionPlaneService` on host or runtime ctx."""
+    """Find :class:`~palm.system.planes.session.SessionPlaneService` on host or runtime.
+
+    **System / tests only.** Product surfaces must use
+    :func:`resolve_session_service` (0.58.17). Prefer ``svc.plane()`` when
+    you already hold the product door.
+    """
     if ctx is None:
         return None
     plane = getattr(ctx, "session_plane", None)
