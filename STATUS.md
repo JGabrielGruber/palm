@@ -4,7 +4,7 @@
 **Last Updated:** July 30, 2026 · **Slice:** **0.58.3** bind law  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** in theme · **SI-*** impact inventory · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
 **Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane (bind law)** · [Grove](docs/VISION-GROVE.md).
 
@@ -20,6 +20,7 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
 | **Next code** | **0.58.4** job path link + event attribution. |
 | **Done** | **0.58.0** plan · **0.58.1** seat · **0.58.2** multi-attach · **0.58.3** bind law (plane + host + CLI) |
+| **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 
 ## Quick Overview
 

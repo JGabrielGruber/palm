@@ -1,6 +1,7 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane open** at **0.58.0** — **SD-008** active · **SI-*** impact inventory.  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane open** — **SD-008** / **SI-*** active.  
+**Also open (later theme):** **[SD-014](#sd-014)** system boot phases + composition truth (named mid-0.58).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Theme (open):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Proposed**  
@@ -12,7 +13,7 @@
 
 | Rule | Meaning |
 |------|---------|
-| **This file is live** | Residual + **0.58** session work: SU-*, SD-008, **SI-***, CS/CF |
+| **This file is live** | Residual + **0.58** session work: SU-*, SD-008, **SI-***; later-theme **SD-014**; CS/CF |
 | **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
 | **IDs** | **SD-** system · **SU-** surface · **SI-** session impact (chew later) · **ST-** stub · **CS-** smell · **CF-** carry from PD era |
 | **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |
@@ -44,6 +45,7 @@
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.13 | ✅ kits package (`palm.kits.server`) |
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
+| [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **later theme** (not 0.58) | open |
 
 ### Surface debt (SU)
 
@@ -279,6 +281,72 @@ workload, executions, hooks) removed. Canonical imports are `palm.system.*`.
 4. Tests assert **intention sets**, not “fake providers return data.”
 
 **Residual:** Package trees for graphql/postgres/etl still exist (scaffolds). Full delete optional later.
+
+---
+
+### SD-014 — System boot phases + composition truth
+
+**Severity:** S2 · **Effort:** L · **Status:** **open — later theme** (named mid-**0.58**, not paid in 0.58)  
+**Related:** CF-002 (host composition residual) · CompositionProfile (0.50) · ADR-017 (import seams) · SI-014 (plane-store framework — separate)
+
+**Named when:** Session plane work (0.58.1–0.58.3) forced a clear split: **plugins** vs **system planes** vs **surface bind**. The pain is not missing dynamic import — Palm already has Django-style `INSTALLED_*` + `autoload()`. The pain is **scattered boot** and **implicit order**.
+
+#### Observation (stacked pains — do not merge into one wrong fix)
+
+| Pain | What exists today | What is weak |
+|------|-------------------|--------------|
+| **Plugin catalog** | `INSTALLED_PATTERNS` / providers / storages / runners / kits / services + `autoload()` | Parallel `_apps.py` shapes; rare `depends_on`; order only by list |
+| **Self-register** | Side-effect `register_*` on import into common registries (ADR-017) | Correct for **plugins**; wrong model for **planes** |
+| **System planes** | wait / work / session / workload attach on `BaseRuntime.start` + host `wire_*` | No single **phase table**; each plane grows its own attach story |
+| **Composition** | `CompositionProfile` (services / surfaces / capabilities) + `DeploymentProfile` | Declared, not fully the only “what is on” switch for host assembly |
+| **Host wire** | `ApplicationHost.start` → spawn → `_wire_cqrs` → workplane `wire_*` … | Imperative scatter; god-wire risk (CF-002) |
+| **Cross-cutting stacks** | Job hooks, wait/work planes, server principal middleware, event journal | Three+ shapes; do **not** collapse into one global middleware list |
+| **Import hygiene** | ADR-017 sanctioned seams; plugins register downward | Residual deferred imports; composition-root still heavy |
+
+#### Law to preserve (when a theme pays this)
+
+1. **Plugins** — settings / `INSTALLED_*` declare *what*; packages **self-register downward** into registries.  
+2. **System planes** — **not** plugins; **not** in `INSTALLED_*`. System runtime **owns attach order**.  
+3. **Settings / composition** choose membership (services, surfaces, capabilities, installed apps). They do **not** replace the kernel schedule.  
+4. **One composition root** walks a **boot phase table**; modules do not invent private boot order via import side effects.  
+5. Keep stacks separate: surface request filters ≠ job hooks ≠ plane law (start/continue/place) ≠ event consumers.
+
+#### Illustrative phase table (target spirit — not frozen API)
+
+```text
+1. storage select / engines construct
+2. ports open (execution, …)
+3. planes attach (wait, work, session, workload — fixed set)
+4. job hooks install
+5. ensure_core_plugins (INSTALLED_* autoload)
+6. product services wire (CompositionProfile.services)
+7. surfaces mount (CompositionProfile.surfaces + DeploymentProfile)
+8. recover / drain / background start
+```
+
+Today steps 3–8 are real but **named only in code paths**, not as one documented schedule.
+
+#### Non-goals (do not “fix” SD-014 with these)
+
+- A second dynamic-import framework on top of `INSTALLED_*` autoload.  
+- Putting session/wait/work into plugin install lists.  
+- One global middleware list for HTTP + job tick + planes.  
+- Shared plane-store framework as a gate (that is **SI-014**, ponder later).  
+- Blocking **0.58** session bind/dogfood on this theme.
+
+#### Target (later theme)
+
+- Document and implement a **system boot phase** schedule (BaseRuntime + host).  
+- Make **CompositionProfile** (and settings) the truthful “what is installed” for product/surfaces/capabilities.  
+- Optional: thin shared `App` protocol for plugins only (`name`, register, optional depends).  
+- Host stops growing parallel hard-coded `if` forests that ignore the profile.  
+- Map/ADR when structure changes; STE theme plan when opened.
+
+#### Agent note
+
+Session plane (0.58) continues under **SD-008 / SI-***.  
+When adding a **new system plane** before SD-014 is paid: attach in BaseRuntime start next to peers; do **not** invent a self-register plugin path.  
+When adding a **plugin**: `INSTALLED_*` + registry; do **not** put it in the kernel phase table as a special case without cause.
 
 ---
 
@@ -528,7 +596,7 @@ These are **not** closed by the archive. Full text: [TECH-DEBT-ERA-0.45](docs/au
 | ID | Old | Title | Notes |
 |----|-----|-------|-------|
 | CF-001 | PD-018 | Overlapping observability vocabularies | Host vs runtime bus is clearer; magic strings may remain |
-| CF-002 | PD-009 / PD-010 | Host composition residual | Host smaller than 1170 LOC; watch god-object creep |
+| CF-002 | PD-009 / PD-010 | Host composition residual | Host smaller than 1170 LOC; **structural fix → [SD-014](#sd-014)** (boot phases + composition truth) |
 | CF-003 | PD-014 / PD-015 | Assist/MCP complexity + coverage | Product/surface debt |
 | CF-004 | PD-016 | Large SSR explorer files | Surface debt; also SD-005 call sites |
 | CF-005 | PD-022 / PD-030 | DB adapters + empty extras | Runner/provider maturity |
@@ -682,11 +750,24 @@ are first-class and distinct from product assist/instance. Product
 ## 6. Accepted trade-offs (not defects)
 
 - **Core purity** — absolute; never “fix” by importing product into core.  
-- **Register downward** — absolute.  
+- **Register downward** — absolute (plugins into registries).  
 - **Pre-1.0 breaks** — allowed when structure needs truth; record SD/SI/CF, ship migration note if public API breaks.  
 - **Archive era PD numbers** — frozen history; no renumber.  
 - **Session store without shared plane-store framework** — allowed (SI-014 later).  
-- **Cookie-like bind** — transport only; not a second session model.
+- **Cookie-like bind** — transport only; not a second session model.  
+- **Plugin self-register + `INSTALLED_*` autoload** — keep; not replaced by a second import framework (SD-014).  
+- **Planes are not plugins** — system owns attach; do not put planes on install lists (SD-014).  
+- **0.58 does not pay SD-014** — name it; boot-phase theme later; session dogfood continues.
+
+---
+
+## 7. Later theme seeds (not open VISION yet)
+
+| Seed | Debt | Spirit |
+|------|------|--------|
+| **System boot + composition truth** | [SD-014](#sd-014), CF-002 | One phase table; profile is membership truth; plugins vs planes stay split |
+| **Session plane (active)** | SD-008, SI-* | Outside subject; multi-attach; bind; dogfood — [VISION-0.58](docs/VISION-0.58.md) |
+| **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 
 ---
 

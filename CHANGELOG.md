@@ -30,7 +30,8 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 
 #### Notes
 - Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.3**.  
-- Next: **0.58.4** job path link + event attribution.
+- Next: **0.58.4** job path link + event attribution.  
+- Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 
 ## [0.57.14] — 2026-07-29
 

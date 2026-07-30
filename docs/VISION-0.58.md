@@ -53,6 +53,7 @@ This theme is **structure + bind law + multi-instance capability**.
 | Grove peer mesh | Needs local session first |
 | Replace wait / work / event laws | Session labels and groups; does not second-resume |
 | Perfect plane-store framework for all planes | Note the need; do not block on a shared store framework |
+| Unified system boot phase table / composition as sole host truth | Real debt **[SD-014](../TECH-DEBT.md#sd-014)** — later theme; not this session theme |
 | Keep `session_id == instance_id` forever | Development simplification; **break** for truth |
 | Long-lived compat shims | Pre-1.0; delete dual paths |
 
