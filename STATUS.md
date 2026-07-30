@@ -1,27 +1,24 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.20** done · **next theme exit** 
-**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
-**Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.58.20` (stamp) · **Active theme:** none (rest) · **Prior closed:** **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58 exit** done  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) **closed** · **ADR:** [027](docs/adr/027-session-plane.md) **Accepted** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
+**Migration / release:** [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — residual **SI-*** / **SU-*** · **[SD-014](TECH-DEBT.md#sd-014)** boot phases · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
 **Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane + SessionService + BoundSurface** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-027](docs/adr/027-session-plane.md) → [TECH-DEBT.md](TECH-DEBT.md) **SI-*** + **SD-008** → [PALM.md](docs/PALM.md) planes.
+Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → residual [TECH-DEBT.md](TECH-DEBT.md) **SI-*** / **SU-*** → queue seeds ([VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md), **SD-014**, Grove).
 
 | Spirit | Decision |
 |--------|----------|
-| **Goal** | Session is the **outside subject** and **system glue**. Multi-instance capable. Not user plane. |
-| **Home** | System: `planes.session`. Product door: `SessionService` (`host.session`). |
-| **Law** | Bind session. Exclusive owner. Active = focus only. Continue via wait plane. **Session owns surface context** (BoundSurface). Session metadata ≠ job metadata. Service sessions for automated start. |
-| **Not** | Session ≡ instance. Active as foreign pass. Dual-own. Second resume. Junk-drawer root. Stuff walk facts only into job meta. Surfaces reinvent dual session slots. |
-| **Next code** | **Theme exit** ([VISION-0.58 §10](docs/VISION-0.58.md)) — residual SI honest; close **SD-008**; **ADR-027 Accepted** |
-| **Done** | **0.58.0–0.58.20** (plane through docs/skill + residual honesty) · exit **named** |
-| **Later seed** | User plane **impersonation** / grants — act as owning session; do not break exclusive ownership |
-| **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
+| **Session law** | Outside subject; multi-instance; BoundSurface; SessionService door; active = focus; continue via wait plane |
+| **Not** | Session ≡ instance; dual-own; second resume; surfaces invent identity |
+| **Next code** | **Rest** — open a theme only when value is clear; do not purge surfaces yet |
+| **Done** | **0.58.0–0.58.20 + exit** — SD-008 closed · ADR-027 Accepted · stamp `0.58.20` |
+| **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) (walk handles, surface compost) · user-plane impersonation · **[SD-014](TECH-DEBT.md#sd-014)** boot phases · API/SDK docs when they unlock dogfood |
 
 ## Quick Overview
 
@@ -48,32 +45,23 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · close plan through `0.58.20` + exit)
+## 0.58 — Session plane (**closed** · theme exit `0.58.20`)
 
-**Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
-**Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
-**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-008** (active) · **SI-*** · residual **SU-*** · **SD-014** later  
-**Close plan:** [VISION-0.58 §6.2](docs/VISION-0.58.md) — **0.58.14–0.58.20** then **exit**
+**Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Accepted**  
+**Map:** [docs/PALM.md](docs/PALM.md) · **Migration:** [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · **Release:** [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
+**Debt residual:** [TECH-DEBT.md](TECH-DEBT.md) **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · **SD-014** later  
 
-**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. **Session owns surface context** (BoundSurface). Session metadata holds walk/surface facts; job metadata holds run facts. Product **SessionService** is the surface door. Not the user plane. Not a second wait/resume path.
+**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. **Session owns surface context** (BoundSurface). Product **SessionService** is the surface door. Not the user plane. Not a second wait/resume path.
 
-**Spirit:** Capable, not weak. Break `session_id == instance_id`. Prefer truth over shims. Store is allowed for the plane. Do not reinvent identity — bind is enough.
+| Patch | Status |
+|-------|--------|
+| 0.58.0–0.58.13 | ✅ plane through service/origin sessions |
+| 0.58.14–0.58.18 | ✅ BoundSurface → strict → inherit → kit door → operate |
+| 0.58.19 | ✅ product vocabulary rename (`instance`) |
+| 0.58.20 | ✅ docs/skill + residual honesty |
+| **exit** | ✅ ADR-027 Accepted · SD-008 closed · stamp `0.58.20` · surface deflation **named** (not paid) |
 
-| Patch | Status | Purpose |
-|-------|--------|---------|
-| **0.58.0–0.58.13** | ✅ | Plane seat → multi-attach → bind → job path → inspect → dogfood → WS → watches → vocabulary → active → owner gate → SessionService → service/origin sessions |
-| **0.58.14** | ✅ | **BoundSurface** + session context metadata API (session owns surface context; SI-016 seat) |
-| **0.58.15** | ✅ | **Strict attribution** — start always sessioned; continue requires owner (SI-015 residual closed) |
-| **0.58.16** | ✅ | **Inherit-or-service** reactive start (SI-011 finished); workloads inherit only |
-| **0.58.17** | ✅ | **Single kit door** + CLI/MCP/WS dogfood on BoundSurface (`resolve_session_service`; no product plane dual-path) |
-| **0.58.18** | ✅ | **Session operate** + surface_view v2 (focus, list waiting, cancel-owned; SI-007 partial) |
-| **0.58.19** | ✅ | **Product vocabulary rename** SI-001/005 — continue segment `instance` / `instance_id`; `session_id` = system only |
-| **0.58.20** | ✅ | **Docs/skill** SI-012 + residual honesty (SI-010/SU-* named) |
-| **exit** | 📋 next | Map true · residual SI honest · **SD-008 closed** · **ADR-027 Accepted** · `just check` |
-
-**Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  
-**At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.  
-**Do not skip 14 before 15–17.** Rename (19) after BoundSurface is safer.
+**Not paid in 0.58:** full surface purge, FlowWalk rewrite (SI-002), explorer bare bind (SI-010). Wisdom kept in [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).
 
 ---
 

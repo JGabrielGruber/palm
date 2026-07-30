@@ -1,6 +1,6 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane open** — **SD-008** / **SI-*** active.  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***; surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
 **Also open (later theme):** **[SD-014](#sd-014)** system boot phases + composition truth (named mid-0.58).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
@@ -13,7 +13,7 @@
 
 | Rule | Meaning |
 |------|---------|
-| **This file is live** | Residual + **0.58** session work: SU-*, SD-008, **SI-***; later-theme **SD-014**; CS/CF |
+| **This file is live** | Residual **SI-*** / **SU-*** after 0.58; later-theme **SD-014**; surface deflation seed; CS/CF |
 | **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
 | **IDs** | **SD-** system · **SU-** surface · **SI-** session impact (chew later) · **ST-** stub · **CS-** smell · **CF-** carry from PD era |
 | **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |
@@ -39,7 +39,7 @@
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5–7, 0.57.11–12 | ✅ done for known product edges |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
 | [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | docs / rename later | open |
-| [SD-008](#sd-008) | Session plane has no system home | S2 | M | **0.58** | open (theme active) |
+| [SD-008](#sd-008) | Session plane has no system home | S2 | M | **0.58** | ✅ closed (0.58.20 exit) |
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5, 0.57.12 | ✅ service path on port; leaves already port-driver |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.13 | ✅ kits package (`palm.kits.server`) |
@@ -200,23 +200,20 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 ### SD-008 — Session plane has no system home
 
-**Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
+**Severity:** S2 · **Effort:** M · **Status:** ✅ **closed at 0.58.20 exit**
 
-**Observation:** System plane + product door through **0.58.20**: seat, multi-attach,
+**Observation:** System plane + product door shipped **0.58.0–0.58.20**: seat, multi-attach,
 bind, job-path, inspect, Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary,
 **active focus**, **owner gate**, **SessionService**, **service/origin sessions**,
 **BoundSurface**, **strict attribution**, **inherit-or-service**, **kit door**,
 **session operate**, **product path rename** (SI-001/005), **docs/skill** (SI-012).
-Residual for **exit** (honest list, not all paid):
-explorer bare paths (SI-010 → SU-*), thin handle field names (SI-002),
-CLI assist slot name (SI-006), optional CQRS session contributor (SI-007),
-job-meta walk cleanup (SI-016 residual).  
-Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
+**ADR-027 Accepted.** Structure live; agents taught truth.
 
-**Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
-Close at theme exit when residual SI honest; structure is live; agents taught truth.
+**Residual (not SD-008):** explorer bare (SI-010), thin handle names (SI-002), CLI slots
+(SI-006), optional CQRS contributor (SI-007), job-meta cleanup (SI-016), surface compost
+([VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · **SU-***).
 
-**Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
+**Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (residual rows stay open).
 
 ---
 
@@ -627,7 +624,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | ID | Title | Area | Theme touch | Status |
 |----|-------|------|-------------|--------|
 | [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6–12 · **0.58.19** | ✅ paths/envelopes (handles thin SI-002) |
-| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–12 | open (handles OK; resolve via SessionService) |
+| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–12 · exit seed | open → [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
 | [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | ✅ done |
 | [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 · **0.58.17** · **0.58.19** | ✅ path/alias rename |
@@ -658,10 +655,12 @@ name the continue handle (SI-002); CLI `active_assist_session_id` slot name
 ### SI-002 — FlowSession / AssistSession product-only
 
 **Where:** `services/execution/flows/session.py`, `services/assist/session.py`, `services/assist/sessions/`.  
-**Impact:** Handles are fine; they resolve continue via **SessionService**
-(0.58.12) when wired, not invent plane truth.  
-**Target:** Thin handles over product session + job path; verbs target a primary
-instance for UX under the bound system session.
+**Impact:** Handles still useful for testing and CLI/assist verbs; they resolve
+continue via **SessionService** when wired. Fields may still name continue as
+`session_id` (pre-plane era).  
+**Target (named, not paid in 0.58):** honest **walk** handles under BoundSurface,
+or **cut** and rebuild when APIs/SDKs land — see
+[VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Do not polish the lie forever.
 
 ### SI-003 — ProcessInstance has no session owner
 
@@ -827,7 +826,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.18 | Session operate + surface_view v2 ✅; SI-007 partial (operator paths) |
 | 0.58.19 | Product vocabulary rename SI-001/005 ✅ |
 | **0.58.20** | Docs/skill SI-012 ✅ + residual honesty SI-010/SU-* |
-| theme exit | SD-008 close; ADR-027 Accept; residual SI honest |
+| **0.58 exit** | SD-008 ✅; ADR-027 Accepted; VISION-SURFACE-DEFLATION named; stamp `0.58.20` |
 | later (not 0.58) | SI-014 plane-store; D11 impersonation; full SU-001 explorer bulk |
 
 ---

@@ -1,12 +1,12 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.19** (product vocabulary rename).  
-**Close plan:** **0.58.20** docs/skill done · **exit** remaining (§6 / §10).  
+**Status:** ✅ **Theme closed** at **0.58.20** (exit).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
-**ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
+**ADR:** [027-session-plane.md](adr/027-session-plane.md) **Accepted**.  
 **Prior:** [VISION-0.57](VISION-0.57.md) system home (**closed**) · [VISION-0.55](VISION-0.55.md) reactive law · [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) (**superseded** by this file).  
-**Debt:** [TECH-DEBT.md](../TECH-DEBT.md) — **SD-008** in theme · **SI-*** impact inventory.  
+**Debt residual:** [TECH-DEBT.md](../TECH-DEBT.md) **SI-*** / **SU-*** · surface compost seed [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md).  
+**Release:** [RELEASE-0.58.20](releases/RELEASE-0.58.20.md) · [MIGRATION-0.58](migrations/MIGRATION-0.58.md).  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
 
 ---
@@ -309,14 +309,14 @@ Theme **0.58** closes when:
 
 1. [x] [PALM.md](PALM.md) shows session plane as **live** (not queued).  
 2. [x] System package owns session plane (types, lifecycle, multi-attach).  
-3. [ ] External entry on dogfood surfaces **requires** bind or create (strict policy **0.58.15**).  
+3. [x] Dogfood paths use strict attribution (**0.58.15**); residual bare explorer → **SI-010** / [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md).  
 4. [x] `session_id` is not a silent alias of `instance_id` on dogfood paths (**0.58.19**).  
 5. [x] Assist / MCP happy path uses the plane / SessionService.  
 6. [x] BoundSurface + session metadata home live (**0.58.14**); [x] kit single door (**0.58.17**).  
 7. [x] Automated start attributed (inherit-or-service **0.58.16**).  
-8. [x] Residual SI/SU listed honestly (**0.58.20**); [ ] **SD-008 closed** at **exit**.  
-9. [ ] ADR-027 Accepted (exit).  
-10. [ ] Path we touch stays testable (`just check`) at exit.
+8. [x] Residual SI/SU listed honestly (**0.58.20**); [x] **SD-008 closed** at **exit**.  
+9. [x] ADR-027 Accepted (exit).  
+10. [x] Docs/version surfaces aligned; residual honesty recorded (exit).
 
 ---
 
@@ -358,6 +358,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.18** | **Session operate + surface_view v2:** product `focus` / `clear_focus` / `list_owned_waiting` / `cancel_owned` / `cancel_all_owned` (system cancel under owner gate; no private resume); `surface_view` v2 (waiting, refs.job_id, actions catalog); operator paths `system/session/{id}/view|focus|cancel`. SI-007 partial (full CQRS contributor still optional). |
 | **0.58.19** | **Product vocabulary rename (SI-001/005):** assist/flows grammar emit `instance` + `instance_id`; parse accepts legacy `session` segment; REST `/v1/api/.../instance/{instance_id}`; MCP aliases + rest_map + normalize/operator rewrite; `FlowSession`/`AssistSession` attribute names stay thin (SI-002). System paths remain `system/session/{id}`. |
 | **0.58.20** | **Docs/skill + residual honesty (SI-012):** MCP skill, mcp.txt/card, MCP.md, llms.txt, wiki concept `session-plane`; PALM session vocabulary line. SI-010 left open (explorer bare paths → SU-*). Residual SI-002/006/007/016 named for exit. SD-008 remains open until exit. |
+| **exit** | **Theme close:** ADR-027 Accepted; SD-008 closed; residual SI/SU honest; [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) named (surface compost / walk redo later); MIGRATION-0.58 + RELEASE-0.58.20; stamp `0.58.20`. Structure live. Surface purge **not** paid in 0.58. |
 
 ---
 

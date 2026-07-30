@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [VISION-0.58](VISION-0.58.md) (session theme **open**) · [ADR-027](adr/027-session-plane.md) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [VISION-0.58](VISION-0.58.md) (session theme **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -246,7 +246,7 @@ A **plane** is system traffic of one kind.
 | **Event** | Signals; completers speak of self | `runtime.event` (orchestration bus) |
 | **Work (start)** | Trigger → WorkIntent → new job | Work drain / start plane |
 | **Wait (continue)** | Interest → resume or fail parked work | Wait plane |
-| **Session** (0.58) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; **strict attribution** (0.58.15); **inherit-or-service** reactive start (0.58.16). **Product** `SessionService` (`host.session` / kit `resolve_session_service`) is the **only** surface door (0.58.17). **BoundSurface** (0.58.14+). **Operate** (0.58.18): `focus` / `list_owned_waiting` / `cancel_owned` under gate; `surface_view` v2. **Vocabulary (0.58.9/19):** `session_id` = system subject (`sess-…`) only; `instance_id` = product continue handle; path segment `instance`. Session metadata ≠ job metadata. Workloads inherit job session only. Active ≠ foreign pass. Plane remains law. Agent docs: skill + [MCP.md](MCP.md) (0.58.20). Close: [VISION-0.58](VISION-0.58.md) §6.2. |
+| **Session** (0.58 **closed**) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; **strict attribution**; **inherit-or-service** reactive start. **Product** `SessionService` / kit `resolve_session_service` is the surface door. **BoundSurface**. **Operate:** focus / list waiting / cancel-owned. **Vocabulary:** `session_id` = system subject (`sess-…`); `instance_id` = continue; path segment `instance`. Session metadata ≠ job metadata. Active ≠ foreign pass. Plane remains law. Theme: [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted. Surface compost residual: [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md). |
 | **Workload** | Isolation lifecycle events and placement | Workload engine + runners |
 
 **Host bus** (`host.event`) is for host coordination (start, shutdown, outbox process).  
@@ -467,7 +467,7 @@ From theme **0.57** onward:
 | Event buses | [EVENT-PLANE](EVENT-PLANE.md) |
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
 | Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
-| Session plane (theme open) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) |
+| Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
@@ -495,9 +495,9 @@ A map that only names **ideals** without today is also incomplete.
 | Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks (**0.57 closed**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
-| Live debt register | **Real** — residual **SU-*** / **SD-008** (in 0.58) / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
+| Live debt register | **Real** — residual **SU-*** / **SI-*** (SD-008 closed) — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
-| Session plane | **Theme open 0.58** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
+| Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

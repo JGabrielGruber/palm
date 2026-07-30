@@ -1,6 +1,6 @@
 # Palm Engine — Project Scope & Roadmap
 
-**Version:** 0.57.14 (shipping) · **Last updated:** July 2026
+**Version:** 0.58.20 (shipping) · **Last updated:** July 2026
 
 This document describes what Palm is for, what it does today, and where it is headed. For layer-by-layer technical detail, see [ARCHITECTURE.md](ARCHITECTURE.md). For day-to-day usage, see [README.md](README.md).
 

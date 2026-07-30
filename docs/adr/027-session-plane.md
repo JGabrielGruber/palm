@@ -1,9 +1,11 @@
 # ADR-027 — Session plane (system glue, multi-instance)
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-07-30  
-**Theme:** [VISION-0.58](../VISION-0.58.md)  
+**Accepted:** 2026-07-30 (theme exit **0.58.20**)  
+**Theme:** [VISION-0.58](../VISION-0.58.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
+**Migration / release:** [MIGRATION-0.58](../migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](../releases/RELEASE-0.58.20.md)  
 **Supersedes (plan only):** watch-first sketch in [VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md)
 
 ---
@@ -141,10 +143,11 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + conti
 ## Follow-up
 
 - [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.13**.  
-- [ ] Execute close plan **0.58.14–0.58.20** ([VISION-0.58 §6.2](../VISION-0.58.md)).  
-- [ ] Close **SD-008** at theme exit when residual SI honest.  
-- [ ] Accept this ADR at theme exit (or earlier if law is stable in code).  
-- [ ] Later theme: user plane + session impersonation / delegate grants (D11) — not 0.58.
+- [x] Execute close plan **0.58.14–0.58.20** ([VISION-0.58 §6.2](../VISION-0.58.md)).  
+- [x] Close **SD-008** at theme exit; residual SI honest.  
+- [x] Accept this ADR at theme exit **0.58.20**.  
+- [ ] Later: user plane + session impersonation / delegate grants (D11).  
+- [ ] Later: surface deflation / walk handles — [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) (SI-002 family, SU-*).
 
 ### D12 — Service sessions for automated start (0.58.13)
 

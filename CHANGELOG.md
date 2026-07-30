@@ -4,9 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### 0.58 — Session plane (**theme open**)
+## [0.58.20] — 2026-07-30
 
-Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-plane.md) **Proposed**
+### 0.58 — Session plane (**theme closed**)
+
+Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-plane.md) **Accepted** · Migration: [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · Release: [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)
 
 #### Added (0.58.0 plan)
 - Theme plan: session as **system glue**, multi-instance, bind law (not user plane)  
@@ -166,12 +168,14 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Operator surfaces** — `mcp-card.txt`, `mcp.txt`, `MCP.md`, `llms.txt` teach 0.58.9/19 law  
 - **Wiki** — `docs/wiki/concepts/session-plane.md`  
 - **PALM.md** — session plane vocabulary line  
-- **Residual honesty** — SI-012 ✅; SI-010 open (explorer bare / SU-*); thin SI-002/006; SI-007/016 partial; **SD-008** open until exit  
+- **Residual honesty** — SI-012 ✅; SI-010 open (explorer bare / SU-*); thin SI-002/006; SI-007/016 partial  
 
-#### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.20** shipped; **exit** named.  
-- Theme **exit** on request: residual SI honest + ADR-027 Accepted + SD-008 close + `just check`.  
-- Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
+#### Theme exit (0.58.20)
+- **ADR-027 Accepted** · **SD-008 closed**  
+- **[VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)** named — surface compost / walk handles later; not paid in 0.58  
+- **MIGRATION-0.58** · **RELEASE-0.58.20** · stamp `0.58.20`  
+- Residual seeds: SI-002 family, SU-*, SD-014, user-plane impersonation, API/SDK docs when value unlocks  
+
 ## [0.57.14] — 2026-07-29
 
 Embedded release covering **0.55–0.57** (previous stamp `0.54.10`).  
