@@ -221,6 +221,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **13** | Service / origin sessions | Automated start (work drain) + host seat use stable service sessions — **0.58.13** ✅ (SI-011 partial) |
 | **14** | BoundSurface + session metadata | Session owns surface context; plane + SessionService metadata API — **0.58.14** ✅ (SI-016 seat) |
 | **15** | Strict attribution | Start always sessioned; continue requires owner; bare orphan refuse — **0.58.15** ✅ (SI-015 residual) |
+| **16** | Inherit-or-service | Reactive start inherits signal session or service origin — **0.58.16** ✅ (SI-011) |
 
 ### 6.2 Remaining — close plan (lock order; implement one purpose each)
 
@@ -228,7 +229,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 |------:|-------|--------|-----------------|-----------|
 | **14** | **BoundSurface + session metadata** | Session **controls** surface context. Product type: `session_id` + `instance_id` + `kind` + `origin` + session metadata API. Prefer session-context meta over stuffing walk facts into job meta. SessionService: `bind_surface` / `surface_from_*` / get-set session metadata. | Foundation for SI-001/006/010 usage; §4.3–4.4 · SI-016 seat | ✅ Surfaces hold one BoundSurface; session metadata round-trips on plane record |
 | **15** | **Strict attribution policy** | When plane ready: **start** always has system session (outside or service); **continue** requires bound system session + owned instance (resolve allowed). Kill bare-instance happy path (SI-015 residual). Optional compat flag only if tests need a short window. | SI-015 residual ✅ | ✅ No product continue without attribution when plane attached (`PALM_SESSION_STRICT_ATTRIBUTION`) |
-| **16** | **Inherit-or-service start** | Reactive WorkIntent: if signal carries session → inherit; else `ensure_service_session(origin)` (`work-drain:…` / `inbound:…` / `schedule:…`). Finish SI-011. Workloads still inherit job session only. | SI-011 ✅; SI-009 edge | Automated start always attributed; parent walks not stolen when context present |
+| **16** | **Inherit-or-service start** | Reactive WorkIntent: if signal carries session → inherit; else `ensure_service_session(origin)` (`work-drain:…` / `inbound:…` / `schedule:…`). Finish SI-011. Workloads still inherit job session only. | SI-011 ✅; SI-009 edge | ✅ Automated start always attributed; parent walks not stolen when context present |
 | **17** | **Single kit door + surface dogfood** | Kit public helper → **SessionService** only (`resolve_session_service`). CLI / MCP / WS prefer BoundSurface; drop dual plane fallbacks on dogfood paths. | SI-005/006 partial; dual-path debt | Dogfood surfaces do not call `session_plane` for product verbs |
 | **18** | **Session operate + surface_view v2** | Product verbs under session: focus (`set_active`), list owned waiting, cancel-owned (drive execution under gate — no private resume), richer `surface_view` (kind/origin/waiting/refs). Optional CQRS/catalog session queries (SI-007). | SI-007 partial; multi-instance operable | Operator can act on a session walk without inventing edge code |
 | **19** | **Product vocabulary rename** | Paths / envelopes / grammar: continue segment is `instance` (or clear `instance_id`); `session_id` only system subject. Assist/MCP tools + REST aligned. Class names `FlowSession` may stay as thin handles (SI-002). | SI-001, SI-005 | Public contracts match 0.58.9 law; no silent instance-as-session on touched paths |
@@ -311,7 +312,7 @@ Theme **0.58** closes when:
 4. [ ] `session_id` is not a silent alias of `instance_id` on dogfood paths (**0.58.19**).  
 5. [x] Assist / MCP happy path uses the plane / SessionService.  
 6. [x] BoundSurface + session metadata home live (**0.58.14**); [ ] kit single door (**0.58.17**).  
-7. [ ] Automated start attributed (inherit-or-service **0.58.16**).  
+7. [x] Automated start attributed (inherit-or-service **0.58.16**).  
 8. [ ] SD-008 closed; residual SI/SU listed (**0.58.20** + exit).  
 9. [ ] ADR-027 Accepted (exit).  
 10. [ ] Path we touch stays testable (`just check`).
@@ -351,6 +352,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **plan** | **Close plan locked (docs):** §4.3 BoundSurface / session owns surface context; §4.4 session vs job metadata; §6.2 remaining **0.58.14–0.58.20** + exit. No code in this plan row. |
 | **0.58.14** | **BoundSurface + session metadata:** product `BoundSurface` (`session_id`, `instance_id`, `kind`, `origin`, metadata snapshot); SessionService `bind_surface` / `surface_from_*` / `get_metadata` / `merge_metadata` / `replace_metadata`; plane `get_metadata` / `merge_metadata` / `replace_metadata`; `surface_view` includes `bound_surface`. SI-016 seat (surface dogfood remains 0.58.17). |
 | **0.58.15** | **Strict attribution:** plane `require_continue_attribution` + `SessionAttributionError`; SessionService `strict_attribution` (settings `session_strict_attribution` / `PALM_SESSION_STRICT_ATTRIBUTION`); gate injects owner from reverse index; bare orphan refuse on rewrite; product unknown id defers to 404; handoff auto-start inherits system session; assist product door unshadowed (`product_session` / `_session`). SI-015 residual closed. |
+| **0.58.16** | **Inherit-or-service reactive start (SI-011):** triggers copy system `session_id` from event signal into WorkIntent; `SessionService.enrich_reactive_start` / `inherit_or_service_session` / `reactive_origin`; work-drain submit inherits parent walk or uses `work-drain:` / `schedule:` / `inbound:` service sessions; never random outside `sess-…` for reactive. Workloads still inherit job session only. |
 
 ---
 

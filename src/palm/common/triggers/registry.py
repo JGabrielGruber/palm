@@ -9,6 +9,33 @@ from palm.common.triggers.parse import TriggerSpec, parse_triggers
 from palm.core.work import WorkIntent
 
 
+def _system_session_from_signal(payload: dict[str, Any]) -> str | None:
+    """Pull system session id from an event payload for inherit-or-service (0.58.16).
+
+    EventContext.enriched_payload and flow.session.* already surface
+    ``session_id`` when the parent job had one. Only ``sess-…`` is carried —
+    never an instance id.
+    """
+    raw = payload.get("session_id")
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if text.startswith("sess-"):
+        return text
+    return None
+
+
+def _with_inherited_session(
+    base: dict[str, Any], payload: dict[str, Any]
+) -> dict[str, Any]:
+    """Copy system session into intent payload when the signal carries one."""
+    out = dict(base)
+    sid = _system_session_from_signal(payload)
+    if sid:
+        out["session_id"] = sid
+    return out
+
+
 class TriggerRegistry:
     """In-memory trigger index reloaded from flow definition metadata."""
 
@@ -133,13 +160,16 @@ class TriggerRegistry:
             return WorkIntent(
                 kind="run_flow",
                 target=spec.work_flow_id,
-                payload={
-                    "trigger": "on_resource",
-                    "resource_ref": ref,
-                    "definition_name": def_name or None,
-                    "action": action,
-                    "depth": depth,
-                },
+                payload=_with_inherited_session(
+                    {
+                        "trigger": "on_resource",
+                        "resource_ref": ref,
+                        "definition_name": def_name or None,
+                        "action": action,
+                        "depth": depth,
+                    },
+                    payload,
+                ),
                 coalesce_key=spec.coalesce_key,
                 depth=depth,
             )
@@ -165,7 +195,14 @@ class TriggerRegistry:
             return WorkIntent(
                 kind="run_flow",
                 target=spec.work_flow_id,
-                payload={"trigger": "on_flow", "source_flow": flow_id, "depth": depth},
+                payload=_with_inherited_session(
+                    {
+                        "trigger": "on_flow",
+                        "source_flow": flow_id,
+                        "depth": depth,
+                    },
+                    payload,
+                ),
                 coalesce_key=spec.coalesce_key,
                 depth=depth,
             )
@@ -191,16 +228,19 @@ class TriggerRegistry:
             return WorkIntent(
                 kind="run_flow",
                 target=spec.work_flow_id,
-                payload={
-                    "trigger": "on_workload",
-                    "event_type": event_type,
-                    "workload_id": payload.get("workload_id"),
-                    "status": payload.get("status"),
-                    "runtime": payload.get("runtime"),
-                    "exit_code": payload.get("exit_code"),
-                    "labels": dict(labels) if labels else {},
-                    "depth": depth,
-                },
+                payload=_with_inherited_session(
+                    {
+                        "trigger": "on_workload",
+                        "event_type": event_type,
+                        "workload_id": payload.get("workload_id"),
+                        "status": payload.get("status"),
+                        "runtime": payload.get("runtime"),
+                        "exit_code": payload.get("exit_code"),
+                        "labels": dict(labels) if labels else {},
+                        "depth": depth,
+                    },
+                    payload,
+                ),
                 coalesce_key=spec.coalesce_key,
                 depth=depth,
             )
@@ -208,4 +248,8 @@ class TriggerRegistry:
         return None
 
 
-__all__ = ["TriggerRegistry"]
+__all__ = [
+    "TriggerRegistry",
+    "_system_session_from_signal",
+    "_with_inherited_session",
+]

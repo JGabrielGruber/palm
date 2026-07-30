@@ -115,14 +115,15 @@ class ScheduleRegistry:
             if nxt > now:
                 continue
             interval = float(raw.get("interval_seconds") or 60)
+            sched_payload = dict(raw.get("payload") or {})
+            sched_payload.setdefault("trigger", "schedule")
+            # 0.58.16: schedule intents are service-origin at submit
+            # (no parent signal to inherit unless payload already has sess-).
             intent = WorkIntent(
                 kind="run_flow",
                 target=str(raw.get("flow_id") or ""),
                 id=f"sched-{uuid4().hex[:12]}",
-                payload={
-                    "trigger": "schedule",
-                    **dict(raw.get("payload") or {}),
-                },
+                payload=sched_payload,
                 coalesce_key=str(raw.get("coalesce_key") or f"schedule:{sid}"),
             )
             iid = self._work.enqueue(intent)

@@ -633,7 +633,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4+8 | ✅ partial + filter |
 | [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.8 partial | partial (EventContext) |
 | [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
-| [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | 0.58.13 | partial (service sessions) |
+| [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | 0.58.13 · **0.58.16** | ✅ done (inherit-or-service) |
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
@@ -725,14 +725,13 @@ wins. Residual: leaves that never bind event context.
 ### SI-011 — Composition / inbound without session
 
 **Where:** work-drain triggers, inbound composition, schedules.  
-**Impact:** **Partial (0.58.13):** work-drain submit enriches with stable **service session**
-`sess-svc-work-drain:{target}` via `SessionService.enrich_submit_body(origin=…)`.
-Host well-known `sess-svc-host` opens at runtime start. Outside surfaces still bind
-random `sess-…`. **No** dual “no session” law for automated start when plane ready.  
-**Residual:** inbound/schedule-specific origin tags if payload never hits work-drain
-enrich; explorer bare paths (SI-010); product rename (SI-001). Workloads inherit only
-(no separate workload session type).  
-**Target:** All automated start attributed; operator composition binds outside sessions.
+**Impact:** ✅ **done (0.58.16):** **inherit-or-service** — WorkIntent carries system
+`session_id` from the signal when present; submit uses
+`SessionService.enrich_reactive_start` (inherit parent walk, else
+`work-drain:` / `schedule:` / `inbound:` service session). Never random outside
+`sess-…` for reactive. Host `sess-svc-host` at runtime start (0.58.13).  
+**Residual edge:** explorer bare paths (SI-010); product rename (SI-001). Workloads
+inherit job session only (no separate workload session type).
 
 ### SI-012 — Docs and skills alias
 
@@ -809,10 +808,11 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.11 | SI-015 owner gate ✅ (`require_owned_instance` + rewrite/product/WS) |
 | 0.58.12 | Product SessionService surface door ✅; flows/assist/MCP rebind; SI-001/002 partial |
 | 0.58.13 | Service/origin sessions ✅; SI-011 partial (work-drain + host); workloads inherit |
+| 0.58.16 | Inherit-or-service reactive start ✅; SI-011 finished |
 | **close plan** | [VISION-0.58 §6.2](docs/VISION-0.58.md) **0.58.14–0.58.20** + exit (docs locked) |
 | 0.58.14 | BoundSurface + session context metadata ✅; SI-016 seat (dogfood residual → 0.58.17) |
 | 0.58.15 | Strict attribution ✅ — SI-015 residual closed |
-| 0.58.16 | Inherit-or-service start — finish SI-011 |
+
 | 0.58.17 | Single kit door + surface dogfood (SI-005/006) |
 | 0.58.18 | Session operate + surface_view v2 (SI-007 partial) |
 | 0.58.19 | Product vocabulary rename SI-001/005 |

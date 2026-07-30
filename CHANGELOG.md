@@ -126,9 +126,20 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **WS** — error code `session_attribution`  
 - Product unknown instance defers to not-found (404); known unowned → attribution refuse  
 
+#### Added (0.58.16) — inherit-or-service reactive start (SI-011 closed)
+- **Triggers** — copy system `session_id` from event signal into WorkIntent payload  
+- **SessionService** — `enrich_reactive_start`, `inherit_or_service_session`, `reactive_origin`  
+  * inherit parent walk when signal carries `sess-…`  
+  * else stable service session: `work-drain:{flow}` / `schedule:{flow}` / `inbound:{resource}`  
+  * never random outside `sess-…` for reactive paths  
+- **Work drain coordinator** — submit uses inherit-or-service (not blind service-only)  
+- **Inbound** — `trigger=inbound`; inherit envelope session when present  
+- Workloads still inherit job session only (no separate workload session type)  
+- **SI-011** closed  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.15** shipped; **0.58.16–20** + exit named.  
-- Theme **exit** after **0.58.16–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.16** shipped; **0.58.17–20** + exit named.  
+- Theme **exit** after **0.58.17–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 

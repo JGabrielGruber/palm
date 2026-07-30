@@ -619,11 +619,20 @@ class InboundBindingService:
         kind = spec.work.kind if spec.work.kind in ("run_flow", "run_process") else "run_flow"
         target = spec.work.target
         payload: dict[str, Any] = {
+            "trigger": "inbound",
             "inbound_resource": binding.resource_name,
             "inbound": envelope,
             "source": source,
             **meta,
         }
+        # 0.58.16: inherit system session from envelope/meta when present.
+        for key in ("session_id", "palm_session"):
+            raw = payload.get(key) or (
+                envelope.get(key) if isinstance(envelope, dict) else None
+            )
+            if raw is not None and str(raw).strip().startswith("sess-"):
+                payload["session_id"] = str(raw).strip()
+                break
         if spec.work.seed_state:
             from palm.system.planes.work.seed_state import resolve_seed_state
 

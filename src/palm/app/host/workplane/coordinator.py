@@ -69,17 +69,28 @@ class WorkPlaneCoordinator:
             submit_body: dict[str, Any] = {"flow_name": flow_id, "metadata": body}
             if seed is not None:
                 submit_body["state"] = seed
-            # SI-011 / 0.58.13: automated start gets a stable service session
-            # (not a random outside subject per intent). Prefer payload session
-            # when already system-shaped; else origin work-drain:{target}.
+            # SI-011 / 0.58.16: inherit-or-service — if the WorkIntent signal
+            # carries a system session_id, keep that walk; else stable service
+            # session by origin (work-drain / schedule / inbound). Never random
+            # outside sess- for reactive start.
             session = getattr(host, "session", None) or getattr(host, "_session", None)
-            if session is not None and hasattr(session, "enrich_submit_body"):
-                origin = f"work-drain:{flow_id}" if flow_id else "work-drain"
-                submit_body = session.enrich_submit_body(
-                    submit_body,
-                    surface="work-drain",
-                    origin=origin,
-                )
+            if session is not None:
+                if hasattr(session, "reactive_origin") and hasattr(
+                    session, "enrich_reactive_start"
+                ):
+                    origin = session.reactive_origin(flow_id, body)
+                    submit_body = session.enrich_reactive_start(
+                        submit_body,
+                        origin=origin,
+                        surface="work-drain",
+                    )
+                elif hasattr(session, "enrich_submit_body"):
+                    origin = f"work-drain:{flow_id}" if flow_id else "work-drain"
+                    submit_body = session.enrich_submit_body(
+                        submit_body,
+                        surface="work-drain",
+                        origin=origin,
+                    )
             return host._execution.flows.submit_flow_body(submit_body)
 
         settings = host.settings

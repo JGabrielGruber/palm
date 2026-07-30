@@ -582,6 +582,9 @@ class SessionService(BaseService):
         * *origin* set → stable service session when no session present
           (work drain / schedules / internal).
         * No origin → outside bind (new ``sess-…``) for interactive surfaces.
+
+        For **reactive** WorkIntent start prefer :meth:`enrich_reactive_start`
+        (inherit-or-service; never random outside ``sess-…``).
         """
         out = dict(body or {})
         meta = dict(out.get("metadata") or {})
@@ -589,6 +592,16 @@ class SessionService(BaseService):
         origin_hint = (origin or meta.get("session_origin") or "").strip() or None
         if not origin_hint and surface in ("work-drain", "schedule", "inbound", "trigger"):
             origin_hint = surface
+        # Reactive surfaces should not mint random outside subjects.
+        if origin_hint or surface in (
+            "work-drain",
+            "schedule",
+            "inbound",
+            "trigger",
+        ):
+            return self.enrich_reactive_start(
+                out, origin=origin_hint or surface or "work-drain", surface=surface
+            )
         candidates = (
             out.get("session_id")
             if looks_like_system_session_id(out.get("session_id"))
@@ -606,12 +619,10 @@ class SessionService(BaseService):
             sid = self.ensure_system_session_id(
                 surface=surface,
                 create=True,
-                origin=origin_hint,
+                origin=None,
             )
         if sid:
             meta["session_id"] = sid
-            if origin_hint:
-                meta.setdefault("session_origin", origin_hint)
             out["metadata"] = meta
         elif (
             self.strict_attribution
@@ -620,6 +631,93 @@ class SessionService(BaseService):
             raise SessionAttributionError(
                 "start requires system session when session plane is ready "
                 "(0.58.15 strict attribution)"
+            )
+        return out
+
+    @staticmethod
+    def reactive_origin(flow_id: str | None, payload: Mapping[str, Any] | None) -> str:
+        """Stable service origin for automated start when no session to inherit.
+
+        * schedule → ``schedule:{flow}``
+        * inbound → ``inbound:{resource}``
+        * else → ``work-drain:{flow}``
+        """
+        meta = dict(payload or {})
+        trigger = str(meta.get("trigger") or "").strip().lower()
+        fid = str(flow_id or meta.get("flow_name") or "").strip()
+        if trigger == "schedule":
+            return f"schedule:{fid}" if fid else "schedule"
+        inbound_res = meta.get("inbound_resource")
+        if trigger == "inbound" or inbound_res:
+            res = str(inbound_res or "inbound").strip() or "inbound"
+            return f"inbound:{res}"
+        if fid:
+            return f"work-drain:{fid}"
+        return "work-drain"
+
+    def inherit_or_service_session(
+        self,
+        *,
+        session_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
+        origin: str,
+    ) -> str | None:
+        """0.58.16: inherit system session from signal, else service session.
+
+        Does **not** mint a random outside ``sess-…``. Workloads still inherit
+        only via EventContext / job metadata (no separate workload session type).
+        """
+        meta = dict(metadata or {})
+        for raw in (session_id, meta.get("session_id"), meta.get("parent_session_id")):
+            if looks_like_system_session_id(raw):
+                return str(raw).strip()
+        return self.ensure_service_session(str(origin or "work-drain").strip())
+
+    def enrich_reactive_start(
+        self,
+        body: dict[str, Any] | None,
+        *,
+        origin: str,
+        surface: str = "work-drain",
+    ) -> dict[str, Any]:
+        """Attribute automated start: **inherit** parent session or **service** origin.
+
+        Law (0.58.16 / SI-011):
+
+        * Signal carries system ``session_id`` → inherit (parent walk not stolen).
+        * Else → stable ``sess-svc-…`` for *origin* (``work-drain:…``,
+          ``inbound:…``, ``schedule:…``).
+        * Never a random outside subject for reactive paths.
+        """
+        out = dict(body or {})
+        meta = dict(out.get("metadata") or {})
+        origin_s = str(origin or "").strip() or surface or "work-drain"
+        inherited = None
+        for raw in (
+            out.get("session_id"),
+            meta.get("session_id"),
+            meta.get("parent_session_id"),
+        ):
+            if looks_like_system_session_id(raw):
+                inherited = str(raw).strip()
+                break
+        if inherited:
+            meta["session_id"] = inherited
+            meta["session_attribution"] = "inherit"
+            # Keep origin for audit only; do not overwrite parent with service.
+            meta.setdefault("session_origin", origin_s)
+            out["metadata"] = meta
+            return out
+        sid = self.ensure_service_session(origin_s)
+        if sid:
+            meta["session_id"] = sid
+            meta["session_origin"] = origin_s
+            meta["session_attribution"] = "service"
+            out["metadata"] = meta
+        elif self.strict_attribution and self.plane_or_none() is not None:
+            raise SessionAttributionError(
+                "reactive start requires system session when session plane is ready "
+                f"(origin={origin_s!r}; 0.58.16 inherit-or-service)"
             )
         return out
 
