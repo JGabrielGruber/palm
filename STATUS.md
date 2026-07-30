@@ -48,36 +48,32 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · through `0.58.13`)
+## 0.58 — Session plane (**open** · close plan through `0.58.20` + exit)
 
 **Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
-**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-008** (active) · **SI-001…** impact inventory · residual **SU-*** · **SD-014** later
+**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-008** (active) · **SI-*** · residual **SU-*** · **SD-014** later  
+**Close plan:** [VISION-0.58 §6.2](docs/VISION-0.58.md) — **0.58.14–0.58.20** then **exit**
 
-**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. Surfaces **bind** (server may use cookie-like transport). Product **SessionService** is the surface door. Not the user plane. Not a second wait/resume path.
+**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. **Session owns surface context** (BoundSurface). Session metadata holds walk/surface facts; job metadata holds run facts. Product **SessionService** is the surface door. Not the user plane. Not a second wait/resume path.
 
 **Spirit:** Capable, not weak. Break `session_id == instance_id`. Prefer truth over shims. Store is allowed for the plane. Do not reinvent identity — bind is enough.
 
 | Patch | Status | Purpose |
 |-------|--------|---------|
-| **0.58.0** | ✅ plan | VISION + ADR-027 + PALM/STATUS/debt + SI inventory |
-| **0.58.1** | ✅ | System seat: `planes.session` + **StorageEngine** store; `runtime.session_plane` |
-| **0.58.2** | ✅ | Multi-attach `attach_instance` / `detach_instance` + reverse index `by_instance` |
-| **0.58.3** | ✅ | Bind law: `bind` / `require_open` / `SessionBind`; host + CLI entry |
-| **0.58.4** | ✅ | Job path: `ProcessInstance.session_id`, `SessionOwnershipHook`, event context/payload |
-| **0.58.5** | ✅ | `inspect` / `list_waiting` journey view; host `inspect_session` (no session-resume) |
-| **0.58.6** | ✅ | Flow submit binds system session; Assist start dogfood |
-| **0.58.7** | ✅ | WS `op:bind` + cookie/header → plane; product instance separate; create Set-Cookie |
-| **0.58.8** | ✅ | Event filter by session; Events WS fan-in; continue resolve; system/session inspect |
-| **0.58.9** | ✅ | Vocabulary slash: `session_id` = system only; `instance_id` = continue; no dual keys |
-| **0.58.10** | ✅ | Plane `active_instance_id`; ownership ≠ focus documented (ADR D9–D11); SI-015 residual gate |
-| **0.58.11** | ✅ | **SI-015 owner gate** — bound system session must own continue instance (`require_owned_instance`) |
-| **0.58.12** | ✅ | **Product SessionService** — surface door (continue target, submit enrich, surface_view, watches); host/assist/flows/MCP rebind |
-| **0.58.13** | ✅ | **Service / origin sessions** — stable `sess-svc-…` for automated start (work drain); well-known host session; SI-011 partial; workloads inherit only |
-| **exit** | 📋 next | SI-001 path/handle rename residual · Map true · SD-008 closed · ADR Accepted |
+| **0.58.0–0.58.13** | ✅ | Plane seat → multi-attach → bind → job path → inspect → dogfood → WS → watches → vocabulary → active → owner gate → SessionService → service/origin sessions |
+| **0.58.14** | 📋 next | **BoundSurface** + session context metadata API (session owns surface context) |
+| **0.58.15** | 📋 | **Strict attribution** — start always attributed; continue requires bound session (kill bare-instance residual SI-015) |
+| **0.58.16** | 📋 | **Inherit-or-service** reactive start (finish SI-011); workloads inherit only |
+| **0.58.17** | 📋 | **Single kit door** + CLI/MCP/WS dogfood on BoundSurface (no product plane dual-path) |
+| **0.58.18** | 📋 | **Session operate** + surface_view v2 (focus, list waiting, cancel-owned; SI-007 partial) |
+| **0.58.19** | 📋 | **Product vocabulary rename** SI-001/005 (paths/envelopes; handles may stay thin) |
+| **0.58.20** | 📋 | **Docs/skill** SI-012 + residual honesty (SI-010/SU-*) |
+| **exit** | 📋 | Map true · residual SI honest · **SD-008 closed** · **ADR-027 Accepted** |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  
-**At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.
+**At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.  
+**Do not skip 14 before 15–17.** Rename (19) after BoundSurface is safer.
 
 ---
 

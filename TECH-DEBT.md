@@ -764,8 +764,17 @@ authoritative (not replaced by plane focus).
 **Law:** exclusive ownership + active = focus only
 ([VISION-0.58 §4.1](docs/VISION-0.58.md), [ADR-027](docs/adr/027-session-plane.md) D9–D11).  
 **Residual:** bare `instance_id` with **no** bound system session still skips the
-gate (legacy tooling / SI-001 surface bind incomplete). Elevated inspect and
+gate — pay at **0.58.15** (strict attribution). Elevated inspect and
 user-plane **impersonation** remain later seeds — not dual-own.
+
+### SI-016 — Surfaces invent dual context; walk facts on job meta
+
+**Where:** CLI dual `active_system_session_id` + `active_assist_session_id`; MCP/WS
+private bind assembly; job metadata used as walk/surface store.  
+**Impact:** Surfaces reinvent what SessionService should own; job meta bloated.  
+**Target:** **0.58.14** — **BoundSurface** + session context metadata on the session
+record ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 D13–D14). Surfaces hold
+one session-shaped context; walk/surface/attribution facts leave job meta.
 
 ---
 
