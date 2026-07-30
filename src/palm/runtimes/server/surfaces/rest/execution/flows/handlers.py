@@ -56,6 +56,16 @@ def create_session(
         return auth_error
 
     body: dict[str, Any] = dict(request.body) if isinstance(request.body, dict) else {}
+    # Cookie-like system session transport (0.58.7) — same contract as WS bind
+    from palm.kits.server.middleware import (
+        extract_system_session_hint,
+        set_cookie_header_value,
+    )
+
+    if not body.get("system_session_id") and not body.get("palm_session_id"):
+        hint = extract_system_session_hint(request.headers)
+        if hint:
+            body["system_session_id"] = hint
     try:
         result = ctx.execution.flows.dispatch(
             ["flows", flow_id, "create"],
@@ -66,7 +76,13 @@ def create_session(
     except Exception as exc:
         return errors.submit_failed(str(exc))
 
-    return accepted(_create_body(result))
+    payload = _create_body(result)
+    headers: dict[str, str] = {}
+    system_sid = payload.get("system_session_id")
+    if system_sid:
+        headers["Set-Cookie"] = set_cookie_header_value(str(system_sid))
+        headers["X-Palm-Session"] = str(system_sid)
+    return accepted(payload, headers=headers if headers else None)
 
 
 def get_session(
@@ -244,12 +260,16 @@ def _session_body(
 def _create_body(result: Any) -> dict[str, Any]:
     if isinstance(result, dict):
         session_id = result.get("session_id")
-        return {
+        body: dict[str, Any] = {
             "session_id": session_id,
             "flow_id": result.get("flow_id"),
             "job_id": result.get("job_id"),
             "status": result.get("status"),
         }
+        system_sid = result.get("system_session_id") or result.get("palm_session_id")
+        if system_sid:
+            body["system_session_id"] = system_sid
+        return body
     return {"result": result}
 
 

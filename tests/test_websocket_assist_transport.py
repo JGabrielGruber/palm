@@ -164,6 +164,7 @@ def test_portal_file_response_rejects_traversal() -> None:
 
 def test_handle_bind_and_dispatch_uses_bound_session(palm_server: ServerRuntime) -> None:
     from palm.runtimes.server.surfaces.websocket.session import _ConnectionState
+    from palm.system.planes.session import looks_like_system_session_id
 
     ctx = palm_server.server_app.context  # type: ignore[union-attr]
     conn = _ConnectionState(headers={})
@@ -174,8 +175,11 @@ def test_handle_bind_and_dispatch_uses_bound_session(palm_server: ServerRuntime)
     )
     assert bound is not None
     assert bound["op"] == "bound"
+    # Product instance remains for continue; system session is separate (0.58.7)
     assert bound["session_id"] == "inst-bound"
     assert conn.session_id == "inst-bound"
+    assert looks_like_system_session_id(bound.get("system_session_id"))
+    assert conn.system_session_id == bound["system_session_id"]
 
 
 def test_handle_dispatch_doctor_with_context(palm_server: ServerRuntime) -> None:

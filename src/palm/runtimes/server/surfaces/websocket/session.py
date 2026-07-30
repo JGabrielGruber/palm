@@ -1,8 +1,10 @@
-"""WebSocket Assist session loop — hello / ping / dispatch (0.32.1+).
+"""WebSocket Assist session loop — hello / ping / dispatch / bind (0.32.1+).
 
 0.32.1: hello + ping/pong.
 0.32.2: ``dispatch`` → same spine as MCP ``palm_assist`` → ``turn`` frames.
 0.33.2: chat continuity (auto-start / intro / action rewrite) in assist.profiles.
+0.58.7: bind law — ``op: bind`` / cookie-like headers resolve **system** session
+via the session plane; product ``session_id`` (instance) stays separate for continue.
 """
 
 from __future__ import annotations
@@ -11,6 +13,10 @@ import json
 import logging
 from typing import TYPE_CHECKING, Any
 
+from palm.kits.server.middleware import (
+    extract_system_session_hint,
+    resolve_session_plane,
+)
 from palm.runtimes.server.surfaces.websocket.frames import (
     OP_CLOSE,
     OP_PING,
@@ -20,6 +26,12 @@ from palm.runtimes.server.surfaces.websocket.frames import (
     encode_close,
     encode_pong,
     encode_text,
+)
+from palm.system.planes.session import (
+    SessionClosedError,
+    SessionNotFoundError,
+    SessionPlaneError,
+    looks_like_system_session_id,
 )
 
 if TYPE_CHECKING:
@@ -41,6 +53,8 @@ def run_assist_websocket(
 ) -> None:
     """Blocking assist channel after HTTP upgrade has completed."""
     conn = _ConnectionState(headers=headers or {})
+    # Cookie-like bind at upgrade time when plane is available
+    _ensure_system_session(conn, ctx=ctx, create=True)
     reader = FrameReader(rfile)
     version = _palm_version()
     _send_json(
@@ -54,6 +68,7 @@ def run_assist_websocket(
             "path": ASSIST_WS_PATH,
             "ops": ["hello", "ping", "dispatch", "bind"],
             "auth": {"mode": conn.auth_mode, "subject": conn.subject},
+            "bound": conn.bound_snapshot(),
         },
     )
 
@@ -143,12 +158,16 @@ def run_assist_websocket(
 
 
 class _ConnectionState:
-    """Per-connection bind state (0.32.3 continuity)."""
+    """Per-connection bind state (0.32.3 continuity + 0.58.7 system session)."""
 
     def __init__(self, *, headers: dict[str, str]) -> None:
+        # System outside subject (session plane) — never an instance id.
+        self.system_session_id: str | None = None
+        # Product continue handle (instance id) — residual SI-001.
         self.session_id: str | None = None
         self.flow_id: str | None = None
         self.client: str | None = None
+        self.system_session_created: bool = False
         lower = {k.lower(): v for k, v in headers.items()}
         auth = lower.get("authorization", "")
         if auth.lower().startswith("bearer ") and auth[7:].strip():
@@ -157,6 +176,16 @@ class _ConnectionState:
         else:
             self.auth_mode = "open"
             self.subject = lower.get("x-palm-subject") or "anonymous"
+        # Cookie / X-Palm-Session hint (plane bind deferred until ctx known)
+        hint = extract_system_session_hint(headers)
+        self._transport_session_hint: str | None = hint
+
+    def bound_snapshot(self) -> dict[str, Any]:
+        return {
+            "system_session_id": self.system_session_id,
+            "session_id": self.session_id,
+            "flow_id": self.flow_id,
+        }
 
 
 def handle_client_message(
@@ -173,11 +202,10 @@ def handle_client_message(
     if op == "hello":
         if message.get("client") is not None:
             state.client = str(message.get("client"))
-        # Optional bind on hello for reconnect
-        if message.get("session_id"):
-            state.session_id = str(message["session_id"])
-        if message.get("flow_id"):
-            state.flow_id = str(message["flow_id"])
+        # Optional system / product bind on hello for reconnect
+        _apply_message_bind_fields(message, state, ctx=ctx, create=True)
+        # Transport hint if still unbound
+        _ensure_system_session(state, ctx=ctx, create=True)
         return {
             "op": "hello",
             "id": msg_id,
@@ -188,10 +216,7 @@ def handle_client_message(
             "ack": True,
             "client": state.client or message.get("client"),
             "ops": ["hello", "ping", "dispatch", "bind"],
-            "bound": {
-                "session_id": state.session_id,
-                "flow_id": state.flow_id,
-            },
+            "bound": state.bound_snapshot(),
             "auth": {"mode": state.auth_mode},
         }
 
@@ -199,7 +224,7 @@ def handle_client_message(
         return {"op": "pong", "id": msg_id}
 
     if op == "bind":
-        return _handle_bind(message, state)
+        return _handle_bind(message, state, ctx=ctx)
 
     if op == "dispatch":
         return _handle_dispatch(message, ctx=ctx, conn=state)
@@ -217,30 +242,163 @@ def handle_client_message(
 def _handle_bind(
     message: dict[str, Any],
     conn: _ConnectionState,
+    *,
+    ctx: object | None = None,
 ) -> dict[str, Any]:
-    """Bind session_id / flow_id for reconnect continuity (0.32.3)."""
+    """Bind system session (plane) + optional product instance / flow (0.58.7)."""
     msg_id = message.get("id")
     if message.get("clear") in (True, "true", "1", 1):
+        conn.system_session_id = None
         conn.session_id = None
         conn.flow_id = None
+        conn.system_session_created = False
+        conn._transport_session_hint = None
+
+    try:
+        _apply_message_bind_fields(message, conn, ctx=ctx, create=_create_flag(message))
+    except SessionClosedError as exc:
+        return {
+            "op": "error",
+            "id": msg_id,
+            "error": {"code": "session_closed", "message": str(exc)},
+        }
+    except SessionNotFoundError as exc:
+        return {
+            "op": "error",
+            "id": msg_id,
+            "error": {"code": "session_not_found", "message": str(exc)},
+        }
+    except SessionPlaneError as exc:
+        return {
+            "op": "error",
+            "id": msg_id,
+            "error": {"code": "session_bind", "message": str(exc)},
+        }
+
+    # Default: ensure a system subject exists when plane is available
+    if conn.system_session_id is None and "system_session_id" not in message:
+        create = _create_flag(message)
+        if create is not False:
+            _ensure_system_session(conn, ctx=ctx, create=True)
+
+    return {
+        "op": "bound",
+        "id": msg_id,
+        **conn.bound_snapshot(),
+        "created": conn.system_session_created,
+    }
+
+
+def _create_flag(message: dict[str, Any]) -> bool:
+    raw = message.get("create")
+    if raw in (False, "false", "0", 0):
+        return False
+    return True
+
+
+def _apply_message_bind_fields(
+    message: dict[str, Any],
+    conn: _ConnectionState,
+    *,
+    ctx: object | None,
+    create: bool,
+) -> None:
+    """Apply system / product / flow fields from hello or bind message."""
+    # Explicit system keys win
+    system_raw = message.get("system_session_id")
+    if system_raw is None:
+        system_raw = message.get("palm_session_id")
+    if system_raw is not None:
+        text = str(system_raw).strip()
+        if not text:
+            conn.system_session_id = None
+            conn.system_session_created = False
+        else:
+            _plane_bind_into(conn, text, ctx=ctx, create=create)
+
+    # session_id: system-shaped → plane; else product instance (continue handle)
     if "session_id" in message:
         raw_sid = message.get("session_id")
         if raw_sid is None or str(raw_sid).strip() == "":
+            # Clear product only; do not clear system unless system key also cleared
             conn.session_id = None
         else:
-            conn.session_id = str(raw_sid).strip() or None
+            sid = str(raw_sid).strip()
+            if looks_like_system_session_id(sid) and system_raw is None:
+                _plane_bind_into(conn, sid, ctx=ctx, create=create)
+            else:
+                conn.session_id = sid
+
     if "flow_id" in message:
         raw_fid = message.get("flow_id")
         if raw_fid is None or str(raw_fid).strip() == "":
             conn.flow_id = None
         else:
             conn.flow_id = str(raw_fid).strip() or None
-    return {
-        "op": "bound",
-        "id": msg_id,
-        "session_id": conn.session_id,
-        "flow_id": conn.flow_id,
-    }
+
+
+def _plane_bind_into(
+    conn: _ConnectionState,
+    session_id: str | None,
+    *,
+    ctx: object | None,
+    create: bool = True,
+) -> None:
+    """Bind via plane when available; otherwise store the id surface-locally."""
+    plane = resolve_session_plane(ctx)
+    if plane is None:
+        if session_id:
+            conn.system_session_id = session_id
+            conn.system_session_created = False
+        return
+    bind = plane.bind(
+        session_id,
+        create=create,
+        surface="websocket",
+        metadata={"via": "ws_bind"},
+    )
+    conn.system_session_id = str(bind.session_id)
+    conn.system_session_created = bool(bind.created)
+
+
+def _ensure_system_session(
+    conn: _ConnectionState,
+    *,
+    ctx: object | None,
+    create: bool = True,
+) -> None:
+    """Ensure connection has a system session when the plane is available."""
+    if conn.system_session_id:
+        # Re-touch / validate when plane available
+        plane = resolve_session_plane(ctx)
+        if plane is not None:
+            try:
+                plane.bind(
+                    conn.system_session_id,
+                    create=False,
+                    surface="websocket",
+                    metadata={"via": "ws_ensure"},
+                )
+            except SessionNotFoundError:
+                if create:
+                    _plane_bind_into(conn, None, ctx=ctx, create=True)
+            except SessionClosedError:
+                if create:
+                    _plane_bind_into(conn, None, ctx=ctx, create=True)
+        return
+
+    hint = conn._transport_session_hint
+    if hint:
+        try:
+            _plane_bind_into(conn, hint, ctx=ctx, create=create)
+            if conn.system_session_id:
+                return
+        except (SessionClosedError, SessionNotFoundError, SessionPlaneError):
+            if not create:
+                raise
+            # fall through to create new
+    if create:
+        _plane_bind_into(conn, None, ctx=ctx, create=True)
 
 
 def _handle_dispatch(
@@ -278,10 +436,35 @@ def _handle_dispatch(
         }
     params = dict(params)
     # Allow top-level convenience keys (chat clients)
-    for key in ("value", "input", "session_id", "flow_id", "body", "query", "q"):
+    for key in (
+        "value",
+        "input",
+        "session_id",
+        "system_session_id",
+        "palm_session_id",
+        "flow_id",
+        "body",
+        "query",
+        "q",
+    ):
         if key in message and key not in params:
             params[key] = message[key]
-    # 0.32.3 — fill from connection bind when client omits ids
+
+    # Ensure system subject before work; inject into params for flow submit
+    try:
+        _ensure_system_session(state, ctx=ctx, create=True)
+    except SessionPlaneError as exc:
+        return {
+            "op": "error",
+            "id": msg_id,
+            "error": {"code": "session_bind", "message": str(exc)},
+        }
+
+    if state.system_session_id and not params.get("system_session_id"):
+        params["system_session_id"] = state.system_session_id
+    if not params.get("palm_session_id") and state.system_session_id:
+        params["palm_session_id"] = state.system_session_id
+    # Product continue handle (instance)
     if not params.get("session_id") and state.session_id:
         params["session_id"] = state.session_id
     if not params.get("flow_id") and state.flow_id:
@@ -372,10 +555,21 @@ def _handle_dispatch(
                 dispatch=_dispatch,
                 shape=_shape,
             )
-        # Refresh bind from turn payload for reconnect convenience
-        sid = shaped.get("session_id") or shaped.get("instance_id")
-        if sid:
-            state.session_id = str(sid)
+        # Refresh bind from turn: product instance + system subject
+        product_sid = shaped.get("session_id") or shaped.get("instance_id")
+        if product_sid and not looks_like_system_session_id(product_sid):
+            state.session_id = str(product_sid)
+        elif product_sid and looks_like_system_session_id(product_sid):
+            # Unusual: product returned system id as session_id — still track system
+            state.system_session_id = str(product_sid)
+        system_sid = shaped.get("system_session_id") or shaped.get("palm_session_id")
+        turn_refs = shaped.get("refs")
+        if not system_sid and isinstance(turn_refs, dict):
+            system_sid = turn_refs.get("system_session_id") or turn_refs.get(
+                "palm_session_id"
+            )
+        if system_sid:
+            state.system_session_id = str(system_sid).strip() or state.system_session_id
         flow = flow_id_from_turn(shaped)
         if flow:
             state.flow_id = str(flow)
@@ -384,14 +578,15 @@ def _handle_dispatch(
                 refs = {}
                 shaped["refs"] = refs
             refs.setdefault("flow_id", state.flow_id)
+            if state.system_session_id:
+                refs.setdefault("system_session_id", state.system_session_id)
+        if state.system_session_id and isinstance(shaped, dict):
+            shaped.setdefault("system_session_id", state.system_session_id)
         return {
             "op": "turn",
             "id": msg_id,
             "payload": shaped,
-            "bound": {
-                "session_id": state.session_id,
-                "flow_id": state.flow_id,
-            },
+            "bound": state.bound_snapshot(),
         }
     except ValueError as exc:
         return {

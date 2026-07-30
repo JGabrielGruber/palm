@@ -42,9 +42,18 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Envelope** — `system_session_id` / `refs.system_session_id` on Assist start and flow create  
 - Product `session_id` remains the instance handle for continue (SI-001 residual, intentional)
 
+#### Added (0.58.7)
+- **WS bind law** — `op: bind` / hello / dispatch bind **system** session via plane (`system_session_id`)  
+- **Cookie-like transport** — `X-Palm-Session` header + Cookie `palm_session`; REST create `Set-Cookie`  
+- **Kit helpers** — `extract_system_session_hint`, `resolve_session_plane`, `looks_like_system_session_id`  
+- Product instance id stays separate on the connection for continue (SI-001 residual)
+
+#### Fixed (0.58.7)
+- Flow create path: name-shaped ids (`todo-builder`) no longer forced `by_id=True` (id-shaped `flow-*` still use by_id)
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.6**.  
-- Next: **0.58.7** WS / cookie-like bind.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.7**.  
+- Next: **0.58.8+** watches / fan-in · theme exit.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 
 ## [0.57.14] — 2026-07-29

@@ -29,6 +29,14 @@ def new_session_id() -> str:
     return f"sess-{uuid4().hex}"
 
 
+def looks_like_system_session_id(value: Any) -> bool:
+    """True when *value* is system-session shaped (``sess-…``), not a bare instance id."""
+    if value is None:
+        return False
+    text = str(value).strip()
+    return text.startswith("sess-")
+
+
 def _now_iso() -> str:
     return datetime.now(UTC).isoformat()
 
@@ -132,5 +140,6 @@ __all__ = [
     "SessionBind",
     "SessionRecord",
     "SessionStatus",
+    "looks_like_system_session_id",
     "new_session_id",
 ]

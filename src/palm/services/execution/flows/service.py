@@ -66,8 +66,11 @@ class FlowExecutionService(BaseService):
             body = dict(params.get("body") or params)
             if "flow" not in body and "wizard" not in body and "flow_name" not in body:
                 body["flow_name"] = parsed.flow_id
-                # Path segment is the definition id (or name); prefer by_id resolve.
-                body.setdefault("by_id", True)
+                # Path segment may be definition id (flow-…) or human name
+                # (todo-builder). Prefer by_id only for id-shaped refs so Assist
+                # and Portal keep working with catalog names (0.58.7).
+                if str(parsed.flow_id).startswith("flow-"):
+                    body.setdefault("by_id", True)
             session = self.run_wizard(body)
             ctx = session.context()
             system_sid = _system_session_from_instance_meta(
@@ -272,10 +275,9 @@ class FlowExecutionService(BaseService):
 
 def _looks_like_system_session_id(value: Any) -> bool:
     """True when id is system-session shaped (not a bare instance id)."""
-    if value is None:
-        return False
-    text = str(value).strip()
-    return text.startswith("sess-")
+    from palm.system.planes.session import looks_like_system_session_id
+
+    return looks_like_system_session_id(value)
 
 
 def _system_session_from_instance_meta(metadata: dict[str, Any] | None) -> str | None:

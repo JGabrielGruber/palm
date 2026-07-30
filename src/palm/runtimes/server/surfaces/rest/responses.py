@@ -16,8 +16,12 @@ def created(body: dict[str, Any]) -> ServerResponse:
     return ServerResponse(status=201, body=body)
 
 
-def accepted(body: dict[str, Any]) -> ServerResponse:
-    return ServerResponse(status=202, body=body)
+def accepted(
+    body: dict[str, Any],
+    *,
+    headers: dict[str, str] | None = None,
+) -> ServerResponse:
+    return ServerResponse(status=202, body=body, headers=dict(headers or {}))
 
 
 def job_snapshot(job: Job) -> dict[str, Any]:

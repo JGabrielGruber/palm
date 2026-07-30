@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.6** (Assist dogfood).  
+**Status:** 🚧 **Theme open** — through **0.58.7** (WS / cookie-like bind).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -119,7 +119,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **4** | Job path link | Create/attach instance under session; events can filter by session — **0.58.4** ✅ |
 | **5** | Wait / inspect | Session → open waits / journey view (no private resume hooks) — **0.58.5** ✅ |
 | **6** | Assist + MCP dogfood | palm_assist bind path uses system session — **0.58.6** ✅ (product session_id still instance handle) |
-| **7** | WS / cookie-like bind | Same contract; delete one-off reconnect hacks |
+| **7** | WS / cookie-like bind | Same contract; delete one-off reconnect hacks — **0.58.7** ✅ |
 | **8+** | Watches / fan-in | Multi-type subscribe by session (old watch sketch) |
 | **exit** | Theme exit | Map true; SD-008 closed; residual SI/SU honest; ADR Accepted |
 
@@ -202,6 +202,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.4** | Job path: `ProcessInstance.session_id`; job metadata `session_id`; `SessionOwnershipHook` plane attach; `EventContext.session_id` + `flow.session.*` payload fields |
 | **0.58.5** | Journey: `SessionPlaneService.inspect` / `list_waiting`; host `inspect_session`; no session-resume path |
 | **0.58.6** | Dogfood: `FlowExecutionService` auto-bind system session on submit; create/Assist envelopes expose `system_session_id`; product `session_id` still instance for continue (SI-001 residual) |
+| **0.58.7** | WS/cookie bind: `op: bind` + `X-Palm-Session` / `palm_session` cookie → session plane; product instance id stays separate; flow create Set-Cookie; fix name-vs-id create (`todo-builder`) |
 
 ---
 

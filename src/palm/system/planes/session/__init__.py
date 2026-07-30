@@ -27,6 +27,7 @@ from palm.system.planes.session.types import (
     SessionBind,
     SessionRecord,
     SessionStatus,
+    looks_like_system_session_id,
     new_session_id,
 )
 
@@ -41,6 +42,7 @@ __all__ = [
     "SessionStatus",
     "SessionStore",
     "bind_session_plane_to_runtime",
+    "looks_like_system_session_id",
     "new_session_id",
     "require_session_plane",
 ]

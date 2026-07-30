@@ -203,13 +203,13 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
 **Observation:** Product `session_id` still instance-shaped for continue (SI-001 residual).
-System plane through **0.58.6**: seat, multi-attach, bind, job-path, inspect, Assist
-start dogfood (`system_session_id`). Still missing: full product rename, WS cookie
-bind (0.58.7), watches.  
+System plane through **0.58.7**: seat, multi-attach, bind, job-path, inspect, Assist
+dogfood, **WS/cookie system bind**. Still missing: full product rename, watches,
+Explorer/REST bulk bind (SI-010).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
-Close when residual SI honest + optional WS/watches decided; dogfood start already real.
+Close when residual SI honest + watches decided; dogfood + surface bind already real.
 
 **Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
 
@@ -624,7 +624,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6 partial | open |
 | [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–6 | open |
 | [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
-| [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | open |
+| [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | ✅ done |
 | [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6 partial | open |
 | [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | 0.58.3 partial · 0.58.6 | open |
 | [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.3–4 | open |
@@ -658,9 +658,11 @@ session id (Assist dogfood 0.58.6).
 
 ### SI-004 — WS bind is surface-local
 
-**Where:** `runtimes/server/surfaces/websocket/session.py` (`op: bind`, `conn.session_id`).  
-**Impact:** Reconnect continuity does not create a system session subject.  
-**Target:** Bind op creates/loads plane session; cookie-like HTTP same contract.
+**Where:** `runtimes/server/surfaces/websocket/session.py` (`op: bind`, conn bind state).  
+**Status:** ✅ **done** at **0.58.7** — `op: bind` / hello / dispatch resolve **system**
+session via plane; cookie-like transport (`X-Palm-Session`, Cookie `palm_session`);
+product `session_id` remains instance handle for continue (SI-001). REST flow create
+echoes system id + `Set-Cookie`.
 
 ### SI-005 — MCP / palm_assist session = instance
 
@@ -747,8 +749,8 @@ Event type names unchanged. Full coverage when all entry paths pass system sessi
 | 0.58.4 | SI-003 ✅; SI-008 partial; job metadata + SessionOwnershipHook |
 | 0.58.5 | Journey inspect / list_waiting ✅ |
 | 0.58.6 | Assist dogfood: system_session_id; SI-001/005 partial |
-| 0.58.7 | SI-004 WS bind |
-| later / residual | SI-006, SI-007, SI-009…012, SI-014, SU-* |
+| 0.58.7 | SI-004 ✅ WS/cookie bind; flow create name-vs-id fix |
+| later / residual | SI-001/005 rename, SI-006, SI-007, SI-009…012, SI-014, SU-*, watches |
 
 ---
 
