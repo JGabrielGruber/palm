@@ -5,7 +5,8 @@
 * :class:`SessionPlaneService` / :func:`bind_session_plane_to_runtime`
 * :class:`SessionRecord` / :class:`SessionStatus`
 
-Multi-attach, durable store, surface bind: later 0.58 slices.
+Store uses :class:`~palm.core.storage.StorageEngine` (like work plane).
+Multi-attach and surface bind: later 0.58 slices.
 Continue/resume remains :mod:`palm.system.planes.wait`.
 """
 

@@ -1,14 +1,15 @@
 """SessionPlaneService — system **session** plane seat (0.58.1).
 
-Outside subject: open / get / close / list. Multi-attach of instances and
-durable store grow in 0.58.2. Surfaces bind later (0.58.3+).
+Outside subject: open / get / close / list on :class:`SessionStore`
+(:class:`~palm.core.storage.StorageEngine`). Multi-attach grows in 0.58.2.
+Surfaces bind later (0.58.3+).
 
 Does **not** resume jobs. Continue remains the wait plane.
 """
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from palm.system.planes.session.store import SessionStore
 from palm.system.planes.session.types import (
@@ -16,6 +17,9 @@ from palm.system.planes.session.types import (
     SessionStatus,
     new_session_id,
 )
+
+if TYPE_CHECKING:
+    from palm.core.storage import StorageEngine
 
 
 class SessionPlaneError(RuntimeError):
@@ -34,13 +38,24 @@ class SessionPlaneService:
     """Session plane: lifecycle of outside subjects on one system instance.
 
     Lifecycle:
-    * :meth:`attach` — bind to a runtime (optional storage hook later)
-    * :meth:`detach` — clear runtime link
+    * construct with :class:`SessionStore` (or storage engine)
+    * :meth:`attach` — bind to a runtime
+    * :meth:`detach` — clear runtime link (store remains on storage backend)
     * :meth:`open` / :meth:`get` / :meth:`close` / :meth:`list_sessions`
     """
 
-    def __init__(self, store: SessionStore | None = None) -> None:
-        self._store = store if store is not None else SessionStore()
+    def __init__(
+        self,
+        store: SessionStore | None = None,
+        *,
+        storage: StorageEngine | None = None,
+    ) -> None:
+        if store is not None:
+            self._store = store
+        elif storage is not None:
+            self._store = SessionStore(storage)
+        else:
+            raise TypeError("SessionPlaneService requires store= or storage=")
         self._runtime: Any | None = None
 
     @property
@@ -56,7 +71,7 @@ class SessionPlaneService:
         self._runtime = runtime
 
     def detach(self) -> None:
-        """Unbind from runtime. Does not wipe the in-memory store."""
+        """Unbind from runtime. Session records stay in StorageEngine."""
         self._runtime = None
 
     def open(
@@ -110,11 +125,13 @@ class SessionPlaneService:
         open_n = len(self._store.list(status=SessionStatus.OPEN, include_closed=False))
         active_n = len(self._store.list(status=SessionStatus.ACTIVE, include_closed=False))
         closed_n = len(self._store.list(status=SessionStatus.CLOSED))
+        backend = getattr(self._store.storage, "backend_name", None)
         return {
             "plane": "session",
             "session_plane_attached": self.is_attached,
             "verbs": ["open", "get", "close", "list"],
-            "store": "memory",
+            "store": "storage_engine",
+            "storage_backend": backend,
             "counts": {
                 "open": open_n,
                 "active": active_n,
@@ -130,7 +147,10 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
     if isinstance(existing, SessionPlaneService):
         existing.attach(runtime)
         return existing
-    plane = SessionPlaneService()
+    storage = getattr(runtime, "storage", None)
+    if storage is None:
+        raise SessionPlaneError("runtime has no storage for session plane")
+    plane = SessionPlaneService(storage=storage)
     plane.attach(runtime)
     if hasattr(runtime, "_session_plane"):
         runtime._session_plane = plane

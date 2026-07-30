@@ -18,8 +18,8 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | **Home** | `palm.system.planes.session` (system). Product thin. |
 | **Law** | No outside interaction without a session bind. Surfaces bind (cookie-like OK on server). |
 | **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
-| **Next code** | **0.58.2** store + multi-attach (0..N instances); durable when ready. |
-| **Done** | **0.58.0** plan · **0.58.1** system seat (`runtime.session_plane`) |
+| **Next code** | **0.58.2** multi-attach (0..N instances) + reverse index. |
+| **Done** | **0.58.0** plan · **0.58.1** seat + **StorageEngine** session store |
 
 ## Quick Overview
 
@@ -59,8 +59,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | Patch | Status | Purpose |
 |-------|--------|---------|
 | **0.58.0** | ✅ plan | VISION + ADR-027 + PALM/STATUS/debt + SI inventory |
-| **0.58.1** | ✅ | System seat: `planes.session` types + lifecycle; `BaseRuntime.session_plane` |
-| **0.58.2** | 📋 next | Store + multi-attach (0..N instances); durable path |
+| **0.58.1** | ✅ | System seat: `planes.session` + **StorageEngine** store; `runtime.session_plane` |
+| **0.58.2** | 📋 next | Multi-attach (0..N instances) + reverse index |
 | **0.58.3** | 📋 | Bind law on entry (touched surfaces) |
 | **0.58.4** | 📋 | Job path link + event attribution |
 | **0.58.5** | 📋 | Wait / inspect by session |

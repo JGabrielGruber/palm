@@ -1,9 +1,10 @@
-"""0.58.1 — Session plane system seat (types + lifecycle on BaseRuntime)."""
+"""0.58.1 — Session plane system seat (types + StorageEngine store + runtime)."""
 
 from __future__ import annotations
 
 import pytest
 
+from palm.core.storage import StorageEngine
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
 from palm.system.planes.session import (
@@ -11,10 +12,18 @@ from palm.system.planes.session import (
     SessionPlaneService,
     SessionRecord,
     SessionStatus,
+    SessionStore,
     bind_session_plane_to_runtime,
     new_session_id,
 )
 from palm.system.planes.session.types import SessionRecord as SessionRecordDirect
+
+
+def _storage() -> StorageEngine:
+    s = StorageEngine()
+    s.initialize()
+    s.select("memory")
+    return s
 
 
 def test_session_id_is_not_instance_shaped() -> None:
@@ -41,13 +50,27 @@ def test_session_record_roundtrip_and_multi_instance_field() -> None:
     assert back.status == SessionStatus.OPEN
 
 
+def test_session_store_uses_storage_engine() -> None:
+    storage = _storage()
+    store = SessionStore(storage)
+    rec = SessionRecord(session_id="sess-se", status=SessionStatus.OPEN)
+    store.put(rec)
+    assert storage.get("palm:session:entry:sess-se") is not None
+    assert "sess-se" in storage.get("palm:session:index")
+    loaded = store.get("sess-se")
+    assert loaded is not None
+    assert loaded.session_id == "sess-se"
+
+
 def test_session_plane_open_get_close_list() -> None:
-    plane = SessionPlaneService()
+    plane = SessionPlaneService(storage=_storage())
     a = plane.open(metadata={"k": 1})
     assert a.status == SessionStatus.OPEN
     assert a.session_id.startswith("sess-")
     assert a.instance_ids == []
-    assert plane.get(a.session_id) is a or plane.get(a.session_id).session_id == a.session_id
+    got = plane.get(a.session_id)
+    assert got is not None
+    assert got.session_id == a.session_id
 
     b = plane.open(session_id="sess-fixed")
     assert b.session_id == "sess-fixed"
@@ -67,28 +90,36 @@ def test_session_plane_open_get_close_list() -> None:
 
 
 def test_session_plane_doctor_snapshot() -> None:
-    plane = SessionPlaneService()
+    plane = SessionPlaneService(storage=_storage())
     plane.open()
     plane.open()
     snap = plane.doctor_snapshot()
     assert snap["plane"] == "session"
-    assert snap["store"] == "memory"
+    assert snap["store"] == "storage_engine"
+    assert snap["storage_backend"] == "memory"
     assert "open" in snap["verbs"]
     assert snap["counts"]["total"] == 2
 
 
 def test_bind_session_plane_helper() -> None:
+    eng = _storage()
+
     class _Rt:
         _session_plane = None
+
+        def __init__(self, storage: StorageEngine) -> None:
+            self.storage = storage
 
         @property
         def session_plane(self):
             return self._session_plane
 
-    rt = _Rt()
+    rt = _Rt(eng)
     plane = bind_session_plane_to_runtime(rt)
     assert plane.is_attached
     assert rt._session_plane is plane
+    rec = plane.open(session_id="sess-bind")
+    assert plane.get(rec.session_id) is not None
 
 
 def test_embedded_runtime_exposes_session_plane() -> None:
@@ -101,8 +132,11 @@ def test_embedded_runtime_exposes_session_plane() -> None:
         rec = rt.session_plane.open(metadata={"via": "embedded"})
         assert rec.session_id.startswith("sess-")
         assert rt.session_plane.get(rec.session_id) is not None
+        # Records live on runtime StorageEngine (same keys as work plane style).
+        assert rt.storage.get(f"palm:session:entry:{rec.session_id}") is not None
         snap = rt.session_plane.doctor_snapshot()
         assert snap["session_plane_attached"] is True
+        assert snap["store"] == "storage_engine"
         assert snap["counts"]["total"] >= 1
     finally:
         rt.stop()

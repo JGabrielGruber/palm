@@ -1,36 +1,55 @@
-"""In-memory session store (0.58.1 seat).
+"""Session store over :class:`~palm.core.storage.StorageEngine` (0.58.1).
 
-Durable storage (mirror instance manager spirit) lands in 0.58.2 (SI-013).
-This store is enough for lifecycle API and tests without product surfaces.
+Same pattern as :class:`~palm.system.planes.work.store.WorkIntentStore`:
+keys on the system instance storage backend (memory, filesystem, …).
 """
 
 from __future__ import annotations
 
-import threading
-from typing import Iterable
+from typing import TYPE_CHECKING
 
 from palm.system.planes.session.types import SessionRecord, SessionStatus
 
+if TYPE_CHECKING:
+    from palm.core.storage import StorageEngine
+
+SESSION_INDEX = "palm:session:index"
+SESSION_ENTRY_PREFIX = "palm:session:entry:"
+
 
 class SessionStore:
-    """Thread-safe in-memory map of session_id → SessionRecord."""
+    """Session records on StorageEngine (index + entry keys)."""
 
-    def __init__(self) -> None:
-        self._lock = threading.RLock()
-        self._by_id: dict[str, SessionRecord] = {}
+    def __init__(self, storage: StorageEngine) -> None:
+        self._storage = storage
+
+    @property
+    def storage(self) -> StorageEngine:
+        return self._storage
 
     def put(self, record: SessionRecord) -> SessionRecord:
-        with self._lock:
-            self._by_id[record.session_id] = record
-            return record
+        self._storage.set(f"{SESSION_ENTRY_PREFIX}{record.session_id}", record.to_dict())
+        index = self._load_index()
+        if record.session_id not in index:
+            index.append(record.session_id)
+            self._storage.set(SESSION_INDEX, index)
+        return record
 
     def get(self, session_id: str) -> SessionRecord | None:
-        with self._lock:
-            return self._by_id.get(session_id)
+        raw = self._storage.get(f"{SESSION_ENTRY_PREFIX}{session_id}")
+        if not isinstance(raw, dict):
+            return None
+        return SessionRecord.from_dict(raw)
 
     def delete(self, session_id: str) -> bool:
-        with self._lock:
-            return self._by_id.pop(session_id, None) is not None
+        key = f"{SESSION_ENTRY_PREFIX}{session_id}"
+        raw = self._storage.get(key)
+        if raw is None:
+            self._remove_from_index(session_id)
+            return False
+        self._storage.delete(key)
+        self._remove_from_index(session_id)
+        return True
 
     def list(
         self,
@@ -38,25 +57,43 @@ class SessionStore:
         status: SessionStatus | None = None,
         include_closed: bool = True,
     ) -> list[SessionRecord]:
-        with self._lock:
-            rows: Iterable[SessionRecord] = self._by_id.values()
-            out: list[SessionRecord] = []
-            for rec in rows:
-                if status is not None and rec.status != status:
-                    continue
-                if not include_closed and rec.status == SessionStatus.CLOSED:
-                    continue
-                out.append(rec)
-            out.sort(key=lambda r: r.created_at)
-            return out
+        out: list[SessionRecord] = []
+        for sid in self._load_index():
+            rec = self.get(sid)
+            if rec is None:
+                self._remove_from_index(sid)
+                continue
+            if status is not None and rec.status != status:
+                continue
+            if not include_closed and rec.status == SessionStatus.CLOSED:
+                continue
+            out.append(rec)
+        out.sort(key=lambda r: r.created_at)
+        return out
 
     def clear(self) -> None:
-        with self._lock:
-            self._by_id.clear()
+        for sid in list(self._load_index()):
+            self._storage.delete(f"{SESSION_ENTRY_PREFIX}{sid}")
+        self._storage.set(SESSION_INDEX, [])
 
     def __len__(self) -> int:
-        with self._lock:
-            return len(self._by_id)
+        return len(self._load_index())
+
+    def _load_index(self) -> list[str]:
+        raw = self._storage.get(SESSION_INDEX)
+        if not isinstance(raw, list):
+            return []
+        return [str(i) for i in raw]
+
+    def _remove_from_index(self, session_id: str) -> None:
+        index = self._load_index()
+        if session_id in index:
+            index.remove(session_id)
+            self._storage.set(SESSION_INDEX, index)
 
 
-__all__ = ["SessionStore"]
+__all__ = [
+    "SESSION_ENTRY_PREFIX",
+    "SESSION_INDEX",
+    "SessionStore",
+]

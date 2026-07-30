@@ -195,7 +195,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | Patch | What |
 |-------|------|
 | **0.58.0** | Plan + ADR-027 Proposed + map/STATUS/debt + supersede VISION-SESSION-PLANE + SI impact inventory |
-| **0.58.1** | System seat: `palm.system.planes.session` types + lifecycle; wired on BaseRuntime |
+| **0.58.1** | System seat: `planes.session` types + lifecycle; **StorageEngine** store; `BaseRuntime.session_plane` |
 
 ---
 

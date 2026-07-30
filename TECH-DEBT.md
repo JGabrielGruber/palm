@@ -639,11 +639,12 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 **Impact:** Agents re-learn the lie.  
 **Target:** Update when dogfood lands; STE on touch.
 
-### SI-013 — Session store not durable
+### SI-013 — Session multi-attach not first-class yet
 
-**Where:** `palm.system.planes.session.store.SessionStore` — **memory only** (0.58.1).  
-**Impact:** Sessions do not survive process restart; multi-attach not persisted.  
-**Target:** 0.58.2 — durable via existing storage patterns (mirror instance manager spirit).
+**Where:** `SessionStore` uses **StorageEngine** (0.58.1 fix; same pattern as work intents).  
+Durability follows the host storage backend (memory vs filesystem).  
+**Impact:** Attach/detach instance API and reverse index not built (0.58.2).  
+**Target:** 0.58.2 — multi-attach verbs on plane; optional instance→session index.
 
 ### SI-014 — Shared plane-store framework
 
@@ -664,8 +665,8 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | Slice | Closes or reduces |
 |------:|-------------------|
 | 0.58.0 | Plan; SI inventory; SD-008 active (not closed) |
-| 0.58.1 | SD-008 home (partial): `palm.system.planes.session` + `runtime.session_plane` lifecycle |
-| 0.58.2 | SI-013 durable; multi-attach API; SI-003 start |
+| 0.58.1 | SD-008 home (partial): plane + StorageEngine store + lifecycle |
+| 0.58.2 | SI-013 multi-attach API; SI-003 start |
 | 0.58.3–4 | SI-001, SI-007, SI-008 (partial) |
 | 0.58.5–6 | SI-002, SI-005 |
 | 0.58.7 | SI-004 |

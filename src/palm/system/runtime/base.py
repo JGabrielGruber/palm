@@ -262,8 +262,8 @@ class BaseRuntime:
         self._wait_plane = WaitPlaneService()
         self._wait_plane.attach(self)
 
-        # Session plane — outside subject seat (0.58.1); multi-attach later.
-        self._session_plane = SessionPlaneService()
+        # Session plane — outside subject seat (0.58.1); StorageEngine store.
+        self._session_plane = SessionPlaneService(storage=self.storage)
         self._session_plane.attach(self)
 
         self._started = True

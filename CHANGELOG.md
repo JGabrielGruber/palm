@@ -15,12 +15,12 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) marked **superseded**
 
 #### Added (0.58.1)
-- **`palm.system.planes.session`** — `SessionRecord`, `SessionStatus`, memory `SessionStore`, `SessionPlaneService`  
-- **`BaseRuntime.session_plane`** — open/get/close/list lifecycle wired at start  
+- **`palm.system.planes.session`** — `SessionRecord`, `SessionStatus`, `SessionStore` on **StorageEngine**, `SessionPlaneService`  
+- **`BaseRuntime.session_plane`** — open/get/close/list lifecycle wired at start (same storage as work plane)  
 
 #### Notes
 - Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.1**.  
-- Next: **0.58.2** multi-attach + durable store.
+- Next: **0.58.2** multi-attach.
 
 ## [0.57.14] — 2026-07-29
 
