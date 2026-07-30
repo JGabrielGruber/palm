@@ -173,6 +173,13 @@ Walk / surface / attribution facts live on **session** record metadata
 Run facts live on **job / instance** metadata.  
 Do not use job metadata as a second session store or ownership graph.
 
+### D15 — Session operate under owner gate (0.58.18 ✅)
+
+Product operate verbs (`focus`, `list_owned_waiting`, `cancel_owned`) live on
+**SessionService**. Cancel drives **system** `cancel_job` only after the owner
+gate. Surfaces must not invent private session resume or unowned cancel.
+`surface_view` v2 is the assemble-once operate envelope (waiting, refs, actions).
+
 ---
 
 ## References

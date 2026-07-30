@@ -10,6 +10,10 @@ use and adds helpers surfaces need to drive **other** services correctly
 (session_id + instance focus + kind/origin + session metadata). Prefer
 session-context metadata for walk/surface facts; job metadata stays run facts.
 
+**0.58.18:** product **operate** verbs — ``focus`` / ``list_owned_waiting`` /
+``cancel_owned`` (system cancel under owner gate) and richer ``surface_view``
+v2 (waiting, refs, actions catalog). No private session resume.
+
 Does **not** resume jobs. Continue remains the wait plane via execution/assist.
 """
 
@@ -37,9 +41,9 @@ from palm.system.planes.session import (
 )
 
 if TYPE_CHECKING:
-    from palm.system.runtime.base import BaseRuntime
     from palm.services.system.service import SystemService
-    from palm.system.planes.session import SessionPlaneService, SessionRecord, SessionBind
+    from palm.system.planes.session import SessionBind, SessionPlaneService, SessionRecord
+    from palm.system.runtime.base import BaseRuntime
 
 
 @dataclass(frozen=True)
@@ -328,6 +332,20 @@ class SessionService(BaseService):
     def clear_active_instance(self, session_id: str) -> SessionRecord:
         return self.plane().clear_active_instance(session_id)
 
+    def focus(self, session_id: str, instance_id: str) -> BoundSurface:
+        """Product operate: set continue focus on an owned instance (0.58.18).
+
+        Same law as :meth:`set_active_instance` (attach list only; no resume).
+        Returns a :class:`BoundSurface` so surfaces need no second assembly step.
+        """
+        self.plane().set_active_instance(session_id, instance_id)
+        return self.surface_from_session(session_id)
+
+    def clear_focus(self, session_id: str) -> BoundSurface:
+        """Product operate: clear continue focus without detaching (0.58.18)."""
+        self.plane().clear_active_instance(session_id)
+        return self.surface_from_session(session_id)
+
     def list_instances(self, session_id: str) -> list[str]:
         return self.plane().list_instances(session_id)
 
@@ -394,7 +412,7 @@ class SessionService(BaseService):
 
         * System-shaped ``session_id`` + missing instance → resolve focus.
         * System-shaped value only in ``instance_id`` → treat as session and resolve.
-        * When ``gate`` and both known → ownership / attribution (0.58.11–15).
+        * When ``gate`` and both known → ownership / attribution (0.58.11-15).
         * Bare instance without session: under strict attribution, resolve owner
           from plane or raise :class:`SessionAttributionError`.
         """
@@ -750,18 +768,212 @@ class SessionService(BaseService):
         return self.plane().inspect(session_id)
 
     def list_waiting(self, session_id: str) -> list[dict[str, Any]]:
+        """Open waits across instances owned by this session (inspect only)."""
         plane = self.plane()
         if hasattr(plane, "list_waiting"):
             return list(plane.list_waiting(session_id))
         data = plane.inspect(session_id)
         return list(data.get("waiting_on") or [])
 
+    def list_owned_waiting(self, session_id: str) -> list[dict[str, Any]]:
+        """Alias for :meth:`list_waiting` — product operate vocabulary (0.58.18)."""
+        return self.list_waiting(session_id)
+
+    def job_id_for_instance(self, instance_id: str) -> str | None:
+        """Best-effort job id for an instance (system inspect; no resume)."""
+        iid = str(instance_id or "").strip()
+        if not iid:
+            return None
+        try:
+            view = self._system.inspect_instance(iid)
+        except Exception:
+            view = None
+        if isinstance(view, dict):
+            jid = view.get("job_id")
+            if jid is not None and str(jid).strip():
+                return str(jid).strip()
+            meta = view.get("metadata") if isinstance(view.get("metadata"), dict) else None
+            if isinstance(meta, dict):
+                jid = meta.get("job_id")
+                if jid is not None and str(jid).strip():
+                    return str(jid).strip()
+        # Plane journey row may already know job_id
+        try:
+            owner = self.owner_session_id(iid)
+            if owner:
+                for row in self.inspect(owner).get("instances") or []:
+                    if isinstance(row, dict) and str(row.get("instance_id")) == iid:
+                        jid = row.get("job_id")
+                        if jid is not None and str(jid).strip():
+                            return str(jid).strip()
+        except Exception:
+            pass
+        return None
+
+    def cancel_owned(
+        self,
+        session_id: str,
+        *,
+        instance_id: str | None = None,
+        job_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Cancel a job for an **owned** instance via system execution (0.58.18).
+
+        Owner gate applies. Does **not** invent session-private resume or
+        cancel outside the attach list. Drive cancel through
+        :meth:`~palm.services.system.service.SystemService.cancel_job`.
+
+        When neither *instance_id* nor *job_id* is given, cancels the continue
+        focus (active → waiting → last).
+        """
+        sid = str(session_id or "").strip()
+        if not sid:
+            raise ValueError("session_id is required")
+        self.require_open(sid)
+
+        iid = str(instance_id).strip() if instance_id else None
+        jid = str(job_id).strip() if job_id else None
+
+        if iid:
+            self.require_owned_instance(sid, iid)
+            if not jid:
+                jid = self.job_id_for_instance(iid)
+        elif jid:
+            # job_id only: resolve owner instance and gate
+            iid = self._instance_id_for_job(jid)
+            if not iid:
+                raise ValueError(
+                    f"cannot resolve owned instance for job {jid!r} under session {sid!r}"
+                )
+            self.require_owned_instance(sid, iid)
+        else:
+            iid = self.resolve_continue_instance(sid)
+            if not iid:
+                raise ValueError(
+                    f"session {sid!r} has no owned instance to cancel "
+                    "(pass instance_id or job_id)"
+                )
+            self.require_owned_instance(sid, iid)
+            jid = self.job_id_for_instance(iid)
+
+        if not jid:
+            return {
+                "kind": "session_cancel_owned",
+                "session_id": sid,
+                "instance_id": iid,
+                "job_id": None,
+                "found": False,
+                "cancelled": False,
+                "reason": "no_job_id_for_instance",
+            }
+
+        result = self._system.cancel_job(jid)
+        out: dict[str, Any] = {
+            "kind": "session_cancel_owned",
+            "session_id": sid,
+            "instance_id": iid,
+            "job_id": jid,
+        }
+        if isinstance(result, dict):
+            out.update(result)
+        else:
+            out["result"] = result
+        out.setdefault("found", True)
+        return out
+
+    def cancel_all_owned(
+        self,
+        session_id: str,
+        *,
+        only_waiting: bool = False,
+    ) -> dict[str, Any]:
+        """Cancel jobs for all owned instances that resolve a job id (0.58.18).
+
+        *only_waiting* limits cancel to instances with open waits. Still
+        drives :meth:`~palm.services.system.service.SystemService.cancel_job`
+        per instance — no private session cancel path.
+        """
+        sid = str(session_id or "").strip()
+        self.require_open(sid)
+        targets: list[str]
+        if only_waiting:
+            waits = self.list_waiting(sid)
+            seen: set[str] = set()
+            targets = []
+            for w in waits:
+                if not isinstance(w, dict):
+                    continue
+                iid = w.get("instance_id")
+                if iid and str(iid) not in seen:
+                    seen.add(str(iid))
+                    targets.append(str(iid))
+        else:
+            targets = list(self.list_instances(sid))
+
+        results: list[dict[str, Any]] = []
+        for iid in targets:
+            try:
+                results.append(self.cancel_owned(sid, instance_id=iid))
+            except Exception as exc:
+                results.append(
+                    {
+                        "kind": "session_cancel_owned",
+                        "session_id": sid,
+                        "instance_id": iid,
+                        "found": False,
+                        "cancelled": False,
+                        "error": str(exc),
+                    }
+                )
+        cancelled = sum(1 for r in results if r.get("cancelled"))
+        return {
+            "kind": "session_cancel_all_owned",
+            "session_id": sid,
+            "only_waiting": only_waiting,
+            "count": len(results),
+            "cancelled_count": cancelled,
+            "results": results,
+        }
+
+    def _instance_id_for_job(self, job_id: str) -> str | None:
+        """Best-effort reverse: job → instance among plane-owned instances."""
+        jid = str(job_id or "").strip()
+        if not jid:
+            return None
+        try:
+            job = self._system.get_job(jid)
+        except Exception:
+            job = None
+        if isinstance(job, dict):
+            for key in ("instance_id",):
+                raw = job.get(key)
+                if raw is not None and str(raw).strip():
+                    return str(raw).strip()
+            meta = job.get("metadata") if isinstance(job.get("metadata"), dict) else None
+            if isinstance(meta, dict):
+                raw = meta.get("instance_id")
+                if raw is not None and str(raw).strip():
+                    return str(raw).strip()
+        # Scan open sessions' journey rows (small multi-attach sets)
+        try:
+            for rec in self.list_sessions(include_closed=False):
+                for row in self.inspect(rec.session_id).get("instances") or []:
+                    if (
+                        isinstance(row, dict)
+                        and str(row.get("job_id") or "") == jid
+                        and row.get("instance_id")
+                    ):
+                        return str(row["instance_id"])
+        except Exception:
+            pass
+        return None
+
     def surface_view(self, session_id: str) -> dict[str, Any]:
-        """Enriched view for surfaces: journey + BoundSurface + continue refs.
+        """Enriched operate view for surfaces (v2, 0.58.18).
 
         Surfaces use this to know which instance to drive and which other
-        services (execution inspect, assist) to call — without each edge
-        assembling plane + system inspect itself.
+        services (execution inspect, assist, system cancel) to call — without
+        each edge assembling plane + system inspect itself.
 
         ``kind`` stays ``session_surface_view`` (envelope). Subject kind lives
         under ``bound_surface.session_kind`` / ``session_kind``.
@@ -770,20 +982,94 @@ class SessionService(BaseService):
         bound = self.surface_from_session(session_id)
         continue_id = bound.instance_id or self.resolve_continue_instance(session_id)
         active = journey.get("active_instance_id")
+        waiting = list(journey.get("waiting_on") or [])
+        instance_ids = list(journey.get("instance_ids") or [])
         return {
             **journey,
             "kind": "session_surface_view",
+            "view_version": 2,
             "continue_instance_id": continue_id,
             "active_instance_id": active,
             "session_kind": bound.kind,
             "origin": bound.origin,
             "bound_surface": bound.to_dict(),
+            "waiting": waiting,
+            "waiting_on": waiting,
+            "counts": {
+                **dict(journey.get("counts") or {}),
+                "instances": len(instance_ids),
+                "open_waits": len(waiting),
+            },
             "refs": {
                 "session_id": session_id,
                 "instance_id": continue_id,
                 "active_instance_id": active,
+                "job_id": self.job_id_for_instance(continue_id) if continue_id else None,
             },
+            "actions": self._operate_actions(session_id, continue_id),
+            "note": (
+                "operate via SessionService (focus / list_waiting / cancel_owned); "
+                "continue still via wait plane — not session resume"
+            ),
         }
+
+    def _operate_actions(
+        self, session_id: str, continue_instance_id: str | None
+    ) -> list[dict[str, Any]]:
+        """Catalog of product operate paths for this session (SI-007 partial)."""
+        sid = session_id
+        actions: list[dict[str, Any]] = [
+            {
+                "verb": "inspect",
+                "path": f"system/session/{sid}",
+                "description": "Journey inspect (instances + waits)",
+            },
+            {
+                "verb": "surface_view",
+                "path": f"system/session/{sid}/view",
+                "description": "Operate surface view (v2)",
+            },
+            {
+                "verb": "list_waiting",
+                "path": f"system/session/{sid}/waiting",
+                "description": "Open waits on owned instances",
+            },
+            {
+                "verb": "list_instances",
+                "path": f"system/session/{sid}/instances",
+                "description": "Attached instance ids",
+            },
+            {
+                "verb": "focus",
+                "path": f"system/session/{sid}/focus",
+                "params": {"instance_id": "<owned instance_id>"},
+                "description": "Set continue focus (owner attach list only)",
+            },
+            {
+                "verb": "clear_focus",
+                "path": f"system/session/{sid}/focus/clear",
+                "description": "Clear continue focus without detach",
+            },
+            {
+                "verb": "cancel_owned",
+                "path": f"system/session/{sid}/cancel",
+                "params": {
+                    "instance_id": continue_instance_id or "<owned instance_id>",
+                    "job_id": "(optional)",
+                },
+                "description": "Cancel job for owned instance via system (no private resume)",
+            },
+        ]
+        if continue_instance_id:
+            actions.append(
+                {
+                    "verb": "continue",
+                    "path": f"assist/session/{continue_instance_id}",
+                    "params": {"session_id": sid, "instance_id": continue_instance_id},
+                    "description": "Continue focus via wait plane (assist/flows)",
+                }
+            )
+        return actions
 
     def event_matches(
         self,

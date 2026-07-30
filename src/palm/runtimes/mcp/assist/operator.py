@@ -256,7 +256,7 @@ def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
     params = params or {}
     if path == ["system", "doctor"]:
         return ctx.system.doctor(ctx.runtime)
-    # 0.58.8 / 0.58.12 / 0.58.17 — system session journey (product door only)
+    # 0.58.8 / 0.58.12 / 0.58.17 / 0.58.18 — session journey + operate (product door)
     if len(path) >= 3 and path[0] == "system" and path[1] == "session":
         door = _resolve_session_service(ctx)
         if door is None:
@@ -266,10 +266,45 @@ def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
         sid = path[2]
         if len(path) == 3:
             return door.inspect(sid)
+        if len(path) == 4 and path[3] == "view":
+            return door.surface_view(sid)
         if len(path) == 4 and path[3] == "waiting":
             return door.list_waiting(sid)
         if len(path) == 4 and path[3] == "instances":
             return door.list_instances(sid)
+        if len(path) == 4 and path[3] == "focus":
+            # params.instance_id required to set focus
+            iid = params.get("instance_id") or params.get("active_instance_id")
+            if not iid:
+                raise ValueError(
+                    "system/session/{id}/focus requires params.instance_id"
+                )
+            bound = door.focus(sid, str(iid))
+            return {
+                "kind": "session_focus",
+                "session_id": sid,
+                "active_instance_id": bound.instance_id,
+                "bound_surface": bound.to_dict(),
+            }
+        if len(path) == 5 and path[3] == "focus" and path[4] == "clear":
+            bound = door.clear_focus(sid)
+            return {
+                "kind": "session_focus_clear",
+                "session_id": sid,
+                "active_instance_id": bound.instance_id,
+                "bound_surface": bound.to_dict(),
+            }
+        if len(path) == 4 and path[3] == "cancel":
+            return door.cancel_owned(
+                sid,
+                instance_id=params.get("instance_id"),
+                job_id=params.get("job_id"),
+            )
+        if len(path) == 5 and path[3] == "cancel" and path[4] == "all":
+            return door.cancel_all_owned(
+                sid,
+                only_waiting=bool(params.get("only_waiting", False)),
+            )
         raise ValueError(f"unrecognized system session path: {'/'.join(path)}")
     if path == ["system", "waiting"]:
         from palm.core.orchestration import JobStatus

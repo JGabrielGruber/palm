@@ -698,10 +698,12 @@ still shows assist id.
 ### SI-007 — CQRS instance queries as public session
 
 **Where:** host CQRS, `kits/server/cqrs.py`, facades `get_instance`, flows session REST.  
-**Impact:** **Partial (0.58.8):** `dispatch_operator_path` supports
-`system/session/{id}` · `/waiting` · `/instances` (plane inspect). Full CQRS
-contributor + REST routes optional residual.  
-**Target:** Session inspect first-class in operator catalog; instance remains job-path API.
+**Impact:** **Partial (0.58.8 + 0.58.18):** operator paths via product door —
+`system/session/{id}` · `/view` · `/waiting` · `/instances` · `/focus` ·
+`/cancel` · `/cancel/all`. SessionService operate verbs (`focus`,
+`cancel_owned`, `surface_view` v2). Full CQRS contributor + REST routes
+optional residual.  
+**Target:** Session inspect/operate first-class in operator catalog; instance remains job-path API.
 
 ### SI-008 — flow.session.* events
 
@@ -813,8 +815,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.14 | BoundSurface + session context metadata ✅; SI-016 seat |
 | 0.58.15 | Strict attribution ✅ — SI-015 residual closed |
 | 0.58.17 | Single kit door + surface dogfood ✅; SI-005/006/016 partial |
-
-| 0.58.18 | Session operate + surface_view v2 (SI-007 partial) |
+| 0.58.18 | Session operate + surface_view v2 ✅; SI-007 partial (operator paths) |
 | 0.58.19 | Product vocabulary rename SI-001/005 |
 | 0.58.20 | Docs/skill SI-012 + residual honesty SI-010/SU |
 | theme exit | SD-008 close; ADR-027 Accept; residual SI honest |

@@ -147,9 +147,16 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **CLI** — `CliContext.bound_surface` is truth; dual slots remain mirrors (SI-006 residual until 0.58.19)  
 - **SI-016** dogfood partial ✅; path rename remains **0.58.19** (SI-001/005)  
 
+#### Added (0.58.18) — session operate + surface_view v2
+- **SessionService operate** — `focus` / `clear_focus` (BoundSurface), `list_owned_waiting`, `cancel_owned` / `cancel_all_owned`  
+- **Cancel law** — owner gate + `SystemService.cancel_job` only; no private session resume/cancel path  
+- **surface_view v2** — `view_version: 2`, `waiting`, richer `refs` (incl. `job_id`), `actions` catalog for operator paths  
+- **Operator (SI-007 partial)** — `system/session/{id}/view` · `/focus` · `/focus/clear` · `/cancel` · `/cancel/all`  
+- Full CQRS session contributor still optional residual  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.17** shipped; **0.58.18–20** + exit named.  
-- Theme **exit** after **0.58.18–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.18** shipped; **0.58.19–20** + exit named.  
+- Theme **exit** after **0.58.19–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 
