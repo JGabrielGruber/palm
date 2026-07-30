@@ -35,14 +35,20 @@ from palm.system.planes.session.plane import (
 )
 from palm.system.planes.session.store import SessionStore
 from palm.system.planes.session.types import (
+    HOST_SESSION_ID,
+    HOST_SESSION_ORIGIN,
+    WORK_DRAIN_ORIGIN,
     SessionBind,
     SessionRecord,
     SessionStatus,
     looks_like_system_session_id,
     new_session_id,
+    service_session_id,
 )
 
 __all__ = [
+    "HOST_SESSION_ID",
+    "HOST_SESSION_ORIGIN",
     "InstanceAlreadyAttachedError",
     "InstanceNotOwnedError",
     "SessionBind",
@@ -53,8 +59,10 @@ __all__ = [
     "SessionRecord",
     "SessionStatus",
     "SessionStore",
+    "WORK_DRAIN_ORIGIN",
     "bind_session_plane_to_runtime",
     "looks_like_system_session_id",
     "new_session_id",
     "require_session_plane",
+    "service_session_id",
 ]

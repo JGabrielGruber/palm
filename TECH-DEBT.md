@@ -203,11 +203,11 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
 **Observation:** Product `session_id` field name still often means instance (SI-001 residual
-path/handle rename). System plane + product door through **0.58.12**: seat, multi-attach,
+path/handle rename). System plane + product door through **0.58.13**: seat, multi-attach,
 bind, job-path, inspect, Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary,
-**active focus**, **owner gate**, **SessionService** surface door. Residual: product
-URL/handle rename (SI-001), explorer bulk (SI-010), docs (SI-012), bare-instance paths
-without a bound system session.  
+**active focus**, **owner gate**, **SessionService**, **service/origin sessions** (work drain
++ host). Residual: product URL/handle rename (SI-001), explorer bulk (SI-010), docs (SI-012),
+bare-instance paths without a bound system session.  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
@@ -633,7 +633,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4+8 | ✅ partial + filter |
 | [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.8 partial | partial (EventContext) |
 | [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
-| [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | later | open |
+| [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | 0.58.13 | partial (service sessions) |
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
@@ -724,8 +724,14 @@ wins. Residual: leaves that never bind event context.
 ### SI-011 — Composition / inbound without session
 
 **Where:** work-drain triggers, inbound composition, schedules.  
-**Impact:** Automated **start** may not need a human session; **operator-facing** composition should.  
-**Target:** Policy: system/automated intents may use a **service session** or explicit “no session” only if ADR allows; do not silently invent dual law. *Decide in a later slice; record here so we do not forget.*
+**Impact:** **Partial (0.58.13):** work-drain submit enriches with stable **service session**
+`sess-svc-work-drain:{target}` via `SessionService.enrich_submit_body(origin=…)`.
+Host well-known `sess-svc-host` opens at runtime start. Outside surfaces still bind
+random `sess-…`. **No** dual “no session” law for automated start when plane ready.  
+**Residual:** inbound/schedule-specific origin tags if payload never hits work-drain
+enrich; explorer bare paths (SI-010); product rename (SI-001). Workloads inherit only
+(no separate workload session type).  
+**Target:** All automated start attributed; operator composition binds outside sessions.
 
 ### SI-012 — Docs and skills alias
 
@@ -786,7 +792,8 @@ user-plane **impersonation** remain later seeds — not dual-own.
 | 0.58.10 | Plane active_instance_id; resolve prefers focus; ownership vs focus documented; SI-015 named |
 | 0.58.11 | SI-015 owner gate ✅ (`require_owned_instance` + rewrite/product/WS) |
 | 0.58.12 | Product SessionService surface door ✅; flows/assist/MCP rebind; SI-001/002 partial |
-| later / residual | SI-001/005 rename, SI-006/007/010…012, SI-014, SU-*; SI-015 bare-instance residual |
+| 0.58.13 | Service/origin sessions ✅; SI-011 partial (work-drain + host); workloads inherit |
+| later / residual | SI-001/005 rename, SI-006/007/010…012 residual, SI-014, SU-*; SI-015 bare-instance residual |
 | theme exit | SD-008 close when residual SI honest |
 
 ---

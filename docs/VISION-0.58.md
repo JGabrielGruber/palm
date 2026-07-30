@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.12** (product SessionService).  
+**Status:** 🚧 **Theme open** — through **0.58.13** (service / origin sessions).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -108,6 +108,22 @@ Cross-session drive is **out of law**.
 **Refuse:** bound session S + instance I when I is not attached to S — **enforced** at rewrite + product continue (0.58.11).  
 **Residual:** bare `instance_id` with **no** bound system session still skips the gate (legacy tooling until SI-001 / surface bind complete).
 
+### 4.2 Outside bind vs service session (0.58.13)
+
+| Kind | Who | Id shape | When |
+|------|-----|----------|------|
+| **Outside session** | Human / agent surface (MCP, HTTP, CLI, WS) | `sess-{uuid}` via **bind** | Each outside walk |
+| **Service session** | Automated / internal start (work drain, schedules, host) | Stable `sess-svc-{origin}` | Same origin reuses one owner |
+| **Host session** | Runtime seat | `sess-svc-host` | Opened at runtime start |
+
+**Policy:**
+
+1. Outside interaction still **binds** (D3).  
+2. Automated **start** is not “no session” — it uses a **service session** so attach, cancel, and watch stay honest (SI-011).  
+3. Prefer **origin** grouping (`work-drain:{flow}`) over one mega root for all automation.  
+4. Workloads **inherit** the job’s session (EventContext / metadata). Do not invent a parallel workload session type.  
+5. Active focus on a service session is legal but often weak (many scheduled instances); operators should set focus or pass `instance_id` when continuing service-owned work.
+
 ---
 
 ## 5. Target shape
@@ -159,6 +175,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **10** | Active instance on record | Plane-owned `active_instance_id`; resolve prefers focus — **0.58.10** ✅ |
 | **11** | Owner gate on continue | Bound session must own instance (SI-015) — **0.58.11** ✅ |
 | **12** | Product SessionService | Surface door: no reinvent plane access; helpers for other services — **0.58.12** ✅ |
+| **13** | Service / origin sessions | Automated start (work drain) + host seat use stable service sessions — **0.58.13** ✅ (SI-011 partial) |
 | **exit** | Theme exit | Map true; SD-008 closed; residual SI/SU honest; ADR Accepted |
 
 **Rule:** Do not ship “session is still just instance_id with a new name.”  
@@ -265,6 +282,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.10** | **Active instance:** `SessionRecord.active_instance_id`; set on attach; `set_active_instance` / `clear_active_instance`; `resolve_continue_instance` = active → waiting → last; inspect/bind expose focus. **Docs:** ownership exclusive; active = focus only; residual bare-instance gate = SI-015; future impersonation seed (user plane) without dual-own |
 | **0.58.11** | **Owner gate (SI-015):** `owns_instance` / `require_owned_instance` / `InstanceNotOwnedError`; operator rewrite + flows/assist continue gate when system `session_id` bound; host `require_session_owns_instance`; WS `session_owner` error code. Path instance is authoritative (not replaced by plane focus). Bare instance without bound session remains residual. |
 | **0.58.12** | **Product SessionService:** `palm.services.session.SessionService` as surface door (bind, continue_target, enrich_submit_body, surface_view, event filter, owner gate helpers). Host `session` slot; composition core includes session; flows/assist/MCP prefer service over scattered plane access. Plane remains law — service does not resume. SI-001 path/handle rename still residual. |
+| **0.58.13** | **Service / origin sessions (SI-011 partial):** stable `sess-svc-{origin}` for automated start; well-known host `sess-svc-host` at runtime start; work drain enriches `work-drain:{target}`; `SessionService.ensure_service_session` / `enrich_submit_body(origin=…)`. Outside surfaces still mint random `sess-…`. **Not** one junk-drawer root for all jobs. Workloads inherit job session (no separate workload session type). |
 
 ---
 

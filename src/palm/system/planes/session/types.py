@@ -37,6 +37,50 @@ def looks_like_system_session_id(value: Any) -> bool:
     return text.startswith("sess-")
 
 
+# Well-known **service** origins (0.58.13). Not outside subjects.
+# Automated start (work drain, schedules) uses stable service sessions so
+# every instance has an owner without minting a random session per job.
+HOST_SESSION_ORIGIN = "host"
+HOST_SESSION_ID = "sess-svc-host"
+WORK_DRAIN_ORIGIN = "work-drain"
+
+
+def service_session_id(origin: str) -> str:
+    """Deterministic system session id for a service *origin*.
+
+    Outside surfaces still use :func:`new_session_id` / bind without id.
+    Service origins (work-drain, host, schedules, …) get stable
+    ``sess-svc-…`` ids so cancel/watch can group automated work.
+    """
+    raw = str(origin or "").strip().lower()
+    if not raw:
+        raise ValueError("service session origin must be non-empty")
+    # Keep alnum and a few separators; collapse the rest to hyphen.
+    parts: list[str] = []
+    prev_hyphen = False
+    for ch in raw:
+        if ch.isalnum():
+            parts.append(ch)
+            prev_hyphen = False
+        elif ch in ("-", "_", ".", ":", "/"):
+            if not prev_hyphen:
+                parts.append("-")
+                prev_hyphen = True
+        else:
+            if not prev_hyphen:
+                parts.append("-")
+                prev_hyphen = True
+    slug = "".join(parts).strip("-")
+    if not slug:
+        raise ValueError(f"service session origin has no usable slug: {origin!r}")
+    # Cap length so storage keys stay reasonable.
+    if len(slug) > 80:
+        slug = slug[:80].rstrip("-")
+    if slug == HOST_SESSION_ORIGIN:
+        return HOST_SESSION_ID
+    return f"sess-svc-{slug}"
+
+
 def _now_iso() -> str:
     return datetime.now(UTC).isoformat()
 
@@ -169,6 +213,10 @@ __all__ = [
     "SessionBind",
     "SessionRecord",
     "SessionStatus",
+    "HOST_SESSION_ID",
+    "HOST_SESSION_ORIGIN",
+    "WORK_DRAIN_ORIGIN",
     "looks_like_system_session_id",
     "new_session_id",
+    "service_session_id",
 ]

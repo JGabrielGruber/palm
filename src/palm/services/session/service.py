@@ -17,8 +17,12 @@ from typing import TYPE_CHECKING, Any
 
 from palm.common.services.base import BaseService
 from palm.system.planes.session import (
+    HOST_SESSION_ID,
+    HOST_SESSION_ORIGIN,
+    WORK_DRAIN_ORIGIN,
     looks_like_system_session_id,
     new_session_id,
+    service_session_id,
 )
 
 if TYPE_CHECKING:
@@ -277,11 +281,14 @@ class SessionService(BaseService):
         metadata: dict[str, Any] | None = None,
         surface: str = "product",
         create: bool = True,
+        origin: str | None = None,
     ) -> str | None:
         """Return a system session id for job metadata / start paths.
 
         Prefers an existing system-shaped id on *session_id* or *metadata*.
-        Otherwise binds a new session when *create* is true.
+        When *origin* is set, uses a stable **service** session (0.58.13)
+        instead of minting a new outside subject. Otherwise binds a new
+        outside session when *create* is true.
         """
         meta = dict(metadata or {})
         for raw in (session_id, meta.get("session_id")):
@@ -289,6 +296,8 @@ class SessionService(BaseService):
                 return str(raw).strip()
         if not create:
             return None
+        if origin:
+            return self.ensure_service_session(origin)
         plane = self.plane_or_none()
         if plane is None:
             return None
@@ -301,19 +310,60 @@ class SessionService(BaseService):
         except Exception:
             return None
 
+    def ensure_service_session(
+        self,
+        origin: str,
+        *,
+        metadata: dict[str, Any] | None = None,
+    ) -> str | None:
+        """Stable system session for automated / internal *origin* (0.58.13).
+
+        Surfaces still :meth:`bind` for outside subjects. Work drain, schedules,
+        and host housekeeping use service sessions so every job-path start has
+        an owner without one random session per intent.
+        """
+        plane = self.plane_or_none()
+        if plane is None:
+            return None
+        try:
+            rec = plane.ensure_service_session(origin, metadata=metadata)
+            return str(rec.session_id)
+        except Exception:
+            return None
+
+    def ensure_host_session(self) -> str | None:
+        """Well-known host service session (``sess-svc-host``)."""
+        plane = self.plane_or_none()
+        if plane is None:
+            return None
+        try:
+            rec = plane.ensure_host_session()
+            return str(rec.session_id)
+        except Exception:
+            return None
+
     def enrich_submit_body(
         self,
         body: dict[str, Any] | None,
         *,
         surface: str = "execution",
+        origin: str | None = None,
     ) -> dict[str, Any]:
         """Ensure submit body metadata carries system ``session_id``.
 
         Edge law: ``session_id`` on body/meta is system subject only when
         system-shaped. Instance-shaped values are not promoted.
+
+        * *origin* set → stable service session when no session present
+          (work drain / schedules / internal).
+        * No origin → outside bind (new ``sess-…``) for interactive surfaces.
         """
         out = dict(body or {})
         meta = dict(out.get("metadata") or {})
+        # Intent payload may carry origin for automated start.
+        origin_hint = (origin or meta.get("session_origin") or "").strip() or None
+        if not origin_hint and surface in ("work-drain", "schedule", "inbound", "trigger"):
+            origin_hint = surface
         candidates = (
             out.get("session_id")
             if looks_like_system_session_id(out.get("session_id"))
@@ -328,9 +378,15 @@ class SessionService(BaseService):
                 sid = str(raw).strip()
                 break
         if sid is None:
-            sid = self.ensure_system_session_id(surface=surface, create=True)
+            sid = self.ensure_system_session_id(
+                surface=surface,
+                create=True,
+                origin=origin_hint,
+            )
         if sid:
             meta["session_id"] = sid
+            if origin_hint:
+                meta.setdefault("session_origin", origin_hint)
             out["metadata"] = meta
         return out
 
@@ -423,7 +479,11 @@ class SessionService(BaseService):
 
 __all__ = [
     "ContinueTarget",
+    "HOST_SESSION_ID",
+    "HOST_SESSION_ORIGIN",
     "SessionService",
+    "WORK_DRAIN_ORIGIN",
     "looks_like_system_session_id",
     "new_session_id",
+    "service_session_id",
 ]

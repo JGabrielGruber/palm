@@ -94,8 +94,17 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - Plane remains law — service does **not** resume jobs  
 - **Residual SI-001:** product path/handle names still say `session` for instance segments  
 
+#### Added (0.58.13) — service / origin sessions (SI-011 partial)
+- **Service sessions** — stable `sess-svc-{origin}` for automated / internal start (not outside bind)  
+- **Host seat** — `sess-svc-host` ensured at runtime start  
+- **Work drain** — submit path enriches `work-drain:{target}` so intents share an owner per flow  
+- **SessionService** — `ensure_service_session` / `ensure_host_session` / `enrich_submit_body(origin=…)`  
+- **Plane** — `ensure_service_session` / `ensure_host_session`  
+- Outside interactive submit still mints a new `sess-…` when no session present  
+- **Not** one junk-drawer root for all automation; workloads inherit job session only  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.12**.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.13**.  
 - Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 

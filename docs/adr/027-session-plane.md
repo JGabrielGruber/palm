@@ -136,11 +136,24 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + conti
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.12** (bind + dogfood + WS + watches + vocabulary + active focus + owner gate + **product SessionService**).  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.13** (bind + dogfood + WS + watches + vocabulary + active focus + owner gate + **product SessionService** + **service/origin sessions**).  
 - [ ] Close **SD-008** at theme exit when residual SI honest.  
 - [ ] Pay remaining **SI-*** (product rename SI-001, explorer, docs) when edges are touched.  
 - [ ] Accept this ADR at theme exit (or earlier if law is stable in code).  
 - [ ] Later theme: user plane + session impersonation / delegate grants (D11) — not 0.58.
+
+### D12 — Service sessions for automated start (0.58.13)
+
+Outside interaction **binds** a session (D3). Automated **start** (work drain, schedules,
+host housekeeping) is not an outside subject and **must not** invent a dual “no session”
+law when the plane is ready.
+
+Use **service sessions**: stable `sess-svc-{origin}` records with metadata
+`kind=service` and `origin=…`. Prefer origin grouping (e.g. `work-drain:{flow}`) over one
+mega root for all automation. Well-known host seat: `sess-svc-host`.
+
+Workloads **inherit** the owning job’s session (EventContext / metadata). Do not create a
+separate “workload session” type for effects under a job.
 
 ---
 

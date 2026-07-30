@@ -177,6 +177,56 @@ class SessionPlaneService:
             existing = self._store.put(existing)
         return SessionBind.from_record(existing, created=False, surface=surf)
 
+    def ensure_service_session(
+        self,
+        origin: str,
+        *,
+        metadata: dict[str, Any] | None = None,
+    ) -> SessionRecord:
+        """Open or return a stable **service** session for *origin* (0.58.13).
+
+        Service sessions attribute **automated / internal** start (work drain,
+        host housekeeping). They are not outside subjects. Id is deterministic
+        from *origin* (``sess-svc-…``). Prefer product
+        :meth:`~palm.services.session.SessionService.ensure_service_session`.
+        """
+        from palm.system.planes.session.types import service_session_id
+
+        sid = service_session_id(origin)
+        meta = dict(metadata or {})
+        meta.setdefault("kind", "service")
+        meta.setdefault("origin", str(origin).strip())
+        existing = self._store.get(sid)
+        if existing is not None:
+            if existing.status == SessionStatus.CLOSED:
+                raise SessionClosedError(
+                    f"service session {sid!r} is closed; refuse reopen"
+                )
+            # Merge stable origin tags without thrashing.
+            touched = False
+            for key, value in meta.items():
+                if existing.metadata.get(key) != value:
+                    existing.metadata[key] = value
+                    touched = True
+            if touched:
+                existing.touch()
+                return self._store.put(existing)
+            return existing
+        return self.open(session_id=sid, metadata=meta)
+
+    def ensure_host_session(
+        self,
+        *,
+        metadata: dict[str, Any] | None = None,
+    ) -> SessionRecord:
+        """Well-known host service session (``sess-svc-host``)."""
+        from palm.system.planes.session.types import HOST_SESSION_ORIGIN
+
+        meta = dict(metadata or {})
+        meta.setdefault("kind", "service")
+        meta.setdefault("origin", HOST_SESSION_ORIGIN)
+        return self.ensure_service_session(HOST_SESSION_ORIGIN, metadata=meta)
+
     def require_open(self, session_id: str) -> SessionRecord:
         """Require an existing non-closed session (continue / inspect paths)."""
         rec = self.require(session_id)
@@ -720,10 +770,18 @@ class SessionPlaneService:
 
 
 def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
-    """Attach a new (or existing) session plane on ``runtime`` and return it."""
+    """Attach a new (or existing) session plane on ``runtime`` and return it.
+
+    Always ensures the well-known **host** service session (0.58.13) so
+    internal attribution has a stable seat after start.
+    """
     existing = getattr(runtime, "session_plane", None)
     if isinstance(existing, SessionPlaneService):
         existing.attach(runtime)
+        try:
+            existing.ensure_host_session()
+        except Exception:
+            pass
         return existing
     storage = getattr(runtime, "storage", None)
     if storage is None:
@@ -732,6 +790,10 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
     plane.attach(runtime)
     if hasattr(runtime, "_session_plane"):
         runtime._session_plane = plane
+    try:
+        plane.ensure_host_session()
+    except Exception:
+        pass
     return plane
 
 

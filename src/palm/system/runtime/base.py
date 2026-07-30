@@ -269,6 +269,11 @@ class BaseRuntime:
         # Session plane — outside subject seat (0.58.1); StorageEngine store.
         self._session_plane = SessionPlaneService(storage=self.storage)
         self._session_plane.attach(self)
+        # 0.58.13 — well-known host service session for internal attribution.
+        try:
+            self._session_plane.ensure_host_session()
+        except Exception:
+            pass
 
         self._started = True
 
