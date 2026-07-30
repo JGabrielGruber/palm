@@ -107,9 +107,9 @@ Optional opaque metadata on the session record is enough for later phenotypes.
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.7** (seat + multi-attach + bind + job path + inspect + Assist dogfood + WS/cookie bind).  
-- [ ] Close **SD-008** when dogfood is enough + residual SI honest (watches optional residual).  
-- [ ] Pay **SI-*** impact rows when each surface/product edge is touched.  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.8** (bind + dogfood + WS + watches/fan-in).  
+- [ ] Close **SD-008** at theme exit when residual SI honest.  
+- [ ] Pay remaining **SI-*** (rename, explorer, docs) when edges are touched.  
 - [ ] Accept this ADR at theme exit (or earlier if law is stable in code).
 
 ---

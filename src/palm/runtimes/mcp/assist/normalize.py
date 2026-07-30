@@ -75,6 +75,19 @@ def normalize_assist_dispatch_args(
         has_value = "value" in params or "input" in params
         collection_action = params.get("collection_action")
         edit = params.get("edit")
+        # 0.58.8 — system session may drive *continue* (not create). Only promote
+        # system_session_id when continuing/inspecting; bare flow_id still creates.
+        if not session_id:
+            system_only = clean_dispatch_str(
+                params.get("system_session_id")
+            ) or clean_dispatch_str(params.get("palm_session_id"))
+            if system_only and (
+                has_value
+                or collection_action is not None
+                or isinstance(edit, dict)
+                or not flow_id
+            ):
+                session_id = system_only
         if session_id and flow_id and (
             has_value or collection_action is not None or isinstance(edit, dict)
         ):

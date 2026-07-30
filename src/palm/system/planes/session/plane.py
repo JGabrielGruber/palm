@@ -248,6 +248,132 @@ class SessionPlaneService:
         """Reverse lookup: session that owns this instance, if any."""
         return self._store.get_by_instance(instance_id)
 
+    def resolve_continue_instance(self, session_id: str) -> str | None:
+        """Pick an instance under the session for continue (0.58.8).
+
+        Prefers an instance that currently has open waits; otherwise the
+        last attached instance. Does **not** resume — only selects the
+        product continue handle from the attach list (truth for multi-instance).
+        """
+        rec = self.require_open(session_id)
+        if not rec.instance_ids:
+            return None
+        waiting = self.list_waiting(session_id)
+        if waiting:
+            for w in reversed(waiting):
+                if not isinstance(w, dict):
+                    continue
+                iid = w.get("instance_id")
+                if iid and str(iid) in rec.instance_ids:
+                    return str(iid)
+        return str(rec.instance_ids[-1])
+
+    def attributed_session_id(
+        self,
+        *,
+        event: Any = None,
+        payload: dict[str, Any] | None = None,
+        context: Any = None,
+    ) -> str | None:
+        """Best-effort system session id for an event (0.58.8 watches).
+
+        Order: EventContext.session_id → payload system keys → payload
+        session_id when system-shaped → reverse index on instance_id.
+        """
+        ctx = context
+        if event is not None and ctx is None:
+            ctx = getattr(event, "context", None)
+        pay = payload
+        if event is not None and pay is None:
+            raw = getattr(event, "payload", None)
+            pay = dict(raw) if isinstance(raw, dict) else {}
+        pay = pay or {}
+
+        if ctx is not None:
+            if hasattr(ctx, "session_id") and ctx.session_id:
+                return str(ctx.session_id).strip() or None
+            if isinstance(ctx, dict) and ctx.get("session_id"):
+                return str(ctx["session_id"]).strip() or None
+
+        for key in ("system_session_id", "palm_session_id"):
+            raw = pay.get(key)
+            if raw is not None and str(raw).strip():
+                return str(raw).strip()
+
+        raw_sid = pay.get("session_id")
+        if raw_sid is not None and str(raw_sid).strip():
+            text = str(raw_sid).strip()
+            if text.startswith("sess-"):
+                return text
+            # Instance-shaped session_id in payload → reverse index
+            owner = self.session_for_instance(text)
+            if owner is not None:
+                return owner.session_id
+
+        for key in ("instance_id", "instance"):
+            raw = pay.get(key)
+            if raw is not None and str(raw).strip():
+                owner = self.session_for_instance(str(raw).strip())
+                if owner is not None:
+                    return owner.session_id
+
+        if ctx is not None:
+            iid = getattr(ctx, "instance_id", None) if not isinstance(ctx, dict) else ctx.get("instance_id")
+            if iid:
+                owner = self.session_for_instance(str(iid).strip())
+                if owner is not None:
+                    return owner.session_id
+        return None
+
+    def event_matches(
+        self,
+        session_id: str,
+        *,
+        event: Any = None,
+        payload: dict[str, Any] | None = None,
+        context: Any = None,
+    ) -> bool:
+        """True when the event belongs to this system session (fan-in filter)."""
+        sid = (session_id or "").strip()
+        if not sid:
+            return False
+        attributed = self.attributed_session_id(
+            event=event, payload=payload, context=context
+        )
+        if attributed == sid:
+            return True
+        # Instance on attach list even without reverse hit on attribution
+        pay = payload
+        if event is not None and pay is None:
+            raw = getattr(event, "payload", None)
+            pay = dict(raw) if isinstance(raw, dict) else {}
+        pay = pay or {}
+        rec = self.get(sid)
+        if rec is None:
+            return False
+        attached = set(rec.instance_ids)
+        for key in ("instance_id", "instance", "session_id"):
+            raw = pay.get(key)
+            if raw is not None and str(raw).strip() in attached:
+                return True
+        if context is not None:
+            iid = (
+                getattr(context, "instance_id", None)
+                if not isinstance(context, dict)
+                else context.get("instance_id")
+            )
+            if iid and str(iid).strip() in attached:
+                return True
+        return False
+
+    def make_event_filter(self, session_id: str) -> Any:
+        """Return a predicate ``(event) -> bool`` for subscribe wrappers / WS."""
+
+        def _filter(event: Any) -> bool:
+            return self.event_matches(session_id, event=event)
+
+        return _filter
+
     def inspect(self, session_id: str) -> dict[str, Any]:
         """Journey view for a session: instances + open waits (0.58.5).
 
@@ -417,13 +543,18 @@ class SessionPlaneService:
                 "attach_instance",
                 "detach_instance",
                 "session_for_instance",
+                "resolve_continue_instance",
                 "inspect",
                 "list_waiting",
+                "event_matches",
+                "attributed_session_id",
+                "make_event_filter",
             ],
             "store": "storage_engine",
             "storage_backend": backend,
             "multi_attach": True,
             "bind_law": True,
+            "event_filter": True,
             "counts": {
                 "open": open_n,
                 "active": active_n,

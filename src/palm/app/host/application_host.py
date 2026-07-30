@@ -290,6 +290,26 @@ class ApplicationHost:
             )
         return plane.inspect(session_id)
 
+    def resolve_session_continue(self, session_id: str) -> str | None:
+        """Instance id under system session for continue (0.58.8). Not resume."""
+        self._require_started()
+        plane = self.session_plane
+        if plane is None:
+            raise RuntimeError(
+                "ApplicationHost has no session plane; primary runtime not ready"
+            )
+        return plane.resolve_continue_instance(session_id)
+
+    def session_event_matches(self, session_id: str, event: Any) -> bool:
+        """Whether an event belongs to the system session (watch filter)."""
+        self._require_started()
+        plane = self.session_plane
+        if plane is None:
+            raise RuntimeError(
+                "ApplicationHost has no session plane; primary runtime not ready"
+            )
+        return bool(plane.event_matches(session_id, event=event))
+
     def start(self, **options: Any) -> Self:
         """Bootstrap, spawn role runtimes, wire CQRS, and recover state."""
         if self._started:

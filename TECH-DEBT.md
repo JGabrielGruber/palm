@@ -202,14 +202,14 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
-**Observation:** Product `session_id` still instance-shaped for continue (SI-001 residual).
-System plane through **0.58.7**: seat, multi-attach, bind, job-path, inspect, Assist
-dogfood, **WS/cookie system bind**. Still missing: full product rename, watches,
-Explorer/REST bulk bind (SI-010).  
+**Observation:** Product `session_id` field name still often means instance (SI-001 residual
+rename). System plane through **0.58.8**: seat, multi-attach, bind, job-path, inspect,
+Assist dogfood, WS/cookie bind, **watches/fan-in**, continue resolve, Events WS session
+filter. Residual: full product rename, explorer bulk (SI-010), docs (SI-012).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
-Close when residual SI honest + watches decided; dogfood + surface bind already real.
+Close at theme exit when residual SI honest; structure is live.
 
 **Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
 
@@ -621,15 +621,15 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 | ID | Title | Area | Theme touch | Status |
 |----|-------|------|-------------|--------|
-| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6 partial | open |
-| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–6 | open |
+| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6–8 | partial (rewrite live) |
+| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–8 | open (handles OK) |
 | [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | ✅ done |
-| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6 partial | open |
+| [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 | partial (rewrite live) |
 | [SI-006](#si-006) | CLI / REPL `active_assist_session_id` | CLI TUI | 0.58.3 partial · 0.58.6 | open |
-| [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.3–4 | open |
-| [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4 | ✅ partial (when metadata has session) |
-| [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.4+ / 0.56 residual | open |
+| [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.8 partial | partial (`system/session`) |
+| [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4+8 | ✅ partial + filter |
+| [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.8 partial | partial (EventContext) |
 | [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
 | [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | later | open |
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
@@ -639,8 +639,10 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 ### SI-001 — session_id forced equal to instance_id
 
 **Where:** Assist product envelope still uses `session_id` as the **instance** handle for continue.  
-**Impact:** **Partial (0.58.6):** system subject is real (`system_session_id` + job metadata + plane attach). Product continue still routes on instance id. Full rename of product `session_id` is residual.  
-**Target:** Product APIs speak system session + primary instance; continue via attach list.
+**Impact:** **Partial (0.58.6–8):** system subject is real; `resolve_continue_instance` +
+`rewrite_system_session_continue` map `sess-…` → attached instance on operator
+dispatch. Envelope field rename (`session_id` vs `instance_id`) remains residual.  
+**Target:** Product APIs name `instance_id` for continue; `system_session_id` for subject.
 
 ### SI-002 — FlowSession / AssistSession product-only
 
@@ -667,8 +669,10 @@ echoes system id + `Set-Cookie`.
 ### SI-005 — MCP / palm_assist session = instance
 
 **Where:** `runtimes/mcp/assist/*`, assist grammar paths `session/{id}`.  
-**Impact:** **Partial (0.58.6):** start dogfood binds system session and exposes `system_session_id`. Continue paths still take product instance-shaped `session_id` (SI-001).  
-**Target:** Agents may pass `system_session_id` for journey; continue verbs still need instance id until full rebind.
+**Impact:** **Partial (0.58.6–8):** start dogfood + path rewrite when `sess-…` is
+passed; `system/session/{id}` inspect path. Grammar still says `session` for
+instance segments in URLs (name residual).  
+**Target:** Skills/docs teach system vs instance; URL rename optional later.
 
 ### SI-006 — CLI / REPL active session id
 
@@ -682,22 +686,24 @@ are first-class and distinct from product assist/instance. Product
 ### SI-007 — CQRS instance queries as public session
 
 **Where:** host CQRS, `kits/server/cqrs.py`, facades `get_instance`, flows session REST.  
-**Impact:** Operator APIs speak instance only.  
-**Target:** Session inspect queries; instance remains job-path API.
+**Impact:** **Partial (0.58.8):** `dispatch_operator_path` supports
+`system/session/{id}` · `/waiting` · `/instances` (plane inspect). Full CQRS
+contributor + REST routes optional residual.  
+**Target:** Session inspect first-class in operator catalog; instance remains job-path API.
 
 ### SI-008 — flow.session.* events
 
 **Where:** orchestration terminal emit; `EventContext`; instance lifecycle events.  
-**Status:** ✅ **partial (0.58.4)** — `EventContext.session_id`; `flow.session.*` and
-instance events include `session_id` / `instance_id` when job metadata has them.
-Event type names unchanged. Full coverage when all entry paths pass system session
-(0.58.6 dogfood).
+**Status:** ✅ **partial (0.58.4 + 0.58.8)** — context/payload attribution +
+`event_matches` / Events WS session filter. Event type names unchanged.
 
 ### SI-009 — WorkloadOwner.session_id
 
 **Where:** `palm/core/workload/owner.py`, engine stop-by-owner filters.  
-**Impact:** Optional field never filled from a plane.  
-**Target:** Attach workloads to session via owner when job path has session; cancel-owned becomes real.
+**Impact:** **Partial (0.58.8):** `BaseRuntime.start_workload` enriches owner from
+active `EventContext` (session/job/instance) when missing. Explicit owner still
+wins. Residual: leaves that never bind event context.  
+**Target:** All job-path starts carry session on owner when metadata has it.
 
 ### SI-010 — Explorer / REST without session bind
 
@@ -750,7 +756,9 @@ Event type names unchanged. Full coverage when all entry paths pass system sessi
 | 0.58.5 | Journey inspect / list_waiting ✅ |
 | 0.58.6 | Assist dogfood: system_session_id; SI-001/005 partial |
 | 0.58.7 | SI-004 ✅ WS/cookie bind; flow create name-vs-id fix |
-| later / residual | SI-001/005 rename, SI-006, SI-007, SI-009…012, SI-014, SU-*, watches |
+| 0.58.8 | Watches/fan-in; SI-001/005/007/008/009 partial truth |
+| later / residual | SI-001/005 field rename, SI-006, SI-007 CQRS, SI-010…012, SI-014, SU-* |
+| theme exit | SD-008 close when residual SI honest |
 
 ---
 

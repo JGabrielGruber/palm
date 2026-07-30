@@ -472,6 +472,8 @@ class BaseRuntime:
             spec if isinstance(spec, WorkloadSpec) else WorkloadSpec.from_dict(dict(spec))
         )
         bound_owner = _coerce_workload_owner(owner)
+        # 0.58.8 — fill session/job/instance from event context when job path has them
+        bound_owner = _enrich_workload_owner_from_event_context(self, bound_owner)
         return engine.start(
             parsed,
             owner=bound_owner,
@@ -577,3 +579,28 @@ def _coerce_workload_owner(owner: Any) -> WorkloadOwner | None:
     if isinstance(owner, dict):
         return WorkloadOwner.from_dict(owner)
     raise TypeError(f"owner must be WorkloadOwner or dict, got {type(owner)!r}")
+
+
+def _enrich_workload_owner_from_event_context(
+    runtime: Any, owner: WorkloadOwner | None
+) -> WorkloadOwner:
+    """Copy system session / job / instance from active EventContext when missing."""
+    base = owner or WorkloadOwner()
+    if base.session_id and base.job_id and base.instance_id:
+        return base
+    event = getattr(runtime, "event", None)
+    if event is None or not hasattr(event, "current_context"):
+        return base
+    try:
+        ctx = event.current_context()
+    except Exception:
+        return base
+    if ctx is None:
+        return base
+    return WorkloadOwner(
+        job_id=base.job_id or getattr(ctx, "job_id", None),
+        instance_id=base.instance_id or getattr(ctx, "instance_id", None),
+        lease_id=base.lease_id,
+        session_id=base.session_id or getattr(ctx, "session_id", None),
+        created_by_palm=base.created_by_palm,
+    )

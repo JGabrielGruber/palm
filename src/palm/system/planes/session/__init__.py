@@ -6,11 +6,14 @@
 * :class:`SessionRecord` / :class:`SessionStatus` / :class:`SessionBind`
 * :meth:`SessionPlaneService.bind` / :meth:`~SessionPlaneService.require_open`
 * :meth:`SessionPlaneService.attach_instance` / reverse lookup
+* :meth:`SessionPlaneService.event_matches` / :meth:`~SessionPlaneService.make_event_filter` (0.58.8)
+* :meth:`SessionPlaneService.resolve_continue_instance` (continue handle from attach list)
 * :func:`require_session_plane`
 
 Store uses :class:`~palm.core.storage.StorageEngine` (like work plane).
 Surfaces (host, CLI, …) **bind** before driving work.
 Continue/resume remains :mod:`palm.system.planes.wait`.
+Watches filter events by system session; they do not resume.
 """
 
 from palm.system.planes.session.plane import (

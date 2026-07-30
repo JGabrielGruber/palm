@@ -27,9 +27,12 @@ def dispatch_operator_path(
     params: dict[str, Any] | None = None,
 ) -> Any:
     """Dispatch a command path against in-process services."""
-    params = params or {}
+    params = dict(params or {})
     if not path:
         raise ValueError("dispatch path must not be empty")
+    path = list(path)
+    # 0.58.8 — system session subject may appear where product expects instance id
+    path, params = rewrite_system_session_continue(ctx, path, params)
     prefix = path[0]
     if prefix not in _DELEGATED_PREFIXES:
         raise ValueError(f"unsupported dispatch prefix: {prefix!r}")
@@ -93,10 +96,95 @@ def dispatch_definitions(ctx: Any, path: list[str], params: dict[str, Any]) -> A
     raise ValueError(f"unrecognized definitions dispatch path: {'/'.join(path)}")
 
 
+def rewrite_system_session_continue(
+    ctx: Any,
+    path: list[str],
+    params: dict[str, Any],
+) -> tuple[list[str], dict[str, Any]]:
+    """Map system session ids to product continue handles (attach list).
+
+    When path/params carry a system session (``sess-…``) where product APIs
+    expect an instance id, resolve via
+    :meth:`~palm.system.planes.session.SessionPlaneService.resolve_continue_instance`.
+    Does not invent resume — only picks the instance under the session.
+    """
+    from palm.kits.server.middleware import resolve_session_plane
+    from palm.system.planes.session import looks_like_system_session_id
+
+    plane = resolve_session_plane(ctx)
+    if plane is None:
+        return path, params
+
+    out_params = dict(params)
+    out_path = list(path)
+
+    def _resolve(sid: str) -> str | None:
+        try:
+            return plane.resolve_continue_instance(sid)
+        except Exception:
+            return None
+
+    # Path: assist/session/{id}/… or flows/{flow}/session/{id}/…
+    if len(out_path) >= 3 and out_path[0] == "assist" and out_path[1] == "session":
+        raw = out_path[2]
+        if looks_like_system_session_id(raw):
+            inst = _resolve(str(raw))
+            if inst:
+                out_path[2] = inst
+                out_params.setdefault("system_session_id", str(raw))
+                out_params["session_id"] = inst
+                out_params.setdefault("instance_id", inst)
+    elif (
+        len(out_path) >= 4
+        and out_path[0] == "flows"
+        and out_path[2] == "session"
+    ):
+        raw = out_path[3]
+        if looks_like_system_session_id(raw):
+            inst = _resolve(str(raw))
+            if inst:
+                out_path[3] = inst
+                out_params.setdefault("system_session_id", str(raw))
+                out_params["session_id"] = inst
+                out_params.setdefault("instance_id", inst)
+
+    # Params-only continue: system session without product instance handle
+    sid = out_params.get("session_id") or out_params.get("instance_id")
+    system_sid = out_params.get("system_session_id") or out_params.get("palm_session_id")
+    if looks_like_system_session_id(sid) and not looks_like_system_session_id(
+        system_sid or ""
+    ):
+        system_sid = sid
+        out_params.setdefault("system_session_id", str(sid))
+    if system_sid and looks_like_system_session_id(system_sid):
+        if not sid or looks_like_system_session_id(sid):
+            inst = _resolve(str(system_sid))
+            if inst:
+                out_params["session_id"] = inst
+                out_params.setdefault("instance_id", inst)
+
+    return out_path, out_params
+
+
 def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
     params = params or {}
     if path == ["system", "doctor"]:
         return ctx.system.doctor(ctx.runtime)
+    # 0.58.8 — system session journey (inspect only; not a second resume path)
+    if len(path) >= 3 and path[0] == "system" and path[1] == "session":
+        from palm.kits.server.middleware import resolve_session_plane
+
+        plane = resolve_session_plane(ctx)
+        if plane is None:
+            raise ValueError("session plane not available")
+        sid = path[2]
+        if len(path) == 3:
+            return plane.inspect(sid)
+        if len(path) == 4 and path[3] == "waiting":
+            return plane.list_waiting(sid)
+        if len(path) == 4 and path[3] == "instances":
+            return plane.list_instances(sid)
+        raise ValueError(f"unrecognized system session path: {'/'.join(path)}")
     if path == ["system", "waiting"]:
         from palm.core.orchestration import JobStatus
 

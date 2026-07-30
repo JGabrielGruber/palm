@@ -51,9 +51,16 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 #### Fixed (0.58.7)
 - Flow create path: name-shaped ids (`todo-builder`) no longer forced `by_id=True` (id-shaped `flow-*` still use by_id)
 
+#### Added (0.58.8)
+- **Session watches** — `event_matches` / `attributed_session_id` / `make_event_filter` on session plane  
+- **Events WS fan-in** — subscribe with `system_session_id` (or cookie); filter live + journal catch-up  
+- **Continue resolve** — `resolve_continue_instance`; operator path rewrite `sess-…` → attached instance  
+- **Operator** — `system/session/{id}` inspect / waiting / instances  
+- **Workload** — owner session/job/instance enriched from active EventContext on start  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.7**.  
-- Next: **0.58.8+** watches / fan-in · theme exit.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.8**.  
+- Next: theme **exit** (ADR-027 Accepted, SD-008 close, residual SI honest).  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 
 ## [0.57.14] — 2026-07-29

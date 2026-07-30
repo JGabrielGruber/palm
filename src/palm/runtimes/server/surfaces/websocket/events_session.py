@@ -3,13 +3,18 @@
 Protocol (JSON text frames)::
 
     ← hello
-    → subscribe { id, types?, since_offset?, consumer? }
+    → subscribe { id, types?, since_offset?, consumer?, session_id? / system_session_id? }
     ← subscribed
     ← event { offset?, type, payload, ts }
     → ping / ← pong
     → unsubscribe
 
 Catch-up: when ``since_offset`` is set and journal is available, replay then live.
+
+0.58.8: optional **system session** filter (fan-in). Events match via
+:meth:`~palm.system.planes.session.SessionPlaneService.event_matches` — context,
+payload, or attached instance. Cookie-like ``X-Palm-Session`` / ``palm_session``
+binds the default filter when subscribe omits session id.
 """
 
 from __future__ import annotations
@@ -26,6 +31,10 @@ from palm.common.events.catalog import (
     filter_public_types,
     is_public_event_type,
 )
+from palm.kits.server.middleware import (
+    extract_system_session_hint,
+    resolve_session_plane,
+)
 from palm.runtimes.server.surfaces.websocket.frames import (
     OP_CLOSE,
     OP_PING,
@@ -36,6 +45,7 @@ from palm.runtimes.server.surfaces.websocket.frames import (
     encode_pong,
     encode_text,
 )
+from palm.system.planes.session import looks_like_system_session_id
 
 logger = logging.getLogger(__name__)
 
@@ -51,10 +61,16 @@ def run_events_websocket(
     headers: dict[str, str] | None = None,
 ) -> None:
     """Serve one events WebSocket connection until close."""
-    del headers
     write_lock = threading.Lock()
     outbound: queue.Queue[dict[str, Any] | None] = queue.Queue()
-    sub_holder: dict[str, Any] = {"sub": None, "types": None, "closed": False}
+    transport_hint = extract_system_session_hint(headers or {})
+    sub_holder: dict[str, Any] = {
+        "sub": None,
+        "types": None,
+        "closed": False,
+        "session_id": None,
+        "transport_session_hint": transport_hint,
+    }
 
     def _send(obj: dict[str, Any]) -> None:
         if sub_holder["closed"]:
@@ -67,6 +83,21 @@ def run_events_websocket(
         except Exception:
             sub_holder["closed"] = True
 
+    # Cookie-like bind: optional default system session on the connection
+    if transport_hint and looks_like_system_session_id(transport_hint):
+        plane = resolve_session_plane(ctx)
+        if plane is not None:
+            try:
+                bind = plane.bind(
+                    transport_hint,
+                    create=True,
+                    surface="websocket-events",
+                    metadata={"via": "events_ws_cookie"},
+                )
+                sub_holder["session_id"] = str(bind.session_id)
+            except Exception:
+                logger.debug("events ws cookie bind failed", exc_info=True)
+
     _send(
         {
             "op": "hello",
@@ -75,6 +106,8 @@ def run_events_websocket(
             "path": EVENTS_WS_PATH,
             "ops": ["hello", "subscribe", "unsubscribe", "ping"],
             "public_types": sorted(PUBLIC_EVENT_TYPES),
+            "bound": {"system_session_id": sub_holder.get("session_id")},
+            "session_filter": True,
         }
     )
 
@@ -85,6 +118,9 @@ def run_events_websocket(
         allowed = sub_holder.get("types")
         if allowed is not None and et not in allowed:
             return
+        sid = sub_holder.get("session_id")
+        if sid and not _event_matches_session(ctx, str(sid), event=event):
+            return
         payload = dict(getattr(event, "payload", None) or {})
         outbound.put(
             {
@@ -93,6 +129,7 @@ def run_events_websocket(
                 "payload": payload,
                 "id": getattr(event, "id", None),
                 "live": True,
+                "system_session_id": sid,
             }
         )
 
@@ -160,6 +197,33 @@ def run_events_websocket(
             pass
 
 
+def _event_matches_session(
+    ctx: Any,
+    session_id: str,
+    *,
+    event: Any = None,
+    payload: dict[str, Any] | None = None,
+) -> bool:
+    plane = resolve_session_plane(ctx)
+    if plane is None:
+        # No plane: fall back to payload key equality only
+        pay = payload
+        if event is not None and pay is None:
+            raw = getattr(event, "payload", None)
+            pay = dict(raw) if isinstance(raw, dict) else {}
+        pay = pay or {}
+        for key in ("system_session_id", "palm_session_id", "session_id"):
+            if str(pay.get(key) or "") == session_id:
+                return True
+        ctx_obj = getattr(event, "context", None) if event is not None else None
+        if ctx_obj is not None and str(getattr(ctx_obj, "session_id", "") or "") == session_id:
+            return True
+        return False
+    return bool(
+        plane.event_matches(session_id, event=event, payload=payload)
+    )
+
+
 def _detach(ctx: Any, sub_holder: dict[str, Any]) -> None:
     sub = sub_holder.get("sub")
     sub_holder["sub"] = None
@@ -189,6 +253,9 @@ def _event_engine(ctx: Any) -> Any:
     host = getattr(ctx, "host", None) or getattr(ctx, "_host", None)
     if host is not None and getattr(host, "event", None) is not None:
         return host.event
+    # ApplicationHost-like
+    if getattr(ctx, "event", None) is not None and not callable(getattr(ctx, "event", None)):
+        return ctx.event
     return getattr(ctx, "event", None)
 
 
@@ -201,6 +268,51 @@ def _journal(ctx: Any) -> Any:
         if j is not None:
             return j
     return getattr(ctx, "event_journal", None)
+
+
+def _resolve_subscribe_session(
+    ctx: Any,
+    msg: dict[str, Any],
+    sub_holder: dict[str, Any],
+) -> str | None:
+    """Session filter for this subscribe (message wins over cookie default)."""
+    raw = (
+        msg.get("system_session_id")
+        or msg.get("palm_session_id")
+        or msg.get("session_id")
+    )
+    if raw is not None and str(raw).strip() == "":
+        return None
+    if raw is None:
+        # Keep connection default (cookie); clear only when explicitly empty above
+        return sub_holder.get("session_id")
+
+    text = str(raw).strip()
+    plane = resolve_session_plane(ctx)
+    if plane is None:
+        return text
+    # System-shaped or known: bind/load on plane. Instance-shaped: reverse index.
+    if looks_like_system_session_id(text):
+        bind = plane.bind(
+            text,
+            create=True,
+            surface="websocket-events",
+            metadata={"via": "events_ws_subscribe"},
+        )
+        return str(bind.session_id)
+    owner = plane.session_for_instance(text)
+    if owner is not None:
+        return owner.session_id
+    # Unknown non-system id: treat as system id open (create) only if create allowed
+    if msg.get("create") not in (False, "false", "0", 0):
+        bind = plane.bind(
+            text,
+            create=True,
+            surface="websocket-events",
+            metadata={"via": "events_ws_subscribe"},
+        )
+        return str(bind.session_id)
+    return text
 
 
 def _handle_subscribe(
@@ -227,6 +339,20 @@ def _handle_subscribe(
             )
             return
     sub_holder["types"] = set(types_list) if types_list else None
+
+    try:
+        filter_sid = _resolve_subscribe_session(ctx, msg, sub_holder)
+    except Exception as exc:
+        send(
+            {
+                "op": "error",
+                "id": msg.get("id"),
+                "error": "session_bind",
+                "message": str(exc),
+            }
+        )
+        return
+    sub_holder["session_id"] = filter_sid
 
     # Catch-up from journal
     since = msg.get("since_offset")
@@ -259,6 +385,10 @@ def _handle_subscribe(
             allowed = sub_holder.get("types")
             if allowed is not None and et not in allowed:
                 continue
+            if filter_sid and not _event_matches_session(
+                ctx, str(filter_sid), payload=payload
+            ):
+                continue
             last_offset = max(last_offset, off)
             outbound.put(
                 {
@@ -269,6 +399,7 @@ def _handle_subscribe(
                     "id": eid,
                     "ts": ts,
                     "live": False,
+                    "system_session_id": filter_sid,
                 }
             )
 
@@ -300,6 +431,8 @@ def _handle_subscribe(
             "catchup_last_offset": last_offset or None,
             "live": engine is not None,
             "journal": journal is not None,
+            "system_session_id": filter_sid,
+            "session_filter": filter_sid is not None,
         }
     )
 
