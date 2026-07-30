@@ -33,21 +33,33 @@ def build_assistant_view(
     composed = build_compose_status(invoke_tree, snapshot)
     merge_snapshot_fields(composed, snapshot)
     payload = humanize_assistant_view(composed, context=context)
-    # Compact pipeline drops non-wizard keys; re-apply system session (0.58.6).
-    system_sid = (
-        flat_view.get("system_session_id")
-        or flat_view.get("palm_session_id")
-        or flat.get("system_session_id")
-        or flat.get("palm_session_id")
+    # Compact pipeline drops non-wizard keys; re-apply system session (0.58.9).
+    # session_id = system subject only; instance_id = continue handle.
+    system_sid = flat_view.get("session_id") or flat.get("session_id")
+    instance_id = (
+        flat_view.get("instance_id")
+        or flat.get("instance_id")
+        or context.session_id
     )
-    if system_sid is not None and str(system_sid).strip():
+    if instance_id is not None and str(instance_id).strip():
+        payload["instance_id"] = str(instance_id).strip()
+    if (
+        system_sid is not None
+        and str(system_sid).strip()
+        and str(system_sid).startswith("sess-")
+    ):
         sid = str(system_sid).strip()
-        payload["system_session_id"] = sid
+        payload["session_id"] = sid
         refs = payload.get("refs")
         if not isinstance(refs, dict):
             refs = {}
-        refs["system_session_id"] = sid
+        refs["session_id"] = sid
+        if payload.get("instance_id"):
+            refs.setdefault("instance_id", payload["instance_id"])
         payload["refs"] = refs
+    elif payload.get("session_id") and not str(payload["session_id"]).startswith("sess-"):
+        # Drop product-instance masquerading as session_id on the envelope.
+        payload.pop("session_id", None)
     scenario_id = context.scenario_id
     if scenario_id:
         payload = apply_assistant_enricher(scenario_id, payload, context=context)

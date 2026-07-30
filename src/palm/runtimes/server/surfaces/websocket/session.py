@@ -3,8 +3,9 @@
 0.32.1: hello + ping/pong.
 0.32.2: ``dispatch`` → same spine as MCP ``palm_assist`` → ``turn`` frames.
 0.33.2: chat continuity (auto-start / intro / action rewrite) in assist.profiles.
-0.58.7: bind law — ``op: bind`` / cookie-like headers resolve **system** session
-via the session plane; product ``session_id`` (instance) stays separate for continue.
+0.58.7 / 0.58.9: bind law — ``op: bind`` / cookie-like headers resolve **session**
+via the session plane (``session_id`` = system subject). Continue handle is
+``instance_id`` (product path residual SI-001).
 """
 
 from __future__ import annotations
@@ -158,16 +159,16 @@ def run_assist_websocket(
 
 
 class _ConnectionState:
-    """Per-connection bind state (0.32.3 continuity + 0.58.7 system session)."""
+    """Per-connection bind state (0.32.3 + 0.58.7/0.58.9 session vocabulary)."""
 
     def __init__(self, *, headers: dict[str, str]) -> None:
-        # System outside subject (session plane) — never an instance id.
-        self.system_session_id: str | None = None
-        # Product continue handle (instance id) — residual SI-001.
+        # System outside subject (session plane) — edge name session_id.
         self.session_id: str | None = None
+        # Product continue handle (instance id) — SI-001 residual.
+        self.instance_id: str | None = None
         self.flow_id: str | None = None
         self.client: str | None = None
-        self.system_session_created: bool = False
+        self.session_created: bool = False
         lower = {k.lower(): v for k, v in headers.items()}
         auth = lower.get("authorization", "")
         if auth.lower().startswith("bearer ") and auth[7:].strip():
@@ -182,8 +183,8 @@ class _ConnectionState:
 
     def bound_snapshot(self) -> dict[str, Any]:
         return {
-            "system_session_id": self.system_session_id,
             "session_id": self.session_id,
+            "instance_id": self.instance_id,
             "flow_id": self.flow_id,
         }
 
@@ -245,13 +246,13 @@ def _handle_bind(
     *,
     ctx: object | None = None,
 ) -> dict[str, Any]:
-    """Bind system session (plane) + optional product instance / flow (0.58.7)."""
+    """Bind system session (plane) + optional product instance / flow (0.58.9)."""
     msg_id = message.get("id")
     if message.get("clear") in (True, "true", "1", 1):
-        conn.system_session_id = None
         conn.session_id = None
+        conn.instance_id = None
         conn.flow_id = None
-        conn.system_session_created = False
+        conn.session_created = False
         conn._transport_session_hint = None
 
     try:
@@ -276,7 +277,7 @@ def _handle_bind(
         }
 
     # Default: ensure a system subject exists when plane is available
-    if conn.system_session_id is None and "system_session_id" not in message:
+    if conn.session_id is None and "session_id" not in message:
         create = _create_flag(message)
         if create is not False:
             _ensure_system_session(conn, ctx=ctx, create=True)
@@ -285,7 +286,7 @@ def _handle_bind(
         "op": "bound",
         "id": msg_id,
         **conn.bound_snapshot(),
-        "created": conn.system_session_created,
+        "created": conn.session_created,
     }
 
 
@@ -303,31 +304,31 @@ def _apply_message_bind_fields(
     ctx: object | None,
     create: bool,
 ) -> None:
-    """Apply system / product / flow fields from hello or bind message."""
-    # Explicit system keys win
-    system_raw = message.get("system_session_id")
-    if system_raw is None:
-        system_raw = message.get("palm_session_id")
-    if system_raw is not None:
-        text = str(system_raw).strip()
-        if not text:
-            conn.system_session_id = None
-            conn.system_session_created = False
-        else:
-            _plane_bind_into(conn, text, ctx=ctx, create=create)
+    """Apply session / instance / flow fields from hello or bind message.
 
-    # session_id: system-shaped → plane; else product instance (continue handle)
+    0.58.9: ``session_id`` is always the system subject. ``instance_id`` is the
+    product continue handle. Instance-shaped values under ``session_id`` are
+    treated as ``instance_id`` (product residual), not promoted to system.
+    """
     if "session_id" in message:
         raw_sid = message.get("session_id")
         if raw_sid is None or str(raw_sid).strip() == "":
-            # Clear product only; do not clear system unless system key also cleared
             conn.session_id = None
+            conn.session_created = False
         else:
             sid = str(raw_sid).strip()
-            if looks_like_system_session_id(sid) and system_raw is None:
+            if looks_like_system_session_id(sid):
                 _plane_bind_into(conn, sid, ctx=ctx, create=create)
             else:
-                conn.session_id = sid
+                # Product lie residual — store as instance, do not bind as system.
+                conn.instance_id = sid
+
+    if "instance_id" in message:
+        raw_iid = message.get("instance_id")
+        if raw_iid is None or str(raw_iid).strip() == "":
+            conn.instance_id = None
+        else:
+            conn.instance_id = str(raw_iid).strip() or None
 
     if "flow_id" in message:
         raw_fid = message.get("flow_id")
@@ -348,8 +349,8 @@ def _plane_bind_into(
     plane = resolve_session_plane(ctx)
     if plane is None:
         if session_id:
-            conn.system_session_id = session_id
-            conn.system_session_created = False
+            conn.session_id = session_id
+            conn.session_created = False
         return
     bind = plane.bind(
         session_id,
@@ -357,8 +358,8 @@ def _plane_bind_into(
         surface="websocket",
         metadata={"via": "ws_bind"},
     )
-    conn.system_session_id = str(bind.session_id)
-    conn.system_session_created = bool(bind.created)
+    conn.session_id = str(bind.session_id)
+    conn.session_created = bool(bind.created)
 
 
 def _ensure_system_session(
@@ -368,13 +369,12 @@ def _ensure_system_session(
     create: bool = True,
 ) -> None:
     """Ensure connection has a system session when the plane is available."""
-    if conn.system_session_id:
-        # Re-touch / validate when plane available
+    if conn.session_id:
         plane = resolve_session_plane(ctx)
         if plane is not None:
             try:
                 plane.bind(
-                    conn.system_session_id,
+                    conn.session_id,
                     create=False,
                     surface="websocket",
                     metadata={"via": "ws_ensure"},
@@ -391,12 +391,11 @@ def _ensure_system_session(
     if hint:
         try:
             _plane_bind_into(conn, hint, ctx=ctx, create=create)
-            if conn.system_session_id:
+            if conn.session_id:
                 return
         except (SessionClosedError, SessionNotFoundError, SessionPlaneError):
             if not create:
                 raise
-            # fall through to create new
     if create:
         _plane_bind_into(conn, None, ctx=ctx, create=True)
 
@@ -440,8 +439,7 @@ def _handle_dispatch(
         "value",
         "input",
         "session_id",
-        "system_session_id",
-        "palm_session_id",
+        "instance_id",
         "flow_id",
         "body",
         "query",
@@ -460,13 +458,11 @@ def _handle_dispatch(
             "error": {"code": "session_bind", "message": str(exc)},
         }
 
-    if state.system_session_id and not params.get("system_session_id"):
-        params["system_session_id"] = state.system_session_id
-    if not params.get("palm_session_id") and state.system_session_id:
-        params["palm_session_id"] = state.system_session_id
-    # Product continue handle (instance)
-    if not params.get("session_id") and state.session_id:
+    # 0.58.9: session_id = system; instance_id = continue handle
+    if state.session_id and not params.get("session_id"):
         params["session_id"] = state.session_id
+    if state.instance_id and not params.get("instance_id"):
+        params["instance_id"] = state.instance_id
     if not params.get("flow_id") and state.flow_id:
         params["flow_id"] = state.flow_id
     # 0.32.6 — Portal needs structured input; service builds it when this is set
@@ -511,27 +507,31 @@ def _handle_dispatch(
         )
         raw = dispatch_operator_path(ctx, resolved, dispatch_params)
         view_format = str(message.get("format") or "assistant")
-        # After create, re-inspect so first turn includes input schema (Portal)
+        # After create, re-inspect so first turn includes input schema (Portal).
+        # Product path keys by instance_id (SI-001); rewrite resolves sess- if needed.
         if (
             view_format == "assistant"
             and len(resolved) >= 2
             and resolved[0] == "flows"
             and resolved[-1] == "create"
             and isinstance(raw, dict)
-            and raw.get("session_id")
         ):
             flow_id = resolved[1]
-            session_id = str(raw["session_id"])
-            inspect_path = ["flows", flow_id, "session", session_id]
-            try:
-                raw = dispatch_operator_path(
-                    ctx,
-                    inspect_path,
-                    {"format": "assistant"},
-                )
-                resolved = inspect_path
-            except Exception:
-                logger.debug("ws create re-inspect failed; using create envelope", exc_info=True)
+            inspect_key = raw.get("instance_id") or raw.get("session_id")
+            if inspect_key:
+                inspect_path = ["flows", flow_id, "session", str(inspect_key)]
+                try:
+                    raw = dispatch_operator_path(
+                        ctx,
+                        inspect_path,
+                        {"format": "assistant"},
+                    )
+                    resolved = inspect_path
+                except Exception:
+                    logger.debug(
+                        "ws create re-inspect failed; using create envelope",
+                        exc_info=True,
+                    )
         shaped = shape_dispatch_result(
             resolved,
             raw,
@@ -555,21 +555,16 @@ def _handle_dispatch(
                 dispatch=_dispatch,
                 shape=_shape,
             )
-        # Refresh bind from turn: product instance + system subject
-        product_sid = shaped.get("session_id") or shaped.get("instance_id")
-        if product_sid and not looks_like_system_session_id(product_sid):
-            state.session_id = str(product_sid)
-        elif product_sid and looks_like_system_session_id(product_sid):
-            # Unusual: product returned system id as session_id — still track system
-            state.system_session_id = str(product_sid)
-        system_sid = shaped.get("system_session_id") or shaped.get("palm_session_id")
+        # Refresh bind from turn: session_id = system; instance_id = continue
+        system_sid = shaped.get("session_id")
         turn_refs = shaped.get("refs")
-        if not system_sid and isinstance(turn_refs, dict):
-            system_sid = turn_refs.get("system_session_id") or turn_refs.get(
-                "palm_session_id"
-            )
-        if system_sid:
-            state.system_session_id = str(system_sid).strip() or state.system_session_id
+        if not looks_like_system_session_id(system_sid) and isinstance(turn_refs, dict):
+            system_sid = turn_refs.get("session_id")
+        if looks_like_system_session_id(system_sid):
+            state.session_id = str(system_sid).strip()
+        instance_id = shaped.get("instance_id")
+        if instance_id and not looks_like_system_session_id(instance_id):
+            state.instance_id = str(instance_id)
         flow = flow_id_from_turn(shaped)
         if flow:
             state.flow_id = str(flow)
@@ -578,10 +573,14 @@ def _handle_dispatch(
                 refs = {}
                 shaped["refs"] = refs
             refs.setdefault("flow_id", state.flow_id)
-            if state.system_session_id:
-                refs.setdefault("system_session_id", state.system_session_id)
-        if state.system_session_id and isinstance(shaped, dict):
-            shaped.setdefault("system_session_id", state.system_session_id)
+            if state.session_id:
+                refs.setdefault("session_id", state.session_id)
+            if state.instance_id:
+                refs.setdefault("instance_id", state.instance_id)
+        if state.session_id and isinstance(shaped, dict):
+            shaped.setdefault("session_id", state.session_id)
+        if state.instance_id and isinstance(shaped, dict):
+            shaped.setdefault("instance_id", state.instance_id)
         return {
             "op": "turn",
             "id": msg_id,

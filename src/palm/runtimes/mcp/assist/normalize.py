@@ -68,40 +68,42 @@ def normalize_assist_dispatch_args(
         params.setdefault("value", open_value)
 
     if not alias and not path:
-        session_id = clean_dispatch_str(params.get("session_id")) or clean_dispatch_str(
-            params.get("instance_id")
-        )
+        # 0.58.9: session_id = system subject (sess-…); instance_id = continue.
+        # Bound system session alone must not steal "flow_id only" → create.
+        # Residual SI-001: instance-shaped session_id is still accepted as continue
+        # handle until product paths rename (no dual system_session_id key).
+        raw_session = clean_dispatch_str(params.get("session_id"))
+        instance_id = clean_dispatch_str(params.get("instance_id"))
+        system_sid: str | None = None
+        if raw_session and raw_session.startswith("sess-"):
+            system_sid = raw_session
+        elif raw_session and not instance_id:
+            instance_id = raw_session
         flow_id = clean_dispatch_str(params.get("flow_id"))
         has_value = "value" in params or "input" in params
         collection_action = params.get("collection_action")
         edit = params.get("edit")
-        # 0.58.8 — system session may drive *continue* (not create). Only promote
-        # system_session_id when continuing/inspecting; bare flow_id still creates.
-        if not session_id:
-            system_only = clean_dispatch_str(
-                params.get("system_session_id")
-            ) or clean_dispatch_str(params.get("palm_session_id"))
-            if system_only and (
-                has_value
-                or collection_action is not None
-                or isinstance(edit, dict)
-                or not flow_id
-            ):
-                session_id = system_only
-        if session_id and flow_id and (
-            has_value or collection_action is not None or isinstance(edit, dict)
-        ):
-            path = ["flows", flow_id, "session", session_id, "input"]
+        mutating = has_value or collection_action is not None or isinstance(edit, dict)
+        # Prefer instance for product continue paths; system id alone needs rewrite.
+        continue_key = instance_id or (
+            system_sid if (mutating or not flow_id) else None
+        )
+        if continue_key and flow_id and mutating:
+            path = ["flows", flow_id, "session", continue_key, "input"]
             if collection_action is not None and "input" not in params:
                 action_text = clean_dispatch_str(collection_action) or str(collection_action)
                 params["input"] = action_text
-        elif session_id and has_value:
-            path = ["assist", "session", session_id, "input"]
-        elif session_id and flow_id:
-            path = ["flows", flow_id, "session", session_id]
-        elif session_id:
-            path = ["assist", "session", session_id]
+        elif continue_key and mutating:
+            path = ["assist", "session", continue_key, "input"]
+        elif instance_id and flow_id:
+            path = ["flows", flow_id, "session", instance_id]
+        elif instance_id:
+            path = ["assist", "session", instance_id]
+        elif system_sid and not flow_id:
+            # Inspect/continue under session (rewrite → primary instance)
+            path = ["assist", "session", system_sid]
         elif flow_id:
+            # Create under bound session (session_id stays in params for job meta)
             path = ["flows", flow_id, "create"]
         else:
             scenario_id = clean_dispatch_str(params.get("scenario_id"))

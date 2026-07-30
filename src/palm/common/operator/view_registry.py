@@ -92,10 +92,15 @@ def _build_powertool_view(
     context: OperatorViewContext,
 ) -> dict[str, Any]:
     flat = dict(flat_view)
+    # 0.58.9: context.session_id is product instance handle (SI-001 residual).
     if context.session_id:
-        flat.setdefault("session_id", context.session_id)
-        if not flat.get("instance_id"):
-            flat["instance_id"] = context.session_id
+        flat.setdefault("instance_id", context.session_id)
+        if flat.get("session_id") is None or not str(flat.get("session_id")).startswith(
+            "sess-"
+        ):
+            # Do not publish instance id as session_id unless system subject known.
+            if not str(context.session_id).startswith("sess-"):
+                flat.pop("session_id", None)
     if context.flow_id:
         flat.setdefault("flow_name", context.flow_id)
     if _is_job_context(flat):

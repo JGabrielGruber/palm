@@ -73,8 +73,8 @@ def prepare_flow_submission(
     if flow.revision is not None:
         meta["flow_revision"] = flow.revision
     _apply_pattern_submission_metadata(flow, meta)
-    # System session owner (0.58.4) — normalize; do not invent when absent.
-    sid = meta.get("session_id") or meta.get("palm_session_id")
+    # System session owner (0.58.4) — one metadata key only (0.58.9: no palm_session_id).
+    sid = meta.get("session_id")
     if sid is not None and str(sid).strip():
         meta["session_id"] = str(sid).strip()
 

@@ -39,7 +39,7 @@ def test_event_matches_context_and_instance_attach() -> None:
 
     # Payload system key
     assert plane.event_matches(
-        sid, payload={"system_session_id": sid, "foo": 1}
+        sid, payload={"session_id": sid, "foo": 1}
     )
 
     # Reverse index via instance only
@@ -102,9 +102,9 @@ def test_rewrite_system_session_continue_path() -> None:
             {"value": "hi"},
         )
         assert path[2] == "inst-continue"
-        assert params["session_id"] == "inst-continue"
-        assert params["system_session_id"] == bind.session_id
-        assert looks_like_system_session_id(params["system_session_id"])
+        assert params["session_id"] == bind.session_id
+        assert params["instance_id"] == "inst-continue"
+        assert looks_like_system_session_id(params["session_id"])
     finally:
         host.shutdown()
 

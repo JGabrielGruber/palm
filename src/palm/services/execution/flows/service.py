@@ -73,31 +73,46 @@ class FlowExecutionService(BaseService):
                     body.setdefault("by_id", True)
             session = self.run_wizard(body)
             ctx = session.context()
+            # Product FlowSession still keys by instance (SI-001 internal).
+            # Envelope law 0.58.9: session_id = system subject; instance_id = continue.
+            instance_id = session.session_id
             system_sid = _system_session_from_instance_meta(
-                self.get_instance_metadata(session.session_id)
+                self.get_instance_metadata(instance_id)
             )
+            if not system_sid:
+                # Plane reverse index is source of truth when instance meta lags.
+                try:
+                    plane = getattr(self.resolve_runtime(), "session_plane", None)
+                    if plane is not None:
+                        owner = plane.session_for_instance(instance_id)
+                        if owner is not None:
+                            system_sid = str(owner.session_id)
+                except Exception:
+                    system_sid = None
             payload: dict[str, Any] = {
-                "session_id": session.session_id,
-                "instance_id": session.session_id,
+                "instance_id": instance_id,
                 "flow_id": session.flow_id,
                 "job_id": ctx.job_id,
                 "status": ctx.status,
             }
             if system_sid:
-                payload["system_session_id"] = system_sid
-                payload["palm_session_id"] = system_sid
+                payload["session_id"] = system_sid
             return payload
 
         if parsed.kind == FlowCommandKind.SESSION:
             assert parsed.flow_id is not None
             assert parsed.session_id is not None
-            return self.session(parsed.flow_id, parsed.session_id).context(sync_gate=True)
+            return self.session(
+                parsed.flow_id, self._resolve_instance_id(parsed.session_id)
+            ).context(sync_gate=True)
 
         if parsed.kind == FlowCommandKind.SESSION_VERB:
             assert parsed.flow_id is not None
             assert parsed.session_id is not None
             assert parsed.verb is not None
-            handle = self.session(parsed.flow_id, parsed.session_id)
+            handle = self.session(
+                parsed.flow_id, self._resolve_instance_id(parsed.session_id)
+            )
             if parsed.verb == "input":
                 from palm.common.operator.flows_session_input import apply_flows_session_input
 
@@ -117,8 +132,30 @@ class FlowExecutionService(BaseService):
         raise RuntimeError(f"unhandled flow command: {parsed}")
 
     def session(self, flow_id: str | None, session_id: str) -> FlowSession:
-        """Return a handle bound to a durable session."""
-        return FlowSession(self, flow_id=flow_id, session_id=session_id)
+        """Return a handle bound to a durable product instance.
+
+        ``session_id`` may be a system subject (``sess-…``); then the primary
+        continue instance is resolved via the session plane (0.58.9 ergonomic).
+        """
+        return FlowSession(
+            self,
+            flow_id=flow_id,
+            session_id=self._resolve_instance_id(session_id),
+        )
+
+    def _resolve_instance_id(self, session_or_instance: str) -> str:
+        """Map system session → continue instance; pass instance ids through."""
+        text = str(session_or_instance or "").strip()
+        if not text.startswith("sess-"):
+            return text
+        try:
+            plane = getattr(self.resolve_runtime(), "session_plane", None)
+            if plane is None:
+                return text
+            inst = plane.resolve_continue_instance(text)
+            return str(inst) if inst else text
+        except Exception:
+            return text
 
     def submit_flow_body(self, body: dict[str, Any]) -> Any:
         """Submit any flow from a REST-shaped body and wait until idle (work drain, triggers)."""
@@ -134,21 +171,22 @@ class FlowExecutionService(BaseService):
         return self.session(flow_id, session_id)
 
     def _with_system_session(self, body: dict[str, Any]) -> dict[str, Any]:
-        """Ensure job metadata carries a system session id (0.58.6 dogfood).
+        """Ensure job metadata carries a system session id (0.58.6 / 0.58.9).
 
-        Prefer an explicit system id from the body; otherwise bind a new one
-        on the runtime session plane. Does not treat product ``session_id``
-        (instance id) as the system subject.
+        **Law:** edge and job metadata use one name — ``session_id`` — for the
+        system subject (typically ``sess-…``). ``instance_id`` is the continue
+        handle. Instance-shaped body ``session_id`` is **not** promoted (product
+        must adapt; SI-001).
         """
         out = dict(body or {})
         meta = dict(out.get("metadata") or {})
-        # Job metadata session_id is system-owned after 0.58.4. Prefer explicit
-        # system keys; only use metadata.session_id when it looks system-shaped.
         candidates = (
-            out.get("system_session_id"),
-            out.get("palm_session_id"),
-            meta.get("palm_session_id"),
-            meta.get("session_id") if _looks_like_system_session_id(meta.get("session_id")) else None,
+            out.get("session_id")
+            if _looks_like_system_session_id(out.get("session_id"))
+            else None,
+            meta.get("session_id")
+            if _looks_like_system_session_id(meta.get("session_id"))
+            else None,
         )
         sid = None
         for raw in candidates:
@@ -198,15 +236,16 @@ class FlowExecutionService(BaseService):
 
     def inspect_session(self, session_id: str) -> dict[str, Any]:
         """Delegate to system inspect for session status views."""
-        return self._system.inspect_instance(session_id)
+        return self._system.inspect_instance(self._resolve_instance_id(session_id))
 
     def get_instance_metadata(self, session_id: str) -> dict[str, Any]:
-        """Return durable metadata for ``session_id`` when persistence is configured."""
+        """Return durable metadata for an instance (or system session → resolve)."""
         repository = self._instance_repository()
         if repository is None:
             return {}
+        iid = self._resolve_instance_id(session_id)
         try:
-            return dict(repository.get(session_id).metadata or {})
+            return dict(repository.get(iid).metadata or {})
         except InstanceNotFoundError:
             return {}
 
@@ -240,7 +279,7 @@ class FlowExecutionService(BaseService):
     def _instance_repository(self) -> Any | None:
         try:
             return self.resolve_runtime().instances
-        except RuntimeError:
+        except Exception:
             return None
 
     def session_context(
@@ -283,14 +322,11 @@ def _looks_like_system_session_id(value: Any) -> bool:
 def _system_session_from_instance_meta(metadata: dict[str, Any] | None) -> str | None:
     if not metadata:
         return None
-    raw = metadata.get("session_id") or metadata.get("palm_session_id")
+    raw = metadata.get("session_id")
     if raw is None:
         return None
     text = str(raw).strip()
-    if not text or not _looks_like_system_session_id(text):
-        # Still return non-empty if present after 0.58.4 (may be custom id)
-        return text or None
-    return text
+    return text or None
 
 
 def _submission_extras(body: dict[str, Any]) -> tuple[dict[str, Any], Any]:

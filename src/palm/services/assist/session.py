@@ -37,12 +37,19 @@ class AssistSession:
         operator_mode = metadata.get("operator_mode")
         if operator_mode:
             view["operator_mode"] = operator_mode
-        # System session owner (0.58.6) — distinct from product session_id (instance).
-        system_sid = metadata.get("session_id") or metadata.get("palm_session_id")
-        if system_sid and str(system_sid).strip() and str(system_sid) != self.session_id:
-            view["system_session_id"] = str(system_sid).strip()
-            view["palm_session_id"] = str(system_sid).strip()
-        view.setdefault("instance_id", self.session_id)
+        # 0.58.9 vocabulary: view.session_id = system subject; instance_id = continue.
+        # Product handle self.session_id is still the instance id (SI-001 internal).
+        view["instance_id"] = self.session_id
+        system_sid = metadata.get("session_id")
+        if (
+            system_sid
+            and str(system_sid).strip()
+            and str(system_sid).strip() != self.session_id
+        ):
+            view["session_id"] = str(system_sid).strip()
+        else:
+            # Do not claim the instance is the system session.
+            view.pop("session_id", None)
         compact = compact_wizard_inspect(view)
         handoff_ready = _handoff_ready(flow_ctx)
         ctx = build_assist_session_context(

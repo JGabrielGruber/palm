@@ -54,16 +54,19 @@ def test_assistant_view_choice_humanize() -> None:
     )
     payload = build_assistant_view(_operator_entry_flat(), context=ctx)
 
-    assert payload["session_id"] == "inst-1"
+    # 0.58.9: instance_id is continue handle; session_id only when system subject
+    assert payload.get("instance_id") == "inst-1"
+    assert payload.get("session_id") is None or str(payload["session_id"]).startswith(
+        "sess-"
+    )
     assert payload["scenario_id"] == "operator-entry"
     assert payload["status"] == "waiting"
     assert payload["question"] == "What would you like to do with Palm?"
     assert payload["hint"] == "Reply with a number or choice name."
     assert payload["compose"]["step"] == "intent"
-    assert payload["refs"] == {
-        "job_id": "job-1",
-        "flow_id": "flow-palm-operator-entry",
-    }
+    assert payload["refs"]["job_id"] == "job-1"
+    assert payload["refs"]["flow_id"] == "flow-palm-operator-entry"
+    assert payload["refs"].get("instance_id") == "inst-1"
     assert payload["choices"] == [
         {"n": 1, "label": "Todo Builder", "value": "todo-builder"},
         {"n": 2, "label": "Compositional Parent", "value": "compositional-parent"},

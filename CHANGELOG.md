@@ -53,14 +53,21 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 
 #### Added (0.58.8)
 - **Session watches** — `event_matches` / `attributed_session_id` / `make_event_filter` on session plane  
-- **Events WS fan-in** — subscribe with `system_session_id` (or cookie); filter live + journal catch-up  
+- **Events WS fan-in** — subscribe with `session_id` (or cookie); filter live + journal catch-up  
 - **Continue resolve** — `resolve_continue_instance`; operator path rewrite `sess-…` → attached instance  
 - **Operator** — `system/session/{id}` inspect / waiting / instances  
 - **Workload** — owner session/job/instance enriched from active EventContext on start  
 
+#### Changed (0.58.9) — vocabulary slash
+- **One edge name:** `session_id` is the system subject only (`sess-…`)  
+- **Continue handle:** `instance_id` only; plane picks waiting → else last attached when only session given  
+- **Deleted duals:** no `system_session_id` / `palm_session_id` fields (cookie name `palm_session` remains transport)  
+- **Product residual (SI-001):** class/path names still say “session” for instance handles; resolve at entry  
+- **Fix:** wizard/dict `SubmitFlowCommand` path preserves job metadata (session bind on REST create)
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.8**.  
-- Next: theme **exit** (ADR-027 Accepted, SD-008 close, residual SI honest).  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.9**.  
+- Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 
 ## [0.57.14] — 2026-07-29

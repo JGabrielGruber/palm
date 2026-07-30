@@ -94,6 +94,14 @@ class StandaloneCommandHandlers:
             body = dict(command.flow)
             if command.job_id is not None:
                 body.setdefault("job_id", command.job_id)
+            # 0.58.9: command.metadata (e.g. system session_id) must not be dropped
+            # when flow payload is a dict (wizard/inline body path).
+            if command.metadata:
+                meta = dict(body.get("metadata") or {})
+                meta.update(command.metadata)
+                body["metadata"] = meta
+            if command.state is not None and "state" not in body:
+                body["state"] = command.state
             plan = prepare_flow_from_body(self._runtime, body)
             return self._runtime.executor.submit_plan(plan)
         return self._runtime.submit_flow(

@@ -81,11 +81,16 @@ def open_target(
                 body,
             )
         )
-        session_id = None
+        # Product inspect path still keys by instance (SI-001/005). Prefer instance_id.
+        instance_id = None
         if isinstance(created, dict):
-            session_id = created.get("session_id") or created.get("instance_id")
-        if session_id:
-            inspect_path = ["flows", tid, "session", str(session_id)]
+            instance_id = created.get("instance_id")
+            if instance_id is None:
+                raw = created.get("session_id")
+                if raw is not None and not str(raw).startswith("sess-"):
+                    instance_id = raw
+        if instance_id:
+            inspect_path = ["flows", tid, "session", str(instance_id)]
             try:
                 inspected = _as_mapping(
                     assist.execution.flows.dispatch(
@@ -103,13 +108,16 @@ def open_target(
                         refs = {}
                         inspected["refs"] = refs
                     refs.setdefault("flow_id", tid)
-                    # Propagate system session from create (0.58.6 dogfood).
+                    # Propagate system session + instance from create (0.58.9).
                     if isinstance(created, dict):
-                        for key in ("system_session_id", "palm_session_id", "instance_id"):
-                            if created.get(key) is not None:
-                                inspected.setdefault(key, created[key])
-                                if key == "system_session_id":
-                                    refs.setdefault("system_session_id", created[key])
+                        if created.get("instance_id") is not None:
+                            inspected.setdefault("instance_id", created["instance_id"])
+                            refs.setdefault("instance_id", created["instance_id"])
+                        if created.get("session_id") is not None and str(
+                            created["session_id"]
+                        ).startswith("sess-"):
+                            inspected["session_id"] = created["session_id"]
+                            refs.setdefault("session_id", created["session_id"])
                     # Help shapers treat this as a flow session even under path assist/open
                     inspected["_open_flow_path"] = inspect_path
                 return inspected

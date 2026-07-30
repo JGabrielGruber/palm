@@ -87,6 +87,25 @@ def _stored_mutation_gate(backend: Any, session_id: str) -> dict[str, Any] | Non
 def register_flow_tools(mcp: Any, backend: Any) -> None:
     """Register flow session MCP tools (0.16 command-path vocabulary)."""
 
+    def _product_instance_id(session_id: str, flat: dict[str, Any] | None = None) -> str:
+        """Continue handle: prefer instance_id; resolve system session via backend if needed."""
+        if flat:
+            iid = flat.get("instance_id")
+            if iid is not None and not str(iid).startswith("sess-"):
+                return str(iid)
+        text = str(session_id or "").strip()
+        if not text.startswith("sess-"):
+            return text
+        resolve = getattr(backend, "resolve_session_continue", None)
+        if callable(resolve):
+            try:
+                inst = resolve(text)
+                if inst:
+                    return str(inst)
+            except Exception:
+                pass
+        return text
+
     def _format_session_payload(
         flat: dict[str, Any],
         *,
@@ -94,20 +113,21 @@ def register_flow_tools(mcp: Any, backend: Any) -> None:
         flow_id: str | None,
         format: str = "powertool",
     ) -> dict[str, Any]:
+        instance_id = _product_instance_id(session_id, flat)
         invoke_tree = None
         if normalize_view_format(format) == "assistant":
-            invoke_tree = backend.get_instance_tree(session_id)
+            invoke_tree = backend.get_instance_tree(instance_id)
         fid = flow_id or flat.get("flow_name") or flat.get("flow")
-        stored_gate = _stored_mutation_gate(backend, session_id)
+        stored_gate = _stored_mutation_gate(backend, instance_id)
         return shape_flow_session_view(
             flat,
             format=format,
-            session_id=session_id,
+            session_id=instance_id,
             flow_id=str(fid) if fid is not None else None,
             path=(
-                ["flows", str(fid), "session", session_id]
+                ["flows", str(fid), "session", instance_id]
                 if fid is not None
-                else ["flows", "session", session_id]
+                else ["flows", "session", instance_id]
             ),
             invoke_tree=invoke_tree,
             stored_mutation_gate=stored_gate,
@@ -142,14 +162,15 @@ def register_flow_tools(mcp: Any, backend: Any) -> None:
     ) -> dict[str, Any]:
         view = backend.flows_get_session(flow_id, session_id)
         flat = flatten_session_view(view)
+        instance_id = _product_instance_id(session_id, flat)
         invoke_tree = None
         if normalize_view_format(format) == "assistant":
-            invoke_tree = backend.get_instance_tree(session_id)
-        stored_gate = _stored_mutation_gate(backend, session_id)
+            invoke_tree = backend.get_instance_tree(instance_id)
+        stored_gate = _stored_mutation_gate(backend, instance_id)
         return shape_flow_session_view(
             flat,
             format=format,
-            session_id=session_id,
+            session_id=instance_id,
             flow_id=flow_id,
             invoke_tree=invoke_tree,
             include=include,

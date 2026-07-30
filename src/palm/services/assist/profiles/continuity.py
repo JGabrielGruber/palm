@@ -67,11 +67,17 @@ def maybe_auto_start_handoff_flow(
     flow_id = intent
     try:
         raw = dispatch(["flows", flow_id, "create"], {"format": "assistant"})
-        session_id = None
+        # Product path keys by instance (SI-001); session_id on envelope is system.
+        instance_id = None
         if isinstance(raw, dict):
-            session_id = raw.get("session_id") or raw.get("instance_id")
-        if session_id:
-            inspect_path = ["flows", flow_id, "session", str(session_id)]
+            instance_id = raw.get("instance_id") or (
+                raw.get("session_id")
+                if raw.get("session_id")
+                and not str(raw.get("session_id")).startswith("sess-")
+                else None
+            )
+        if instance_id:
+            inspect_path = ["flows", flow_id, "session", str(instance_id)]
             try:
                 raw = dispatch(inspect_path, {"format": "assistant"})
                 resolved = inspect_path
@@ -122,12 +128,17 @@ def maybe_auto_start_design_entry(
             start_path,
             {"format": "assistant", "include_input_schema": True},
         )
-        session_id = None
+        instance_id = None
         if isinstance(raw, dict):
-            session_id = raw.get("session_id") or raw.get("instance_id")
+            instance_id = raw.get("instance_id") or (
+                raw.get("session_id")
+                if raw.get("session_id")
+                and not str(raw.get("session_id")).startswith("sess-")
+                else None
+            )
         resolved = list(start_path)
-        if session_id:
-            input_path = ["assist", "session", str(session_id), "input"]
+        if instance_id:
+            input_path = ["assist", "session", str(instance_id), "input"]
             try:
                 raw = dispatch(
                     input_path,
@@ -142,10 +153,10 @@ def maybe_auto_start_design_entry(
                 logger.debug("design auto-start intent input failed", exc_info=True)
                 try:
                     raw = dispatch(
-                        ["assist", "session", str(session_id)],
+                        ["assist", "session", str(instance_id)],
                         {"format": "assistant", "include_input_schema": True},
                     )
-                    resolved = ["assist", "session", str(session_id)]
+                    resolved = ["assist", "session", str(instance_id)]
                 except Exception:
                     pass
         next_turn = _shape_turn(shape, resolved, raw)
@@ -179,9 +190,14 @@ def maybe_auto_continue_introduction(
         return None
     if not is_introduction_turn(shaped):
         return None
-    session_id = shaped.get("session_id") or shaped.get("instance_id")
+    # Product path needs instance; system session alone is not enough for this path.
+    instance_id = shaped.get("instance_id")
+    if instance_id is None:
+        raw_sid = shaped.get("session_id")
+        if raw_sid is not None and not str(raw_sid).startswith("sess-"):
+            instance_id = raw_sid
     flow_id = flow_id_from_turn(shaped)
-    if not session_id or not flow_id:
+    if not instance_id or not flow_id:
         return None
     banner_parts: list[str] = []
     prior_banner = str(shaped.get("intro_banner") or "").strip()
@@ -192,7 +208,7 @@ def maybe_auto_continue_introduction(
         banner_parts.append(intro_q)
     intro_text = "\n\n".join(banner_parts)
     try:
-        input_path = ["flows", str(flow_id), "session", str(session_id), "input"]
+        input_path = ["flows", str(flow_id), "session", str(instance_id), "input"]
         raw = dispatch(
             input_path,
             {"value": "", "format": "assistant", "include_input_schema": True},

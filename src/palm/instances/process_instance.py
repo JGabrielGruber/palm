@@ -53,7 +53,7 @@ class ProcessInstance:
         if self.session_id:
             return str(self.session_id)
         meta = self.metadata or {}
-        raw = meta.get("session_id") or meta.get("palm_session_id")
+        raw = meta.get("session_id")
         if raw is None:
             return None
         sid = str(raw).strip()
@@ -99,7 +99,7 @@ class ProcessInstance:
         meta = dict(data.get("metadata") or {})
         raw_session = data.get("session_id")
         if raw_session is None:
-            raw_session = meta.get("session_id") or meta.get("palm_session_id")
+            raw_session = meta.get("session_id")
         session_id = str(raw_session).strip() if raw_session is not None else None
         if session_id == "":
             session_id = None

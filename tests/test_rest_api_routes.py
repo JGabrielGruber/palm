@@ -75,7 +75,8 @@ def test_create_flow_session_via_command_path(server: ServerRuntime) -> None:
     )
     assert status in {200, 202}
     assert isinstance(body, dict)
-    assert body.get("session_id")
+    assert body.get("instance_id")
+    assert body.get("session_id")  # system subject
 
 
 def test_get_session_context_via_command_path(server: ServerRuntime) -> None:
@@ -87,17 +88,20 @@ def test_get_session_context_via_command_path(server: ServerRuntime) -> None:
     )
     assert status in {200, 202}
     assert isinstance(created, dict)
-    session_id = created.get("session_id")
-    assert session_id
+    # Product REST continue path keys by instance (SI-001 residual).
+    instance_id = created.get("instance_id")
+    system_sid = created.get("session_id")
+    assert instance_id
+    assert system_sid and str(system_sid).startswith("sess-")
 
     status, body = _request(
         server.base_url,
         "GET",
-        f"/v1/api/flows/onboard/session/{session_id}",
+        f"/v1/api/flows/onboard/session/{instance_id}",
     )
     assert status == 200
     assert isinstance(body, dict)
-    assert body.get("instance_id") == session_id
+    assert body.get("instance_id") == instance_id
     assert "next_actions" in body
 
 

@@ -62,10 +62,13 @@ def create_session(
         set_cookie_header_value,
     )
 
-    if not body.get("system_session_id") and not body.get("palm_session_id"):
+    # Cookie/header → edge session_id (system subject only, 0.58.9).
+    if not body.get("session_id") or not str(body.get("session_id", "")).startswith(
+        "sess-"
+    ):
         hint = extract_system_session_hint(request.headers)
         if hint:
-            body["system_session_id"] = hint
+            body["session_id"] = hint
     try:
         result = ctx.execution.flows.dispatch(
             ["flows", flow_id, "create"],
@@ -78,8 +81,8 @@ def create_session(
 
     payload = _create_body(result)
     headers: dict[str, str] = {}
-    system_sid = payload.get("system_session_id")
-    if system_sid:
+    system_sid = payload.get("session_id")
+    if system_sid and str(system_sid).startswith("sess-"):
         headers["Set-Cookie"] = set_cookie_header_value(str(system_sid))
         headers["X-Palm-Session"] = str(system_sid)
     return accepted(payload, headers=headers if headers else None)
@@ -236,21 +239,36 @@ def _session_body(
 ) -> dict[str, Any]:
     flat = flatten_session_context(ctx_obj)
     view_format = _view_format(request)
+    # Product continue key is instance_id; path may still pass system session.
+    instance_key = (
+        flat.get("instance_id")
+        or (
+            session_id
+            if session_id and not str(session_id).startswith("sess-")
+            else None
+        )
+    )
+    if instance_key is None and session_id and str(session_id).startswith("sess-"):
+        try:
+            instance_key = ctx.execution.flows._resolve_instance_id(str(session_id))
+        except Exception:
+            instance_key = None
+    if instance_key is None:
+        raw = session_id or flat.get("session_id")
+        if raw is not None and not str(raw).startswith("sess-"):
+            instance_key = raw
     invoke_tree = None
-    if view_format == "assistant":
-        sid = session_id or flat.get("instance_id") or flat.get("session_id")
-        if sid is not None:
-            invoke_tree = build_invoke_tree(ctx.runtime, str(sid), base_url=None)
-    sid = session_id or flat.get("instance_id") or flat.get("session_id")
+    if view_format == "assistant" and instance_key is not None:
+        invoke_tree = build_invoke_tree(ctx.runtime, str(instance_key), base_url=None)
     stored_gate = None
-    if sid is not None:
-        meta = ctx.execution.flows.get_instance_metadata(str(sid))
+    if instance_key is not None:
+        meta = ctx.execution.flows.get_instance_metadata(str(instance_key))
         gate = meta.get("mutation_gate")
         stored_gate = gate if isinstance(gate, dict) else None
     return shape_flow_session_view(
         flat,
         format=view_format,
-        session_id=sid,
+        session_id=str(instance_key) if instance_key is not None else session_id,
         flow_id=flow_id or flat.get("flow_name"),
         invoke_tree=invoke_tree,
         stored_mutation_gate=stored_gate,
@@ -259,16 +277,17 @@ def _session_body(
 
 def _create_body(result: Any) -> dict[str, Any]:
     if isinstance(result, dict):
-        session_id = result.get("session_id")
+        # 0.58.9: session_id = system; instance_id = continue handle.
         body: dict[str, Any] = {
-            "session_id": session_id,
             "flow_id": result.get("flow_id"),
             "job_id": result.get("job_id"),
             "status": result.get("status"),
         }
-        system_sid = result.get("system_session_id") or result.get("palm_session_id")
-        if system_sid:
-            body["system_session_id"] = system_sid
+        if result.get("instance_id") is not None:
+            body["instance_id"] = result["instance_id"]
+        sid = result.get("session_id")
+        if sid is not None and str(sid).startswith("sess-"):
+            body["session_id"] = sid
         return body
     return {"result": result}
 

@@ -35,7 +35,25 @@ def shape_flow_session_view(
     if fmt == "verbose":
         return dict(flat)
     if fmt == "assistant":
-        sid = session_id or flat.get("instance_id") or flat.get("session_id")
+        # 0.58.9: product continue handle is instance_id; system session is sess-…
+        instance_key = (
+            flat.get("instance_id")
+            or session_id
+            or flat.get("session_id")
+        )
+        system_key = flat.get("session_id")
+        if system_key is not None and not str(system_key).startswith("sess-"):
+            system_key = None
+        if instance_key is not None and str(instance_key).startswith("sess-"):
+            # Path still passed system id — context.session_id remains product handle
+            # only when we have a real instance key.
+            pass
+        sid = instance_key
+        if system_key is not None:
+            flat = dict(flat)
+            flat["session_id"] = str(system_key)
+            if sid is not None and not str(sid).startswith("sess-"):
+                flat["instance_id"] = str(sid)
         fid = flow_id or flat.get("flow_name") or flat.get("flow")
         # 0.32.5 — infer assist scenario / handoff when driving via flows path
         scen = scenario_id or _scenario_id_from_flat(flat)

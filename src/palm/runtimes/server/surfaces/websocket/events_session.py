@@ -3,7 +3,7 @@
 Protocol (JSON text frames)::
 
     ← hello
-    → subscribe { id, types?, since_offset?, consumer?, session_id? / system_session_id? }
+    → subscribe { id, types?, since_offset?, consumer?, session_id? }
     ← subscribed
     ← event { offset?, type, payload, ts }
     → ping / ← pong
@@ -106,7 +106,7 @@ def run_events_websocket(
             "path": EVENTS_WS_PATH,
             "ops": ["hello", "subscribe", "unsubscribe", "ping"],
             "public_types": sorted(PUBLIC_EVENT_TYPES),
-            "bound": {"system_session_id": sub_holder.get("session_id")},
+            "bound": {"session_id": sub_holder.get("session_id")},
             "session_filter": True,
         }
     )
@@ -129,7 +129,7 @@ def run_events_websocket(
                 "payload": payload,
                 "id": getattr(event, "id", None),
                 "live": True,
-                "system_session_id": sid,
+                "session_id": sid,
             }
         )
 
@@ -212,9 +212,8 @@ def _event_matches_session(
             raw = getattr(event, "payload", None)
             pay = dict(raw) if isinstance(raw, dict) else {}
         pay = pay or {}
-        for key in ("system_session_id", "palm_session_id", "session_id"):
-            if str(pay.get(key) or "") == session_id:
-                return True
+        if str(pay.get("session_id") or "") == session_id:
+            return True
         ctx_obj = getattr(event, "context", None) if event is not None else None
         if ctx_obj is not None and str(getattr(ctx_obj, "session_id", "") or "") == session_id:
             return True
@@ -275,19 +274,23 @@ def _resolve_subscribe_session(
     msg: dict[str, Any],
     sub_holder: dict[str, Any],
 ) -> str | None:
-    """Session filter for this subscribe (message wins over cookie default)."""
-    raw = (
-        msg.get("system_session_id")
-        or msg.get("palm_session_id")
-        or msg.get("session_id")
-    )
-    if raw is not None and str(raw).strip() == "":
-        return None
-    if raw is None:
-        # Keep connection default (cookie); clear only when explicitly empty above
-        return sub_holder.get("session_id")
+    """Session filter for this subscribe (message wins over cookie default).
 
-    text = str(raw).strip()
+    Edge key only: ``session_id`` (system subject, 0.58.9). Cookie/header
+    default still applies when the message omits the key.
+    """
+    if "session_id" in msg:
+        raw = msg.get("session_id")
+        if raw is None or str(raw).strip() == "":
+            return None
+        text = str(raw).strip()
+    else:
+        # Keep connection default (cookie)
+        fallback = sub_holder.get("session_id")
+        if fallback is None or str(fallback).strip() == "":
+            return None
+        text = str(fallback).strip()
+
     plane = resolve_session_plane(ctx)
     if plane is None:
         return text
@@ -399,7 +402,7 @@ def _handle_subscribe(
                     "id": eid,
                     "ts": ts,
                     "live": False,
-                    "system_session_id": filter_sid,
+                    "session_id": filter_sid,
                 }
             )
 
@@ -431,7 +434,7 @@ def _handle_subscribe(
             "catchup_last_offset": last_offset or None,
             "live": engine is not None,
             "journal": journal is not None,
-            "system_session_id": filter_sid,
+            "session_id": filter_sid,
             "session_filter": filter_sid is not None,
         }
     )

@@ -23,7 +23,8 @@ from palm.system.executions.flow_submission import prepare_flow_submission
 
 def test_session_id_from_job_metadata() -> None:
     assert session_id_from_job_metadata({"session_id": "sess-a"}) == "sess-a"
-    assert session_id_from_job_metadata({"palm_session_id": "sess-b"}) == "sess-b"
+    # 0.58.9 — no palm_session_id dual; ignored if present
+    assert session_id_from_job_metadata({"palm_session_id": "sess-b"}) is None
     assert session_id_from_job_metadata({}) is None
     assert session_id_from_job_metadata({"session_id": "  "}) is None
 
@@ -88,13 +89,23 @@ def test_prepare_flow_submission_normalizes_session_id() -> None:
     submission = prepare_flow_submission(
         flow,
         state=None,
-        metadata={"palm_session_id": "sess-prep"},
+        metadata={"session_id": "sess-prep"},
         instances=None,
         build_ctx=PatternBuildContext(definition_repository=repo),
         instance_id="inst-prep",
     )
     assert submission.metadata["session_id"] == "sess-prep"
     assert submission.metadata["instance_id"] == "inst-prep"
+    # 0.58.9 — palm_session_id is not normalized into session_id
+    bare = prepare_flow_submission(
+        flow,
+        state=None,
+        metadata={"palm_session_id": "sess-ignored"},
+        instances=None,
+        build_ctx=PatternBuildContext(definition_repository=repo),
+        instance_id="inst-prep-2",
+    )
+    assert "session_id" not in bare.metadata or bare.metadata.get("session_id") != "sess-ignored"
 
 
 def test_event_context_carries_session_id() -> None:

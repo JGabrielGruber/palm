@@ -59,7 +59,7 @@ def test_resolve_dispatch_path_defaults_without_target() -> None:
 def test_normalize_infers_flows_session_input() -> None:
     path, alias, params, used_default = normalize_assist_dispatch_args(
         params={
-            "session_id": "inst-9",
+            "instance_id": "inst-9",
             "flow_id": "todo-builder",
             "value": "yes",
         },
@@ -72,7 +72,7 @@ def test_normalize_infers_flows_session_input() -> None:
 
 def test_normalize_infers_flows_session_inspect() -> None:
     path, alias, params, _ = normalize_assist_dispatch_args(
-        params={"session_id": "inst-9", "flow_id": "todo-builder"},
+        params={"instance_id": "inst-9", "flow_id": "todo-builder"},
     )
     assert path == ["flows", "todo-builder", "session", "inst-9"]
     assert alias is None
@@ -81,7 +81,7 @@ def test_normalize_infers_flows_session_inspect() -> None:
 def test_normalize_collection_action_params() -> None:
     path, alias, params, _ = normalize_assist_dispatch_args(
         params={
-            "session_id": "inst-9",
+            "instance_id": "inst-9",
             "flow_id": "todo-builder",
             "collection_action": "add",
             "value": "X",
@@ -287,18 +287,26 @@ async def test_palm_assist_flows_session_defaults_assistant(assist_server_ctx) -
             "palm_assist",
             {"alias": "operator-entry/start", "params": {}},
         )
-        session_id = started.data["session_id"]
+        # 0.58.9: session_id = system; product path uses instance_id
+        system_sid = started.data["session_id"]
+        instance_id = started.data["instance_id"]
         flow_id = started.data["refs"]["flow_id"]
+        assert str(system_sid).startswith("sess-")
         result = await client.call_tool(
             "palm_assist",
             {
-                "path": ["flows", flow_id, "session", session_id],
+                "path": ["flows", flow_id, "session", instance_id],
                 "params": {},
             },
         )
 
     payload = result.data
-    assert payload.get("session_id") == session_id or payload.get("instance_id") == session_id
+    assert payload.get("instance_id") == instance_id
+    # System subject preferred on envelope; may be absent if meta lag (SI residual)
+    if payload.get("session_id") is not None:
+        assert payload.get("session_id") == system_sid or str(
+            payload["session_id"]
+        ).startswith("sess-")
     assert payload.get("question")
     assert payload.get("status") == "waiting"
 

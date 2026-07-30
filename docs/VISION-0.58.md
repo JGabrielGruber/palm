@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.8** (watches / fan-in).  
+**Status:** 🚧 **Theme open** — through **0.58.9** (vocabulary slash).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -121,6 +121,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **6** | Assist + MCP dogfood | palm_assist bind path uses system session — **0.58.6** ✅ (product session_id still instance handle) |
 | **7** | WS / cookie-like bind | Same contract; delete one-off reconnect hacks — **0.58.7** ✅ |
 | **8** | Watches / fan-in | Multi-type subscribe by session — **0.58.8** ✅ |
+| **9** | Vocabulary slash | One name: `session_id` = system; `instance_id` = continue; delete duals — **0.58.9** ✅ |
 | **exit** | Theme exit | Map true; SD-008 closed; residual SI/SU honest; ADR Accepted |
 
 **Rule:** Do not ship “session is still just instance_id with a new name.”  
@@ -201,9 +202,10 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.3** | Bind law: `SessionPlaneService.bind` / `require_open` / `SessionBind`; `ApplicationHost.bind_session`; CLI `active_system_session_id` distinct from product assist/instance |
 | **0.58.4** | Job path: `ProcessInstance.session_id`; job metadata `session_id`; `SessionOwnershipHook` plane attach; `EventContext.session_id` + `flow.session.*` payload fields |
 | **0.58.5** | Journey: `SessionPlaneService.inspect` / `list_waiting`; host `inspect_session`; no session-resume path |
-| **0.58.6** | Dogfood: `FlowExecutionService` auto-bind system session on submit; create/Assist envelopes expose `system_session_id`; product `session_id` still instance for continue (SI-001 residual) |
-| **0.58.7** | WS/cookie bind: `op: bind` + `X-Palm-Session` / `palm_session` cookie → session plane; product instance id stays separate; flow create Set-Cookie; fix name-vs-id create (`todo-builder`) |
-| **0.58.8** | Watches: plane `event_matches` / `make_event_filter`; Events WS `system_session_id` fan-in; `resolve_continue_instance` + path rewrite; `system/session/{id}` inspect; workload owner session from EventContext |
+| **0.58.6** | Dogfood: `FlowExecutionService` auto-bind system session on submit; Assist start dogfood |
+| **0.58.7** | WS/cookie bind: `op: bind` + `X-Palm-Session` / `palm_session` cookie → session plane; flow create Set-Cookie; fix name-vs-id create (`todo-builder`) |
+| **0.58.8** | Watches: plane `event_matches` / `make_event_filter`; Events WS fan-in; `resolve_continue_instance` + path rewrite; `system/session/{id}` inspect; workload owner session from EventContext |
+| **0.58.9** | **Vocabulary slash:** edge + job meta `session_id` = system subject only; continue handle = `instance_id`; delete `system_session_id` / `palm_session_id` duals; plane resolve when only session given; product internal paths still resolve `sess-…` (SI-001 residual class names) |
 
 ---
 

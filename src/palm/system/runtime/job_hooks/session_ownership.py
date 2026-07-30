@@ -54,7 +54,7 @@ class SessionOwnershipHook(JobHookAdapter):
         if plane is None:
             return
         meta = job.metadata or {}
-        sid_raw = meta.get("session_id") or meta.get("palm_session_id")
+        sid_raw = meta.get("session_id")
         iid_raw = meta.get("instance_id")
         if sid_raw is None or iid_raw is None:
             return

@@ -127,13 +127,12 @@ def refs_block(composed: dict[str, Any], context: OperatorViewContext) -> dict[s
     if flow_id is not None:
         refs["flow_id"] = flow_id
     instance_id = composed.get("instance_id")
-    if instance_id is not None and str(instance_id) != str(composed.get("session_id") or ""):
+    if instance_id is not None:
         refs["instance_id"] = instance_id
-    elif instance_id is not None:
-        refs.setdefault("instance_id", instance_id)
-    system_sid = composed.get("system_session_id") or composed.get("palm_session_id")
-    if system_sid is not None and str(system_sid).strip():
-        refs["system_session_id"] = str(system_sid).strip()
+    # 0.58.9: session_id in refs is system subject only (sess-…).
+    raw_sid = composed.get("session_id")
+    if raw_sid is not None and str(raw_sid).strip().startswith("sess-"):
+        refs["session_id"] = str(raw_sid).strip()
     return refs
 
 
@@ -224,31 +223,33 @@ def humanize_assistant_view(
     *,
     context: OperatorViewContext,
 ) -> dict[str, Any]:
-    session_id = (
-        context.session_id
-        or composed.get("instance_id")
-        or composed.get("session_id")
+    # 0.58.9: instance_id = continue; session_id = system subject (sess-…) only.
+    # context.session_id is still the product instance handle (SI-001 internal).
+    instance_id = (
+        composed.get("instance_id")
+        or context.session_id
+    )
+    raw_session = composed.get("session_id")
+    system_sid = (
+        str(raw_session).strip()
+        if raw_session is not None and str(raw_session).strip().startswith("sess-")
+        else None
     )
     handoff_ready = bool(context.handoff_ready)
 
     operator_mode = composed.get("operator_mode")
 
     payload: dict[str, Any] = {
-        "session_id": session_id,
         "status": human_status(composed.get("status")),
         "question": question_text(composed),
         "hint": hint_text(composed),
         "handoff_ready": handoff_ready,
         "compose": slim_compose(composed),
     }
-    # Product session_id remains the instance handle for continue (SI-001 residual).
-    # System subject is exposed separately when known (0.58.6 dogfood).
-    instance_id = composed.get("instance_id") or session_id
     if instance_id is not None:
-        payload.setdefault("instance_id", instance_id)
-    system_sid = composed.get("system_session_id") or composed.get("palm_session_id")
-    if system_sid is not None and str(system_sid).strip():
-        payload["system_session_id"] = str(system_sid).strip()
+        payload["instance_id"] = instance_id
+    if system_sid is not None:
+        payload["session_id"] = system_sid
 
     if context.scenario_id:
         payload["scenario_id"] = context.scenario_id
@@ -306,9 +307,10 @@ def humanize_assistant_view(
     if status in {"complete", "failed"}:
         apply_terminal_blurb(payload, composed)
 
+    # Resource actions still key product continue by instance (SI-001).
     resource_actions = resource_assistant_actions(
         composed,
-        session_id=str(session_id) if session_id else None,
+        session_id=str(instance_id) if instance_id else None,
         flow_id=context.flow_id,
     )
     if resource_actions:

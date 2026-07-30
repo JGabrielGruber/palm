@@ -47,7 +47,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · through `0.58.8`)
+## 0.58 — Session plane (**open** · through `0.58.9`)
 
 **Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
@@ -65,9 +65,10 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.58.3** | ✅ | Bind law: `bind` / `require_open` / `SessionBind`; host + CLI entry |
 | **0.58.4** | ✅ | Job path: `ProcessInstance.session_id`, `SessionOwnershipHook`, event context/payload |
 | **0.58.5** | ✅ | `inspect` / `list_waiting` journey view; host `inspect_session` (no session-resume) |
-| **0.58.6** | ✅ | Flow submit binds system session; envelope `system_session_id`; Assist start dogfood |
+| **0.58.6** | ✅ | Flow submit binds system session; Assist start dogfood |
 | **0.58.7** | ✅ | WS `op:bind` + cookie/header → plane; product instance separate; create Set-Cookie |
 | **0.58.8** | ✅ | Event filter by session; Events WS fan-in; continue resolve; system/session inspect |
+| **0.58.9** | ✅ | Vocabulary slash: `session_id` = system only; `instance_id` = continue; no dual keys |
 | **exit** | 📋 next | Map true · SD-008 closed · ADR Accepted |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  

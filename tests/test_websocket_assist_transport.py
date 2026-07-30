@@ -169,17 +169,17 @@ def test_handle_bind_and_dispatch_uses_bound_session(palm_server: ServerRuntime)
     ctx = palm_server.server_app.context  # type: ignore[union-attr]
     conn = _ConnectionState(headers={})
     bound = handle_client_message(
-        {"op": "bind", "id": "b1", "session_id": "inst-bound", "flow_id": "todo-builder"},
+        {"op": "bind", "id": "b1", "instance_id": "inst-bound", "flow_id": "todo-builder"},
         ctx=ctx,
         conn=conn,
     )
     assert bound is not None
     assert bound["op"] == "bound"
-    # Product instance remains for continue; system session is separate (0.58.7)
-    assert bound["session_id"] == "inst-bound"
-    assert conn.session_id == "inst-bound"
-    assert looks_like_system_session_id(bound.get("system_session_id"))
-    assert conn.system_session_id == bound["system_session_id"]
+    # Product instance remains for continue; session_id is system subject (0.58.9)
+    assert bound["instance_id"] == "inst-bound"
+    assert conn.instance_id == "inst-bound"
+    assert looks_like_system_session_id(bound.get("session_id"))
+    assert conn.session_id == bound["session_id"]
 
 
 def test_handle_dispatch_doctor_with_context(palm_server: ServerRuntime) -> None:

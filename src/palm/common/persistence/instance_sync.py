@@ -37,10 +37,13 @@ __all__ = [
 
 
 def session_id_from_job_metadata(metadata: dict[str, Any] | None) -> str | None:
-    """Extract system session id from job metadata (0.58.4)."""
+    """Extract system session id from job metadata (0.58.4 / 0.58.9).
+
+    One key only: ``session_id`` (system subject, typically ``sess-…``).
+    """
     if not metadata:
         return None
-    raw = metadata.get("session_id") or metadata.get("palm_session_id")
+    raw = metadata.get("session_id")
     if raw is None:
         return None
     sid = str(raw).strip()

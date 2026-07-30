@@ -141,7 +141,7 @@ def test_cli_context_bind_system_session_distinct_from_assist() -> None:
         # Product assist may still pass instance-shaped session_id
         ctx.set_active_assist(
             {
-                "session_id": "inst-product-alias",
+                "instance_id": "inst-product-alias",
                 "scenario_id": "demo",
                 "refs": {"job_id": "job-1"},
             }
@@ -153,15 +153,16 @@ def test_cli_context_bind_system_session_distinct_from_assist() -> None:
         assert ctx.active_system_session_id.startswith("sess-")
         assert ctx.active_system_session_id != ctx.active_assist_session_id
 
-        # Explicit system_session_id on view is honored
+        # Explicit system session_id on view is honored
         other = host.bind_session(surface="cli")
         ctx.set_active_assist(
             {
-                "session_id": "inst-other",
-                "system_session_id": other.session_id,
+                "session_id": other.session_id,
+                "instance_id": "inst-other",
             }
         )
         assert ctx.active_system_session_id == other.session_id
+        assert ctx.active_assist_session_id == "inst-other"
     finally:
         host.shutdown()
 

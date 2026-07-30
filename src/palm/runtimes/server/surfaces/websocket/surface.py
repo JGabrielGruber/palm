@@ -96,7 +96,7 @@ class WebSocketSurface(BaseSurface):
                 "ops": ["hello", "ping", "dispatch", "bind"],
                 "events_ops": ["hello", "subscribe", "unsubscribe", "ping"],
                 "session_filter": True,
-                "session_bind": "X-Palm-Session header or Cookie palm_session; subscribe.system_session_id",
+                "session_bind": "X-Palm-Session header or Cookie palm_session; subscribe.session_id",
             },
         )
 

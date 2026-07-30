@@ -37,6 +37,19 @@ class FlowSession:
     def context(self, *, sync_gate: bool = False) -> SessionContext:
         """Pattern-aware session view with command-path hints."""
         view = self._flows.inspect_session(self.session_id)
+        # 0.58.9: expose system subject on the view; product handle is instance_id.
+        view = dict(view) if isinstance(view, dict) else {"raw": view}
+        view.setdefault("instance_id", self.session_id)
+        meta = self._flows.get_instance_metadata(self.session_id)
+        system_sid = meta.get("session_id") if isinstance(meta, dict) else None
+        if (
+            system_sid
+            and str(system_sid).strip()
+            and str(system_sid).startswith("sess-")
+        ):
+            view["session_id"] = str(system_sid).strip()
+        elif view.get("session_id") and not str(view["session_id"]).startswith("sess-"):
+            view.pop("session_id", None)
         ctx = build_session_context(
             flow_id=self.flow_id,
             session_id=self.session_id,

@@ -329,7 +329,7 @@ class OrchestrationEngine(BasePalmEngine):
         iid = job.metadata.get("instance_id")
         if iid is not None:
             payload["instance_id"] = str(iid)
-        sid = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+        sid = job.metadata.get("session_id")
         if sid is not None and str(sid).strip():
             payload["session_id"] = str(sid).strip()
         event_type = (
@@ -368,7 +368,7 @@ class OrchestrationEngine(BasePalmEngine):
             name = wizard_meta.get("name")
             if name is not None:
                 extra["wizard"] = str(name)
-        sid_raw = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+        sid_raw = job.metadata.get("session_id")
         session_id = str(sid_raw).strip() if sid_raw is not None else None
         if session_id == "":
             session_id = None

@@ -43,9 +43,15 @@ class AssistSessionContext:
         if fmt == "verbose":
             return self._verbose_dict()
         flat = dict(self.detail)
-        flat["session_id"] = self.session_id
+        # 0.58.9: self.session_id is product instance handle (SI-001 internal).
+        # Envelope session_id is system subject when detail already carries sess-…
+        flat.setdefault("instance_id", self.session_id)
         if self.session_id:
             flat["instance_id"] = self.session_id
+        system_on_detail = flat.get("session_id")
+        if system_on_detail is None or not str(system_on_detail).startswith("sess-"):
+            # Do not publish instance id as session_id on the envelope.
+            flat.pop("session_id", None)
         if self.flow_id:
             flat.setdefault("flow_name", self.flow_id)
         answers = _answers_from_detail(self.detail)
@@ -119,8 +125,12 @@ class AssistSessionContext:
         return payload
 
     def _verbose_dict(self) -> dict[str, Any]:
+        # instance_id = continue; session_id = system when known (0.58.9)
+        system_sid = self.detail.get("session_id") if isinstance(self.detail, dict) else None
+        if system_sid is not None and not str(system_sid).startswith("sess-"):
+            system_sid = None
         payload: dict[str, Any] = {
-            "session_id": self.session_id,
+            "instance_id": self.session_id,
             "scenario_id": self.scenario_id,
             "flow_id": self.flow_id,
             "job_id": self.job_id,
@@ -131,6 +141,8 @@ class AssistSessionContext:
             "next_commands": self.next_commands,
             "detail": self.detail,
         }
+        if system_sid is not None:
+            payload["session_id"] = system_sid
         if self.operator_hint is not None:
             payload["operator_hint"] = self.operator_hint
         if self.compose_status is not None:
@@ -141,9 +153,12 @@ class AssistSessionContext:
 
     def _merge_powertool_fields(self, payload: dict[str, Any]) -> dict[str, Any]:
         merged = dict(payload)
-        merged["session_id"] = self.session_id
+        merged.setdefault("instance_id", self.session_id)
         if not merged.get("instance_id"):
             merged["instance_id"] = self.session_id
+        # Keep system session_id when already set; never overwrite with instance.
+        if merged.get("session_id") and not str(merged["session_id"]).startswith("sess-"):
+            merged.pop("session_id", None)
         if self.scenario_id is not None:
             merged["scenario_id"] = self.scenario_id
         merged["handoff_ready"] = self.handoff_ready

@@ -110,17 +110,22 @@ class CliContext:
         System bind is always separate (``active_system_session_id``).
         """
         # Bind law first: outside subject before product assist tracking.
-        system_from_view = view.get("system_session_id") or view.get(
-            "palm_session_id"
-        )
+        # 0.58.9: view.session_id is system subject when sess-shaped.
+        system_from_view = view.get("session_id")
+        if system_from_view and not str(system_from_view).startswith("sess-"):
+            system_from_view = None
         self.bind_system_session(
             str(system_from_view) if system_from_view else None,
             surface="cli",
             metadata={"via": "assist"},
         )
 
-        session_id = view.get("session_id")
+        # Product continue handle (SI-001 internal) — instance_id preferred.
+        session_id = view.get("instance_id") or view.get("session_id")
         if not session_id:
+            return
+        if str(session_id).startswith("sess-"):
+            # System id only — no product instance yet; leave assist handle unset.
             return
         session_id = str(session_id)
         self.active_assist_session_id = session_id

@@ -636,13 +636,17 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
 
-### SI-001 — session_id forced equal to instance_id
+### SI-001 — product handles still named “session” for instance
 
-**Where:** Assist product envelope still uses `session_id` as the **instance** handle for continue.  
-**Impact:** **Partial (0.58.6–8):** system subject is real; `resolve_continue_instance` +
-`rewrite_system_session_continue` map `sess-…` → attached instance on operator
-dispatch. Envelope field rename (`session_id` vs `instance_id`) remains residual.  
-**Target:** Product APIs name `instance_id` for continue; `system_session_id` for subject.
+**Where:** `FlowSession.session_id`, `AssistSession.session_id`, grammar path
+`…/session/{id}`, MCP tool param docs — internal product still keys continue by
+an attribute/path named session.  
+**Impact:** **Partial (0.58.9):** public envelopes use `session_id` = system subject
+and `instance_id` = continue. Plane + product entry resolve `sess-…` → primary
+instance (waiting → last attached). No `system_session_id` / `palm_session_id`
+duals. Residual: rename product handle fields and URL segments to `instance`.  
+**Target:** Product APIs and paths name `instance_id` for continue; `session_id`
+only for the system subject.
 
 ### SI-002 — FlowSession / AssistSession product-only
 
@@ -661,10 +665,10 @@ session id (Assist dogfood 0.58.6).
 ### SI-004 — WS bind is surface-local
 
 **Where:** `runtimes/server/surfaces/websocket/session.py` (`op: bind`, conn bind state).  
-**Status:** ✅ **done** at **0.58.7** — `op: bind` / hello / dispatch resolve **system**
-session via plane; cookie-like transport (`X-Palm-Session`, Cookie `palm_session`);
-product `session_id` remains instance handle for continue (SI-001). REST flow create
-echoes system id + `Set-Cookie`.
+**Status:** ✅ **done** at **0.58.7** (+ **0.58.9** vocabulary) — `op: bind` / hello /
+dispatch resolve system session via plane; cookie-like transport
+(`X-Palm-Session`, Cookie `palm_session`); bound snapshot uses `session_id` +
+`instance_id`. REST create echoes system `session_id` + `Set-Cookie`.
 
 ### SI-005 — MCP / palm_assist session = instance
 
@@ -754,10 +758,11 @@ wins. Residual: leaves that never bind event context.
 | 0.58.3 | Bind law on plane + host + CLI; SI-006 partial; SI-001 still product |
 | 0.58.4 | SI-003 ✅; SI-008 partial; job metadata + SessionOwnershipHook |
 | 0.58.5 | Journey inspect / list_waiting ✅ |
-| 0.58.6 | Assist dogfood: system_session_id; SI-001/005 partial |
+| 0.58.6 | Assist dogfood: system session on submit |
 | 0.58.7 | SI-004 ✅ WS/cookie bind; flow create name-vs-id fix |
 | 0.58.8 | Watches/fan-in; SI-001/005/007/008/009 partial truth |
-| later / residual | SI-001/005 field rename, SI-006, SI-007 CQRS, SI-010…012, SI-014, SU-* |
+| 0.58.9 | Vocabulary slash: session_id=system, instance_id=continue; duals deleted |
+| later / residual | SI-001/005 path/class rename, SI-006, SI-007 CQRS, SI-010…012, SI-014, SU-* |
 | theme exit | SD-008 close when residual SI honest |
 
 ---

@@ -146,7 +146,8 @@ async def test_palm_flows_session_assistant_in_process(flows_server_ctx) -> None
             "palm_flows_create_session",
             {"flow_id": "onboard"},
         )
-        session_id = started.data["session_id"]
+        # 0.58.9: system session may be used; product resolves to instance
+        session_id = started.data.get("session_id") or started.data["instance_id"]
         result = await client.call_tool(
             "palm_flows_session",
             {"session_id": session_id, "flow_id": "onboard", "format": "assistant"},
@@ -174,7 +175,7 @@ async def test_palm_flows_session_powertool_default_in_process(flows_server_ctx)
             "palm_flows_create_session",
             {"flow_id": "onboard"},
         )
-        session_id = started.data["session_id"]
+        session_id = started.data.get("session_id") or started.data["instance_id"]
         result = await client.call_tool(
             "palm_flows_session",
             {"session_id": session_id, "flow_id": "onboard"},
@@ -229,7 +230,8 @@ def test_flows_rest_session_assistant_opt_in(server: ServerRuntime) -> None:
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
     assert status in {200, 202}
-    session_id = created["session_id"]
+    # System session on path is resolved to instance (0.58.9 ergonomic)
+    session_id = created.get("session_id") or created["instance_id"]
 
     status, payload = _request(
         server.base_url,
@@ -258,7 +260,7 @@ async def test_palm_flows_session_input_assistant_format(flows_server_ctx) -> No
             "palm_flows_create_session",
             {"flow_id": "onboard"},
         )
-        session_id = started.data["session_id"]
+        session_id = started.data.get("session_id") or started.data["instance_id"]
         result = await client.call_tool(
             "palm_flows_session_input",
             {
@@ -283,7 +285,7 @@ def test_flows_rest_session_input_assistant_opt_in(server: ServerRuntime) -> Non
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
     assert status in {200, 202}
-    session_id = created["session_id"]
+    session_id = created.get("session_id") or created["instance_id"]
 
     status, payload = _request(
         server.base_url,
@@ -305,7 +307,7 @@ def test_flows_rest_session_powertool_default(server: ServerRuntime) -> None:
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
     assert status in {200, 202}
-    session_id = created["session_id"]
+    session_id = created.get("session_id") or created["instance_id"]
 
     status, payload = _request(
         server.base_url,

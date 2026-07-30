@@ -22,15 +22,32 @@ class AssistSessionService:
         self._assist = assist
 
     def get(self, session_id: str) -> AssistSession:
-        view = self._assist.system.inspect_instance(session_id)
+        # 0.58.9: session_id may be system subject — resolve primary instance.
+        instance_id = self._resolve_instance_id(session_id)
+        view = self._assist.system.inspect_instance(instance_id)
         flow_id = flow_id_from_view(view)
         scenario_id = scenario_id_from_view(view, flow_id)
         return AssistSession(
             self._assist,
             flow_id=flow_id,
-            session_id=session_id,
+            session_id=instance_id,
             scenario_id=scenario_id,
         )
+
+    def _resolve_instance_id(self, session_or_instance: str) -> str:
+        """Map system session id → continue instance; pass instance ids through."""
+        text = str(session_or_instance or "").strip()
+        if not text.startswith("sess-"):
+            return text
+        try:
+            runtime = self._assist.execution.flows.resolve_runtime()
+            plane = getattr(runtime, "session_plane", None)
+            if plane is None:
+                return text
+            inst = plane.resolve_continue_instance(text)
+            return str(inst) if inst else text
+        except Exception:
+            return text
 
     def inspect(
         self,

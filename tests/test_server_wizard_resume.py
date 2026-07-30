@@ -114,7 +114,7 @@ def test_session_resume_redrives_waiting_wizard(server: ServerRuntime) -> None:
     )
     assert status in {200, 202}
     assert isinstance(created, dict)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
 
     status, payload = _request(
         server.base_url,
@@ -123,7 +123,7 @@ def test_session_resume_redrives_waiting_wizard(server: ServerRuntime) -> None:
     )
     assert status == 200
     assert isinstance(payload, dict)
-    assert payload.get("session_id") == session_id or payload.get("instance_id") == session_id
+    assert payload.get("instance_id") == session_id or payload.get("session_id") == session_id
     assert payload["status"] == JobStatus.WAITING_FOR_INPUT.value
 
 
@@ -138,7 +138,7 @@ def test_session_resume_child_wait_route_gone(server: ServerRuntime) -> None:
     )
     assert status in {200, 202}
     assert isinstance(created, dict)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
 
     status, _payload = _request(
         server.base_url,

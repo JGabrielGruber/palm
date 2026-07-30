@@ -16,9 +16,19 @@ if TYPE_CHECKING:
 
 def prepare_flow_from_body(runtime: BaseRuntime, body: dict[str, object]) -> ExecutionPlan:
     """Build a flow plan from an HTTP-style request body."""
+    meta = body.get("metadata")
+    metadata = dict(meta) if isinstance(meta, dict) else None
+    state = body.get("state")
+    job_id = _optional_str(body.get("job_id"))
+
     if "flow" in body and isinstance(body["flow"], dict):
         flow = FlowDefinition.from_dict(body["flow"])
-        return runtime.executor.prepare_flow_plan(flow, job_id=_optional_str(body.get("job_id")))
+        return runtime.executor.prepare_flow_plan(
+            flow,
+            job_id=job_id,
+            state=state,  # type: ignore[arg-type]
+            metadata=metadata,
+        )
 
     if "wizard" in body:
         wizard = body["wizard"]
@@ -30,13 +40,20 @@ def prepare_flow_from_body(runtime: BaseRuntime, body: dict[str, object]) -> Exe
             pattern="wizard",
             options={"steps": int(steps)} if steps is not None else {},
         )
-        return runtime.executor.prepare_flow_plan(flow, job_id=_optional_str(body.get("job_id")))
+        return runtime.executor.prepare_flow_plan(
+            flow,
+            job_id=job_id,
+            state=state,  # type: ignore[arg-type]
+            metadata=metadata,
+        )
 
     if "flow_name" in body:
         return runtime.executor.prepare_flow_plan(
             str(body["flow_name"]),
             by_id=bool(body.get("by_id", False)),
-            job_id=_optional_str(body.get("job_id")),
+            job_id=job_id,
+            state=state,  # type: ignore[arg-type]
+            metadata=metadata,
         )
 
     raise ValueError("expected 'flow', 'wizard', or 'flow_name' in request body")

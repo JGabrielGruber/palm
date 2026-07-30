@@ -1,8 +1,6 @@
-"""0.58.7 — WS / cookie-like bind to system session plane (SI-004)."""
+"""0.58.7 / 0.58.9 — WS / cookie-like bind; session_id = system subject."""
 
 from __future__ import annotations
-
-import pytest
 
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.roles import DeploymentProfile
@@ -65,23 +63,22 @@ def test_ws_bind_creates_system_session_on_plane() -> None:
         )
         assert bound is not None
         assert bound["op"] == "bound"
-        sid = bound["system_session_id"]
+        sid = bound["session_id"]
         assert sid and looks_like_system_session_id(sid)
-        assert conn.system_session_id == sid
+        assert conn.session_id == sid
         assert bound.get("created") is True
         plane = host.session_plane
         assert plane is not None
         rec = plane.require_open(sid)
         assert rec.session_id == sid
 
-        # Rebind same system session
         again = handle_client_message(
-            {"op": "bind", "id": "b2", "system_session_id": sid},
+            {"op": "bind", "id": "b2", "session_id": sid},
             ctx=host,
             conn=conn,
         )
         assert again is not None
-        assert again["system_session_id"] == sid
+        assert again["session_id"] == sid
         assert again.get("created") is False
     finally:
         host.shutdown()
@@ -100,20 +97,19 @@ def test_ws_bind_product_instance_stays_separate_from_system() -> None:
             {
                 "op": "bind",
                 "id": "b1",
-                "session_id": "inst-product",
+                "instance_id": "inst-product",
                 "flow_id": "todo-builder",
             },
             ctx=host,
             conn=conn,
         )
         assert bound is not None
-        assert bound["session_id"] == "inst-product"
+        assert bound["instance_id"] == "inst-product"
         assert bound["flow_id"] == "todo-builder"
-        # Product instance is not the system subject
-        assert bound["system_session_id"] != "inst-product"
-        assert looks_like_system_session_id(bound["system_session_id"])
-        assert conn.session_id == "inst-product"
-        assert conn.system_session_id == bound["system_session_id"]
+        assert bound["session_id"] != "inst-product"
+        assert looks_like_system_session_id(bound["session_id"])
+        assert conn.instance_id == "inst-product"
+        assert conn.session_id == bound["session_id"]
     finally:
         host.shutdown()
 
@@ -133,10 +129,9 @@ def test_ws_bind_sess_shaped_session_id_is_system() -> None:
             conn=conn,
         )
         assert bound is not None
-        assert bound["system_session_id"] == "sess-explicit-ws"
-        assert conn.system_session_id == "sess-explicit-ws"
-        # Not treated as product instance
-        assert conn.session_id is None
+        assert bound["session_id"] == "sess-explicit-ws"
+        assert conn.session_id == "sess-explicit-ws"
+        assert conn.instance_id is None
         plane = host.session_plane
         assert plane is not None
         assert plane.get("sess-explicit-ws") is not None
@@ -152,7 +147,6 @@ def test_ws_cookie_header_binds_on_hello() -> None:
     )
     host.start()
     try:
-        # Pre-open so create=False path is not required
         plane = host.session_plane
         assert plane is not None
         plane.open(session_id="sess-cookie-hello")
@@ -167,8 +161,8 @@ def test_ws_cookie_header_binds_on_hello() -> None:
         )
         assert hello is not None
         assert hello["op"] == "hello"
-        assert hello["bound"]["system_session_id"] == "sess-cookie-hello"
-        assert conn.system_session_id == "sess-cookie-hello"
+        assert hello["bound"]["session_id"] == "sess-cookie-hello"
+        assert conn.session_id == "sess-cookie-hello"
     finally:
         host.shutdown()
 
@@ -187,7 +181,7 @@ def test_ws_bind_refuses_closed_system_session() -> None:
         plane.close("sess-closed-ws")
         conn = _ConnectionState(headers={})
         err = handle_client_message(
-            {"op": "bind", "id": "b1", "system_session_id": "sess-closed-ws"},
+            {"op": "bind", "id": "b1", "session_id": "sess-closed-ws"},
             ctx=host,
             conn=conn,
         )
@@ -213,8 +207,8 @@ def test_resolve_session_plane_from_host() -> None:
         host.shutdown()
 
 
-def test_ws_dispatch_injects_system_session_id() -> None:
-    """Dispatch without explicit system id still binds and exposes bound system subject."""
+def test_ws_dispatch_injects_session_id() -> None:
+    """Dispatch without explicit session still binds and exposes system subject."""
     settings = PalmSettings.for_tests(load_examples=True)
     host = ApplicationHost(
         settings=settings,
@@ -231,7 +225,7 @@ def test_ws_dispatch_injects_system_session_id() -> None:
         assert frame is not None
         assert frame["op"] == "turn"
         bound = frame.get("bound") or {}
-        assert looks_like_system_session_id(bound.get("system_session_id"))
-        assert conn.system_session_id == bound["system_session_id"]
+        assert looks_like_system_session_id(bound.get("session_id"))
+        assert conn.session_id == bound["session_id"]
     finally:
         host.shutdown()

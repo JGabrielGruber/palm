@@ -103,10 +103,12 @@ def rewrite_system_session_continue(
 ) -> tuple[list[str], dict[str, Any]]:
     """Map system session ids to product continue handles (attach list).
 
-    When path/params carry a system session (``sess-…``) where product APIs
-    expect an instance id, resolve via
-    :meth:`~palm.system.planes.session.SessionPlaneService.resolve_continue_instance`.
-    Does not invent resume — only picks the instance under the session.
+    **0.58.9 law:** ``session_id`` is always the system subject. Product path
+    segments still expect an **instance** id (SI-001/005). When a path or
+    param carries ``sess-…`` where product needs an instance, resolve via
+    :meth:`~palm.system.planes.session.SessionPlaneService.resolve_continue_instance`
+    (waiting → else last attached). Does **not** invent resume. Does **not**
+    write the instance back into ``session_id``.
     """
     from palm.kits.server.middleware import resolve_session_plane
     from palm.system.planes.session import looks_like_system_session_id
@@ -124,6 +126,10 @@ def rewrite_system_session_continue(
         except Exception:
             return None
 
+    def _apply_instance(inst: str, system_sid: str) -> None:
+        out_params["session_id"] = system_sid
+        out_params["instance_id"] = inst
+
     # Path: assist/session/{id}/… or flows/{flow}/session/{id}/…
     if len(out_path) >= 3 and out_path[0] == "assist" and out_path[1] == "session":
         raw = out_path[2]
@@ -131,9 +137,7 @@ def rewrite_system_session_continue(
             inst = _resolve(str(raw))
             if inst:
                 out_path[2] = inst
-                out_params.setdefault("system_session_id", str(raw))
-                out_params["session_id"] = inst
-                out_params.setdefault("instance_id", inst)
+                _apply_instance(inst, str(raw))
     elif (
         len(out_path) >= 4
         and out_path[0] == "flows"
@@ -144,24 +148,26 @@ def rewrite_system_session_continue(
             inst = _resolve(str(raw))
             if inst:
                 out_path[3] = inst
-                out_params.setdefault("system_session_id", str(raw))
-                out_params["session_id"] = inst
-                out_params.setdefault("instance_id", inst)
+                _apply_instance(inst, str(raw))
 
-    # Params-only continue: system session without product instance handle
-    sid = out_params.get("session_id") or out_params.get("instance_id")
-    system_sid = out_params.get("system_session_id") or out_params.get("palm_session_id")
-    if looks_like_system_session_id(sid) and not looks_like_system_session_id(
-        system_sid or ""
-    ):
-        system_sid = sid
-        out_params.setdefault("system_session_id", str(sid))
-    if system_sid and looks_like_system_session_id(system_sid):
-        if not sid or looks_like_system_session_id(sid):
+    # Params: session_id is system; instance_id is continue (resolve if missing).
+    system_sid = out_params.get("session_id")
+    inst_param = out_params.get("instance_id")
+    if looks_like_system_session_id(system_sid):
+        if not inst_param or looks_like_system_session_id(inst_param):
             inst = _resolve(str(system_sid))
             if inst:
-                out_params["session_id"] = inst
-                out_params.setdefault("instance_id", inst)
+                out_params["instance_id"] = inst
+        # Keep session_id as system — never overwrite with instance.
+    elif looks_like_system_session_id(inst_param) and not looks_like_system_session_id(
+        system_sid or ""
+    ):
+        # Misplaced system id in instance_id — correct and resolve.
+        system_sid = str(inst_param)
+        out_params["session_id"] = system_sid
+        inst = _resolve(system_sid)
+        if inst:
+            out_params["instance_id"] = inst
 
     return out_path, out_params
 

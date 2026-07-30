@@ -111,7 +111,7 @@ class InstancePersistenceHook(JobHookAdapter):
             "job_id": job.id,
             "status": status,
         }
-        sid = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+        sid = job.metadata.get("session_id")
         if sid is not None and str(sid).strip():
             payload["session_id"] = str(sid).strip()
         event = Event(

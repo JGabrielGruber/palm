@@ -170,6 +170,7 @@ def test_ws_auto_start_binds_business_flow_id(assist_host: ApplicationHost) -> N
     )
     assert start is not None and start["op"] == "turn"
     sid = start["bound"]["session_id"]
+    start_instance = start["bound"].get("instance_id")
     fid = start["bound"]["flow_id"]
     handoff = handle_client_message(
         {
@@ -187,7 +188,10 @@ def test_ws_auto_start_binds_business_flow_id(assist_host: ApplicationHost) -> N
     )
     assert handoff is not None and handoff["op"] == "turn"
     assert "todo-builder" in str(handoff["bound"]["flow_id"])
-    assert handoff["bound"]["session_id"] != sid
+    # 0.58.9: system session is stable; continue handle (instance) changes on handoff
+    assert handoff["bound"]["session_id"] == sid
+    if start_instance is not None:
+        assert handoff["bound"].get("instance_id") != start_instance
     path = handoff["payload"].get("path") or []
     assert path[:2] == ["flows", "todo-builder"]
     # next answer uses bind only (no explicit flow_id)
@@ -329,7 +333,7 @@ def test_inspect_catalog_includes_design_cta(assist_host: ApplicationHost) -> No
 
 def test_handoff_todo_builder_still_kind_flow(assist_host: ApplicationHost) -> None:
     started = assist_host.assist.start_scenario("operator-entry", {})
-    session_id = started["session_id"]
+    session_id = started["session_id"]  # system subject; resolve on product path
     assist_host.assist.dispatch(
         ["assist", "session", session_id, "input"],
         {"value": "todo-builder", "format": "assistant"},
@@ -341,24 +345,28 @@ def test_handoff_todo_builder_still_kind_flow(assist_host: ApplicationHost) -> N
 
 def test_assist_session_input_and_context(assist_host: ApplicationHost) -> None:
     started = assist_host.assist.start_scenario("operator-entry", {})
-    session_id = started["session_id"]
-    ctx = assist_host.assist.dispatch(["assist", "session", session_id])
-    assert ctx["session_id"] == session_id
+    # System subject + continue handle (0.58.9); product paths resolve sess-…
+    system_sid = started["session_id"]
+    instance_id = started["instance_id"]
+    assert str(system_sid).startswith("sess-")
+    ctx = assist_host.assist.dispatch(["assist", "session", system_sid])
+    assert ctx.get("session_id") == system_sid
+    assert ctx.get("instance_id") == instance_id
     assert ctx.get("status") == "waiting"
     assert ctx.get("question")
     assert "detail" not in ctx
 
     updated = assist_host.assist.dispatch(
-        ["assist", "session", session_id, "input"],
+        ["assist", "session", system_sid, "input"],
         {"value": "todo-builder"},
     )
-    assert updated["session_id"] == session_id
+    assert updated.get("session_id") == system_sid or updated.get("instance_id")
     if updated.get("status") == "waiting":
         assist_host.assist.dispatch(
-            ["assist", "session", session_id, "input"],
+            ["assist", "session", system_sid, "input"],
             {"value": "yes"},
         )
 
-    handoff = assist_host.assist.handoff(session_id)
+    handoff = assist_host.assist.handoff(system_sid)
     assert handoff["handoff"]["kind"] == "flow"
     assert handoff["handoff"]["flow_id"] == "todo-builder"

@@ -478,7 +478,7 @@ def test_wizard_instance_detail_renders_prompt(server: ServerRuntime) -> None:
         "/v1/api/flows/onboard/create",
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
 
     status, html, _ = _get_html(server.base_url, f"/explorer/instances/{instance_id}")
     assert status == 200
@@ -496,7 +496,7 @@ def test_wizard_instance_list_shows_continue(server: ServerRuntime) -> None:
         "/v1/api/flows/onboard/create",
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
 
     status, html, _ = _get_html(server.base_url, "/explorer/instances")
     assert status == 200
@@ -511,7 +511,7 @@ def test_wizard_input_htmx_partial(server: ServerRuntime) -> None:
         "/v1/api/flows/onboard/create",
         body={"wizard": {"name": "onboard", "steps": 2}},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
 
     status, html, _ = _post_form(
         server.base_url,
@@ -553,7 +553,7 @@ def test_wizard_collection_overview_renders(server: ServerRuntime) -> None:
         "/v1/api/flows/todo-test/create",
         body={"flow_name": "todo-test"},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
 
     status, html, _ = _get_html(server.base_url, f"/explorer/instances/{instance_id}")
     assert status == 200
@@ -570,7 +570,7 @@ def test_wizard_collection_add_item_htmx(server: ServerRuntime) -> None:
         "/v1/api/flows/todo-test/create",
         body={"flow_name": "todo-test"},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
 
     status, html, _ = _post_form(
         server.base_url,
@@ -621,7 +621,7 @@ def test_wizard_collection_shows_item_in_overview(server: ServerRuntime) -> None
         "/v1/api/flows/todo-test/create",
         body={"flow_name": "todo-test"},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
     html = _collection_add_item(
         server.base_url,
         instance_id,
@@ -640,7 +640,7 @@ def test_wizard_collection_edit_item_htmx(server: ServerRuntime) -> None:
         "/v1/api/flows/todo-test/create",
         body={"flow_name": "todo-test"},
     )
-    instance_id = created.get("session_id") or created["instance_id"]
+    instance_id = created["instance_id"]
     _collection_add_item(
         server.base_url,
         instance_id,

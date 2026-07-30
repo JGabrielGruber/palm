@@ -493,9 +493,12 @@ class ApplicationHost:
         metadata: dict[str, Any] | None = None,
         session_id: str | None = None,
     ) -> Job:
-        """Submit a flow. Optional ``session_id`` is the system session owner (0.58.4)."""
+        """Submit a flow. Optional ``session_id`` is the system session owner (0.58.4).
+
+        Job metadata and edge use one name: ``session_id`` (system subject only).
+        """
         meta = dict(metadata or {})
-        sid = (session_id or meta.get("session_id") or meta.get("palm_session_id") or "")
+        sid = (session_id or meta.get("session_id") or "")
         sid = str(sid).strip() if sid else ""
         if sid:
             meta["session_id"] = sid

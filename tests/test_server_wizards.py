@@ -71,14 +71,18 @@ def _create_session(server: ServerRuntime, *, body: dict[str, Any] | None = None
 
 def test_create_session_returns_session_id(server: ServerRuntime) -> None:
     payload = _create_session(server)
+    # 0.58.9: instance_id = continue; session_id = system subject when plane binds
+    assert payload.get("instance_id")
     assert payload.get("session_id")
+    assert str(payload["session_id"]).startswith("sess-")
+    assert payload["session_id"] != payload["instance_id"]
     assert payload.get("job_id")
     assert payload["status"] == JobStatus.WAITING_FOR_INPUT.value
 
 
 def test_get_session_returns_prompt(server: ServerRuntime) -> None:
     created = _create_session(server)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
     flow_id = _flow_id()
 
     status, payload = _request(
@@ -88,7 +92,7 @@ def test_get_session_returns_prompt(server: ServerRuntime) -> None:
     )
     assert status == 200
     assert isinstance(payload, dict)
-    assert payload.get("session_id") == session_id or payload.get("instance_id") == session_id
+    assert payload.get("instance_id") == session_id or payload.get("session_id") == session_id
     assert payload.get("job_id") == created["job_id"]
     assert payload.get("status") == JobStatus.WAITING_FOR_INPUT.value
     assert payload.get("prompt") is not None or payload.get("current_step_slug") is not None
@@ -125,7 +129,7 @@ def test_create_session_validation_error(server: ServerRuntime) -> None:
 
 def test_session_input_advances_step(server: ServerRuntime) -> None:
     created = _create_session(server)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
     flow_id = _flow_id()
 
     status, payload = _request(
@@ -162,7 +166,7 @@ def test_session_input_not_found(server: ServerRuntime) -> None:
 
 def test_session_backtrack_returns_to_previous_step(server: ServerRuntime) -> None:
     created = _create_session(server)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
     flow_id = _flow_id()
 
     status, after_input = _request(
@@ -189,7 +193,7 @@ def test_session_backtrack_returns_to_previous_step(server: ServerRuntime) -> No
 
 def test_session_backtrack_rejects_first_step(server: ServerRuntime) -> None:
     created = _create_session(server)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
     flow_id = _flow_id()
 
     status, payload = _request(
@@ -205,7 +209,7 @@ def test_session_backtrack_rejects_first_step(server: ServerRuntime) -> None:
 
 def test_session_backtrack_explicit_target(server: ServerRuntime) -> None:
     created = _create_session(server)
-    session_id = created["session_id"]
+    session_id = created["instance_id"]
     flow_id = _flow_id()
 
     _request(

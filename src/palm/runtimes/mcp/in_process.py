@@ -232,6 +232,19 @@ class PalmInProcessBackend:
         except InstanceNotFoundError as exc:
             raise _instance_not_found(instance_id) from exc
 
+    def resolve_session_continue(self, session_id: str) -> str | None:
+        """Map system session id → primary continue instance (0.58.9)."""
+        text = str(session_id or "").strip()
+        if not text.startswith("sess-"):
+            return text or None
+        try:
+            plane = getattr(self._ctx.runtime, "session_plane", None)
+            if plane is None:
+                return None
+            return plane.resolve_continue_instance(text)
+        except Exception:
+            return None
+
     def get_job_context(self, job_id: str) -> dict[str, Any]:
         result = self._ctx.system.inspect_job(job_id)
         if isinstance(result, dict) and not result.get("found", True):
@@ -276,8 +289,13 @@ class PalmInProcessBackend:
         return self.flows_create_session(flow_id, body)
 
     def _resolve_flow_id(self, session_id: str) -> str:
+        # 0.58.9: system session may be passed; resolve primary instance first.
+        iid = session_id
+        resolved = self.resolve_session_continue(session_id)
+        if resolved:
+            iid = resolved
         try:
-            view = self._ctx.system.inspect_instance(session_id)
+            view = self._ctx.system.inspect_instance(iid)
         except InstanceNotFoundServiceError as exc:
             raise _wizard_not_found(exc.instance_id) from exc
         flow_id = resolve_flow_id_from_inspect(view)

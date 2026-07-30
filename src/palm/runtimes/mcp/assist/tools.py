@@ -74,19 +74,20 @@ def register_assist_tools(mcp: Any, backend: Any) -> None:
                 and resolved[0] == "flows"
                 and resolved[-1] == "create"
                 and isinstance(result, dict)
-                and result.get("session_id")
             ):
+                # Product path keys by instance_id; sess-… is rewritten on dispatch.
                 flow_id = resolved[1]
-                session_id = str(result["session_id"])
-                inspect_path = ["flows", flow_id, "session", session_id]
-                try:
-                    result = backend.assist_dispatch(
-                        inspect_path,
-                        params={"format": "assistant"},
-                    )
-                    resolved = inspect_path
-                except Exception:
-                    pass  # fall back to create envelope
+                inspect_key = result.get("instance_id") or result.get("session_id")
+                if inspect_key:
+                    inspect_path = ["flows", flow_id, "session", str(inspect_key)]
+                    try:
+                        result = backend.assist_dispatch(
+                            inspect_path,
+                            params={"format": "assistant"},
+                        )
+                        resolved = inspect_path
+                    except Exception:
+                        pass  # fall back to create envelope
         except (TypeError, ValueError, DefinitionNotFoundServiceError) as exc:
             raise ValueError(str(exc)) from exc
         except PalmRestError as exc:

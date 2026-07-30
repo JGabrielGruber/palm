@@ -53,7 +53,7 @@ class ReliableEventPublisher:
 
 def event_context_from_job(job: Job) -> EventContext:
     """Build correlation context from orchestration job metadata."""
-    sid_raw = job.metadata.get("session_id") or job.metadata.get("palm_session_id")
+    sid_raw = job.metadata.get("session_id")
     session_id = str(sid_raw).strip() if sid_raw is not None else None
     if session_id == "":
         session_id = None

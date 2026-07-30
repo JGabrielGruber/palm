@@ -295,17 +295,13 @@ class SessionPlaneService:
             if isinstance(ctx, dict) and ctx.get("session_id"):
                 return str(ctx["session_id"]).strip() or None
 
-        for key in ("system_session_id", "palm_session_id"):
-            raw = pay.get(key)
-            if raw is not None and str(raw).strip():
-                return str(raw).strip()
-
+        # 0.58.9: payload session_id is system subject when system-shaped;
+        # instance-shaped → reverse index (legacy product payloads).
         raw_sid = pay.get("session_id")
         if raw_sid is not None and str(raw_sid).strip():
             text = str(raw_sid).strip()
             if text.startswith("sess-"):
                 return text
-            # Instance-shaped session_id in payload → reverse index
             owner = self.session_for_instance(text)
             if owner is not None:
                 return owner.session_id
