@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.8** watches / fan-in  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58.10** active instance on session record  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -18,8 +18,8 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | **Home** | `palm.system.planes.session` (system). Product thin. |
 | **Law** | No outside interaction without a session bind. Surfaces bind (cookie-like OK on server). |
 | **Not** | Session ≡ instance. Second resume path. Long-lived shims. |
-| **Next code** | Theme **exit** (ADR Accepted, SD-008 close, residual SI honest). |
-| **Done** | **0.58.0–0.58.8** bind → dogfood → WS → watches |
+| **Next code** | Product SI-001 rename (handles/paths use `instance_id`); theme **exit** when residual SI honest. |
+| **Done** | **0.58.0–0.58.10** bind → dogfood → WS → watches → vocabulary → **active instance** |
 | **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 
 ## Quick Overview
@@ -47,7 +47,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · through `0.58.9`)
+## 0.58 — Session plane (**open** · through `0.58.10`)
 
 **Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
@@ -69,7 +69,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.58.7** | ✅ | WS `op:bind` + cookie/header → plane; product instance separate; create Set-Cookie |
 | **0.58.8** | ✅ | Event filter by session; Events WS fan-in; continue resolve; system/session inspect |
 | **0.58.9** | ✅ | Vocabulary slash: `session_id` = system only; `instance_id` = continue; no dual keys |
-| **exit** | 📋 next | Map true · SD-008 closed · ADR Accepted |
+| **0.58.10** | ✅ | Plane `active_instance_id`; attach sets focus; resolve active → waiting → last |
+| **exit** | 📋 next | Product SI-001 residual · Map true · SD-008 closed · ADR Accepted |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  
 **At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.

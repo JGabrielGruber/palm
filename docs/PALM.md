@@ -246,7 +246,7 @@ A **plane** is system traffic of one kind.
 | **Event** | Signals; completers speak of self | `runtime.event` (orchestration bus) |
 | **Work (start)** | Trigger → WorkIntent → new job | Work drain / start plane |
 | **Wait (continue)** | Interest → resume or fail parked work | Wait plane |
-| **Session** (0.58) | Outside subject: bind, multi-instance walk, watch | System `planes.session` (bind + job path + WS/cookie + event filter through 0.58.8); thin product later |
+| **Session** (0.58) | Outside subject: bind, multi-instance walk, watch | System `planes.session` (bind + multi-attach + **active_instance_id** focus + resolve through 0.58.10); thin product later |
 | **Workload** | Isolation lifecycle events and placement | Workload engine + runners |
 
 **Host bus** (`host.event`) is for host coordination (start, shutdown, outbox process).  

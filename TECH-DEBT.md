@@ -641,12 +641,12 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 **Where:** `FlowSession.session_id`, `AssistSession.session_id`, grammar path
 `…/session/{id}`, MCP tool param docs — internal product still keys continue by
 an attribute/path named session.  
-**Impact:** **Partial (0.58.9):** public envelopes use `session_id` = system subject
-and `instance_id` = continue. Plane + product entry resolve `sess-…` → primary
-instance (waiting → last attached). No `system_session_id` / `palm_session_id`
-duals. Residual: rename product handle fields and URL segments to `instance`.  
+**Impact:** **Partial (0.58.9–10):** public envelopes use `session_id` = system
+subject and `instance_id` = continue. Plane owns ``active_instance_id`` (0.58.10);
+``resolve_continue_instance`` = active → waiting → last. No dual edge keys.
+Residual: rename product handle fields and URL segments to `instance`.  
 **Target:** Product APIs and paths name `instance_id` for continue; `session_id`
-only for the system subject.
+only for the system subject; product reads focus from the plane.
 
 ### SI-002 — FlowSession / AssistSession product-only
 
@@ -762,6 +762,7 @@ wins. Residual: leaves that never bind event context.
 | 0.58.7 | SI-004 ✅ WS/cookie bind; flow create name-vs-id fix |
 | 0.58.8 | Watches/fan-in; SI-001/005/007/008/009 partial truth |
 | 0.58.9 | Vocabulary slash: session_id=system, instance_id=continue; duals deleted |
+| 0.58.10 | Plane active_instance_id; resolve prefers focus |
 | later / residual | SI-001/005 path/class rename, SI-006, SI-007 CQRS, SI-010…012, SI-014, SU-* |
 | theme exit | SD-008 close when residual SI honest |
 

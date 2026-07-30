@@ -7,7 +7,9 @@
 * :meth:`SessionPlaneService.bind` / :meth:`~SessionPlaneService.require_open`
 * :meth:`SessionPlaneService.attach_instance` / reverse lookup
 * :meth:`SessionPlaneService.event_matches` / :meth:`~SessionPlaneService.make_event_filter` (0.58.8)
-* :meth:`SessionPlaneService.resolve_continue_instance` (continue handle from attach list)
+* :meth:`SessionPlaneService.resolve_continue_instance` (active → waiting → last)
+* :attr:`SessionRecord.active_instance_id` / :meth:`SessionPlaneService.set_active_instance` (0.58.10)
+
 * :func:`require_session_plane`
 
 Store uses :class:`~palm.core.storage.StorageEngine` (like work plane).

@@ -65,8 +65,15 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Product residual (SI-001):** class/path names still say “session” for instance handles; resolve at entry  
 - **Fix:** wizard/dict `SubmitFlowCommand` path preserves job metadata (session bind on REST create)
 
+#### Added (0.58.10) — active instance on record
+- **`SessionRecord.active_instance_id`** — plane-owned continue focus (not equal to `session_id`)  
+- **Attach** sets active to the newly attached instance; re-attach does not steal focus  
+- **`set_active_instance` / `clear_active_instance` / `active_instance`**  
+- **`resolve_continue_instance`** order: active (if attached) → open wait → last attached  
+- **Inspect / SessionBind** expose `active_instance_id`; legacy store rows seed last attached  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.9**.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.10**.  
 - Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 

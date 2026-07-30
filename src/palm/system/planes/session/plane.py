@@ -6,6 +6,7 @@ Outside subject on :class:`SessionStore` (:class:`~palm.core.storage.StorageEngi
 * Multi-attach (0.58.2): attach/detach instances; reverse index
 * **Bind law (0.58.3):** surfaces call :meth:`bind` / :meth:`require_open`
   before driving work — no silent instance-only subject
+* **Active instance (0.58.10):** plane-owned continue focus on the record
 
 Does **not** resume jobs. Continue remains the wait plane.
 """
@@ -50,8 +51,10 @@ class SessionPlaneService:
     * :meth:`attach` / :meth:`detach` — plane↔runtime link (not instances)
     * :meth:`open` / :meth:`get` / :meth:`close` / :meth:`list_sessions`
     * :meth:`attach_instance` / :meth:`detach_instance` — multi-attach (0.58.2)
+    * :meth:`set_active_instance` / :attr:`SessionRecord.active_instance_id` (0.58.10)
     * :meth:`session_for_instance` — reverse lookup
     * :meth:`bind` / :meth:`require_open` — surface entry law (0.58.3)
+    * :meth:`resolve_continue_instance` — active → waiting → last attached
     """
 
     def __init__(
@@ -201,8 +204,13 @@ class SessionPlaneService:
     def attach_instance(self, session_id: str, instance_id: str) -> SessionRecord:
         """Attach an instance to a session (multi-attach; 0..N).
 
-        Idempotent if already on this session. Refuses if another session
-        already owns the instance. Promotes OPEN → ACTIVE on first attach.
+        Idempotent if already on this session (does **not** change active).
+        Refuses if another session already owns the instance.
+        Promotes OPEN → ACTIVE on first attach.
+
+        **Active focus (0.58.10):** a newly attached instance becomes
+        ``active_instance_id`` (new work under the session is the continue
+        focus). Re-attach of an already listed id leaves focus alone.
         """
         iid = (instance_id or "").strip()
         if not iid:
@@ -218,8 +226,21 @@ class SessionPlaneService:
                 f"instance {iid!r} already attached to session {owner!r}"
             )
         if iid in rec.instance_ids:
+            # Heal missing active on legacy/corrupt records without steal focus.
+            if rec.active_instance_id is None:
+                rec.active_instance_id = iid
+                rec.touch()
+                return self._store.put(rec)
+            if (
+                rec.active_instance_id is not None
+                and rec.active_instance_id not in rec.instance_ids
+            ):
+                rec.active_instance_id = iid
+                rec.touch()
+                return self._store.put(rec)
             return rec
         rec.instance_ids.append(iid)
+        rec.active_instance_id = iid
         if rec.status == SessionStatus.OPEN:
             rec.status = SessionStatus.ACTIVE
         rec.touch()
@@ -229,6 +250,9 @@ class SessionPlaneService:
         """Remove an instance from a session. Idempotent if not attached.
 
         Closed sessions may still detach (cleanup). Does not reopen closed.
+
+        If the detached id was active, focus moves to the last remaining
+        attached instance, or ``None`` when the list is empty (0.58.10).
         """
         iid = (instance_id or "").strip()
         if not iid:
@@ -237,6 +261,46 @@ class SessionPlaneService:
         if iid not in rec.instance_ids:
             return rec
         rec.instance_ids = [x for x in rec.instance_ids if x != iid]
+        if rec.active_instance_id == iid:
+            rec.active_instance_id = (
+                rec.instance_ids[-1] if rec.instance_ids else None
+            )
+        elif (
+            rec.active_instance_id is not None
+            and rec.active_instance_id not in rec.instance_ids
+        ):
+            rec.active_instance_id = (
+                rec.instance_ids[-1] if rec.instance_ids else None
+            )
+        rec.touch()
+        return self._store.put(rec)
+
+    def set_active_instance(self, session_id: str, instance_id: str) -> SessionRecord:
+        """Set the plane continue focus to an **already attached** instance (0.58.10).
+
+        Does not attach. Does not resume. Closed sessions refuse.
+        """
+        iid = (instance_id or "").strip()
+        if not iid:
+            raise SessionPlaneError("instance_id is required")
+        rec = self.require_open(session_id)
+        if iid not in rec.instance_ids:
+            raise SessionPlaneError(
+                f"instance {iid!r} is not attached to session {session_id!r}; "
+                "attach first, then set_active_instance"
+            )
+        if rec.active_instance_id == iid:
+            return rec
+        rec.active_instance_id = iid
+        rec.touch()
+        return self._store.put(rec)
+
+    def clear_active_instance(self, session_id: str) -> SessionRecord:
+        """Clear continue focus without detaching instances (0.58.10)."""
+        rec = self.require_open(session_id)
+        if rec.active_instance_id is None:
+            return rec
+        rec.active_instance_id = None
         rec.touch()
         return self._store.put(rec)
 
@@ -244,20 +308,37 @@ class SessionPlaneService:
         """Return attached instance ids for a session (ordered)."""
         return list(self.require(session_id).instance_ids)
 
+    def active_instance(self, session_id: str) -> str | None:
+        """Return the plane continue focus id, or None."""
+        rec = self.require(session_id)
+        active = rec.active_instance_id
+        if active is None:
+            return None
+        if active not in rec.instance_ids:
+            return None
+        return str(active)
+
     def session_for_instance(self, instance_id: str) -> SessionRecord | None:
         """Reverse lookup: session that owns this instance, if any."""
         return self._store.get_by_instance(instance_id)
 
     def resolve_continue_instance(self, session_id: str) -> str | None:
-        """Pick an instance under the session for continue (0.58.8).
+        """Pick an instance under the session for continue (0.58.8 + 0.58.10).
 
-        Prefers an instance that currently has open waits; otherwise the
-        last attached instance. Does **not** resume — only selects the
-        product continue handle from the attach list (truth for multi-instance).
+        Order (plane truth first):
+
+        1. ``active_instance_id`` when still attached
+        2. An attached instance that currently has open waits (newest wait wins)
+        3. Last attached instance
+
+        Does **not** resume — only selects the product continue handle.
         """
         rec = self.require_open(session_id)
         if not rec.instance_ids:
             return None
+        active = rec.active_instance_id
+        if active is not None and str(active) in rec.instance_ids:
+            return str(active)
         waiting = self.list_waiting(session_id)
         if waiting:
             for w in reversed(waiting):
@@ -392,6 +473,9 @@ class SessionPlaneService:
                             "session_id": rec.session_id,
                         }
                     )
+        active = rec.active_instance_id
+        if active is not None and active not in rec.instance_ids:
+            active = None
         return {
             "kind": "session_inspect",
             "session_id": rec.session_id,
@@ -400,6 +484,7 @@ class SessionPlaneService:
             "created_at": rec.created_at,
             "updated_at": rec.updated_at,
             "instance_ids": list(rec.instance_ids),
+            "active_instance_id": active,
             "instances": instances,
             "waiting_on": waiting,
             "counts": {
@@ -538,6 +623,9 @@ class SessionPlaneService:
                 "list",
                 "attach_instance",
                 "detach_instance",
+                "set_active_instance",
+                "clear_active_instance",
+                "active_instance",
                 "session_for_instance",
                 "resolve_continue_instance",
                 "inspect",
@@ -549,6 +637,7 @@ class SessionPlaneService:
             "store": "storage_engine",
             "storage_backend": backend,
             "multi_attach": True,
+            "active_instance": True,
             "bind_law": True,
             "event_filter": True,
             "counts": {

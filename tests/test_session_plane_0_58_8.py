@@ -58,7 +58,10 @@ def test_resolve_continue_prefers_waiting_then_last() -> None:
     sid = plane.bind().session_id
     plane.attach_instance(sid, "inst-1")
     plane.attach_instance(sid, "inst-2")
-    # No runtime waits → last attached
+    # 0.58.10: new attach sets active → resolve returns active (inst-2)
+    assert plane.resolve_continue_instance(sid) == "inst-2"
+    plane.clear_active_instance(sid)
+    # No active + no runtime waits → last attached
     assert plane.resolve_continue_instance(sid) == "inst-2"
 
 

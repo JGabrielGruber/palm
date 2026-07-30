@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.9** (vocabulary slash).  
+**Status:** 🚧 **Theme open** — through **0.58.10** (active instance on record).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -122,6 +122,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **7** | WS / cookie-like bind | Same contract; delete one-off reconnect hacks — **0.58.7** ✅ |
 | **8** | Watches / fan-in | Multi-type subscribe by session — **0.58.8** ✅ |
 | **9** | Vocabulary slash | One name: `session_id` = system; `instance_id` = continue; delete duals — **0.58.9** ✅ |
+| **10** | Active instance on record | Plane-owned `active_instance_id`; resolve prefers focus — **0.58.10** ✅ |
 | **exit** | Theme exit | Map true; SD-008 closed; residual SI/SU honest; ADR Accepted |
 
 **Rule:** Do not ship “session is still just instance_id with a new name.”  
@@ -206,6 +207,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.7** | WS/cookie bind: `op: bind` + `X-Palm-Session` / `palm_session` cookie → session plane; flow create Set-Cookie; fix name-vs-id create (`todo-builder`) |
 | **0.58.8** | Watches: plane `event_matches` / `make_event_filter`; Events WS fan-in; `resolve_continue_instance` + path rewrite; `system/session/{id}` inspect; workload owner session from EventContext |
 | **0.58.9** | **Vocabulary slash:** edge + job meta `session_id` = system subject only; continue handle = `instance_id`; delete `system_session_id` / `palm_session_id` duals; plane resolve when only session given; product internal paths still resolve `sess-…` (SI-001 residual class names) |
+| **0.58.10** | **Active instance:** `SessionRecord.active_instance_id`; set on attach; `set_active_instance` / `clear_active_instance`; `resolve_continue_instance` = active → waiting → last; inspect/bind expose focus |
 
 ---
 

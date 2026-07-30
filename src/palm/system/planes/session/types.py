@@ -48,11 +48,16 @@ class SessionRecord:
     ``instance_ids`` is the ordered attach list (0..N). Empty at open
     until :meth:`~SessionPlaneService.attach_instance` binds work under
     this session.
+
+    ``active_instance_id`` (0.58.10) is the plane-owned **continue focus**
+    among attached instances. Not equal to ``session_id``. None when no
+    instance is attached (or after detach of the last).
     """
 
     session_id: str
     status: SessionStatus = SessionStatus.OPEN
     instance_ids: list[str] = field(default_factory=list)
+    active_instance_id: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
     created_at: str = field(default_factory=_now_iso)
     updated_at: str = field(default_factory=_now_iso)
@@ -66,6 +71,7 @@ class SessionRecord:
             "session_id": self.session_id,
             "status": self.status.value,
             "instance_ids": list(self.instance_ids),
+            "active_instance_id": self.active_instance_id,
             "metadata": dict(self.metadata),
             "created_at": self.created_at,
             "updated_at": self.updated_at,
@@ -79,10 +85,25 @@ class SessionRecord:
         except ValueError:
             status = SessionStatus.OPEN
         ids = data.get("instance_ids") or []
+        instance_ids = [str(i) for i in ids]
+        active: str | None = None
+        if "active_instance_id" not in data:
+            # Legacy store rows (pre-0.58.10): seed focus to last attached.
+            if instance_ids:
+                active = instance_ids[-1]
+        else:
+            active_raw = data.get("active_instance_id")
+            if active_raw is not None and str(active_raw).strip():
+                active = str(active_raw).strip()
+                # Drop stale focus not on the attach list (corrupt store).
+                if active not in instance_ids:
+                    active = None
+            # Explicit null means cleared focus — do not re-seed.
         return cls(
             session_id=str(data["session_id"]),
             status=status,
-            instance_ids=[str(i) for i in ids],
+            instance_ids=instance_ids,
+            active_instance_id=active,
             metadata=dict(data.get("metadata") or {}),
             created_at=str(data.get("created_at") or _now_iso()),
             updated_at=str(data.get("updated_at") or _now_iso()),
@@ -95,6 +116,7 @@ class SessionBind:
 
     ``session_id`` is always a system session id (not an instance id).
     ``created`` is True when bind opened a new record.
+    ``active_instance_id`` is the plane continue focus when one is set (0.58.10).
     """
 
     session_id: str
@@ -102,6 +124,7 @@ class SessionBind:
     created: bool = False
     surface: str | None = None
     instance_ids: tuple[str, ...] = ()
+    active_instance_id: str | None = None
 
     @classmethod
     def from_record(
@@ -123,6 +146,7 @@ class SessionBind:
             created=created,
             surface=surf,
             instance_ids=tuple(record.instance_ids),
+            active_instance_id=record.active_instance_id,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -133,6 +157,7 @@ class SessionBind:
             "created": self.created,
             "surface": self.surface,
             "instance_ids": list(self.instance_ids),
+            "active_instance_id": self.active_instance_id,
         }
 
 

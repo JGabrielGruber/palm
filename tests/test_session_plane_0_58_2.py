@@ -34,12 +34,15 @@ def test_attach_many_instances_one_session() -> None:
     a = plane.attach_instance("sess-multi", "inst-1")
     assert a.status == SessionStatus.ACTIVE
     assert a.instance_ids == ["inst-1"]
+    assert a.active_instance_id == "inst-1"
 
     b = plane.attach_instance("sess-multi", "inst-2")
     assert b.instance_ids == ["inst-1", "inst-2"]
+    assert b.active_instance_id == "inst-2"
 
     c = plane.attach_instance("sess-multi", "inst-3")
     assert c.instance_ids == ["inst-1", "inst-2", "inst-3"]
+    assert c.active_instance_id == "inst-3"
     assert plane.list_instances("sess-multi") == ["inst-1", "inst-2", "inst-3"]
     # session_id is not any instance id
     assert "sess-multi" not in c.instance_ids
