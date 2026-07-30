@@ -66,14 +66,24 @@ class FlowExecutionService(BaseService):
             body = dict(params.get("body") or params)
             if "flow" not in body and "wizard" not in body and "flow_name" not in body:
                 body["flow_name"] = parsed.flow_id
+                # Path segment is the definition id (or name); prefer by_id resolve.
+                body.setdefault("by_id", True)
             session = self.run_wizard(body)
             ctx = session.context()
-            return {
+            system_sid = _system_session_from_instance_meta(
+                self.get_instance_metadata(session.session_id)
+            )
+            payload: dict[str, Any] = {
                 "session_id": session.session_id,
+                "instance_id": session.session_id,
                 "flow_id": session.flow_id,
                 "job_id": ctx.job_id,
                 "status": ctx.status,
             }
+            if system_sid:
+                payload["system_session_id"] = system_sid
+                payload["palm_session_id"] = system_sid
+            return payload
 
         if parsed.kind == FlowCommandKind.SESSION:
             assert parsed.flow_id is not None
@@ -109,7 +119,7 @@ class FlowExecutionService(BaseService):
 
     def submit_flow_body(self, body: dict[str, Any]) -> Any:
         """Submit any flow from a REST-shaped body and wait until idle (work drain, triggers)."""
-        job = self.dispatch_command(flow_command_from_body(body))
+        job = self.dispatch_command(flow_command_from_body(self._with_system_session(body)))
         self.wait_until_idle()
         return job
 
@@ -119,6 +129,45 @@ class FlowExecutionService(BaseService):
         session_id = instance_id_for_job(job)
         flow_id = _flow_id_from_body(body)
         return self.session(flow_id, session_id)
+
+    def _with_system_session(self, body: dict[str, Any]) -> dict[str, Any]:
+        """Ensure job metadata carries a system session id (0.58.6 dogfood).
+
+        Prefer an explicit system id from the body; otherwise bind a new one
+        on the runtime session plane. Does not treat product ``session_id``
+        (instance id) as the system subject.
+        """
+        out = dict(body or {})
+        meta = dict(out.get("metadata") or {})
+        # Job metadata session_id is system-owned after 0.58.4. Prefer explicit
+        # system keys; only use metadata.session_id when it looks system-shaped.
+        candidates = (
+            out.get("system_session_id"),
+            out.get("palm_session_id"),
+            meta.get("palm_session_id"),
+            meta.get("session_id") if _looks_like_system_session_id(meta.get("session_id")) else None,
+        )
+        sid = None
+        for raw in candidates:
+            if raw is not None and str(raw).strip():
+                sid = str(raw).strip()
+                break
+        if sid is None:
+            try:
+                runtime = self.resolve_runtime()
+                plane = getattr(runtime, "session_plane", None)
+                if plane is not None:
+                    bind = plane.bind(
+                        surface="execution",
+                        metadata={"via": "flow_submit"},
+                    )
+                    sid = str(bind.session_id)
+            except Exception:
+                sid = None
+        if sid:
+            meta["session_id"] = sid
+            out["metadata"] = meta
+        return out
 
     def run_flow(
         self,
@@ -219,6 +268,27 @@ class FlowExecutionService(BaseService):
     def dispatch_command(self, command: Any) -> Any:
         """Dispatch a CQRS command through the validated bus."""
         return super().dispatch(command)
+
+
+def _looks_like_system_session_id(value: Any) -> bool:
+    """True when id is system-session shaped (not a bare instance id)."""
+    if value is None:
+        return False
+    text = str(value).strip()
+    return text.startswith("sess-")
+
+
+def _system_session_from_instance_meta(metadata: dict[str, Any] | None) -> str | None:
+    if not metadata:
+        return None
+    raw = metadata.get("session_id") or metadata.get("palm_session_id")
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text or not _looks_like_system_session_id(text):
+        # Still return non-empty if present after 0.58.4 (may be custom id)
+        return text or None
+    return text
 
 
 def _submission_extras(body: dict[str, Any]) -> tuple[dict[str, Any], Any]:

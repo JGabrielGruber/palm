@@ -103,6 +103,13 @@ def open_target(
                         refs = {}
                         inspected["refs"] = refs
                     refs.setdefault("flow_id", tid)
+                    # Propagate system session from create (0.58.6 dogfood).
+                    if isinstance(created, dict):
+                        for key in ("system_session_id", "palm_session_id", "instance_id"):
+                            if created.get(key) is not None:
+                                inspected.setdefault(key, created[key])
+                                if key == "system_session_id":
+                                    refs.setdefault("system_session_id", created[key])
                     # Help shapers treat this as a flow session even under path assist/open
                     inspected["_open_flow_path"] = inspect_path
                 return inspected

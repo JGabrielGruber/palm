@@ -33,6 +33,21 @@ def build_assistant_view(
     composed = build_compose_status(invoke_tree, snapshot)
     merge_snapshot_fields(composed, snapshot)
     payload = humanize_assistant_view(composed, context=context)
+    # Compact pipeline drops non-wizard keys; re-apply system session (0.58.6).
+    system_sid = (
+        flat_view.get("system_session_id")
+        or flat_view.get("palm_session_id")
+        or flat.get("system_session_id")
+        or flat.get("palm_session_id")
+    )
+    if system_sid is not None and str(system_sid).strip():
+        sid = str(system_sid).strip()
+        payload["system_session_id"] = sid
+        refs = payload.get("refs")
+        if not isinstance(refs, dict):
+            refs = {}
+        refs["system_session_id"] = sid
+        payload["refs"] = refs
     scenario_id = context.scenario_id
     if scenario_id:
         payload = apply_assistant_enricher(scenario_id, payload, context=context)

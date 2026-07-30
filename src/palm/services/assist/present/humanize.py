@@ -126,6 +126,14 @@ def refs_block(composed: dict[str, Any], context: OperatorViewContext) -> dict[s
     flow_id = context.flow_id or composed.get("flow")
     if flow_id is not None:
         refs["flow_id"] = flow_id
+    instance_id = composed.get("instance_id")
+    if instance_id is not None and str(instance_id) != str(composed.get("session_id") or ""):
+        refs["instance_id"] = instance_id
+    elif instance_id is not None:
+        refs.setdefault("instance_id", instance_id)
+    system_sid = composed.get("system_session_id") or composed.get("palm_session_id")
+    if system_sid is not None and str(system_sid).strip():
+        refs["system_session_id"] = str(system_sid).strip()
     return refs
 
 
@@ -233,6 +241,14 @@ def humanize_assistant_view(
         "handoff_ready": handoff_ready,
         "compose": slim_compose(composed),
     }
+    # Product session_id remains the instance handle for continue (SI-001 residual).
+    # System subject is exposed separately when known (0.58.6 dogfood).
+    instance_id = composed.get("instance_id") or session_id
+    if instance_id is not None:
+        payload.setdefault("instance_id", instance_id)
+    system_sid = composed.get("system_session_id") or composed.get("palm_session_id")
+    if system_sid is not None and str(system_sid).strip():
+        payload["system_session_id"] = str(system_sid).strip()
 
     if context.scenario_id:
         payload["scenario_id"] = context.scenario_id

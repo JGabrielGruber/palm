@@ -37,9 +37,14 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Journey inspect** — `SessionPlaneService.inspect` / `list_waiting` (instances + open waits)  
 - **Host** — `inspect_session`; note: inspect only, continue stays wait plane  
 
+#### Added (0.58.6)
+- **Dogfood** — flow submit auto-binds system session; `SessionOwnershipHook` attaches instance  
+- **Envelope** — `system_session_id` / `refs.system_session_id` on Assist start and flow create  
+- Product `session_id` remains the instance handle for continue (SI-001 residual, intentional)
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.5**.  
-- Next: **0.58.6** Assist + MCP dogfood.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.6**.  
+- Next: **0.58.7** WS / cookie-like bind.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 
 ## [0.57.14] — 2026-07-29

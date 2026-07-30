@@ -37,6 +37,12 @@ class AssistSession:
         operator_mode = metadata.get("operator_mode")
         if operator_mode:
             view["operator_mode"] = operator_mode
+        # System session owner (0.58.6) — distinct from product session_id (instance).
+        system_sid = metadata.get("session_id") or metadata.get("palm_session_id")
+        if system_sid and str(system_sid).strip() and str(system_sid) != self.session_id:
+            view["system_session_id"] = str(system_sid).strip()
+            view["palm_session_id"] = str(system_sid).strip()
+        view.setdefault("instance_id", self.session_id)
         compact = compact_wizard_inspect(view)
         handoff_ready = _handoff_ready(flow_ctx)
         ctx = build_assist_session_context(
@@ -48,7 +54,6 @@ class AssistSession:
             handoff_ready=handoff_ready,
         )
         ctx.invoke_tree = _safe_invoke_tree(self._assist, self.session_id)
-        metadata = self._assist.execution.flows.get_instance_metadata(self.session_id)
         gate = metadata.get("mutation_gate")
         ctx.stored_mutation_gate = gate if isinstance(gate, dict) else None
         return ctx
