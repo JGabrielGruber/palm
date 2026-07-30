@@ -103,11 +103,15 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - Outside interactive submit still mints a new `sess-…` when no session present  
 - **Not** one junk-drawer root for all automation; workloads inherit job session only  
 
-#### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.13**.  
-- Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  
-- Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
+#### Documented (close plan) — remaining 0.58.14–0.58.20 + exit
+- [VISION-0.58 §4.3–4.4](docs/VISION-0.58.md) — session owns **BoundSurface**; session metadata ≠ job metadata  
+- [VISION-0.58 §6.2](docs/VISION-0.58.md) — ordered close slices: BoundSurface → strict attribution → inherit-or-service → kit door → operate → rename → docs → exit  
+- ADR-027 **D13–D14** · TECH-DEBT **SI-016** · STATUS table  
 
+#### Notes
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.13** shipped; **0.58.14+** named not yet coded.  
+- Theme **exit** after **0.58.14–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 
 Embedded release covering **0.55–0.57** (previous stamp `0.54.10`).  

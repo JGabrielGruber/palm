@@ -1,6 +1,7 @@
 # VISION 0.58 — Session plane (system glue)
 
 **Status:** 🚧 **Theme open** — through **0.58.13** (service / origin sessions).  
+**Close plan:** remaining slices **0.58.14–0.58.20** + **exit** named below (§6).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -124,6 +125,45 @@ Cross-session drive is **out of law**.
 4. Workloads **inherit** the job’s session (EventContext / metadata). Do not invent a parallel workload session type.  
 5. Active focus on a service session is legal but often weak (many scheduled instances); operators should set focus or pass `instance_id` when continuing service-owned work.
 
+### 4.3 Session owns surface context (0.58.14+)
+
+**Law:** the **session** (via product **SessionService**) **owns** what surfaces need to operate.  
+Surfaces do **not** invent dual slots (`active_system_*` + `active_assist_*` + private plane access) as truth.
+
+**BoundSurface** (name may lock in 0.58.14) is the surface handle shaped by the session door:
+
+```text
+BoundSurface
+  session_id     # system subject (sess-… | sess-svc-…)
+  instance_id    # continue focus under that session (or None)
+  kind           # outside | service | host
+  origin         # optional: mcp | cli | work-drain:{flow} | …
+  metadata       # session-context facts (see §4.4) — not job blackboard
+```
+
+| Who | Owns |
+|-----|------|
+| **Session plane** | Record, attach list, exclusive ownership, active focus, service origins |
+| **SessionService** | Bind / BoundSurface / enrich / gate / surface_view / session metadata |
+| **Surface** | Transport of bind proof (cookie, header, WS, CLI slot); **not** a second identity model |
+| **Job / instance** | Run state, waits, orchestration — job metadata stays **run** facts |
+
+### 4.4 Session context metadata vs job metadata
+
+Not everything belongs on **job** metadata.
+
+| Home | Holds | Examples |
+|------|-------|----------|
+| **Session context metadata** | Walk / surface / attribution facts that outlive one job | `kind`, `origin`, last surface, UI prefs, client labels, “current walk” tags |
+| **Job / instance metadata** | Facts of **this run** | definition id, pattern, wait interests, depth, per-run seed |
+| **EventContext** | Moment of emit / effect | session_id + job_id + instance_id for inheritance |
+
+**Rule:** if a fact is about **who is walking** or **how the outside subject is bound**, put it on the **session**.  
+**Rule:** if a fact is about **this orchestration unit**, put it on the **job/instance**.  
+**Rule:** do not duplicate ownership graphs into job meta — plane attach list is truth.
+
+This is the seat for **BoundSurface** and for cleaning dual CLI/MCP context later (0.58.14+).
+
 ---
 
 ## 5. Target shape
@@ -149,7 +189,8 @@ Job path (spine)
 | **Ownership** | Reverse index: instance → owner session; exclusive attach |
 | **Store** | Plane may use a store (memory first; durable when host storage allows). Same idea as instance manager — **not** a second source of job truth |
 | **Bind** | Surface connection / request / client context points at `session_id` |
-| **Product** | **SessionService** (0.58.12) — surface door over the plane: bind, continue target, submit enrich, journey, event filter. Assist stays envelope; continue via instance under bound session |
+| **Product** | **SessionService** (0.58.12) — surface door. **BoundSurface** (0.58.14+) — session-owned surface context. Assist stays envelope; continue via instance under bound session |
+| **Session metadata** | Walk/surface/attribution on session record (0.58.14+); job meta stays run facts only |
 | **Watches** | Filter events and open waits by session (after bind + multi-attach work) |
 
 **Server surface:** bind may look like a **cookie** (or header / WS bind op). That is transport. The plane is the truth.
@@ -159,6 +200,8 @@ Job path (spine)
 ## 6. Ordered work
 
 Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
+
+### 6.1 Done (0.58.0–0.58.13)
 
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
@@ -176,10 +219,28 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **11** | Owner gate on continue | Bound session must own instance (SI-015) — **0.58.11** ✅ |
 | **12** | Product SessionService | Surface door: no reinvent plane access; helpers for other services — **0.58.12** ✅ |
 | **13** | Service / origin sessions | Automated start (work drain) + host seat use stable service sessions — **0.58.13** ✅ (SI-011 partial) |
-| **exit** | Theme exit | Map true; SD-008 closed; residual SI/SU honest; ADR Accepted |
+
+### 6.2 Remaining — close plan (lock order; implement one purpose each)
+
+| Order | Slice | Spirit | Pays / residual | Done when |
+|------:|-------|--------|-----------------|-----------|
+| **14** | **BoundSurface + session metadata** | Session **controls** surface context. Product type: `session_id` + `instance_id` + `kind` + `origin` + session metadata API. Prefer session-context meta over stuffing walk facts into job meta. SessionService: `bind_surface` / `surface_from_*` / get-set session metadata. | Foundation for SI-001/006/010 usage; §4.3–4.4 | Surfaces can hold one BoundSurface; session metadata round-trips on plane record |
+| **15** | **Strict attribution policy** | When plane ready: **start** always has system session (outside or service); **continue** requires bound system session + owned instance (resolve allowed). Kill bare-instance happy path (SI-015 residual). Optional compat flag only if tests need a short window. | SI-015 residual ✅ | No product continue without bound session when plane attached |
+| **16** | **Inherit-or-service start** | Reactive WorkIntent: if signal carries session → inherit; else `ensure_service_session(origin)` (`work-drain:…` / `inbound:…` / `schedule:…`). Finish SI-011. Workloads still inherit job session only. | SI-011 ✅; SI-009 edge | Automated start always attributed; parent walks not stolen when context present |
+| **17** | **Single kit door + surface dogfood** | Kit public helper → **SessionService** only (`resolve_session_service`). CLI / MCP / WS prefer BoundSurface; drop dual plane fallbacks on dogfood paths. | SI-005/006 partial; dual-path debt | Dogfood surfaces do not call `session_plane` for product verbs |
+| **18** | **Session operate + surface_view v2** | Product verbs under session: focus (`set_active`), list owned waiting, cancel-owned (drive execution under gate — no private resume), richer `surface_view` (kind/origin/waiting/refs). Optional CQRS/catalog session queries (SI-007). | SI-007 partial; multi-instance operable | Operator can act on a session walk without inventing edge code |
+| **19** | **Product vocabulary rename** | Paths / envelopes / grammar: continue segment is `instance` (or clear `instance_id`); `session_id` only system subject. Assist/MCP tools + REST aligned. Class names `FlowSession` may stay as thin handles (SI-002). | SI-001, SI-005 | Public contracts match 0.58.9 law; no silent instance-as-session on touched paths |
+| **20** | **Docs, skill, residual honesty** | MCP skill + MCP.md + wiki: session ≠ instance; BoundSurface; service sessions. Explorer/SSR bind when cheap (SI-010); else **name residual** for SU-*. | SI-012; SI-010 honesty | Agents learn truth; STATUS residual SI list ready for exit |
+| **exit** | **Theme exit** | Map true; residual SI honest; **SD-008 closed**; **ADR-027 Accepted**; `just check` green. | SD-008; ADR | Theme closed in STATUS/CHANGELOG |
+
+**Implement rule:** do not skip 14 before 15–17 (BoundSurface is the seat).  
+**Implement rule:** 19 is safer after 14–17 (rename with a real context object).  
+**Implement rule:** 20 may land early on touch; must be complete before exit.  
+**Not in close plan:** user plane, impersonation (D11), SI-014 plane-store framework, Grove mesh.
 
 **Rule:** Do not ship “session is still just instance_id with a new name.”  
-**Rule:** Do not invent session-resume that bypasses the wait plane.
+**Rule:** Do not invent session-resume that bypasses the wait plane.  
+**Rule:** Session owns surface context; job meta is not a second session store.
 
 ---
 
@@ -242,14 +303,16 @@ Do not hide impact only in chat.
 
 Theme **0.58** closes when:
 
-1. [ ] [PALM.md](PALM.md) shows session plane as **live** (not queued).  
-2. [ ] System package owns session plane (types, lifecycle, multi-attach).  
-3. [ ] External entry on dogfood surfaces **requires** bind or create.  
-4. [ ] `session_id` is not a silent alias of `instance_id` on those paths.  
-5. [ ] Assist / MCP happy path uses the plane.  
-6. [ ] SD-008 closed; residual SI/SU listed.  
-7. [ ] ADR-027 Accepted.  
-8. [ ] Path we touch stays testable (`just check`).
+1. [x] [PALM.md](PALM.md) shows session plane as **live** (not queued).  
+2. [x] System package owns session plane (types, lifecycle, multi-attach).  
+3. [ ] External entry on dogfood surfaces **requires** bind or create (strict policy **0.58.15**).  
+4. [ ] `session_id` is not a silent alias of `instance_id` on dogfood paths (**0.58.19**).  
+5. [x] Assist / MCP happy path uses the plane / SessionService.  
+6. [ ] BoundSurface + session metadata home live (**0.58.14**); kit single door (**0.58.17**).  
+7. [ ] Automated start attributed (inherit-or-service **0.58.16**).  
+8. [ ] SD-008 closed; residual SI/SU listed (**0.58.20** + exit).  
+9. [ ] ADR-027 Accepted (exit).  
+10. [ ] Path we touch stays testable (`just check`).
 
 ---
 
@@ -283,7 +346,8 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.11** | **Owner gate (SI-015):** `owns_instance` / `require_owned_instance` / `InstanceNotOwnedError`; operator rewrite + flows/assist continue gate when system `session_id` bound; host `require_session_owns_instance`; WS `session_owner` error code. Path instance is authoritative (not replaced by plane focus). Bare instance without bound session remains residual. |
 | **0.58.12** | **Product SessionService:** `palm.services.session.SessionService` as surface door (bind, continue_target, enrich_submit_body, surface_view, event filter, owner gate helpers). Host `session` slot; composition core includes session; flows/assist/MCP prefer service over scattered plane access. Plane remains law — service does not resume. SI-001 path/handle rename still residual. |
 | **0.58.13** | **Service / origin sessions (SI-011 partial):** stable `sess-svc-{origin}` for automated start; well-known host `sess-svc-host` at runtime start; work drain enriches `work-drain:{target}`; `SessionService.ensure_service_session` / `enrich_submit_body(origin=…)`. Outside surfaces still mint random `sess-…`. **Not** one junk-drawer root for all jobs. Workloads inherit job session (no separate workload session type). |
+| **plan** | **Close plan locked (docs):** §4.3 BoundSurface / session owns surface context; §4.4 session vs job metadata; §6.2 remaining **0.58.14–0.58.20** + exit. No code in this plan row. |
 
 ---
 
-*Session is the outside subject. Bind it. Own many instances. Active is focus, not a pass. Grow Palm on one glue.* 🌴📡
+*Session is the outside subject. Bind it. Own many instances. Active is focus, not a pass. Session owns surface context. Grow Palm on one glue.* 🌴📡

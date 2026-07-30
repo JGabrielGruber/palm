@@ -136,9 +136,9 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + conti
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.13** (bind + dogfood + WS + watches + vocabulary + active focus + owner gate + **product SessionService** + **service/origin sessions**).  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.13**.  
+- [ ] Execute close plan **0.58.14–0.58.20** ([VISION-0.58 §6.2](../VISION-0.58.md)).  
 - [ ] Close **SD-008** at theme exit when residual SI honest.  
-- [ ] Pay remaining **SI-*** (product rename SI-001, explorer, docs) when edges are touched.  
 - [ ] Accept this ADR at theme exit (or earlier if law is stable in code).  
 - [ ] Later theme: user plane + session impersonation / delegate grants (D11) — not 0.58.
 
@@ -154,6 +154,18 @@ mega root for all automation. Well-known host seat: `sess-svc-host`.
 
 Workloads **inherit** the owning job’s session (EventContext / metadata). Do not create a
 separate “workload session” type for effects under a job.
+
+### D13 — Session owns surface context (0.58.14+)
+
+Surfaces do not invent dual identity slots as truth. Product **SessionService** shapes a
+**BoundSurface** (system `session_id`, continue `instance_id`, kind, origin, session metadata).
+Transport (cookie, header, WS, CLI) carries bind proof only.
+
+### D14 — Session metadata vs job metadata (0.58.14+)
+
+Walk / surface / attribution facts live on **session** record metadata.  
+Run facts live on **job / instance** metadata.  
+Do not use job metadata as a second session store or ownership graph.
 
 ---
 

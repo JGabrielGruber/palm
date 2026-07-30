@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.13** service / origin sessions (SI-011)  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58.13** done · **next 0.58.14** BoundSurface (close plan named)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -16,10 +16,10 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 |--------|----------|
 | **Goal** | Session is the **outside subject** and **system glue**. Multi-instance capable. Not user plane. |
 | **Home** | System: `planes.session`. Product door: `SessionService` (`host.session`). |
-| **Law** | Bind session. Exclusive owner (instance → one session). Active = focus on attach list only. Continue via wait plane. Surfaces use product door. Automated start uses **service sessions** (stable origin), not “no session”. |
-| **Not** | Session ≡ instance. Active as foreign pass. Dual-own for admin. Second resume path. One junk-drawer root for all work. Long shims. |
-| **Next code** | SI-001 path/handle rename residual; theme **exit** when residual SI honest. |
-| **Done** | **0.58.0–0.58.13** … → SessionService → **service/origin sessions** (host + work-drain) |
+| **Law** | Bind session. Exclusive owner. Active = focus only. Continue via wait plane. **Session owns surface context** (BoundSurface). Session metadata ≠ job metadata. Service sessions for automated start. |
+| **Not** | Session ≡ instance. Active as foreign pass. Dual-own. Second resume. Junk-drawer root. Stuff walk facts only into job meta. Surfaces reinvent dual session slots. |
+| **Next code** | **0.58.14** BoundSurface + session metadata → then **15–20** + **exit** ([VISION-0.58 §6.2](docs/VISION-0.58.md)) |
+| **Done** | **0.58.0–0.58.13** (plane through service/origin sessions) · close plan **named** (docs) |
 | **Later seed** | User plane **impersonation** / grants — act as owning session; do not break exclusive ownership |
 | **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 

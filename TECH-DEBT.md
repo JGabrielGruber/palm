@@ -637,7 +637,8 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
-| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 | ✅ done (bare-instance residual) |
+| [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 | ✅ done (bare-instance residual → **0.58.15**) |
+| [SI-016](#si-016) | Surfaces invent dual context; walk facts on job meta | product / surfaces | **0.58.14** | open (close-plan seat) |
 
 ### SI-001 — product handles still named “session” for instance
 
@@ -793,8 +794,16 @@ user-plane **impersonation** remain later seeds — not dual-own.
 | 0.58.11 | SI-015 owner gate ✅ (`require_owned_instance` + rewrite/product/WS) |
 | 0.58.12 | Product SessionService surface door ✅; flows/assist/MCP rebind; SI-001/002 partial |
 | 0.58.13 | Service/origin sessions ✅; SI-011 partial (work-drain + host); workloads inherit |
-| later / residual | SI-001/005 rename, SI-006/007/010…012 residual, SI-014, SU-*; SI-015 bare-instance residual |
-| theme exit | SD-008 close when residual SI honest |
+| **close plan** | [VISION-0.58 §6.2](docs/VISION-0.58.md) **0.58.14–0.58.20** + exit (docs locked) |
+| 0.58.14 | BoundSurface + session context metadata (session owns surface context) |
+| 0.58.15 | Strict attribution — kill SI-015 bare-instance residual |
+| 0.58.16 | Inherit-or-service start — finish SI-011 |
+| 0.58.17 | Single kit door + surface dogfood (SI-005/006) |
+| 0.58.18 | Session operate + surface_view v2 (SI-007 partial) |
+| 0.58.19 | Product vocabulary rename SI-001/005 |
+| 0.58.20 | Docs/skill SI-012 + residual honesty SI-010/SU |
+| theme exit | SD-008 close; ADR-027 Accept; residual SI honest |
+| later (not 0.58) | SI-014 plane-store; D11 impersonation; full SU-001 explorer bulk |
 
 ---
 
