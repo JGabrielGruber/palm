@@ -1,6 +1,6 @@
 # VISION 0.58 — Session plane (system glue)
 
-**Status:** 🚧 **Theme open** — through **0.58.11** (SI-015 owner gate).  
+**Status:** 🚧 **Theme open** — through **0.58.12** (product SessionService).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [027-session-plane.md](adr/027-session-plane.md) **Proposed** (accept at theme exit or when law is stable in code).  
@@ -133,7 +133,7 @@ Job path (spine)
 | **Ownership** | Reverse index: instance → owner session; exclusive attach |
 | **Store** | Plane may use a store (memory first; durable when host storage allows). Same idea as instance manager — **not** a second source of job truth |
 | **Bind** | Surface connection / request / client context points at `session_id` |
-| **Product** | Thin SessionService later if needed; Assist stays envelope; continue via instance under bound session |
+| **Product** | **SessionService** (0.58.12) — surface door over the plane: bind, continue target, submit enrich, journey, event filter. Assist stays envelope; continue via instance under bound session |
 | **Watches** | Filter events and open waits by session (after bind + multi-attach work) |
 
 **Server surface:** bind may look like a **cookie** (or header / WS bind op). That is transport. The plane is the truth.
@@ -158,6 +158,7 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **9** | Vocabulary slash | One name: `session_id` = system; `instance_id` = continue; delete duals — **0.58.9** ✅ |
 | **10** | Active instance on record | Plane-owned `active_instance_id`; resolve prefers focus — **0.58.10** ✅ |
 | **11** | Owner gate on continue | Bound session must own instance (SI-015) — **0.58.11** ✅ |
+| **12** | Product SessionService | Surface door: no reinvent plane access; helpers for other services — **0.58.12** ✅ |
 | **exit** | Theme exit | Map true; SD-008 closed; residual SI/SU honest; ADR Accepted |
 
 **Rule:** Do not ship “session is still just instance_id with a new name.”  
@@ -263,6 +264,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.9** | **Vocabulary slash:** edge + job meta `session_id` = system subject only; continue handle = `instance_id`; delete `system_session_id` / `palm_session_id` duals; plane resolve when only session given; product internal paths still resolve `sess-…` (SI-001 residual class names) |
 | **0.58.10** | **Active instance:** `SessionRecord.active_instance_id`; set on attach; `set_active_instance` / `clear_active_instance`; `resolve_continue_instance` = active → waiting → last; inspect/bind expose focus. **Docs:** ownership exclusive; active = focus only; residual bare-instance gate = SI-015; future impersonation seed (user plane) without dual-own |
 | **0.58.11** | **Owner gate (SI-015):** `owns_instance` / `require_owned_instance` / `InstanceNotOwnedError`; operator rewrite + flows/assist continue gate when system `session_id` bound; host `require_session_owns_instance`; WS `session_owner` error code. Path instance is authoritative (not replaced by plane focus). Bare instance without bound session remains residual. |
+| **0.58.12** | **Product SessionService:** `palm.services.session.SessionService` as surface door (bind, continue_target, enrich_submit_body, surface_view, event filter, owner gate helpers). Host `session` slot; composition core includes session; flows/assist/MCP prefer service over scattered plane access. Plane remains law — service does not resume. SI-001 path/handle rename still residual. |
 
 ---
 

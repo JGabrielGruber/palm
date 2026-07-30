@@ -136,7 +136,7 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + conti
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.11** (bind + dogfood + WS + watches + vocabulary + active focus + **owner gate**).  
+- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.12** (bind + dogfood + WS + watches + vocabulary + active focus + owner gate + **product SessionService**).  
 - [ ] Close **SD-008** at theme exit when residual SI honest.  
 - [ ] Pay remaining **SI-*** (product rename SI-001, explorer, docs) when edges are touched.  
 - [ ] Accept this ADR at theme exit (or earlier if law is stable in code).  

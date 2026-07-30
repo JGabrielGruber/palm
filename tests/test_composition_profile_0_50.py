@@ -83,13 +83,21 @@ def test_helpers() -> None:
 # ── 0.50.2: the host reads its composition ───────────────────────────────────
 
 
-def test_host_default_composition_builds_all_six() -> None:
+def test_host_default_composition_builds_all_services() -> None:
     """Behavior-preserving: the default host still builds every service."""
     host = ApplicationHost(settings=PalmSettings.for_tests(load_examples=False))
     host.start()
     try:
         assert host.composition.services == CP.all_in_one().services
-        for name in ("system", "definitions", "execution", "assist", "design", "analytics"):
+        for name in (
+            "system",
+            "session",
+            "definitions",
+            "execution",
+            "assist",
+            "design",
+            "analytics",
+        ):
             assert getattr(host, name) is not None
     finally:
         host.shutdown()
@@ -103,8 +111,14 @@ def test_host_embedded_composition_builds_core_only() -> None:
     )
     host.start()
     try:
-        assert host.composition.services == ("system", "definitions", "execution")
+        assert host.composition.services == (
+            "system",
+            "session",
+            "definitions",
+            "execution",
+        )
         assert host.system is not None
+        assert host.session is not None
         assert host.definitions is not None
         assert host.execution is not None
         assert host.assist is None

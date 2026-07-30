@@ -203,9 +203,10 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
 **Observation:** Product `session_id` field name still often means instance (SI-001 residual
-rename). System plane through **0.58.11**: seat, multi-attach, bind, job-path, inspect,
-Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary, **active focus**, **owner gate**.
-Residual: full product rename, explorer bulk (SI-010), docs (SI-012), bare-instance paths
+path/handle rename). System plane + product door through **0.58.12**: seat, multi-attach,
+bind, job-path, inspect, Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary,
+**active focus**, **owner gate**, **SessionService** surface door. Residual: product
+URL/handle rename (SI-001), explorer bulk (SI-010), docs (SI-012), bare-instance paths
 without a bound system session.  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
@@ -622,8 +623,8 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 
 | ID | Title | Area | Theme touch | Status |
 |----|-------|------|-------------|--------|
-| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6–8 | partial (rewrite live) |
-| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–8 | open (handles OK) |
+| [SI-001](#si-001) | `session_id` forced equal to `instance_id` | product Assist | 0.58.6–12 | partial (door live; path rename residual) |
+| [SI-002](#si-002) | FlowSession / AssistSession are product-only “sessions” | product | 0.58.1–12 | open (handles OK; resolve via SessionService) |
 | [SI-003](#si-003) | ProcessInstance has no session owner link | instances / system | 0.58.4 | ✅ done |
 | [SI-004](#si-004) | WS connection bind is surface-local only | server WS | 0.58.7 | ✅ done |
 | [SI-005](#si-005) | MCP / palm_assist paths treat session as instance | MCP Assist | 0.58.6–8 | partial (rewrite live) |
@@ -643,18 +644,21 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 **Where:** `FlowSession.session_id`, `AssistSession.session_id`, grammar path
 `…/session/{id}`, MCP tool param docs — internal product still keys continue by
 an attribute/path named session.  
-**Impact:** **Partial (0.58.9–10):** public envelopes use `session_id` = system
-subject and `instance_id` = continue. Plane owns ``active_instance_id`` (0.58.10);
-``resolve_continue_instance`` = active → waiting → last. No dual edge keys.
-Residual: rename product handle fields and URL segments to `instance`.  
+**Impact:** **Partial (0.58.9–12):** public envelopes use `session_id` = system
+subject and `instance_id` = continue. Plane owns ``active_instance_id``;
+product **SessionService** (0.58.12) is the surface door for resolve/gate/submit.
+Residual: rename product handle fields and URL segments to `instance` (not a
+prerequisite for correct surface operation).  
 **Target:** Product APIs and paths name `instance_id` for continue; `session_id`
-only for the system subject; product reads focus from the plane.
+only for the system subject; product reads focus via SessionService → plane.
 
 ### SI-002 — FlowSession / AssistSession product-only
 
 **Where:** `services/execution/flows/session.py`, `services/assist/session.py`, `services/assist/sessions/`.  
-**Impact:** Handles are fine; they must resolve **system** session, not invent truth.  
-**Target:** Thin handles over plane; verbs may still target a primary instance for UX.
+**Impact:** Handles are fine; they resolve continue via **SessionService**
+(0.58.12) when wired, not invent plane truth.  
+**Target:** Thin handles over product session + job path; verbs target a primary
+instance for UX under the bound system session.
 
 ### SI-003 — ProcessInstance has no session owner
 
@@ -781,6 +785,7 @@ user-plane **impersonation** remain later seeds — not dual-own.
 | 0.58.9 | Vocabulary slash: session_id=system, instance_id=continue; duals deleted |
 | 0.58.10 | Plane active_instance_id; resolve prefers focus; ownership vs focus documented; SI-015 named |
 | 0.58.11 | SI-015 owner gate ✅ (`require_owned_instance` + rewrite/product/WS) |
+| 0.58.12 | Product SessionService surface door ✅; flows/assist/MCP rebind; SI-001/002 partial |
 | later / residual | SI-001/005 rename, SI-006/007/010…012, SI-014, SU-*; SI-015 bare-instance residual |
 | theme exit | SD-008 close when residual SI honest |
 

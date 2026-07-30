@@ -86,8 +86,16 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - Path product instance is **authoritative** (not replaced by plane focus)  
 - **Residual:** bare instance without bound system session still ungated  
 
+#### Added (0.58.12) — product SessionService (surface door)
+- **`palm.services.session.SessionService`** — product door over the system session plane  
+- **Helpers for surfaces / other services:** `continue_target`, `enrich_submit_body`, `surface_view`, resolve/gate, event filter  
+- **Host** `session` slot; composition **core** includes `session`; ServerContext exposes `ctx.session`  
+- **Flows + Assist + MCP operator** prefer SessionService (no scattered `session_plane` reinvent)  
+- Plane remains law — service does **not** resume jobs  
+- **Residual SI-001:** product path/handle names still say `session` for instance segments  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.11**.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.12**.  
 - Theme **exit** when you choose (ADR-027 Accepted, SD-008 close, residual SI honest).  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases + composition truth — later theme.
 

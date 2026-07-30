@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from palm.services.definitions import DefinitionService
     from palm.services.design import DesignService
     from palm.services.execution import ExecutionService
+    from palm.services.session import SessionService
     from palm.services.system import SystemService
 
 
@@ -94,6 +95,7 @@ class ServerContext:
             self._build_standalone_services(runtime)
         else:
             self._system = host.system
+            self._session = host.session
             self._definitions = host.definitions
             self._execution = host.execution
             self._assist = host.assist
@@ -131,6 +133,7 @@ class ServerContext:
         )
         built = core_service_registry().build_all(service_ctx, only=self.composition.services)
         self._system = built.get("system")
+        self._session = built.get("session")
         self._definitions = built.get("definitions")
         self._execution = built.get("execution")
         self._assist = built.get("assist")
@@ -204,6 +207,13 @@ class ServerContext:
         return self._system
 
     @property
+    def session(self) -> SessionService | None:
+        """Product session door (0.58.12) when composed."""
+        if self._host is not None:
+            return self._host.session
+        return getattr(self, "_session", None)
+
+    @property
     def definitions(self) -> DefinitionService:
         if self._host is not None:
             return self._host.definitions
@@ -248,6 +258,7 @@ class ServerContext:
         self._command_bus = host.commands
         self._query_bus = host.queries
         self._system = host.system
+        self._session = host.session
         self._definitions = host.definitions
         self._execution = host.execution
         self._assist = host.assist

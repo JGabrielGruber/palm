@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from palm.system.runtime.base import BaseRuntime
     from palm.services.definitions.service import DefinitionService
     from palm.services.execution.service import ExecutionService
+    from palm.services.session.service import SessionService
     from palm.services.system.service import SystemService
 
 
@@ -45,6 +46,7 @@ class AssistService(BaseService):
         definitions: DefinitionService,
         execution: ExecutionService,
         system: SystemService,
+        session: SessionService | None = None,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
         analytics: Any | None = None,
@@ -53,6 +55,7 @@ class AssistService(BaseService):
         self._definitions = definitions
         self._execution = execution
         self._system = system
+        self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
         self._analytics = analytics
@@ -97,6 +100,11 @@ class AssistService(BaseService):
     @property
     def system(self) -> SystemService:
         return self._system
+
+    @property
+    def session(self) -> SessionService | None:
+        """Product session door when host-wired (0.58.12)."""
+        return self._session
 
     # --- path dispatch ----------------------------------------------------
 

@@ -109,7 +109,15 @@ def test_services_not_gated_by_capabilities_yet() -> None:
             {"journal", "projections", "analytics", "neonroot", "workloads"}
         )
         # ... yet every service is still built (services are a separate axis)
-        for name in ("system", "definitions", "execution", "assist", "design", "analytics"):
+        for name in (
+            "system",
+            "session",
+            "definitions",
+            "execution",
+            "assist",
+            "design",
+            "analytics",
+        ):
             assert getattr(host, name) is not None
     finally:
         host.shutdown()

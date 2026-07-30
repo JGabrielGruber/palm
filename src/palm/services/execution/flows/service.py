@@ -20,6 +20,7 @@ from palm.services.execution.flows.session import FlowSession
 
 if TYPE_CHECKING:
     from palm.system.runtime.base import BaseRuntime
+    from palm.services.session.service import SessionService
     from palm.services.system.service import SystemService
 
 
@@ -33,13 +34,20 @@ class FlowExecutionService(BaseService):
         queries: Any,
         schemas: Any,
         system: SystemService,
+        session: SessionService | None = None,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._system = system
+        self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
+
+    @property
+    def sessions(self) -> SessionService | None:
+        """Product session door when host-wired (0.58.12)."""
+        return self._session
 
     def dispatch(
         self,
@@ -79,7 +87,9 @@ class FlowExecutionService(BaseService):
             system_sid = _system_session_from_instance_meta(
                 self.get_instance_metadata(instance_id)
             )
-            if not system_sid:
+            if not system_sid and self._session is not None:
+                system_sid = self._session.system_session_from_instance(instance_id)
+            elif not system_sid:
                 # Plane reverse index is source of truth when instance meta lags.
                 try:
                     plane = getattr(self.resolve_runtime(), "session_plane", None)
@@ -135,7 +145,7 @@ class FlowExecutionService(BaseService):
         """Return a handle bound to a durable product instance.
 
         ``session_id`` may be a system subject (``sess-…``); then the primary
-        continue instance is resolved via the session plane (0.58.9 ergonomic).
+        continue instance is resolved via SessionService / plane (0.58.9+).
         """
         return FlowSession(
             self,
@@ -145,6 +155,8 @@ class FlowExecutionService(BaseService):
 
     def _resolve_instance_id(self, session_or_instance: str) -> str:
         """Map system session → continue instance; pass instance ids through."""
+        if self._session is not None:
+            return self._session.resolve_instance_id(session_or_instance)
         text = str(session_or_instance or "").strip()
         if not text.startswith("sess-"):
             return text
@@ -162,9 +174,12 @@ class FlowExecutionService(BaseService):
     ) -> None:
         """SI-015 / 0.58.11: bound system session must own the continue instance.
 
-        No-op when params lack a system-shaped ``session_id`` (legacy bare
-        instance paths). Plane is the ownership truth.
+        Prefers product SessionService (0.58.12). No-op when params lack a
+        system-shaped ``session_id`` (legacy bare instance paths).
         """
+        if self._session is not None:
+            self._session.gate_bound_session_owns(instance_id, params)
+            return
         params = params or {}
         raw = params.get("session_id")
         if raw is None or not str(raw).strip():
@@ -192,13 +207,15 @@ class FlowExecutionService(BaseService):
         return self.session(flow_id, session_id)
 
     def _with_system_session(self, body: dict[str, Any]) -> dict[str, Any]:
-        """Ensure job metadata carries a system session id (0.58.6 / 0.58.9).
+        """Ensure job metadata carries a system session id (0.58.6 / 0.58.12).
 
         **Law:** edge and job metadata use one name — ``session_id`` — for the
         system subject (typically ``sess-…``). ``instance_id`` is the continue
         handle. Instance-shaped body ``session_id`` is **not** promoted (product
-        must adapt; SI-001).
+        must adapt; SI-001). Prefer SessionService.enrich_submit_body.
         """
+        if self._session is not None:
+            return self._session.enrich_submit_body(body, surface="execution")
         out = dict(body or {})
         meta = dict(out.get("metadata") or {})
         candidates = (

@@ -127,6 +127,7 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 | Pattern CQRS | `patterns/<name>/bindings/cqrs/` | `register_cqrs_contributor()` |
 | Service CQRS | `services/<domain>/bindings/cqrs/` | [ADR-009](docs/adr/009-service-cqrs-contributors.md) |
 | Product method | `palm/services/<domain>/` | service + registry; no engines as public truth |
+| Session (product door) | `palm/services/session/` | `SessionService` over system plane; surfaces use `host.session` (0.58.12) |
 | MCP | `runtimes/mcp/` + contributors | Prefer assist paths · [MCP.md](docs/MCP.md) |
 | Surface | `palm/runtimes/<name>/` | Thin; no second semantics |
 | Wait types (pure) | `palm/core/wait/` | No I/O |

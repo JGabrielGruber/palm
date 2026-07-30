@@ -1,15 +1,17 @@
 """
 Core host service providers (T2 / 0.48.2).
 
-The six core services and their construction, declared as dependency-ordered
-``ServiceProvider`` entries. Extracted verbatim (behaviour-preserving) from
-``ApplicationHost._wire_cqrs``; the host now builds them via
+Core services and their construction, declared as dependency-ordered
+``ServiceProvider`` entries. The host builds them via
 ``HostServiceRegistry.build_all(ctx)``.
 
 Construction order encoded by ``depends_on``:
-``system``/``definitions`` → ``execution`` → ``assist``/``design``/``analytics``.
+``system`` → ``session`` → ``definitions`` → ``execution`` →
+``assist``/``design``/``analytics``.
 The ``assist.bind_analytics(analytics)`` cross-wire stays an explicit host
 post-build step (a mutual link, not a construction dependency).
+
+**0.58.12:** product ``session`` is the surface door over the system session plane.
 """
 
 from __future__ import annotations
@@ -27,11 +29,20 @@ from palm.services.execution.flows import FlowExecutionService
 from palm.services.execution.processes import ProcessExecutionService
 from palm.services.execution.providers import ProviderExecutionService
 from palm.services.execution.workloads import WorkloadExecutionService
+from palm.services.session import SessionService
 from palm.services.system import SystemService
 
 
 def _build_system(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
     return SystemService(**ctx.bus_kwargs)
+
+
+def _build_session(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
+    return SessionService(
+        **ctx.bus_kwargs,
+        system=built["system"],
+        runtime_resolver=ctx.resolve_execution_runtime,
+    )
 
 
 def _build_definitions(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
@@ -42,6 +53,7 @@ def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
     flows = FlowExecutionService(
         **ctx.bus_kwargs,
         system=built["system"],
+        session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
     )
     providers = ProviderExecutionService(
@@ -72,6 +84,7 @@ def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
         definitions=built["definitions"],
         execution=built["execution"],
         system=built["system"],
+        session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
     )
 
@@ -106,9 +119,18 @@ def _build_analytics(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 CORE_SERVICE_PROVIDERS: tuple[ServiceProvider, ...] = (
     ServiceProvider("system", _build_system),
+    ServiceProvider("session", _build_session, depends_on=("system",)),
     ServiceProvider("definitions", _build_definitions),
-    ServiceProvider("execution", _build_execution, depends_on=("system", "definitions")),
-    ServiceProvider("assist", _build_assist, depends_on=("definitions", "execution", "system")),
+    ServiceProvider(
+        "execution",
+        _build_execution,
+        depends_on=("system", "definitions", "session"),
+    ),
+    ServiceProvider(
+        "assist",
+        _build_assist,
+        depends_on=("definitions", "execution", "system", "session"),
+    ),
     ServiceProvider("design", _build_design, depends_on=("definitions",)),
     ServiceProvider("analytics", _build_analytics, depends_on=("definitions", "execution")),
 )

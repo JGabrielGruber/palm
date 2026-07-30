@@ -20,7 +20,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal, Self
 
-ServiceName = Literal["system", "definitions", "execution", "assist", "design", "analytics"]
+ServiceName = Literal[
+    "system",
+    "session",
+    "definitions",
+    "execution",
+    "assist",
+    "design",
+    "analytics",
+]
 SurfaceName = Literal["rest", "websocket", "mcp", "explorer", "studio"]
 Capability = Literal[
     "work_drain",
@@ -37,6 +45,7 @@ Capability = Literal[
 #: The full service set the host builds today (pinned to CORE_SERVICE_PROVIDERS by tests).
 ALL_SERVICES: tuple[ServiceName, ...] = (
     "system",
+    "session",
     "definitions",
     "execution",
     "assist",
@@ -44,7 +53,13 @@ ALL_SERVICES: tuple[ServiceName, ...] = (
     "analytics",
 )
 #: Minimal services for an embedded/library shape — no assist/design/analytics chrome.
-CORE_SERVICES: tuple[ServiceName, ...] = ("system", "definitions", "execution")
+#: Includes product ``session`` (0.58.12) so core submit paths have the surface door.
+CORE_SERVICES: tuple[ServiceName, ...] = (
+    "system",
+    "session",
+    "definitions",
+    "execution",
+)
 #: The surfaces the server runtime ships (see runtimes/server/surfaces default_surfaces).
 SERVER_SURFACES: tuple[SurfaceName, ...] = ("rest", "websocket", "mcp", "explorer", "studio")
 #: Background/optional capabilities on for a full host by default.

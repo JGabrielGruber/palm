@@ -36,6 +36,9 @@ class AssistSessionService:
 
     def _resolve_instance_id(self, session_or_instance: str) -> str:
         """Map system session id → continue instance; pass instance ids through."""
+        product = self._assist.session
+        if product is not None:
+            return product.resolve_instance_id(session_or_instance)
         text = str(session_or_instance or "").strip()
         if not text.startswith("sess-"):
             return text
@@ -53,6 +56,10 @@ class AssistSessionService:
         self, instance_id: str, params: dict[str, Any] | None
     ) -> None:
         """SI-015 / 0.58.11: bound system session must own the continue instance."""
+        product = self._assist.session
+        if product is not None:
+            product.gate_bound_session_owns(instance_id, params)
+            return
         params = params or {}
         raw = params.get("session_id")
         if raw is None or not str(raw).strip():

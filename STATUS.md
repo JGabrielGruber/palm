@@ -1,12 +1,12 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.57.14` (stamp) · **Active theme:** **`0.58` Session plane** (**open**) · **Prior closed:** **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58.11** SI-015 owner gate on continue  
+**Last Updated:** July 30, 2026 · **Slice:** **0.58.12** product SessionService (surface door)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) · **ADR:** [027](docs/adr/027-session-plane.md) **Proposed** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
 **Migration / release (last dump):** [MIGRATION-0.57](docs/migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](docs/releases/RELEASE-0.57.14.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-008** / **SI-*** (0.58) · **[SD-014](TECH-DEBT.md#sd-014)** boot phases (later theme) · residual **SU-*** · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane (bind law)** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane + product SessionService** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
@@ -15,11 +15,11 @@ Read in order: **this STATUS** → [VISION-0.58](docs/VISION-0.58.md) → [ADR-0
 | Spirit | Decision |
 |--------|----------|
 | **Goal** | Session is the **outside subject** and **system glue**. Multi-instance capable. Not user plane. |
-| **Home** | `palm.system.planes.session` (system). Product thin. |
-| **Law** | Bind session. Exclusive owner (instance → one session). Active = focus on attach list only. Continue via wait plane. |
+| **Home** | System: `planes.session`. Product door: `SessionService` (`host.session`). |
+| **Law** | Bind session. Exclusive owner (instance → one session). Active = focus on attach list only. Continue via wait plane. Surfaces use product door — do not reinvent plane access. |
 | **Not** | Session ≡ instance. Active as foreign pass. Dual-own for admin. Second resume path. Long shims. |
-| **Next code** | SI-001 product rename residual; theme **exit** when residual SI honest. |
-| **Done** | **0.58.0–0.58.11** bind → dogfood → WS → watches → vocabulary → active focus → **owner gate** |
+| **Next code** | SI-001 path/handle rename residual; theme **exit** when residual SI honest. |
+| **Done** | **0.58.0–0.58.12** … → owner gate → **product SessionService** |
 | **Later seed** | User plane **impersonation** / grants — act as owning session; do not break exclusive ownership |
 | **Named later** | **[SD-014](TECH-DEBT.md#sd-014)** — system **boot phases** + composition truth (not paid in 0.58) |
 
@@ -48,13 +48,13 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
-## 0.58 — Session plane (**open** · through `0.58.11`)
+## 0.58 — Session plane (**open** · through `0.58.12`)
 
 **Vision:** [docs/VISION-0.58.md](docs/VISION-0.58.md) · **ADR:** [docs/adr/027-session-plane.md](docs/adr/027-session-plane.md) **Proposed**  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Supersedes queue note:** [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)  
 **Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-008** (active) · **SI-001…** impact inventory · residual **SU-*** · **SD-014** later
 
-**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. Surfaces **bind** (server may use cookie-like transport). Not the user plane. Not a second wait/resume path.
+**Theme purpose:** Session as **system plane** and growth glue. Every external interaction has a session. One session may own **many instances**. Surfaces **bind** (server may use cookie-like transport). Product **SessionService** is the surface door. Not the user plane. Not a second wait/resume path.
 
 **Spirit:** Capable, not weak. Break `session_id == instance_id`. Prefer truth over shims. Store is allowed for the plane. Do not reinvent identity — bind is enough.
 
@@ -72,7 +72,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.58.9** | ✅ | Vocabulary slash: `session_id` = system only; `instance_id` = continue; no dual keys |
 | **0.58.10** | ✅ | Plane `active_instance_id`; ownership ≠ focus documented (ADR D9–D11); SI-015 residual gate |
 | **0.58.11** | ✅ | **SI-015 owner gate** — bound system session must own continue instance (`require_owned_instance`) |
-| **exit** | 📋 next | SI-001 rename residual · Map true · SD-008 closed · ADR Accepted |
+| **0.58.12** | ✅ | **Product SessionService** — surface door (continue target, submit enrich, surface_view, watches); host/assist/flows/MCP rebind |
+| **exit** | 📋 next | SI-001 path/handle rename residual · Map true · SD-008 closed · ADR Accepted |
 
 **Docs rule:** ASD-STE100 for new/revised theme text ([docs/WRITING.md](docs/WRITING.md)).  
 **At each chunk:** update this table, VISION patch log, and SI rows if new impact appears.

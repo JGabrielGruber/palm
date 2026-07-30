@@ -115,6 +115,7 @@ class ApplicationHost:
         self._event_recorder = HostEventRecorder()
         self._schema_registry: Any | None = None
         self._system: Any | None = None
+        self._session: Any | None = None
         self._definitions: Any | None = None
         self._execution: Any | None = None
         self._assist: Any | None = None
@@ -157,6 +158,14 @@ class ApplicationHost:
     def system(self):
         """Operational inspect/debug service API."""
         return self._system
+
+    @property
+    def session(self):
+        """Product session door (0.58.12) — bind, continue target, journey, watches.
+
+        Surfaces use this instead of reinventing plane access. Plane remains law.
+        """
+        return self._session
 
     @property
     def definitions(self):
@@ -262,12 +271,19 @@ class ApplicationHost:
         metadata: dict[str, Any] | None = None,
         surface: str | None = None,
     ) -> Any:
-        """Bind law entry for host surfaces (0.58.3).
+        """Bind law entry for host surfaces (0.58.3 / 0.58.12 via SessionService).
 
-        Resolves or creates a **system** session via the primary runtime's
-        session plane. Returns :class:`~palm.system.planes.session.SessionBind`.
+        Resolves or creates a **system** session. Prefer product
+        :attr:`session` for new surface code.
         """
         self._require_started()
+        if self._session is not None:
+            return self._session.bind(
+                session_id,
+                create=create,
+                metadata=metadata,
+                surface=surface,
+            )
         plane = self.session_plane
         if plane is None:
             raise RuntimeError(
@@ -283,6 +299,8 @@ class ApplicationHost:
     def inspect_session(self, session_id: str) -> dict[str, Any]:
         """Session journey view (instances + open waits). Inspect only (0.58.5)."""
         self._require_started()
+        if self._session is not None:
+            return self._session.inspect(session_id)
         plane = self.session_plane
         if plane is None:
             raise RuntimeError(
@@ -293,6 +311,8 @@ class ApplicationHost:
     def resolve_session_continue(self, session_id: str) -> str | None:
         """Instance id under system session for continue (0.58.8). Not resume."""
         self._require_started()
+        if self._session is not None:
+            return self._session.resolve_continue_instance(session_id)
         plane = self.session_plane
         if plane is None:
             raise RuntimeError(
@@ -305,6 +325,8 @@ class ApplicationHost:
     ) -> Any:
         """SI-015 owner gate (0.58.11): bound session must own instance."""
         self._require_started()
+        if self._session is not None:
+            return self._session.require_owned_instance(session_id, instance_id)
         plane = self.session_plane
         if plane is None:
             raise RuntimeError(
@@ -315,6 +337,8 @@ class ApplicationHost:
     def session_event_matches(self, session_id: str, event: Any) -> bool:
         """Whether an event belongs to the system session (watch filter)."""
         self._require_started()
+        if self._session is not None:
+            return self._session.event_matches(session_id, event=event)
         plane = self.session_plane
         if plane is None:
             raise RuntimeError(
@@ -631,9 +655,10 @@ class ApplicationHost:
             resolve_execution_runtime=self._resolve_execution_runtime,
         )
         # Build only the services this app is composed of (+ their transitive deps).
-        # Default composition (all_in_one) is all six, so this is behaviour-preserving.
+        # Default composition (all_in_one) is full services, so this is behaviour-preserving.
         built = core_service_registry().build_all(service_ctx, only=self.composition.services)
         self._system = built.get("system")
+        self._session = built.get("session")
         self._definitions = built.get("definitions")
         self._execution = built.get("execution")
         self._assist = built.get("assist")

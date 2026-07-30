@@ -96,6 +96,17 @@ def dispatch_definitions(ctx: Any, path: list[str], params: dict[str, Any]) -> A
     raise ValueError(f"unrecognized definitions dispatch path: {'/'.join(path)}")
 
 
+def _resolve_session_service(ctx: Any) -> Any | None:
+    """Product SessionService from ServerContext / host (0.58.12)."""
+    svc = getattr(ctx, "session", None)
+    if svc is not None:
+        return svc
+    host = getattr(ctx, "host", None)
+    if host is not None:
+        return getattr(host, "session", None)
+    return None
+
+
 def rewrite_system_session_continue(
     ctx: Any,
     path: list[str],
@@ -106,20 +117,21 @@ def rewrite_system_session_continue(
     **0.58.9 law:** ``session_id`` is always the system subject. Product path
     segments still expect an **instance** id (SI-001/005). When a path or
     param carries ``sess-…`` where product needs an instance, resolve via
-    :meth:`~palm.system.planes.session.SessionPlaneService.resolve_continue_instance`
-    (active → waiting → last attached). Does **not** invent resume. Does **not**
-    write the instance back into ``session_id``.
+    product :class:`~palm.services.session.SessionService` (or plane fallback)
+    ``resolve_continue_instance`` (active → waiting → last). Does **not**
+    invent resume. Does **not** write the instance back into ``session_id``.
 
     **0.58.11 SI-015:** when a system ``session_id`` is bound and the path is a
     product continue/inspect under that subject, the continue ``instance_id``
     must be on the session attach list
-    (:meth:`~palm.system.planes.session.SessionPlaneService.require_owned_instance`).
+    (:meth:`~palm.services.session.SessionService.require_owned_instance`).
     """
     from palm.kits.server.middleware import resolve_session_plane
     from palm.system.planes.session import looks_like_system_session_id
 
-    plane = resolve_session_plane(ctx)
-    if plane is None:
+    product = _resolve_session_service(ctx)
+    plane = None if product is not None else resolve_session_plane(ctx)
+    if product is None and plane is None:
         return path, params
 
     out_params = dict(params)
@@ -127,6 +139,8 @@ def rewrite_system_session_continue(
 
     def _resolve(sid: str) -> str | None:
         try:
+            if product is not None:
+                return product.resolve_continue_instance(sid)
             return plane.resolve_continue_instance(sid)
         except Exception:
             return None
@@ -182,7 +196,7 @@ def rewrite_system_session_continue(
             out_params["instance_id"] = inst
 
     # SI-015: bound system session + product continue instance → owner check
-    _gate_continue_owner(plane, out_path, out_params)
+    _gate_continue_owner(product or plane, out_path, out_params)
 
     return out_path, out_params
 
@@ -234,20 +248,21 @@ def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
     params = params or {}
     if path == ["system", "doctor"]:
         return ctx.system.doctor(ctx.runtime)
-    # 0.58.8 — system session journey (inspect only; not a second resume path)
+    # 0.58.8 / 0.58.12 — system session journey (prefer product SessionService)
     if len(path) >= 3 and path[0] == "system" and path[1] == "session":
         from palm.kits.server.middleware import resolve_session_plane
 
-        plane = resolve_session_plane(ctx)
-        if plane is None:
+        product = _resolve_session_service(ctx)
+        door = product if product is not None else resolve_session_plane(ctx)
+        if door is None:
             raise ValueError("session plane not available")
         sid = path[2]
         if len(path) == 3:
-            return plane.inspect(sid)
+            return door.inspect(sid)
         if len(path) == 4 and path[3] == "waiting":
-            return plane.list_waiting(sid)
+            return door.list_waiting(sid)
         if len(path) == 4 and path[3] == "instances":
-            return plane.list_instances(sid)
+            return door.list_instances(sid)
         raise ValueError(f"unrecognized system session path: {'/'.join(path)}")
     if path == ["system", "waiting"]:
         from palm.core.orchestration import JobStatus

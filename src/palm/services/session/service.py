@@ -1,0 +1,429 @@
+"""Product SessionService — surface door for system session + related context.
+
+Surfaces and other product services use this instead of reinventing
+``runtime.session_plane`` access. The **plane remains law** (bind, attach,
+ownership, active focus, watches). This service shapes that law for product
+use and adds helpers surfaces need to drive **other** services correctly
+(continue target, submit metadata, journey view, event filter).
+
+Does **not** resume jobs. Continue remains the wait plane via execution/assist.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any
+
+from palm.common.services.base import BaseService
+from palm.system.planes.session import (
+    looks_like_system_session_id,
+    new_session_id,
+)
+
+if TYPE_CHECKING:
+    from palm.system.runtime.base import BaseRuntime
+    from palm.services.system.service import SystemService
+    from palm.system.planes.session import SessionPlaneService, SessionRecord, SessionBind
+
+
+@dataclass(frozen=True)
+class ContinueTarget:
+    """Resolved pair for continue under a system session.
+
+    * ``session_id`` — system subject (``sess-…``) when known
+    * ``instance_id`` — product continue handle (job-path instance)
+    """
+
+    session_id: str | None
+    instance_id: str | None
+
+    def to_dict(self) -> dict[str, Any]:
+        out: dict[str, Any] = {}
+        if self.session_id:
+            out["session_id"] = self.session_id
+        if self.instance_id:
+            out["instance_id"] = self.instance_id
+        return out
+
+
+class SessionService(BaseService):
+    """Product API for the session plane and surface-oriented session helpers.
+
+    Construction is host-wired (``HostServiceRegistry``). Surfaces call
+    ``host.session`` / ``ctx.session`` rather than the plane directly.
+    """
+
+    def __init__(
+        self,
+        *,
+        commands: Any,
+        queries: Any,
+        schemas: Any,
+        system: SystemService,
+        runtime: BaseRuntime | None = None,
+        runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
+    ) -> None:
+        super().__init__(commands=commands, queries=queries, schemas=schemas)
+        self._system = system
+        self._runtime = runtime
+        self._runtime_resolver = runtime_resolver
+
+    # ── runtime / plane ────────────────────────────────────────────────────
+
+    def resolve_runtime(self, runtime_name: str | None = None) -> BaseRuntime:
+        if self._runtime_resolver is not None:
+            return self._runtime_resolver(runtime_name)
+        if self._runtime is not None:
+            return self._runtime
+        raise RuntimeError("SessionService requires a runtime or runtime_resolver")
+
+    @property
+    def system(self) -> SystemService:
+        return self._system
+
+    def plane(self) -> SessionPlaneService:
+        """System session plane on the resolved runtime.
+
+        Raises ``RuntimeError`` when the plane is not attached (runtime not ready).
+        """
+        runtime = self.resolve_runtime()
+        plane = getattr(runtime, "session_plane", None)
+        if plane is None:
+            raise RuntimeError(
+                "SessionService has no session plane; primary runtime not ready"
+            )
+        return plane
+
+    def plane_or_none(self) -> SessionPlaneService | None:
+        try:
+            return self.plane()
+        except Exception:
+            return None
+
+    # ── bind / lifecycle (plane verbs, product door) ───────────────────────
+
+    def bind(
+        self,
+        session_id: str | None = None,
+        *,
+        create: bool = True,
+        metadata: dict[str, Any] | None = None,
+        surface: str | None = None,
+    ) -> SessionBind:
+        """Bind law: resolve or create a system session for a surface entry."""
+        return self.plane().bind(
+            session_id,
+            create=create,
+            metadata=metadata,
+            surface=surface,
+        )
+
+    def require_open(self, session_id: str) -> SessionRecord:
+        return self.plane().require_open(session_id)
+
+    def get(self, session_id: str) -> SessionRecord | None:
+        plane = self.plane_or_none()
+        if plane is None:
+            return None
+        return plane.get(session_id)
+
+    def close(self, session_id: str) -> SessionRecord:
+        return self.plane().close(session_id)
+
+    def list_sessions(
+        self,
+        *,
+        status: Any = None,
+        include_closed: bool = True,
+    ) -> list[SessionRecord]:
+        return self.plane().list_sessions(
+            status=status, include_closed=include_closed
+        )
+
+    # ── attach / focus ─────────────────────────────────────────────────────
+
+    def attach_instance(self, session_id: str, instance_id: str) -> SessionRecord:
+        return self.plane().attach_instance(session_id, instance_id)
+
+    def detach_instance(self, session_id: str, instance_id: str) -> SessionRecord:
+        return self.plane().detach_instance(session_id, instance_id)
+
+    def set_active_instance(self, session_id: str, instance_id: str) -> SessionRecord:
+        return self.plane().set_active_instance(session_id, instance_id)
+
+    def clear_active_instance(self, session_id: str) -> SessionRecord:
+        return self.plane().clear_active_instance(session_id)
+
+    def list_instances(self, session_id: str) -> list[str]:
+        return self.plane().list_instances(session_id)
+
+    def active_instance(self, session_id: str) -> str | None:
+        """Plane continue focus id, or None."""
+        return self.plane().active_instance(session_id)
+
+    def session_for_instance(self, instance_id: str) -> SessionRecord | None:
+        plane = self.plane_or_none()
+        if plane is None:
+            return None
+        return plane.session_for_instance(instance_id)
+
+    def owner_session_id(self, instance_id: str) -> str | None:
+        """System session id that owns *instance_id*, if any."""
+        rec = self.session_for_instance(instance_id)
+        return rec.session_id if rec is not None else None
+
+    # ── ownership / continue resolve ───────────────────────────────────────
+
+    def owns_instance(self, session_id: str, instance_id: str) -> bool:
+        plane = self.plane_or_none()
+        if plane is None:
+            return False
+        return bool(plane.owns_instance(session_id, instance_id))
+
+    def require_owned_instance(
+        self, session_id: str, instance_id: str
+    ) -> SessionRecord:
+        """Owner gate (SI-015): bound session must own continue instance."""
+        return self.plane().require_owned_instance(session_id, instance_id)
+
+    def resolve_continue_instance(self, session_id: str) -> str | None:
+        """Pick continue instance: active → waiting → last. Does not resume."""
+        return self.plane().resolve_continue_instance(session_id)
+
+    def resolve_instance_id(self, session_or_instance: str) -> str:
+        """Map system session id → continue instance; pass instance ids through.
+
+        Product edges use this so they do not reimplement plane resolve.
+        """
+        text = str(session_or_instance or "").strip()
+        if not text:
+            return text
+        if not looks_like_system_session_id(text):
+            return text
+        plane = self.plane_or_none()
+        if plane is None:
+            return text
+        try:
+            inst = plane.resolve_continue_instance(text)
+            return str(inst) if inst else text
+        except Exception:
+            return text
+
+    def continue_target(
+        self,
+        *,
+        session_id: str | None = None,
+        instance_id: str | None = None,
+        gate: bool = True,
+    ) -> ContinueTarget:
+        """Resolve the (system session, instance) pair for continue.
+
+        * System-shaped ``session_id`` + missing instance → resolve focus.
+        * System-shaped value only in ``instance_id`` → treat as session and resolve.
+        * When ``gate`` and both known → :meth:`require_owned_instance`.
+        """
+        sid = (session_id or "").strip() or None
+        iid = (instance_id or "").strip() or None
+
+        if looks_like_system_session_id(iid) and not looks_like_system_session_id(sid):
+            sid = iid
+            iid = None
+
+        if looks_like_system_session_id(sid):
+            if not iid or looks_like_system_session_id(iid):
+                resolved = self.resolve_continue_instance(sid)
+                iid = str(resolved) if resolved else None
+            if gate and iid:
+                self.require_owned_instance(sid, iid)
+            return ContinueTarget(session_id=sid, instance_id=iid)
+
+        # No system session bound: instance-only (legacy residual).
+        if iid and looks_like_system_session_id(iid):
+            # Misplaced sess- only in instance slot without session_id handled above.
+            resolved = self.resolve_continue_instance(str(iid))
+            return ContinueTarget(
+                session_id=str(iid),
+                instance_id=str(resolved) if resolved else None,
+            )
+        return ContinueTarget(session_id=sid, instance_id=iid)
+
+    def gate_bound_session_owns(
+        self,
+        instance_id: str,
+        params: dict[str, Any] | None,
+    ) -> None:
+        """SI-015 gate from product params: system ``session_id`` must own instance.
+
+        No-op when params lack a system-shaped ``session_id`` (legacy bare path).
+        """
+        params = params or {}
+        raw = params.get("session_id")
+        if raw is None or not str(raw).strip():
+            return
+        if not looks_like_system_session_id(raw):
+            return
+        plane = self.plane_or_none()
+        if plane is None:
+            return
+        plane.require_owned_instance(str(raw).strip(), str(instance_id).strip())
+
+    # ── submit / metadata helpers (for execution and other services) ───────
+
+    def ensure_system_session_id(
+        self,
+        *,
+        session_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
+        surface: str = "product",
+        create: bool = True,
+    ) -> str | None:
+        """Return a system session id for job metadata / start paths.
+
+        Prefers an existing system-shaped id on *session_id* or *metadata*.
+        Otherwise binds a new session when *create* is true.
+        """
+        meta = dict(metadata or {})
+        for raw in (session_id, meta.get("session_id")):
+            if looks_like_system_session_id(raw):
+                return str(raw).strip()
+        if not create:
+            return None
+        plane = self.plane_or_none()
+        if plane is None:
+            return None
+        try:
+            bind = plane.bind(
+                surface=surface,
+                metadata={"via": "session_service.ensure"},
+            )
+            return str(bind.session_id)
+        except Exception:
+            return None
+
+    def enrich_submit_body(
+        self,
+        body: dict[str, Any] | None,
+        *,
+        surface: str = "execution",
+    ) -> dict[str, Any]:
+        """Ensure submit body metadata carries system ``session_id``.
+
+        Edge law: ``session_id`` on body/meta is system subject only when
+        system-shaped. Instance-shaped values are not promoted.
+        """
+        out = dict(body or {})
+        meta = dict(out.get("metadata") or {})
+        candidates = (
+            out.get("session_id")
+            if looks_like_system_session_id(out.get("session_id"))
+            else None,
+            meta.get("session_id")
+            if looks_like_system_session_id(meta.get("session_id"))
+            else None,
+        )
+        sid = None
+        for raw in candidates:
+            if raw is not None and str(raw).strip():
+                sid = str(raw).strip()
+                break
+        if sid is None:
+            sid = self.ensure_system_session_id(surface=surface, create=True)
+        if sid:
+            meta["session_id"] = sid
+            out["metadata"] = meta
+        return out
+
+    def system_session_from_instance(self, instance_id: str) -> str | None:
+        """Best-effort system session for an instance (meta reverse, then plane)."""
+        iid = str(instance_id or "").strip()
+        if not iid:
+            return None
+        owner = self.owner_session_id(iid)
+        if owner:
+            return owner
+        # Instance repository meta may lag plane reverse index.
+        try:
+            view = self._system.inspect_instance(iid)
+            if isinstance(view, dict):
+                meta = view.get("metadata") if isinstance(view.get("metadata"), dict) else view
+                raw = None
+                if isinstance(meta, dict):
+                    raw = meta.get("session_id")
+                if looks_like_system_session_id(raw):
+                    return str(raw).strip()
+        except Exception:
+            pass
+        return None
+
+    # ── journey / watches ──────────────────────────────────────────────────
+
+    def inspect(self, session_id: str) -> dict[str, Any]:
+        """Session journey view (instances + open waits). Inspect only."""
+        return self.plane().inspect(session_id)
+
+    def list_waiting(self, session_id: str) -> list[dict[str, Any]]:
+        plane = self.plane()
+        if hasattr(plane, "list_waiting"):
+            return list(plane.list_waiting(session_id))
+        data = plane.inspect(session_id)
+        return list(data.get("waiting_on") or [])
+
+    def surface_view(self, session_id: str) -> dict[str, Any]:
+        """Enriched view for surfaces: journey + continue target + product hints.
+
+        Surfaces use this to know which instance to drive and which other
+        services (execution inspect, assist) to call — without each edge
+        assembling plane + system inspect itself.
+        """
+        journey = self.inspect(session_id)
+        continue_id = self.resolve_continue_instance(session_id)
+        active = journey.get("active_instance_id")
+        return {
+            **journey,
+            "kind": "session_surface_view",
+            "continue_instance_id": continue_id,
+            "active_instance_id": active,
+            "refs": {
+                "session_id": session_id,
+                "instance_id": continue_id,
+                "active_instance_id": active,
+            },
+        }
+
+    def event_matches(
+        self,
+        session_id: str,
+        *,
+        event: Any = None,
+        payload: dict[str, Any] | None = None,
+        context: Any = None,
+    ) -> bool:
+        return bool(
+            self.plane().event_matches(
+                session_id, event=event, payload=payload, context=context
+            )
+        )
+
+    def make_event_filter(self, session_id: str) -> Any:
+        """Predicate ``(event) -> bool`` for WS / subscribe wrappers."""
+        return self.plane().make_event_filter(session_id)
+
+    def attributed_session_id(
+        self,
+        *,
+        event: Any = None,
+        payload: dict[str, Any] | None = None,
+        context: Any = None,
+    ) -> str | None:
+        return self.plane().attributed_session_id(
+            event=event, payload=payload, context=context
+        )
+
+
+__all__ = [
+    "ContinueTarget",
+    "SessionService",
+    "looks_like_system_session_id",
+    "new_session_id",
+]
