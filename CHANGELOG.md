@@ -108,9 +108,17 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - [VISION-0.58 §6.2](docs/VISION-0.58.md) — ordered close slices: BoundSurface → strict attribution → inherit-or-service → kit door → operate → rename → docs → exit  
 - ADR-027 **D13–D14** · TECH-DEBT **SI-016** · STATUS table  
 
+#### Added (0.58.14) — BoundSurface + session context metadata
+- **BoundSurface** — product handle: `session_id`, `instance_id`, `kind` (outside|service|host), `origin`, session metadata snapshot  
+- **SessionService** — `bind_surface`, `surface_from_session` / `from_bind` / `from_params` / `from_dict`, `get_metadata` / `merge_metadata` / `replace_metadata`  
+- **Session plane** — `get_metadata` / `merge_metadata` / `replace_metadata` on the record  
+- **surface_view** — includes `bound_surface`, `session_kind`, `origin`  
+- Session metadata holds walk/surface/attribution facts; job metadata stays run facts (ADR-027 D14)  
+- **SI-016** seat partial; surface dogfood dual-slot cleanup remains **0.58.17**  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.13** shipped; **0.58.14+** named not yet coded.  
-- Theme **exit** after **0.58.14–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.14** shipped; **0.58.15–20** + exit named.  
+- Theme **exit** after **0.58.15–0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 

@@ -155,15 +155,17 @@ mega root for all automation. Well-known host seat: `sess-svc-host`.
 Workloads **inherit** the owning job’s session (EventContext / metadata). Do not create a
 separate “workload session” type for effects under a job.
 
-### D13 — Session owns surface context (0.58.14+)
+### D13 — Session owns surface context (0.58.14 ✅ seat)
 
 Surfaces do not invent dual identity slots as truth. Product **SessionService** shapes a
 **BoundSurface** (system `session_id`, continue `instance_id`, kind, origin, session metadata).
-Transport (cookie, header, WS, CLI) carries bind proof only.
+Transport (cookie, header, WS, CLI) carries bind proof only. Surface dogfood of the
+handle is **0.58.17**.
 
-### D14 — Session metadata vs job metadata (0.58.14+)
+### D14 — Session metadata vs job metadata (0.58.14 ✅ API)
 
-Walk / surface / attribution facts live on **session** record metadata.  
+Walk / surface / attribution facts live on **session** record metadata
+(`get_metadata` / `merge_metadata` on plane + SessionService).  
 Run facts live on **job / instance** metadata.  
 Do not use job metadata as a second session store or ownership graph.
 

@@ -6,16 +6,26 @@ ownership, active focus, watches). This service shapes that law for product
 use and adds helpers surfaces need to drive **other** services correctly
 (continue target, submit metadata, journey view, event filter).
 
+**0.58.14:** :class:`BoundSurface` is the session-owned surface context handle
+(session_id + instance focus + kind/origin + session metadata). Prefer
+session-context metadata for walk/surface facts; job metadata stays run facts.
+
 Does **not** resume jobs. Continue remains the wait plane via execution/assist.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 from palm.common.services.base import BaseService
+from palm.services.session.bound_surface import (
+    SESSION_CONTEXT_KEYS,
+    BoundSurface,
+    derive_session_kind,
+    derive_session_origin,
+)
 from palm.system.planes.session import (
     HOST_SESSION_ID,
     HOST_SESSION_ORIGIN,
@@ -122,6 +132,160 @@ class SessionService(BaseService):
             metadata=metadata,
             surface=surface,
         )
+
+    # ── BoundSurface + session context metadata (0.58.14) ──────────────────
+
+    def bind_surface(
+        self,
+        session_id: str | None = None,
+        *,
+        create: bool = True,
+        metadata: dict[str, Any] | None = None,
+        surface: str | None = None,
+        instance_id: str | None = None,
+        origin: str | None = None,
+        resolve_instance: bool = True,
+    ) -> BoundSurface:
+        """Bind and return a :class:`BoundSurface` (session owns surface context).
+
+        Surfaces should hold this handle rather than inventing dual session
+        slots. Session-context facts go in *metadata* (merged onto the plane
+        record). *instance_id* is continue focus under the bound session.
+        """
+        meta = dict(metadata or {})
+        if origin:
+            meta.setdefault("origin", str(origin).strip())
+        sid_hint = (session_id or "").strip() or None
+        # Outside subjects get kind=outside unless already service-shaped.
+        if not (sid_hint and str(sid_hint).startswith("sess-svc-")):
+            meta.setdefault("kind", "outside")
+        bind = self.bind(
+            sid_hint,
+            create=create,
+            metadata=meta or None,
+            surface=surface,
+        )
+        return self.surface_from_session(
+            bind.session_id,
+            instance_id=instance_id,
+            resolve_instance=resolve_instance,
+        )
+
+    def surface_from_session(
+        self,
+        session_id: str,
+        *,
+        instance_id: str | None = None,
+        resolve_instance: bool = True,
+    ) -> BoundSurface:
+        """Build :class:`BoundSurface` from a known system session id."""
+        rec = self.require_open(session_id)
+        iid = (instance_id or "").strip() or None
+        if iid is None and resolve_instance:
+            try:
+                resolved = self.resolve_continue_instance(rec.session_id)
+                iid = str(resolved) if resolved else None
+            except Exception:
+                iid = rec.active_instance_id
+        return BoundSurface.from_record(rec, instance_id=iid)
+
+    def surface_from_bind(
+        self,
+        bind: SessionBind,
+        *,
+        instance_id: str | None = None,
+        resolve_instance: bool = True,
+    ) -> BoundSurface:
+        """Build :class:`BoundSurface` from a :class:`SessionBind` proof."""
+        return self.surface_from_session(
+            bind.session_id,
+            instance_id=instance_id
+            if instance_id is not None
+            else bind.active_instance_id,
+            resolve_instance=resolve_instance and instance_id is None,
+        )
+
+    def surface_from_params(
+        self,
+        params: Mapping[str, Any] | None,
+        *,
+        create: bool = False,
+        surface: str | None = None,
+        resolve_instance: bool = True,
+    ) -> BoundSurface | None:
+        """Extract or bind a BoundSurface from product params.
+
+        * System-shaped ``session_id`` present → :meth:`surface_from_session`.
+        * Missing + ``create=True`` → :meth:`bind_surface`.
+        * Otherwise ``None`` (caller may use legacy bare-instance residual).
+        """
+        params = dict(params or {})
+        raw_sid = params.get("session_id")
+        raw_iid = params.get("instance_id")
+        iid = str(raw_iid).strip() if raw_iid is not None and str(raw_iid).strip() else None
+        if looks_like_system_session_id(raw_sid):
+            return self.surface_from_session(
+                str(raw_sid).strip(),
+                instance_id=iid,
+                resolve_instance=resolve_instance and iid is None,
+            )
+        # Misplaced system id in instance_id slot (legacy rewrite residual).
+        if looks_like_system_session_id(raw_iid) and not looks_like_system_session_id(
+            raw_sid
+        ):
+            return self.surface_from_session(
+                str(raw_iid).strip(),
+                resolve_instance=resolve_instance,
+            )
+        if create:
+            origin = params.get("origin") or params.get("session_origin")
+            return self.bind_surface(
+                surface=surface or params.get("surface"),
+                origin=str(origin).strip() if origin else None,
+                instance_id=iid,
+                resolve_instance=resolve_instance and iid is None,
+            )
+        return None
+
+    def surface_from_dict(self, data: Mapping[str, Any]) -> BoundSurface:
+        """Rebuild BoundSurface from :meth:`BoundSurface.to_dict` payload."""
+        # Prefer live plane record so metadata is current.
+        sid = data.get("session_id")
+        if looks_like_system_session_id(sid):
+            try:
+                return self.surface_from_session(
+                    str(sid),
+                    instance_id=data.get("instance_id"),
+                    resolve_instance=data.get("instance_id") is None,
+                )
+            except Exception:
+                pass
+        return BoundSurface.from_dict(data)
+
+    def get_metadata(self, session_id: str) -> dict[str, Any]:
+        """Session-context metadata (walk / surface / attribution)."""
+        return self.plane().get_metadata(session_id)
+
+    def merge_metadata(
+        self,
+        session_id: str,
+        metadata: dict[str, Any] | None,
+    ) -> BoundSurface:
+        """Merge session-context facts onto the plane record; return BoundSurface.
+
+        Prefer this over stuffing walk facts into job metadata (ADR-027 D14).
+        """
+        self.plane().merge_metadata(session_id, metadata)
+        return self.surface_from_session(session_id)
+
+    def replace_metadata(
+        self,
+        session_id: str,
+        metadata: dict[str, Any] | None,
+    ) -> BoundSurface:
+        """Replace session-context metadata entirely; return BoundSurface."""
+        self.plane().replace_metadata(session_id, metadata)
+        return self.surface_from_session(session_id)
 
     def require_open(self, session_id: str) -> SessionRecord:
         return self.plane().require_open(session_id)
@@ -426,20 +590,27 @@ class SessionService(BaseService):
         return list(data.get("waiting_on") or [])
 
     def surface_view(self, session_id: str) -> dict[str, Any]:
-        """Enriched view for surfaces: journey + continue target + product hints.
+        """Enriched view for surfaces: journey + BoundSurface + continue refs.
 
         Surfaces use this to know which instance to drive and which other
         services (execution inspect, assist) to call — without each edge
         assembling plane + system inspect itself.
+
+        ``kind`` stays ``session_surface_view`` (envelope). Subject kind lives
+        under ``bound_surface.session_kind`` / ``session_kind``.
         """
         journey = self.inspect(session_id)
-        continue_id = self.resolve_continue_instance(session_id)
+        bound = self.surface_from_session(session_id)
+        continue_id = bound.instance_id or self.resolve_continue_instance(session_id)
         active = journey.get("active_instance_id")
         return {
             **journey,
             "kind": "session_surface_view",
             "continue_instance_id": continue_id,
             "active_instance_id": active,
+            "session_kind": bound.kind,
+            "origin": bound.origin,
+            "bound_surface": bound.to_dict(),
             "refs": {
                 "session_id": session_id,
                 "instance_id": continue_id,
@@ -478,11 +649,15 @@ class SessionService(BaseService):
 
 
 __all__ = [
+    "SESSION_CONTEXT_KEYS",
+    "BoundSurface",
     "ContinueTarget",
     "HOST_SESSION_ID",
     "HOST_SESSION_ORIGIN",
     "SessionService",
     "WORK_DRAIN_ORIGIN",
+    "derive_session_kind",
+    "derive_session_origin",
     "looks_like_system_session_id",
     "new_session_id",
     "service_session_id",

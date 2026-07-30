@@ -237,6 +237,55 @@ class SessionPlaneService:
     def get(self, session_id: str) -> SessionRecord | None:
         return self._store.get(session_id)
 
+    # ── session context metadata (0.58.14) ─────────────────────────────────
+    # Walk / surface / attribution facts live here — not on job metadata.
+    # Product door: SessionService.get_metadata / merge_metadata.
+
+    def get_metadata(self, session_id: str) -> dict[str, Any]:
+        """Return a copy of session-context metadata for *session_id*."""
+        rec = self.require(session_id)
+        return dict(rec.metadata)
+
+    def merge_metadata(
+        self,
+        session_id: str,
+        metadata: dict[str, Any] | None,
+    ) -> SessionRecord:
+        """Merge *metadata* into the open session record (session context).
+
+        Does not replace the whole map. Closed sessions raise
+        :class:`SessionClosedError`. Empty / None *metadata* is a no-op touch
+        skip (returns current record).
+        """
+        rec = self.require_open(session_id)
+        meta = dict(metadata or {})
+        if not meta:
+            return rec
+        touched = False
+        for key, value in meta.items():
+            if rec.metadata.get(key) != value:
+                rec.metadata[key] = value
+                touched = True
+        if touched:
+            rec.touch()
+            return self._store.put(rec)
+        return rec
+
+    def replace_metadata(
+        self,
+        session_id: str,
+        metadata: dict[str, Any] | None,
+    ) -> SessionRecord:
+        """Replace session-context metadata entirely (rare; prefer merge).
+
+        Reserved plane facts (attach list, active focus) are **not** in
+        metadata — only the free-form context map is replaced.
+        """
+        rec = self.require_open(session_id)
+        rec.metadata = dict(metadata or {})
+        rec.touch()
+        return self._store.put(rec)
+
     def require(self, session_id: str) -> SessionRecord:
         rec = self._store.get(session_id)
         if rec is None:

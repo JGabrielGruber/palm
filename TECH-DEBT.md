@@ -638,7 +638,7 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
 | [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 | ✅ done (bare-instance residual → **0.58.15**) |
-| [SI-016](#si-016) | Surfaces invent dual context; walk facts on job meta | product / surfaces | **0.58.14** | open (close-plan seat) |
+| [SI-016](#si-016) | Surfaces invent dual context; walk facts on job meta | product / surfaces | **0.58.14** | partial (seat ✅; dogfood 0.58.17) |
 
 ### SI-001 — product handles still named “session” for instance
 
@@ -771,10 +771,14 @@ user-plane **impersonation** remain later seeds — not dual-own.
 
 **Where:** CLI dual `active_system_session_id` + `active_assist_session_id`; MCP/WS
 private bind assembly; job metadata used as walk/surface store.  
-**Impact:** Surfaces reinvent what SessionService should own; job meta bloated.  
-**Target:** **0.58.14** — **BoundSurface** + session context metadata on the session
-record ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 D13–D14). Surfaces hold
-one session-shaped context; walk/surface/attribution facts leave job meta.
+**Impact:** **Partial (0.58.14):** product **BoundSurface** + session context
+metadata API on plane/SessionService (`bind_surface`, `merge_metadata`, …).
+Surfaces *can* hold one session-shaped context; walk facts have a home that is
+not job meta.  
+**Residual:** CLI/MCP/WS still assemble dual slots until **0.58.17** dogfood;
+job meta cleanup where edges still stuff walk facts.  
+**Target:** Surfaces hold one **BoundSurface**; walk/surface/attribution facts
+on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 D13–D14).
 
 ---
 
@@ -804,7 +808,7 @@ one session-shaped context; walk/surface/attribution facts leave job meta.
 | 0.58.12 | Product SessionService surface door ✅; flows/assist/MCP rebind; SI-001/002 partial |
 | 0.58.13 | Service/origin sessions ✅; SI-011 partial (work-drain + host); workloads inherit |
 | **close plan** | [VISION-0.58 §6.2](docs/VISION-0.58.md) **0.58.14–0.58.20** + exit (docs locked) |
-| 0.58.14 | BoundSurface + session context metadata (session owns surface context) |
+| 0.58.14 | BoundSurface + session context metadata ✅; SI-016 seat (dogfood residual → 0.58.17) |
 | 0.58.15 | Strict attribution — kill SI-015 bare-instance residual |
 | 0.58.16 | Inherit-or-service start — finish SI-011 |
 | 0.58.17 | Single kit door + surface dogfood (SI-005/006) |

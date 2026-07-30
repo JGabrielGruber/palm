@@ -10,12 +10,15 @@
 * :meth:`SessionPlaneService.resolve_continue_instance` (active → waiting → last)
 * :attr:`SessionRecord.active_instance_id` / :meth:`SessionPlaneService.set_active_instance` (0.58.10)
 * :meth:`SessionPlaneService.owns_instance` / :meth:`~SessionPlaneService.require_owned_instance` (0.58.11 SI-015)
+* :meth:`SessionPlaneService.get_metadata` / :meth:`~SessionPlaneService.merge_metadata` (0.58.14)
 * :func:`require_session_plane`
 
 **Ownership:** one instance → one session (exclusive).  
 **Active:** focus inside that attach list only — not a foreign-session pass.  
 **Owner gate:** bound system session + continue instance must match attach list.  
-Docs: ``docs/VISION-0.58.md`` §4.1 · ADR-027 D9–D11 · SI-015.
+**Session metadata:** walk/surface/attribution on the record (not job meta).  
+**Product door:** ``BoundSurface`` via ``SessionService`` (0.58.14).  
+Docs: ``docs/VISION-0.58.md`` §4.1–4.4 · ADR-027 D9–D14 · SI-015/016.
 
 Store uses :class:`~palm.core.storage.StorageEngine` (like work plane).
 Surfaces (host, CLI, …) **bind** before driving work.

@@ -130,7 +130,7 @@ Cross-session drive is **out of law**.
 **Law:** the **session** (via product **SessionService**) **owns** what surfaces need to operate.  
 Surfaces do **not** invent dual slots (`active_system_*` + `active_assist_*` + private plane access) as truth.
 
-**BoundSurface** (name may lock in 0.58.14) is the surface handle shaped by the session door:
+**BoundSurface** (name locked in 0.58.14) is the surface handle shaped by the session door:
 
 ```text
 BoundSurface
@@ -219,12 +219,13 @@ Slices stay **one purpose each**. Numbers lock at execution; spirit is fixed.
 | **11** | Owner gate on continue | Bound session must own instance (SI-015) — **0.58.11** ✅ |
 | **12** | Product SessionService | Surface door: no reinvent plane access; helpers for other services — **0.58.12** ✅ |
 | **13** | Service / origin sessions | Automated start (work drain) + host seat use stable service sessions — **0.58.13** ✅ (SI-011 partial) |
+| **14** | BoundSurface + session metadata | Session owns surface context; plane + SessionService metadata API — **0.58.14** ✅ (SI-016 seat) |
 
 ### 6.2 Remaining — close plan (lock order; implement one purpose each)
 
 | Order | Slice | Spirit | Pays / residual | Done when |
 |------:|-------|--------|-----------------|-----------|
-| **14** | **BoundSurface + session metadata** | Session **controls** surface context. Product type: `session_id` + `instance_id` + `kind` + `origin` + session metadata API. Prefer session-context meta over stuffing walk facts into job meta. SessionService: `bind_surface` / `surface_from_*` / get-set session metadata. | Foundation for SI-001/006/010 usage; §4.3–4.4 | Surfaces can hold one BoundSurface; session metadata round-trips on plane record |
+| **14** | **BoundSurface + session metadata** | Session **controls** surface context. Product type: `session_id` + `instance_id` + `kind` + `origin` + session metadata API. Prefer session-context meta over stuffing walk facts into job meta. SessionService: `bind_surface` / `surface_from_*` / get-set session metadata. | Foundation for SI-001/006/010 usage; §4.3–4.4 · SI-016 seat | ✅ Surfaces hold one BoundSurface; session metadata round-trips on plane record |
 | **15** | **Strict attribution policy** | When plane ready: **start** always has system session (outside or service); **continue** requires bound system session + owned instance (resolve allowed). Kill bare-instance happy path (SI-015 residual). Optional compat flag only if tests need a short window. | SI-015 residual ✅ | No product continue without bound session when plane attached |
 | **16** | **Inherit-or-service start** | Reactive WorkIntent: if signal carries session → inherit; else `ensure_service_session(origin)` (`work-drain:…` / `inbound:…` / `schedule:…`). Finish SI-011. Workloads still inherit job session only. | SI-011 ✅; SI-009 edge | Automated start always attributed; parent walks not stolen when context present |
 | **17** | **Single kit door + surface dogfood** | Kit public helper → **SessionService** only (`resolve_session_service`). CLI / MCP / WS prefer BoundSurface; drop dual plane fallbacks on dogfood paths. | SI-005/006 partial; dual-path debt | Dogfood surfaces do not call `session_plane` for product verbs |
@@ -308,7 +309,7 @@ Theme **0.58** closes when:
 3. [ ] External entry on dogfood surfaces **requires** bind or create (strict policy **0.58.15**).  
 4. [ ] `session_id` is not a silent alias of `instance_id` on dogfood paths (**0.58.19**).  
 5. [x] Assist / MCP happy path uses the plane / SessionService.  
-6. [ ] BoundSurface + session metadata home live (**0.58.14**); kit single door (**0.58.17**).  
+6. [x] BoundSurface + session metadata home live (**0.58.14**); [ ] kit single door (**0.58.17**).  
 7. [ ] Automated start attributed (inherit-or-service **0.58.16**).  
 8. [ ] SD-008 closed; residual SI/SU listed (**0.58.20** + exit).  
 9. [ ] ADR-027 Accepted (exit).  
@@ -347,6 +348,7 @@ After compact, an agent reads: **STATUS → VISION-0.58 → ADR-027 → TECH-DEB
 | **0.58.12** | **Product SessionService:** `palm.services.session.SessionService` as surface door (bind, continue_target, enrich_submit_body, surface_view, event filter, owner gate helpers). Host `session` slot; composition core includes session; flows/assist/MCP prefer service over scattered plane access. Plane remains law — service does not resume. SI-001 path/handle rename still residual. |
 | **0.58.13** | **Service / origin sessions (SI-011 partial):** stable `sess-svc-{origin}` for automated start; well-known host `sess-svc-host` at runtime start; work drain enriches `work-drain:{target}`; `SessionService.ensure_service_session` / `enrich_submit_body(origin=…)`. Outside surfaces still mint random `sess-…`. **Not** one junk-drawer root for all jobs. Workloads inherit job session (no separate workload session type). |
 | **plan** | **Close plan locked (docs):** §4.3 BoundSurface / session owns surface context; §4.4 session vs job metadata; §6.2 remaining **0.58.14–0.58.20** + exit. No code in this plan row. |
+| **0.58.14** | **BoundSurface + session metadata:** product `BoundSurface` (`session_id`, `instance_id`, `kind`, `origin`, metadata snapshot); SessionService `bind_surface` / `surface_from_*` / `get_metadata` / `merge_metadata` / `replace_metadata`; plane `get_metadata` / `merge_metadata` / `replace_metadata`; `surface_view` includes `bound_surface`. SI-016 seat (surface dogfood remains 0.58.17). |
 
 ---
 

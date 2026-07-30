@@ -246,7 +246,7 @@ A **plane** is system traffic of one kind.
 | **Event** | Signals; completers speak of self | `runtime.event` (orchestration bus) |
 | **Work (start)** | Trigger → WorkIntent → new job | Work drain / start plane |
 | **Wait (continue)** | Interest → resume or fail parked work | Wait plane |
-| **Session** (0.58) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; resolve active → wait → last. **Product** `SessionService` (`host.session`) is the surface door. **Service sessions** (`sess-svc-…`) for automated start. **Close plan:** BoundSurface (session owns surface context); session metadata ≠ job metadata ([VISION-0.58](VISION-0.58.md) §4.3–4.4, §6.2). Workloads inherit. Active ≠ foreign pass. Plane remains law. |
+| **Session** (0.58) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; resolve active → wait → last. **Product** `SessionService` (`host.session`) is the surface door. **BoundSurface** (0.58.14): session-owned surface context (`session_id` + continue `instance_id` + kind/origin + session metadata). Session metadata ≠ job metadata. **Service sessions** (`sess-svc-…`) for automated start. Workloads inherit. Active ≠ foreign pass. Plane remains law. Close plan: [VISION-0.58](VISION-0.58.md) §6.2. |
 | **Workload** | Isolation lifecycle events and placement | Workload engine + runners |
 
 **Host bus** (`host.event`) is for host coordination (start, shutdown, outbox process).  
