@@ -62,7 +62,8 @@ palm/core/         PURE engines — Behavior Tree, Orchestration, Context, Stora
 | **Reliability** | Transactional outbox, compensation handlers, optional webhook dispatch |
 | **Runtimes** | Embedded, Daemon, Server (HTTP), CLI + REPL (host-backed) |
 | **Resources (0.12)** | `ResourceDefinition`, `ResourceEngine.invoke()`, `ResourceLeaf`, `ResourceCatalog`, `palm` provider |
-| **Flow REST (0.16)** | `/v1/api/flows/{flow_id}/session/{session_id}/…` — create, inspect, input, backtrack |
+| **Flow REST (0.58.19 paths)** | `/v1/api/flows/{flow_id}/instance/{instance_id}/…` — create, inspect, input, backtrack (legacy segment `session` may parse) |
+| **Session plane (0.58)** | System `session_id` (`sess-…`) ≠ product `instance_id`; BoundSurface / SessionService door |
 | **Definitions REST (0.16)** | `/v1/api/definitions/{flows,processes,resources}/…` — catalog CRUD + validate |
 | **Definition revisions (0.24)** | Append-only flow revisions; `flow_revision` pin; `GET flow?revision=`; impact + migrate |
 | **Providers REST (0.16)** | `POST /v1/api/providers/{provider}/{resource_ref}/invoke` |
@@ -99,7 +100,7 @@ python -c "from palm.runtimes.server import ServerRuntime, run_server; run_serve
 # → http://localhost:8080/explorer (root / redirects here)
 curl -s -X POST http://localhost:8080/v1/api/flows/todo-builder/create \
   -H 'Content-Type: application/json' -d '{"flow_name":"todo-builder"}'
-# → open /explorer/instances/<session_id> for wizard workspace + collection UI
+# → open /explorer/instances/<instance_id> for wizard workspace + collection UI
 ```
 
 ## Agent development with MCP (0.16)
@@ -117,29 +118,30 @@ Grok: `.grok/config.toml` — `PALM_MCP_IN_PROCESS=1`, `PALM_LLMS_TXT=docs/mcp.t
 
 ### Operator loop (memorize this)
 
-`definitions → create session → inspect → input → wait on children → resume`
+`definitions → create → inspect → input → wait on children → resume`
 
 ### Rules for agents
 
-1. **Session-first** — flow sessions use `session_id` (same durable id as `instance_id` in views). Use `job_id` only when you lack a session handle (`palm_system_inspect_job`).
-2. **Plain input** — `palm_flows_session_input(session_id, input="yes")` not JSON blobs. `yes`/`no` coerce to boolean on confirm steps.
+1. **Instance-continue / session-bind (0.58)** — prefer `instance_id` for walk continue; system `session_id` is `sess-…` only. Do not treat them as the same. Use `job_id` only when you lack a continue handle (`palm_system_inspect_job`).
+2. **Plain input** — `palm_flows_session_input` + continue id + `input="yes"` not JSON blobs. `yes`/`no` coerce to boolean on confirm steps.
 3. **Two view modes (0.20–0.21)** — **Assistant** on assist paths (`question`, `choices`, `hint`, `actions`). **Powertool** default on `palm_flows_*` and flows/system `palm_assist` paths. **0.21.5 opt-in:** `palm_flows_session(format="assistant")` or flows REST `?format=assistant`. Use `format=powertool` on assist for 0.19 compact shape; `verbose` for full inspect.
-4. **Human entry (0.21)** — CLI: `assist start operator-entry`. Explorer: `/explorer/assist`. MCP/REST assist unchanged; handoff → flows create.
+4. **Human entry (0.21)** — CLI: `assist start operator-entry`. Explorer: `/explorer/assist`. MCP/REST assist; handoff → flows create.
 5. **Resources = read, tools = write** — MCP read URIs (`palm://definitions/*`, `palm://agent/guide`) via FetchMcpResource; resource definitions (`knowkey.search_nodes`, `fetch-customer`) via `palm_providers_invoke`. Never pass `palm://` to invoke.
-6. **Compositional wizards** — check `waiting_on`, drive the **child** session; parent unparks on completion.
-7. **Collection steps** — `palm_wizard_collection_action` or **0.21.10+** `palm_assist(params={session_id, flow_id, collection_action, value})`; **0.21.11+** `params.edit={item_index, …}` for field edits; fuzzy menu tokens (`add`/`edit`/`done`/`continue`) coerce to labels.
+6. **Compositional wizards** — check `waiting_on`, drive the **child** instance; parent unparks on completion.
+7. **Collection steps** — `palm_wizard_collection_action` or `palm_assist(params={instance_id, flow_id, collection_action, value})`; `params.edit={item_index, …}` for field edits; fuzzy menu tokens (`add`/`edit`/`done`/`continue`) coerce to labels.
 8. **Interactive entry** — `palm_assist` / `palm_flows_create_session(flow_id=…)` for wizards. Never `palm_processes_submit` on catalog processes with `entry_flow`; read `palm://definitions/processes/{name}` for `submit_hint` / `mcp_default_entry`.
 9. **Batch drive** — `palm_flows_session_drive` accepts plain strings in `inputs`, `payload={…}` alone for one structured step, or both. After commit, `palm_flows_compose_status` includes `result` / `result_summary`.
 10. **`actions` block (0.21.4)** — on assistant turns; prefer structured `path`/`alias` over parsing `hint` for next steps.
+11. **Product door** — SessionService / BoundSurface; continue via wait plane only.
 
-### Typical session (0.31 — assist-first / weak-LLM)
+### Typical walk (0.31 — assist-first / weak-LLM)
 
 ```
 # Progressive docs: palm://agent/card first (not full guide)
 palm_assist(alias="assist/discover", params={query: "run"})  # optional route search
 palm_assist()                                                → operator-entry
 palm_assist(params={flow_id: "coconut-npc"})                 → start flow (assistant)
-palm_assist(params={session_id, flow_id, value: "…"})        → continue
+palm_assist(params={instance_id, flow_id, value: "…"})       → continue
 palm_assist(params={body: {name, pattern, options.steps}})   → one-shot publish
 palm_assist(alias="assist/doctor")                           → health / resource preflight
 # With PALM_MCP_SURFACE=assist these are the only tool calls needed

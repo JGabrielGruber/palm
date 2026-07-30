@@ -31,7 +31,7 @@ uv run --extra mcp python scripts/mcp_catalog_inventory.py --surface assist --js
 | Discover | `alias="assist/discover"`, optional `params={query: "…"}` |
 | List flows | `alias="assist/catalog/flows"` |
 | List waiting | `alias="assist/catalog/waiting"` |
-| Resume resource step | `alias="flows/session-resume"`, `params={session_id, flow_id}` |
+| Resume resource step | `alias="flows/instance-resume"` (legacy `flows/session-resume`), `params={instance_id, flow_id}` |
 | Publish flow | `alias="design/publish"`, `params={body: …}` |
 | Run flow | `params={flow_id: "…"}` |
 
@@ -78,7 +78,9 @@ flowchart LR
     REST --> Engine
 ```
 
-**Operator loop:** definitions → create session → inspect → input → wait on children → resume.
+**Operator loop:** definitions → create → inspect → input → wait on children → resume.
+
+**Vocabulary (0.58):** `session_id` = system subject (`sess-…`) only; `instance_id` = product continue handle; path segment **`instance`** (legacy `session` may parse). Product door: **SessionService** / **BoundSurface**. System journey: `system/session/{id}`. REST: `/v1/api/…/instance/{instance_id}`. See [VISION-0.58](VISION-0.58.md) · skill `session-management`.
 
 ### Dual backend
 
@@ -137,9 +139,9 @@ just mcp-inspector                  # MCP Inspector UI
 
 ### Conventions agents must follow
 
-1. **Session-first** — Flow sessions use `session_id` (same durable id as `instance_id` in views). Use `job_id` only when you lack a session handle (`palm_system_inspect_job`, `palm_system_job_input`). `palm_system_list_waiting` returns real `instance_id` values (never aliases `job_id`).
+1. **Instance-continue / session-bind (0.58)** — Prefer `instance_id` for walk continue. System `session_id` (`sess-…`) is the outside subject (BoundSurface / SessionService). Do **not** treat `session_id` ≡ `instance_id`. Use `job_id` only when you lack a continue handle (`palm_system_inspect_job`, `palm_system_job_input`). `palm_system_list_waiting` returns real `instance_id` values (never aliases `job_id`). Legacy param name `session_id` may fill continue when the value is not `sess-…`.
 
-2. **Plain-string input** — Prefer `palm_flows_session_input(session_id, input="yes")` or `input="Ada"`. Do **not** wrap answers in JSON objects. Coercion matches Explorer (`yes` → boolean on confirm steps).
+2. **Plain-string input** — Prefer `palm_flows_session_input` + continue id + `input="yes"` or `input="Ada"`. Do **not** wrap answers in JSON objects. Coercion matches Explorer (`yes` → boolean on confirm steps).
 
 3. **Two view modes (0.20–0.21)** — **Assistant** (human compose: `question`, `choices`, `hint`, `actions`) on assist surfaces; **Powertool** (agent snapshot: `operator_hint`, `step_kind`) on `palm_flows_*` / `palm_system_*` by default. `palm_assist` defaults `format="assistant"` on assist paths; flows/system paths stay powertool unless `params.format=assistant`. **0.21.5 opt-in:** `palm_flows_session(format="assistant")` and flows REST `?format=assistant` for human labels on business sessions. Use `format="verbose"` only when debugging full inspect dicts.
 
@@ -151,17 +153,17 @@ just mcp-inspector                  # MCP Inspector UI
    - `menu` → `palm_wizard_collection_action` (`add`, `edit`, `remove`, `done`, …) **or** `palm_flows_session_input` with choice label/number
    - **0.21.8 one-shot:** `palm_wizard_collection_action(action=add, value="title")` or `palm_flows_session_input(input="add", value="title")` at menu phase
    - **0.21.9 assistant:** pass `format="assistant"` on `palm_flows_session_input` / `palm_wizard_collection_action` for `question` + `actions` on mutations
-   - **0.21.10 unified assist:** `palm_assist(params={session_id, flow_id, value})` drives flows input without explicit `path`; aliases `flows/session-input`, `flows/session`
-   - **0.21.11 edit shortcut:** `palm_assist(params={session_id, flow_id, edit: {item_index: 0, priority: "low"}})` chains menu → select → fields; fuzzy menu tokens (`add`/`edit`/`done`/`continue`) coerce to choice labels
-   - `field` / `select_item` / `remove_confirm` → `palm_flows_session_input(session_id, input="…")` (plain string)
+   - **0.21.10 unified assist:** `palm_assist(params={instance_id, flow_id, value})` drives flows input without explicit `path`; aliases `flows/instance-input` (legacy `flows/session-input`)
+   - **0.21.11 edit shortcut:** `palm_assist(params={instance_id, flow_id, edit: {item_index: 0, priority: "low"}})` chains menu → select → fields; fuzzy menu tokens (`add`/`edit`/`done`/`continue`) coerce to choice labels
+   - `field` / `select_item` / `remove_confirm` → `palm_flows_session_input` + continue id + `input="…"` (plain string)
 
 7. **Submit entry** — Use `palm_flows_create_session(flow_id=…)` for interactive operator-driven flows. `palm_processes_submit` submits **one job per flow**; it is **rejected** when the process declares `entry_flow` or `metadata.mcp.entries`. Read `palm://definitions/processes/{name}` for `submit_hint` / `mcp_default_entry`.
 
-8. **Batch stepping** — Use `palm_flows_session_drive(session_id, inputs=[…])` to apply multiple answers in one MCP call.
+8. **Batch stepping** — Use `palm_flows_session_drive` + continue id + `inputs=[…]` to apply multiple answers in one MCP call.
 
-9. **Session map** — Prefer `palm_flows_compose_status(session_id)` when navigating compositional stacks.
+9. **Stack map** — Prefer `palm_flows_compose_status` + continue id when navigating compositional stacks.
 
-10. **Sequential driving** — Drive one session at a time. When `waiting_on` is set, drive that target — do not poke the parent.
+10. **Sequential driving** — Drive one instance at a time. When `waiting_on` is set, drive that target — do not poke the parent.
 
 ### Mutation guard (0.22.1+)
 
@@ -178,17 +180,17 @@ MCP tool docstrings should lead with `call_connected_tool(tool_name="palm___…"
 | `palm_assist` | Purpose |
 |---------------|---------|
 | `palm_assist()` (no args) | **0.21.7** — starts `operator-entry` (human-first default for weak LLMs) |
-| `params={"session_id": id, "value": "…"}` | **0.21.7** — inferred `assist/session/…/input` when path/alias omitted |
+| `params={"instance_id": id, "value": "…"}` | Continue assist/input when path/alias omitted (legacy `session_id` param soft-lands) |
 | `alias="operator-entry/start"` | Start operator entry — returns **first turn** (`question`, `choices`) |
 | `format="assistant"` | Default on assist paths (human envelope) |
 | `format="powertool"` | Opt-in 0.19 compact shape on assist |
-| `path=["assist","session",id,"input"], params={"value":"yes"}` | Plain-string input |
-| `alias="operator-entry/handoff", params={"session_id":id}` | Typed handoff payload |
+| `path=["assist","instance",id,"input"], params={"value":"yes"}` | Plain-string input (segment `instance`) |
+| `alias="operator-entry/handoff", params={"instance_id":id}` | Typed handoff payload |
 | `path=["flows","todo-builder","create"]` | Delegate to flows — **powertool** response |
-| `params={session_id, flow_id, value}` | **0.21.10** — inferred `flows/…/session/…/input` |
-| `params={session_id, flow_id, collection_action: "add", value: "title"}` | **0.21.10** — collection one-shot via assist |
-| `params={session_id, flow_id, edit: {item_index: 0, …}}` | **0.21.11** — collection field edit shortcut |
-| `alias="flows/session-input"` | **0.21.10** — registered flows input alias (`flow_id` + `session_id` in `params`) |
+| `params={instance_id, flow_id, value}` | Inferred `flows/…/instance/…/input` |
+| `params={instance_id, flow_id, collection_action: "add", value: "title"}` | Collection one-shot via assist |
+| `params={instance_id, flow_id, edit: {item_index: 0, …}}` | Collection field edit shortcut |
+| `alias="flows/instance-input"` | Flows input alias (`flow_id` + `instance_id`; legacy `flows/session-input`) |
 
 Read `palm://assist/routes` for the full command-path catalog and aliases. Per-domain tools (`palm_flows_*`, …) remain valid. See [MIGRATION-0.21.md](migrations/MIGRATION-0.21.md) · [MIGRATION-0.20.md](migrations/MIGRATION-0.20.md) · [MIGRATION-0.19.md](migrations/MIGRATION-0.19.md).
 
@@ -196,9 +198,9 @@ Read `palm://assist/routes` for the full command-path catalog and aliases. Per-d
 |-------------|---------|
 | `GET /v1/api/assist/scenarios` | List registered scenarios |
 | `POST /v1/api/assist/scenarios/operator-entry/start` | Start — assistant first turn (default) |
-| `GET /v1/api/assist/session/{id}?format=assistant` | Inspect assist session |
+| `GET /v1/api/assist/instance/{id}?format=assistant` | Inspect assist walk (continue id) |
 | `GET /v1/api/assist/catalog/flows` | Runnable flows from assist catalog |
-| `POST /v1/api/assist/session/{session_id}/handoff` | Typed handoff payload |
+| `POST /v1/api/assist/instance/{instance_id}/handoff` | Typed handoff payload |
 
 Assist scenarios are normal wizard flows (`palm-operator-entry`). Resource steps use existing `step_kind: resource` → `ResourceLeaf`.
 

@@ -9,13 +9,13 @@
 | Operator menu | `palm_assist()` |
 | Discover routes | `alias=assist/discover` + optional `params={query: "publish"}` |
 | Run a flow | `palm_assist(params={flow_id: "coconut-npc"})` |
-| Continue | `palm_assist(params={session_id, flow_id, value})` |
+| Continue | `palm_assist(params={instance_id, flow_id, value})` (legacy `session_id` ok if not `sess-…`) |
 | Publish flow | `palm_assist(params={body: {name, pattern, options.steps}})` or `alias=design/publish` |
 | Publish resource | `alias=design/publish-resource` + body |
 | Doctor | `alias=assist/doctor` |
 | List flows | `alias=assist/catalog/flows` |
 | List waiting | `alias=assist/catalog/waiting` |
-| Resume resource | `alias=flows/session-resume` + session_id, flow_id |
+| Resume resource | `alias=flows/instance-resume` (legacy `flows/session-resume`) + instance_id, flow_id |
 
 ## Rules
 
@@ -23,6 +23,7 @@
 2. Send plain strings (`yes`, choice slugs, text) as `value` / `input`.
 3. Respect `mutation.mutations_allowed` and `confirm_step`.
 4. On resource failure: resume alias or doctor — do not invent peer tools if assist-only.
+5. **`session_id` ≠ `instance_id`** — system subject vs continue handle (0.58). Prefer `instance_id` to continue.
 
 ## Load more only when stuck
 

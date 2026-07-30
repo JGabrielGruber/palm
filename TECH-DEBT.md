@@ -202,17 +202,19 @@ Optional rename to `OpsService` / `InspectService` only if product API churn is 
 
 **Severity:** S2 · **Effort:** M · **Status:** **open — theme 0.58 active** (plan **0.58.0**)
 
-**Observation:** System plane + product door through **0.58.19**: seat, multi-attach,
+**Observation:** System plane + product door through **0.58.20**: seat, multi-attach,
 bind, job-path, inspect, Assist dogfood, WS/cookie bind, watches/fan-in, vocabulary,
 **active focus**, **owner gate**, **SessionService**, **service/origin sessions**,
 **BoundSurface**, **strict attribution**, **inherit-or-service**, **kit door**,
-**session operate**, **product path rename** (SI-001/005). Residual for exit:
-explorer bulk (SI-010), docs/skill (SI-012), thin handle field names (SI-002),
-CLI assist slot name (SI-006).  
+**session operate**, **product path rename** (SI-001/005), **docs/skill** (SI-012).
+Residual for **exit** (honest list, not all paid):
+explorer bare paths (SI-010 → SU-*), thin handle field names (SI-002),
+CLI assist slot name (SI-006), optional CQRS session contributor (SI-007),
+job-meta walk cleanup (SI-016 residual).  
 Watch-first queue note: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) (**superseded**).
 
 **Target:** [VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) —  
-Close at theme exit when residual SI honest; structure is live.
+Close at theme exit when residual SI honest; structure is live; agents taught truth.
 
 **Impact list:** [SI-001+](#4b-session-impact-inventory-si--0580-analysis) (not all paid in 0.58).
 
@@ -633,9 +635,9 @@ PD-001–004, PD-006–008, PD-012, PD-013, PD-019–021, PD-028, PD-031, and th
 | [SI-007](#si-007) | CQRS instance queries are the public “session” | host CQRS / kits | 0.58.8 partial | partial (`system/session`) |
 | [SI-008](#si-008) | `flow.session.*` events lack real session subject | event plane | 0.58.4+8 | ✅ partial + filter |
 | [SI-009](#si-009) | WorkloadOwner.session_id optional / unenforced | workload | 0.58.8 partial | partial (EventContext) |
-| [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open |
+| [SI-010](#si-010) | Explorer / REST drive instance without session bind | surfaces SU | later (SU-*) | open (named residual) |
 | [SI-011](#si-011) | Composition / inbound start without session attribution | work plane edges | 0.58.13 · **0.58.16** | ✅ done (inherit-or-service) |
-| [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | ongoing | open |
+| [SI-012](#si-012) | Docs and skills say session ≡ flow instance | docs / MCP skill | **0.58.20** | ✅ taught (skill + MCP + wiki) |
 | [SI-013](#si-013) | Session multi-attach + reverse index | system plane | 0.58.2 | ✅ done |
 | [SI-014](#si-014) | Plane-store pattern not shared across planes | architecture | **ponder later** | open |
 | [SI-015](#si-015) | Continue paths skip owner check when session bound | product / surfaces | 0.58.11 · **0.58.15** | ✅ done (strict attribution) |
@@ -684,7 +686,7 @@ dispatch resolve system session via plane; cookie-like transport
 use `instance`; aliases `flows/instance-*` (legacy `flows/session-*` keys map
 to instance paths); `{instance_id}` accepts legacy `session_id` param when
 continue handle is absent; `system/session/{id}` remains system journey.  
-**Residual:** skill/docs narrative polish → **0.58.20** (SI-012).
+**Residual:** none on path/alias; skill narrative → **SI-012** ✅ at **0.58.20**.
 
 ### SI-006 — CLI / REPL active session id
 
@@ -721,9 +723,12 @@ wins. Residual: leaves that never bind event context.
 
 ### SI-010 — Explorer / REST without session bind
 
-**Where:** server explorer SSR, REST flow session routes (SU-001 related).  
-**Impact:** Operator UI bypasses session glue.  
-**Target:** Later surface paydown; cookie bind when HTTP is touched.
+**Where:** server explorer SSR, bare explorer instance routes (SU-* related).  
+**Impact:** Operator UI can drive instance without BoundSurface bind. Dogfood MCP/CLI/WS
+paths bind; explorer bulk not paid in 0.58.  
+**Status:** **open residual (0.58.20 honesty)** — name for later surface / SU-* theme.
+Not a dual-path law hole on dogfood surfaces.  
+**Target:** Cookie / BoundSurface when explorer HTTP is next touched.
 
 ### SI-011 — Composition / inbound without session
 
@@ -738,9 +743,13 @@ inherit job session only (no separate workload session type).
 
 ### SI-012 — Docs and skills alias
 
-**Where:** MCP skill, docs/MCP.md, wiki, examples that say session_id is instance.  
-**Impact:** Agents re-learn the lie.  
-**Target:** Update when dogfood lands; STE on touch.
+**Where:** MCP skill, docs/MCP.md, mcp.txt/card, llms.txt, wiki.  
+**Status:** ✅ **done at 0.58.20** — skill + operator card/guide + MCP.md + wiki concept
+`session-plane` teach: `session_id` = system subject; `instance_id` = continue;
+BoundSurface / SessionService; system paths `system/session/{id}`; soft-land legacy
+param names. STE on touch.  
+**Residual:** thin class field names stay SI-002; legacy prose in deep MCP history
+tables may still say “session” for walks — prefer new wording on next touch.
 
 ### SI-013 — Session multi-attach not first-class yet
 
@@ -817,8 +826,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | 0.58.17 | Single kit door + surface dogfood ✅; SI-005/006/016 partial |
 | 0.58.18 | Session operate + surface_view v2 ✅; SI-007 partial (operator paths) |
 | 0.58.19 | Product vocabulary rename SI-001/005 ✅ |
-| 0.58.20 | Docs/skill SI-012 + residual honesty |
-| 0.58.20 | Docs/skill SI-012 + residual honesty SI-010/SU |
+| **0.58.20** | Docs/skill SI-012 ✅ + residual honesty SI-010/SU-* |
 | theme exit | SD-008 close; ADR-027 Accept; residual SI honest |
 | later (not 0.58) | SI-014 plane-store; D11 impersonation; full SU-001 explorer bulk |
 

@@ -19,6 +19,21 @@ You operate Palm through MCP — **prefer `palm_assist` only** (required when `P
 
 **Do not** load full guide + all references unless needed.
 
+## Session ≠ instance (0.58 law)
+
+| Term | Meaning |
+|------|---------|
+| **`session_id`** | System subject only (`sess-…` / `sess-svc-…`). Outside owner; multi-instance capable. |
+| **`instance_id`** | Product continue handle (one run / wizard walk). |
+| **Path segment** | Prefer **`instance`** in product paths. Legacy segment `session` may still parse. |
+| **System journey** | `system/session/{id}/…` stays system (not renamed to instance). |
+| **Product door** | **SessionService** / **BoundSurface** via kit `resolve_session_service`. |
+| **Continue** | Wait plane only. No dual-own. Active = focus among owned instances. |
+
+Prefer `instance_id` for continue params. Legacy `session_id` in tool params may fill the continue handle when the value is **not** a system `sess-…` id.
+
+Detail: `references/session-management.md` · map [PALM.md](../../../PALM.md) session plane · [VISION-0.58](../../../VISION-0.58.md).
+
 ## Core principles
 
 - **Stateful** — re-inspect after every input; follow returned `question` / `actions`.
@@ -47,13 +62,14 @@ You operate Palm through MCP — **prefer `palm_assist` only** (required when `P
 | Fresh start | `palm_assist()` |
 | Discover | `alias=assist/discover` + optional `query` |
 | Run a flow | `params={flow_id: "coconut-npc"}` then `value` |
-| Continue | `params={session_id, flow_id, value}` |
+| Continue | `params={instance_id, flow_id, value}` (legacy `session_id` ok if not `sess-…`) |
 | List flows | `alias=assist/catalog/flows` |
 | Waiting | `alias=assist/catalog/waiting` |
 | Doctor | `alias=assist/doctor` |
-| Resume resource | `alias=flows/session-resume` + session_id, flow_id |
+| Resume resource | `alias=flows/instance-resume` (legacy `flows/session-resume`) + instance_id, flow_id |
 | Publish flow | `params={body: {…}}` or `alias=design/publish` |
 | Publish resource | `alias=design/publish-resource` |
+| System session view | path/alias under `system/session/{session_id}` |
 
 ## When editing Palm MCP code
 

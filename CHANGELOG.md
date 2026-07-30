@@ -161,9 +161,16 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Handles** — `FlowSession` / `AssistSession` class field names may stay thin (SI-002); public path/envelope law: `session_id` = system, `instance_id` = continue  
 - **System paths** — `system/session/{id}/…` unchanged (system journey)  
 
+#### Documented (0.58.20) — docs/skill + residual honesty (SI-012)
+- **Skill** — `docs/skills/palm/` vocabulary: session ≠ instance; BoundSurface; SessionService; prefer `instance_id`  
+- **Operator surfaces** — `mcp-card.txt`, `mcp.txt`, `MCP.md`, `llms.txt` teach 0.58.9/19 law  
+- **Wiki** — `docs/wiki/concepts/session-plane.md`  
+- **PALM.md** — session plane vocabulary line  
+- **Residual honesty** — SI-012 ✅; SI-010 open (explorer bare / SU-*); thin SI-002/006; SI-007/016 partial; **SD-008** open until exit  
+
 #### Notes
-- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.19** shipped; **0.58.20** + exit named.  
-- Theme **exit** after **0.58.20** (or residual honesty on open SI) + ADR-027 Accepted + SD-008 close.  
+- Code stamp remains `0.57.14` until an embedded dump; logical slices **0.58.0–0.58.20** shipped; **exit** named.  
+- Theme **exit** on request: residual SI honest + ADR-027 Accepted + SD-008 close + `just check`.  
 - Debt named (not paid): **[SD-014](TECH-DEBT.md#sd-014)** system boot phases — later theme.
 ## [0.57.14] — 2026-07-29
 

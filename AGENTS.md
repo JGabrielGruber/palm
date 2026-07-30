@@ -99,11 +99,11 @@ Prefer **`palm_assist`**, not curl or many domain tools.
 | Menu | `palm_assist()` |
 | Discover | `palm_assist(alias="assist/discover", params={query: "…"})` |
 | Run flow | `palm_assist(params={flow_id: "…"})` |
-| Continue | `palm_assist(params={session_id, flow_id, value})` |
+| Continue | `palm_assist(params={instance_id, flow_id, value})` (legacy `session_id` ok if not `sess-…`) |
 | Publish flow | `palm_assist(params={body: {…}})` or `alias=design/publish` |
 | Doctor / list / waiting | `assist/doctor` · `assist/catalog/flows` · `assist/catalog/waiting` |
 
-**Conventions:** session-first; plain `value`/`input`; follow `question` / `choices` / `actions` / `waiting_on`; do not guess state.
+**Conventions:** instance-continue / system-session bind (`session_id` ≠ `instance_id`, 0.58); plain `value`/`input`; follow `question` / `choices` / `actions` / `waiting_on`; do not guess state.
 
 **Setup:** `uv sync --extra mcp` · `PALM_MCP_IN_PROCESS=1` · optional `PALM_MCP_SURFACE=assist`.  
 **Docs L1:** `palm://agent/card` before full skill.  

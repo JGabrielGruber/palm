@@ -8,17 +8,21 @@ On-disk: `docs/mcp.txt`, `docs/llms.txt` (project context).
 Palm = stateful, path-driven workflow engine with interactive wizard support.
 
 - **Flows** — reusable wizards (`todo-builder`, `approval`, custom flows you publish, …)
-- **Sessions** — durable executions (`session_id` ≡ `instance_id`)
+- **System session** — outside subject (`session_id` = `sess-…`); may own many instances (0.58)
+- **Instance** — one run / continue handle (`instance_id`); product paths use segment `instance`
+- **BoundSurface / SessionService** — product bind door (not a second resume path)
 - **Assist** — `palm_assist` parametric dispatch (paths, aliases, params)
 - **Design (0.25+)** — safe catalog writes via `palm_design_*` (propose → impact → commit)
 - **Resources** — read-only `palm://definitions/*`, `palm://instances/{id}/tree`, skill references
-- **Tools** — write/act: design, create session, input, resume, cancel
+- **Tools** — write/act: design, create, input, resume, cancel
+
+**Do not** treat `session_id` ≡ `instance_id`. Detail: `session-management.md`.
 
 ## Golden rules
 
 | Task | Start here |
 |------|------------|
-| Run an existing flow | `palm_assist()` unless you have `session_id` or explicit `flow_id` |
+| Run an existing flow | `palm_assist()` unless you have continue `instance_id` or explicit `flow_id` |
 | Create or change a flow definition | `palm://agent/references/design-flows` + `palm_design_*` — **not** repo files or `palm_definitions_*` writes |
 
 ## View modes
@@ -28,15 +32,17 @@ Palm = stateful, path-driven workflow engine with interactive wizard support.
 | Assistant | assist paths, opt-in flows | `question`, `choices`, `hint`, `actions` |
 | Powertool | `palm_flows_*` default | `operator_hint`, `step_kind` |
 
-## Typical session (0.21.7+)
+## Typical walk (0.21.7+ · vocabulary 0.58)
 
 ```
-palm_assist()                                          → operator-entry
-palm_assist(params={"session_id": id, "value": "yes"}) → continue assist
-palm_assist(alias="operator-entry/handoff", params={"session_id": id})
-palm_assist(path=["flows", "todo-builder", "create"])  → business session
-palm_assist(params={session_id, flow_id, value})       → flows input (0.21.10)
+palm_assist()                                             → operator-entry
+palm_assist(params={instance_id: id, value: "yes"})       → continue (prefer instance_id)
+palm_assist(alias="operator-entry/handoff", params={instance_id: id})
+palm_assist(path=["flows", "todo-builder", "create"])     → start business instance
+palm_assist(params={instance_id, flow_id, value})         → flows input
 ```
+
+Legacy: param name `session_id` may still carry the continue handle when the value is not `sess-…`.
 
 ## Design loop (create or improve flows)
 
@@ -65,4 +71,4 @@ Fuzzy menu tokens: `add`, `edit`, `done`, `continue`.
 | Choice | `input="beta"` or `input="2"` from assistant `choices` |
 | Summary (`include_summary`) | `input="yes"` only when user explicitly confirms — never auto-confirm on inspect |
 
-Re-inspect with `palm_flows_session(..., format="assistant")` after **every** input.
+Re-inspect with `palm_flows_session(..., format="assistant")` (continue id) after **every** input.
