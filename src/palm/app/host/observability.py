@@ -17,8 +17,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from palm.app.cli_settings import is_durable_storage
+from palm.app.host.boot.modes import list_boot_modes
 from palm.common.events.consumers import DEFAULT_JOURNAL_CONSUMERS, journal_consumer_status
 from palm.common.resource.document_storage import resolve_kv_backend
+from palm.system.boot import schedule_catalog
 from palm.system.log import get_system_log
 
 if TYPE_CHECKING:
@@ -152,6 +154,7 @@ class HostObservability:
                 inbound_bindings = list(host.inbound.list_bindings())
             except Exception:
                 inbound_bindings = []
+        boot_mode = getattr(host, "boot_mode", None)
         return {
             "work_pending": work_pending,
             "work_drain_running": bg,
@@ -164,6 +167,17 @@ class HostObservability:
             "journal_consumers": list(DEFAULT_JOURNAL_CONSUMERS),
             "inbound_bindings": inbound_bindings,
             "inbound_count": len(inbound_bindings),
+            "boot": {
+                "mode": None if boot_mode is None else boot_mode.name,
+                "mode_detail": None if boot_mode is None else boot_mode.to_dict(),
+                "modes_available": list(list_boot_modes()),
+                "phase_tables": schedule_catalog(),
+                "note": (
+                    "0.59.2 locked phase tables + modes. Walker seats: "
+                    "host.system_log / system.log.ready; remaining phases "
+                    "imperative until 0.59.3–.4."
+                ),
+            },
             "event_plane": self.event_plane_status(),
             "ops": self.ops_status(),
         }

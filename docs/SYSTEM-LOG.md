@@ -32,8 +32,9 @@ This is the Palm analog of **`journalctl` for Palm’s own boot and system path*
 | Host + system boot phase lines (inventory-aligned ids) | ✅ |
 | Skip reasons (surfaces, projections, work_drain, outbox, bind) | ✅ |
 | `host.system_log` · doctor `event_plane.system_log_recent` | ✅ |
-| Mode default levels · full operate catalog | later with modes |
-| JSON file sink · OTel | later |
+| Mode default levels (BootMode) · walker reuses phase API | ✅ 0.59.2 |
+| Early seats `host.system_log` / `system.log.ready` | ✅ 0.59.2 |
+| Full operate catalog · JSON file sink · OTel | later |
 
 ---
 
@@ -285,8 +286,8 @@ Walker (0.59.2+) should call the same helpers so migration does not invent a sec
 | When | Work | Result |
 |------|------|--------|
 | **0.59.1a** | Plan **+** basic implement | ✅ ring, console, host+system phase lines |
-| **0.59.2** | Walker reuses SystemLog phase API | No dual narrative |
-| **Modes** | Default levels by mode | quieter test / richer dev |
+| **0.59.2** | Walker reuses SystemLog phase API · mode levels | ✅ No dual narrative |
+| **0.59.3+** | Full schedule walk emits phase lines only via SystemLog | cutover |
 | **Membership** | More skip reasons | Composition visible |
 | **Theme exit** | BI-015 closed or residual | OPS note if needed |
 

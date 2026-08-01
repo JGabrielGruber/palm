@@ -344,13 +344,13 @@ The host **wires** system instances and product.
 
 #### Boot (honest today · target 0.59)
 
-| Level | Today | Target |
-|-------|-------|--------|
-| **System schedule** | Imperative `BaseRuntime.start` (plugins, engines, ports, planes, hooks) | Named phase table under system (`palm.system.boot` intent) |
-| **Host schedule** | Imperative `ApplicationHost.start` (bootstrap, spawn, CQRS, surfaces, recover) | Named phase table under host; calls system schedule at spawn |
+| Level | Today (0.59.2) | Target |
+|-------|-----------------|--------|
+| **System schedule** | Locked `SYSTEM_PHASES`; early `system.log.ready` walks; rest imperative in `BaseRuntime.start` | Full walker cutover (0.59.3) |
+| **Host schedule** | Locked `HOST_PHASES`; early `host.system_log` walks; rest imperative in `ApplicationHost.start` | Full walker cutover (0.59.4) |
 | **Membership** | CompositionProfile declared; host still has special-case ORs | Profile is membership truth on migrated path |
-| **Modes** | Presets exist as composition/deployment shapes only | Explicit modes: safe / test / dev / prod / shape presets |
-| **System log** | Sparse process stdout | `palm.system.log` phase narrative on host/system start (0.59.1a) — [SYSTEM-LOG](SYSTEM-LOG.md) |
+| **Modes** | `BootMode` presets (safe/test/dev/prod + shapes); opt-in via `boot_mode=` | Modes dogfood in CI green bar |
+| **System log** | `palm.system.log` phase narrative + early seats — [SYSTEM-LOG](SYSTEM-LOG.md) | Richer operate catalog as phases migrate |
 
 **Law:** plugins stay on `INSTALLED_*`. Planes are **not** plugins.  
 **Law:** one composition root walks the host phase table — no private boot via import side effects.  
@@ -518,7 +518,7 @@ A map that only names **ideals** without today is also incomplete.
 | Live debt register | **Real** — **SD-014** / **BI-*** (0.59) · residual **SU-*** / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
 | Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
-| Boot schedule + composition truth | **Theme open 0.59.0** — phase tables + modes planned; still imperative start today — [VISION-0.59](VISION-0.59.md) |
+| Boot schedule + composition truth | **Theme open** — tables + modes + walker **0.59.2**; start mostly imperative until 0.59.3–.4 — [VISION-0.59](VISION-0.59.md) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

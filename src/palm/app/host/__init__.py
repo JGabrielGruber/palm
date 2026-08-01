@@ -9,6 +9,7 @@ from palm.app.host.roles import DeploymentProfile, DeploymentProfilePreset, Depl
 
 __all__ = [
     "ApplicationHost",
+    "BootMode",
     "CompositionProfile",
     "DeploymentProfile",
     "DeploymentProfilePreset",
@@ -20,6 +21,7 @@ __all__ = [
 
 _LAZY_EXPORTS: dict[str, tuple[str, str]] = {
     "ApplicationHost": ("palm.app.host.application_host", "ApplicationHost"),
+    "BootMode": ("palm.app.host.boot.modes", "BootMode"),
     "run_host": ("palm.app.host.application_host", "run_host"),
 }
 

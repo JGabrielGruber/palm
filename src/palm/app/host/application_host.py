@@ -13,6 +13,8 @@ from palm.app.bootstrap import (
     deployment_profile_from_settings,
     runtime_start_options,
 )
+from palm.app.host.boot.modes import BootMode, resolve_boot_mode
+from palm.app.host.boot.system_log_phase import make_host_system_log_handler
 from palm.app.host.composition import CompositionProfile
 from palm.app.host.event_recorder import HostEventRecorder, RecordedEvent
 from palm.app.host.events import HostEventType
@@ -66,6 +68,8 @@ from palm.patterns.wizard.bindings.cqrs.projection import (
 )
 from palm.services._cqrs_wiring import wire_all_service_cqrs
 from palm.services.design.contributors import wire_builtin_design_contributors
+from palm.system.boot import BootContext, walk_schedule
+from palm.system.boot.phases import HOST_PHASES
 from palm.system.log import get_system_log
 
 if TYPE_CHECKING:
@@ -98,10 +102,30 @@ class ApplicationHost:
         profile: DeploymentProfile | None = None,
         composition: CompositionProfile | None = None,
         storage: StorageEngine | None = None,
+        boot_mode: BootMode | str | None = None,
     ) -> None:
         self.settings = settings or PalmSettings()
-        self.profile = profile or deployment_profile_from_settings(self.settings)
-        self.composition = composition or composition_profile_from_settings(self.settings)
+        mode = resolve_boot_mode(boot_mode)
+        self.boot_mode = mode
+        # Mode supplies defaults only when caller omits profile/composition.
+        self.profile = (
+            profile
+            if profile is not None
+            else (
+                mode.deployment
+                if mode is not None
+                else deployment_profile_from_settings(self.settings)
+            )
+        )
+        self.composition = (
+            composition
+            if composition is not None
+            else (
+                mode.composition
+                if mode is not None
+                else composition_profile_from_settings(self.settings)
+            )
+        )
         self._app = PalmKernel(self.settings, storage=storage)
         self._event = EventEngine()
         self._command_bus = CommandBus()
@@ -359,32 +383,48 @@ class ApplicationHost:
 
         slog = get_system_log()
         roles = sorted(self.profile.roles)
+        mode_name = self.boot_mode.name if self.boot_mode is not None else None
+        # 0.59.2 — first real walker seat: host.system_log (early console).
+        # Remaining host phases stay imperative until 0.59.4; they still emit
+        # SystemLog phase lines so observation stays one narrative.
+        walk_schedule(
+            (HOST_PHASES[0],),
+            {"host.system_log": make_host_system_log_handler(self.boot_mode)},
+            ctx=BootContext(schedule="host", mode=mode_name),
+            log=slog,
+        )
         slog.info(
             "boot.start",
             "host boot start",
             schedule="host",
+            mode=mode_name,
             roles=",".join(roles) or "(none)",
             composition_services=len(self.composition.services),
             primary=self._app.primary_name,
         )
         try:
-            with slog.phase("host", "host.kernel.bootstrap"):
+            with slog.phase("host", "host.kernel.bootstrap", mode=mode_name):
                 self._app.bootstrap()
-            with slog.phase("host", "host.event"):
+            with slog.phase("host", "host.event", mode=mode_name):
                 self._event.initialize()
                 self._event_recorder.attach(self._event)
-            with slog.phase("host", "host.workers.note"):
+            with slog.phase("host", "host.workers.note", mode=mode_name):
                 self._worker_coordinator = WorkerCoordinator(self.profile, self._event)
             merged = runtime_start_options(self.settings, **options)
-            with slog.phase("host", "host.system.spawn", primary=self._app.primary_name):
+            with slog.phase(
+                "host",
+                "host.system.spawn",
+                primary=self._app.primary_name,
+                mode=mode_name,
+            ):
                 self._spawner.spawn_runtimes(merged)
-            with slog.phase("host", "host.definitions.load"):
+            with slog.phase("host", "host.definitions.load", mode=mode_name):
                 self._app.load_definitions()
-            with slog.phase("host", "host.product.wire"):
+            with slog.phase("host", "host.product.wire", mode=mode_name):
                 self._wire_cqrs()
             # Always call collaborators (inventory order); log skip when phenotype is off.
             if self.profile.server:
-                with slog.phase("host", "host.surfaces.mount"):
+                with slog.phase("host", "host.surfaces.mount", mode=mode_name):
                     self._start_server_surface()
             else:
                 slog.phase_skip(
@@ -394,7 +434,7 @@ class ApplicationHost:
                 )
                 self._start_server_surface()
             if self.composition.has("projections"):
-                with slog.phase("host", "host.projections.attach"):
+                with slog.phase("host", "host.projections.attach", mode=mode_name):
                     self._attach_projections()
             else:
                 slog.phase_skip(
@@ -403,17 +443,29 @@ class ApplicationHost:
                     reason="composition_off:projections",
                 )
                 self._attach_projections()
-            with slog.phase("host", "host.recover"):
-                self._recovery.recover()
+            recover = True
+            if self.boot_mode is not None and not self.boot_mode.recover_on_start:
+                recover = False
+            if recover:
+                with slog.phase("host", "host.recover", mode=mode_name):
+                    self._recovery.recover()
+            else:
+                slog.phase_skip(
+                    "host",
+                    "host.recover",
+                    reason="mode_recover_off",
+                    mode=mode_name,
+                )
 
-            self._event.emit(
-                HostEventType.STARTED,
-                roles=roles,
-                primary=self._app.primary_name,
-            )
-            self._started = True
+            with slog.phase("host", "host.ready", mode=mode_name):
+                self._event.emit(
+                    HostEventType.STARTED,
+                    roles=roles,
+                    primary=self._app.primary_name,
+                )
+                self._started = True
             if self._work_drain_background_enabled():
-                with slog.phase("host", "host.background.work_drain"):
+                with slog.phase("host", "host.background.work_drain", mode=mode_name):
                     self._workplane.start_background()
             else:
                 slog.phase_skip(
@@ -425,6 +477,7 @@ class ApplicationHost:
                 "ready",
                 "host ready",
                 schedule="host",
+                mode=mode_name,
                 primary=self._app.primary_name,
                 roles=",".join(roles) or "(none)",
             )
@@ -434,6 +487,7 @@ class ApplicationHost:
                 "boot.fail",
                 f"host boot fail: {type(exc).__name__}: {exc}",
                 schedule="host",
+                mode=mode_name,
                 reason=f"{type(exc).__name__}: {exc}",
             )
             raise
@@ -446,7 +500,11 @@ class ApplicationHost:
         (derived from ``settings.enable_work_drain_service``); the deployment profile can
         *also* activate it for network-facing roles. Either source turns it on — the 0.44.1
         OR semantics preserved, now routed through the capability axis.
+
+        0.59.2: boot mode may forbid background drain (safe/test).
         """
+        if self.boot_mode is not None and not self.boot_mode.allow_background_drain:
+            return False
         return bool(
             self.composition.has("work_drain") or self.profile.enable_work_drain_service
         )

@@ -47,6 +47,8 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
 from palm.states import BlackboardState
+from palm.system.boot import BootContext, system_log_ready_handler, walk_schedule
+from palm.system.boot.phases import SYSTEM_PHASES
 from palm.system.log import get_system_log
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
@@ -161,6 +163,14 @@ class BaseRuntime:
 
         slog = get_system_log()
         runtime = getattr(self, "name", None) or self.runtime_name
+        # 0.59.2 — first real system walker seat: system.log.ready (early console).
+        # Remaining system phases stay imperative until 0.59.3.
+        walk_schedule(
+            (SYSTEM_PHASES[0],),
+            {"system.log.ready": system_log_ready_handler},
+            ctx=BootContext(schedule="system", runtime=str(runtime)),
+            log=slog,
+        )
         slog.info(
             "boot.start",
             "system schedule start",

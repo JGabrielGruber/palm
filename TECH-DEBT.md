@@ -861,27 +861,28 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 | ID | Observation (seed) | Class / note | Status |
 |----|--------------------|--------------|--------|
-| [BI-001](#bi-001) | Dual start graphs (host vs runtime) undocumented as one story | inventory | open (doc ✅ 0.59.1; code walker later) |
+| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | open (tables ✅ 0.59.2; cutover 0.59.3–.4) |
 | [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | open |
 | [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
 | [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase S5 | open |
-| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | open |
-| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | open |
-| [BI-008](#bi-008) | doctor does not report boot phases / mode | report seat | open |
+| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | open (mode can forbid drain 0.59.2) |
+| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | open (BootMode exists; not forced) |
+| [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ 0.59.2 (`control_plane.boot`) |
 | [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | open |
 | [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | open |
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | open (bucket) |
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | open (bucket) |
 | BI-013 | Work **start** (WorkIntent drain) lives on host workplane, not system schedule | name in table; may stay host-owned | open (named 0.59.1) |
 | BI-014 | `ensure_host_session` swallows Exception on system start | honesty / fail loud later | open (named 0.59.1) |
-| [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | basic ✅ 0.59.1a; grow with walker/modes | open (partial) |
+| [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | basic + early seats ✅; richer catalog later | open (partial) |
 
 ### BI-001 — Dual start graphs
 
 **Observation:** Host and system start are real but not one documented schedule.  
-**Progress (0.59.1):** Documented as one story in [BOOT-INVENTORY.md](docs/BOOT-INVENTORY.md) (provisional H*/S* ids).  
-**Pay:** 0.59.2 stubs → 0.59.3–.4 schedule walkers in code.
+**Progress (0.59.1):** Documented as one story in [BOOT-INVENTORY.md](docs/BOOT-INVENTORY.md).  
+**Progress (0.59.2):** Locked `HOST_PHASES` / `SYSTEM_PHASES` + `walk_schedule`; early log seats walk; rest still imperative.  
+**Pay:** 0.59.3–.4 full schedule walkers in code.
 
 ### BI-002 — Composition membership truth
 
@@ -916,7 +917,8 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 ### BI-008 — Doctor boot report
 
 **Observation:** No phase/mode dump.  
-**Pay:** stub report in 0.59.2+.
+**Progress (0.59.2):** `control_plane_status()["boot"]` — mode, modes_available, phase_tables.  
+**Pay residual:** live last-walk outcomes when full walker owns start.
 
 ### BI-009 — Triple override
 
@@ -939,10 +941,11 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 **Observation:** Domain buses + journal exist; process boot narrative was missing.  
 
 **Progress (0.59.1a):** `palm.system.log` + host/system phase lines + ring + doctor tail.  
+**Progress (0.59.2):** Walker **reuses** SystemLog; `BootMode` default levels; early seats `host.system_log` / `system.log.ready`.  
 See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 
-**Residual:** mode default levels; richer operate catalog; walker should **reuse** SystemLog (not a second path); optional JSON/file sink.  
-**Exit:** residual named or closed when modes + walker dogfood.  
+**Residual:** richer operate catalog; optional JSON/file sink; mode levels auto-applied only when `boot_mode=` set.  
+**Exit:** residual named or closed when full walker dogfood.  
 **Not:** OpenTelemetry product; BT tick flood; replace journal.
 
 ---

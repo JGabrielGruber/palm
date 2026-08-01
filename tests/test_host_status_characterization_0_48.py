@@ -51,6 +51,7 @@ CONTROL_PLANE_KEYS = {
     "journal_consumers",
     "inbound_bindings",
     "inbound_count",
+    "boot",  # 0.59.2 phase tables + mode
     "event_plane",
     "ops",
 }

@@ -188,7 +188,9 @@ Spine regressions fix in-slice.
 | System: job hooks | S8–S9 |
 | System: orch start / ready | S12, S15 |
 
-**Illustrative only** until 0.59.2 freezes ids in code stubs.
+**Locked in code (0.59.2):** `palm.system.boot` — `HOST_PHASES` / `SYSTEM_PHASES`.  
+Early seats **implemented:** `host.system_log`, `system.log.ready`.  
+Most other seats: **imperative** (still soup) or **stub** until 0.59.3–.4.
 
 ---
 
@@ -196,14 +198,14 @@ Spine regressions fix in-slice.
 
 | Id | Smell |
 |----|--------|
-| BI-001 | Two schedules exist only as code paths, not one story |
+| BI-001 | Two schedules: tables locked 0.59.2; full walk still 0.59.3–.4 |
 | BI-002 | Surfaces/capabilities not sole membership truth |
 | BI-003 | ServerContext host-less path has no host schedule |
 | BI-004 | Plugin ensure appears host + system + tests |
 | BI-005 | Job hooks built as inline list in S8 |
 | BI-006 | work_drain background OR composition/deployment |
-| BI-007 | Tests use many host shapes without mode names |
-| BI-008 | No doctor phase/mode report |
+| BI-007 | Tests use many host shapes without mode names (modes exist; not yet forced) |
+| BI-008 | Doctor `control_plane.boot` reports tables + mode (0.59.2) |
 | BI-009 | settings / profile / start options triple |
 | BI-010 | Surface mount ≠ composition.surfaces alone |
 | — | Work **start** plane lives on **host**, not system schedule (law may stay; must be **named**) |
@@ -216,10 +218,11 @@ Spine regressions fix in-slice.
 | File | Pins |
 |------|------|
 | `tests/test_boot_inventory_0_59.py` | Host start collaborator order; system post-start contracts; spine services; dual ensure idempotent |
+| `tests/test_boot_schedule_0_59_2.py` | Locked tables; walker skip honesty; modes; early log seats; doctor boot |
 | Existing `tests/test_application_host.py` | Deployment spawn shapes |
 | Existing composition / status tests | Profile presets; status reports |
 
-When 0.59.2+ introduces a walker, **update these tests** to pin the table, not only spies on private methods.
+Walker dry-run and early seats are pinned. Full start cutover updates inventory tests in 0.59.3–.4.
 
 ---
 

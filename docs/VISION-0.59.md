@@ -1,6 +1,6 @@
 # VISION 0.59 — System Boot + Composition Truth
 
-**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log plan **0.59.1a** ✅  
+**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log **0.59.1a** ✅ · stub schedule + modes **0.59.2** ✅  
 **Inventory:** [BOOT-INVENTORY.md](BOOT-INVENTORY.md)  
 **System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (observation seat — not a second theme)  
 **Language:** ASD-STE100 Simplified Technical English.  
@@ -209,7 +209,7 @@ Slices stay **one purpose each**. Numbers lock at execution time after 0.59.1 in
 | **0** | Plan + map + ADR | This file, ADR-028 Proposed, PALM boot section, STATUS, BI-* seed — ✅ |
 | **1** | Inventory + characterization | [BOOT-INVENTORY.md](BOOT-INVENTORY.md); `tests/test_boot_inventory_0_59.py`; green bar — ✅ **0.59.1** |
 | **1a** | System log basic | [SYSTEM-LOG.md](SYSTEM-LOG.md) · `palm.system.log` · host+system phase lines — ✅ **0.59.1a** |
-| **2** | Stub schedule + modes | Phase ids, walker, mode registry; **reuse SystemLog** (do not invent a second narrative) |
+| **2** | Stub schedule + modes | Phase ids, walker, mode registry; **reuse SystemLog** — ✅ **0.59.2** (`palm.system.boot` · `BootMode` · early log seats) |
 | **3** | System schedule v1 | `BaseRuntime.start` walks table (+ system log phase lines) |
 | **4** | Host schedule v1 | `ApplicationHost.start` walks table (+ host log phase lines) |
 | **5** | Composition membership truth | Profile is the switch (+ skip reasons in system log) |

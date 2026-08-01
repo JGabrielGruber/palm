@@ -112,10 +112,10 @@ Theme exit requires: spine + declared modes green; residual chrome named.
 |---------|----------------|
 | System phase protocol | `palm.system.boot` |
 | Host phase handlers | `palm.app.host.boot` |
-| Mode presets | `palm.app.host` beside composition / deployment |
+| Mode presets | `palm.app.host.boot.modes` (beside composition / deployment) |
 
 System schedule must not import product or surfaces.  
-Exact module layout may refine in early slices; purpose is fixed here.
+**0.59.2:** tables, walker, modes, early log seats live under these homes.
 
 ### D11 — Non-goals locked by this ADR
 
