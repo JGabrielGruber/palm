@@ -172,7 +172,13 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "system.planes.attach",
         "system",
         "implemented",
-        "Wait plane + session plane",
+        "Wait plane + session plane (+ work plane when landed)",
+    ),
+    PhaseSpec(
+        "system.supervisor.wire",
+        "system",
+        "implemented",
+        "SystemSupervisor seat — continuous services registry (0.60)",
     ),
     PhaseSpec(
         "system.bind",

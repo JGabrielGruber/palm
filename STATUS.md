@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.59.8` (stamp) · **Active theme:** **`0.60` System Supervisor + Work Plane** (plan **0.60.0**) · **Prior closed:** **`0.59` System Boot** · **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** August 1, 2026 · **Theme open:** **0.60.0** 📋  
+**Current Version:** `0.59.8` (stamp) · **Active theme:** **`0.60` System Supervisor + Work Plane** (through **0.60.1**) · **Prior closed:** **`0.59` System Boot** · **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
+**Last Updated:** August 1, 2026 · **Theme open:** **0.60** (plan ✅ · supervisor seat ✅)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.60](docs/VISION-0.60.md) **open** · **ADR:** [029](docs/adr/029-system-supervisor.md) **Proposed** · prior [VISION-0.59](docs/VISION-0.59.md) **closed** · [ADR-028](docs/adr/028-system-boot.md) Accepted · [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
 **Migration / release (prior):** [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md) · [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **BI-013** pay in **0.60** · residual **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -57,8 +57,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 
 | Patch | Status |
 |-------|--------|
-| **0.60.0** | 📋 plan + ADR-029 Proposed + STATUS/PALM pointer |
-| **0.60.1** | Supervisor seat (registry · status · boot hooks) |
+| **0.60.0** | ✅ plan + ADR-029 Proposed + STATUS/PALM pointer |
+| **0.60.1** | ✅ Supervisor seat (`SystemSupervisor` · `system.supervisor.wire` · empty registry) |
 | **0.60.2** | WorkPlaneService + `runtime.work_plane` |
 | **0.60.3** | System job start for drain submit |
 | **0.60.4** | Session-safe reactive start on system path |

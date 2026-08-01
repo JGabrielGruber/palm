@@ -31,9 +31,11 @@ def test_system_start_walks_full_phase_table() -> None:
         assert by_id["system.hooks.install"].outcome == "ok"
         assert by_id["system.orchestration.start"].outcome == "ok"
         assert by_id["system.planes.attach"].outcome == "ok"
+        assert by_id["system.supervisor.wire"].outcome == "ok"
         assert by_id["system.ready"].outcome == "ok"
         assert isinstance(rt.wait_plane, WaitPlaneService)
         assert isinstance(rt.session_plane, SessionPlaneService)
+        assert rt.supervisor is not None
 
         slog = get_system_log()
         assert "boot.start" in slog.events()

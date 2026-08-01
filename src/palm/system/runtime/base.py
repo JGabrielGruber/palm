@@ -103,6 +103,7 @@ class BaseRuntime:
         self._outbox_processor: OutboxProcessor | None = None
         self._wait_plane: WaitPlaneService | None = None
         self._session_plane: SessionPlaneService | None = None
+        self._supervisor: Any | None = None
         self._last_boot_walk: list[Any] | None = None
 
     @property
@@ -147,6 +148,11 @@ class BaseRuntime:
     def session_plane(self) -> SessionPlaneService | None:
         """Session plane (outside subject lifecycle), or ``None`` before start."""
         return self._session_plane
+
+    @property
+    def supervisor(self) -> Any | None:
+        """Continuous system services supervisor (0.60), or ``None`` before wire."""
+        return self._supervisor
 
     def start(self, **options: Any) -> None:
         """Hand control to the system boot schedule (``SYSTEM_PHASES``).
@@ -203,6 +209,13 @@ class BaseRuntime:
         unbind_runtime = get_runtime_unbinding()
         if unbind_runtime is not None:
             unbind_runtime()
+
+        if self._supervisor is not None:
+            try:
+                self._supervisor.stop()
+            except Exception:
+                pass
+            self._supervisor = None
 
         if self._session_plane is not None:
             self._session_plane.detach()

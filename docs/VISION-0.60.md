@@ -146,8 +146,8 @@ Slices stay **one purpose each**. Numbers may gain `a`/`b` sub-slices.
 
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
-| **0** | Plan + map + ADR | This file · ADR-029 Proposed · STATUS · PALM pointer · BI-013 theme — **0.60.0** |
-| **1** | Supervisor seat | Registry, start/stop/status, boot hooks; empty services OK |
+| **0** | Plan + map + ADR | This file · ADR-029 Proposed · STATUS · PALM pointer · BI-013 theme — ✅ **0.60.0** |
+| **1** | Supervisor seat | Registry, start/stop/status, boot hooks; empty services OK — ✅ **0.60.1** |
 | **2** | Work plane service | `WorkPlaneService` · `runtime.work_plane` · attach · tick/enqueue over existing store |
 | **3** | System job start | Drain submits via executor / ExecutionPort (product façade later) |
 | **4** | Session-safe start | Reactive attribution on system path (0.58 law, system wire) |

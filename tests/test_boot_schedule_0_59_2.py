@@ -37,6 +37,10 @@ def test_locked_phase_tables_order() -> None:
     assert sys_ids[0] == "system.log.ready"
     assert "system.plugins.ensure" in sys_ids
     assert "system.planes.attach" in sys_ids
+    assert "system.supervisor.wire" in sys_ids
+    assert sys_ids.index("system.planes.attach") < sys_ids.index(
+        "system.supervisor.wire"
+    )
     assert sys_ids[-1] == "system.ready"
 
     catalog = schedule_catalog()

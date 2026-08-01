@@ -38,6 +38,7 @@ from palm.system.log import get_system_log
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
+from palm.system.supervisor import SystemSupervisor
 from palm.system.runtime.hooks import (
     AuthMiddleware,
     DriveObservabilityHook,
@@ -196,6 +197,17 @@ def build_system_handlers(
                 reason=str(exc),
             )
 
+    def supervisor_wire(ctx: BootContext) -> None:
+        """0.60.1 — empty supervisor seat; services register in later slices."""
+        runtime._supervisor = SystemSupervisor()
+        get_system_log().info(
+            "supervisor.wire",
+            "system supervisor ready",
+            schedule="system",
+            runtime=ctx.runtime,
+            service_count=0,
+        )
+
     def bind(_ctx: BootContext) -> None:
         bind_runtime = get_runtime_binding()
         if bind_runtime is None:
@@ -221,6 +233,7 @@ def build_system_handlers(
         "system.hooks.install": hooks_install,
         "system.orchestration.start": orchestration_start,
         "system.planes.attach": planes_attach,
+        "system.supervisor.wire": supervisor_wire,
         "system.bind": bind,
         "system.ready": ready,
     }
