@@ -155,7 +155,7 @@ Slices stay **one purpose each**. Numbers may gain `a`/`b` sub-slices.
 | **6** | Outbox continuous | Supervisor owns poll; host thread path thins — ✅ **0.60.6** (`OutboxLoopService` · host recover prefers supervisor) |
 | **7** | Catalog feed · triggers | Reload arms on work plane — ✅ **0.60.7** (`reload_from_repository` · host fallback) |
 | **8** | Inbound system contract | Required enqueue + supervised workers — ✅ **0.60.8** (`planes.work.inbound` · supervisor `inbound`) |
-| **9** | Host deflate · dual root | Coordinators thin; lean roots attach planes + supervisor |
+| **9** | Host deflate · dual root | Coordinators thin; lean roots attach planes + supervisor — ✅ **0.60.9** (lean BaseRuntime seats proven; host product wire residual) |
 | **exit** | ADR Accepted · debts closed or residual named · stamp · migration if needed | |
 
 ---

@@ -970,11 +970,11 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 
 **Pay:** `WorkPlaneService` · `runtime.work_plane` · supervised `work_drain` · inbound system contract · system job start · host coordinator deflate.  
 
-**Progress (0.60.1–0.60.8):** `SystemSupervisor` · `WorkPlaneService` · system session attr · supervised work_drain + outbox · inbound home under `planes.work` · host prefers plane/supervisor.  
+**Progress (0.60.1–0.60.9):** `SystemSupervisor` · `WorkPlaneService` · system session attr · supervised work_drain + outbox · inbound under `planes.work` · host prefers plane/supervisor · lean BaseRuntime seats without host.  
 
-**Residual:** host coordinator/recovery still wire product edges; dual-root attach; ExecutionPort job-start expand optional.  
+**Residual:** host coordinator still wires product session enrich + definition catalog; host `WorkDrainService` fallback; ExecutionPort job-start expand optional; BI-003 ServerContext product wire separate.  
 
-**Status:** **in progress → 0.60** (through 0.60.8).
+**Status:** **ready for theme exit** (implementation slices done; close at exit).
 
 ---
 
