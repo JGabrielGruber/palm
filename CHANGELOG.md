@@ -4,6 +4,25 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.60.9] — 2026-08-01
+
+### 0.60 — System Supervisor + Work Plane (**theme closed**)
+
+Vision: [VISION-0.60](docs/VISION-0.60.md) · ADR: [029](docs/adr/029-system-supervisor.md) **Accepted** · Migration: [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · Release: [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)
+
+#### Added / paid (0.60.0–0.60.9)
+- **`SystemSupervisor`** — continuous services registry + lifecycle on `SystemInstance`  
+- **`WorkPlaneService`** — start plane (`runtime.work_plane`): enqueue / tick / triggers / schedules / background  
+- **System session attribution** for reactive start (`session_attr`; inherit-or-service)  
+- **Supervised** `work_drain` + **`OutboxLoopService`** + optional `system.background.start`  
+- **Inbound** home under `palm.system.planes.work.inbound` (host re-export)  
+- Host prefers plane/supervisor; lean BaseRuntime seats without ApplicationHost  
+
+#### Theme exit (0.60.9)
+- **ADR-029 Accepted** · **BI-013 closed**  
+- Residual host product enrich/catalog wire named  
+- **MIGRATION-0.60** · **RELEASE-0.60.9** · stamp `0.60.9`
+
 ## [0.59.8] — 2026-08-01
 
 ### 0.59 — System Boot + Composition Truth (**theme closed**)

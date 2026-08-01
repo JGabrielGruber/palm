@@ -1,10 +1,12 @@
 # ADR-029 — System supervisor + work plane on SystemInstance
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-08-01  
-**Theme:** [VISION-0.60](../VISION-0.60.md)  
+**Accepted:** 2026-08-01 (theme exit `0.60.9`)  
+**Theme:** [VISION-0.60](../VISION-0.60.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
-**Debt:** [BI-013](../../TECH-DEBT.md) · inbound / outbox continuous re-home  
+**Debt:** [BI-013](../../TECH-DEBT.md) ✅ closed at exit · residual host product wire  
+**Release:** [RELEASE-0.60.9](../releases/RELEASE-0.60.9.md) · [MIGRATION-0.60](../migrations/MIGRATION-0.60.md)  
 **Related:** [ADR-025](025-reactive-interests.md) · [ADR-026](026-palm-system-layer.md) · [ADR-027](027-session-plane.md) · [ADR-028](028-system-boot.md) · [WORK-DRAIN](../WORK-DRAIN.md)
 
 ---
@@ -149,10 +151,10 @@ Spine and reactive law regressions fix in-theme.
 
 ## Follow-up (theme)
 
-- [ ] Execute [VISION-0.60](../VISION-0.60.md) slices.  
-- [ ] Accept this ADR at theme exit.  
-- [ ] Update [PALM.md](../PALM.md), [WORK-DRAIN.md](../WORK-DRAIN.md), STATUS, TECH-DEBT.  
-- [ ] Migration note if public host APIs move.
+- [x] Execute [VISION-0.60](../VISION-0.60.md) slices (0.60.1–0.60.9).  
+- [x] Accept this ADR at theme exit.  
+- [x] Update [PALM.md](../PALM.md), STATUS, TECH-DEBT, [MIGRATION-0.60](../migrations/MIGRATION-0.60.md).  
+- [x] Host re-exports for inbound; product enrich path residual named.
 
 ---
 

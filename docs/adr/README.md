@@ -43,12 +43,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [026](026-palm-system-layer.md) | Palm system layer and module purposes (0.57) | Accepted |
 | [027](027-session-plane.md) | Session plane — system glue, multi-instance (0.58) | Accepted |
 | [028](028-system-boot.md) | System boot schedule + composition truth (0.59) | Accepted |
-| [029](029-system-supervisor.md) | System supervisor + work plane on SystemInstance (0.60) | Proposed |
+| [029](029-system-supervisor.md) | System supervisor + work plane on SystemInstance (0.60) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
 **Next free number:** 030.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** **closed** (ADR-026 / 027 / 028 Accepted). Theme **0.60** open — [VISION-0.60](../VISION-0.60.md) · ADR-029 Proposed. Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
+**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** all **closed** (ADR-026…029 Accepted). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
 
 ## How to add an ADR
 

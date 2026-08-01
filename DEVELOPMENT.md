@@ -1,6 +1,6 @@
 # DEVELOPMENT.md
 
-Guide for contributors working on Palm **0.59.8** (services are the API, `/v1/api/…` REST, per-domain MCP, `host.execution.flows`).
+Guide for contributors working on Palm **0.60.9** (services are the API, `/v1/api/…` REST, per-domain MCP, `host.execution.flows`).
 
 ## Setup
 

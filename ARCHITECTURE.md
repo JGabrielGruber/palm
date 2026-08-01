@@ -1,6 +1,6 @@
 # ARCHITECTURE.md
 
-**Palm Engine** · **0.59.8** · Provider apps + Wizard Experience + Compositional Power · June 2026 · PyPI: `palmengine`
+**Palm Engine** · **0.60.9** · Provider apps + Wizard Experience + Compositional Power · June 2026 · PyPI: `palmengine`
 
 High-level technical architecture for Palm: layers, engines, control flow, middleware, and extension. For product scope and roadmap, see [SCOPE.md](SCOPE.md).
 

@@ -1,10 +1,11 @@
 # VISION 0.60 — System Supervisor + Work Plane
 
-**Status:** 📋 **Theme open** at **0.60.0** (plan).  
+**Status:** ✅ **Theme closed** at **0.60.9** (exit).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
-**ADR:** [029-system-supervisor.md](adr/029-system-supervisor.md) **Proposed**.  
-**Debt:** [BI-013](../TECH-DEBT.md) (pay) · host workplane / inbound / outbox continuous re-home · dual-root attach (**BI-003** edges).  
+**ADR:** [029-system-supervisor.md](adr/029-system-supervisor.md) **Accepted**.  
+**Debt:** [BI-013](../TECH-DEBT.md) ✅ closed · residual host product wire named.  
+**Release:** [RELEASE-0.60.9](releases/RELEASE-0.60.9.md) · [MIGRATION-0.60](migrations/MIGRATION-0.60.md).  
 **Prior closed:** [VISION-0.59](VISION-0.59.md) boot · [VISION-0.58](VISION-0.58.md) session · [VISION-0.57](VISION-0.57.md) system · [VISION-0.55](VISION-0.55.md) reactive law.  
 **Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · user plane · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
@@ -156,7 +157,7 @@ Slices stay **one purpose each**. Numbers may gain `a`/`b` sub-slices.
 | **7** | Catalog feed · triggers | Reload arms on work plane — ✅ **0.60.7** (`reload_from_repository` · host fallback) |
 | **8** | Inbound system contract | Required enqueue + supervised workers — ✅ **0.60.8** (`planes.work.inbound` · supervisor `inbound`) |
 | **9** | Host deflate · dual root | Coordinators thin; lean roots attach planes + supervisor — ✅ **0.60.9** (lean BaseRuntime seats proven; host product wire residual) |
-| **exit** | ADR Accepted · debts closed or residual named · stamp · migration if needed | |
+| **exit** | ADR Accepted · debts closed or residual named · stamp · migration if needed — ✅ **0.60.9** | |
 
 ---
 
@@ -192,17 +193,17 @@ Each slice states which modes are in the green bar.
 
 ## 9. Success criteria
 
-- [ ] `runtime.work_plane` attached on system start.  
-- [ ] `runtime.supervisor` owns continuous services (at least work drain; outbox as sliced).  
-- [ ] Inbound is a system contract; workers supervised.  
-- [ ] Job start from drain uses system path (product façade only).  
-- [ ] Session attribution works on reactive start without host-only law.  
-- [ ] Host workplane is thin or gone; law tests run host-thin or hostless.  
-- [ ] Doctor / control status reports supervisor + planes.  
-- [ ] PALM names supervisor and work plane seats.  
-- [ ] BI-013 closed; residual named.  
-- [ ] ADR-029 Accepted at exit.  
-- [ ] Spine green on declared modes.
+- [x] `runtime.work_plane` attached on system start.  
+- [x] `runtime.supervisor` owns continuous services (work drain; outbox; inbound when host wires).  
+- [x] Inbound is a system contract; workers supervised.  
+- [x] Job start from drain uses system path (product façade when host rebinds).  
+- [x] Session attribution works on reactive start without host-only law.  
+- [x] Host workplane prefers system plane; hostless law tests green.  
+- [x] Supervisor `.status()` available (doctor wiring residual fine).  
+- [x] PALM names supervisor and work plane seats.  
+- [x] BI-013 closed; residual named.  
+- [x] ADR-029 Accepted at exit.  
+- [x] Spine green on declared modes (prior dogfood retained).
 
 ---
 

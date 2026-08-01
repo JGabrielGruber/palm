@@ -1,9 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot closed** at **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.60 System Supervisor + Work Plane open** at **0.60.0** — pay **[BI-013](#bi-013)** · [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Proposed**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot closed** at **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.60 System Supervisor + Work Plane closed** at **0.60.9** — **[BI-013](#bi-013)** ✅ · [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Accepted**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
-**Theme (open):** [docs/VISION-0.60.md](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Proposed**  
+**Theme (closed supervisor):** [docs/VISION-0.60.md](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Accepted** · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)  
 **Theme (closed boot):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Accepted** · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Theme (closed):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Accepted** · [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
 
@@ -875,7 +875,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-010](#bi-010) | Surface mount still special-cased | membership + deflation | **residual** bulk → surface deflation |
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | residual bucket |
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | residual bucket |
-| [BI-013](#bi-013) | Work **start** (WorkIntent drain) lives on host workplane | system work plane + supervisor | **open → 0.60** (pay) |
+| [BI-013](#bi-013) | Work **start** (WorkIntent drain) lives on host workplane | system work plane + supervisor | ✅ closed (0.60.9 exit) |
 | BI-014 | `ensure_host_session` swallows Exception on system start | honesty | **residual** |
 | [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | seats ✅; catalog later | **residual** |
 
@@ -974,7 +974,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 
 **Residual:** host coordinator still wires product session enrich + definition catalog; host `WorkDrainService` fallback; ExecutionPort job-start expand optional; BI-003 ServerContext product wire separate.  
 
-**Status:** **ready for theme exit** (implementation slices done; close at exit).
+**Status:** ✅ **closed** at **0.60.9** theme exit.
 
 ---
 
@@ -1004,7 +1004,7 @@ See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
 | **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh |
 
-**Open theme (not a seed):** **System supervisor + work plane** — [BI-013](#bi-013) · [VISION-0.60](docs/VISION-0.60.md).  
+**Closed (not a seed):** **System supervisor + work plane** — [BI-013](#bi-013) ✅ · [VISION-0.60](docs/VISION-0.60.md) closed.  
 
 **Closed (not a seed):** **System boot** — [SD-014](#sd-014) ✅ · [VISION-0.59](docs/VISION-0.59.md) closed · residual **BI-***.
 
