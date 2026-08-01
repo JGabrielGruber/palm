@@ -1,7 +1,7 @@
 # Palm — Boot inventory (0.59.1)
 
 **Status:** Characterization of **today’s** boot (stamp `0.58.20` + theme open).  
-**Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) **Proposed**  
+**Theme:** [VISION-0.59](VISION-0.59.md) (**closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · stamp `0.59.8`  
 **System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (0.59.1a) — runtime tape for these phase ids when seats land  
 **Debt:** [SD-014](../TECH-DEBT.md#sd-014) · [BI-*](../TECH-DEBT.md#bi-boot-impact-inventory) · [BI-015](../TECH-DEBT.md#bi-015)  
 **Language:** ASD-STE100 (practical).  

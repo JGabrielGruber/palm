@@ -1,14 +1,15 @@
 # VISION 0.59 — System Boot + Composition Truth
 
-**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log **0.59.1a** ✅ · stubs/modes **0.59.2** ✅ · system schedule **0.59.3** ✅ · host schedule **0.59.4** ✅ · membership **0.59.5** ✅ · mode dogfood **0.59.6** ✅ · shapes **0.59.7** ✅ · residual **0.59.8** ✅  
+**Status:** ✅ **Theme closed** at **0.59.8** (exit).  
 **Inventory:** [BOOT-INVENTORY.md](BOOT-INVENTORY.md)  
-**System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (observation seat — not a second theme)  
+**System log:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (seats live; catalog residual **BI-015**)  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
-**ADR:** [028-system-boot.md](adr/028-system-boot.md) **Proposed**.  
-**Debt root:** [SD-014](../TECH-DEBT.md#sd-014) · host residual [CF-002](../TECH-DEBT.md) · impact **BI-*** · system log [BI-015](../TECH-DEBT.md#bi-015).  
+**ADR:** [028-system-boot.md](adr/028-system-boot.md) **Accepted**.  
+**Debt:** [SD-014](../TECH-DEBT.md#sd-014) ✅ closed · residual **BI-***.  
+**Release:** [RELEASE-0.59.8](releases/RELEASE-0.59.8.md) · [MIGRATION-0.59](migrations/MIGRATION-0.59.md).  
 **Prior closed:** [VISION-0.58](VISION-0.58.md) session · [VISION-0.57](VISION-0.57.md) system · composition skeleton [ADR-019](adr/019-composition-profiles.md).  
-**Queue (not this theme):** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · workload remainder · Grove.  
+**Queue:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
 
 ---
@@ -216,8 +217,7 @@ Slices stay **one purpose each**. Numbers lock at execution time after 0.59.1 in
 | **6** | Mode dogfood | `safe` + `test` green in CI (+ level defaults) — ✅ **0.59.6** (`for_mode`, fixtures, spine) |
 | **7** | dev / prod / shape presets | cli/mcp/worker/server mapped — ✅ **0.59.7** (`for_mode` + `server_port`, phenotype + spine) |
 | **8** | Residual cleanup | default `host` fixture mode-pinned; dead spine examples fixed; BI-007 honest — ✅ **0.59.8** |
-| **8+** | Residual BI-* | Harvest isolation; fold dual roots only if cheap |
-| **exit** | ADR Accepted · SD-014 closed or residual named · stamp · system log shipped or BI-015 residual |
+| **exit** | ADR Accepted · SD-014 closed · residual BI named · stamp `0.59.8` — ✅ |
 
 ---
 
@@ -236,12 +236,12 @@ Each break row should note: **rule harvested?** · **true owner?** · **parked t
 - [x] Code walks a phase table.  
 - [x] At least two real modes dogfooded (`safe`/`test` + full shapes) — **0.59.6** + **0.59.7**.  
 - [x] CompositionProfile membership truth on migrated path.  
-- [ ] Plugins still INSTALLED_*; planes not install-list items.  
-- [ ] BI-* honest; SD-014 closed or residual re-homed.  
+- [x] Plugins still INSTALLED_*; planes not install-list items.  
+- [x] BI-* honest; SD-014 closed; residual re-homed.  
 - [x] Spine green on declared modes (`safe`/`test` + collapsed full shapes); queued shapes accept submit honestly.  
-- [ ] ADR-028 Accepted at exit.  
+- [x] ADR-028 Accepted at exit.  
 - [x] Tests boot Palm by mode without private host internals (`for_mode` + `boot_walk`).  
-- [ ] System log planned ([SYSTEM-LOG](SYSTEM-LOG.md)); seats or residual **BI-015**.
+- [x] System log seats live; richer catalog residual **BI-015**.
 
 ---
 

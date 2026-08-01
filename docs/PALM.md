@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [VISION-0.59](VISION-0.59.md) (boot theme **open**) · [ADR-028](adr/028-system-boot.md) **Proposed** · [VISION-0.58](VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [VISION-0.59](VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -335,27 +335,27 @@ Surfaces must not invent a second semantic model.
 | **ApplicationHost** | Composition root: roles, CQRS wiring, recovery, service façades, workers |
 | **CompositionProfile** | Membership: services, surfaces, capabilities (*what*) |
 | **DeploymentProfile** | Roles and deployment activation (*where*) |
-| **Boot schedule + mode** | Order and strictness (*how start runs*) — **0.59 open** |
-| **System log** | Ordered narrative of system life (observation) — plan [SYSTEM-LOG](SYSTEM-LOG.md) · **0.59.1a** |
+| **Boot schedule + mode** | Order and strictness (*how start runs*) — **0.59 closed** |
+| **System log** | Ordered narrative of system life (observation) — [SYSTEM-LOG](SYSTEM-LOG.md) |
 | **Settings** | Configuration resolver into the axes above |
 
 The host is **not** a second port table.  
 The host **wires** system instances and product.
 
-#### Boot (honest today · target 0.59)
+#### Boot (0.59 closed)
 
-| Level | Today (0.59.2) | Target |
-|-------|-----------------|--------|
-| **System schedule** | **Walked** — `BaseRuntime.start` → `SYSTEM_PHASES` + boot handlers (0.59.3) | Mode toggles / harvest as needed |
-| **Host schedule** | **Walked** — `ApplicationHost.start` → `HOST_PHASES` + host boot handlers (0.59.4) | Shape presets (0.59.7) |
-| **Membership** | **Truth on migrated path (0.59.5)** — profile sole switch; skip reasons; deployment feeds resolver only | Residual surface chrome (BI-010 / deflation) |
-| **Modes** | `BootMode` + `for_mode` dogfood ✅ **0.59.6**–**0.59.7** (safe/test + shapes) | residual BI-*; theme exit |
-| **System log** | `palm.system.log` phase narrative + early seats — [SYSTEM-LOG](SYSTEM-LOG.md) | Richer operate catalog as phases migrate |
+| Level | Status |
+|-------|--------|
+| **System schedule** | **Walked** — `BaseRuntime.start` → `SYSTEM_PHASES` + boot handlers |
+| **Host schedule** | **Walked** — `ApplicationHost.start` → `HOST_PHASES` + host boot handlers |
+| **Membership** | **Truth on migrated path** — profile sole switch; PhaseSkip reasons; deployment feeds resolver only |
+| **Modes** | `BootMode` + `for_mode` dogfood (safe/test + shapes); residual suite force **BI-007** |
+| **System log** | Seats live — [SYSTEM-LOG](SYSTEM-LOG.md); richer catalog residual **BI-015** |
 
 **Law:** plugins stay on `INSTALLED_*`. Planes are **not** plugins.  
 **Law:** one composition root walks the host phase table — no private boot via import side effects.  
 **Law:** system log is **observation**; event buses remain **reaction**; EventJournal remains **durable domain facts**.  
-**Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) · debt [SD-014](../TECH-DEBT.md#sd-014) · impact **BI-*** · [BI-015](../TECH-DEBT.md#bi-015).
+**Theme closed:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) **Accepted** · [SD-014](../TECH-DEBT.md#sd-014) ✅ · residual **BI-*** · [RELEASE-0.59.8](releases/RELEASE-0.59.8.md).
 
 ### 5.9 Reliability and truth aids
 
@@ -487,7 +487,7 @@ From theme **0.57** onward:
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
 | Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
 | Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
-| System boot (open) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) plan · [ADR-028](adr/028-system-boot.md) Proposed · [SD-014](../TECH-DEBT.md#sd-014) · **BI-*** |
+| System boot (closed) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) · [ADR-028](adr/028-system-boot.md) Accepted · residual **BI-*** |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
@@ -515,10 +515,10 @@ A map that only names **ideals** without today is also incomplete.
 | Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks (**0.57 closed**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
-| Live debt register | **Real** — **SD-014** / **BI-*** (0.59) · residual **SU-*** / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
+| Live debt register | **Real** — residual **BI-*** / **SU-*** / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
 | Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
-| Boot schedule + composition truth | **Theme open** — schedules **0.59.4** · membership **0.59.5** · modes **0.59.6**–**0.59.7** · residual next — [VISION-0.59](VISION-0.59.md) |
+| Boot schedule + composition truth | **Theme closed** at `0.59.8` — [VISION-0.59](VISION-0.59.md) · residual **BI-*** |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

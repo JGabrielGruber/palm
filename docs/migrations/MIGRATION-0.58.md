@@ -45,5 +45,5 @@ Palm is pre-1.0. This theme **breaks the product lie** that `session_id` ≡ `in
 |------|------|
 | **SI-002** / **SI-006** / **SI-007** / **SI-010** / **SI-016** | Residual honesty — see TECH-DEBT |
 | **SU-*** surface weight / explorer / MCP dual stack | Optional; [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
-| **SD-014** boot phases | Later theme |
+| **SD-014** boot phases | ✅ paid in **0.59** — residual **BI-*** |
 | User plane impersonation | Later (ADR-027 D11) |

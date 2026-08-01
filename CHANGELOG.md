@@ -4,6 +4,25 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.59.8] — 2026-08-01
+
+### 0.59 — System Boot + Composition Truth (**theme closed**)
+
+Vision: [VISION-0.59](docs/VISION-0.59.md) · ADR: [028](docs/adr/028-system-boot.md) **Accepted** · Migration: [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · Release: [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)
+
+#### Added / paid (0.59.0–0.59.8)
+- **Host + system boot phase tables** walked in code (`HOST_PHASES` / `SYSTEM_PHASES`); boot packages own handlers  
+- **CompositionProfile membership truth** — sole switch for services / surfaces / capabilities; PhaseSkip `composition_off:*`  
+- **BootMode** + `ApplicationHost.for_mode` — safe / test / dev / prod + shape presets; `server_port` for CI  
+- **SystemLog** — ordered boot narrative seats (`palm.system.log`)  
+- **Dogfood** — mode + shape phenotype tests; spine on collapsed modes  
+- **Residual cleanup (0.59.8)** — default `host` fixture → `for_mode("all_in_one")`; dead quick-dag examples → spine wizard helper  
+
+#### Theme exit (0.59.8)
+- **ADR-028 Accepted** · **SD-014 closed**  
+- Residual **BI-*** named (dual root, suite force, work start home, surface chrome, log catalog, …)  
+- **MIGRATION-0.59** · **RELEASE-0.59.8** · stamp `0.59.8`
+
 ## [0.58.20] — 2026-07-30
 
 ### 0.58 — Session plane (**theme closed**)

@@ -1,12 +1,14 @@
 # ADR-028 — System boot schedule + composition truth
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-08-01  
-**Theme:** [VISION-0.59](../VISION-0.59.md)  
-**Inventory:** [BOOT-INVENTORY.md](../BOOT-INVENTORY.md) (0.59.1)  
-**System log plan:** [SYSTEM-LOG.md](../SYSTEM-LOG.md) (0.59.1a)  
+**Accepted:** 2026-08-01 (theme exit `0.59.8`)  
+**Theme:** [VISION-0.59](../VISION-0.59.md) (**closed**)  
+**Inventory:** [BOOT-INVENTORY.md](../BOOT-INVENTORY.md)  
+**System log:** [SYSTEM-LOG.md](../SYSTEM-LOG.md) (seats live; richer catalog residual **BI-015**)  
 **Map:** [PALM.md](../PALM.md)  
-**Debt:** [SD-014](../../TECH-DEBT.md#sd-014) · impact **BI-*** · [BI-015](../../TECH-DEBT.md#bi-015)  
+**Debt:** [SD-014](../../TECH-DEBT.md#sd-014) ✅ closed at exit · residual **BI-***  
+**Release:** [RELEASE-0.59.8](../releases/RELEASE-0.59.8.md) · [MIGRATION-0.59](../migrations/MIGRATION-0.59.md)  
 **Related:** [ADR-019](019-composition-profiles.md) · [ADR-018](018-application-host-decomposition.md) · [ADR-026](026-palm-system-layer.md) · [ADR-017](017-import-seams.md)
 
 ---
@@ -172,16 +174,15 @@ Do not make system log the wait/work path.
 
 ---
 
-## Acceptance (theme exit)
+## Acceptance (theme exit) — **met at 0.59.8**
 
-- ADR status → **Accepted**.  
-- SD-014 closed or residual re-homed with honest BI-*.  
-- Phase tables walk in code for system + host.  
-- At least `safe`/`test` + one full mode dogfooded. (**safe/test ✅ 0.59.6**; **shapes ✅ 0.59.7**)  
-- Membership truth on migrated path.  
-- System log planned; seats or BI-015 residual named.  
-
-- [VISION-0.59](../VISION-0.59.md) closed with residual named.
+- [x] ADR status → **Accepted**.  
+- [x] SD-014 closed; residual re-homed as honest **BI-***.  
+- [x] Phase tables walk in code for system + host.  
+- [x] `safe`/`test` + full shapes dogfooded (**0.59.6**–**0.59.7**).  
+- [x] Membership truth on migrated path (**0.59.5**).  
+- [x] System log seats live; richer catalog residual **BI-015**.  
+- [x] [VISION-0.59](../VISION-0.59.md) closed with residual named.
 
 ---
 

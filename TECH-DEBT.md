@@ -1,9 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot open** at **0.59.0** — **[SD-014](#sd-014)** + **[BI-*](#bi-boot-impact-inventory)**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot closed** at **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
-**Theme (open):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Proposed**  
+**Theme (closed boot):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Accepted** · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Theme (closed):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Accepted** · [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
 
 ---
@@ -12,7 +12,7 @@
 
 | Rule | Meaning |
 |------|---------|
-| **This file is live** | **SD-014** + **BI-*** (0.59 boot); residual **SI-*** / **SU-***; surface deflation seed; CS/CF |
+| **This file is live** | Residual **BI-*** (after 0.59 boot); residual **SI-*** / **SU-***; surface deflation seed; CS/CF |
 | **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
 | **IDs** | **SD-** system · **SU-** surface · **SI-** session impact · **BI-** boot impact (0.59) · **ST-** stub · **CS-** smell · **CF-** carry from PD era |
 | **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |
@@ -46,7 +46,7 @@
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.13 | ✅ kits package (`palm.kits.server`) |
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
-| [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | open (theme open 0.59.0) |
+| [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
 
 ### Surface debt (SU)
 
@@ -289,11 +289,14 @@ workload, executions, hooks) removed. Canonical imports are `palm.system.*`.
 
 ### SD-014 — System boot phases + composition truth
 
-**Severity:** S2 · **Effort:** L · **Status:** **open — theme 0.59** (named mid-**0.58**; plan open **0.59.0**)  
-**Theme:** [VISION-0.59](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Proposed**  
-**Related:** CF-002 (host composition residual) · CompositionProfile (0.50) · ADR-017 (import seams) · SI-014 (plane-store framework — separate) · impact **[BI-*](#bi-boot-impact-inventory)**
+**Severity:** S2 · **Effort:** L · **Status:** ✅ **closed at 0.59.8 exit**  
+**Theme:** [VISION-0.59](docs/VISION-0.59.md) (**closed**) · [ADR-028](docs/adr/028-system-boot.md) **Accepted**  
+**Release:** [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md) · [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md)  
+**Related:** CF-002 (host composition residual) · CompositionProfile (0.50) · ADR-017 (import seams) · SI-014 (plane-store framework — separate) · residual **[BI-*](#bi-boot-impact-inventory)**
 
 **Named when:** Session plane work (0.58.1–0.58.3) forced a clear split: **plugins** vs **system planes** vs **surface bind**. The pain is not missing dynamic import — Palm already has Django-style `INSTALLED_*` + `autoload()`. The pain is **scattered boot** and **implicit order**.
+
+**Paid (0.59.0–0.59.8):** host + system phase tables walked; composition membership truth; BootMode + `for_mode` dogfood; SystemLog seats; residual cleanup (fixture + dead spine). Residual work is **BI-*** only — not a re-open of this debt root.
 
 #### Observation (stacked pains — do not merge into one wrong fix)
 
@@ -347,12 +350,10 @@ Today steps 3–8 are real but **named only in code paths**, not as one document
 - Host stops growing parallel hard-coded `if` forests that ignore the profile.  
 - Map + ADR-028; STE theme plan open at 0.59.0.
 
-#### Agent note
+#### Agent note (after close)
 
-**0.59 pays SD-014.** Residual session impact remains **SI-*** / surface seed.  
-When adding a **new system plane** during boot migration: attach via **system schedule** phase, not a plugin install list.  
-When adding a **plugin**: `INSTALLED_*` + registry; do **not** put it in the kernel phase table as a special case without cause.  
-When a path **breaks** under schedule work: classify break → harvest rule → BI-* row (do not restore import-order magic).
+**SD-014 is closed.** New system planes attach via **system schedule**, not plugin install lists.  
+Plugins stay `INSTALLED_*` + registry. Residual boot tangles use **BI-*** kill conditions — do not re-open dual membership ORs or private start soup.
 
 ---
 
@@ -861,21 +862,21 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 | ID | Observation (seed) | Class / note | Status |
 |----|--------------------|--------------|--------|
-| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | partial ✅ both walked 0.59.4; dual root residual BI-003 |
-| [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | ✅ paid 0.59.5 (residual BI-010 surfaces bulk) |
-| [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
-| [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
-| [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase S5 | open |
-| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | partial ✅ work_drain OR removed 0.59.5; mode forbid 0.59.2 |
-| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | partial ✅ **0.59.8** default `host` → `for_mode("all_in_one")`; dead quick-dag fixed; many hand-built hosts remain |
-| [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ tables · membership · **0.59.6** `last_walk` |
-| [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | open |
-| [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | partial ✅ composition.surfaces gate 0.59.5; bulk → deflation |
-| [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | open (bucket) |
-| [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | open (bucket) |
-| BI-013 | Work **start** (WorkIntent drain) lives on host workplane, not system schedule | name in table; may stay host-owned | open (named 0.59.1) |
-| BI-014 | `ensure_host_session` swallows Exception on system start | honesty / fail loud later | open (named 0.59.1) |
-| [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | basic + early seats ✅; richer catalog later | open (partial) |
+| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | ✅ paid 0.59.4 (dual root → BI-003) |
+| [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | ✅ paid 0.59.5 (surface bulk → BI-010) |
+| [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root | **residual** (exit) |
+| [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | partial ✅ walked; residual edge cases |
+| [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase | partial ✅ phase seat; residual body clarity |
+| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | ✅ work_drain OR gone; mode forbid; outbox dual still BI-009-ish |
+| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | **residual** (fixture + dogfood paid; suite not forced) |
+| [BI-008](#bi-008) | doctor boot phases / mode | report seat | ✅ paid (tables · membership · last_walk) |
+| [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | **residual** |
+| [BI-010](#bi-010) | Surface mount still special-cased | membership + deflation | **residual** bulk → surface deflation |
+| [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | residual bucket |
+| [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | residual bucket |
+| BI-013 | Work **start** (WorkIntent drain) lives on host workplane | may stay host-owned | **residual** (true owner OK) |
+| BI-014 | `ensure_host_session` swallows Exception on system start | honesty | **residual** |
+| [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | seats ✅; catalog later | **residual** |
 
 ### BI-001 — Dual start graphs
 
@@ -966,8 +967,8 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 **Progress (0.59.2):** Walker **reuses** SystemLog; `BootMode` default levels; early seats `host.system_log` / `system.log.ready`.  
 See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 
-**Residual:** richer operate catalog; optional JSON/file sink; mode levels auto-applied only when `boot_mode=` set.  
-**Exit:** residual named or closed when full walker dogfood.  
+**Residual:** richer operate catalog; optional JSON/file sink.  
+**Status at 0.59 exit:** seats + mode levels dogfooded; catalog/sinks remain residual.  
 **Not:** OpenTelemetry product; BT tick flood; replace journal.
 
 ---
@@ -982,7 +983,7 @@ See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
 | **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh |
 
-**Active (not a seed):** **System boot** — [SD-014](#sd-014) · [VISION-0.59](docs/VISION-0.59.md).
+**Closed (not a seed):** **System boot** — [SD-014](#sd-014) ✅ · [VISION-0.59](docs/VISION-0.59.md) closed · residual **BI-***.
 
 ---
 
