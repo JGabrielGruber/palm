@@ -861,7 +861,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 | ID | Observation (seed) | Class / note | Status |
 |----|--------------------|--------------|--------|
-| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | open (tables ✅ 0.59.2; cutover 0.59.3–.4) |
+| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | open (system ✅ 0.59.3; host 0.59.4) |
 | [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | open |
 | [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
@@ -881,8 +881,9 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 **Observation:** Host and system start are real but not one documented schedule.  
 **Progress (0.59.1):** Documented as one story in [BOOT-INVENTORY.md](docs/BOOT-INVENTORY.md).  
-**Progress (0.59.2):** Locked `HOST_PHASES` / `SYSTEM_PHASES` + `walk_schedule`; early log seats walk; rest still imperative.  
-**Pay:** 0.59.3–.4 full schedule walkers in code.
+**Progress (0.59.2):** Locked tables + walker; early log seats.  
+**Progress (0.59.3):** System schedule fully walked; boot owns handlers; `runtime` package init no longer eagerly imports `BaseRuntime` (dependency direction fixed).  
+**Pay residual:** host schedule walker 0.59.4.
 
 ### BI-002 — Composition membership truth
 

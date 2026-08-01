@@ -44,9 +44,9 @@ def test_locked_phase_tables_order() -> None:
     assert len(catalog["system"]) == len(SYSTEM_PHASES)
     assert HOST_PHASES[0].seat == "implemented"
     assert SYSTEM_PHASES[0].seat == "implemented"
-    # Remaining bulk still soup until 0.59.3 / 0.59.4.
+    # Host bulk still soup until 0.59.4; system fully implemented 0.59.3.
     assert any(p.seat == "imperative" for p in HOST_PHASES[1:])
-    assert any(p.seat == "stub" for p in SYSTEM_PHASES)
+    assert all(p.seat == "implemented" for p in SYSTEM_PHASES)
 
 
 def test_walker_skips_missing_handlers_honestly() -> None:

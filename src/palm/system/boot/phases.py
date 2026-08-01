@@ -121,70 +121,70 @@ HOST_PHASES: tuple[PhaseSpec, ...] = (
 )
 
 # ── System schedule (BaseRuntime) ────────────────────────────────────────────
-# Early log first when system starts alone; no-op if host already configured.
+# 0.59.3 — full table walked by BaseRuntime.start (all seats implemented).
 
 SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
     PhaseSpec(
         "system.log.ready",
         "system",
         "implemented",
-        "Ensure SystemLog is process-ready (early console; no-op if host already set)",
+        "Ensure SystemLog is process-ready (early console)",
     ),
     PhaseSpec(
         "system.plugins.ensure",
         "system",
-        "imperative",
+        "implemented",
         "ensure_core_plugins (idempotent)",
     ),
     PhaseSpec(
         "system.engines.init",
         "system",
-        "imperative",
-        "context, event, resource, workload, auth (+ storage select today)",
+        "implemented",
+        "context, event, resource, workload, auth",
     ),
     PhaseSpec(
         "system.storage.select",
         "system",
-        "stub",
-        "Named seat for storage select (today inside engines.init)",
+        "implemented",
+        "StorageFactory when storage not yet initialized",
     ),
     PhaseSpec(
         "system.outbox.wire",
         "system",
-        "imperative",
+        "implemented",
         "OutboxStore + reliable events when enabled",
         optional=True,
     ),
     PhaseSpec(
         "system.hooks.install",
         "system",
-        "imperative",
-        "Job hooks list + orch init collaborators",
+        "implemented",
+        "Job hooks + orch/BT/instance_manager initialize",
     ),
     PhaseSpec(
         "system.orchestration.start",
         "system",
-        "imperative",
-        "orchestration / BT / instances start — accept jobs",
+        "implemented",
+        "orchestration.start — accept jobs",
     ),
     PhaseSpec(
         "system.planes.attach",
         "system",
-        "imperative",
+        "implemented",
         "Wait plane + session plane",
     ),
     PhaseSpec(
         "system.bind",
         "system",
-        "imperative",
+        "implemented",
         "Optional palm provider bind",
         optional=True,
     ),
     PhaseSpec(
         "system.ready",
         "system",
-        "imperative",
-        "System instance ready",
+        "implemented",
+        "System instance ready mark",
     ),
 )
 

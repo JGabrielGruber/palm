@@ -188,9 +188,9 @@ Spine regressions fix in-slice.
 | System: job hooks | S8–S9 |
 | System: orch start / ready | S12, S15 |
 
-**Locked in code (0.59.2):** `palm.system.boot` — `HOST_PHASES` / `SYSTEM_PHASES`.  
-Early seats **implemented:** `host.system_log`, `system.log.ready`.  
-Most other seats: **imperative** (still soup) or **stub** until 0.59.3–.4.
+**Locked in code:** `palm.system.boot` — `HOST_PHASES` / `SYSTEM_PHASES`.  
+**System (0.59.3):** all `SYSTEM_PHASES` **implemented** and walked by `BaseRuntime.start` (handlers in `system_schedule`).  
+**Host:** early `host.system_log` implemented; rest **imperative** until 0.59.4.
 
 ---
 

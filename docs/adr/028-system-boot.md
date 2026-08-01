@@ -115,7 +115,10 @@ Theme exit requires: spine + declared modes green; residual chrome named.
 | Mode presets | `palm.app.host.boot.modes` (beside composition / deployment) |
 
 System schedule must not import product or surfaces.  
-**0.59.2:** tables, walker, modes, early log seats live under these homes.
+**0.59.2:** tables, walker, modes, early log seats live under these homes.  
+**0.59.3:** system handlers live under `palm.system.boot.system_schedule`.  
+`BaseRuntime` is the assembly shell — it does not own start order.  
+`palm.system.runtime` package init must not eagerly import `BaseRuntime` (keeps boot → collaborator edges acyclic).
 
 ### D11 — Non-goals locked by this ADR
 

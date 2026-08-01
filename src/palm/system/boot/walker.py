@@ -1,8 +1,9 @@
 """
-Schedule walker — control path for boot phases (0.59.2).
+Schedule walker — control path for boot phases (0.59.2+).
 
 Observation goes through SystemLog only (no second narrative).
 Missing handlers are honest: skip with reason from seat type.
+Handlers may raise :class:`PhaseSkip` for optional declines (0.59.3).
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from typing import Any, Literal
 
 from palm.system.boot.context import BootContext
 from palm.system.boot.phases import PhaseSpec
+from palm.system.boot.skip import PhaseSkip
 from palm.system.log import SystemLog, get_system_log
 
 PhaseHandler = Callable[[BootContext], None]
@@ -70,13 +72,13 @@ def walk_schedule(
     phases:
         Ordered phase specs (usually ``HOST_PHASES`` / ``SYSTEM_PHASES``).
     handlers:
-        Map phase id → callable. Only implemented seats need handlers today.
+        Map phase id → callable. Implemented seats should register handlers.
     ctx:
         Shared context; created if omitted.
     log:
         SystemLog used for phase.start/end/skip/fail. Defaults to process log.
     require_handlers:
-        When True, missing handler fails the walk (strict mode for later slices).
+        When True, missing handler fails the walk for ``implemented`` seats.
         When False (default), missing handler → honest skip by seat type.
     schedule:
         Override schedule name on context when phases may be mixed (rare).
@@ -131,6 +133,27 @@ def walk_schedule(
         t0 = time.perf_counter()
         try:
             handler(boot_ctx)
+        except PhaseSkip as skip:
+            duration_ms = round((time.perf_counter() - t0) * 1000.0, 1)
+            slog.phase_skip(
+                spec.schedule,
+                spec.id,
+                reason=skip.reason,
+                duration_ms=duration_ms,
+                mode=boot_ctx.mode,
+                runtime=boot_ctx.runtime,
+            )
+            walked.append(
+                WalkedPhase(
+                    phase=spec.id,
+                    schedule=spec.schedule,
+                    outcome="skip",
+                    reason=skip.reason,
+                    duration_ms=duration_ms,
+                    seat=spec.seat,
+                )
+            )
+            continue
         except Exception as exc:
             duration_ms = round((time.perf_counter() - t0) * 1000.0, 1)
             slog.phase_fail(
@@ -174,6 +197,7 @@ def walk_schedule(
 
 __all__ = [
     "PhaseHandler",
+    "PhaseSkip",
     "WalkOutcome",
     "WalkedPhase",
     "walk_schedule",
