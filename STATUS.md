@@ -1,24 +1,26 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.58.20` (stamp) · **Active theme:** none (rest) · **Prior closed:** **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** July 30, 2026 · **Slice:** **0.58 exit** done  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.58](docs/VISION-0.58.md) **closed** · **ADR:** [027](docs/adr/027-session-plane.md) **Accepted** · [VISION-0.57](docs/VISION-0.57.md) closed · [ADR-026](docs/adr/026-palm-system-layer.md) Accepted  
-**Migration / release:** [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — residual **SI-*** / **SU-*** · **[SD-014](TECH-DEBT.md#sd-014)** boot phases · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.58.20` (stamp) · **Active theme:** **`0.59` System Boot** · **Prior closed:** **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
+**Last Updated:** August 1, 2026 · **Slice:** **0.59.0** plan open  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.59](docs/VISION-0.59.md) **open** · **ADR:** [028](docs/adr/028-system-boot.md) **Proposed** · prior [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
+**Migration / release (prior):** [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **[SD-014](TECH-DEBT.md#sd-014)** this theme · **BI-*** boot impact · residual **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane + SessionService + BoundSurface** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane + SessionService + BoundSurface** · boot schedule **opening** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → residual [TECH-DEBT.md](TECH-DEBT.md) **SI-*** / **SU-*** → queue seeds ([VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md), **SD-014**, Grove).
+Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → [VISION-0.59](docs/VISION-0.59.md) → [TECH-DEBT.md](TECH-DEBT.md) **SD-014** / **BI-*** → residual SI/SU · surface seed later.
 
 | Spirit | Decision |
 |--------|----------|
-| **Session law** | Outside subject; multi-instance; BoundSurface; SessionService door; active = focus; continue via wait plane |
-| **Not** | Session ≡ instance; dual-own; second resume; surfaces invent identity |
-| **Next code** | **Rest** — open a theme only when value is clear; do not purge surfaces yet |
-| **Done** | **0.58.0–0.58.20 + exit** — SD-008 closed · ADR-027 Accepted · stamp `0.58.20` |
-| **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) (walk handles, surface compost) · user-plane impersonation · **[SD-014](TECH-DEBT.md#sd-014)** boot phases · API/SDK docs when they unlock dogfood |
+| **Boot law** | Two schedules (host + system); phase table; composition = membership; modes; plugins ≠ planes |
+| **Break / harvest** | Mid-theme may go red on legacy paths; grab the rule; declared green bar; spine stays sacred |
+| **Not** | Second autoload framework; planes on INSTALLED_*; permanent dual boot; surface purge in this theme |
+| **Next code** | **0.59.1** inventory + characterization (no rewrite of host start in 0.59.0) |
+| **Done (prior)** | **0.58.0–0.58.20 + exit** — SD-008 closed · ADR-027 Accepted · stamp `0.58.20` |
+| **This open** | **0.59.0** plan — VISION + ADR-028 Proposed + map + BI-* seed |
+| **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · user-plane impersonation · workload remainder · Grove |
 
 ## Quick Overview
 
@@ -44,6 +46,25 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/app/` | Host + composition / deployment profiles. |
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
+
+## 0.59 — System Boot + Composition Truth (**open** · plan `0.59.0`)
+
+**Vision:** [docs/VISION-0.59.md](docs/VISION-0.59.md) · **ADR:** [docs/adr/028-system-boot.md](docs/adr/028-system-boot.md) **Proposed**  
+**Debt:** [SD-014](TECH-DEBT.md#sd-014) · impact **[BI-*](TECH-DEBT.md#bi-boot-impact-inventory)**  
+**Map:** [docs/PALM.md](docs/PALM.md) §5.8 boot  
+
+**Theme purpose:** Named **host + system boot schedules**, **composition membership truth**, and **boot modes** (safe / test / dev / prod). Stub seats first. Break/harvest isolation when assembly fails. Not surface compost. Not a second plugin framework.
+
+| Patch | Status |
+|-------|--------|
+| **0.59.0** Plan + ADR + map + BI-* seed | ✅ open |
+| 0.59.1 Inventory + characterization | 📋 next |
+| 0.59.2 Stub schedule + modes | 📋 |
+| 0.59.3+ System/host schedule, membership, mode dogfood | 📋 |
+
+**Green bar (0.59.0):** docs only — no behavior change. Spine contract unchanged until schedule slices.
+
+---
 
 ## 0.58 — Session plane (**closed** · theme exit `0.58.20`)
 
@@ -198,14 +219,15 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 **North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
 
-- **0.58** Session plane — **open** ([VISION-0.58](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md))  
+- **0.59** System boot + composition truth — **open** ([VISION-0.59](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) · [SD-014](TECH-DEBT.md#sd-014))  
+- **0.58** Session plane — **closed**  
 - **0.55** Reactive Interests — law closed  
-- **0.56** Workload plane — scout; session cancel / ownership consume 0.58  
+- **0.56** Workload plane — scout; cancel/ownership consume session  
 - **0.57** System layer — closed  
-- Docs dogfood domain (post session + workload)  
+- Surface deflation seed ([VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md))  
+- Docs dogfood domain (post boot + workload)  
 - Adapter runners via workloads (PD-022)  
 - Peer / org dogfood (Grove later seasons)  
-- Payload/artifact registry for registered modules  
-- Shared plane-store framework — **ponder later** (each plane may grow a store)
+- Shared plane-store framework — **ponder later**
 
 See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-GROVE.md](docs/VISION-GROVE.md).

@@ -42,11 +42,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [025](025-reactive-interests.md) | Reactive Interests — wait + trigger law (0.55) | Accepted |
 | [026](026-palm-system-layer.md) | Palm system layer and module purposes (0.57) | Accepted |
 | [027](027-session-plane.md) | Session plane — system glue, multi-instance (0.58) | Accepted |
+| [028](028-system-boot.md) | System boot schedule + composition truth (0.59) | Proposed |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
-**Next free number:** 028.  
-**Note:** System layer **0.57 closed** ([VISION-0.57](../VISION-0.57.md) · ADR-026 Accepted). Session plane **0.58 closed** ([VISION-0.58](../VISION-0.58.md) · ADR-027 Accepted). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
+**Next free number:** 029.  
+**Note:** System layer **0.57 closed** ([VISION-0.57](../VISION-0.57.md) · ADR-026 Accepted). Session plane **0.58 closed** ([VISION-0.58](../VISION-0.58.md) · ADR-027 Accepted). Boot theme **0.59 open** ([VISION-0.59](../VISION-0.59.md) · ADR-028 Proposed · SD-014). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
 
 ## How to add an ADR
 

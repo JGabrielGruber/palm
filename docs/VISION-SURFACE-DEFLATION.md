@@ -153,7 +153,8 @@ SessionService                      ← product door
     └─ Wait / work / workload       ← start & continue law unchanged
 ```
 
-**Out of scope until opened:** full user plane, Grove mesh, shared plane-store framework (SI-014), boot phases (SD-014).
+**Out of scope for surface deflation:** full user plane, Grove mesh, shared plane-store framework (SI-014).  
+**Boot phases (SD-014)** are paid under **[VISION-0.59](VISION-0.59.md)** (open) — do not mix surface compost into boot slices.
 
 ---
 

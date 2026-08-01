@@ -15,7 +15,7 @@ For AI coding agents and human developers who change code.
 | **System low-level** (package, port, moves) | [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) |
 | **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [docs/STUBS.md](docs/STUBS.md) intentions · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) |
 | How to write docs | [docs/WRITING.md](docs/WRITING.md) (ASD-STE100) |
-| Project status / themes | [STATUS.md](STATUS.md) · [docs/VISION-0.58.md](docs/VISION-0.58.md) (**closed** session) · [docs/VISION-SURFACE-DEFLATION.md](docs/VISION-SURFACE-DEFLATION.md) (queue) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed** system) |
+| Project status / themes | [STATUS.md](STATUS.md) · [docs/VISION-0.59.md](docs/VISION-0.59.md) (**open** boot) · [docs/VISION-0.58.md](docs/VISION-0.58.md) (**closed** session) · [docs/VISION-SURFACE-DEFLATION.md](docs/VISION-SURFACE-DEFLATION.md) (queue) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed** system) |
 | Multi-Palm horizon | [docs/VISION-GROVE.md](docs/VISION-GROVE.md) |
 | MCP operate | [docs/MCP.md](docs/MCP.md) · skill [docs/skills/palm/SKILL.md](docs/skills/palm/SKILL.md) |
 
@@ -23,7 +23,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** July 2026 · map [PALM.md](docs/PALM.md) · session theme [VISION-0.58](docs/VISION-0.58.md) **closed** · [ADR-027](docs/adr/027-session-plane.md) Accepted · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
+**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · boot theme [VISION-0.59](docs/VISION-0.59.md) **open** · [ADR-028](docs/adr/028-system-boot.md) Proposed · session [VISION-0.58](docs/VISION-0.58.md) **closed** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
 
 ---
 
@@ -136,6 +136,7 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 | Workload product | `services/execution/workloads/` | Not a top-level domain |
 | Design | `palm/services/design/` | [VISION-0.25](docs/VISION-0.25.md) |
 | Host / profile | `palm/app/host/` | Prefer ApplicationHost |
+| Boot phase / mode | system schedule + host schedule | [VISION-0.59](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) — not import-order side effects; planes ≠ plugins |
 
 **Never:**
 

@@ -1,11 +1,10 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***; surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
-**Also open (later theme):** **[SD-014](#sd-014)** system boot phases + composition truth (named mid-0.58).  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot open** at **0.59.0** — **[SD-014](#sd-014)** + **[BI-*](#bi-boot-impact-inventory)**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
-**Theme (open):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Proposed**  
-**Theme (closed):** [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
+**Theme (open):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Proposed**  
+**Theme (closed):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Accepted** · [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
 
 ---
 
@@ -13,9 +12,9 @@
 
 | Rule | Meaning |
 |------|---------|
-| **This file is live** | Residual **SI-*** / **SU-*** after 0.58; later-theme **SD-014**; surface deflation seed; CS/CF |
+| **This file is live** | **SD-014** + **BI-*** (0.59 boot); residual **SI-*** / **SU-***; surface deflation seed; CS/CF |
 | **Archive is history** | [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) — PD-001… era |
-| **IDs** | **SD-** system · **SU-** surface · **SI-** session impact (chew later) · **ST-** stub · **CS-** smell · **CF-** carry from PD era |
+| **IDs** | **SD-** system · **SU-** surface · **SI-** session impact · **BI-** boot impact (0.59) · **ST-** stub · **CS-** smell · **CF-** carry from PD era |
 | **Carry** | Still-real items from the old era use **CF-NNN** and link the old PD |
 | **Stubs catalog** | Purpose without fake implementation: [docs/STUBS.md](docs/STUBS.md) |
 | **Close** | Mark `✅ done` with theme patch; do not delete rows |
@@ -24,7 +23,9 @@
 **Add a row when:** you leave a shim, find an edge→engine bypass, discover a purpose lie, or ship a surface that bypasses product/ports.  
 **Do not add:** fixed bugs that are not structural.
 
-**SI-* purpose:** After analysis (0.58.0), list code/docs that **must change** when session becomes multi-instance system glue. Not all are 0.58 slices. Agents resume from SI rows without full chat context.
+**SI-* purpose:** After analysis (0.58.0), list code/docs that **must change** when session becomes multi-instance system glue. Residual after 0.58.
+
+**BI-* purpose:** During **0.59** boot theme, list tangles and breaks discovered while migrating to phase tables and modes. Each break row should note: **rule harvested?** · **true owner?** · **parked theme?** See [VISION-0.59](docs/VISION-0.59.md) §5 break/harvest.
 
 ---
 
@@ -45,7 +46,7 @@
 | [SD-011](#sd-011) | Server transport stack under `common.runtimes` | S2 | L | 0.57.13 | ✅ kits package (`palm.kits.server`) |
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
-| [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **later theme** (not 0.58) | open |
+| [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | open (theme open 0.59.0) |
 
 ### Surface debt (SU)
 
@@ -288,8 +289,9 @@ workload, executions, hooks) removed. Canonical imports are `palm.system.*`.
 
 ### SD-014 — System boot phases + composition truth
 
-**Severity:** S2 · **Effort:** L · **Status:** **open — later theme** (named mid-**0.58**, not paid in 0.58)  
-**Related:** CF-002 (host composition residual) · CompositionProfile (0.50) · ADR-017 (import seams) · SI-014 (plane-store framework — separate)
+**Severity:** S2 · **Effort:** L · **Status:** **open — theme 0.59** (named mid-**0.58**; plan open **0.59.0**)  
+**Theme:** [VISION-0.59](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Proposed**  
+**Related:** CF-002 (host composition residual) · CompositionProfile (0.50) · ADR-017 (import seams) · SI-014 (plane-store framework — separate) · impact **[BI-*](#bi-boot-impact-inventory)**
 
 **Named when:** Session plane work (0.58.1–0.58.3) forced a clear split: **plugins** vs **system planes** vs **surface bind**. The pain is not missing dynamic import — Palm already has Django-style `INSTALLED_*` + `autoload()`. The pain is **scattered boot** and **implicit order**.
 
@@ -336,19 +338,21 @@ Today steps 3–8 are real but **named only in code paths**, not as one document
 - Shared plane-store framework as a gate (that is **SI-014**, ponder later).  
 - Blocking **0.58** session bind/dogfood on this theme.
 
-#### Target (later theme)
+#### Target (theme 0.59)
 
-- Document and implement a **system boot phase** schedule (BaseRuntime + host).  
+- Document and implement **host + system boot phase** schedules.  
 - Make **CompositionProfile** (and settings) the truthful “what is installed” for product/surfaces/capabilities.  
-- Optional: thin shared `App` protocol for plugins only (`name`, register, optional depends).  
+- **Boot modes** (safe / test / dev / prod / shapes) as presets over axes.  
+- Stub seats first; migrate; **break/harvest** isolation ([VISION-0.59](docs/VISION-0.59.md) §5).  
 - Host stops growing parallel hard-coded `if` forests that ignore the profile.  
-- Map/ADR when structure changes; STE theme plan when opened.
+- Map + ADR-028; STE theme plan open at 0.59.0.
 
 #### Agent note
 
-Session plane (0.58) continues under **SD-008 / SI-***.  
-When adding a **new system plane** before SD-014 is paid: attach in BaseRuntime start next to peers; do **not** invent a self-register plugin path.  
-When adding a **plugin**: `INSTALLED_*` + registry; do **not** put it in the kernel phase table as a special case without cause.
+**0.59 pays SD-014.** Residual session impact remains **SI-*** / surface seed.  
+When adding a **new system plane** during boot migration: attach via **system schedule** phase, not a plugin install list.  
+When adding a **plugin**: `INSTALLED_*` + registry; do **not** put it in the kernel phase table as a special case without cause.  
+When a path **breaks** under schedule work: classify break → harvest rule → BI-* row (do not restore import-order magic).
 
 ---
 
@@ -841,10 +845,88 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 - **Cookie-like bind** — transport only; not a second session model.  
 - **Exclusive instance ownership** — one instance → one session; not dual-own for admin UX.  
 - **Active instance is focus only** — not a foreign-session pass ([ADR-027](docs/adr/027-session-plane.md) D10).  
-- **Plugin self-register + `INSTALLED_*` autoload** — keep; not replaced by a second import framework (SD-014).  
-- **Planes are not plugins** — system owns attach; do not put planes on install lists (SD-014).  
-- **0.58 does not pay SD-014** — name it; boot-phase theme later; session dogfood continues.  
-- **0.58 does not ship user impersonation** — D11 seed only; do not soften D9 for support UX.
+- **Plugin self-register + `INSTALLED_*` autoload** — keep; not replaced by a second import framework (SD-014 / 0.59).  
+- **Planes are not plugins** — system owns attach; do not put planes on install lists (SD-014 / 0.59).  
+- **Break / harvest mid-boot** — mid-0.59 may red-fail legacy phenotypes; declared green bar only; spine sacred ([VISION-0.59](docs/VISION-0.59.md) §5).  
+- **0.58 does not ship user impersonation** — D11 seed only; do not soften exclusive ownership for support UX.
+
+---
+
+## 4c. Boot impact inventory (BI-* · 0.59)
+
+<a id="bi-boot-impact-inventory"></a>
+
+**Purpose:** Discoveries and breaks while paying **SD-014**. Grow during the theme.  
+**Method:** [VISION-0.59](docs/VISION-0.59.md) §5 · [ADR-028](docs/adr/028-system-boot.md) D8.
+
+| ID | Observation (seed) | Class / note | Status |
+|----|--------------------|--------------|--------|
+| [BI-001](#bi-001) | Dual start graphs (host vs runtime) undocumented as one story | inventory | open |
+| [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | open |
+| [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
+| [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
+| [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase S5 | open |
+| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | open |
+| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | open |
+| [BI-008](#bi-008) | doctor does not report boot phases / mode | report seat | open |
+| [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | open |
+| [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | open |
+| [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | open (bucket) |
+| [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | open (bucket) |
+
+### BI-001 — Dual start graphs
+
+**Observation:** Host and system start are real but not one documented schedule.  
+**Pay:** 0.59.1 inventory → 0.59.3–.4 schedule walkers.
+
+### BI-002 — Composition membership truth
+
+**Observation:** Profile fields exist; host still special-cases capability ORs and mounts.  
+**Pay:** 0.59.5+.
+
+### BI-003 — Dual composition root
+
+**Observation:** `ServerContext` lean path vs `ApplicationHost` (ADR-019 refined).  
+**Pay:** only if boot schedule makes fold cheap; else residual after 0.59.
+
+### BI-004 — Plugin ensure vs plane attach
+
+**Observation:** `ensure_core_plugins` then engines then planes — order implicit in code.  
+**Pay:** system schedule phase ids.
+
+### BI-005 — Job hooks ad hoc
+
+**Observation:** Hooks list built inline in `BaseRuntime.start`.  
+**Pay:** named system phase; no global middleware merge.
+
+### BI-006 — Capability OR logic
+
+**Observation:** work_drain / recover / projections activated by mixed profile and deployment flags.  
+**Pay:** host schedule + mode presets.
+
+### BI-007 — Test host constructions
+
+**Observation:** Many tests build hosts without a named mode.  
+**Pay:** `test` / `safe` fixtures; declare green bar per slice.
+
+### BI-008 — Doctor boot report
+
+**Observation:** No phase/mode dump.  
+**Pay:** stub report in 0.59.2+.
+
+### BI-009 — Triple override
+
+**Observation:** Settings, profile, and start options can disagree.  
+**Pay:** resolver table documented and tested.
+
+### BI-010 — Surface mount special cases
+
+**Observation:** Surface mount not only `CompositionProfile.surfaces`.  
+**Pay:** membership truth; residual bulk → surface deflation theme.
+
+### BI-011 / BI-012 — Harvest buckets
+
+Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked theme**.
 
 ---
 
@@ -852,11 +934,13 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 | Seed | Debt | Spirit |
 |------|------|--------|
-| **System boot + composition truth** | [SD-014](#sd-014), CF-002 | One phase table; profile is membership truth; plugins vs planes stay split |
-| **Session plane (active theme)** | SD-008, SI-* | Outside subject; multi-attach; bind; dogfood — [VISION-0.58](docs/VISION-0.58.md) |
+| **Surface deflation** | SU-* · SI-002/006/010 | Compost outdated surface weight — [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
-| **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session (grant, audit, time-bound). **Not** dual-own instances. Support/admin maturity without dissolving ownership — [VISION-0.58 §7.1](docs/VISION-0.58.md) |
-| **Delegate / team session membership** | growth | Shared walk under one owner session + many principals, or explicit delegate tokens — same exclusive attach graph |
+| **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
+| **Delegate / team session membership** | growth | Shared walk under one owner session |
+| **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh |
+
+**Active (not a seed):** **System boot** — [SD-014](#sd-014) · [VISION-0.59](docs/VISION-0.59.md).
 
 ---
 

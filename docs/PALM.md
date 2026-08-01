@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [VISION-0.58](VISION-0.58.md) (session theme **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [VISION-0.59](VISION-0.59.md) (boot theme **open**) · [ADR-028](adr/028-system-boot.md) **Proposed** · [VISION-0.58](VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -325,19 +325,34 @@ Stay thin.
 
 Surfaces must not invent a second semantic model.
 
-### 5.8 App host (`palm.app`)
+### 5.8 App host (`palm.app`) and boot
 
 **Purpose:** Compose a **phenotype** of Palm and boot it.
 
 | Piece | Role |
 |-------|------|
 | **PalmKernel** | Infra: shared storage, instance manager, runtime registry |
-| **ApplicationHost** | Roles, CQRS wiring, recovery, service façades, workers |
-| **Composition / deployment profiles** | Declare shape (embedded, server, all-in-one, …) |
-| **Settings** | Configuration |
+| **ApplicationHost** | Composition root: roles, CQRS wiring, recovery, service façades, workers |
+| **CompositionProfile** | Membership: services, surfaces, capabilities (*what*) |
+| **DeploymentProfile** | Roles and deployment activation (*where*) |
+| **Boot schedule + mode** | Order and strictness (*how start runs*) — **0.59 open** |
+| **Settings** | Configuration resolver into the axes above |
 
 The host is **not** a second port table.  
 The host **wires** system instances and product.
+
+#### Boot (honest today · target 0.59)
+
+| Level | Today | Target |
+|-------|-------|--------|
+| **System schedule** | Imperative `BaseRuntime.start` (plugins, engines, ports, planes, hooks) | Named phase table under system (`palm.system.boot` intent) |
+| **Host schedule** | Imperative `ApplicationHost.start` (bootstrap, spawn, CQRS, surfaces, recover) | Named phase table under host; calls system schedule at spawn |
+| **Membership** | CompositionProfile declared; host still has special-case ORs | Profile is membership truth on migrated path |
+| **Modes** | Presets exist as composition/deployment shapes only | Explicit modes: safe / test / dev / prod / shape presets |
+
+**Law:** plugins stay on `INSTALLED_*`. Planes are **not** plugins.  
+**Law:** one composition root walks the host phase table — no private boot via import side effects.  
+**Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) · debt [SD-014](../TECH-DEBT.md#sd-014) · impact **BI-***.
 
 ### 5.9 Reliability and truth aids
 
@@ -398,6 +413,7 @@ Each top-level part has **one purpose**.
 | New operator domain | **Product** service + CQRS |
 | New transport | **Surface** |
 | New deployment shape | **Composition / deployment profile** |
+| New boot mode or phase | **Boot schedule** (host or system) — not import-order side effects ([VISION-0.59](VISION-0.59.md)) |
 | New event reaction | **Trigger or wait interest** on the event plane — not a private hook web |
 
 **Growth rule:** extend **kinds** and **registries**.  
@@ -468,6 +484,7 @@ From theme **0.57** onward:
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
 | Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
 | Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
+| System boot (open) | [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) Proposed · [SD-014](../TECH-DEBT.md#sd-014) · **BI-*** |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
@@ -495,9 +512,10 @@ A map that only names **ideals** without today is also incomplete.
 | Named system layer in packages | **Live** — `palm.system` holds BaseRuntime, ports, planes, executions, job hooks (**0.57 closed**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
-| Live debt register | **Real** — residual **SU-*** / **SI-*** (SD-008 closed) — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
+| Live debt register | **Real** — **SD-014** / **BI-*** (0.59) · residual **SU-*** / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
 | Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
+| Boot schedule + composition truth | **Theme open 0.59.0** — phase tables + modes planned; still imperative start today — [VISION-0.59](VISION-0.59.md) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  
