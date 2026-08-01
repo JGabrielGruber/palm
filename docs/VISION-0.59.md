@@ -1,6 +1,6 @@
 # VISION 0.59 — System Boot + Composition Truth
 
-**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log **0.59.1a** ✅ · stubs/modes **0.59.2** ✅ · system schedule **0.59.3** ✅ · host schedule **0.59.4** ✅  
+**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log **0.59.1a** ✅ · stubs/modes **0.59.2** ✅ · system schedule **0.59.3** ✅ · host schedule **0.59.4** ✅ · membership **0.59.5** ✅  
 **Inventory:** [BOOT-INVENTORY.md](BOOT-INVENTORY.md)  
 **System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (observation seat — not a second theme)  
 **Language:** ASD-STE100 Simplified Technical English.  
@@ -212,7 +212,7 @@ Slices stay **one purpose each**. Numbers lock at execution time after 0.59.1 in
 | **2** | Stub schedule + modes | Phase ids, walker, mode registry; **reuse SystemLog** — ✅ **0.59.2** (`palm.system.boot` · `BootMode` · early log seats) |
 | **3** | System schedule v1 | `BaseRuntime.start` walks table; boot owns handlers; runtime shell cleaned — ✅ **0.59.3** |
 | **4** | Host schedule v1 | `ApplicationHost.start` walks table; host boot owns handlers — ✅ **0.59.4** |
-| **5** | Composition membership truth | Profile is the switch (+ skip reasons in system log) |
+| **5** | Composition membership truth | Profile is the switch (+ skip reasons in system log) — ✅ **0.59.5** |
 | **6** | Mode dogfood | `safe` + `test` green in CI (+ level defaults) |
 | **7** | dev / prod / shape presets | cli/mcp/worker/server mapped |
 | **8+** | Residual BI-* | Harvest isolation; fold dual roots only if cheap |
@@ -234,7 +234,7 @@ Each break row should note: **rule harvested?** · **true owner?** · **parked t
 - [ ] Documented host + system boot schedule.  
 - [ ] Code walks a phase table.  
 - [ ] At least two real modes dogfooded (`safe`/`test` + one full).  
-- [ ] CompositionProfile membership truth on migrated path.  
+- [x] CompositionProfile membership truth on migrated path.  
 - [ ] Plugins still INSTALLED_*; planes not install-list items.  
 - [ ] BI-* honest; SD-014 closed or residual re-homed.  
 - [ ] Spine green; declared modes green; chrome residual named.  

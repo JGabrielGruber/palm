@@ -121,9 +121,9 @@ Source: `BaseRuntime.start` (`palm.system.runtime.base`).
 
 | Axis | Controls today | Gap |
 |------|----------------|-----|
-| **CompositionProfile.services** | Which services `build_all` builds | OK for services |
-| **CompositionProfile.surfaces** | Declared; server mount still driven mainly by **DeploymentProfile.server** | BI-010 |
-| **CompositionProfile.capabilities** | projections, compensation, outbox (with deployment), work_drain (partial), journal, neonroot, workloads | ORs remain (BI-006) |
+| **CompositionProfile.services** | Which services `build_all` builds | Membership truth (0.59.5) |
+| **CompositionProfile.surfaces** | Mount when `deployment.server` **and** non-empty surfaces; factory `only=` filters | BI-010 residual chrome |
+| **CompositionProfile.capabilities** | Sole runtime gate for projections, compensation, journal, work_drain background, … | Outbox still available×activated (role) |
 | **DeploymentProfile** | Which runtimes spawn; server host/port; outbox service activation; worker count | True role axis |
 | **PalmSettings** | storage, flags → composition capabilities via resolver; runtime_start_options | Triple override risk (BI-009) |
 | **start(**options)** | Merged into system start | Can fight settings |
@@ -190,7 +190,8 @@ Spine regressions fix in-slice.
 
 **Locked in code:** `palm.system.boot` — `HOST_PHASES` / `SYSTEM_PHASES`.  
 **System (0.59.3):** all `SYSTEM_PHASES` walked by `BaseRuntime.start` (`system_schedule`).  
-**Host (0.59.4):** all `HOST_PHASES` walked by `ApplicationHost.start` (`palm.app.host.boot.host_schedule`).
+**Host (0.59.4):** all `HOST_PHASES` walked by `ApplicationHost.start` (`palm.app.host.boot.host_schedule`).  
+**Membership (0.59.5):** composition sole switch; deployment feeds settings resolver only; PhaseSkip `composition_off:*`.
 
 ---
 
@@ -199,7 +200,7 @@ Spine regressions fix in-slice.
 | Id | Smell |
 |----|--------|
 | BI-001 | Two schedules: tables locked 0.59.2; full walk still 0.59.3–.4 |
-| BI-002 | Surfaces/capabilities not sole membership truth |
+| BI-002 | Membership truth paid 0.59.5 (residual surface chrome BI-010) |
 | BI-003 | ServerContext host-less path has no host schedule |
 | BI-004 | Plugin ensure appears host + system + tests |
 | BI-005 | Job hooks built as inline list in S8 |

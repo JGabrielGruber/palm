@@ -172,10 +172,11 @@ class HostObservability:
                 "mode_detail": None if boot_mode is None else boot_mode.to_dict(),
                 "modes_available": list(list_boot_modes()),
                 "phase_tables": schedule_catalog(),
+                "membership": host.membership_snapshot(),
                 "note": (
-                    "0.59.4 host + system schedules walked. Boot owns start law; "
-                    "host/runtime shells are assembly targets. Modes + PhaseSkip "
-                    "are the switches mid-theme."
+                    "0.59.5 membership truth on migrated path: CompositionProfile "
+                    "is the sole switch for services/surfaces/capabilities. "
+                    "Deployment feeds resolver only; modes + PhaseSkip strictness."
                 ),
             },
             "event_plane": self.event_plane_status(),

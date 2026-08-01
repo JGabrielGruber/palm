@@ -218,9 +218,12 @@ def test_outbox_drainer_is_available_times_activated() -> None:
 
 
 def test_work_drain_settings_side_routes_through_the_capability() -> None:
-    """work_drain keeps its 0.44.1 OR semantics (either source enables it), but the
-    settings side now routes through composition.has('work_drain'): an explicit composition
-    declaring it enables the drain even when the deployment profile does not activate it."""
+    """0.59.5: work_drain is composition.has only (no deployment OR at gate time).
+
+    Explicit composition declaring work_drain enables background drain even when the
+    deployment profile's enable_work_drain_service is False. Deployment may *feed*
+    membership on the settings-resolve path; explicit composition always wins.
+    """
     settings = PalmSettings.for_tests(load_examples=False)  # enable_work_drain_service False
     profile = DeploymentProfile.all_in_one()  # enable_work_drain_service False
 
@@ -231,7 +234,7 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     on.start()
     try:
-        assert on._work_drain_background_enabled() is True  # capability side of the OR
+        assert on._work_drain_background_enabled() is True  # membership alone
     finally:
         on.shutdown()
 
@@ -242,7 +245,7 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     off.start()
     try:
-        assert off._work_drain_background_enabled() is False  # neither source enables it
+        assert off._work_drain_background_enabled() is False  # no membership
     finally:
         off.shutdown()
 

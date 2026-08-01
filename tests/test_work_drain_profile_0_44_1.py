@@ -7,6 +7,8 @@ from palm.app.host.roles import DeploymentProfile
 
 
 def test_server_profile_starts_work_drain_without_env() -> None:
+    """0.59.5: server deployment *feeds* work_drain into composition at resolve time;
+    gate still reads composition only (no OR with profile flag at phase time)."""
     settings = PalmSettings.for_tests(load_examples=False)
     assert settings.enable_work_drain_service is False
     host = ApplicationHost(
@@ -16,6 +18,7 @@ def test_server_profile_starts_work_drain_without_env() -> None:
     host.start()
     try:
         assert host.profile.enable_work_drain_service is True
+        assert host.composition.has("work_drain")  # membership fed at resolve
         assert host._work_drain_background_enabled() is True
         assert host.work_drain is not None
         assert host.work_drain.is_running is True
@@ -32,6 +35,7 @@ def test_all_in_one_profile_does_not_auto_drain() -> None:
     host.start()
     try:
         assert host.profile.enable_work_drain_service is False
+        assert not host.composition.has("work_drain")
         assert host._work_drain_background_enabled() is False
         assert host.work_drain is not None
         assert host.work_drain.is_running is False

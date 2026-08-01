@@ -862,15 +862,15 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | ID | Observation (seed) | Class / note | Status |
 |----|--------------------|--------------|--------|
 | [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | partial ✅ both walked 0.59.4; dual root residual BI-003 |
-| [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | open |
+| [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | ✅ paid 0.59.5 (residual BI-010 surfaces bulk) |
 | [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
 | [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase S5 | open |
-| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | open (mode can forbid drain 0.59.2) |
+| [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | partial ✅ work_drain OR removed 0.59.5; mode forbid 0.59.2 |
 | [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | open (BootMode exists; not forced) |
-| [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ 0.59.2 (`control_plane.boot`) |
+| [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ 0.59.2 tables; **0.59.5** `boot.membership` |
 | [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | open |
-| [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | open |
+| [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | partial ✅ composition.surfaces gate 0.59.5; bulk → deflation |
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | open (bucket) |
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | open (bucket) |
 | BI-013 | Work **start** (WorkIntent drain) lives on host workplane, not system schedule | name in table; may stay host-owned | open (named 0.59.1) |
@@ -884,12 +884,16 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 **Progress (0.59.2):** Locked tables + walker; early log seats.  
 **Progress (0.59.3):** System schedule fully walked; boot owns handlers; runtime package init cleaned.  
 **Progress (0.59.4):** Host schedule fully walked; host boot owns handlers; ApplicationHost thin handoff.  
-**Pay residual:** dual root (BI-003); membership truth (BI-002).
+**Progress (0.59.5):** Membership truth — composition sole gate; deployment feeds resolver only.  
+**Pay residual:** dual root (BI-003).
 
 ### BI-002 — Composition membership truth
 
 **Observation:** Profile fields exist; host still special-cases capability ORs and mounts.  
-**Pay:** 0.59.5+.
+**Pay:** ✅ **0.59.5** — runtime gates read `composition` only; settings resolver may fold deployment
+`enable_work_drain_service` into membership once; explicit composition wins; PhaseSkip
+`composition_off:*`; `boot.start` / doctor `boot.membership` report phenotype.  
+**Residual:** surface *bulk* / chrome special cases → BI-010 / surface deflation.
 
 ### BI-003 — Dual composition root
 
@@ -909,7 +913,10 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 ### BI-006 — Capability OR logic
 
 **Observation:** work_drain / recover / projections activated by mixed profile and deployment flags.  
-**Pay:** host schedule + mode presets.
+**Progress (0.59.2):** mode may forbid recover / background drain.  
+**Progress (0.59.5):** work_drain background is composition-only at gate (no OR); deployment
+feeds resolver on settings path. Outbox remains available×activated (composition + role).  
+**Pay residual:** remaining triple-override clarity → BI-009.
 
 ### BI-007 — Test host constructions
 
@@ -930,7 +937,9 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 ### BI-010 — Surface mount special cases
 
 **Observation:** Surface mount not only `CompositionProfile.surfaces`.  
-**Pay:** membership truth; residual bulk → surface deflation theme.
+**Progress (0.59.5):** host schedule requires `deployment.server` **and** non-empty
+`composition.surfaces`; factory already filters by `only=composition.surfaces`.  
+**Pay residual:** chrome / dual-stack surface bulk → [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).
 
 ### BI-011 / BI-012 — Harvest buckets
 

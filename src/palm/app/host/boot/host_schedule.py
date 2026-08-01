@@ -1,9 +1,13 @@
 """
-Host schedule handlers — start law for ApplicationHost (0.59.4).
+Host schedule handlers — start law for ApplicationHost (0.59.4 / 0.59.5).
 
 **Ownership:** host boot owns *when* and *in what order* the composition root
 comes up. Handlers here are the rules. Collaborators (kernel, spawner, CQRS
 wire, recovery, workplane) are tools — they do not own boot order.
+
+**Membership (0.59.5):** ``CompositionProfile`` is the switch for services,
+surfaces, and capabilities. Skips use ``composition_off:<name>`` (or mode /
+deployment reasons). Do not grow parallel ``if`` forests that ignore the profile.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
 are the switches. Do not restore import-order magic.
@@ -59,17 +63,39 @@ def build_host_handlers(
 
     def product_wire(_ctx: BootContext) -> None:
         host._wire_cqrs()
+        # Membership truth narrative (0.59.5) — what services the schedule built.
+        built = [
+            name
+            for name in host.composition.services
+            if getattr(host, name, None) is not None
+        ]
+        get_system_log().system(
+            "product.wire",
+            "product services wired from composition",
+            schedule="host",
+            services=",".join(built) or "(none)",
+            capabilities=",".join(sorted(host.composition.capabilities)) or "(none)",
+        )
 
     def surfaces_mount(_ctx: BootContext) -> None:
-        # Always call collaborator (inventory); skip narrative when deployment off.
-        host._start_server_surface()
+        # Membership: deployment selects *where* HTTP runs; composition.surfaces
+        # is *what* mounts. Both must be on — no silent full surface set.
         if not host.profile.server:
             raise PhaseSkip("deployment.server_off")
+        if not host.composition.surfaces:
+            raise PhaseSkip("composition_off:surfaces")
+        host._start_server_surface()
+        get_system_log().system(
+            "surfaces.mount",
+            "server surfaces mount",
+            schedule="host",
+            surfaces=",".join(host.composition.surfaces),
+        )
 
     def projections_attach(_ctx: BootContext) -> None:
-        host._attach_projections()
         if not host.composition.has("projections"):
             raise PhaseSkip("composition_off:projections")
+        host._attach_projections()
 
     def recover(_ctx: BootContext) -> None:
         if host.boot_mode is not None and not host.boot_mode.recover_on_start:
@@ -94,8 +120,11 @@ def build_host_handlers(
         )
 
     def background_work_drain(_ctx: BootContext) -> None:
-        if not host._work_drain_background_enabled():
-            raise PhaseSkip("work_drain_off")
+        # Membership truth: composition only; mode may forbid (0.59.5).
+        if host.boot_mode is not None and not host.boot_mode.allow_background_drain:
+            raise PhaseSkip("mode_background_off")
+        if not host.composition.has("work_drain"):
+            raise PhaseSkip("composition_off:work_drain")
         host._workplane.start_background()
 
     return {

@@ -64,6 +64,11 @@ On the migrated path, **CompositionProfile** (with settings resolver) is the onl
 Host code must not grow parallel `if` forests that ignore the profile.  
 **DeploymentProfile** still selects roles and deployment-facing activation.
 
+**0.59.5 (implemented):** runtime gates read composition only. Settings resolver may
+fold deployment `enable_work_drain_service` into membership once; explicit
+`CompositionProfile` always wins. PhaseSkip reasons `composition_off:*`;
+`boot.start` and doctor `boot.membership` report phenotype.
+
 ### D5 — Plugins vs planes (preserve)
 
 1. **Plugins** — settings / `INSTALLED_*` declare membership; packages self-register downward.  

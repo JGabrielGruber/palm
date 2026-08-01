@@ -18,17 +18,33 @@ from palm.runtimes.embedded import EmbeddedRuntime
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 
-# Provisional host phase order for ApplicationHost.start (0.59.1 inventory).
-# Update with docs/BOOT-INVENTORY.md when the real walker lands.
+# Collaborator call order on collapsed all_in_one (server off).
+# 0.59.5: surfaces.mount PhaseSkip before _start_server_surface when
+# deployment.server is false — so that collaborator is not invoked.
 HOST_START_PHASE_ORDER: tuple[str, ...] = (
     "kernel.bootstrap",
     "host.event",
     "system.spawn",
     "definitions.load",
     "product.wire",
-    "surfaces.mount",
     "projections.attach",
     "recover",
+)
+
+# Full schedule seat ids (walker always visits; optional seats may skip).
+HOST_WALK_PHASE_IDS: tuple[str, ...] = (
+    "host.system_log",
+    "host.kernel.bootstrap",
+    "host.event",
+    "host.workers.note",
+    "host.system.spawn",
+    "host.definitions.load",
+    "host.product.wire",
+    "host.surfaces.mount",
+    "host.projections.attach",
+    "host.recover",
+    "host.ready",
+    "host.background.work_drain",
 )
 
 
@@ -80,9 +96,16 @@ def test_host_start_phase_order_all_in_one(spine_settings: PalmSettings) -> None
     try:
         host.start()
         assert host.is_started
-        # Only the ordered core phases (background drain is post-ready optional).
+        # Collaborators that actually ran (surfaces skipped on collapsed profile).
         core = [p for p in seen if p in HOST_START_PHASE_ORDER]
         assert core == list(HOST_START_PHASE_ORDER)
+        assert "surfaces.mount" not in seen  # PhaseSkip before collaborator
+        # Walker still visits every host seat (skip outcomes on optional phases).
+        walked = [w.phase for w in (host._last_boot_walk or [])]
+        assert walked == list(HOST_WALK_PHASE_IDS)
+        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
+        assert by_id["host.surfaces.mount"].outcome == "skip"
+        assert by_id["host.surfaces.mount"].reason == "deployment.server_off"
     finally:
         host.shutdown()
 
@@ -107,10 +130,11 @@ def test_spine_host_post_start_contracts(spine_settings: PalmSettings) -> None:
         assert host.session is not None
         assert host.definitions is not None
         assert host.execution is not None
-        # Composition membership partially authoritative today.
+        # Composition membership truth (0.59.5).
         assert "system" in host.composition.services
         assert "session" in host.composition.services
         assert host.composition.has("projections")
+        assert host.membership_snapshot()["services"]
     finally:
         host.shutdown()
 
@@ -157,7 +181,7 @@ def test_host_start_idempotent(spine_settings: PalmSettings) -> None:
 
 
 def test_composition_services_gate_build(spine_settings: PalmSettings) -> None:
-    """build_all honors composition.services (membership partial truth today)."""
+    """build_all honors composition.services (membership truth)."""
     from palm.app.host.composition import CompositionProfile
 
     lean = CompositionProfile.embedded()
@@ -181,8 +205,11 @@ def test_composition_services_gate_build(spine_settings: PalmSettings) -> None:
 
 
 def test_inventory_constants_match_documented_count() -> None:
-    """Guard: HOST_START_PHASE_ORDER length matches inventory table core steps."""
-    # H1–H9 in BOOT-INVENTORY (bootstrap through recover); host.event is H2.
-    assert len(HOST_START_PHASE_ORDER) == 8
+    """Guard: collaborator order + full walk table stay aligned with inventory."""
+    # Collaborators on collapsed profile (no surfaces.mount call).
+    assert len(HOST_START_PHASE_ORDER) == 7
     assert HOST_START_PHASE_ORDER[0] == "kernel.bootstrap"
     assert HOST_START_PHASE_ORDER[-1] == "recover"
+    assert len(HOST_WALK_PHASE_IDS) == 12
+    assert HOST_WALK_PHASE_IDS[0] == "host.system_log"
+    assert HOST_WALK_PHASE_IDS[-1] == "host.background.work_drain"

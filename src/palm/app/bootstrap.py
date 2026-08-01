@@ -146,14 +146,24 @@ def deployment_profile_from_settings(settings: PalmSettings) -> DeploymentProfil
     )
 
 
-def _capabilities_from_settings(settings: PalmSettings) -> frozenset[str]:
-    """Derive the *available* capabilities from settings (0.51.1).
+def _capabilities_from_settings(
+    settings: PalmSettings,
+    *,
+    deployment: DeploymentProfile | None = None,
+) -> frozenset[str]:
+    """Derive the *available* capabilities for membership (0.51.1 / 0.59.5).
 
-    This is the composition axis of capabilities — *availability*. ``DeploymentProfile``
-    decides *activation* (whether this running node actually spins a background loop) at
-    gate-time (0.51.3). ``journal`` and ``projections`` have no flag: they are wired whenever
-    the host assembles, so they are always available on a settings-composed host (a lean
-    *explicit* composition can still omit them). See VISION-0.51 / ADR-020.
+    This is the composition axis — **membership**. Runtime gates read
+    ``composition.has(...)`` only; they do not re-OR deployment flags.
+
+    **0.59.5:** when resolving from settings *without* an explicit
+    ``CompositionProfile``, deployment may **feed** membership (e.g.
+    ``enable_work_drain_service`` on a server role adds ``work_drain``). That
+    fold happens here once — not as a second switch at phase time.
+
+    ``journal``, ``projections``, and ``workloads`` have no settings flag: they
+    are always available on a settings-composed host (a lean *explicit*
+    composition can still omit them). See VISION-0.51 / ADR-020 / ADR-028 D4.
     """
     # journal, projections, workloads: always wired on settings-composed hosts
     capabilities: set[str] = {"journal", "projections", "workloads"}
@@ -165,6 +175,9 @@ def _capabilities_from_settings(settings: PalmSettings) -> frozenset[str]:
         capabilities.add("webhook")
     if settings.enable_work_drain_service:
         capabilities.add("work_drain")
+    # Deployment feeds membership only on the settings-resolve path (0.59.5).
+    if deployment is not None and deployment.enable_work_drain_service:
+        capabilities.add("work_drain")
     if settings.analytics_enabled:
         capabilities.add("analytics")
     # NeonRoot WorkloadRuntime availability (CLI optional; does not install binary).
@@ -173,20 +186,25 @@ def _capabilities_from_settings(settings: PalmSettings) -> frozenset[str]:
     return frozenset(capabilities)
 
 
-def composition_profile_from_settings(settings: PalmSettings) -> CompositionProfile:
+def composition_profile_from_settings(
+    settings: PalmSettings,
+    *,
+    deployment: DeploymentProfile | None = None,
+) -> CompositionProfile:
     """Resolve a :class:`~palm.app.host.composition.CompositionProfile` from settings.
 
-    The twin of :func:`deployment_profile_from_settings`. **0.51.1:** ``capabilities`` are
-    now **derived** from the ``enable_*`` flags (see :func:`_capabilities_from_settings`)
-    rather than taken from a constant preset — the composition profile's third axis coming
-    alive (VISION-0.51). ``services`` and ``surfaces`` stay ``all_in_one``'s (their
-    behaviour was settled in 0.50); the derived capabilities are informational until the
-    host gates on them (0.51.2+), so this is behaviour-preserving. Settings *refine* the
-    profile; they never bypass it.
+    The twin of :func:`deployment_profile_from_settings`. **0.51.1:** ``capabilities``
+    are derived from the ``enable_*`` flags. **0.59.5:** optional ``deployment`` may
+    feed membership (server work-drain role → ``work_drain`` capability) so the host
+    has **one** membership truth at resolve time. Explicit ``CompositionProfile``
+    passed to ``ApplicationHost`` still wins and is never rewritten.
+
+    ``services`` and ``surfaces`` stay ``all_in_one``'s on this path (0.50). Settings
+    *refine* the profile; they never bypass an explicit composition.
     """
     return replace(
         CompositionProfile.all_in_one(),
-        capabilities=_capabilities_from_settings(settings),
+        capabilities=_capabilities_from_settings(settings, deployment=deployment),
     )
 
 

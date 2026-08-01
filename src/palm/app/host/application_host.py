@@ -109,6 +109,8 @@ class ApplicationHost:
         mode = resolve_boot_mode(boot_mode)
         self.boot_mode = mode
         # Mode supplies defaults only when caller omits profile/composition.
+        # Resolve deployment first so settings→composition can fold role membership
+        # (0.59.5) without a second OR at phase time.
         self.profile = (
             profile
             if profile is not None
@@ -124,7 +126,9 @@ class ApplicationHost:
             else (
                 mode.composition
                 if mode is not None
-                else composition_profile_from_settings(self.settings)
+                else composition_profile_from_settings(
+                    self.settings, deployment=self.profile
+                )
             )
         )
         self._app = PalmKernel(self.settings, storage=storage)
@@ -391,14 +395,34 @@ class ApplicationHost:
         roles = sorted(self.profile.roles)
         mode_name = self.boot_mode.name if self.boot_mode is not None else None
         ctx = BootContext(schedule="host", mode=mode_name)
+        membership = self.membership_snapshot()
+        services_s = ",".join(membership["services"]) or "(none)"
+        surfaces_s = ",".join(membership["surfaces"]) or "(none)"
+        capabilities_s = ",".join(membership["capabilities"]) or "(none)"
+        # Lifecycle: phenotype always on boot.start (pain-point visibility).
+        # System level: dedicated membership event when log ≥ system.
         slog.info(
             "boot.start",
             "host boot start",
             schedule="host",
             mode=mode_name,
             roles=",".join(roles) or "(none)",
+            services=services_s,
+            surfaces=surfaces_s,
+            capabilities=capabilities_s,
             composition_services=len(self.composition.services),
+            composition_surfaces=len(self.composition.surfaces),
+            composition_capabilities=len(self.composition.capabilities),
             primary=self._app.primary_name,
+        )
+        slog.system(
+            "membership",
+            "composition membership",
+            schedule="host",
+            mode=mode_name,
+            services=services_s,
+            surfaces=surfaces_s,
+            capabilities=capabilities_s,
         )
         try:
             # Boot owns order + handlers; this shell is the assembly target.
@@ -421,21 +445,30 @@ class ApplicationHost:
             raise
         return self
 
+    def membership_snapshot(self) -> dict[str, list[str]]:
+        """Declared composition membership (services / surfaces / capabilities).
+
+        0.59.5 — doctor and system log use this as the single membership report.
+        """
+        return {
+            "services": list(self.composition.services),
+            "surfaces": list(self.composition.surfaces),
+            "capabilities": sorted(self.composition.capabilities),
+        }
+
     def _work_drain_background_enabled(self) -> bool:
         """True when continuous WorkIntent drain should run.
 
-        0.51.3: the composition declares the ``work_drain`` capability is *available*
-        (derived from ``settings.enable_work_drain_service``); the deployment profile can
-        *also* activate it for network-facing roles. Either source turns it on — the 0.44.1
-        OR semantics preserved, now routed through the capability axis.
+        **0.59.5 membership truth:** only ``composition.has("work_drain")`` decides
+        membership. Deployment may *feed* that capability when resolving composition
+        from settings (``composition_profile_from_settings(..., deployment=…)``);
+        it is not a second OR at gate time. Explicit ``CompositionProfile`` wins.
 
         0.59.2: boot mode may forbid background drain (safe/test).
         """
         if self.boot_mode is not None and not self.boot_mode.allow_background_drain:
             return False
-        return bool(
-            self.composition.has("work_drain") or self.profile.enable_work_drain_service
-        )
+        return self.composition.has("work_drain")
 
     def shutdown(self) -> None:
         """Stop services, projections, and all runtimes."""
