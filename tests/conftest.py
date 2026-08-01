@@ -151,3 +151,24 @@ def host(fast_settings: PalmSettings) -> Iterator[ApplicationHost]:
     application_host.start()
     yield application_host
     application_host.shutdown()
+
+
+@pytest.fixture
+def test_mode_host(fast_settings: PalmSettings) -> Iterator[ApplicationHost]:
+    """Started host pinned to boot mode ``test`` (0.59.6 CI dogfood).
+
+    Prefer this for new spine/isolation tests that do not need full chrome.
+    """
+    application_host = ApplicationHost.for_mode("test", settings=fast_settings)
+    application_host.start()
+    yield application_host
+    application_host.shutdown()
+
+
+@pytest.fixture
+def safe_mode_host(fast_settings: PalmSettings) -> Iterator[ApplicationHost]:
+    """Started host pinned to boot mode ``safe`` (0.59.6 CI isolation)."""
+    application_host = ApplicationHost.for_mode("safe", settings=fast_settings)
+    application_host.start()
+    yield application_host
+    application_host.shutdown()

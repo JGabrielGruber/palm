@@ -34,6 +34,7 @@ This is the Palm analog of **`journalctl` for Palm’s own boot and system path*
 | `host.system_log` · doctor `event_plane.system_log_recent` | ✅ |
 | Mode default levels (BootMode) · walker reuses phase API | ✅ 0.59.2 |
 | Early seats `host.system_log` / `system.log.ready` | ✅ 0.59.2 |
+| Mode dogfood applies levels on `for_mode("safe"|"test")` start | ✅ 0.59.6 |
 | Full operate catalog · JSON file sink · OTel | later |
 
 ---

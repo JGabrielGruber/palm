@@ -1,7 +1,9 @@
 """
-Boot modes — presets over composition + deployment + schedule strictness (0.59.2).
+Boot modes — presets over composition + deployment + schedule strictness (0.59.2+).
 
 Modes are not a fourth composition root. They select axes and system-log defaults.
+Dogfood entry (0.59.6): ``ApplicationHost.for_mode("safe"|"test")`` for CI green bar.
+
 See docs/VISION-0.59.md §6.3 and ADR-028 D3.
 """
 

@@ -162,6 +162,41 @@ class ApplicationHost:
         self.jobs = JobsFacade(self)
         self.wizards = WizardsFacade(self)
 
+    @classmethod
+    def for_mode(
+        cls,
+        mode: BootMode | str,
+        *,
+        settings: PalmSettings | None = None,
+        profile: DeploymentProfile | None = None,
+        composition: CompositionProfile | None = None,
+        storage: StorageEngine | None = None,
+    ) -> Self:
+        """Build a host pinned to a named boot mode (0.59.6 dogfood entry).
+
+        Prefer this over hand-assembling profile/composition when you want a
+        declared phenotype (``safe`` / ``test`` / ``dev`` / shapes).
+
+        When ``settings`` is omitted and the mode is ``safe`` or ``test``, uses
+        :meth:`PalmSettings.for_tests` with ``load_examples=False`` (CI isolation).
+        Other modes default to a plain :class:`PalmSettings`.
+        """
+        resolved = resolve_boot_mode(mode)
+        if resolved is None:
+            raise ValueError("for_mode requires a boot mode name or BootMode")
+        if settings is None:
+            if resolved.name in ("safe", "test"):
+                settings = PalmSettings.for_tests(load_examples=False)
+            else:
+                settings = PalmSettings()
+        return cls(
+            settings=settings,
+            boot_mode=resolved,
+            profile=profile,
+            composition=composition,
+            storage=storage,
+        )
+
     @property
     def app(self) -> PalmKernel:
         """Infrastructure layer — storage and runtime registry."""
@@ -455,6 +490,17 @@ class ApplicationHost:
             "surfaces": list(self.composition.surfaces),
             "capabilities": sorted(self.composition.capabilities),
         }
+
+    @property
+    def boot_walk(self) -> list[dict[str, Any]] | None:
+        """Last host schedule walk as plain dicts (after ``start``), or None.
+
+        0.59.6 — public dogfood surface so tests and doctor need not touch
+        ``_last_boot_walk``. Each row matches :meth:`WalkedPhase.to_dict`.
+        """
+        if self._last_boot_walk is None:
+            return None
+        return [w.to_dict() for w in self._last_boot_walk]
 
     def _work_drain_background_enabled(self) -> bool:
         """True when continuous WorkIntent drain should run.

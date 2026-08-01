@@ -150,15 +150,16 @@ Idempotent (`_loaded` flag). Not wrong — but **order dependency** if something
 |-------|-------------|
 | **Spine host** | Collapsed `ApplicationHost` with test settings: start → submit/continue path available; session plane + wait plane present |
 | **Spine system** | `BaseRuntime`/`EmbeddedRuntime` start alone: plugins, storage, wait, session, orchestration |
-| **Declared modes (later slices)** | When a mode is declared supported, tests for that mode must pass |
+| **Declared modes** | **`safe` / `test` dogfood ✅ 0.59.6** — `ApplicationHost.for_mode`; spine submit/continue; fixtures |
 | **Legacy dual roots / heavy surfaces** | May fail mid-theme; BI-* required; not spine |
 
-**0.59.1 green bar:** characterization tests in `tests/test_boot_inventory_0_59.py` + existing host tests remain green. No schedule rewrite yet.
+**0.59.1 green bar:** characterization tests in `tests/test_boot_inventory_0_59.py` + existing host tests remain green.  
+**0.59.6 green bar:** `tests/test_mode_dogfood_0_59_6.py` — safe + test phenotype, log levels, spine.
 
 ### 7.2 End of theme (reminder)
 
 - Phase tables walk in code.  
-- `safe`/`test` + one full mode dogfood.  
+- `safe`/`test` ✅ + one full mode dogfood (0.59.7).  
 - Membership truth on migrated path.  
 - Residual chrome named.
 

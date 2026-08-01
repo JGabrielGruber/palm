@@ -867,8 +867,8 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
 | [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase S5 | open |
 | [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | partial ✅ work_drain OR removed 0.59.5; mode forbid 0.59.2 |
-| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | open (BootMode exists; not forced) |
-| [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ 0.59.2 tables; **0.59.5** `boot.membership` |
+| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | partial ✅ **0.59.6** `for_mode` + fixtures; legacy hosts still free |
+| [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ tables · membership · **0.59.6** `last_walk` |
 | [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | open |
 | [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | partial ✅ composition.surfaces gate 0.59.5; bulk → deflation |
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | open (bucket) |
@@ -921,13 +921,17 @@ feeds resolver on settings path. Outbox remains available×activated (compositio
 ### BI-007 — Test host constructions
 
 **Observation:** Many tests build hosts without a named mode.  
-**Pay:** `test` / `safe` fixtures; declare green bar per slice.
+**Progress (0.59.6):** `ApplicationHost.for_mode("test"|"safe")`; conftest
+`test_mode_host` / `safe_mode_host`; dogfood tests pin phenotype + spine.  
+**Pay residual:** optional migrate older tests to modes (not forced mid-theme).
 
 ### BI-008 — Doctor boot report
 
 **Observation:** No phase/mode dump.  
 **Progress (0.59.2):** `control_plane_status()["boot"]` — mode, modes_available, phase_tables.  
-**Pay residual:** live last-walk outcomes when full walker owns start.
+**Progress (0.59.5):** `boot.membership`.  
+**Progress (0.59.6):** `boot.last_walk` (public `host.boot_walk`).  
+**Pay residual:** none required for exit bar; richer catalog optional.
 
 ### BI-009 — Triple override
 

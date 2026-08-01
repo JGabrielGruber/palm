@@ -173,10 +173,11 @@ class HostObservability:
                 "modes_available": list(list_boot_modes()),
                 "phase_tables": schedule_catalog(),
                 "membership": host.membership_snapshot(),
+                "last_walk": getattr(host, "boot_walk", None),
                 "note": (
-                    "0.59.5 membership truth on migrated path: CompositionProfile "
-                    "is the sole switch for services/surfaces/capabilities. "
-                    "Deployment feeds resolver only; modes + PhaseSkip strictness."
+                    "0.59.6 mode dogfood: prefer ApplicationHost.for_mode('test'|'safe'). "
+                    "CompositionProfile is the sole membership switch (0.59.5); "
+                    "deployment feeds resolver only; modes + PhaseSkip strictness."
                 ),
             },
             "event_plane": self.event_plane_status(),
