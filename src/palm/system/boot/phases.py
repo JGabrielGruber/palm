@@ -193,6 +193,13 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "implemented",
         "System instance ready mark",
     ),
+    PhaseSpec(
+        "system.background.start",
+        "system",
+        "implemented",
+        "Start supervised continuous services (work_drain, …)",
+        optional=True,
+    ),
 )
 
 _HOST_BY_ID = {p.id: p for p in HOST_PHASES}

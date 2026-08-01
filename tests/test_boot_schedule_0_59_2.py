@@ -38,10 +38,12 @@ def test_locked_phase_tables_order() -> None:
     assert "system.plugins.ensure" in sys_ids
     assert "system.planes.attach" in sys_ids
     assert "system.supervisor.wire" in sys_ids
+    assert "system.background.start" in sys_ids
     assert sys_ids.index("system.planes.attach") < sys_ids.index(
         "system.supervisor.wire"
     )
-    assert sys_ids[-1] == "system.ready"
+    assert sys_ids.index("system.ready") < sys_ids.index("system.background.start")
+    assert sys_ids[-1] == "system.background.start"
 
     catalog = schedule_catalog()
     assert len(catalog["host"]) == len(HOST_PHASES)

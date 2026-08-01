@@ -58,7 +58,12 @@ class WorkPlaneCoordinator:
     # ── wiring (called during host start) ────────────────────────────────────
 
     def wire_work_drain(self) -> None:
-        """WorkIntent queue + trigger attach (0.37). Drain is explicit via tick()."""
+        """WorkIntent queue + trigger attach (0.37). Drain is explicit via tick().
+
+        **0.60.5:** Prefer system ``runtime.work_plane`` when the spawned system
+        already attached the start plane. Rebind submit for session enrich.
+        Fall back to host :class:`WorkDrainService` when no plane is present.
+        """
         host = self._host
         if not host._app.storage.is_initialized:
             return
@@ -94,6 +99,29 @@ class WorkPlaneCoordinator:
             return host._execution.flows.submit_flow_body(submit_body)
 
         settings = host.settings
+        plane = None
+        try:
+            runtime = host._app.runtime()
+            plane = getattr(runtime, "work_plane", None)
+        except Exception:
+            plane = None
+
+        if plane is not None and getattr(plane, "is_attached", False):
+            # One start plane — host rebinds product submit + host-able gate.
+            if hasattr(plane, "set_submit_flow"):
+                plane.set_submit_flow(_submit)
+            else:
+                plane._submit_flow = _submit
+            plane._able = lambda: bool(host._started)
+            plane._max_depth = max(1, int(settings.work_drain_max_depth))
+            plane._batch_size = max(1, int(settings.work_drain_batch_size))
+            plane._poll_interval = max(
+                0.05, float(settings.work_drain_poll_interval)
+            )
+            self._work_drain = plane
+            self.reload_work_triggers()
+            return
+
         self._work_drain = WorkDrainService(
             host._app.storage,
             submit_flow=_submit,
@@ -266,10 +294,27 @@ class WorkPlaneCoordinator:
     # ── background lifecycle (called from host start/shutdown) ───────────────
 
     def start_background(self) -> None:
+        # Prefer supervisor when the system registered work_drain (0.60.5).
+        try:
+            runtime = self._host._app.runtime()
+            sup = getattr(runtime, "supervisor", None)
+            if sup is not None and sup.get("work_drain") is not None:
+                sup.start("work_drain")
+                return
+        except Exception:
+            pass
         if self._work_drain is not None:
             self._work_drain.start_background()
 
     def stop_background(self) -> None:
+        try:
+            runtime = self._host._app.runtime()
+            sup = getattr(runtime, "supervisor", None)
+            if sup is not None and sup.get("work_drain") is not None:
+                sup.stop("work_drain")
+                return
+        except Exception:
+            pass
         if self._work_drain is not None:
             self._work_drain.stop_background()
 

@@ -91,4 +91,4 @@ def test_system_spine_via_settings_options() -> None:
 def test_all_system_phases_implemented() -> None:
     assert all(p.seat == "implemented" for p in SYSTEM_PHASES)
     assert system_phase_ids()[0] == "system.log.ready"
-    assert system_phase_ids()[-1] == "system.ready"
+    assert system_phase_ids()[-1] == "system.background.start"

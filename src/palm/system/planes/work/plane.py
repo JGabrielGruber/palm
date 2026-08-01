@@ -9,6 +9,7 @@ See docs/VISION-0.60.md · ADR-029 · docs/WORK-DRAIN.md.
 
 from __future__ import annotations
 
+import threading
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
@@ -29,6 +30,8 @@ class WorkPlaneService:
     Lifecycle:
     * :meth:`attach` — bind storage, submit callback, optional event bus
     * :meth:`detach` — clear bus subscriptions
+    * :meth:`start_background` / :meth:`stop_background` — continuous tick
+      (also registered on :class:`~palm.system.supervisor.SystemSupervisor`)
     """
 
     def __init__(self) -> None:
@@ -39,10 +42,14 @@ class WorkPlaneService:
         self._able: Callable[[], bool] = lambda: True
         self._max_depth = 8
         self._batch_size = 10
+        self._poll_interval = 1.0
         self._event_engine: EventEngine | None = None
         self._subs: list[Any] = []
         self._dropped_depth = 0
         self._runtime: Any | None = None
+        self._stop = threading.Event()
+        self._thread: threading.Thread | None = None
+        self._bg_started = False
 
     @property
     def is_attached(self) -> bool:
@@ -80,6 +87,7 @@ class WorkPlaneService:
         able: Callable[[], bool] | None = None,
         max_depth: int = 8,
         batch_size: int = 10,
+        poll_interval: float = 1.0,
         attach_events: bool = True,
     ) -> None:
         """Bind storage and effectors on a started (or starting) system instance."""
@@ -95,6 +103,7 @@ class WorkPlaneService:
         self._schedules = ScheduleRegistry(storage, self._store)
         self._max_depth = max(1, int(max_depth))
         self._batch_size = max(1, int(batch_size))
+        self._poll_interval = max(0.05, float(poll_interval))
         self._able = able or (lambda: bool(getattr(runtime, "is_started", True)))
         self._submit_flow = submit_flow or _default_submit(runtime)
         self._dropped_depth = 0
@@ -104,8 +113,15 @@ class WorkPlaneService:
             if event is not None and getattr(event, "is_initialized", False):
                 self.attach_event_engine(event)
 
+    def set_submit_flow(
+        self, submit_flow: Callable[[str, dict[str, Any]], Any]
+    ) -> None:
+        """Replace submit callback (host session enrich may rebind)."""
+        self._submit_flow = submit_flow
+
     def detach(self) -> None:
-        """Unsubscribe event handlers; keep no store handle."""
+        """Stop background, unsubscribe handlers, clear store handle."""
+        self.stop_background()
         for unsub in self._subs:
             try:
                 if callable(unsub):
@@ -185,6 +201,46 @@ class WorkPlaneService:
                 self._store.fail(intent.id, str(exc))
         return done
 
+    @property
+    def is_running(self) -> bool:
+        return (
+            self._bg_started
+            and self._thread is not None
+            and self._thread.is_alive()
+        )
+
+    def start_background(self) -> None:
+        """Continuous poll loop (supervisor or host may call)."""
+        if self._bg_started:
+            return
+        self._stop.clear()
+        self._thread = threading.Thread(
+            target=self._poll_loop,
+            name="palm-work-plane",
+            daemon=True,
+        )
+        self._thread.start()
+        self._bg_started = True
+
+    def stop_background(self, *, timeout: float = 2.0) -> None:
+        if not self._bg_started:
+            return
+        self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=timeout)
+        self._thread = None
+        self._bg_started = False
+
+    def _poll_loop(self) -> None:
+        while not self._stop.wait(self._poll_interval):
+            try:
+                if not self._able():
+                    continue
+                self.tick_schedules()
+                self.tick(limit=self._batch_size)
+            except Exception:
+                continue
+
     def status(self) -> dict[str, Any]:
         pending = 0
         if self._store is not None:
@@ -198,6 +254,7 @@ class WorkPlaneService:
             "dropped_depth": self._dropped_depth,
             "max_depth": self._max_depth,
             "batch_size": self._batch_size,
+            "background": self.is_running,
             "trigger_count": len(getattr(self._triggers, "_specs", []) or []),
         }
 

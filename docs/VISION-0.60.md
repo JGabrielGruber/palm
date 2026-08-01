@@ -149,9 +149,9 @@ Slices stay **one purpose each**. Numbers may gain `a`/`b` sub-slices.
 | **0** | Plan + map + ADR | This file · ADR-029 Proposed · STATUS · PALM pointer · BI-013 theme — ✅ **0.60.0** |
 | **1** | Supervisor seat | Registry, start/stop/status, boot hooks; empty services OK — ✅ **0.60.1** |
 | **2** | Work plane service | `WorkPlaneService` · `runtime.work_plane` · attach · tick/enqueue over existing store — ✅ **0.60.2** |
-| **3** | System job start | Drain submits via executor / ExecutionPort (product façade later) |
-| **4** | Session-safe start | Reactive attribution on system path (0.58 law, system wire) |
-| **5** | Supervised work drain | Background loop · system phase · mode skip |
+| **3** | System job start | Drain submits via executor / ExecutionPort (product façade later) — ✅ default `runtime.submit_flow` on plane; host rebinds product + session |
+| **4** | Session-safe start | Reactive attribution on system path (0.58 law, system wire) — partial: host rebind enrich; pure system path later |
+| **5** | Supervised work drain | Background loop · system phase · mode skip — ✅ **0.60.5** (`work_drain` on supervisor · `system.background.start`) |
 | **6** | Outbox continuous | Supervisor owns poll; host thread path thins |
 | **7** | Catalog feed · triggers | Reload arms on work plane |
 | **8** | Inbound system contract | Required enqueue + supervised workers |

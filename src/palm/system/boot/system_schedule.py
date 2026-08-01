@@ -39,7 +39,6 @@ from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.planes.work.plane import WorkPlaneService
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
-from palm.system.supervisor import SystemSupervisor
 from palm.system.runtime.hooks import (
     AuthMiddleware,
     DriveObservabilityHook,
@@ -53,6 +52,7 @@ from palm.system.runtime.job_hooks import (
     StateSnapshotHook,
 )
 from palm.system.runtime.wiring import resolve_scheduler
+from palm.system.supervisor import CallableSystemService, SystemSupervisor
 
 
 def build_system_handlers(
@@ -201,12 +201,14 @@ def build_system_handlers(
         # 0.60.2 — start plane (enqueue / tick). Continuous drain → supervisor later.
         max_depth = int(options.get("work_drain_max_depth", 8) or 8)
         batch_size = int(options.get("work_drain_batch_size", 10) or 10)
+        poll_interval = float(options.get("work_drain_poll_interval", 1.0) or 1.0)
         runtime._work_plane = WorkPlaneService()
         runtime._work_plane.attach(
             runtime,
             max_depth=max_depth,
             batch_size=batch_size,
-            # able=True during attach; after ready, is_started gates tick.
+            poll_interval=poll_interval,
+            # able after ready; is_started gates tick.
             able=lambda: bool(getattr(runtime, "is_started", False)),
         )
         slog.info(
@@ -217,14 +219,28 @@ def build_system_handlers(
         )
 
     def supervisor_wire(ctx: BootContext) -> None:
-        """0.60.1 — empty supervisor seat; services register in later slices."""
-        runtime._supervisor = SystemSupervisor()
+        """0.60.1 seat + 0.60.5 register work_drain over work plane."""
+        sup = SystemSupervisor()
+        runtime._supervisor = sup
+        plane = getattr(runtime, "_work_plane", None) or getattr(
+            runtime, "work_plane", None
+        )
+        if plane is not None:
+            sup.register(
+                CallableSystemService(
+                    "work_drain",
+                    start=plane.start_background,
+                    stop=plane.stop_background,
+                    status=plane.status,
+                )
+            )
         get_system_log().info(
             "supervisor.wire",
             "system supervisor ready",
             schedule="system",
             runtime=ctx.runtime,
-            service_count=0,
+            service_count=len(sup.names()),
+            services=",".join(sup.names()) or "(none)",
         )
 
     def bind(_ctx: BootContext) -> None:
@@ -243,6 +259,28 @@ def build_system_handlers(
             mode=ctx.mode,
         )
 
+    def background_start(ctx: BootContext) -> None:
+        """0.60.5 — start supervised continuous services when enabled."""
+        if not bool(options.get("enable_work_drain_service", False)):
+            raise PhaseSkip("enable_work_drain_service_off")
+        if bool(options.get("allow_background_drain", True)) is False:
+            raise PhaseSkip("allow_background_drain_off")
+        sup = runtime._supervisor
+        if sup is None:
+            raise PhaseSkip("no_supervisor")
+        if sup.get("work_drain") is None:
+            raise PhaseSkip("no_work_drain_service")
+        started = sup.start("work_drain")
+        get_system_log().info(
+            "supervisor.background.start",
+            "supervised work_drain started"
+            if started
+            else "work_drain already running",
+            schedule="system",
+            runtime=ctx.runtime,
+            services=",".join(started) or "work_drain",
+        )
+
     return {
         "system.log.ready": system_log_ready_handler,
         "system.plugins.ensure": plugins_ensure,
@@ -255,6 +293,7 @@ def build_system_handlers(
         "system.supervisor.wire": supervisor_wire,
         "system.bind": bind,
         "system.ready": ready,
+        "system.background.start": background_start,
     }
 
 

@@ -64,5 +64,29 @@ def test_system_schedule_attaches_work_plane() -> None:
         assert rt.wait_plane is not None
         assert rt.session_plane is not None
         assert rt.supervisor is not None
+        assert "work_drain" in rt.supervisor.names()
+        by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
+        assert by_id["system.background.start"].outcome == "skip"
+        assert by_id["system.background.start"].reason == "enable_work_drain_service_off"
     finally:
         rt.stop()
+
+
+def test_supervised_work_drain_background_when_enabled() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        enable_work_drain_service=True,
+    )
+    try:
+        assert rt.supervisor is not None
+        by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
+        assert by_id["system.background.start"].outcome == "ok"
+        assert rt.work_plane is not None
+        assert rt.work_plane.is_running is True
+        assert rt.supervisor.status()["running"] == ["work_drain"]
+    finally:
+        rt.stop()
+        assert rt.work_plane is None

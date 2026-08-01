@@ -68,8 +68,9 @@ def test_system_boot_wires_empty_supervisor() -> None:
     try:
         assert rt.is_started
         assert isinstance(rt.supervisor, SystemSupervisor)
-        assert rt.supervisor.names() == []
-        assert rt.supervisor.status()["service_count"] == 0
+        # 0.60.5 registers work_drain over the work plane (not started by default).
+        assert "work_drain" in rt.supervisor.names()
+        assert rt.supervisor.status()["running_count"] == 0
 
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.supervisor.wire"].outcome == "ok"
