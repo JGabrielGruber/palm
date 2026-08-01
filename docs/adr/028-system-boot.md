@@ -118,7 +118,9 @@ System schedule must not import product or surfaces.
 **0.59.2:** tables, walker, modes, early log seats live under these homes.  
 **0.59.3:** system handlers live under `palm.system.boot.system_schedule`.  
 `BaseRuntime` is the assembly shell — it does not own start order.  
-`palm.system.runtime` package init must not eagerly import `BaseRuntime` (keeps boot → collaborator edges acyclic).
+`palm.system.runtime` package init must not eagerly import `BaseRuntime` (keeps boot → collaborator edges acyclic).  
+**0.59.4:** host handlers live under `palm.app.host.boot.host_schedule`.  
+`ApplicationHost` is the composition-root shell — it does not own start order.
 
 ### D11 — Non-goals locked by this ADR
 

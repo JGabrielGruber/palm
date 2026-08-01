@@ -189,8 +189,8 @@ Spine regressions fix in-slice.
 | System: orch start / ready | S12, S15 |
 
 **Locked in code:** `palm.system.boot` — `HOST_PHASES` / `SYSTEM_PHASES`.  
-**System (0.59.3):** all `SYSTEM_PHASES` **implemented** and walked by `BaseRuntime.start` (handlers in `system_schedule`).  
-**Host:** early `host.system_log` implemented; rest **imperative** until 0.59.4.
+**System (0.59.3):** all `SYSTEM_PHASES` walked by `BaseRuntime.start` (`system_schedule`).  
+**Host (0.59.4):** all `HOST_PHASES` walked by `ApplicationHost.start` (`palm.app.host.boot.host_schedule`).
 
 ---
 

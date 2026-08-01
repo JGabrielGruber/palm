@@ -44,8 +44,8 @@ def test_locked_phase_tables_order() -> None:
     assert len(catalog["system"]) == len(SYSTEM_PHASES)
     assert HOST_PHASES[0].seat == "implemented"
     assert SYSTEM_PHASES[0].seat == "implemented"
-    # Host bulk still soup until 0.59.4; system fully implemented 0.59.3.
-    assert any(p.seat == "imperative" for p in HOST_PHASES[1:])
+    # 0.59.3–.4: both schedules fully implemented seats.
+    assert all(p.seat == "implemented" for p in HOST_PHASES)
     assert all(p.seat == "implemented" for p in SYSTEM_PHASES)
 
 
@@ -59,8 +59,8 @@ def test_walker_skips_missing_handlers_honestly() -> None:
     )
     assert len(walked) == len(HOST_PHASES)
     assert all(w.outcome == "skip" for w in walked)
-    assert walked[0].reason == "no_handler"  # implemented seat, no handler
-    assert walked[1].reason == "imperative_until_migrated"
+    # All seats implemented (0.59.4) — missing handler → no_handler, not fake ok.
+    assert all(w.reason == "no_handler" for w in walked)
     assert "phase.skip" in log.events()
     # Same SystemLog narrative — no second path.
     assert all(r.event == "phase.skip" for r in log.recent() if r.event.startswith("phase."))

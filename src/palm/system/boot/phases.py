@@ -40,81 +40,82 @@ class PhaseSpec:
 
 
 # ── Host schedule (ApplicationHost) ─────────────────────────────────────────
-# Order locked from BOOT-INVENTORY + early system log (Linux-style printk first).
+# 0.59.4 — full table walked by ApplicationHost.start (all seats implemented).
 
 HOST_PHASES: tuple[PhaseSpec, ...] = (
     PhaseSpec(
         "host.system_log",
         "host",
         "implemented",
-        "Early console / ring — configure SystemLog from boot mode (first real seat)",
+        "Early console / ring — configure SystemLog from boot mode",
     ),
     PhaseSpec(
         "host.kernel.bootstrap",
         "host",
-        "imperative",
+        "implemented",
         "PalmKernel.bootstrap → ensure plugins",
     ),
     PhaseSpec(
         "host.event",
         "host",
-        "imperative",
+        "implemented",
         "Host EventEngine + HostEventRecorder",
     ),
     PhaseSpec(
         "host.workers.note",
         "host",
-        "imperative",
+        "implemented",
         "WorkerCoordinator note (readiness later in recover)",
     ),
     PhaseSpec(
         "host.system.spawn",
         "host",
-        "imperative",
+        "implemented",
         "Spawn system instance(s) → system schedule",
     ),
     PhaseSpec(
         "host.definitions.load",
         "host",
-        "imperative",
+        "implemented",
         "PalmKernel.load_definitions",
     ),
     PhaseSpec(
         "host.product.wire",
         "host",
-        "imperative",
+        "implemented",
         "CQRS + product services from composition",
     ),
     PhaseSpec(
         "host.surfaces.mount",
         "host",
-        "imperative",
+        "implemented",
         "Mount server surfaces when deployment.server",
         optional=True,
     ),
     PhaseSpec(
         "host.projections.attach",
         "host",
-        "imperative",
+        "implemented",
         "Attach projections when composition has projections",
         optional=True,
     ),
     PhaseSpec(
         "host.recover",
         "host",
-        "imperative",
-        "RecoveryCoordinator.recover",
+        "implemented",
+        "RecoveryCoordinator.recover (mode may skip)",
+        optional=True,
     ),
     PhaseSpec(
         "host.ready",
         "host",
-        "imperative",
+        "implemented",
         "Host STARTED + ready mark",
     ),
     PhaseSpec(
         "host.background.work_drain",
         "host",
-        "imperative",
+        "implemented",
         "Optional continuous WorkIntent drain",
         optional=True,
     ),

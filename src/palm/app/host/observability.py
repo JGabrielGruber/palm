@@ -173,9 +173,9 @@ class HostObservability:
                 "modes_available": list(list_boot_modes()),
                 "phase_tables": schedule_catalog(),
                 "note": (
-                    "0.59.2 locked phase tables + modes. Walker seats: "
-                    "host.system_log / system.log.ready; remaining phases "
-                    "imperative until 0.59.3–.4."
+                    "0.59.4 host + system schedules walked. Boot owns start law; "
+                    "host/runtime shells are assembly targets. Modes + PhaseSkip "
+                    "are the switches mid-theme."
                 ),
             },
             "event_plane": self.event_plane_status(),

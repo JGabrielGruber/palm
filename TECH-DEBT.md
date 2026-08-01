@@ -861,7 +861,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 | ID | Observation (seed) | Class / note | Status |
 |----|--------------------|--------------|--------|
-| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | open (system ✅ 0.59.3; host 0.59.4) |
+| [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | partial ✅ both walked 0.59.4; dual root residual BI-003 |
 | [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | open |
 | [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
@@ -882,8 +882,9 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 **Observation:** Host and system start are real but not one documented schedule.  
 **Progress (0.59.1):** Documented as one story in [BOOT-INVENTORY.md](docs/BOOT-INVENTORY.md).  
 **Progress (0.59.2):** Locked tables + walker; early log seats.  
-**Progress (0.59.3):** System schedule fully walked; boot owns handlers; `runtime` package init no longer eagerly imports `BaseRuntime` (dependency direction fixed).  
-**Pay residual:** host schedule walker 0.59.4.
+**Progress (0.59.3):** System schedule fully walked; boot owns handlers; runtime package init cleaned.  
+**Progress (0.59.4):** Host schedule fully walked; host boot owns handlers; ApplicationHost thin handoff.  
+**Pay residual:** dual root (BI-003); membership truth (BI-002).
 
 ### BI-002 — Composition membership truth
 

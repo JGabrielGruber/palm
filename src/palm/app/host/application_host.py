@@ -11,10 +11,9 @@ from typing import TYPE_CHECKING, Any, Self
 from palm.app.bootstrap import (
     composition_profile_from_settings,
     deployment_profile_from_settings,
-    runtime_start_options,
 )
+from palm.app.host.boot.host_schedule import build_host_handlers
 from palm.app.host.boot.modes import BootMode, resolve_boot_mode
-from palm.app.host.boot.system_log_phase import make_host_system_log_handler
 from palm.app.host.composition import CompositionProfile
 from palm.app.host.event_recorder import HostEventRecorder, RecordedEvent
 from palm.app.host.events import HostEventType
@@ -31,7 +30,6 @@ from palm.app.host.wiring import (
     wire_command_bus,
     wire_query_bus,
 )
-from palm.app.host.workers import WorkerCoordinator
 from palm.app.host.workplane import WorkPlaneCoordinator
 from palm.app.kernel import PalmKernel
 from palm.app.settings import PalmSettings
@@ -68,8 +66,7 @@ from palm.patterns.wizard.bindings.cqrs.projection import (
 )
 from palm.services._cqrs_wiring import wire_all_service_cqrs
 from palm.services.design.contributors import wire_builtin_design_contributors
-from palm.system.boot import BootContext, walk_schedule
-from palm.system.boot.phases import HOST_PHASES
+from palm.system.boot import HOST_PHASES, BootContext, walk_schedule
 from palm.system.log import get_system_log
 
 if TYPE_CHECKING:
@@ -82,11 +79,15 @@ if TYPE_CHECKING:
 
 class ApplicationHost:
     """
-    Top-level Palm orchestrator — roles, CQRS, projections, and recovery.
+    Composition-root shell — roles, CQRS, projections, recovery collaborators.
+
+    **Start law lives in** ``palm.app.host.boot`` (0.59.4+). ``start()`` walks
+    ``HOST_PHASES``; do not grow private boot order here — add a host phase
+    handler under boot.
 
     :class:`~palm.app.kernel.PalmKernel` remains the infrastructure layer (shared
-    storage, runtime registry). The host owns command dispatch, query serving,
-    worker routing, and background services::
+    storage, runtime registry). After start, the host owns command dispatch,
+    query serving, worker routing, and background services::
 
         host = ApplicationHost(profile=DeploymentProfile.all_in_one())
         host.start()
@@ -136,7 +137,7 @@ class ApplicationHost:
         self._pattern_projections: dict[str, Any] = {}
         self._resource_projection: ResourceInvocationProjection | None = None
         self._job_board_projection: JobStatusBoardProjection | None = None
-        self._worker_coordinator: WorkerCoordinator | None = None
+        self._worker_coordinator: Any | None = None
         self._event_recorder = HostEventRecorder()
         self._schema_registry: Any | None = None
         self._system: Any | None = None
@@ -148,6 +149,7 @@ class ApplicationHost:
         self._analytics: Any | None = None
         self._started = False
         self._signal_stop = threading.Event()
+        self._last_boot_walk: list[Any] | None = None
         self._observability = HostObservability(self)
         self._workplane = WorkPlaneCoordinator(self)
         self._spawner = RuntimeSpawner(self)
@@ -377,22 +379,18 @@ class ApplicationHost:
         return bool(plane.event_matches(session_id, event=event))
 
     def start(self, **options: Any) -> Self:
-        """Bootstrap, spawn role runtimes, wire CQRS, and recover state."""
+        """Hand control to the host boot schedule (``HOST_PHASES``).
+
+        0.59.4 — no private soup here. Rules live in
+        ``palm.app.host.boot.host_schedule``. Observation via SystemLog.
+        """
         if self._started:
             return self
 
         slog = get_system_log()
         roles = sorted(self.profile.roles)
         mode_name = self.boot_mode.name if self.boot_mode is not None else None
-        # 0.59.2 — first real walker seat: host.system_log (early console).
-        # Remaining host phases stay imperative until 0.59.4; they still emit
-        # SystemLog phase lines so observation stays one narrative.
-        walk_schedule(
-            (HOST_PHASES[0],),
-            {"host.system_log": make_host_system_log_handler(self.boot_mode)},
-            ctx=BootContext(schedule="host", mode=mode_name),
-            log=slog,
-        )
+        ctx = BootContext(schedule="host", mode=mode_name)
         slog.info(
             "boot.start",
             "host boot start",
@@ -403,83 +401,13 @@ class ApplicationHost:
             primary=self._app.primary_name,
         )
         try:
-            with slog.phase("host", "host.kernel.bootstrap", mode=mode_name):
-                self._app.bootstrap()
-            with slog.phase("host", "host.event", mode=mode_name):
-                self._event.initialize()
-                self._event_recorder.attach(self._event)
-            with slog.phase("host", "host.workers.note", mode=mode_name):
-                self._worker_coordinator = WorkerCoordinator(self.profile, self._event)
-            merged = runtime_start_options(self.settings, **options)
-            with slog.phase(
-                "host",
-                "host.system.spawn",
-                primary=self._app.primary_name,
-                mode=mode_name,
-            ):
-                self._spawner.spawn_runtimes(merged)
-            with slog.phase("host", "host.definitions.load", mode=mode_name):
-                self._app.load_definitions()
-            with slog.phase("host", "host.product.wire", mode=mode_name):
-                self._wire_cqrs()
-            # Always call collaborators (inventory order); log skip when phenotype is off.
-            if self.profile.server:
-                with slog.phase("host", "host.surfaces.mount", mode=mode_name):
-                    self._start_server_surface()
-            else:
-                slog.phase_skip(
-                    "host",
-                    "host.surfaces.mount",
-                    reason="deployment.server_off",
-                )
-                self._start_server_surface()
-            if self.composition.has("projections"):
-                with slog.phase("host", "host.projections.attach", mode=mode_name):
-                    self._attach_projections()
-            else:
-                slog.phase_skip(
-                    "host",
-                    "host.projections.attach",
-                    reason="composition_off:projections",
-                )
-                self._attach_projections()
-            recover = True
-            if self.boot_mode is not None and not self.boot_mode.recover_on_start:
-                recover = False
-            if recover:
-                with slog.phase("host", "host.recover", mode=mode_name):
-                    self._recovery.recover()
-            else:
-                slog.phase_skip(
-                    "host",
-                    "host.recover",
-                    reason="mode_recover_off",
-                    mode=mode_name,
-                )
-
-            with slog.phase("host", "host.ready", mode=mode_name):
-                self._event.emit(
-                    HostEventType.STARTED,
-                    roles=roles,
-                    primary=self._app.primary_name,
-                )
-                self._started = True
-            if self._work_drain_background_enabled():
-                with slog.phase("host", "host.background.work_drain", mode=mode_name):
-                    self._workplane.start_background()
-            else:
-                slog.phase_skip(
-                    "host",
-                    "host.background.work_drain",
-                    reason="work_drain_off",
-                )
-            slog.info(
-                "ready",
-                "host ready",
-                schedule="host",
-                mode=mode_name,
-                primary=self._app.primary_name,
-                roles=",".join(roles) or "(none)",
+            # Boot owns order + handlers; this shell is the assembly target.
+            self._last_boot_walk = walk_schedule(
+                HOST_PHASES,
+                build_host_handlers(self, options),
+                ctx=ctx,
+                log=slog,
+                require_handlers=True,
             )
         except Exception as exc:
             slog.emit(

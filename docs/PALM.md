@@ -346,8 +346,8 @@ The host **wires** system instances and product.
 
 | Level | Today (0.59.2) | Target |
 |-------|-----------------|--------|
-| **System schedule** | **Walked** — `BaseRuntime.start` → `SYSTEM_PHASES` + boot handlers (0.59.3) | Grow optional skips / mode toggles as needed |
-| **Host schedule** | Locked `HOST_PHASES`; early `host.system_log` walks; rest imperative in `ApplicationHost.start` | Full walker cutover (0.59.4) |
+| **System schedule** | **Walked** — `BaseRuntime.start` → `SYSTEM_PHASES` + boot handlers (0.59.3) | Mode toggles / harvest as needed |
+| **Host schedule** | **Walked** — `ApplicationHost.start` → `HOST_PHASES` + host boot handlers (0.59.4) | Membership truth (0.59.5+) |
 | **Membership** | CompositionProfile declared; host still has special-case ORs | Profile is membership truth on migrated path |
 | **Modes** | `BootMode` presets (safe/test/dev/prod + shapes); opt-in via `boot_mode=` | Modes dogfood in CI green bar |
 | **System log** | `palm.system.log` phase narrative + early seats — [SYSTEM-LOG](SYSTEM-LOG.md) | Richer operate catalog as phases migrate |
@@ -518,7 +518,7 @@ A map that only names **ideals** without today is also incomplete.
 | Live debt register | **Real** — **SD-014** / **BI-*** (0.59) · residual **SU-*** / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
 | Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
-| Boot schedule + composition truth | **Theme open** — system schedule walked **0.59.3**; host cutover **0.59.4** — [VISION-0.59](VISION-0.59.md) |
+| Boot schedule + composition truth | **Theme open** — host+system schedules walked **0.59.4**; membership next — [VISION-0.59](VISION-0.59.md) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  
