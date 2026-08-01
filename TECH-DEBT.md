@@ -867,7 +867,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
 | [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase S5 | open |
 | [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | partial ✅ work_drain OR removed 0.59.5; mode forbid 0.59.2 |
-| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | partial ✅ **0.59.6** `for_mode` + fixtures; legacy hosts still free |
+| [BI-007](#bi-007) | Tests construct hosts many ways (hard to pin mode) | test mode fixtures | partial ✅ **0.59.6**–**0.59.7** `for_mode` + shape dogfood; legacy hosts still free |
 | [BI-008](#bi-008) | doctor boot phases / mode | report seat | partial ✅ tables · membership · **0.59.6** `last_walk` |
 | [BI-009](#bi-009) | Settings vs profile vs options triple override | resolver table | open |
 | [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | partial ✅ composition.surfaces gate 0.59.5; bulk → deflation |
@@ -921,7 +921,7 @@ feeds resolver on settings path. Outbox remains available×activated (compositio
 ### BI-007 — Test host constructions
 
 **Observation:** Many tests build hosts without a named mode.  
-**Progress (0.59.6):** `ApplicationHost.for_mode("test"|"safe")`; conftest
+**Progress (0.59.6–.7):** `ApplicationHost.for_mode("test"|"safe"|shapes)`; `server_port`; conftest
 `test_mode_host` / `safe_mode_host`; dogfood tests pin phenotype + spine.  
 **Pay residual:** optional migrate older tests to modes (not forced mid-theme).
 

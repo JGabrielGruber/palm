@@ -171,16 +171,23 @@ class ApplicationHost:
         profile: DeploymentProfile | None = None,
         composition: CompositionProfile | None = None,
         storage: StorageEngine | None = None,
+        server_port: int | None = None,
     ) -> Self:
-        """Build a host pinned to a named boot mode (0.59.6 dogfood entry).
+        """Build a host pinned to a named boot mode (0.59.6+ dogfood entry).
 
         Prefer this over hand-assembling profile/composition when you want a
         declared phenotype (``safe`` / ``test`` / ``dev`` / shapes).
 
         When ``settings`` is omitted and the mode is ``safe`` or ``test``, uses
         :meth:`PalmSettings.for_tests` with ``load_examples=False`` (CI isolation).
-        Other modes default to a plain :class:`PalmSettings`.
+        Other modes default to a plain :class:`PalmSettings` — pass
+        ``PalmSettings.for_tests(...)`` in CI for full/shape dogfood.
+
+        ``server_port`` (0.59.7): when the mode's deployment has ``server`` and
+        ``profile`` is omitted, pin the bind port (use ``0`` for ephemeral CI).
         """
+        from dataclasses import replace
+
         resolved = resolve_boot_mode(mode)
         if resolved is None:
             raise ValueError("for_mode requires a boot mode name or BootMode")
@@ -189,6 +196,13 @@ class ApplicationHost:
                 settings = PalmSettings.for_tests(load_examples=False)
             else:
                 settings = PalmSettings()
+        if profile is None and server_port is not None:
+            if not resolved.deployment.server:
+                raise ValueError(
+                    f"server_port requires a server deployment; "
+                    f"mode {resolved.name!r} has server={resolved.deployment.server}"
+                )
+            profile = replace(resolved.deployment, server_port=server_port)
         return cls(
             settings=settings,
             boot_mode=resolved,

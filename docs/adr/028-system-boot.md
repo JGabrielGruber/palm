@@ -177,7 +177,7 @@ Do not make system log the wait/work path.
 - ADR status → **Accepted**.  
 - SD-014 closed or residual re-homed with honest BI-*.  
 - Phase tables walk in code for system + host.  
-- At least `safe`/`test` + one full mode dogfooded. (**safe/test ✅ 0.59.6**; full shape → 0.59.7)  
+- At least `safe`/`test` + one full mode dogfooded. (**safe/test ✅ 0.59.6**; **shapes ✅ 0.59.7**)  
 - Membership truth on migrated path.  
 - System log planned; seats or BI-015 residual named.  
 

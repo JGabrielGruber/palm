@@ -349,7 +349,7 @@ The host **wires** system instances and product.
 | **System schedule** | **Walked** — `BaseRuntime.start` → `SYSTEM_PHASES` + boot handlers (0.59.3) | Mode toggles / harvest as needed |
 | **Host schedule** | **Walked** — `ApplicationHost.start` → `HOST_PHASES` + host boot handlers (0.59.4) | Shape presets (0.59.7) |
 | **Membership** | **Truth on migrated path (0.59.5)** — profile sole switch; skip reasons; deployment feeds resolver only | Residual surface chrome (BI-010 / deflation) |
-| **Modes** | `BootMode` + `for_mode("safe"|"test")` dogfood ✅ **0.59.6**; shapes next | dev/prod/cli/mcp/worker/server (0.59.7) |
+| **Modes** | `BootMode` + `for_mode` dogfood ✅ **0.59.6**–**0.59.7** (safe/test + shapes) | residual BI-*; theme exit |
 | **System log** | `palm.system.log` phase narrative + early seats — [SYSTEM-LOG](SYSTEM-LOG.md) | Richer operate catalog as phases migrate |
 
 **Law:** plugins stay on `INSTALLED_*`. Planes are **not** plugins.  
@@ -518,7 +518,7 @@ A map that only names **ideals** without today is also incomplete.
 | Live debt register | **Real** — **SD-014** / **BI-*** (0.59) · residual **SU-*** / **SI-*** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
 | Surface thinness | **Law** — bulk/bypass as SU-* (~14k server LOC; optional paydown) |
 | Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
-| Boot schedule + composition truth | **Theme open** — schedules **0.59.4** · membership **0.59.5** · safe/test modes **0.59.6** · shapes next — [VISION-0.59](VISION-0.59.md) |
+| Boot schedule + composition truth | **Theme open** — schedules **0.59.4** · membership **0.59.5** · modes **0.59.6**–**0.59.7** · residual next — [VISION-0.59](VISION-0.59.md) |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

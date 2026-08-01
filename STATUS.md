@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.58.20` (stamp) · **Active theme:** **`0.59` System Boot** · **Prior closed:** **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** August 1, 2026 · **Slice:** **0.59.6** mode dogfood (`safe` + `test`) ✅  
+**Last Updated:** August 1, 2026 · **Slice:** **0.59.7** shape dogfood (dev/prod/cli/mcp/worker/server) ✅  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.59](docs/VISION-0.59.md) **open** · **Inventory:** [BOOT-INVENTORY](docs/BOOT-INVENTORY.md) · **System log:** [SYSTEM-LOG](docs/SYSTEM-LOG.md) · **ADR:** [028](docs/adr/028-system-boot.md) **Proposed** · prior [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
 **Migration / release (prior):** [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **[SD-014](TECH-DEBT.md#sd-014)** this theme · **BI-*** boot impact (**BI-015** system log) · residual **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -18,9 +18,9 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → [VISION-0.59](doc
 | **System log** | Observation tape live (`palm.system.log`); first real seats `host.system_log` / `system.log.ready` — [SYSTEM-LOG](docs/SYSTEM-LOG.md) |
 | **Break / harvest** | Mid-theme may go red on legacy paths; grab the rule; declared green bar; spine stays sacred |
 | **Not** | Second autoload framework; planes on INSTALLED_*; permanent dual boot; surface purge in this theme |
-| **Next code** | **0.59.7** dev / prod / shape presets dogfood |
+| **Next code** | **0.59.8+** residual BI-* · theme exit |
 | **Done (prior)** | **0.58.0–0.58.20 + exit** — SD-008 closed · ADR-027 Accepted · stamp `0.58.20` |
-| **This theme** | **0.59.0**–**0.59.6** ✅ schedules + membership + safe/test modes |
+| **This theme** | **0.59.0**–**0.59.7** ✅ schedules + membership + modes + shapes |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · user-plane impersonation · workload remainder · Grove |
 
 ## Quick Overview
@@ -66,9 +66,10 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.59.4** Host schedule v1 | ✅ `ApplicationHost.start` walks `HOST_PHASES`; host boot owns handlers |
 | **0.59.5** Composition membership truth | ✅ profile sole switch; skip reasons; no work_drain OR at gate |
 | **0.59.6** Mode dogfood | ✅ `safe` + `test` green · `for_mode` · fixtures · doctor `last_walk` |
-| 0.59.7+ shape presets, residual BI-* | 📋 next |
+| **0.59.7** Shape dogfood | ✅ dev/prod + cli/mcp/worker/server/all_in_one · `server_port` · phenotype + spine |
+| 0.59.8+ residual BI-* · exit | 📋 next |
 
-**Green bar:** spine on **`safe`/`test`** (`ApplicationHost.for_mode`) · schedules walked · membership · SystemLog levels · doctor `boot.last_walk`.
+**Green bar:** spine on **`safe`/`test`** + collapsed full shapes · queued shapes accept submit · schedules walked · membership · SystemLog levels · doctor `boot.last_walk`.
 
 ---
 

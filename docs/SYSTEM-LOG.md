@@ -35,6 +35,7 @@ This is the Palm analog of **`journalctl` for Palm’s own boot and system path*
 | Mode default levels (BootMode) · walker reuses phase API | ✅ 0.59.2 |
 | Early seats `host.system_log` / `system.log.ready` | ✅ 0.59.2 |
 | Mode dogfood applies levels on `for_mode("safe"|"test")` start | ✅ 0.59.6 |
+| Shape dogfood applies levels on `for_mode("dev"|"prod"|…)` | ✅ 0.59.7 |
 | Full operate catalog · JSON file sink · OTel | later |
 
 ---
