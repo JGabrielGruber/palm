@@ -1,0 +1,234 @@
+# Palm — Boot inventory (0.59.1)
+
+**Status:** Characterization of **today’s** boot (stamp `0.58.20` + theme open).  
+**Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) **Proposed**  
+**Debt:** [SD-014](../TECH-DEBT.md#sd-014) · [BI-*](../TECH-DEBT.md#bi-boot-impact-inventory)  
+**Language:** ASD-STE100 (practical).  
+**Rule:** This file is **truth about current code**. Phase ids here are **provisional names** for the future table — not a public API yet.
+
+---
+
+## 1. Why this document
+
+Theme 0.59 needs a shared picture:
+
+- what already runs,
+- in what order,
+- what membership already controls,
+- what is still soup,
+- what the **green bar** is for the whole theme.
+
+Without this, stubs and refactors fight ghost expectations.
+
+---
+
+## 2. Entrypoints (who starts Palm)
+
+| Path | Code | What it does |
+|------|------|----------------|
+| **Library host** | `ApplicationHost(...).start()` | Full composition root |
+| **CLI** | `create_cli_host()` → host + `all_in_one` deployment | Collapsed embedded `main` |
+| **run_host** | `run_host(profile=…)` | Host + signal block |
+| **Kernel only** | `PalmKernel.bootstrap()` + `create_runtime(..., autostart=True)` | Infra + system instance; **no** CQRS/product wire |
+| **ServerRuntime** | `ServerRuntime.start` → `BaseRuntime.start` | System schedule; HTTP later via host attach |
+| **Standalone ServerContext** | `ServerContext(runtime)` host-less | Lean product services + standalone buses (**no** host schedule) |
+| **MCP in-process** | often runtime.start(http=False) | May bypass full host (BI residual) |
+| **Tests** | many `ApplicationHost` + profiles; conftest calls `ensure_core_plugins()` at import | Green bar must pin named shapes |
+
+**Dual root residual (BI-003):** `ApplicationHost` vs host-less `ServerContext` share `core_service_registry()` but not one boot schedule.
+
+---
+
+## 3. Host schedule (today — imperative)
+
+Source: `ApplicationHost.start` + collaborators.
+
+| # | Provisional id | What runs | Notes |
+|---|----------------|-----------|--------|
+| H0 | `host.init` | `__init__`: settings, deployment, composition, kernel, buses, facades | Not in `start()`; still “boot assembly” |
+| H1 | `kernel.bootstrap` | `PalmKernel.bootstrap()` → `ensure_plugins()` → `ensure_core_plugins()` | Plugin load **first** time; again in system start (idempotent) |
+| H2 | `host.event` | Host `EventEngine.initialize()` + `HostEventRecorder.attach` | Host bus ≠ job bus |
+| H3 | `workers.note` | `WorkerCoordinator(profile, host.event)` | Readiness later in recover |
+| H4 | `system.spawn` | `RuntimeSpawner.spawn_runtimes` → `create_runtime(..., autostart=True)` | **Enters system schedule** per runtime |
+| H5 | `definitions.load` | `PalmKernel.load_definitions()` | After system instances exist |
+| H6 | `product.wire` | `_wire_cqrs()` | Commands, projections/capability, **services from composition**, workplane wire, service CQRS |
+| H7 | `surfaces.mount` | `_start_server_surface()` if `profile.server` | attach_host + start_http |
+| H8 | `projections.attach` | `_attach_projections()` if capability | Host + runtime event attach |
+| H9 | `recover` | `RecoveryCoordinator.recover()` | workers_ready, compensation, outbox, projection rebuild |
+| H10 | `host.ready` | emit STARTED; `_started = True` | |
+| H11 | `background.work_drain` | optional `workplane.start_background()` | composition **or** deployment OR (BI-006) |
+
+### H4 spawn detail (`RuntimeSpawner`)
+
+| Deployment | Runtimes created | Scheduler default |
+|------------|------------------|-------------------|
+| collapsed / all_in_one | `main` embedded | inline |
+| master | `command` embedded | inline |
+| worker (no server) | `worker`, `worker-N` daemon | queued |
+| server | `server` ServerRuntime | queued; `http=False` at spawn (HTTP in H7) |
+
+Each created runtime with `autostart=True` runs the **full system schedule** before host continues.
+
+### H6 product wire detail (`_wire_cqrs`)
+
+1. `wire_command_bus`  
+2. If `composition.has("projections")`: build/register projections + `wire_query_bus`; else `wire_standalone_query_bus` on primary  
+3. `core_service_registry().build_all(..., only=composition.services)`  
+4. Assign system/session/definitions/execution/assist/design/analytics  
+5. assist↔analytics bind; dashboard store; workplane: work_drain, journal, inbound  
+6. design contributors; `wire_all_service_cqrs`
+
+**Membership already partial truth:** `composition.services` and several `composition.has(...)` gates.  
+**Still OR soup:** work_drain background (H11), outbox activation (composition + deployment + profile flags).
+
+---
+
+## 4. System schedule (today — imperative)
+
+Source: `BaseRuntime.start` (`palm.system.runtime.base`).
+
+| # | Provisional id | What runs | Notes |
+|---|----------------|-----------|--------|
+| S1 | `plugins.ensure` | `ensure_core_plugins()` | patterns, providers, runners, storages, kits, transforms |
+| S2 | `engines.core` | context, event initialize | |
+| S3 | `engines.resource` | resource.initialize (+ cache options) | |
+| S4 | `engines.workload` | `initialize_workload_engine` | host runner opt-in via options |
+| S5 | `engines.auth` | auth.initialize + authenticate_runtime | |
+| S6 | `storage.select` | StorageFactory if not initialized | default memory |
+| S7 | `events.outbox` | OutboxStore + wire_reliable_events if enabled | |
+| S8 | `hooks.install` | build job hooks list | observability, auth, persist, session ownership, outbox drain, snapshots |
+| S9 | `orch.init` | orchestration.initialize(scheduler, hooks, …) | |
+| S10 | `bt.init` | behavior_tree.initialize | |
+| S11 | `instances.init` | instance_manager.initialize | |
+| S12 | `orch.start` | orchestration.start() | accepts jobs |
+| S13 | `plane.wait` | WaitPlaneService attach | continue law |
+| S14 | `plane.session` | SessionPlaneService attach + ensure_host_session | outside subject |
+| S15 | `system.ready` | `_started = True`; optional palm provider bind | |
+
+**Not in system schedule today:**
+
+- Work **start** drain / WorkIntent — **host** workplane (H6).  
+- Product services / CQRS — **host** (H6).  
+- Surfaces — **host** (H7) or ServerRuntime HTTP.  
+- Projection rebuild — **host** recover (H9).
+
+**Ports:** `ExecutionPort` is structural on BaseRuntime (live after engines exist). No separate “open ports” step yet (future S3-style phase may name it).
+
+---
+
+## 5. Axes today (what controls what)
+
+| Axis | Controls today | Gap |
+|------|----------------|-----|
+| **CompositionProfile.services** | Which services `build_all` builds | OK for services |
+| **CompositionProfile.surfaces** | Declared; server mount still driven mainly by **DeploymentProfile.server** | BI-010 |
+| **CompositionProfile.capabilities** | projections, compensation, outbox (with deployment), work_drain (partial), journal, neonroot, workloads | ORs remain (BI-006) |
+| **DeploymentProfile** | Which runtimes spawn; server host/port; outbox service activation; worker count | True role axis |
+| **PalmSettings** | storage, flags → composition capabilities via resolver; runtime_start_options | Triple override risk (BI-009) |
+| **start(**options)** | Merged into system start | Can fight settings |
+
+---
+
+## 6. Double plugin ensure
+
+```text
+Host H1: ensure_core_plugins()
+System S1: ensure_core_plugins()  # no-op if already loaded
+Tests: conftest import-time ensure_core_plugins()
+```
+
+Idempotent (`_loaded` flag). Not wrong — but **order dependency** if something assumes plugins only after S1.
+
+---
+
+## 7. Theme expectations (locked for 0.59)
+
+### 7.1 Green bar (theme-wide)
+
+| Track | Expectation |
+|-------|-------------|
+| **Spine host** | Collapsed `ApplicationHost` with test settings: start → submit/continue path available; session plane + wait plane present |
+| **Spine system** | `BaseRuntime`/`EmbeddedRuntime` start alone: plugins, storage, wait, session, orchestration |
+| **Declared modes (later slices)** | When a mode is declared supported, tests for that mode must pass |
+| **Legacy dual roots / heavy surfaces** | May fail mid-theme; BI-* required; not spine |
+
+**0.59.1 green bar:** characterization tests in `tests/test_boot_inventory_0_59.py` + existing host tests remain green. No schedule rewrite yet.
+
+### 7.2 End of theme (reminder)
+
+- Phase tables walk in code.  
+- `safe`/`test` + one full mode dogfood.  
+- Membership truth on migrated path.  
+- Residual chrome named.
+
+### 7.3 Break / harvest (reminder)
+
+If a later slice breaks a path: classify → harvest rule → BI-* → do not restore import-order magic.  
+Spine regressions fix in-slice.
+
+---
+
+## 8. Target phase mapping (spirit → today’s steps)
+
+| Future spirit (VISION) | Maps from today |
+|------------------------|-----------------|
+| Host: bootstrap | H1 |
+| Host: host event | H2–H3 |
+| Host: spawn system | H4 → system schedule |
+| Host: definitions | H5 |
+| Host: product services | H6 (services part) |
+| Host: surfaces | H7 (+ composition.surfaces truth later) |
+| Host: projections/outbox | H6 partial + H8 + H9 |
+| Host: recover/drain | H9 + H11 |
+| System: plugins | S1 |
+| System: engines/storage | S2–S6 |
+| System: ports open | implicit (name later) |
+| System: planes | S13–S14 (+ workload init S4) |
+| System: job hooks | S8–S9 |
+| System: orch start / ready | S12, S15 |
+
+**Illustrative only** until 0.59.2 freezes ids in code stubs.
+
+---
+
+## 9. Known lies / smells (feed BI-*)
+
+| Id | Smell |
+|----|--------|
+| BI-001 | Two schedules exist only as code paths, not one story |
+| BI-002 | Surfaces/capabilities not sole membership truth |
+| BI-003 | ServerContext host-less path has no host schedule |
+| BI-004 | Plugin ensure appears host + system + tests |
+| BI-005 | Job hooks built as inline list in S8 |
+| BI-006 | work_drain background OR composition/deployment |
+| BI-007 | Tests use many host shapes without mode names |
+| BI-008 | No doctor phase/mode report |
+| BI-009 | settings / profile / start options triple |
+| BI-010 | Surface mount ≠ composition.surfaces alone |
+| — | Work **start** plane lives on **host**, not system schedule (law may stay; must be **named**) |
+| — | Session host session ensure swallows Exception (silent) |
+
+---
+
+## 10. Characterization tests
+
+| File | Pins |
+|------|------|
+| `tests/test_boot_inventory_0_59.py` | Host start collaborator order; system post-start contracts; spine services; dual ensure idempotent |
+| Existing `tests/test_application_host.py` | Deployment spawn shapes |
+| Existing composition / status tests | Profile presets; status reports |
+
+When 0.59.2+ introduces a walker, **update these tests** to pin the table, not only spies on private methods.
+
+---
+
+## 11. How to update this file
+
+- After inventory-changing slices: refresh tables from code.  
+- When phase ids freeze in code: mark provisional → **locked**.  
+- Do not invent phases that do not exist yet without a stub seat row.  
+- Link new BI rows here when discovery adds them.
+
+---
+
+*Name what boots. Then walk it on purpose.*

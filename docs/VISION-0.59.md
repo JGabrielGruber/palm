@@ -1,6 +1,7 @@
 # VISION 0.59 — System Boot + Composition Truth
 
-**Status:** 📋 **Theme open** at **0.59.0** (plan).  
+**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅  
+**Inventory:** [BOOT-INVENTORY.md](BOOT-INVENTORY.md)  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [028-system-boot.md](adr/028-system-boot.md) **Proposed**.  
@@ -202,8 +203,8 @@ Slices stay **one purpose each**. Numbers lock at execution time after 0.59.1 in
 
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
-| **0** | Plan + map + ADR | This file, ADR-028 Proposed, PALM boot section, STATUS, BI-* seed |
-| **1** | Inventory + characterization | Real boot graphs; spine tests; initial green bar |
+| **0** | Plan + map + ADR | This file, ADR-028 Proposed, PALM boot section, STATUS, BI-* seed — ✅ |
+| **1** | Inventory + characterization | [BOOT-INVENTORY.md](BOOT-INVENTORY.md); `tests/test_boot_inventory_0_59.py`; green bar — ✅ **0.59.1** |
 | **2** | Stub schedule + modes | Phase ids, walker, mode registry; doctor list |
 | **3** | System schedule v1 | `BaseRuntime.start` walks table |
 | **4** | Host schedule v1 | `ApplicationHost.start` walks table |

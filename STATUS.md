@@ -1,8 +1,8 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.58.20` (stamp) · **Active theme:** **`0.59` System Boot** · **Prior closed:** **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** August 1, 2026 · **Slice:** **0.59.0** plan open  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.59](docs/VISION-0.59.md) **open** · **ADR:** [028](docs/adr/028-system-boot.md) **Proposed** · prior [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
+**Last Updated:** August 1, 2026 · **Slice:** **0.59.1** inventory ✅  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.59](docs/VISION-0.59.md) **open** · **Inventory:** [BOOT-INVENTORY](docs/BOOT-INVENTORY.md) · **ADR:** [028](docs/adr/028-system-boot.md) **Proposed** · prior [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
 **Migration / release (prior):** [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **[SD-014](TECH-DEBT.md#sd-014)** this theme · **BI-*** boot impact · residual **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
@@ -17,9 +17,9 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → [VISION-0.59](doc
 | **Boot law** | Two schedules (host + system); phase table; composition = membership; modes; plugins ≠ planes |
 | **Break / harvest** | Mid-theme may go red on legacy paths; grab the rule; declared green bar; spine stays sacred |
 | **Not** | Second autoload framework; planes on INSTALLED_*; permanent dual boot; surface purge in this theme |
-| **Next code** | **0.59.1** inventory + characterization (no rewrite of host start in 0.59.0) |
+| **Next code** | **0.59.2** stub schedule + modes (phase ids + walker seats) |
 | **Done (prior)** | **0.58.0–0.58.20 + exit** — SD-008 closed · ADR-027 Accepted · stamp `0.58.20` |
-| **This open** | **0.59.0** plan — VISION + ADR-028 Proposed + map + BI-* seed |
+| **This theme** | **0.59.0** plan · **0.59.1** inventory + characterization ✅ |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · user-plane impersonation · workload remainder · Grove |
 
 ## Quick Overview
@@ -57,12 +57,12 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 
 | Patch | Status |
 |-------|--------|
-| **0.59.0** Plan + ADR + map + BI-* seed | ✅ open |
-| 0.59.1 Inventory + characterization | 📋 next |
-| 0.59.2 Stub schedule + modes | 📋 |
+| **0.59.0** Plan + ADR + map + BI-* seed | ✅ |
+| **0.59.1** Inventory + characterization | ✅ [BOOT-INVENTORY](docs/BOOT-INVENTORY.md) · `tests/test_boot_inventory_0_59.py` |
+| 0.59.2 Stub schedule + modes | 📋 next |
 | 0.59.3+ System/host schedule, membership, mode dogfood | 📋 |
 
-**Green bar (0.59.0):** docs only — no behavior change. Spine contract unchanged until schedule slices.
+**Green bar (0.59.1):** spine host (collapsed all_in_one + test settings) + system-alone start contracts; host phase order characterization. No schedule rewrite yet.
 
 ---
 

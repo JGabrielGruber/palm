@@ -861,7 +861,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 
 | ID | Observation (seed) | Class / note | Status |
 |----|--------------------|--------------|--------|
-| [BI-001](#bi-001) | Dual start graphs (host vs runtime) undocumented as one story | inventory | open |
+| [BI-001](#bi-001) | Dual start graphs (host vs runtime) undocumented as one story | inventory | open (doc ✅ 0.59.1; code walker later) |
 | [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | open |
 | [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root; fold only if cheap | open |
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | open |
@@ -873,11 +873,14 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-010](#bi-010) | Surface mount still special-cased | membership + later deflation | open |
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | open (bucket) |
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | open (bucket) |
+| BI-013 | Work **start** (WorkIntent drain) lives on host workplane, not system schedule | name in table; may stay host-owned | open (named 0.59.1) |
+| BI-014 | `ensure_host_session` swallows Exception on system start | honesty / fail loud later | open (named 0.59.1) |
 
 ### BI-001 — Dual start graphs
 
 **Observation:** Host and system start are real but not one documented schedule.  
-**Pay:** 0.59.1 inventory → 0.59.3–.4 schedule walkers.
+**Progress (0.59.1):** Documented as one story in [BOOT-INVENTORY.md](docs/BOOT-INVENTORY.md) (provisional H*/S* ids).  
+**Pay:** 0.59.2 stubs → 0.59.3–.4 schedule walkers in code.
 
 ### BI-002 — Composition membership truth
 

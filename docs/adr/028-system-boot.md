@@ -3,6 +3,7 @@
 **Status:** Proposed  
 **Date:** 2026-08-01  
 **Theme:** [VISION-0.59](../VISION-0.59.md)  
+**Inventory:** [BOOT-INVENTORY.md](../BOOT-INVENTORY.md) (0.59.1)  
 **Map:** [PALM.md](../PALM.md)  
 **Debt:** [SD-014](../../TECH-DEBT.md#sd-014) · impact **BI-***  
 **Related:** [ADR-019](019-composition-profiles.md) · [ADR-018](018-application-host-decomposition.md) · [ADR-026](026-palm-system-layer.md) · [ADR-017](017-import-seams.md)

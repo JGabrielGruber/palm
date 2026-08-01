@@ -484,7 +484,7 @@ From theme **0.57** onward:
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
 | Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
 | Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
-| System boot (open) | [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) Proposed · [SD-014](../TECH-DEBT.md#sd-014) · **BI-*** |
+| System boot (open) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [ADR-028](adr/028-system-boot.md) Proposed · [SD-014](../TECH-DEBT.md#sd-014) · **BI-*** |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
