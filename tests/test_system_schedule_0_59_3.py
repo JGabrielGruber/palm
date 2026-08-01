@@ -35,6 +35,7 @@ def test_system_start_walks_full_phase_table() -> None:
         assert by_id["system.ready"].outcome == "ok"
         assert isinstance(rt.wait_plane, WaitPlaneService)
         assert isinstance(rt.session_plane, SessionPlaneService)
+        assert rt.work_plane is not None
         assert rt.supervisor is not None
 
         slog = get_system_log()

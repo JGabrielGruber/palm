@@ -37,6 +37,7 @@ from palm.system.boot.walker import PhaseHandler
 from palm.system.log import get_system_log
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
+from palm.system.planes.work.plane import WorkPlaneService
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.supervisor import SystemSupervisor
 from palm.system.runtime.hooks import (
@@ -196,6 +197,24 @@ def build_system_handlers(
                 runtime=ctx.runtime,
                 reason=str(exc),
             )
+
+        # 0.60.2 — start plane (enqueue / tick). Continuous drain → supervisor later.
+        max_depth = int(options.get("work_drain_max_depth", 8) or 8)
+        batch_size = int(options.get("work_drain_batch_size", 10) or 10)
+        runtime._work_plane = WorkPlaneService()
+        runtime._work_plane.attach(
+            runtime,
+            max_depth=max_depth,
+            batch_size=batch_size,
+            # able=True during attach; after ready, is_started gates tick.
+            able=lambda: bool(getattr(runtime, "is_started", False)),
+        )
+        slog.info(
+            "plane.work.attach",
+            "work plane attached",
+            schedule="system",
+            runtime=ctx.runtime,
+        )
 
     def supervisor_wire(ctx: BootContext) -> None:
         """0.60.1 — empty supervisor seat; services register in later slices."""

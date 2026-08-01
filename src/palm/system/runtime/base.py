@@ -103,6 +103,7 @@ class BaseRuntime:
         self._outbox_processor: OutboxProcessor | None = None
         self._wait_plane: WaitPlaneService | None = None
         self._session_plane: SessionPlaneService | None = None
+        self._work_plane: Any | None = None
         self._supervisor: Any | None = None
         self._last_boot_walk: list[Any] | None = None
 
@@ -148,6 +149,11 @@ class BaseRuntime:
     def session_plane(self) -> SessionPlaneService | None:
         """Session plane (outside subject lifecycle), or ``None`` before start."""
         return self._session_plane
+
+    @property
+    def work_plane(self) -> Any | None:
+        """Start plane (WorkIntent enqueue / tick), or ``None`` before attach."""
+        return self._work_plane
 
     @property
     def supervisor(self) -> Any | None:
@@ -216,6 +222,13 @@ class BaseRuntime:
             except Exception:
                 pass
             self._supervisor = None
+
+        if self._work_plane is not None:
+            try:
+                self._work_plane.detach()
+            except Exception:
+                pass
+            self._work_plane = None
 
         if self._session_plane is not None:
             self._session_plane.detach()

@@ -244,7 +244,7 @@ A **plane** is system traffic of one kind.
 | Plane | Verb / role | Home (intent) |
 |-------|-------------|----------------|
 | **Event** | Signals; completers speak of self | `runtime.event` (orchestration bus) |
-| **Work (start)** | Trigger → WorkIntent → new job | **0.60 open:** `WorkPlaneService` on system (`planes.work` store lives; full plane + drain → [VISION-0.60](VISION-0.60.md)). Today continuous drain still host workplane residual **BI-013**. |
+| **Work (start)** | Trigger → WorkIntent → new job | **0.60:** `runtime.work_plane` (`WorkPlaneService`) attach + enqueue/tick (**0.60.2**). Continuous drain → supervisor (**0.60.5+**). Host workplane residual until deflate — [VISION-0.60](VISION-0.60.md) · **BI-013**. |
 | **Wait (continue)** | Interest → resume or fail parked work | Wait plane on system (`runtime.wait_plane`) |
 | **Session** (0.58 **closed**) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; **strict attribution**; **inherit-or-service** reactive start. **Product** `SessionService` / kit `resolve_session_service` is the surface door. **BoundSurface**. **Operate:** focus / list waiting / cancel-owned. **Vocabulary:** `session_id` = system subject (`sess-…`); `instance_id` = continue; path segment `instance`. Session metadata ≠ job metadata. Active ≠ foreign pass. Plane remains law. Theme: [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted. Surface compost residual: [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md). |
 | **Workload** | Isolation lifecycle events and placement | Workload engine + runners |

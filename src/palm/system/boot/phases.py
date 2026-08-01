@@ -172,7 +172,7 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "system.planes.attach",
         "system",
         "implemented",
-        "Wait plane + session plane (+ work plane when landed)",
+        "Wait + session + work planes",
     ),
     PhaseSpec(
         "system.supervisor.wire",
