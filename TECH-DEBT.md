@@ -1,8 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot closed** at **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
+**Status:** Live register from **0.57.1**. Theme **0.57 closed** at **0.57.14**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.59 System Boot closed** at **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.60 System Supervisor + Work Plane open** at **0.60.0** — pay **[BI-013](#bi-013)** · [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Proposed**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
+**Theme (open):** [docs/VISION-0.60.md](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Proposed**  
 **Theme (closed boot):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Accepted** · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Theme (closed):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Accepted** · [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
 
@@ -874,7 +875,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-010](#bi-010) | Surface mount still special-cased | membership + deflation | **residual** bulk → surface deflation |
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | residual bucket |
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | residual bucket |
-| BI-013 | Work **start** (WorkIntent drain) lives on host workplane | may stay host-owned | **residual** (true owner OK) |
+| [BI-013](#bi-013) | Work **start** (WorkIntent drain) lives on host workplane | system work plane + supervisor | **open → 0.60** (pay) |
 | BI-014 | `ensure_host_session` swallows Exception on system start | honesty | **residual** |
 | [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | seats ✅; catalog later | **residual** |
 
@@ -957,6 +958,22 @@ shared fixtures; do not reintroduce dead `options={"name": "quick"}` DAGs.
 
 Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked theme**.
 
+### BI-013 — Work start on host workplane
+
+<a id="bi-013"></a>
+
+**Observation:** Durable WorkIntent store and schedules live under `palm.system.planes.work`. Continuous drain, trigger wire, and inbound live under `palm.app.host.workplane`.  
+
+**True owner:** System — work plane service + **supervisor** for continuous drain.  
+
+**Theme:** [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Proposed**.  
+
+**Pay:** `WorkPlaneService` · `runtime.work_plane` · supervised `work_drain` · inbound system contract · system job start · host coordinator deflate.  
+
+**Status:** **open → 0.60** (theme open at 0.60.0).
+
+---
+
 ### BI-015 — System log (ordered narrative)
 
 <a id="bi-015"></a>
@@ -982,6 +999,8 @@ See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
 | **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh |
+
+**Open theme (not a seed):** **System supervisor + work plane** — [BI-013](#bi-013) · [VISION-0.60](docs/VISION-0.60.md).  
 
 **Closed (not a seed):** **System boot** — [SD-014](#sd-014) ✅ · [VISION-0.59](docs/VISION-0.59.md) closed · residual **BI-***.
 

@@ -1,24 +1,25 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.59.8` (stamp) · **Active theme:** *(none — pick next seed)* · **Prior closed:** **`0.59` System Boot** · **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
-**Last Updated:** August 1, 2026 · **Theme exit:** **0.59.8** ✅  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.59](docs/VISION-0.59.md) **closed** · **Inventory:** [BOOT-INVENTORY](docs/BOOT-INVENTORY.md) · **System log:** [SYSTEM-LOG](docs/SYSTEM-LOG.md) · **ADR:** [028](docs/adr/028-system-boot.md) **Accepted** · prior [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
-**Migration / release:** [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md) · prior [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — residual **BI-*** (after SD-014 close) · residual **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.59.8` (stamp) · **Active theme:** **`0.60` System Supervisor + Work Plane** (plan **0.60.0**) · **Prior closed:** **`0.59` System Boot** · **`0.58` Session plane** · **`0.57` Palm System** · **`0.56` Workload** scout · **`0.55` Reactive Interests**  
+**Last Updated:** August 1, 2026 · **Theme open:** **0.60.0** 📋  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.60](docs/VISION-0.60.md) **open** · **ADR:** [029](docs/adr/029-system-supervisor.md) **Proposed** · prior [VISION-0.59](docs/VISION-0.59.md) **closed** · [ADR-028](docs/adr/028-system-boot.md) Accepted · [VISION-0.58](docs/VISION-0.58.md) closed · [ADR-027](docs/adr/027-session-plane.md) Accepted  
+**Migration / release (prior):** [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md) · [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **BI-013** pay in **0.60** · residual **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot schedules + modes + membership truth** · system log **live** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot schedules + modes** · system log **live** · **0.60 open:** supervisor + work plane · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → closed [VISION-0.59](docs/VISION-0.59.md) · [TECH-DEBT.md](TECH-DEBT.md) residual **BI-*** / SI / SU · surface seed later.
+Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) · [TECH-DEBT.md](TECH-DEBT.md) **BI-013** · closed [VISION-0.59](docs/VISION-0.59.md).
 
 | Spirit | Decision |
 |--------|----------|
+| **0.60 seats** | Planes = reactive traffic (work start · wait continue); **Supervisor** = continuous services; inbound = **required** system contract |
+| **Host** | Packaging (composition, product, surfaces) — not owner of start law or drain loops |
 | **Boot law** | Two schedules (host + system); composition = membership; modes via `for_mode`; plugins ≠ planes |
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); richer catalog residual **BI-015** |
-| **Closed** | **0.59.0–0.59.8 + exit** — SD-014 closed · ADR-028 Accepted · stamp `0.59.8` |
-| **Not paid** | Full suite force (BI-007) · dual root (BI-003) · work start re-home (BI-013) · surface compost |
-| **Next** | Choose seed (surface deflation / residual BI when touched / Grove later) |
+| **Closed prior** | **0.59.0–0.59.8** — SD-014 closed · ADR-028 Accepted · stamp `0.59.8` |
+| **Pay in 0.60** | BI-013 · host workplane deflate · outbox continuous · inbound system · dual-root attach edges |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · user-plane · workload remainder · Grove |
 
 ## Quick Overview
@@ -46,6 +47,30 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | `palm/patterns/`, `providers/`, `storages/`, `runners/` | Plugins by registry (`INSTALLED_*` truthful; intentions gated). |
 | `palm/runtimes/` | Thin surfaces. |
 
+## 0.60 — System Supervisor + Work Plane (**open** · plan `0.60.0`)
+
+**Vision:** [docs/VISION-0.60.md](docs/VISION-0.60.md) · **ADR:** [docs/adr/029-system-supervisor.md](docs/adr/029-system-supervisor.md) **Proposed**  
+**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **BI-013** (pay) · inbound / outbox continuous · dual-root edges  
+**Map:** [docs/PALM.md](docs/PALM.md) · prior boot [VISION-0.59](docs/VISION-0.59.md) · reactive [VISION-0.55](docs/VISION-0.55.md)  
+
+**Theme purpose:** **Work plane** (start) on system · **Supervisor** for continuous services (work drain, outbox, inbound workers) · **inbound** as required system contract · host thins to packaging. Not surface compost. Not Grove mesh.
+
+| Patch | Status |
+|-------|--------|
+| **0.60.0** | 📋 plan + ADR-029 Proposed + STATUS/PALM pointer |
+| **0.60.1** | Supervisor seat (registry · status · boot hooks) |
+| **0.60.2** | WorkPlaneService + `runtime.work_plane` |
+| **0.60.3** | System job start for drain submit |
+| **0.60.4** | Session-safe reactive start on system path |
+| **0.60.5** | Supervised work drain (background) |
+| **0.60.6** | Outbox continuous under supervisor |
+| **0.60.7** | Catalog feed · trigger reload |
+| **0.60.8** | Inbound system contract + supervised workers |
+| **0.60.9** | Host deflate · dual-root attach |
+| **exit** | ADR-029 Accepted · BI-013 closed · stamp |
+
+---
+
 ## 0.59 — System Boot + Composition Truth (**closed** · theme exit `0.59.8`)
 
 **Vision:** [docs/VISION-0.59.md](docs/VISION-0.59.md) · **ADR:** [docs/adr/028-system-boot.md](docs/adr/028-system-boot.md) **Accepted**  
@@ -63,7 +88,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.59.8** | ✅ residual cleanup (fixture + dead spine) |
 | **exit** | ✅ ADR-028 Accepted · SD-014 closed · residual BI named · stamp `0.59.8` |
 
-**Not paid in 0.59:** dual root fold (BI-003), full suite mode force (BI-007), work start → system (BI-013), surface chrome (BI-010 / deflation), richer system-log catalog (BI-015).
+**Not paid in 0.59:** dual root fold (BI-003), full suite mode force (BI-007), work start → system (BI-013 → **0.60**), surface chrome (BI-010 / deflation), richer system-log catalog (BI-015).
 
 ---
 

@@ -9,7 +9,7 @@
 **Debt:** [SD-014](../TECH-DEBT.md#sd-014) ✅ closed · residual **BI-***.  
 **Release:** [RELEASE-0.59.8](releases/RELEASE-0.59.8.md) · [MIGRATION-0.59](migrations/MIGRATION-0.59.md).  
 **Prior closed:** [VISION-0.58](VISION-0.58.md) session · [VISION-0.57](VISION-0.57.md) system · composition skeleton [ADR-019](adr/019-composition-profiles.md).  
-**Queue:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI · Grove.  
+**Queue (next open):** [VISION-0.60](VISION-0.60.md) supervisor + work plane · later [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
 
 ---
