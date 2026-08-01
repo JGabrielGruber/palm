@@ -20,6 +20,7 @@ from palm.system.effects import (
     workload_driver_from_port,
 )
 from palm.system.instance import SystemInstance
+from palm.system.log import SystemLog, get_system_log
 from palm.system.ports.execution import ExecutionPort
 from palm.system.runtime.base import BaseRuntime
 
@@ -29,6 +30,8 @@ __all__ = [
     "PortResourceInvoker",
     "PortWorkloadDriver",
     "SystemInstance",
+    "SystemLog",
+    "get_system_log",
     "resource_invoker_from_port",
     "workload_driver_from_port",
 ]

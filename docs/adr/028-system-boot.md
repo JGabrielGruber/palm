@@ -4,8 +4,9 @@
 **Date:** 2026-08-01  
 **Theme:** [VISION-0.59](../VISION-0.59.md)  
 **Inventory:** [BOOT-INVENTORY.md](../BOOT-INVENTORY.md) (0.59.1)  
+**System log plan:** [SYSTEM-LOG.md](../SYSTEM-LOG.md) (0.59.1a)  
 **Map:** [PALM.md](../PALM.md)  
-**Debt:** [SD-014](../../TECH-DEBT.md#sd-014) · impact **BI-***  
+**Debt:** [SD-014](../../TECH-DEBT.md#sd-014) · impact **BI-*** · [BI-015](../../TECH-DEBT.md#bi-015)  
 **Related:** [ADR-019](019-composition-profiles.md) · [ADR-018](018-application-host-decomposition.md) · [ADR-026](026-palm-system-layer.md) · [ADR-017](017-import-seams.md)
 
 ---
@@ -124,6 +125,15 @@ Exact module layout may refine in early slices; purpose is fixed here.
 - Planes as install-list plugins.  
 - Permanent dual boot paths for comfort.
 
+### D12 — System log is observation (not control)
+
+Boot **control** is the phase table.  
+Boot **observation** is a **system log** — ordered narrative of system life.
+
+System log is **not** the domain event bus, **not** EventJournal, **not** a telemetry product.  
+Implementation: `palm.system.log` · plan [SYSTEM-LOG.md](../SYSTEM-LOG.md) · [BI-015](../../TECH-DEBT.md#bi-015).  
+Do not make system log the wait/work path.
+
 ---
 
 ## Consequences
@@ -134,7 +144,8 @@ Exact module layout may refine in early slices; purpose is fixed here.
 - Tangled order becomes **visible** phase boundaries.  
 - Safe / test / dev / prod control becomes real.  
 - CompositionProfile stops being a partial lie.  
-- Isolation harvest turns red tests into better shape.
+- Isolation harvest turns red tests into better shape.  
+- System log gives an ordered tape without reading source (0.59.1a).
 
 ### Negative / risk
 
@@ -146,7 +157,8 @@ Exact module layout may refine in early slices; purpose is fixed here.
 
 - Dual root (`ServerContext`) folds only when schedule makes it cheap (BI-*).  
 - Surface compost remains a later theme.  
-- Exact phase names lock after inventory (0.59.1+), not in this ADR’s prose sketches.
+- Exact phase names lock after inventory (0.59.1+), not in this ADR’s prose sketches.  
+- System log may ship partial (BI-015 residual) if phase control finishes first.
 
 ---
 
@@ -157,6 +169,8 @@ Exact module layout may refine in early slices; purpose is fixed here.
 - Phase tables walk in code for system + host.  
 - At least `safe`/`test` + one full mode dogfooded.  
 - Membership truth on migrated path.  
+- System log planned; seats or BI-015 residual named.  
+
 - [VISION-0.59](../VISION-0.59.md) closed with residual named.
 
 ---

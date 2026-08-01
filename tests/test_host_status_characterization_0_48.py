@@ -24,6 +24,8 @@ EVENT_PLANE_KEYS = {
     "journal_bus",
     "internal_inbound_bindings",
     "orchestration_event_types",
+    "system_log_level",  # 0.59.1a process narrative
+    "system_log_recent",
     "note",
 }
 

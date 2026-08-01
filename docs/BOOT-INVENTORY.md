@@ -2,7 +2,8 @@
 
 **Status:** Characterization of **today’s** boot (stamp `0.58.20` + theme open).  
 **Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) **Proposed**  
-**Debt:** [SD-014](../TECH-DEBT.md#sd-014) · [BI-*](../TECH-DEBT.md#bi-boot-impact-inventory)  
+**System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (0.59.1a) — runtime tape for these phase ids when seats land  
+**Debt:** [SD-014](../TECH-DEBT.md#sd-014) · [BI-*](../TECH-DEBT.md#bi-boot-impact-inventory) · [BI-015](../TECH-DEBT.md#bi-015)  
 **Language:** ASD-STE100 (practical).  
 **Rule:** This file is **truth about current code**. Phase ids here are **provisional names** for the future table — not a public API yet.
 

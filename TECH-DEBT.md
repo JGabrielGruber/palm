@@ -875,6 +875,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | open (bucket) |
 | BI-013 | Work **start** (WorkIntent drain) lives on host workplane, not system schedule | name in table; may stay host-owned | open (named 0.59.1) |
 | BI-014 | `ensure_host_session` swallows Exception on system start | honesty / fail loud later | open (named 0.59.1) |
+| [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | basic ✅ 0.59.1a; grow with walker/modes | open (partial) |
 
 ### BI-001 — Dual start graphs
 
@@ -930,6 +931,19 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 ### BI-011 / BI-012 — Harvest buckets
 
 Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked theme**.
+
+### BI-015 — System log (ordered narrative)
+
+<a id="bi-015"></a>
+
+**Observation:** Domain buses + journal exist; process boot narrative was missing.  
+
+**Progress (0.59.1a):** `palm.system.log` + host/system phase lines + ring + doctor tail.  
+See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
+
+**Residual:** mode default levels; richer operate catalog; walker should **reuse** SystemLog (not a second path); optional JSON/file sink.  
+**Exit:** residual named or closed when modes + walker dogfood.  
+**Not:** OpenTelemetry product; BT tick flood; replace journal.
 
 ---
 

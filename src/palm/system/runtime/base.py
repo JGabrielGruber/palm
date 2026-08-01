@@ -47,6 +47,7 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
 from palm.states import BlackboardState
+from palm.system.log import get_system_log
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
@@ -158,133 +159,198 @@ class BaseRuntime:
         if self._started:
             return
 
-        # Plugin registries (patterns/providers/runners/storages) — via common,
-        # not direct system imports (guard_system purity).
-        ensure_core_plugins()
-
-        self.context.initialize()
-        self.event.initialize()
-        cache_options = options.get("resource_cache")
-        resource_options: dict[str, Any] = {
-            "event_engine": self.event,
-            "definition_resolver": resource_definition_resolver(self.repository),
-        }
-        if cache_options is not None:
-            resource_options["resource_cache"] = cache_options
-        self.resource.initialize(**resource_options)
-
-        def _publish_workload(event_type: str, payload: dict[str, Any]) -> None:
-            self.event.emit(event_type, **payload)
-
-        initialize_workload_engine(
-            self.workload,
-            host_enabled=bool(options.get("workload_host_enabled", False)),
-            work_root=options.get("workload_work_root") or options.get("data_dir"),
-            default_runtime=options.get("workload_default_runtime"),
-            publish_event=_publish_workload,
+        slog = get_system_log()
+        runtime = getattr(self, "name", None) or self.runtime_name
+        slog.info(
+            "boot.start",
+            "system schedule start",
+            schedule="system",
+            runtime=str(runtime),
         )
-
-        self.auth.initialize()
-        authenticate_runtime(self.auth, options.get("credentials"))
-
-        if not self.storage.is_initialized:
-            StorageFactory.initialize_engine(
-                self.storage,
-                storage_backend=str(options.get("storage_backend", "memory")),
-                **dict(options.get("backend_options") or {}),
-            )
-
-        enable_outbox = bool(options.get("enable_event_outbox", True))
-        if enable_outbox:
-            self._outbox_store = OutboxStore(self.storage)
-            wire_reliable_events(self.event, self._outbox_store)
-            self._outbox_processor = OutboxProcessor(self._outbox_store, self.event)
-
-        scheduler = resolve_scheduler(
-            options,
-            default_policy=self.default_scheduler_policy,
-        )
-        hooks = list(options.get("hooks") or [])
-        if options.get("observability"):
-            hooks.append(DriveObservabilityHook())
-        self._auth_enforce = bool(options.get("auth_enforce"))
-        if self._auth_enforce:
-            hooks.append(
-                AuthMiddleware(
-                    self.auth,
-                    required_roles=tuple(options.get("auth_roles") or ("user",)),
-                )
-            )
-        hooks.append(JobExecutionContextHook())
-        # Continue verb: WaitMatcher on runtime.event (not job hooks).
-        hooks.append(
-            InstancePersistenceHook(
-                self.instance_manager,
-                outbox_store=self._outbox_store,
-            )
-        )
-        # Session plane ownership (0.58.4) — after instance create; plane bound below.
-        session_ownership = SessionOwnershipHook(get_plane=lambda: self._session_plane)
-        hooks.append(session_ownership)
-        if self._outbox_processor is not None:
-            hooks.append(OutboxDrainHook(self._outbox_processor))
-        if options.get("enable_state_snapshot"):
-            hooks.append(
-                StateSnapshotHook(
-                    self.instance_manager,
-                    snapshot_on_status=options.get("snapshot_on_status"),
-                    max_snapshots_per_instance=int(options.get("max_snapshots_per_instance", 10)),
-                )
-            )
-
-        orch_options: dict[str, Any] = {
-            "scheduler": scheduler,
-            "event_engine": self.event,
-            "context_engine": self.context,
-            "hooks": hooks,
-        }
-        max_jobs = options.get("max_concurrent_jobs")
-        if isinstance(max_jobs, int) and max_jobs > 0:
-            orch_options["max_concurrent_jobs"] = max_jobs
-        self.orchestration.initialize(**orch_options)
-
-        state = options.get("state")
-        bt_state: BaseState = state if isinstance(state, BaseState) else BlackboardState()
-        self.behavior_tree.initialize(state=bt_state)
-
-        if not self.instance_manager.is_initialized:
-            self.instance_manager.initialize(
-                max_loaded_instances=options.get("max_loaded_instances"),
-                max_concurrent_active=options.get("max_concurrent_active"),
-                max_snapshots_per_instance=options.get("max_snapshots_per_instance"),
-                reconcile_on_startup=options.get("reconcile_on_startup"),
-            )
-
-        self.orchestration.start()
-
-        # Continue plane — peer of work-drain (start); always wired.
-        self._wait_plane = WaitPlaneService()
-        self._wait_plane.attach(self)
-
-        # Session plane — outside subject seat (0.58.1); StorageEngine store.
-        self._session_plane = SessionPlaneService(storage=self.storage)
-        self._session_plane.attach(self)
-        # 0.58.13 — well-known host service session for internal attribution.
         try:
-            self._session_plane.ensure_host_session()
-        except Exception:
-            pass
+            # Plugin registries (patterns/providers/runners/storages) — via common,
+            # not direct system imports (guard_system purity).
+            with slog.phase("system", "system.plugins.ensure", runtime=runtime):
+                ensure_core_plugins()
 
-        self._started = True
+            with slog.phase("system", "system.engines.init", runtime=runtime):
+                self.context.initialize()
+                self.event.initialize()
+                cache_options = options.get("resource_cache")
+                resource_options: dict[str, Any] = {
+                    "event_engine": self.event,
+                    "definition_resolver": resource_definition_resolver(self.repository),
+                }
+                if cache_options is not None:
+                    resource_options["resource_cache"] = cache_options
+                self.resource.initialize(**resource_options)
 
-        bind_runtime = get_runtime_binding()
-        if bind_runtime is not None:
-            bind_runtime(self)
+                def _publish_workload(event_type: str, payload: dict[str, Any]) -> None:
+                    self.event.emit(event_type, **payload)
+
+                initialize_workload_engine(
+                    self.workload,
+                    host_enabled=bool(options.get("workload_host_enabled", False)),
+                    work_root=options.get("workload_work_root") or options.get("data_dir"),
+                    default_runtime=options.get("workload_default_runtime"),
+                    publish_event=_publish_workload,
+                )
+
+                self.auth.initialize()
+                authenticate_runtime(self.auth, options.get("credentials"))
+
+                if not self.storage.is_initialized:
+                    StorageFactory.initialize_engine(
+                        self.storage,
+                        storage_backend=str(options.get("storage_backend", "memory")),
+                        **dict(options.get("backend_options") or {}),
+                    )
+
+            enable_outbox = bool(options.get("enable_event_outbox", True))
+            if enable_outbox:
+                with slog.phase("system", "system.outbox.wire", runtime=runtime):
+                    self._outbox_store = OutboxStore(self.storage)
+                    wire_reliable_events(self.event, self._outbox_store)
+                    self._outbox_processor = OutboxProcessor(self._outbox_store, self.event)
+            else:
+                slog.phase_skip(
+                    "system",
+                    "system.outbox.wire",
+                    reason="enable_event_outbox_off",
+                    runtime=runtime,
+                )
+
+            with slog.phase("system", "system.hooks.install", runtime=runtime):
+                scheduler = resolve_scheduler(
+                    options,
+                    default_policy=self.default_scheduler_policy,
+                )
+                hooks = list(options.get("hooks") or [])
+                if options.get("observability"):
+                    hooks.append(DriveObservabilityHook())
+                self._auth_enforce = bool(options.get("auth_enforce"))
+                if self._auth_enforce:
+                    hooks.append(
+                        AuthMiddleware(
+                            self.auth,
+                            required_roles=tuple(options.get("auth_roles") or ("user",)),
+                        )
+                    )
+                hooks.append(JobExecutionContextHook())
+                # Continue verb: WaitMatcher on runtime.event (not job hooks).
+                hooks.append(
+                    InstancePersistenceHook(
+                        self.instance_manager,
+                        outbox_store=self._outbox_store,
+                    )
+                )
+                # Session plane ownership (0.58.4) — after instance create; plane bound below.
+                session_ownership = SessionOwnershipHook(get_plane=lambda: self._session_plane)
+                hooks.append(session_ownership)
+                if self._outbox_processor is not None:
+                    hooks.append(OutboxDrainHook(self._outbox_processor))
+                if options.get("enable_state_snapshot"):
+                    hooks.append(
+                        StateSnapshotHook(
+                            self.instance_manager,
+                            snapshot_on_status=options.get("snapshot_on_status"),
+                            max_snapshots_per_instance=int(
+                                options.get("max_snapshots_per_instance", 10)
+                            ),
+                        )
+                    )
+
+                orch_options: dict[str, Any] = {
+                    "scheduler": scheduler,
+                    "event_engine": self.event,
+                    "context_engine": self.context,
+                    "hooks": hooks,
+                }
+                max_jobs = options.get("max_concurrent_jobs")
+                if isinstance(max_jobs, int) and max_jobs > 0:
+                    orch_options["max_concurrent_jobs"] = max_jobs
+                self.orchestration.initialize(**orch_options)
+
+                state = options.get("state")
+                bt_state: BaseState = (
+                    state if isinstance(state, BaseState) else BlackboardState()
+                )
+                self.behavior_tree.initialize(state=bt_state)
+
+                if not self.instance_manager.is_initialized:
+                    self.instance_manager.initialize(
+                        max_loaded_instances=options.get("max_loaded_instances"),
+                        max_concurrent_active=options.get("max_concurrent_active"),
+                        max_snapshots_per_instance=options.get("max_snapshots_per_instance"),
+                        reconcile_on_startup=options.get("reconcile_on_startup"),
+                    )
+
+            with slog.phase("system", "system.orchestration.start", runtime=runtime):
+                self.orchestration.start()
+
+            with slog.phase("system", "system.planes.attach", runtime=runtime):
+                # Continue plane — peer of work-drain (start); always wired.
+                self._wait_plane = WaitPlaneService()
+                self._wait_plane.attach(self)
+
+                # Session plane — outside subject seat (0.58.1); StorageEngine store.
+                self._session_plane = SessionPlaneService(storage=self.storage)
+                self._session_plane.attach(self)
+                # 0.58.13 — well-known host service session for internal attribution.
+                try:
+                    self._session_plane.ensure_host_session()
+                except Exception as exc:
+                    slog.system(
+                        "plane.session.host_session",
+                        f"ensure_host_session swallowed: {type(exc).__name__}",
+                        runtime=runtime,
+                        reason=str(exc),
+                    )
+
+            self._started = True
+
+            bind_runtime = get_runtime_binding()
+            if bind_runtime is not None:
+                with slog.phase("system", "system.bind", runtime=runtime):
+                    bind_runtime(self)
+            else:
+                slog.phase_skip(
+                    "system",
+                    "system.bind",
+                    reason="no_runtime_binding",
+                    runtime=runtime,
+                )
+
+            slog.info(
+                "ready",
+                "system ready",
+                schedule="system",
+                runtime=str(runtime),
+            )
+        except Exception as exc:
+            slog.emit(
+                1,
+                "boot.fail",
+                f"system boot fail: {type(exc).__name__}: {exc}",
+                schedule="system",
+                runtime=str(runtime),
+                reason=f"{type(exc).__name__}: {exc}",
+            )
+            raise
 
     def stop(self) -> None:
         """Stop orchestration and shut down all engines."""
         if not self._started:
             return
+
+        slog = get_system_log()
+        runtime = getattr(self, "name", None) or self.runtime_name
+        slog.info(
+            "shutdown.start",
+            "system shutdown start",
+            schedule="system",
+            runtime=str(runtime),
+        )
 
         unbind_runtime = get_runtime_unbinding()
         if unbind_runtime is not None:
@@ -312,6 +378,12 @@ class BaseRuntime:
         self.context.shutdown()
         self.event.shutdown()
         self._started = False
+        slog.info(
+            "shutdown.end",
+            "system shutdown end",
+            schedule="system",
+            runtime=str(runtime),
+        )
 
     def submit_flow(
         self,

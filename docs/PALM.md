@@ -336,6 +336,7 @@ Surfaces must not invent a second semantic model.
 | **CompositionProfile** | Membership: services, surfaces, capabilities (*what*) |
 | **DeploymentProfile** | Roles and deployment activation (*where*) |
 | **Boot schedule + mode** | Order and strictness (*how start runs*) — **0.59 open** |
+| **System log** | Ordered narrative of system life (observation) — plan [SYSTEM-LOG](SYSTEM-LOG.md) · **0.59.1a** |
 | **Settings** | Configuration resolver into the axes above |
 
 The host is **not** a second port table.  
@@ -349,10 +350,12 @@ The host **wires** system instances and product.
 | **Host schedule** | Imperative `ApplicationHost.start` (bootstrap, spawn, CQRS, surfaces, recover) | Named phase table under host; calls system schedule at spawn |
 | **Membership** | CompositionProfile declared; host still has special-case ORs | Profile is membership truth on migrated path |
 | **Modes** | Presets exist as composition/deployment shapes only | Explicit modes: safe / test / dev / prod / shape presets |
+| **System log** | Sparse process stdout | `palm.system.log` phase narrative on host/system start (0.59.1a) — [SYSTEM-LOG](SYSTEM-LOG.md) |
 
 **Law:** plugins stay on `INSTALLED_*`. Planes are **not** plugins.  
 **Law:** one composition root walks the host phase table — no private boot via import side effects.  
-**Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) · debt [SD-014](../TECH-DEBT.md#sd-014) · impact **BI-***.
+**Law:** system log is **observation**; event buses remain **reaction**; EventJournal remains **durable domain facts**.  
+**Theme:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) · debt [SD-014](../TECH-DEBT.md#sd-014) · impact **BI-*** · [BI-015](../TECH-DEBT.md#bi-015).
 
 ### 5.9 Reliability and truth aids
 
@@ -484,7 +487,7 @@ From theme **0.57** onward:
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
 | Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
 | Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
-| System boot (open) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [ADR-028](adr/028-system-boot.md) Proposed · [SD-014](../TECH-DEBT.md#sd-014) · **BI-*** |
+| System boot (open) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) plan · [ADR-028](adr/028-system-boot.md) Proposed · [SD-014](../TECH-DEBT.md#sd-014) · **BI-*** |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |

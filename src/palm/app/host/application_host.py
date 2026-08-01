@@ -66,6 +66,7 @@ from palm.patterns.wizard.bindings.cqrs.projection import (
 )
 from palm.services._cqrs_wiring import wire_all_service_cqrs
 from palm.services.design.contributors import wire_builtin_design_contributors
+from palm.system.log import get_system_log
 
 if TYPE_CHECKING:
     from palm.system.runtime.base import BaseRuntime
@@ -140,6 +141,11 @@ class ApplicationHost:
     def event(self) -> EventEngine:
         """Host-level coordination bus."""
         return self._event
+
+    @property
+    def system_log(self):
+        """Process system log (ordered boot / system narrative). See docs/SYSTEM-LOG.md."""
+        return get_system_log()
 
     @property
     def commands(self) -> CommandBus:
@@ -351,26 +357,86 @@ class ApplicationHost:
         if self._started:
             return self
 
-        self._app.bootstrap()
-        self._event.initialize()
-        self._event_recorder.attach(self._event)
-        self._worker_coordinator = WorkerCoordinator(self.profile, self._event)
-        merged = runtime_start_options(self.settings, **options)
-        self._spawner.spawn_runtimes(merged)
-        self._app.load_definitions()
-        self._wire_cqrs()
-        self._start_server_surface()
-        self._attach_projections()
-        self._recovery.recover()
-
-        self._event.emit(
-            HostEventType.STARTED,
-            roles=sorted(self.profile.roles),
+        slog = get_system_log()
+        roles = sorted(self.profile.roles)
+        slog.info(
+            "boot.start",
+            "host boot start",
+            schedule="host",
+            roles=",".join(roles) or "(none)",
+            composition_services=len(self.composition.services),
             primary=self._app.primary_name,
         )
-        self._started = True
-        if self._work_drain_background_enabled():
-            self._workplane.start_background()
+        try:
+            with slog.phase("host", "host.kernel.bootstrap"):
+                self._app.bootstrap()
+            with slog.phase("host", "host.event"):
+                self._event.initialize()
+                self._event_recorder.attach(self._event)
+            with slog.phase("host", "host.workers.note"):
+                self._worker_coordinator = WorkerCoordinator(self.profile, self._event)
+            merged = runtime_start_options(self.settings, **options)
+            with slog.phase("host", "host.system.spawn", primary=self._app.primary_name):
+                self._spawner.spawn_runtimes(merged)
+            with slog.phase("host", "host.definitions.load"):
+                self._app.load_definitions()
+            with slog.phase("host", "host.product.wire"):
+                self._wire_cqrs()
+            # Always call collaborators (inventory order); log skip when phenotype is off.
+            if self.profile.server:
+                with slog.phase("host", "host.surfaces.mount"):
+                    self._start_server_surface()
+            else:
+                slog.phase_skip(
+                    "host",
+                    "host.surfaces.mount",
+                    reason="deployment.server_off",
+                )
+                self._start_server_surface()
+            if self.composition.has("projections"):
+                with slog.phase("host", "host.projections.attach"):
+                    self._attach_projections()
+            else:
+                slog.phase_skip(
+                    "host",
+                    "host.projections.attach",
+                    reason="composition_off:projections",
+                )
+                self._attach_projections()
+            with slog.phase("host", "host.recover"):
+                self._recovery.recover()
+
+            self._event.emit(
+                HostEventType.STARTED,
+                roles=roles,
+                primary=self._app.primary_name,
+            )
+            self._started = True
+            if self._work_drain_background_enabled():
+                with slog.phase("host", "host.background.work_drain"):
+                    self._workplane.start_background()
+            else:
+                slog.phase_skip(
+                    "host",
+                    "host.background.work_drain",
+                    reason="work_drain_off",
+                )
+            slog.info(
+                "ready",
+                "host ready",
+                schedule="host",
+                primary=self._app.primary_name,
+                roles=",".join(roles) or "(none)",
+            )
+        except Exception as exc:
+            slog.emit(
+                1,
+                "boot.fail",
+                f"host boot fail: {type(exc).__name__}: {exc}",
+                schedule="host",
+                reason=f"{type(exc).__name__}: {exc}",
+            )
+            raise
         return self
 
     def _work_drain_background_enabled(self) -> bool:
@@ -390,6 +456,8 @@ class ApplicationHost:
         if not self._started:
             return
 
+        slog = get_system_log()
+        slog.info("shutdown.start", "host shutdown start", schedule="host")
         self._workplane.stop_background()
         self._workplane.stop_inbound()
 
@@ -408,6 +476,7 @@ class ApplicationHost:
         self._event.shutdown()
         self._started = False
         self._signal_stop.set()
+        slog.info("shutdown.end", "host shutdown end", schedule="host")
 
     def execute(self, command: Command) -> Any:
         """Dispatch a write-side command through the host command bus."""

@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING, Any
 from palm.app.cli_settings import is_durable_storage
 from palm.common.events.consumers import DEFAULT_JOURNAL_CONSUMERS, journal_consumer_status
 from palm.common.resource.document_storage import resolve_kv_backend
+from palm.system.log import get_system_log
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
@@ -49,6 +50,7 @@ class HostObservability:
                 )
             except Exception:
                 internal_bindings = 0
+        slog = get_system_log()
         return {
             "orchestration_bus": orchestration_bus,
             "host_coordination_bus": "host",
@@ -61,11 +63,14 @@ class HostObservability:
                 "flow.session.succeeded",
                 "flow.session.failed",
             ],
+            "system_log_level": slog.level,
+            "system_log_recent": [r.to_dict() for r in slog.recent(limit=15)],
             "note": (
                 "Orchestration events emit on runtime.event when the runtime is "
                 "started; host.event is coordination only (host.started, journal, "
                 "outbox). Internal inbound and work-drain subscribe to the "
-                "orchestration bus."
+                "orchestration bus. system_log_* is process narrative (0.59.1a), "
+                "not the domain event bus."
             ),
         }
 

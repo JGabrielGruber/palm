@@ -1,11 +1,12 @@
 # VISION 0.59 — System Boot + Composition Truth
 
-**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅  
+**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log plan **0.59.1a** ✅  
 **Inventory:** [BOOT-INVENTORY.md](BOOT-INVENTORY.md)  
+**System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (observation seat — not a second theme)  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [028-system-boot.md](adr/028-system-boot.md) **Proposed**.  
-**Debt root:** [SD-014](../TECH-DEBT.md#sd-014) · host residual [CF-002](../TECH-DEBT.md) · impact **BI-*** (this theme).  
+**Debt root:** [SD-014](../TECH-DEBT.md#sd-014) · host residual [CF-002](../TECH-DEBT.md) · impact **BI-*** · system log [BI-015](../TECH-DEBT.md#bi-015).  
 **Prior closed:** [VISION-0.58](VISION-0.58.md) session · [VISION-0.57](VISION-0.57.md) system · composition skeleton [ADR-019](adr/019-composition-profiles.md).  
 **Queue (not this theme):** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · workload remainder · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
@@ -33,11 +34,13 @@ Today, boot order lives in imperative soup:
 - **CompositionProfile** is membership truth for services, surfaces, capabilities.  
 - **Boot modes** declare phenotypes; tests boot **by mode**.  
 - Breaks during migration **harvest isolation** (BI-*).  
-- Spine (job path) stays honest; residual chrome is named, not pretended.
+- Spine (job path) stays honest; residual chrome is named, not pretended.  
+- **System log** (when seats land) shows ordered boot story without reading source ([SYSTEM-LOG](SYSTEM-LOG.md)).
 
 This theme is **not** surface compost.  
 This theme is **not** a second plugin autoload framework.  
-This theme is **schedule + membership + eager stubs + break/harvest**.
+This theme is **schedule + membership + eager stubs + break/harvest**.  
+**System log** is **observation** for that work — not a separate product theme.
 
 ---
 
@@ -205,14 +208,15 @@ Slices stay **one purpose each**. Numbers lock at execution time after 0.59.1 in
 |------:|--------------|--------|
 | **0** | Plan + map + ADR | This file, ADR-028 Proposed, PALM boot section, STATUS, BI-* seed — ✅ |
 | **1** | Inventory + characterization | [BOOT-INVENTORY.md](BOOT-INVENTORY.md); `tests/test_boot_inventory_0_59.py`; green bar — ✅ **0.59.1** |
-| **2** | Stub schedule + modes | Phase ids, walker, mode registry; doctor list |
-| **3** | System schedule v1 | `BaseRuntime.start` walks table |
-| **4** | Host schedule v1 | `ApplicationHost.start` walks table |
-| **5** | Composition membership truth | Profile is the switch |
-| **6** | Mode dogfood | `safe` + `test` green in CI |
+| **1a** | System log basic | [SYSTEM-LOG.md](SYSTEM-LOG.md) · `palm.system.log` · host+system phase lines — ✅ **0.59.1a** |
+| **2** | Stub schedule + modes | Phase ids, walker, mode registry; **reuse SystemLog** (do not invent a second narrative) |
+| **3** | System schedule v1 | `BaseRuntime.start` walks table (+ system log phase lines) |
+| **4** | Host schedule v1 | `ApplicationHost.start` walks table (+ host log phase lines) |
+| **5** | Composition membership truth | Profile is the switch (+ skip reasons in system log) |
+| **6** | Mode dogfood | `safe` + `test` green in CI (+ level defaults) |
 | **7** | dev / prod / shape presets | cli/mcp/worker/server mapped |
 | **8+** | Residual BI-* | Harvest isolation; fold dual roots only if cheap |
-| **exit** | ADR Accepted · SD-014 closed or residual named · stamp |
+| **exit** | ADR Accepted · SD-014 closed or residual named · stamp · system log shipped or BI-015 residual |
 
 ---
 
@@ -235,7 +239,8 @@ Each break row should note: **rule harvested?** · **true owner?** · **parked t
 - [ ] BI-* honest; SD-014 closed or residual re-homed.  
 - [ ] Spine green; declared modes green; chrome residual named.  
 - [ ] ADR-028 Accepted at exit.  
-- [ ] Tests boot Palm by mode without private host internals.
+- [ ] Tests boot Palm by mode without private host internals.  
+- [ ] System log planned ([SYSTEM-LOG](SYSTEM-LOG.md)); seats or residual **BI-015**.
 
 ---
 
