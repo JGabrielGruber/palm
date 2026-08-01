@@ -167,6 +167,37 @@ class WorkPlaneService:
             self._schedules.load_from_flow_rows(flow_rows, get_metadata=get_metadata)
         return n
 
+    def reload_from_repository(self, repository: Any) -> int:
+        """0.60.7 — arm triggers/schedules from a definition repository (hostless)."""
+        try:
+            flows = list(repository.list_flows() or [])
+        except Exception:
+            return 0
+        rows: list[dict[str, Any]] = []
+        by_name: dict[str, Any] = {}
+        for flow in flows:
+            name = str(getattr(flow, "name", "") or "").strip()
+            if not name:
+                continue
+            by_name[name] = flow
+            rows.append({"name": name})
+
+        def _meta(name: str) -> dict[str, Any] | None:
+            flow = by_name.get(name)
+            if flow is None:
+                return None
+            meta = getattr(flow, "metadata", None)
+            if isinstance(meta, dict) and (
+                meta.get("triggers") or meta.get("schedule")
+            ):
+                return meta
+            opts = getattr(flow, "options", None)
+            if isinstance(opts, dict):
+                return opts
+            return meta if isinstance(meta, dict) else None
+
+        return self.reload_triggers(rows, get_metadata=_meta)
+
     def enqueue(self, intent: WorkIntent) -> str:
         if self._store is None:
             raise RuntimeError("work plane not attached")
@@ -279,11 +310,17 @@ class WorkPlaneService:
 def _default_submit(
     runtime: Any,
 ) -> Callable[[str, dict[str, Any]], Any]:
-    """Submit via system executor — product façade not required."""
+    """Submit via system executor — product façade not required.
+
+    **0.60.4:** attribute reactive session on the system path (session plane).
+    """
 
     def submit(flow_id: str, payload: dict[str, Any]) -> Any:
+        from palm.system.planes.work.session_attr import attribute_reactive_start
+
         body = dict(payload or {})
         seed = body.pop("_seed_state", None)
+        body = attribute_reactive_start(runtime, flow_id, body)
         state = seed
         if isinstance(seed, dict):
             from palm.states import BlackboardState

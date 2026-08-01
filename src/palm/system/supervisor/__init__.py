@@ -8,11 +8,13 @@ See docs/VISION-0.60.md · ADR-029.
 
 from __future__ import annotations
 
+from palm.system.supervisor.outbox_loop import OutboxLoopService
 from palm.system.supervisor.service import CallableSystemService, SystemService
 from palm.system.supervisor.supervisor import SystemSupervisor
 
 __all__ = [
     "CallableSystemService",
+    "OutboxLoopService",
     "SystemService",
     "SystemSupervisor",
 ]

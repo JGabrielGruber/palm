@@ -13,8 +13,8 @@ from uuid import uuid4
 from palm.core.work import WorkIntent
 
 if TYPE_CHECKING:
-    from palm.system.planes.work.store import WorkIntentStore
     from palm.core.storage import StorageEngine
+    from palm.system.planes.work.store import WorkIntentStore
 
 SCHEDULE_PREFIX = "palm:schedule:entry:"
 SCHEDULE_INDEX = "palm:schedule:index"

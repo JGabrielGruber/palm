@@ -30,6 +30,7 @@ class RecoveryCoordinator:
         self._host = host
         self._compensation: CompensationCoordinator | None = None
         self._outbox_service: OutboxBackgroundService | None = None
+        self._outbox_via_supervisor: bool = False
         self._webhook_dispatcher: WebhookDispatcher | None = None
         self._last_recovery: dict[str, Any] | None = None
 
@@ -84,6 +85,14 @@ class RecoveryCoordinator:
             self._start_outbox_service()
             if self._outbox_service is not None:
                 recovery["outbox_pending"] = self._outbox_service.store.pending_count()
+            elif self._outbox_via_supervisor:
+                try:
+                    store = host._app.runtime().outbox_store
+                    if store is not None:
+                        recovery["outbox_pending"] = store.pending_count()
+                        recovery["outbox_via"] = "supervisor"
+                except Exception:
+                    pass
 
         # 0.51.5: no projection layer (lean composition) → nothing to rebuild.
         if host.composition.has("projections") and host.settings.rebuild_projections_on_startup:
@@ -105,6 +114,27 @@ class RecoveryCoordinator:
         if not host._app.storage.is_initialized:
             return
         dispatcher = self._build_webhook_dispatcher()
+        # 0.60.6: prefer system supervisor outbox when no host webhook targets.
+        if dispatcher is None:
+            try:
+                runtime = host._app.runtime()
+                sup = getattr(runtime, "supervisor", None)
+                if sup is not None and sup.get("outbox") is not None:
+                    # Align poll settings if the service exposes them.
+                    svc = sup.get("outbox")
+                    if hasattr(svc, "_poll_interval"):
+                        svc._poll_interval = max(
+                            0.05, float(host.profile.outbox_poll_interval)
+                        )
+                    if hasattr(svc, "_recover_on_start"):
+                        svc._recover_on_start = bool(
+                            host.profile.outbox_recover_on_startup
+                        )
+                    sup.start("outbox")
+                    self._outbox_via_supervisor = True
+                    return
+            except Exception:
+                pass
         self._outbox_service = OutboxBackgroundService(
             host._app.storage,
             host._event,
@@ -131,6 +161,14 @@ class RecoveryCoordinator:
         return self._webhook_dispatcher
 
     def stop(self) -> None:
+        if self._outbox_via_supervisor:
+            try:
+                sup = self._host._app.runtime().supervisor
+                if sup is not None and sup.get("outbox") is not None:
+                    sup.stop("outbox")
+            except Exception:
+                pass
+            self._outbox_via_supervisor = False
         if self._outbox_service is not None:
             self._outbox_service.stop()
             self._outbox_service = None

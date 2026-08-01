@@ -16,10 +16,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.app.host.workplane.inbound_service import InboundBindingService
 from palm.app.host.workplane.work_drain_service import WorkDrainService
 from palm.common.events import wire_event_journal as _wire_event_journal
 from palm.common.events.consumers import consume_for_projections, consume_for_webhooks
+from palm.system.planes.work.inbound import InboundBindingService
+from palm.system.supervisor import CallableSystemService
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
@@ -174,6 +175,28 @@ class WorkPlaneCoordinator:
             invoke_resource=_invoke,
         )
         self.reload_inbound_bindings()
+        # 0.60.8 — register continuous inbound workers on the system supervisor.
+        try:
+            runtime = host._app.runtime()
+            sup = getattr(runtime, "supervisor", None)
+            if sup is not None:
+
+                def _start() -> None:
+                    self._inbound.start_workers()
+
+                def _stop() -> None:
+                    self._inbound.stop()
+
+                sup.register(
+                    CallableSystemService(
+                        "inbound",
+                        start=_start,
+                        stop=_stop,
+                        status=self._inbound.status,
+                    )
+                )
+        except Exception:
+            pass
 
     def wire_event_journal(self) -> None:
         host = self._host
@@ -193,7 +216,12 @@ class WorkPlaneCoordinator:
     # ── reload / tick / drain (public host API delegates here) ───────────────
 
     def reload_work_triggers(self) -> int:
-        """Reload definition triggers into the work drain (after design/example load)."""
+        """Reload definition triggers into the work drain (after design/example load).
+
+        **0.60.7:** when the drain is the system work plane and product
+        definitions are unavailable, fall back to the runtime definition
+        repository on the system instance.
+        """
         host = self._host
         if self._work_drain is None:
             return 0
@@ -216,6 +244,16 @@ class WorkPlaneCoordinator:
 
             return int(self._work_drain.reload_triggers(rows, get_metadata=_meta) or 0)
         except Exception:
+            # Hostless / product-thin: repository on the system instance.
+            plane = self._work_drain
+            if hasattr(plane, "reload_from_repository"):
+                try:
+                    runtime = host._app.runtime()
+                    repo = getattr(runtime, "repository", None)
+                    if repo is not None:
+                        return int(plane.reload_from_repository(repo) or 0)
+                except Exception:
+                    return 0
             return 0
 
     def reload_inbound_bindings(self) -> int:
@@ -224,6 +262,15 @@ class WorkPlaneCoordinator:
             return 0
         try:
             n = int(self._inbound.reload_from_definitions() or 0)
+            # Prefer supervisor start when inbound is registered (0.60.8).
+            try:
+                runtime = self._host._app.runtime()
+                sup = getattr(runtime, "supervisor", None)
+                if sup is not None and sup.get("inbound") is not None:
+                    sup.start("inbound")
+                    return n
+            except Exception:
+                pass
             self._inbound.start_workers()
             return n
         except Exception:
@@ -319,6 +366,14 @@ class WorkPlaneCoordinator:
             self._work_drain.stop_background()
 
     def stop_inbound(self) -> None:
+        try:
+            runtime = self._host._app.runtime()
+            sup = getattr(runtime, "supervisor", None)
+            if sup is not None and sup.get("inbound") is not None:
+                sup.stop("inbound")
+                return
+        except Exception:
+            pass
         if self._inbound is not None:
             try:
                 self._inbound.stop()

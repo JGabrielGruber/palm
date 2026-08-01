@@ -52,7 +52,11 @@ from palm.system.runtime.job_hooks import (
     StateSnapshotHook,
 )
 from palm.system.runtime.wiring import resolve_scheduler
-from palm.system.supervisor import CallableSystemService, SystemSupervisor
+from palm.system.supervisor import (
+    CallableSystemService,
+    OutboxLoopService,
+    SystemSupervisor,
+)
 
 
 def build_system_handlers(
@@ -219,7 +223,7 @@ def build_system_handlers(
         )
 
     def supervisor_wire(ctx: BootContext) -> None:
-        """0.60.1 seat + 0.60.5 register work_drain over work plane."""
+        """Register continuous services (work_drain, outbox) — start later."""
         sup = SystemSupervisor()
         runtime._supervisor = sup
         plane = getattr(runtime, "_work_plane", None) or getattr(
@@ -232,6 +236,27 @@ def build_system_handlers(
                     start=plane.start_background,
                     stop=plane.stop_background,
                     status=plane.status,
+                )
+            )
+        # 0.60.6 — outbox continuous when processor was wired.
+        proc = getattr(runtime, "_outbox_processor", None) or getattr(
+            runtime, "outbox_processor", None
+        )
+        store = getattr(runtime, "_outbox_store", None) or getattr(
+            runtime, "outbox_store", None
+        )
+        if proc is not None and store is not None:
+            sup.register(
+                OutboxLoopService(
+                    proc,
+                    store,
+                    poll_interval=float(
+                        options.get("outbox_poll_interval", 0.5) or 0.5
+                    ),
+                    batch_size=int(options.get("outbox_batch_size", 50) or 50),
+                    recover_on_start=bool(
+                        options.get("outbox_recover_on_startup", True)
+                    ),
                 )
             )
         get_system_log().info(
@@ -260,25 +285,37 @@ def build_system_handlers(
         )
 
     def background_start(ctx: BootContext) -> None:
-        """0.60.5 — start supervised continuous services when enabled."""
-        if not bool(options.get("enable_work_drain_service", False)):
-            raise PhaseSkip("enable_work_drain_service_off")
+        """Start supervised continuous services when options allow (0.60.5-6)."""
         if bool(options.get("allow_background_drain", True)) is False:
             raise PhaseSkip("allow_background_drain_off")
         sup = runtime._supervisor
         if sup is None:
             raise PhaseSkip("no_supervisor")
-        if sup.get("work_drain") is None:
-            raise PhaseSkip("no_work_drain_service")
-        started = sup.start("work_drain")
+
+        want_drain = bool(options.get("enable_work_drain_service", False))
+        want_outbox = bool(options.get("enable_outbox_background", False))
+        if not want_drain and not want_outbox:
+            raise PhaseSkip("no_background_services_enabled")
+
+        started: list[str] = []
+        if want_drain and sup.get("work_drain") is not None:
+            started.extend(sup.start("work_drain"))
+        if want_outbox and sup.get("outbox") is not None:
+            started.extend(sup.start("outbox"))
+        if not started and not (
+            (want_drain and sup.get("work_drain") is not None)
+            or (want_outbox and sup.get("outbox") is not None)
+        ):
+            raise PhaseSkip("no_matching_supervised_services")
+
         get_system_log().info(
             "supervisor.background.start",
-            "supervised work_drain started"
+            "supervised background started"
             if started
-            else "work_drain already running",
+            else "supervised services already running or idle",
             schedule="system",
             runtime=ctx.runtime,
-            services=",".join(started) or "work_drain",
+            services=",".join(started) or "(none)",
         )
 
     return {

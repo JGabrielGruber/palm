@@ -150,11 +150,11 @@ Slices stay **one purpose each**. Numbers may gain `a`/`b` sub-slices.
 | **1** | Supervisor seat | Registry, start/stop/status, boot hooks; empty services OK — ✅ **0.60.1** |
 | **2** | Work plane service | `WorkPlaneService` · `runtime.work_plane` · attach · tick/enqueue over existing store — ✅ **0.60.2** |
 | **3** | System job start | Drain submits via executor / ExecutionPort (product façade later) — ✅ default `runtime.submit_flow` on plane; host rebinds product + session |
-| **4** | Session-safe start | Reactive attribution on system path (0.58 law, system wire) — partial: host rebind enrich; pure system path later |
+| **4** | Session-safe start | Reactive attribution on system path (0.58 law, system wire) — ✅ **0.60.4** (`session_attr` on default submit) |
 | **5** | Supervised work drain | Background loop · system phase · mode skip — ✅ **0.60.5** (`work_drain` on supervisor · `system.background.start`) |
-| **6** | Outbox continuous | Supervisor owns poll; host thread path thins |
-| **7** | Catalog feed · triggers | Reload arms on work plane |
-| **8** | Inbound system contract | Required enqueue + supervised workers |
+| **6** | Outbox continuous | Supervisor owns poll; host thread path thins — ✅ **0.60.6** (`OutboxLoopService` · host recover prefers supervisor) |
+| **7** | Catalog feed · triggers | Reload arms on work plane — ✅ **0.60.7** (`reload_from_repository` · host fallback) |
+| **8** | Inbound system contract | Required enqueue + supervised workers — ✅ **0.60.8** (`planes.work.inbound` · supervisor `inbound`) |
 | **9** | Host deflate · dual root | Coordinators thin; lean roots attach planes + supervisor |
 | **exit** | ADR Accepted · debts closed or residual named · stamp · migration if needed | |
 
