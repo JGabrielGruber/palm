@@ -150,12 +150,13 @@ Idempotent (`_loaded` flag). Not wrong — but **order dependency** if something
 |-------|-------------|
 | **Spine host** | Collapsed `ApplicationHost` with test settings: start → submit/continue path available; session plane + wait plane present |
 | **Spine system** | `BaseRuntime`/`EmbeddedRuntime` start alone: plugins, storage, wait, session, orchestration |
-| **Declared modes** | **`safe`/`test` ✅ 0.59.6** + **dev/prod/shapes ✅ 0.59.7** — `for_mode` (+ `server_port=0` for server/prod CI) |
+| **Declared modes** | **`safe`/`test` ✅ 0.59.6** + **shapes ✅ 0.59.7** + default fixture **`all_in_one` ✅ 0.59.8** |
 | **Legacy dual roots / heavy surfaces** | May fail mid-theme; BI-* required; not spine |
 
 **0.59.1 green bar:** characterization tests in `tests/test_boot_inventory_0_59.py` + existing host tests remain green.  
 **0.59.6 green bar:** `tests/test_mode_dogfood_0_59_6.py` — safe + test phenotype, log levels, spine.  
-**0.59.7 green bar:** `tests/test_shape_dogfood_0_59_7.py` — dev/prod + shapes phenotype; collapsed spine SUCCEEDED; queued shapes accept submit.
+**0.59.7 green bar:** `tests/test_shape_dogfood_0_59_7.py` — dev/prod + shapes phenotype; collapsed spine SUCCEEDED; queued shapes accept submit.  
+**0.59.8 residual:** conftest `host` → `for_mode("all_in_one")`; dead `options={"name":"quick"}` DAGs → `tests/helpers/flows.py` spine wizard.
 
 ### 7.2 End of theme (reminder)
 

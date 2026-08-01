@@ -143,11 +143,12 @@ def rest_base_url(http_echo_server: str) -> str:
 
 @pytest.fixture
 def host(fast_settings: PalmSettings) -> Iterator[ApplicationHost]:
-    """Started collapsed ApplicationHost for integration tests."""
-    application_host = ApplicationHost(
-        settings=fast_settings,
-        profile=DeploymentProfile.all_in_one(),
-    )
+    """Started full host for integration tests — boot mode ``all_in_one`` (0.59.8).
+
+    Named mode (not anonymous constructor). Full services/capabilities; no HTTP.
+    Lean isolation: use ``test_mode_host`` / ``safe_mode_host`` instead.
+    """
+    application_host = ApplicationHost.for_mode("all_in_one", settings=fast_settings)
     application_host.start()
     yield application_host
     application_host.shutdown()

@@ -129,8 +129,10 @@ def test_build_unknown_pattern_raises() -> None:
 
 
 def test_builder_rejects_unsupported_options() -> None:
+    # DAG requires nodes/steps first; bare junk options no longer use the old
+    # "unsupported options" path once nodes are missing.
     flow = FlowDefinition(name="dag", pattern="dag", options={"extra": True})
-    with pytest.raises(DefinitionBuildError, match="does not support"):
+    with pytest.raises(DefinitionBuildError, match="nodes|steps|does not support"):
         build_pattern(flow)
 
 

@@ -1,6 +1,6 @@
 # VISION 0.59 — System Boot + Composition Truth
 
-**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log **0.59.1a** ✅ · stubs/modes **0.59.2** ✅ · system schedule **0.59.3** ✅ · host schedule **0.59.4** ✅ · membership **0.59.5** ✅ · mode dogfood **0.59.6** ✅ · shapes **0.59.7** ✅  
+**Status:** 📋 **Theme open** · plan **0.59.0** · inventory **0.59.1** ✅ · system log **0.59.1a** ✅ · stubs/modes **0.59.2** ✅ · system schedule **0.59.3** ✅ · host schedule **0.59.4** ✅ · membership **0.59.5** ✅ · mode dogfood **0.59.6** ✅ · shapes **0.59.7** ✅ · residual **0.59.8** ✅  
 **Inventory:** [BOOT-INVENTORY.md](BOOT-INVENTORY.md)  
 **System log plan:** [SYSTEM-LOG.md](SYSTEM-LOG.md) (observation seat — not a second theme)  
 **Language:** ASD-STE100 Simplified Technical English.  
@@ -215,6 +215,7 @@ Slices stay **one purpose each**. Numbers lock at execution time after 0.59.1 in
 | **5** | Composition membership truth | Profile is the switch (+ skip reasons in system log) — ✅ **0.59.5** |
 | **6** | Mode dogfood | `safe` + `test` green in CI (+ level defaults) — ✅ **0.59.6** (`for_mode`, fixtures, spine) |
 | **7** | dev / prod / shape presets | cli/mcp/worker/server mapped — ✅ **0.59.7** (`for_mode` + `server_port`, phenotype + spine) |
+| **8** | Residual cleanup | default `host` fixture mode-pinned; dead spine examples fixed; BI-007 honest — ✅ **0.59.8** |
 | **8+** | Residual BI-* | Harvest isolation; fold dual roots only if cheap |
 | **exit** | ADR Accepted · SD-014 closed or residual named · stamp · system log shipped or BI-015 residual |
 

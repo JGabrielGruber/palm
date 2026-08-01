@@ -5,7 +5,6 @@ from __future__ import annotations
 from palm.app.host.events import HostEventType
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.query import ListInstancesQuery
-from palm.definitions.flow import FlowDefinition
 from palm.runtimes.cli.shared.args import CliInvocation
 from palm.runtimes.cli.shared.bootstrap import bootstrap_runtime, shutdown_context
 from palm.runtimes.cli.tui import actions as tui_actions
@@ -24,9 +23,15 @@ def test_cli_submit_flow_uses_host_command_bus(fast_cli_settings: PalmSettings) 
         lambda e: dispatched.append(str(e.payload.get("command"))),
     )
     try:
-        flow = FlowDefinition(name="quick", pattern="dag", options={"name": "quick"})
+        from tests.helpers.flows import spine_wizard
+
+        flow = spine_wizard("quick")
         ctx.app.runtime().repository.register_flow(flow)
         job = tui_actions.submit_flow(ctx, "quick")
+        assert job.status.value == "WAITING_FOR_INPUT"
+        ctx.host.provide_input(job.id, "ok")
+        job = ctx.host.runtime().orchestration.get_job(job.id)
+        assert job is not None
         assert job.status.value == "SUCCEEDED"
         assert "SubmitFlowCommand" in dispatched
     finally:

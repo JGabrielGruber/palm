@@ -61,9 +61,9 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert host.assist is None
         assert host.design is None
         assert host.analytics is None
-        assert host.work_drain is None or not getattr(
-            host.work_drain, "is_running", False
-        )
+        # Embedded + mode_background_off: drain never starts.
+        assert host.work_drain is None or host.work_drain.is_running is False
+
 
         boot = host.control_plane_status()["boot"]
         assert boot["mode"] == mode_name

@@ -10,7 +10,6 @@ from palm.app import ApplicationHost, DeploymentProfile, PalmSettings
 from palm.app.host.events import HostEventType
 from palm.common.events import OutboxStore
 from palm.core.event import Event
-from palm.definitions.flow import FlowDefinition
 from palm.runtimes.daemon import DaemonRuntime
 from palm.runtimes.embedded import EmbeddedRuntime
 from palm.runtimes.server import ServerRuntime
@@ -124,14 +123,15 @@ def test_outbox_service_drains_pending_entries(full_recovery_settings: PalmSetti
 
 
 def test_all_in_one_submits_flow(settings: PalmSettings) -> None:
-    host = ApplicationHost(settings=settings, profile=DeploymentProfile.all_in_one())
+    from tests.helpers.flows import complete_spine_job
+
+    host = ApplicationHost.for_mode("all_in_one", settings=settings)
     host.start()
-
-    flow = FlowDefinition(name="quick", pattern="dag", options={"name": "quick"})
-    job = host.submit_flow(flow, job_id="dag-host-1")
-    assert job.status.value == "SUCCEEDED"
-
-    host.shutdown()
+    try:
+        job = complete_spine_job(host, "dag-host-1", flow_name="quick")
+        assert job.status.value == "SUCCEEDED"
+    finally:
+        host.shutdown()
 
 
 def test_deployment_profile_from_settings_roles(settings: PalmSettings) -> None:

@@ -103,17 +103,16 @@ def test_wizard_live_events_update_progress_projection() -> None:
 
 
 def test_host_job_board_updates_on_submit(settings: PalmSettings) -> None:
-    from palm.definitions.flow import FlowDefinition
+    from tests.helpers.flows import spine_wizard
 
-    host = ApplicationHost(settings=settings, profile=DeploymentProfile.all_in_one())
+    host = ApplicationHost.for_mode("all_in_one", settings=settings)
     host.start()
-
-    flow = FlowDefinition(name="quick", pattern="dag", options={"name": "quick"})
-    job = host.submit_flow(flow, job_id="board-1")
-    views = host.list_job_views()
-    assert any(row.job_id == job.id for row in views)
-
-    host.shutdown()
+    try:
+        job = host.submit_flow(spine_wizard("quick"), job_id="board-1")
+        views = host.list_job_views()
+        assert any(row.job_id == job.id for row in views)
+    finally:
+        host.shutdown()
 
 
 def test_cli_context_uses_query_bus_for_instance_list(fast_cli_settings: PalmSettings) -> None:

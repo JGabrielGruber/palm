@@ -41,7 +41,7 @@ def test_multiple_runtimes_share_storage(app: PalmKernel) -> None:
     assert embedded.storage is daemon.storage is app.storage
     assert set(app.running()) == {"api", "worker"}
 
-    flow = FlowDefinition(name="shared", pattern="dag", options={"name": "shared"})
+    flow = FlowDefinition(name="shared", pattern="wizard", options={"steps": 1})
     embedded.repository.save_flow(flow)
     app.load_definitions(name="worker")
     assert daemon.repository.has_flow("shared")
@@ -51,8 +51,12 @@ def test_daemon_and_embedded_concurrent(app: PalmKernel) -> None:
     embedded = app.create_runtime("embedded", name="cli", autostart=True)
     daemon = app.create_runtime("daemon", name="bg", autostart=True)
 
-    flow = FlowDefinition(name="quick", pattern="dag", options={"name": "quick"})
+    flow = FlowDefinition(name="quick", pattern="wizard", options={"steps": 1})
     job = embedded.submit_flow(flow, job_id="dag-1")
+    assert job.status.value == "WAITING_FOR_INPUT"
+    embedded.provide_input("dag-1", "ok")
+    job = embedded.orchestration.get_job("dag-1")
+    assert job is not None
     assert job.status.value == "SUCCEEDED"
     daemon.wait_until_idle(timeout=2.0)
 
