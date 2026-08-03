@@ -99,6 +99,8 @@ SEAT_SESSION_PLANE: Final[str] = "session_plane"
 SEAT_WORK_PLANE: Final[str] = "work_plane"
 SEAT_SUPERVISOR: Final[str] = "supervisor"
 SEAT_EXECUTION: Final[str] = "execution"
+SEAT_INSTALL: Final[str] = "install"
+"""InstallInterface collaborator board (peer of execution)."""
 SEAT_SYSTEM_LOG: Final[str] = "system_log"
 SEAT_BOOT_MEMBERSHIP: Final[str] = "boot_membership"
 
@@ -195,6 +197,7 @@ __all__ = [
     "ROLE_TOOL",
     "SEAT_BOOT_MEMBERSHIP",
     "SEAT_EXECUTION",
+    "SEAT_INSTALL",
     "SEAT_REPORT_SCHEMA",
     "SEAT_SESSION_PLANE",
     "SEAT_SUPERVISOR",

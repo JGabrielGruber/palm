@@ -23,7 +23,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **Boot law** | Two schedules; composition = membership; modes via `for_mode` |
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); catalog residual **BI-015** |
 | **Closed** | **0.60.0–0.60.9 + exit** — BI-013 closed · ADR-029 Accepted · stamp `0.60.9` |
-| **Next** | **0.61.3+** emission window · Inspect rename · growth (stamps when José exits) |
+| **Next** | **0.61.3+** emission window · Inspect rename · growth (stamps when José exits) · host dogfood walk live |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · user-plane · workload remainder · Grove |
 
 ## Quick Overview

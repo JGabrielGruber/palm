@@ -9,6 +9,7 @@
 **Prior closed:** [VISION-0.60](VISION-0.60.md) supervisor + work plane · [VISION-0.59](VISION-0.59.md) boot · [VISION-0.58](VISION-0.58.md) session.  
 **Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) · [CS-002](../TECH-DEBT.md#cs-002) · [OD-001](../TECH-DEBT.md#od-001) · [BI-015](../TECH-DEBT.md#bi-015).  
 **Mid-theme residual:** [SD-016](../TECH-DEBT.md#sd-016) ambient seat DI (open) · paid SD-015 / CS-006…008.  
+**Dogfood:** host.start → primary → seat walk (install + planes + supervisor) — eyes on system under composition root; host itself is not a vitality seat yet.  
  
 **Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI / SI / SU · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).

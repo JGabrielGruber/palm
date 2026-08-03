@@ -33,6 +33,7 @@ from palm.system.vitality.schema import (
     KIND_SUPERVISOR,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
+    SEAT_INSTALL,
     SEAT_PLANES,
     SEAT_SUPERVISOR,
     SEAT_SYSTEM_LOG,
@@ -46,6 +47,17 @@ def _resolve_execution(instance: Any) -> Any | None:
     if callable(getattr(instance, "invoke_resource", None)):
         return instance
     return None
+
+
+def _resolve_install(instance: Any) -> Any | None:
+    """InstallInterface board on the shell (explicit bind; not bag scrape)."""
+    board = getattr(instance, "install", None)
+    if board is None:
+        return None
+    # Prefer objects that look like the install board (status of ports).
+    if callable(getattr(board, "status", None)):
+        return board
+    return board
 
 
 def _resolve_system_log(instance: Any) -> Any | None:
@@ -83,6 +95,26 @@ def _report_execution(instance: Any, port: Any) -> SeatReport:
             "has_invoke_resource": callable(getattr(port, "invoke_resource", None)),
             "has_start_workload": callable(getattr(port, "start_workload", None)),
             "port_type": type(port).__name__,
+        },
+    )
+
+
+def _report_install(instance: Any, board: Any) -> SeatReport:
+    """Raw InstallInterface status() — which collaborator ports are bound."""
+    return sample_attrs(
+        board,
+        seat_id=SEAT_INSTALL,
+        kind=KIND_PORT,
+        attrs=(),
+        source="install_interface",
+        instance=instance,
+        extra_raw={
+            "board_type": type(board).__name__,
+            "ports": (
+                board.status()
+                if callable(getattr(board, "status", None))
+                else None
+            ),
         },
     )
 
@@ -137,6 +169,15 @@ def build_default_probes() -> list[SeatProbe]:
             order=50,
             tags=("core", "port"),
             description="ExecutionPort — raw port attrs",
+        ),
+        SeatProbe(
+            seat_id=SEAT_INSTALL,
+            kind=KIND_PORT,
+            resolve=_resolve_install,
+            report=_report_install,
+            order=55,
+            tags=("core", "port", "install"),
+            description="InstallInterface — raw status() of collaborator ports",
         ),
         SeatProbe(
             seat_id=SEAT_SYSTEM_LOG,
