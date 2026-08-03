@@ -4,6 +4,18 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.61.0] — 2026-08-03
+
+### 0.61 — Living-kernel vitality (**theme open** · plan)
+
+Vision: [VISION-0.61](docs/VISION-0.61.md) · ADR: [030](docs/adr/030-system-vitality.md) **Proposed** · seed essay: [VISION-VITALITY](docs/VISION-VITALITY.md)
+
+#### Plan (0.61.0)
+- Theme open: system-intrinsic vitality (living `top`); dynamic seat discovery; Inspect product door; doctor marked debt (**OD-001**)
+- ADR-030 Proposed (homes, registry, emission identity, no workaround architecture)
+- STATUS / AGENTS / PALM / LIBRARY / TECH-DEBT pointers; seed essay → opened as 0.61
+- **Theme discipline (project standard):** [VERSIONING.md](docs/VERSIONING.md) floor · growth · exit; **José** as sole human authority (*Who decides*); [AGENTS.md](AGENTS.md) §6b; [WRITING.md](docs/WRITING.md) VISION rules; [PHILOSOPHY.md](PHILOSOPHY.md) metabolism — ambition over empty process; proper homes over dual-truth workarounds
+
 ## [0.60.9] — 2026-08-01
 
 ### 0.60 — System Supervisor + Work Plane (**theme closed**)

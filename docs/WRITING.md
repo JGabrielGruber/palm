@@ -48,4 +48,25 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 
 ---
 
+## Theme plans (VISION-0.X)
+
+Theme process law: [VERSIONING.md](VERSIONING.md) (floor · growth · exit).
+
+When you write or revise a theme plan:
+
+| Prefer | Avoid |
+|--------|--------|
+| **Floor** (intent is real) + **growth line** (theme may continue) | Only a kill checklist that forces early exit |
+| Slice table as **ordered guide** | Sealed contract that forbids needed work |
+| **Non-goals** = not this subject (other seed) | Forever-bans without layer reason |
+| **Forbidden always** = layer law (truth, one path) | Process that kills ambition |
+| Debt: pay / break / **name residual** | Permanent workaround as “efficiency” |
+| Exit = homes proper + residual honest | Exit = every seed row ticked |
+
+Agents and humans plan for **proper Palm**, not for empty theme-kill theater.
+
+When exit, ambition, or process vs growth is the point, name **José** (José Gabriel Gruber) as the person who decides — see [VERSIONING.md](VERSIONING.md) *Who decides*. Vague “maintainer” is weaker for negotiation in a single-human project.
+
+---
+
 *Clear words keep the structure alive.*

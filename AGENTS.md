@@ -14,8 +14,9 @@ For AI coding agents and human developers who change code.
 | **What Palm is** (layers, job path, ports, planes, laws) | **[docs/PALM.md](docs/PALM.md)** |
 | **System low-level** (package, port, moves) | [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) |
 | **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [docs/STUBS.md](docs/STUBS.md) intentions · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) |
-| How to write docs | [docs/WRITING.md](docs/WRITING.md) (ASD-STE100) |
-| Project status / themes | [STATUS.md](STATUS.md) · [docs/VISION-0.60.md](docs/VISION-0.60.md) (**closed** supervisor + work plane) · [docs/VISION-0.59.md](docs/VISION-0.59.md) (**closed** boot) · [docs/VISION-0.58.md](docs/VISION-0.58.md) (**closed** session) · [docs/VISION-SURFACE-DEFLATION.md](docs/VISION-SURFACE-DEFLATION.md) (queue) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed** system) |
+| How to write docs | [docs/WRITING.md](docs/WRITING.md) (ASD-STE100 · VISION floor/growth) |
+| Version + **theme discipline** | [docs/VERSIONING.md](docs/VERSIONING.md) — floor · growth · exit; **José** decides; ambition over empty process |
+| Project status / themes | [STATUS.md](STATUS.md) · [docs/VISION-0.61.md](docs/VISION-0.61.md) (**open** vitality) · [docs/VISION-0.60.md](docs/VISION-0.60.md) (**closed** supervisor + work plane) · [docs/VISION-0.59.md](docs/VISION-0.59.md) (**closed** boot) · [docs/VISION-0.58.md](docs/VISION-0.58.md) (**closed** session) · [docs/VISION-SURFACE-DEFLATION.md](docs/VISION-SURFACE-DEFLATION.md) (queue) · [docs/VISION-VITALITY.md](docs/VISION-VITALITY.md) (seed essay) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed** system) |
 | Multi-Palm horizon | [docs/VISION-GROVE.md](docs/VISION-GROVE.md) |
 | MCP operate | [docs/MCP.md](docs/MCP.md) · skill [docs/skills/palm/SKILL.md](docs/skills/palm/SKILL.md) |
 
@@ -23,7 +24,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.60](docs/VISION-0.60.md) **closed** · [ADR-029](docs/adr/029-system-supervisor.md) Accepted · stamp `0.60.9` · residual **BI-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
+**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **OD-001** · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
 
 ---
 
@@ -39,8 +40,11 @@ When structure changes, update **PALM.md** (and ADR if needed). Keep this file a
 | **Testability first** | Critical paths unit-testable in isolation |
 | **Human-first + truth-seeking** | Wait, resume, inspect, honest failure |
 | **Minimal magic** | Prefer readable, explicit code |
+| **Proper over workaround** | Break ugly dual truth; pay debt or name it — do not ship permanent lies as architecture |
+| **Ambition over empty process** | Themes grow until intent is proper; exit is **José’s** judgment, not checklist theater |
 
-Full layer laws: [PALM.md §9](docs/PALM.md).
+Full layer laws: [PALM.md §9](docs/PALM.md).  
+Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md) (floor · growth · exit · **who decides**).
 
 ---
 
@@ -151,7 +155,7 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 
 - **System map:** [docs/PALM.md](docs/PALM.md) — update when layers/ports/planes change.  
 - **ADR or waive** for significant decisions ([docs/adr/](docs/adr/), index; or `ADR: waived — …` on VISION/STATUS). Numbers append-only.  
-- **Theme plan:** `docs/VISION-0.X.md` · versioning [docs/VERSIONING.md](docs/VERSIONING.md).  
+- **Theme plan:** `docs/VISION-0.X.md` · full discipline [docs/VERSIONING.md](docs/VERSIONING.md) (floor · growth · exit judgment).  
 - **Status / debt:** [STATUS.md](STATUS.md) · live [TECH-DEBT.md](TECH-DEBT.md) · intentions [docs/STUBS.md](docs/STUBS.md); PD-era archive under `docs/audit/`.  
 - **Surfaces:** stay thin; no new `runtime.resource` / `runtime.orchestration` access from surfaces (SU-001 / SD-005).  
 - **Stubs:** do not add fake-success providers/storages; record purpose in STUBS.md (ST-001+).  
@@ -161,6 +165,28 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 - Living Library: [docs/LIBRARY.md](docs/LIBRARY.md).
 
 **Rule:** Code and docs diverge → treat as a bug.
+
+---
+
+## 6b. Theme planning and growth (agents)
+
+**Who decides:** **José Gabriel Gruber (José)** is the sole human technical lead for Palm.  
+Theme open/close, floor vs growth, ambition vs process, and ADR accept at exit are **his** calls.  
+Agents **propose and implement**; they **negotiate with José** — they do not close themes alone or invent a faceless “maintainer.”
+
+When you open or plan a minor (`0.X.0` / VISION / ADR), or execute slices:
+
+| Do | Do not |
+|----|--------|
+| State **floor** (intent is real) and **growth line** (theme may continue) | Treat slice tables as sealed kill contracts |
+| Protect **layer law** (purity, ports, one start/continue path) | Invent process that shrinks ambition to close faster |
+| **Break** dual truth that blocks the home; **pay** debt or **name** residual | Ship permanent workarounds so tests stay green without truth |
+| Allow **big renames / deletes** when the home is wrong | Fear large correct moves because “theme should stay thin” |
+| Leave theme **open** until **José** judges intent finished | Force theme exit for empty checklist theater |
+| Write **non-goals** as “not this subject” when another seed owns them | Write forever-bans that kill Palm’s prospect without layer reason |
+| Name **José** in docs when exit or ambition judgment is the point | Hide authority behind vague “maintainer” when negotiation needs a person |
+
+**Exit** is José’s judgment when homes are proper — see [VERSIONING.md](docs/VERSIONING.md) · spirit [PHILOSOPHY.md](PHILOSOPHY.md).
 
 ---
 
@@ -176,10 +202,12 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 - [ ] `just docs-check` if docs/version touched  
 - [ ] No `archive/` imports  
 - [ ] `just guard-core` / `just guard-common`  
-- [ ] **`just check` green**  
+- [ ] **`just check` green** (declared green bar for the slice)  
 - [ ] No experimental features registered as installed without a flag  
 - [ ] No new deferred imports only to hide cycles (comment if unavoidable)  
-- [ ] One slice per `docs/VERSIONING.md` (`feat(0.X.N): …`)
+- [ ] Slice labeled per [VERSIONING.md](docs/VERSIONING.md) (`feat(0.X.N): …`); one purpose when possible  
+- [ ] No permanent workaround architecture; debt named if not paid  
+- [ ] Theme floor/growth not confused with “must close now”; exit only with **José’s** call
 
 ---
 
@@ -193,14 +221,17 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 
 Simple at the core. Powerful at the edges.  
 Human-first. Truth-seeking. Evolutionary.  
-Long clarity over short cleverness.
+Long clarity over short cleverness.  
+**Proper homes over thin lies. Ambition over empty process.**
 
-Spirit essay: [PHILOSOPHY.md](PHILOSOPHY.md).
+Spirit essay: [PHILOSOPHY.md](PHILOSOPHY.md).  
+Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ---
 
 ## 10. How to update this file
 
-Update **AGENTS.md** when **agent rules** change (checklist, MCP loop, purity, extend table).  
+Update **AGENTS.md** when **agent rules** change (checklist, MCP loop, purity, extend table, theme discipline).  
 Update **PALM.md** when **what Palm is** changes.  
+Update **VERSIONING.md** when version or theme-process law changes.  
 Do not grow this file back into a second map.

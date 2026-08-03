@@ -69,13 +69,23 @@ codebase can give: **the freedom to change it without fear.**
 Palm does not pretend to be clean. It keeps a ledger of its own debt — honestly, with
 severities and effort estimates — and it pays it down *one theme per minor version*, like
 seasons. T1 built the safety net. T3 untangled the import cycles. T2 decomposed the
-god-object. Each season closes a coherent arc, documents its plan before executing it, and
-ratchets a fitness function so the ground never slips back.
+god-object. Each season opens with a plan, executes in compounding steps, and ratchets
+fitness so the ground never slips back.
+
+A season has a **floor** (the intent is real in the organism) and may keep a **growth
+line** while the theme stays open. The season **ends when the home is proper** — when
+residual debt is named honestly and **José** (the human who grows Palm) judges the arc
+complete. It does not end to satisfy empty checklist theater, or to ship a thin lie so
+the minor number can advance. Agents and tools propose; they do not close a season by
+process alone. Process that kills ambition is not metabolism; it is starvation. Proper
+homes over dual-truth workarounds. Break what is ugly. Pay what is feasible. Name the rest.
 
 This rhythm — *document the intent, execute in small compounding steps, guard against
-regression, then open the next season* — is Palm's metabolism. Small steps that feel like
-progress because they *are* progress, and because they compound. Nothing heroic. Just the
-patient, honest work of a thing that intends to endure.
+regression, grow until proper, then open the next season* — is Palm's metabolism. Small
+steps that feel like progress because they *are* progress, and because they compound.
+Nothing heroic. Just the patient, honest work of a thing that intends to endure.
+
+(Operational detail: [docs/VERSIONING.md](docs/VERSIONING.md) · agent rules: [AGENTS.md](AGENTS.md).)
 
 ## Its phenotypes: one genome, many shapes
 
