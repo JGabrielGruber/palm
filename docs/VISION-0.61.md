@@ -187,9 +187,12 @@ VitalityProjection snapshot (lineage)
 
 **Not dynamic:** filesystem package scan as physiology; heap scrape; always-green hardcoded service names.
 
-**Discovery seeds today (not a closed menu):**  
-`wait_plane`, `session_plane`, `work_plane`, `supervisor` (+ registered services), `execution` port, system log, boot last_walk / membership.  
-New seats appear by **being attached**.
+**System planes (definition of record):**  
+``palm.system.planes.roster.SYSTEM_PLANES`` — boot attaches; vitality discovers plane seats from **this table only**. Vitality does not own a private plane list.
+
+**Other discovery seeds:**  
+`supervisor` (+ registered services), `execution` port, system log, boot last_walk / membership.  
+New seats appear by **being attached** (or registered on supervisor).
 
 ### 6.3 Seat report (vitality-owned)
 
@@ -200,17 +203,18 @@ New seats appear by **being attached**.
 | `kind` | plane · supervisor · supervisor_service · port · log · boot · engine · other |
 | `present` | bool |
 | `state` | ok · degraded · absent · error · skipped |
-| `load` | optional counters (vitality terms) |
+| `load` | optional (usually empty in system — product interprets raw) |
 | `notes` | short strings |
-| `lineage` | `native` \| `adapter` |
-| `meta` | optional provenance (e.g. `adapter_source`) |
+| `lineage` | `sampled` (normal) · `native` · `adapter` (residue only) |
+| `meta` | `sample_source` + **`raw`** (uninterpreted public payload) |
 | `sample_ts` | optional ISO sample time |
 
 **Package (locked):** `palm.system.vitality`  
 **Types:** `SeatReport` · `SeatReportable` · `SeatProbe` · `ProbeCatalog`  
 **Walk:** `discover_seats` / `seat_walk` / `walk_result`  
-**Default seeds:** `wait_plane` · `session_plane` · `work_plane` · `supervisor` · `execution` · `system_log` · `boot_membership`  
-**Dynamic expansion:** `supervisor.<service_name>` from live registry (not a closed menu)
+**Plane seeds:** from ``SYSTEM_PLANES`` roster  
+**Other seeds:** `supervisor` · `execution` · `system_log` · `boot_membership`  
+**Dynamic expansion:** `supervisor.<service_name>` from live registry
 
 **Sample law (system vitality):** raw-dog the live system — call public methods / read public attrs; stash in `meta.raw` (`lineage: sampled`). Structural fields only (id, kind, present, state). **No adapter maps** in system. **Product present** interprets raw.  
 Do **not** put vitality `seat_report` on simple seats — public API is enough.  

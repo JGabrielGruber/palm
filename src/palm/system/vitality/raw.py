@@ -246,6 +246,67 @@ def sample_sequence(
     )
 
 
+# Public sample convention (order). First callable wins. Not a field map.
+PUBLIC_SAMPLE_METHODS: tuple[str, ...] = ("status", "doctor_snapshot")
+
+
+def sample_by_convention(
+    seat: Any,
+    *,
+    seat_id: str,
+    kind: str,
+    methods: Sequence[str] = PUBLIC_SAMPLE_METHODS,
+    extra_meta: Mapping[str, Any] | None = None,
+) -> SeatReport:
+    """
+    Raw-dog by **convention**: try public methods in order, else type-only.
+
+    No per-seat field maps. Product interprets whatever raw appears.
+    """
+
+    def _sample() -> SeatReport:
+        tried: list[str] = []
+        for method in methods:
+            fn = getattr(seat, method, None)
+            if not callable(fn):
+                continue
+            tried.append(method)
+            try:
+                result = fn()
+                raw = _as_mapping(result)
+                return sample_raw(
+                    seat_id,
+                    kind,
+                    source=method,
+                    raw=raw,
+                    notes=[f"convention:{method}"],
+                    extra_meta=extra_meta,
+                )
+            except Exception as exc:
+                return SeatReport.error(
+                    seat_id,
+                    kind,
+                    reason=f"{method}:{type(exc).__name__}: {exc}",
+                    lineage=LINEAGE_SAMPLED,
+                    meta={
+                        "sample_source": method,
+                        "raw": {},
+                        "convention_tried": tried,
+                        **dict(extra_meta or {}),
+                    },
+                )
+        return sample_raw(
+            seat_id,
+            kind,
+            source="present_only",
+            raw={"type": type(seat).__name__},
+            notes=["no_public_sample_method", f"tried:{','.join(methods)}"],
+            extra_meta=extra_meta,
+        )
+
+    return prefer_native(seat, seat_id=seat_id, kind=kind, sampler=_sample)
+
+
 def bound_method_reporter(
     seat_id: str,
     kind: str,
@@ -255,6 +316,21 @@ def bound_method_reporter(
 
     def _report(instance: Any, seat: Any) -> SeatReport:
         return sample_method(seat, seat_id=seat_id, kind=kind, method=method)
+
+    return _report
+
+
+def bound_convention_reporter(
+    seat_id: str,
+    kind: str,
+    methods: Sequence[str] = PUBLIC_SAMPLE_METHODS,
+) -> Callable[[Any, Any], SeatReport]:
+    """Probe report: sample by public method convention."""
+
+    def _report(instance: Any, seat: Any) -> SeatReport:
+        return sample_by_convention(
+            seat, seat_id=seat_id, kind=kind, methods=methods
+        )
 
     return _report
 
@@ -298,12 +374,15 @@ def bound_sequence_reporter(
 
 
 __all__ = [
+    "PUBLIC_SAMPLE_METHODS",
     "bound_attrs_reporter",
+    "bound_convention_reporter",
     "bound_method_reporter",
     "bound_sequence_reporter",
     "call_public",
     "prefer_native",
     "sample_attrs",
+    "sample_by_convention",
     "sample_method",
     "sample_raw",
     "sample_sequence",

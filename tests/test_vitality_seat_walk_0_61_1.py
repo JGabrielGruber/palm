@@ -36,6 +36,38 @@ from palm.system.vitality import (
 )
 
 
+# ── unit: plane roster is system definition of record ────────────────────────
+
+
+def test_plane_probes_come_from_system_roster_not_vitality_list() -> None:
+    """Vitality must not own a private plane menu — SYSTEM_PLANES does."""
+    from palm.system.planes.roster import SYSTEM_PLANES, system_plane_seat_ids
+    from palm.system.vitality.seats import build_default_probes
+
+    plane_probes = [p for p in build_default_probes() if p.kind == KIND_PLANE]
+    assert {p.seat_id for p in plane_probes} == set(system_plane_seat_ids())
+    assert [p.seat_id for p in plane_probes] == list(system_plane_seat_ids())
+    assert len(SYSTEM_PLANES) == 3
+    assert system_plane_seat_ids() == (
+        "wait_plane",
+        "session_plane",
+        "work_plane",
+    )
+
+
+def test_started_runtime_matches_system_plane_roster() -> None:
+    from palm.system.planes.roster import SYSTEM_PLANES, missing_roster_planes
+
+    rt = BaseRuntime()
+    try:
+        rt.start(storage_backend="memory", enable_event_outbox=True)
+        assert missing_roster_planes(rt) == ()
+        for spec in SYSTEM_PLANES:
+            assert getattr(rt, spec.attr) is not None
+    finally:
+        rt.stop()
+
+
 # ── unit: SeatReport ─────────────────────────────────────────────────────────
 
 

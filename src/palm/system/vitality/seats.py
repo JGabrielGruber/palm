@@ -1,14 +1,18 @@
 """
 Default discovery seeds for Palm living seats (0.61).
 
-Probes only declare **where** to look and **which public API** to raw-sample.
-No per-seat adapter maps. Product interprets ``meta.raw``.
+**Planes** come from :data:`palm.system.planes.roster.SYSTEM_PLANES` — the
+system definition of record. Vitality does **not** own a private plane list.
+
+Other seeds (supervisor, execution, log, boot) declare where to look and which
+public API to raw-sample. Product interprets ``meta.raw``.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from palm.system.planes.roster import SYSTEM_PLANES
 from palm.system.vitality.probe import (
     ProbeCatalog,
     SeatProbe,
@@ -16,7 +20,7 @@ from palm.system.vitality.probe import (
     private_attr_resolver,
 )
 from palm.system.vitality.raw import (
-    bound_attrs_reporter,
+    bound_convention_reporter,
     bound_method_reporter,
     bound_sequence_reporter,
     sample_attrs,
@@ -30,11 +34,8 @@ from palm.system.vitality.schema import (
     KIND_SUPERVISOR,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
-    SEAT_SESSION_PLANE,
     SEAT_SUPERVISOR,
     SEAT_SYSTEM_LOG,
-    SEAT_WAIT_PLANE,
-    SEAT_WORK_PLANE,
 )
 
 
@@ -97,40 +98,28 @@ def _report_system_log_instance(instance: Any) -> SeatReport:
     return _report_system_log(instance, log)
 
 
+def _plane_probes_from_roster() -> list[SeatProbe]:
+    """Plane discovery seeds — driven only by SYSTEM_PLANES."""
+    probes: list[SeatProbe] = []
+    for i, spec in enumerate(SYSTEM_PLANES):
+        probes.append(
+            SeatProbe(
+                seat_id=spec.seat_id,
+                kind=KIND_PLANE,
+                resolve=attr_resolver(spec.attr),
+                report=bound_convention_reporter(spec.seat_id, KIND_PLANE),
+                order=10 + i,
+                tags=("core", "plane", spec.plane_id),
+                description=spec.description or f"System plane {spec.plane_id}",
+            )
+        )
+    return probes
+
+
 def build_default_probes() -> list[SeatProbe]:
-    """Ordered default probes — raw public APIs only."""
+    """Ordered default probes — planes from roster; rest raw public APIs."""
     return [
-        SeatProbe(
-            seat_id=SEAT_WAIT_PLANE,
-            kind=KIND_PLANE,
-            resolve=attr_resolver("wait_plane"),
-            report=bound_method_reporter(
-                SEAT_WAIT_PLANE, KIND_PLANE, "doctor_snapshot"
-            ),
-            order=10,
-            tags=("core", "plane"),
-            description="Continue plane — raw doctor_snapshot()",
-        ),
-        SeatProbe(
-            seat_id=SEAT_SESSION_PLANE,
-            kind=KIND_PLANE,
-            resolve=attr_resolver("session_plane"),
-            report=bound_method_reporter(
-                SEAT_SESSION_PLANE, KIND_PLANE, "doctor_snapshot"
-            ),
-            order=20,
-            tags=("core", "plane"),
-            description="Session plane — raw doctor_snapshot()",
-        ),
-        SeatProbe(
-            seat_id=SEAT_WORK_PLANE,
-            kind=KIND_PLANE,
-            resolve=attr_resolver("work_plane"),
-            report=bound_method_reporter(SEAT_WORK_PLANE, KIND_PLANE, "status"),
-            order=30,
-            tags=("core", "plane"),
-            description="Work plane — raw status()",
-        ),
+        *_plane_probes_from_roster(),
         SeatProbe(
             seat_id=SEAT_SUPERVISOR,
             kind=KIND_SUPERVISOR,

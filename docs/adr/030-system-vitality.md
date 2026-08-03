@@ -57,6 +57,11 @@ Absent seat or capability → **absent / skipped**, not fake green.
 Do **not** hardcode a closed menu of package paths as health law.  
 Do **not** treat heap reflection as the architecture of record.
 
+**System planes:** the definition of which planes a system instance runs is
+``palm.system.planes.roster.SYSTEM_PLANES``. Boot attaches that roster;
+vitality discovers plane seats from the **same** table. Vitality must not
+own a private plane list. (Planes ≠ composition plugins.)
+
 ### D4 — Seat report is the unit of truth
 
 Each discovered seat contributes a **seat report** (versioned dict).  

@@ -35,6 +35,7 @@ from palm.system.boot.log_phase import system_log_ready_handler
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
 from palm.system.log import get_system_log
+from palm.system.planes.roster import SYSTEM_PLANES, missing_roster_planes
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.planes.work.plane import WorkPlaneService
@@ -185,7 +186,20 @@ def build_system_handlers(
         runtime.orchestration.start()
 
     def planes_attach(ctx: BootContext) -> None:
+        """
+        Attach system planes listed in :data:`~palm.system.planes.roster.SYSTEM_PLANES`.
+
+        Roster is the definition of **what** runs. This handler is the **how**
+        (constructors differ). Vitality discovers from the same roster.
+        """
         slog = get_system_log()
+        # Roster order: wait → session → work (SYSTEM_PLANES).
+        assert [p.plane_id for p in SYSTEM_PLANES] == [
+            "wait",
+            "session",
+            "work",
+        ], "planes_attach out of sync with SYSTEM_PLANES roster"
+
         runtime._wait_plane = WaitPlaneService()
         runtime._wait_plane.attach(runtime)
 
@@ -215,12 +229,23 @@ def build_system_handlers(
             # able after ready; is_started gates tick.
             able=lambda: bool(getattr(runtime, "is_started", False)),
         )
-        slog.info(
-            "plane.work.attach",
-            "work plane attached",
-            schedule="system",
-            runtime=ctx.runtime,
-        )
+        missing = missing_roster_planes(runtime)
+        if missing:
+            slog.system(
+                "plane.roster.incomplete",
+                f"roster planes missing after attach: {','.join(missing)}",
+                schedule="system",
+                runtime=ctx.runtime,
+                missing=list(missing),
+            )
+        else:
+            slog.info(
+                "plane.roster.attached",
+                "system planes attached per roster",
+                schedule="system",
+                runtime=ctx.runtime,
+                planes=[p.plane_id for p in SYSTEM_PLANES],
+            )
 
     def supervisor_wire(ctx: BootContext) -> None:
         """Register continuous services (work_drain, outbox) — start later."""
