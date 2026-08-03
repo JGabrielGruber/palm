@@ -298,7 +298,7 @@ Named so boy-scout and later slices do not pretend hub install is finished.
 | **[CS-006](../TECH-DEBT.md#cs-006)** | ~~schedule prose~~ → **paid** | `ContinuousServiceDefinition`; `sup.install` |
 | **[CS-007](../TECH-DEBT.md#cs-007)** | ~~adapter lineage~~ → **paid** | coerce → sampled; no `adapter_count` |
 | **[CS-008](../TECH-DEBT.md#cs-008)** | ~~runtime closures~~ → **paid** | `InstallInterface` + `InstallContext.from_install` |
-| **[SD-016](../TECH-DEBT.md#sd-016)** | ambient system-instance DI residual | host/surfaces boy-scout; drop shims; engine closure out of schedule |
+| **[SD-016](../TECH-DEBT.md#sd-016)** | ambient system-instance DI residual | host/surfaces boy-scout; drop shims; progressive install bind |
 
 **Landed (not debt):** hub membership; collaborator `attach`; **InstallInterface**; `system.interfaces` / `system.subsystems`; `Subsystem` protocol; BootContext seats; seat-first `bind_*_plane`; vitality package; AGENTS §1.2.
 

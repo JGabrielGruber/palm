@@ -1,9 +1,14 @@
 """
-System schedule handlers — start law for the system instance (0.59.3).
+System schedule handlers — start law for the system instance (0.59.3 / seat DI).
 
 **Ownership:** ``palm.system.boot`` owns *when* and *in what order* the system
 comes up. Handlers here are the rules. Collaborators (hooks, storage factory,
 planes) are tools the schedule *uses* — they do not own boot order.
+
+**Seat DI:** handlers resolve the shell from ``ctx.shell`` and publish engine /
+interface / subsystem seats onto :class:`BootContext` as they become live.
+Prefer ``ctx.event`` / ``ctx.install`` / ``ctx.planes`` over digging the shell
+when a seat is already published.
 
 **Break / harvest:** mid-theme Palm may be red on unmigrated phenotypes.
 Modes and optional phase skips are the switches. Do not restore import-order
@@ -11,7 +16,7 @@ magic to keep a path green. See VISION-0.59 §5 and ADR-028 D8.
 
 **Dependency direction:**
 
-- ``BaseRuntime.start`` → boot walker + these handlers
+- ``BaseRuntime.start`` → boot walker + these handlers (sets ``ctx.shell``)
 - handlers → hooks / job_hooks / wiring / planes (leaf collaborators)
 - collaborators must **not** import ``BaseRuntime`` or re-enter boot tables
 
@@ -54,95 +59,138 @@ from palm.system.subsystems.supervisor import SystemSupervisor
 
 
 def build_system_handlers(
-    runtime: Any,
-    options: dict[str, Any],
+    runtime: Any | None = None,
+    options: dict[str, Any] | None = None,
 ) -> dict[str, PhaseHandler]:
     """Build the full system schedule handler map for one ``start()`` call.
 
-    ``runtime`` is the system instance shell (today ``BaseRuntime``). Boot
-    treats it as a bag of engines/planes to assemble — not as the schedule owner.
+    *runtime* is optional when ``ctx.shell`` is already set (preferred).
+    Kept as a fallback so older call sites that only pass the shell still work.
+    Handlers must not close over engine fields — they read seats from *ctx*.
     """
+    options = dict(options or {})
+
+    def _shell(ctx: BootContext) -> Any:
+        if ctx.shell is not None:
+            return ctx.shell
+        if runtime is not None:
+            ctx.shell = runtime
+            return runtime
+        return ctx.require_shell()
 
     def plugins_ensure(_ctx: BootContext) -> None:
         ensure_core_plugins()
 
-    def engines_init(_ctx: BootContext) -> None:
-        runtime.context.initialize()
-        runtime.event.initialize()
+    def engines_init(ctx: BootContext) -> None:
+        shell = _shell(ctx)
+        shell.context.initialize()
+        shell.event.initialize()
         cache_options = options.get("resource_cache")
         resource_options: dict[str, Any] = {
-            "event_engine": runtime.event,
-            "definition_resolver": resource_definition_resolver(runtime.repository),
+            "event_engine": shell.event,
+            "definition_resolver": resource_definition_resolver(shell.repository),
         }
         if cache_options is not None:
             resource_options["resource_cache"] = cache_options
-        runtime.resource.initialize(**resource_options)
+        shell.resource.initialize(**resource_options)
 
         def _publish_workload(event_type: str, payload: dict[str, Any]) -> None:
-            runtime.event.emit(event_type, **payload)
+            shell.event.emit(event_type, **payload)
 
         initialize_workload_engine(
-            runtime.workload,
+            shell.workload,
             host_enabled=bool(options.get("workload_host_enabled", False)),
             work_root=options.get("workload_work_root") or options.get("data_dir"),
             default_runtime=options.get("workload_default_runtime"),
             publish_event=_publish_workload,
         )
 
-        runtime.auth.initialize()
-        authenticate_runtime(runtime.auth, options.get("credentials"))
+        shell.auth.initialize()
+        authenticate_runtime(shell.auth, options.get("credentials"))
 
-    def storage_select(_ctx: BootContext) -> None:
-        if runtime.storage.is_initialized:
-            return
-        StorageFactory.initialize_engine(
-            runtime.storage,
-            storage_backend=str(options.get("storage_backend", "memory")),
-            **dict(options.get("backend_options") or {}),
+        ctx.publish(
+            context_engine=shell.context,
+            event=shell.event,
+            resource=shell.resource,
+            workload=shell.workload,
+            auth=shell.auth,
         )
 
-    def outbox_wire(_ctx: BootContext) -> None:
+    def storage_select(ctx: BootContext) -> None:
+        shell = _shell(ctx)
+        if not shell.storage.is_initialized:
+            StorageFactory.initialize_engine(
+                shell.storage,
+                storage_backend=str(options.get("storage_backend", "memory")),
+                **dict(options.get("backend_options") or {}),
+            )
+        ctx.publish(storage=shell.storage)
+
+    def outbox_wire(ctx: BootContext) -> None:
         if not bool(options.get("enable_event_outbox", True)):
             raise PhaseSkip("enable_event_outbox_off")
-        runtime._outbox_store = OutboxStore(runtime.storage)
-        wire_reliable_events(runtime.event, runtime._outbox_store)
-        runtime._outbox_processor = OutboxProcessor(
-            runtime._outbox_store, runtime.event
+        shell = _shell(ctx)
+        event = ctx.event if ctx.event is not None else shell.event
+        storage = ctx.storage if ctx.storage is not None else shell.storage
+        shell._outbox_store = OutboxStore(storage)
+        wire_reliable_events(event, shell._outbox_store)
+        shell._outbox_processor = OutboxProcessor(shell._outbox_store, event)
+        ctx.publish(
+            outbox_store=shell._outbox_store,
+            outbox_processor=shell._outbox_processor,
         )
 
-    def hooks_install(_ctx: BootContext) -> None:
+    def hooks_install(ctx: BootContext) -> None:
+        shell = _shell(ctx)
+        event = ctx.event if ctx.event is not None else shell.event
+        context_engine = (
+            ctx.context_engine if ctx.context_engine is not None else shell.context
+        )
+        auth = ctx.auth if ctx.auth is not None else shell.auth
+        outbox_store = (
+            ctx.outbox_store
+            if ctx.outbox_store is not None
+            else getattr(shell, "_outbox_store", None)
+        )
+        outbox_processor = (
+            ctx.outbox_processor
+            if ctx.outbox_processor is not None
+            else getattr(shell, "_outbox_processor", None)
+        )
+
         scheduler = resolve_scheduler(
             options,
-            default_policy=runtime.default_scheduler_policy,
+            default_policy=shell.default_scheduler_policy,
         )
         hooks = list(options.get("hooks") or [])
         if options.get("observability"):
             hooks.append(DriveObservabilityHook())
-        runtime._auth_enforce = bool(options.get("auth_enforce"))
-        if runtime._auth_enforce:
+        shell._auth_enforce = bool(options.get("auth_enforce"))
+        if shell._auth_enforce:
             hooks.append(
                 AuthMiddleware(
-                    runtime.auth,
+                    auth,
                     required_roles=tuple(options.get("auth_roles") or ("user",)),
                 )
             )
         hooks.append(JobExecutionContextHook())
         hooks.append(
             InstancePersistenceHook(
-                runtime.instance_manager,
-                outbox_store=runtime._outbox_store,
+                shell.instance_manager,
+                outbox_store=outbox_store,
             )
         )
+        # session_plane is not seated until planes.attach; hook resolves late.
         session_ownership = SessionOwnershipHook(
-            get_plane=lambda: runtime.session_plane
+            get_plane=lambda: shell.session_plane
         )
         hooks.append(session_ownership)
-        if runtime._outbox_processor is not None:
-            hooks.append(OutboxDrainHook(runtime._outbox_processor))
+        if outbox_processor is not None:
+            hooks.append(OutboxDrainHook(outbox_processor))
         if options.get("enable_state_snapshot"):
             hooks.append(
                 StateSnapshotHook(
-                    runtime.instance_manager,
+                    shell.instance_manager,
                     snapshot_on_status=options.get("snapshot_on_status"),
                     max_snapshots_per_instance=int(
                         options.get("max_snapshots_per_instance", 10)
@@ -152,37 +200,47 @@ def build_system_handlers(
 
         orch_options: dict[str, Any] = {
             "scheduler": scheduler,
-            "event_engine": runtime.event,
-            "context_engine": runtime.context,
+            "event_engine": event,
+            "context_engine": context_engine,
             "hooks": hooks,
         }
         max_jobs = options.get("max_concurrent_jobs")
         if isinstance(max_jobs, int) and max_jobs > 0:
             orch_options["max_concurrent_jobs"] = max_jobs
-        runtime.orchestration.initialize(**orch_options)
+        shell.orchestration.initialize(**orch_options)
 
         state = options.get("state")
         bt_state: BaseState = (
             state if isinstance(state, BaseState) else BlackboardState()
         )
-        runtime.behavior_tree.initialize(state=bt_state)
+        shell.behavior_tree.initialize(state=bt_state)
 
-        if not runtime.instance_manager.is_initialized:
-            runtime.instance_manager.initialize(
+        if not shell.instance_manager.is_initialized:
+            shell.instance_manager.initialize(
                 max_loaded_instances=options.get("max_loaded_instances"),
                 max_concurrent_active=options.get("max_concurrent_active"),
                 max_snapshots_per_instance=options.get("max_snapshots_per_instance"),
                 reconcile_on_startup=options.get("reconcile_on_startup"),
             )
 
-    def orchestration_start(_ctx: BootContext) -> None:
-        runtime.orchestration.start()
+        ctx.publish(
+            orchestration=shell.orchestration,
+            instance_manager=shell.instance_manager,
+        )
+
+    def orchestration_start(ctx: BootContext) -> None:
+        orch = (
+            ctx.orchestration
+            if ctx.orchestration is not None
+            else _shell(ctx).orchestration
+        )
+        orch.start()
 
     def install_bind(ctx: BootContext) -> None:
         """Bind InstallInterface; publish on *ctx.install*."""
-        shell = ctx.shell if ctx.shell is not None else runtime
+        shell = _shell(ctx)
         board = shell.bind_system_install()
-        ctx.install = board
+        ctx.publish(install=board)
         bound = [k for k, v in board.status().items() if v]
         get_system_log().info(
             "install.bound",
@@ -200,11 +258,11 @@ def build_system_handlers(
         owns collaborators.
         """
         slog = get_system_log()
-        shell = ctx.shell if ctx.shell is not None else runtime
+        shell = _shell(ctx)
         board = ctx.install
         if board is None:
             board = shell.bind_system_install()
-            ctx.install = board
+            ctx.publish(install=board)
 
         def _on_host_session_error(exc: BaseException) -> None:
             # BI-014 — still swallowed; honesty later.
@@ -221,9 +279,9 @@ def build_system_handlers(
             options,
             on_host_session_error=_on_host_session_error,
         )
-        ctx.planes = planes
-        # Publish work plane on the install board for supervisor continuous install.
-        ctx.install = shell.bind_system_install()
+        # Re-bind install so work_plane is visible to supervisor continuous install.
+        board = shell.bind_system_install()
+        ctx.publish(planes=planes, install=board)
         slog.info(
             "plane.hub.attached",
             "system planes subsystem ready",
@@ -234,13 +292,12 @@ def build_system_handlers(
 
     def supervisor_wire(ctx: BootContext) -> None:
         """Seat supervisor; walk continuous definitions from *ctx.install*."""
-        shell = ctx.shell if ctx.shell is not None else runtime
+        shell = _shell(ctx)
         board = ctx.install if ctx.install is not None else shell.install
-        ctx.install = board
-        sup = SystemSupervisor()
-        shell._supervisor = sup
+        ctx.publish(install=board)
+        sup = SystemSupervisor.ensure_on(shell)
         sup.install(board, options)
-        ctx.supervisor = sup
+        ctx.publish(supervisor=sup)
         get_system_log().info(
             "supervisor.wire",
             "system supervisor ready",
@@ -250,14 +307,16 @@ def build_system_handlers(
             services=",".join(sup.names()) or "(none)",
         )
 
-    def bind(_ctx: BootContext) -> None:
+    def bind(ctx: BootContext) -> None:
+        shell = _shell(ctx)
         bind_runtime = get_runtime_binding()
         if bind_runtime is None:
             raise PhaseSkip("no_runtime_binding")
-        bind_runtime(runtime)
+        bind_runtime(shell)
 
     def ready(ctx: BootContext) -> None:
-        runtime._started = True
+        shell = _shell(ctx)
+        shell._started = True
         get_system_log().info(
             "ready",
             "system ready",
@@ -270,8 +329,8 @@ def build_system_handlers(
         """Start supervised continuous services when options allow (0.60.5-6)."""
         if bool(options.get("allow_background_drain", True)) is False:
             raise PhaseSkip("allow_background_drain_off")
-        shell = ctx.shell if ctx.shell is not None else runtime
-        sup = ctx.supervisor if ctx.supervisor is not None else shell._supervisor
+        shell = _shell(ctx)
+        sup = ctx.supervisor if ctx.supervisor is not None else shell.supervisor
         if sup is None:
             raise PhaseSkip("no_supervisor")
 

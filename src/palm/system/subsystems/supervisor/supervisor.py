@@ -38,6 +38,31 @@ class SystemSupervisor:
             else DEFAULT_CONTINUOUS_DEFINITIONS
         )
 
+    @classmethod
+    def ensure_on(
+        cls,
+        shell: Any,
+        definitions: Sequence[ContinuousServiceDefinition] | None = None,
+    ) -> SystemSupervisor:
+        """
+        Return the shell's supervisor subsystem, creating and seating one if absent.
+
+        *shell* owns the seat (``_supervisor``). Prefer holding the returned
+        supervisor and calling :meth:`install` with an InstallInterface — do not
+        pass the shell into continuous definitions.
+        """
+        existing = getattr(shell, "_supervisor", None)
+        if existing is None:
+            try:
+                existing = shell.supervisor
+            except Exception:
+                existing = None
+        if existing is not None:
+            return existing  # type: ignore[no-any-return]
+        sup = cls(definitions=definitions)
+        shell._supervisor = sup
+        return sup
+
     def register(self, service: SystemService) -> None:
         """Add or replace a service by name. Does not auto-start."""
         name = str(getattr(service, "name", "") or "").strip()

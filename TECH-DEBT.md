@@ -50,7 +50,7 @@
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 | [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
 | [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | ✅ paid (definitions at edge) |
-| [SD-016](#sd-016) | Ambient system-instance DI (seat DI incomplete) | S2 | L | **0.61**+ | open (InstallInterface + seat APIs started) |
+| [SD-016](#sd-016) | Ambient system-instance DI (seat DI incomplete) | S2 | L | **0.61**+ | open (boot engine seats + ensure_on; host residual) |
 
 ### Surface debt (SU)
 
@@ -272,19 +272,20 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 **Law (target):** inject **interfaces** and **subsystems** — not ambient shell DI.  
 [AGENTS §1.2](AGENTS.md) · [PALM §9](docs/PALM.md) law 18.
 
-| Started (0.61) | Still open |
-|----------------|------------|
+| Landed (0.61) | Still open |
+|---------------|------------|
 | `InstallInterface` / `SystemInstall` | Kill ambient digs in host/product/surfaces |
 | `system.interfaces` + `system.subsystems` packages | Drop compat shims when callers migrated |
-| `Subsystem` protocol | More seat-first APIs outside boot |
-| BootContext: `shell` / `install` / `planes` / `supervisor` | Engines still closed over in schedule handlers |
-| `bind_wait_plane` / `bind_session_plane` | Thin `*_to_runtime` bridges remain |
+| `Subsystem` protocol | Seat-first APIs outside boot (product doors) |
+| BootContext seats: engines + install/planes/supervisor | Progressive install bind (partial board earlier) |
+| Schedule uses `ctx.shell` + published seats | Thin `*_to_runtime` bridges remain |
+| `SystemPlanes.ensure_on` / `SystemSupervisor.ensure_on` | Host recovery / ApplicationHost bag digs |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 
 **Related:** [SD-015](#sd-015) · [CS-008](#cs-008) · [SU-*](#surface-debt-su).
 
-**Status:** open (wedge landed; layout + call-graph incomplete).
+**Status:** open (boot seat DI improved; host/surfaces residual).
 
 ---
 

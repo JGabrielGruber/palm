@@ -231,6 +231,40 @@ def test_boot_context_publishes_seats() -> None:
         rt.stop()
 
 
+def test_boot_context_engine_seats_and_supervisor_ensure_on() -> None:
+    """SD-016: boot publishes engine seats; supervisor seats like planes."""
+    from palm.system.boot.context import BootContext
+    from palm.system.boot.system_schedule import build_system_handlers
+    from palm.system.boot.phases import SYSTEM_PHASES
+    from palm.system.boot.walker import walk_schedule
+    from palm.system.runtime.base import BaseRuntime
+    from palm.system.subsystems.supervisor import SystemSupervisor
+
+    rt = BaseRuntime()
+    ctx = BootContext(schedule="system", shell=rt, runtime=str(rt.runtime_name))
+    try:
+        walk_schedule(
+            SYSTEM_PHASES,
+            build_system_handlers(options={
+                "storage_backend": "memory",
+                "enable_event_outbox": True,
+            }),
+            ctx=ctx,
+        )
+        assert ctx.event is not None
+        assert ctx.storage is not None
+        assert ctx.orchestration is not None
+        assert ctx.install is not None
+        assert ctx.planes is not None
+        assert ctx.supervisor is not None
+        assert ctx.supervisor is rt.supervisor
+        # ensure_on is idempotent seating
+        again = SystemSupervisor.ensure_on(rt)
+        assert again is rt.supervisor
+    finally:
+        rt.stop()
+
+
 def test_runtime_install_is_first_class_interface() -> None:
     """SystemInstall peer of execution — bind explicit, snapshot via from_install."""
     from palm.system.subsystems.planes.install_context import InstallContext
