@@ -1,4 +1,8 @@
-"""Phase: system.bind — optional palm provider bind."""
+"""
+System start phase: optional palm provider bind (system.bind).
+
+Subject: provider runtime binding (common registry).
+"""
 
 from __future__ import annotations
 
@@ -24,3 +28,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="Optional palm provider bind",
 )
+
+__all__ = ["DEFINITION", "run"]

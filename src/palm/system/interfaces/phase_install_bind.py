@@ -1,4 +1,9 @@
-"""Phase: system.install.bind."""
+"""
+System start phase: bind InstallInterface (system.install.bind).
+
+Subject: :mod:`palm.system.interfaces.install`.
+Boot owns order only; this module owns *how*.
+"""
 
 from __future__ import annotations
 
@@ -30,3 +35,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="Bind InstallInterface collaborator ports (peer of execution)",
 )
+
+__all__ = ["DEFINITION", "run"]

@@ -1,4 +1,8 @@
-"""Phase: system.plugins.ensure."""
+"""
+System start phase: ensure core plugins (system.plugins.ensure).
+
+Subject: plugin registry (common); phase seat on system start.
+"""
 
 from __future__ import annotations
 
@@ -19,3 +23,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="ensure_core_plugins (idempotent)",
 )
+
+__all__ = ["DEFINITION", "run"]

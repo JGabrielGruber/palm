@@ -1,35 +1,26 @@
 """
-Palm system boot — schedule control for how the system comes up (0.59).
+Palm system boot — schedule control for how the system comes up (0.59–0.61).
 
 **What boot owns**
 
-- Phase tables (host + system)
+- Phase **order** tables (host + system) — *when*
 - Walker (order, skip/fail, SystemLog observation)
-- Phase table (``phases``) — *when* / order
-- Phase definitions + catalog — *how* each system phase runs (OCP)
-- Assembly leaves (``boot.assembly``) — shared construct helpers
+- Thin **catalog** — membership imports of subject phase definitions
 - Schedule bind (``system_schedule``) — catalog → walker handlers
-- Later: host phase definitions under app host boot
+- BootContext — seat bag for one start walk
 
 **What boot does not own**
 
-- Domain reaction (event bus), EventJournal, product services, surfaces
-- Hook *implementations* as libraries (persist, auth middleware) — assembly *installs* them
+- Phase **how** — co-located on the subject (interfaces, subsystems, runtime, log)
+- Domain reaction, product services, surfaces
+- Host schedule bodies (``palm.app.host.boot``)
 
-**Break / harvest**
+**Law**
 
-Theme 0.59 rewrites start. Mid-theme breakage on unmigrated paths is expected.
-Modes (``BootMode``) and optional ``PhaseSkip`` are the switches. Prefer smaller
-honest modes over dual-path soup. Spine regressions fix in-theme.
+New system start step = subject ``phase_*.py`` + catalog entry + PhaseSpec row.
+Do not open-code phase bodies under ``boot/``.
 
-**Dependency direction**
-
-- Instance shell (``BaseRuntime``) calls boot to start
-- Boot handlers may import leaf collaborators (hooks, planes, storage factory)
-- Collaborators and ``runtime`` package init must not re-enter ``BaseRuntime`` /
-  boot tables (see ``runtime/__init__.py`` lazy façade)
-
-Observation: ``palm.system.log``. Map: docs/VISION-0.59.md · ADR-028.
+Observation: ``palm.system.log``. Map: docs/VISION-0.59.md · ADR-028 · SD-016.
 """
 
 from __future__ import annotations
@@ -41,7 +32,6 @@ from palm.system.boot.catalog import (
 )
 from palm.system.boot.context import BootContext
 from palm.system.boot.definition import PhaseDefinition
-from palm.system.boot.log_phase import ensure_system_log_ready, system_log_ready_handler
 from palm.system.boot.phases import (
     HOST_PHASES,
     SYSTEM_PHASES,
@@ -54,10 +44,14 @@ from palm.system.boot.phases import (
     schedule_catalog,
     system_phase_ids,
 )
-from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.shell import resolve_shell
+from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.system_schedule import bind_phase_handlers, build_system_handlers
 from palm.system.boot.walker import PhaseHandler, WalkedPhase, walk_schedule
+from palm.system.log.phase_ready import (
+    ensure_system_log_ready,
+    system_log_ready_handler,
+)
 
 __all__ = [
     "DEFAULT_SYSTEM_PHASE_DEFINITIONS",

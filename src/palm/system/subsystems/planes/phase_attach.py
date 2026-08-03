@@ -1,4 +1,8 @@
-"""Phase: system.planes.attach."""
+"""
+System start phase: attach planes subsystem (system.planes.attach).
+
+Subject: :class:`~palm.system.subsystems.planes.hub.SystemPlanes`.
+"""
 
 from __future__ import annotations
 
@@ -51,3 +55,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="SystemPlanes subsystem: put wait, session, work from install",
 )
+
+__all__ = ["DEFINITION", "run"]

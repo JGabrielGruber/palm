@@ -280,8 +280,8 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 | BootContext seats: engines + install/planes/supervisor | Progressive install bind (partial board earlier) |
 | Schedule uses `ctx.shell` + published seats | Thin `*_to_runtime` bridges remain |
 | `SystemPlanes.ensure_on` / `SystemSupervisor.ensure_on` | Host recovery / ApplicationHost bag digs |
-| `boot.assembly` peels hooks/engines/outbox from schedule | Host schedule debloat (if any) |
-| System **phase definitions** + catalog (schedule binds only) | Host phase definitions (same pattern) |
+| Phase **how** co-located on subject (`phase_*.py`); boot = order + catalog + walk | Host phase definitions (same pattern) |
+| System phase catalog imports subject modules only | Drop boot/log_phase compat shim when quiet |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 

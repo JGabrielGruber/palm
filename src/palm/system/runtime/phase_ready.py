@@ -1,4 +1,8 @@
-"""Phase: system.ready."""
+"""
+System start phase: shell ready mark (system.ready).
+
+Subject: system instance shell.
+"""
 
 from __future__ import annotations
 
@@ -28,3 +32,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="System instance ready mark",
 )
+
+__all__ = ["DEFINITION", "run"]

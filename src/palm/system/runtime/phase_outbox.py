@@ -1,15 +1,34 @@
-"""Phase: system.outbox.wire."""
+"""
+System start phase: reliable event outbox (system.outbox.wire).
+
+Subject: shell outbox seats + common events outbox.
+"""
 
 from __future__ import annotations
 
 from collections.abc import Mapping
 from typing import Any
 
-from palm.system.boot.assembly import wire_system_outbox
+from palm.common.events import OutboxProcessor, OutboxStore, wire_reliable_events
 from palm.system.boot.context import BootContext
 from palm.system.boot.definition import PhaseDefinition
 from palm.system.boot.shell import resolve_shell
 from palm.system.boot.skip import PhaseSkip
+
+
+def wire_system_outbox(
+    shell: Any,
+    *,
+    event: Any,
+    storage: Any,
+) -> tuple[Any, Any]:
+    """Attach outbox store + processor on *shell*."""
+    store = OutboxStore(storage)
+    wire_reliable_events(event, store)
+    processor = OutboxProcessor(store, event)
+    shell._outbox_store = store
+    shell._outbox_processor = processor
+    return store, processor
 
 
 def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
@@ -27,3 +46,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="OutboxStore + reliable events when enabled",
 )
+
+__all__ = ["DEFINITION", "run", "wire_system_outbox"]

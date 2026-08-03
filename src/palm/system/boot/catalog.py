@@ -1,47 +1,65 @@
 """
-System phase definition catalog — who participates in system start (0.61).
+System phase definition catalog — membership of system start (0.61).
 
 **Order** lives on :data:`~palm.system.boot.phases.SYSTEM_PHASES`.
-**How** lives on each :class:`~palm.system.boot.definition.PhaseDefinition`.
+**How** lives on each subject's phase module (co-located):
 
-New system start step = new definition module + entry here + PhaseSpec row.
-Do not open-code phase bodies in ``system_schedule``.
+| Phase id | Home |
+|----------|------|
+| system.log.ready | ``palm.system.log.phase_ready`` |
+| system.plugins.ensure | ``palm.system.runtime.phase_plugins`` |
+| system.engines.init | ``palm.system.runtime.phase_engines`` |
+| system.storage.select | ``palm.system.runtime.phase_storage`` |
+| system.outbox.wire | ``palm.system.runtime.phase_outbox`` |
+| system.hooks.install | ``palm.system.runtime.phase_hooks`` |
+| system.orchestration.start | ``palm.system.runtime.phase_orchestration_start`` |
+| system.install.bind | ``palm.system.interfaces.phase_install_bind`` |
+| system.planes.attach | ``palm.system.subsystems.planes.phase_attach`` |
+| system.supervisor.wire | ``palm.system.subsystems.supervisor.phase_wire`` |
+| system.bind | ``palm.system.runtime.phase_provider_bind`` |
+| system.ready | ``palm.system.runtime.phase_ready`` |
+| system.background.start | ``palm.system.subsystems.supervisor.phase_background`` |
+
+Boot only **imports** definitions and walks them. New step = subject module
++ entry here + :class:`~palm.system.boot.phases.PhaseSpec` row.
 """
 
 from __future__ import annotations
 
 from palm.system.boot.definition import PhaseDefinition
-from palm.system.boot.definitions import (
-    background,
-    bind,
-    engines,
-    hooks,
-    install_bind,
-    log_ready,
-    orchestration_start,
-    outbox,
-    planes_attach,
-    plugins,
-    ready,
-    storage,
-    supervisor_wire,
+from palm.system.interfaces.phase_install_bind import DEFINITION as _install_bind
+from palm.system.log.phase_ready import DEFINITION as _log_ready
+from palm.system.runtime.phase_engines import DEFINITION as _engines
+from palm.system.runtime.phase_hooks import DEFINITION as _hooks
+from palm.system.runtime.phase_orchestration_start import (
+    DEFINITION as _orchestration_start,
 )
+from palm.system.runtime.phase_outbox import DEFINITION as _outbox
+from palm.system.runtime.phase_plugins import DEFINITION as _plugins
+from palm.system.runtime.phase_provider_bind import DEFINITION as _bind
+from palm.system.runtime.phase_ready import DEFINITION as _ready
+from palm.system.runtime.phase_storage import DEFINITION as _storage
+from palm.system.subsystems.planes.phase_attach import DEFINITION as _planes_attach
+from palm.system.subsystems.supervisor.phase_background import (
+    DEFINITION as _background,
+)
+from palm.system.subsystems.supervisor.phase_wire import DEFINITION as _supervisor_wire
 
 # Membership of the system start catalog (not walk order).
 DEFAULT_SYSTEM_PHASE_DEFINITIONS: tuple[PhaseDefinition, ...] = (
-    log_ready.DEFINITION,
-    plugins.DEFINITION,
-    engines.DEFINITION,
-    storage.DEFINITION,
-    outbox.DEFINITION,
-    hooks.DEFINITION,
-    orchestration_start.DEFINITION,
-    install_bind.DEFINITION,
-    planes_attach.DEFINITION,
-    supervisor_wire.DEFINITION,
-    bind.DEFINITION,
-    ready.DEFINITION,
-    background.DEFINITION,
+    _log_ready,
+    _plugins,
+    _engines,
+    _storage,
+    _outbox,
+    _hooks,
+    _orchestration_start,
+    _install_bind,
+    _planes_attach,
+    _supervisor_wire,
+    _bind,
+    _ready,
+    _background,
 )
 
 _BY_ID: dict[str, PhaseDefinition] = {

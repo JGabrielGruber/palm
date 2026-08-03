@@ -1,10 +1,20 @@
-"""Supervised background start policy — boot assembly leaf."""
+"""
+System start phase: start supervised background (system.background.start).
+
+Subject: :class:`~palm.system.subsystems.supervisor.SystemSupervisor`.
+"""
 
 from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
+
+from palm.system.boot.context import BootContext
+from palm.system.boot.definition import PhaseDefinition
+from palm.system.boot.shell import resolve_shell
+from palm.system.boot.skip import PhaseSkip
+from palm.system.log import get_system_log
 
 
 @dataclass(frozen=True)
@@ -23,11 +33,7 @@ def start_supervised_background(
     supervisor: Any,
     options: Mapping[str, Any] | None = None,
 ) -> BackgroundStartResult:
-    """
-    Start work_drain / outbox when options and membership allow.
-
-    Returns skip_reason when the phase should PhaseSkip; otherwise started names.
-    """
+    """Start work_drain / outbox when options and membership allow."""
     opts = dict(options or {})
     if bool(opts.get("allow_background_drain", True)) is False:
         return BackgroundStartResult(started=[], skip_reason="allow_background_drain_off")
@@ -56,4 +62,34 @@ def start_supervised_background(
     return BackgroundStartResult(started=started)
 
 
-__all__ = ["BackgroundStartResult", "start_supervised_background"]
+def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
+    shell = resolve_shell(ctx)
+    sup = ctx.supervisor if ctx.supervisor is not None else shell.supervisor
+    if sup is None:
+        raise PhaseSkip("no_supervisor")
+    result = start_supervised_background(sup, options)
+    if result.should_skip:
+        raise PhaseSkip(result.skip_reason or "background_skip")
+    get_system_log().info(
+        "supervisor.background.start",
+        "supervised background started"
+        if result.started
+        else "supervised services already running or idle",
+        schedule="system",
+        runtime=ctx.runtime,
+        services=",".join(result.started) or "(none)",
+    )
+
+
+DEFINITION = PhaseDefinition(
+    id="system.background.start",
+    run=run,
+    description="Start supervised continuous services (work_drain, …)",
+)
+
+__all__ = [
+    "BackgroundStartResult",
+    "DEFINITION",
+    "run",
+    "start_supervised_background",
+]

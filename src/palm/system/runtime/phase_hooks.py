@@ -1,8 +1,7 @@
 """
-Orchestration hooks + engine init — boot assembly leaf.
+System start phase: orchestration hooks (system.hooks.install).
 
-Builds the drive hook chain, initializes orchestration, behavior tree, and
-instance manager. Schedule only calls this and publishes returned seats.
+Subject: shell orchestration + runtime hooks / job_hooks.
 """
 
 from __future__ import annotations
@@ -12,6 +11,9 @@ from typing import Any
 
 from palm.core.context import BaseState
 from palm.states import BlackboardState
+from palm.system.boot.context import BootContext
+from palm.system.boot.definition import PhaseDefinition
+from palm.system.boot.shell import resolve_shell
 from palm.system.runtime.hooks import (
     AuthMiddleware,
     DriveObservabilityHook,
@@ -36,11 +38,7 @@ def install_orchestration_hooks(
     outbox_processor: Any = None,
     options: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """
-    Assemble hooks, initialize orchestration / BT / instance manager.
-
-    Returns seats ``orchestration`` and ``instance_manager`` for BootContext.
-    """
+    """Assemble hooks; initialize orchestration / BT / instance manager."""
     opts = dict(options or {})
 
     scheduler = resolve_scheduler(
@@ -66,7 +64,6 @@ def install_orchestration_hooks(
             outbox_store=outbox_store,
         )
     )
-    # session_plane is not seated until planes.attach; hook resolves late.
     hooks.append(SessionOwnershipHook(get_plane=lambda: shell.session_plane))
     if outbox_processor is not None:
         hooks.append(OutboxDrainHook(outbox_processor))
@@ -110,4 +107,34 @@ def install_orchestration_hooks(
     }
 
 
-__all__ = ["install_orchestration_hooks"]
+def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
+    shell = resolve_shell(ctx)
+    seats = install_orchestration_hooks(
+        shell,
+        event=ctx.event if ctx.event is not None else shell.event,
+        context_engine=(
+            ctx.context_engine if ctx.context_engine is not None else shell.context
+        ),
+        auth=ctx.auth if ctx.auth is not None else shell.auth,
+        outbox_store=(
+            ctx.outbox_store
+            if ctx.outbox_store is not None
+            else getattr(shell, "_outbox_store", None)
+        ),
+        outbox_processor=(
+            ctx.outbox_processor
+            if ctx.outbox_processor is not None
+            else getattr(shell, "_outbox_processor", None)
+        ),
+        options=options,
+    )
+    ctx.publish(**seats)
+
+
+DEFINITION = PhaseDefinition(
+    id="system.hooks.install",
+    run=run,
+    description="Job hooks + orch/BT/instance_manager initialize",
+)
+
+__all__ = ["DEFINITION", "install_orchestration_hooks", "run"]

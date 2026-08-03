@@ -1,4 +1,8 @@
-"""Phase: system.supervisor.wire."""
+"""
+System start phase: wire supervisor subsystem (system.supervisor.wire).
+
+Subject: :class:`~palm.system.subsystems.supervisor.SystemSupervisor`.
+"""
 
 from __future__ import annotations
 
@@ -9,7 +13,7 @@ from palm.system.boot.context import BootContext
 from palm.system.boot.definition import PhaseDefinition
 from palm.system.boot.shell import resolve_shell
 from palm.system.log import get_system_log
-from palm.system.subsystems.supervisor import SystemSupervisor
+from palm.system.subsystems.supervisor.supervisor import SystemSupervisor
 
 
 def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
@@ -34,3 +38,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="SystemSupervisor seat — continuous services registry",
 )
+
+__all__ = ["DEFINITION", "run"]

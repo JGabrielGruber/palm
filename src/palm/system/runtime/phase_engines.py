@@ -1,4 +1,8 @@
-"""Engine init assembly — context, event, resource, workload, auth (boot leaf)."""
+"""
+System start phase: engine init (system.engines.init).
+
+Subject: system instance shell engines (context, event, resource, workload, auth).
+"""
 
 from __future__ import annotations
 
@@ -6,6 +10,9 @@ from collections.abc import Mapping
 from typing import Any
 
 from palm.common.resource import resource_definition_resolver
+from palm.system.boot.context import BootContext
+from palm.system.boot.definition import PhaseDefinition
+from palm.system.boot.shell import resolve_shell
 from palm.system.runtime.hooks import authenticate_runtime
 from palm.system.subsystems.planes.workload.bootstrap import initialize_workload_engine
 
@@ -14,12 +21,7 @@ def init_system_engines(
     shell: Any,
     options: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """
-    Initialize core engines on *shell*.
-
-    Returns seats to publish on :class:`~palm.system.boot.context.BootContext`
-    (``context_engine``, ``event``, ``resource``, ``workload``, ``auth``).
-    """
+    """Initialize core engines on *shell*; return seats for BootContext."""
     opts = dict(options or {})
     shell.context.initialize()
     shell.event.initialize()
@@ -56,4 +58,15 @@ def init_system_engines(
     }
 
 
-__all__ = ["init_system_engines"]
+def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
+    seats = init_system_engines(resolve_shell(ctx), options)
+    ctx.publish(**seats)
+
+
+DEFINITION = PhaseDefinition(
+    id="system.engines.init",
+    run=run,
+    description="context, event, resource, workload, auth",
+)
+
+__all__ = ["DEFINITION", "init_system_engines", "run"]

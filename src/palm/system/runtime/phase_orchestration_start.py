@@ -1,4 +1,8 @@
-"""Phase: system.orchestration.start."""
+"""
+System start phase: orchestration.start (system.orchestration.start).
+
+Subject: shell orchestration engine.
+"""
 
 from __future__ import annotations
 
@@ -24,3 +28,5 @@ DEFINITION = PhaseDefinition(
     run=run,
     description="orchestration.start — accept jobs",
 )
+
+__all__ = ["DEFINITION", "run"]
