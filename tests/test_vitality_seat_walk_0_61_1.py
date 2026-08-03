@@ -64,8 +64,18 @@ def test_started_runtime_matches_system_plane_roster() -> None:
         assert missing_roster_planes(rt) == ()
         for spec in SYSTEM_PLANES:
             assert getattr(rt, spec.attr) is not None
+            assert rt.plane(spec.plane_id) is getattr(rt, spec.attr)
     finally:
         rt.stop()
+
+
+def test_attachers_cover_every_roster_plane() -> None:
+    """Schedule attach path must not drift from SYSTEM_PLANES."""
+    from palm.system.planes import attach as plane_attach
+    from palm.system.planes.roster import SYSTEM_PLANES
+
+    plane_attach._require_attachers_match_roster()
+    assert set(plane_attach._ATTACHERS) == {p.plane_id for p in SYSTEM_PLANES}
 
 
 # ── unit: SeatReport ─────────────────────────────────────────────────────────

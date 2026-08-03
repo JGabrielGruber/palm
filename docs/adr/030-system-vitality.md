@@ -58,9 +58,10 @@ Do **not** hardcode a closed menu of package paths as health law.
 Do **not** treat heap reflection as the architecture of record.
 
 **System planes:** the definition of which planes a system instance runs is
-``palm.system.planes.roster.SYSTEM_PLANES``. Boot attaches that roster;
-vitality discovers plane seats from the **same** table. Vitality must not
-own a private plane list. (Planes ≠ composition plugins.)
+``palm.system.planes.roster.SYSTEM_PLANES``. Boot ``planes_attach`` calls
+``attach_system_planes`` (roster order); shutdown calls ``detach_system_planes``;
+vitality discovers plane seats from the **same** table. No consumer may
+re-list wait/session/work privately. (Planes ≠ composition plugins.)
 
 ### D4 — Seat report is the unit of truth
 

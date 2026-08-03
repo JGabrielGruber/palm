@@ -188,7 +188,9 @@ VitalityProjection snapshot (lineage)
 **Not dynamic:** filesystem package scan as physiology; heap scrape; always-green hardcoded service names.
 
 **System planes (definition of record):**  
-``palm.system.planes.roster.SYSTEM_PLANES`` — boot attaches; vitality discovers plane seats from **this table only**. Vitality does not own a private plane list.
+``palm.system.planes.roster.SYSTEM_PLANES`` — single **what**.  
+``attach_system_planes`` / ``detach_system_planes`` — schedule + shutdown **how**.  
+Vitality discovers plane seats from the **same** table. No private re-lists.
 
 **Other discovery seeds:**  
 `supervisor` (+ registered services), `execution` port, system log, boot last_walk / membership.  

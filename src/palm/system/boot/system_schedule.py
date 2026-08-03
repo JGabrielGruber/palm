@@ -35,10 +35,11 @@ from palm.system.boot.log_phase import system_log_ready_handler
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
 from palm.system.log import get_system_log
-from palm.system.planes.roster import SYSTEM_PLANES, missing_roster_planes
-from palm.system.planes.session.plane import SessionPlaneService
-from palm.system.planes.wait.plane import WaitPlaneService
-from palm.system.planes.work.plane import WorkPlaneService
+from palm.system.planes.attach import (
+    attach_system_planes,
+    get_attached_plane,
+    log_roster_attach_result,
+)
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.runtime.hooks import (
     AuthMiddleware,
@@ -186,74 +187,15 @@ def build_system_handlers(
         runtime.orchestration.start()
 
     def planes_attach(ctx: BootContext) -> None:
-        """
-        Attach system planes listed in :data:`~palm.system.planes.roster.SYSTEM_PLANES`.
-
-        Roster is the definition of **what** runs. This handler is the **how**
-        (constructors differ). Vitality discovers from the same roster.
-        """
-        slog = get_system_log()
-        # Roster order: wait → session → work (SYSTEM_PLANES).
-        assert [p.plane_id for p in SYSTEM_PLANES] == [
-            "wait",
-            "session",
-            "work",
-        ], "planes_attach out of sync with SYSTEM_PLANES roster"
-
-        runtime._wait_plane = WaitPlaneService()
-        runtime._wait_plane.attach(runtime)
-
-        runtime._session_plane = SessionPlaneService(storage=runtime.storage)
-        runtime._session_plane.attach(runtime)
-        try:
-            runtime._session_plane.ensure_host_session()
-        except Exception as exc:
-            # BI-014 — still swallowed; honesty later.
-            slog.system(
-                "plane.session.host_session",
-                f"ensure_host_session swallowed: {type(exc).__name__}",
-                runtime=ctx.runtime,
-                reason=str(exc),
-            )
-
-        # 0.60.2 — start plane (enqueue / tick). Continuous drain → supervisor later.
-        max_depth = int(options.get("work_drain_max_depth", 8) or 8)
-        batch_size = int(options.get("work_drain_batch_size", 10) or 10)
-        poll_interval = float(options.get("work_drain_poll_interval", 1.0) or 1.0)
-        runtime._work_plane = WorkPlaneService()
-        runtime._work_plane.attach(
-            runtime,
-            max_depth=max_depth,
-            batch_size=batch_size,
-            poll_interval=poll_interval,
-            # able after ready; is_started gates tick.
-            able=lambda: bool(getattr(runtime, "is_started", False)),
-        )
-        missing = missing_roster_planes(runtime)
-        if missing:
-            slog.system(
-                "plane.roster.incomplete",
-                f"roster planes missing after attach: {','.join(missing)}",
-                schedule="system",
-                runtime=ctx.runtime,
-                missing=list(missing),
-            )
-        else:
-            slog.info(
-                "plane.roster.attached",
-                "system planes attached per roster",
-                schedule="system",
-                runtime=ctx.runtime,
-                planes=[p.plane_id for p in SYSTEM_PLANES],
-            )
+        """Attach :data:`~palm.system.planes.roster.SYSTEM_PLANES` via roster attach."""
+        attach_system_planes(runtime, options=options, ctx=ctx)
+        log_roster_attach_result(runtime, ctx)
 
     def supervisor_wire(ctx: BootContext) -> None:
         """Register continuous services (work_drain, outbox) — start later."""
         sup = SystemSupervisor()
         runtime._supervisor = sup
-        plane = getattr(runtime, "_work_plane", None) or getattr(
-            runtime, "work_plane", None
-        )
+        plane = get_attached_plane(runtime, "work")
         if plane is not None:
             sup.register(
                 CallableSystemService(

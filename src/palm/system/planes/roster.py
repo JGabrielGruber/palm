@@ -31,6 +31,11 @@ class SystemPlaneSpec:
         """Observation / vitality seat id — same as instance attr by law."""
         return self.attr
 
+    @property
+    def private_attr(self) -> str:
+        """Backing field on BaseRuntime (``_wait_plane``)."""
+        return f"_{self.attr}"
+
 
 # Fixed system set today. Membership is system schedule attach, not CompositionProfile.
 SYSTEM_PLANES: Final[tuple[SystemPlaneSpec, ...]] = (

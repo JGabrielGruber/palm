@@ -44,6 +44,7 @@ from palm.system.boot import (
     walk_schedule,
 )
 from palm.system.log import get_system_log
+from palm.system.planes.attach import detach_system_planes, get_attached_plane
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.runtime.schedulers import QueuedScheduler
@@ -155,6 +156,10 @@ class BaseRuntime:
         """Start plane (WorkIntent enqueue / tick), or ``None`` before attach."""
         return self._work_plane
 
+    def plane(self, plane_id_or_attr: str) -> Any | None:
+        """Roster plane by id (``wait``) or attr (``wait_plane``), or ``None``."""
+        return get_attached_plane(self, plane_id_or_attr)
+
     @property
     def supervisor(self) -> Any | None:
         """Continuous system services supervisor (0.60), or ``None`` before wire."""
@@ -232,20 +237,8 @@ class BaseRuntime:
                 pass
             self._supervisor = None
 
-        if self._work_plane is not None:
-            try:
-                self._work_plane.detach()
-            except Exception:
-                pass
-            self._work_plane = None
-
-        if self._session_plane is not None:
-            self._session_plane.detach()
-            self._session_plane = None
-
-        if self._wait_plane is not None:
-            self._wait_plane.detach()
-            self._wait_plane = None
+        # Reverse of SYSTEM_PLANES attach order (roster-driven).
+        detach_system_planes(self)
 
         self.orchestration.stop()
         if self._owns_instance_manager:
