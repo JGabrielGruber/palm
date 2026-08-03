@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from palm.core.event import EventEngine
     from palm.core.orchestration import OrchestrationEngine
     from palm.core.resource import ResourceEngine
-    from palm.system.ports.execution import ExecutionPort
+    from palm.system.interfaces.execution import ExecutionPort
 
 
 @runtime_checkable

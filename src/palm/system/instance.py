@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from palm.system.ports.execution import ExecutionPort
-from palm.system.ports.install import InstallInterface
+from palm.system.interfaces.execution import ExecutionPort
+from palm.system.interfaces.install import InstallInterface
 
 
 @runtime_checkable

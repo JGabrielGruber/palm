@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from palm.system.planes.wait.present import summarize_waiting_on, waiting_on_from_job
+from palm.system.subsystems.planes.wait.present import summarize_waiting_on, waiting_on_from_job
 from palm.core.orchestration.exceptions import JobNotFoundError
 
 

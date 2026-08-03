@@ -164,7 +164,7 @@ def test_portal_file_response_rejects_traversal() -> None:
 
 def test_handle_bind_and_dispatch_uses_bound_session(palm_server: ServerRuntime) -> None:
     from palm.runtimes.server.surfaces.websocket.session import _ConnectionState
-    from palm.system.planes.session import looks_like_system_session_id
+    from palm.system.subsystems.planes.session import looks_like_system_session_id
 
     ctx = palm_server.server_app.context  # type: ignore[union-attr]
     conn = _ConnectionState(headers={})

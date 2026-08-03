@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
-from palm.system.supervisor import OutboxLoopService
+from palm.system.subsystems.supervisor import OutboxLoopService
 
 
 def test_outbox_registered_when_outbox_wired() -> None:

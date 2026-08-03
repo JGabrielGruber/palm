@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.planes.wait.index import WaitOwnerIndex
-from palm.system.planes.wait.matcher import WaitMatcher
-from palm.system.planes.wait.policy import (
+from palm.system.subsystems.planes.wait.index import WaitOwnerIndex
+from palm.system.subsystems.planes.wait.matcher import WaitMatcher
+from palm.system.subsystems.planes.wait.policy import (
     ACTION_FAIL_OWNER,
     ACTION_NOOP,
     ACTION_RESUME_OWNER,
     resolve_wait_action,
 )
-from palm.system.planes.wait.signals import TargetSignal, extract_target_signal
+from palm.system.subsystems.planes.wait.signals import TargetSignal, extract_target_signal
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import (

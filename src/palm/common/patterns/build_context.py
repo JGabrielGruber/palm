@@ -22,7 +22,7 @@ from palm.core.workload import WorkloadEngine
 if TYPE_CHECKING:
     from palm.common.persistence.definition_repository import DefinitionRepository
     from palm.definitions.flow import FlowDefinition
-    from palm.system.ports.execution import ExecutionPort
+    from palm.system.interfaces.execution import ExecutionPort
 
 
 @dataclass

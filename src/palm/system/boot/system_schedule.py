@@ -35,8 +35,8 @@ from palm.system.boot.log_phase import system_log_ready_handler
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
 from palm.system.log import get_system_log
-from palm.system.planes.hub import SystemPlanes
-from palm.system.planes.workload.bootstrap import initialize_workload_engine
+from palm.system.subsystems.planes.hub import SystemPlanes
+from palm.system.subsystems.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.runtime.hooks import (
     AuthMiddleware,
     DriveObservabilityHook,
@@ -50,7 +50,7 @@ from palm.system.runtime.job_hooks import (
     StateSnapshotHook,
 )
 from palm.system.runtime.wiring import resolve_scheduler
-from palm.system.supervisor import SystemSupervisor
+from palm.system.subsystems.supervisor import SystemSupervisor
 
 
 def build_system_handlers(
@@ -179,8 +179,10 @@ def build_system_handlers(
         runtime.orchestration.start()
 
     def install_bind(ctx: BootContext) -> None:
-        """Bind :class:`~palm.system.ports.install.SystemInstall` — named ports only."""
-        board = runtime.bind_system_install()
+        """Bind InstallInterface; publish on *ctx.install*."""
+        shell = ctx.shell if ctx.shell is not None else runtime
+        board = shell.bind_system_install()
+        ctx.install = board
         bound = [k for k, v in board.status().items() if v]
         get_system_log().info(
             "install.bound",
@@ -192,12 +194,17 @@ def build_system_handlers(
 
     def planes_attach(ctx: BootContext) -> None:
         """
-        Seat :class:`SystemPlanes` and install members from :attr:`runtime.install`.
+        Seat planes subsystem; install members from *ctx.install*.
 
         Schedule owns *when*. Subsystem walks definitions; install interface
         owns collaborators.
         """
         slog = get_system_log()
+        shell = ctx.shell if ctx.shell is not None else runtime
+        board = ctx.install
+        if board is None:
+            board = shell.bind_system_install()
+            ctx.install = board
 
         def _on_host_session_error(exc: BaseException) -> None:
             # BI-014 — still swallowed; honesty later.
@@ -208,14 +215,15 @@ def build_system_handlers(
                 reason=str(exc),
             )
 
-        planes = SystemPlanes.ensure_on(runtime)
+        planes = SystemPlanes.ensure_on(shell)
         planes.install(
-            runtime.install,
+            board,
             options,
             on_host_session_error=_on_host_session_error,
         )
+        ctx.planes = planes
         # Publish work plane on the install board for supervisor continuous install.
-        runtime.bind_system_install()
+        ctx.install = shell.bind_system_install()
         slog.info(
             "plane.hub.attached",
             "system planes subsystem ready",
@@ -225,10 +233,14 @@ def build_system_handlers(
         )
 
     def supervisor_wire(ctx: BootContext) -> None:
-        """Seat supervisor; walk continuous definitions from install interface."""
+        """Seat supervisor; walk continuous definitions from *ctx.install*."""
+        shell = ctx.shell if ctx.shell is not None else runtime
+        board = ctx.install if ctx.install is not None else shell.install
+        ctx.install = board
         sup = SystemSupervisor()
-        runtime._supervisor = sup
-        sup.install(runtime.install, options)
+        shell._supervisor = sup
+        sup.install(board, options)
+        ctx.supervisor = sup
         get_system_log().info(
             "supervisor.wire",
             "system supervisor ready",
@@ -258,7 +270,8 @@ def build_system_handlers(
         """Start supervised continuous services when options allow (0.60.5-6)."""
         if bool(options.get("allow_background_drain", True)) is False:
             raise PhaseSkip("allow_background_drain_off")
-        sup = runtime._supervisor
+        shell = ctx.shell if ctx.shell is not None else runtime
+        sup = ctx.supervisor if ctx.supervisor is not None else shell._supervisor
         if sup is None:
             raise PhaseSkip("no_supervisor")
 

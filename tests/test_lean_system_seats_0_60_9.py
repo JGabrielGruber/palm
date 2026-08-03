@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from palm.system.log import reset_system_log_for_tests
-from palm.system.planes.session.plane import SessionPlaneService
-from palm.system.planes.wait.plane import WaitPlaneService
-from palm.system.planes.work.plane import WorkPlaneService
+from palm.system.subsystems.planes.session.plane import SessionPlaneService
+from palm.system.subsystems.planes.wait.plane import WaitPlaneService
+from palm.system.subsystems.planes.work.plane import WorkPlaneService
 from palm.system.runtime.base import BaseRuntime
-from palm.system.supervisor import SystemSupervisor
+from palm.system.subsystems.supervisor import SystemSupervisor
 
 
 def test_base_runtime_reactive_seats_without_host() -> None:

@@ -15,8 +15,8 @@ from palm.app import ApplicationHost, DeploymentProfile
 from palm.app.settings import PalmSettings
 from palm.common.plugins import ensure_core_plugins
 from palm.runtimes.embedded import EmbeddedRuntime
-from palm.system.planes.session.plane import SessionPlaneService
-from palm.system.planes.wait.plane import WaitPlaneService
+from palm.system.subsystems.planes.session.plane import SessionPlaneService
+from palm.system.subsystems.planes.wait.plane import WaitPlaneService
 
 # Collaborator call order on collapsed all_in_one (server off).
 # 0.59.5: surfaces.mount PhaseSkip before _start_server_surface when

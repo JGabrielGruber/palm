@@ -22,7 +22,7 @@ from palm.common.job_inspection import (
     transform_from_bundle,
     validation_from_bundle,
 )
-from palm.system.planes.wait.present import waiting_on_from_state
+from palm.system.subsystems.planes.wait.present import waiting_on_from_state
 from palm.core.orchestration import Job
 from palm.patterns.wizard.bindings.context.keys import WizardKeys
 from palm.patterns.wizard.flow.collection.selection import default_label_field

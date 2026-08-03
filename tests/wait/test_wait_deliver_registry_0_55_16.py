@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.system.planes.wait.deliver import (
+from palm.system.subsystems.planes.wait.deliver import (
     clear_wait_deliverers,
     deliver_nested_wizard_completion,
     deliver_wait_completion,
@@ -10,7 +10,7 @@ from palm.system.planes.wait.deliver import (
     register_wait_deliverer,
     unregister_wait_deliverer,
 )
-from palm.system.planes.wait.plane import WaitPlaneService
+from palm.system.subsystems.planes.wait.plane import WaitPlaneService
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import make_job_wait, make_workload_wait, open_wait_on_job
 

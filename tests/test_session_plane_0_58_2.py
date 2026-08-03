@@ -7,7 +7,7 @@ import pytest
 from palm.core.storage import StorageEngine
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     InstanceAlreadyAttachedError,
     SessionClosedError,
     SessionNotFoundError,
@@ -15,7 +15,7 @@ from palm.system.planes.session import (
     SessionStatus,
     SessionStore,
 )
-from palm.system.planes.session.store import SESSION_BY_INSTANCE_PREFIX
+from palm.system.subsystems.planes.session.store import SESSION_BY_INSTANCE_PREFIX
 
 
 def _storage() -> StorageEngine:
@@ -125,7 +125,7 @@ def test_attach_empty_instance_id() -> None:
 def test_store_put_syncs_reverse_and_delete_clears() -> None:
     storage = _storage()
     store = SessionStore(storage)
-    from palm.system.planes.session import SessionRecord
+    from palm.system.subsystems.planes.session import SessionRecord
 
     rec = SessionRecord(
         session_id="sess-store",

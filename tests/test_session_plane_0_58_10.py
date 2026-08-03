@@ -8,7 +8,7 @@ from palm.app.host.application_host import ApplicationHost
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
 from palm.core.storage import StorageEngine
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     SessionPlaneError,
     SessionPlaneService,
     SessionRecord,

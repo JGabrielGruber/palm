@@ -1,21 +1,15 @@
-"""System planes — start (work), continue (wait), session, workload glue.
+"""
+Compatibility shim — prefer :mod:`palm.system.subsystems.planes`.
 
-:class:`SystemPlanes` is the living seat that consumes individual planes
-(parallel to :class:`~palm.system.supervisor.SystemSupervisor`).
-Install **law** lives on :class:`~palm.system.planes.definition.PlaneDefinition`
-at the edge; the hub walks definitions and seats members. Boot only says when.
+``__path__`` is extended so nested imports (``palm.system.planes.wait…``) resolve
+to the real subsystem package for one theme.
 """
 
-from palm.system.planes.catalog import DEFAULT_PLANE_DEFINITIONS, default_plane_definitions
-from palm.system.planes.definition import PlaneDefinition
-from palm.system.planes.hub import SystemPlanes, get_system_planes
-from palm.system.planes.install_context import InstallContext
+from __future__ import annotations
 
-__all__ = [
-    "DEFAULT_PLANE_DEFINITIONS",
-    "InstallContext",
-    "PlaneDefinition",
-    "SystemPlanes",
-    "default_plane_definitions",
-    "get_system_planes",
-]
+import palm.system.subsystems.planes as _real
+
+__path__ = list(_real.__path__)  # type: ignore[name-defined]
+
+from palm.system.subsystems.planes import *  # noqa: F403, E402
+from palm.system.subsystems.planes import __all__ as __all__  # noqa: E402

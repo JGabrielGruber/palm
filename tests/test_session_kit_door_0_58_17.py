@@ -26,7 +26,7 @@ from palm.runtimes.server.surfaces.websocket.session import (
     handle_client_message,
 )
 from palm.services.session import BoundSurface, SessionService
-from palm.system.planes.session import InstanceNotOwnedError
+from palm.system.subsystems.planes.session import InstanceNotOwnedError
 
 
 def _host() -> ApplicationHost:

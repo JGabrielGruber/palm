@@ -10,7 +10,7 @@ from palm.app.settings import PalmSettings
 from palm.core.storage import StorageEngine
 from palm.runtimes.mcp.assist.operator import rewrite_system_session_continue
 from palm.services.session import ContinueTarget, SessionService
-from palm.system.planes.session import InstanceNotOwnedError
+from palm.system.subsystems.planes.session import InstanceNotOwnedError
 
 
 def _host() -> ApplicationHost:

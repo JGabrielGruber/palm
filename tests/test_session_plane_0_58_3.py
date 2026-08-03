@@ -11,7 +11,7 @@ from palm.core.storage import StorageEngine
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.cli.shared.context import CliContext
 from palm.runtimes.embedded import EmbeddedRuntime
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     SessionBind,
     SessionClosedError,
     SessionNotFoundError,

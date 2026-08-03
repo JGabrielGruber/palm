@@ -274,11 +274,11 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 
 | Started (0.61) | Still open |
 |----------------|------------|
-| `InstallInterface` / `SystemInstall` (was wire) | Package move `ports` → `interfaces`, planes → `subsystems` |
-| `InstallContext.from_install` | BootContext exposes seat handles |
-| `planes.install(install_iface)` | Kill ambient digs in host/product/surfaces |
-| `bind_wait_plane` / `bind_session_plane` seat APIs | Thin `*_to_runtime` bridges remain |
-| phase `system.install.bind` | Shared `Subsystem` protocol; more seat-first APIs |
+| `InstallInterface` / `SystemInstall` | Kill ambient digs in host/product/surfaces |
+| `system.interfaces` + `system.subsystems` packages | Drop compat shims when callers migrated |
+| `Subsystem` protocol | More seat-first APIs outside boot |
+| BootContext: `shell` / `install` / `planes` / `supervisor` | Engines still closed over in schedule handlers |
+| `bind_wait_plane` / `bind_session_plane` | Thin `*_to_runtime` bridges remain |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 

@@ -88,7 +88,8 @@ Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md) (floor · growth · e
 **Smell:** *ambient system-instance DI* — everything takes `runtime` and digs.  
 **Boy scout:** when you touch a `*_to_runtime` dig, prefer seat args; keep shell bridges thin.
 
-Target layout (migrate toward): `system.interfaces` · `system.subsystems` — **not** `system.common`.  
+Layout: `system.interfaces` · `system.subsystems` (planes, supervisor) — **not** `system.common`.  
+Compat shims: `system.ports`, `system.planes`, `system.supervisor`.  
 Map: [PALM.md](docs/PALM.md) §2 / §9 · residual [SD-016](TECH-DEBT.md#sd-016).
 
 ---

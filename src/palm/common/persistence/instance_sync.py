@@ -20,7 +20,7 @@ from palm.common.persistence.state_snapshot import (
     snapshot_state,
     state_from_snapshot,
 )
-from palm.system.planes.wait.rehydrate import rehydrate_wait_interests
+from palm.system.subsystems.planes.wait.rehydrate import rehydrate_wait_interests
 from palm.core.orchestration import Job
 from palm.definitions.flow import FlowDefinition
 from palm.instances import ProcessInstance

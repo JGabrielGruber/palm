@@ -1,7 +1,7 @@
 """
 BaseRuntime — concrete **system instance** for a running Palm.
 
-Holds engines, planes, and the :class:`~palm.system.ports.execution.ExecutionPort`
+Holds engines, planes, and the :class:`~palm.system.interfaces.execution.ExecutionPort`
 surface for graphs and product. Canonical home: :mod:`palm.system.runtime`.
 
 
@@ -44,15 +44,15 @@ from palm.system.boot import (
     walk_schedule,
 )
 from palm.system.log import get_system_log
-from palm.system.planes.hub import SystemPlanes
-from palm.system.planes.session.plane import SessionPlaneService
-from palm.system.planes.wait.plane import WaitPlaneService
-from palm.system.ports.install import SystemInstall
+from palm.system.subsystems.planes.hub import SystemPlanes
+from palm.system.subsystems.planes.session.plane import SessionPlaneService
+from palm.system.subsystems.planes.wait.plane import WaitPlaneService
+from palm.system.interfaces.install import SystemInstall
 from palm.system.runtime.schedulers import QueuedScheduler
 from palm.system.runtime.wiring import SchedulerPolicy
 
 if TYPE_CHECKING:
-    from palm.system.ports.execution import ExecutionPort
+    from palm.system.interfaces.execution import ExecutionPort
 
 
 class BaseRuntime:
@@ -64,7 +64,7 @@ class BaseRuntime:
     order here — add or migrate a phase handler under boot.
 
     Satisfies :class:`~palm.system.instance.SystemInstance` and
-    :class:`~palm.system.ports.execution.ExecutionPort` structurally.
+    :class:`~palm.system.interfaces.execution.ExecutionPort` structurally.
     Also satisfies the thin legacy :class:`~palm.system.runtime.host.RuntimeHost`.
 
     Subclasses set :attr:`default_scheduler_policy` to choose inline vs queued driving.
@@ -250,7 +250,11 @@ class BaseRuntime:
 
         slog = get_system_log()
         runtime = getattr(self, "name", None) or self.runtime_name
-        ctx = BootContext(schedule="system", runtime=str(runtime))
+        ctx = BootContext(
+            schedule="system",
+            runtime=str(runtime),
+            shell=self,
+        )
         slog.info(
             "boot.start",
             "system schedule start",

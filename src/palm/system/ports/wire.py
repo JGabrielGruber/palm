@@ -1,14 +1,8 @@
-"""
-Compatibility re-export — prefer :mod:`palm.system.ports.install`.
-
-``WirePort`` / ``SystemWire`` are aliases of
-:class:`~palm.system.ports.install.InstallInterface` /
-:class:`~palm.system.ports.install.SystemInstall`.
-"""
+"""Compatibility — prefer :mod:`palm.system.interfaces.install`."""
 
 from __future__ import annotations
 
-from palm.system.ports.install import (
+from palm.system.interfaces.install import (
     InstallInterface,
     SystemInstall,
     WirePort,

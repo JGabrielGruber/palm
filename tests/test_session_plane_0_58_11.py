@@ -9,7 +9,7 @@ from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
 from palm.core.storage import StorageEngine
 from palm.runtimes.mcp.assist.operator import rewrite_system_session_continue
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     InstanceNotOwnedError,
     SessionClosedError,
     SessionPlaneService,
@@ -119,7 +119,7 @@ def test_rewrite_rejects_foreign_instance_with_bound_session() -> None:
 
 def test_rewrite_bare_orphan_without_bound_session_refused_0_58_15() -> None:
     """0.58.15: bare orphan continue is refused (strict attribution)."""
-    from palm.system.planes.session import SessionAttributionError
+    from palm.system.subsystems.planes.session import SessionAttributionError
 
     settings = PalmSettings(load_example_definitions=False)
     host = ApplicationHost(

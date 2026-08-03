@@ -2,6 +2,6 @@
 
 from __future__ import annotations
 
-from palm.system.planes.work.inbound import InboundBinding, InboundBindingService
+from palm.system.subsystems.planes.work.inbound import InboundBinding, InboundBindingService
 
 __all__ = ["InboundBinding", "InboundBindingService"]

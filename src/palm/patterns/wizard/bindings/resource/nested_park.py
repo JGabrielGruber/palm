@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.planes.wait.access import close_interest_for_state, open_interest_for_state
-from palm.system.planes.wait.deliver import NESTED_WIZARD_SOURCE
+from palm.system.subsystems.planes.wait.access import close_interest_for_state, open_interest_for_state
+from palm.system.subsystems.planes.wait.deliver import NESTED_WIZARD_SOURCE
 from palm.core.orchestration import JobStatus
 from palm.core.resource.result import ProviderResult
 from palm.core.wait import WAIT_KIND_JOB, WaitInterest, find_wait_interests, make_job_wait

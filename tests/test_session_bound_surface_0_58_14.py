@@ -15,7 +15,7 @@ from palm.services.session import (
     derive_session_kind,
     derive_session_origin,
 )
-from palm.system.planes.session import SessionClosedError
+from palm.system.subsystems.planes.session import SessionClosedError
 
 
 def _host() -> ApplicationHost:

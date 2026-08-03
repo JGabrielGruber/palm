@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from palm.system.planes.wait import WaitPlaneService
-from palm.system.planes.wait.plane import bind_wait_plane_to_runtime
+from palm.system.subsystems.planes.wait import WaitPlaneService
+from palm.system.subsystems.planes.wait.plane import bind_wait_plane_to_runtime
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import has_open_waits, make_job_wait
@@ -67,7 +67,7 @@ def test_embedded_runtime_exposes_wait_plane() -> None:
 
 
 def test_bind_wait_plane_helper() -> None:
-    from palm.system.ports.install import SystemInstall
+    from palm.system.interfaces.install import SystemInstall
 
     engine = EventEngine()
     engine.initialize()

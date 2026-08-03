@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.planes.workload.run_python import spec_from_bound_params
+from palm.system.subsystems.planes.workload.run_python import spec_from_bound_params
 from palm.core.behavior_tree import BasePattern, PatternStatus
 from palm.core.context import BaseState
 from palm.core.resource.invocation import bind_resource_params

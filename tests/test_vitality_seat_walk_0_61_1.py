@@ -6,7 +6,7 @@ from typing import Any
 
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
-from palm.system.supervisor import CallableSystemService, SystemSupervisor
+from palm.system.subsystems.supervisor import CallableSystemService, SystemSupervisor
 from palm.system.vitality import (
     KIND_OTHER,
     KIND_PLANE,
@@ -65,7 +65,7 @@ def test_started_runtime_planes_hub_consumes_members() -> None:
 
 
 def test_system_planes_put_get_detach() -> None:
-    from palm.system.planes.hub import SystemPlanes
+    from palm.system.subsystems.planes.hub import SystemPlanes
 
     hub = SystemPlanes()
     marker = object()
@@ -99,9 +99,9 @@ def test_system_planes_install_owns_policy() -> None:
 
 
 def test_system_planes_ensure_on_and_install_wait() -> None:
-    from palm.system.planes.hub import SystemPlanes
-    from palm.system.planes.wait.plane import WaitPlaneService
-    from palm.system.ports.install import SystemInstall
+    from palm.system.subsystems.planes.hub import SystemPlanes
+    from palm.system.subsystems.planes.wait.plane import WaitPlaneService
+    from palm.system.interfaces.install import SystemInstall
 
     class _Orch:
         jobs: dict = {}
@@ -136,11 +136,11 @@ def test_plane_definitions_at_edge_not_open_coded_on_hub() -> None:
     """SD-015: install law on definitions; hub walks catalog."""
     import inspect
 
-    from palm.system.planes.catalog import DEFAULT_PLANE_DEFINITIONS
-    from palm.system.planes.hub import SystemPlanes
-    from palm.system.planes.session.definition import SESSION_PLANE
-    from palm.system.planes.wait.definition import WAIT_PLANE
-    from palm.system.planes.work.definition import WORK_PLANE
+    from palm.system.subsystems.planes.catalog import DEFAULT_PLANE_DEFINITIONS
+    from palm.system.subsystems.planes.hub import SystemPlanes
+    from palm.system.subsystems.planes.session.definition import SESSION_PLANE
+    from palm.system.subsystems.planes.wait.definition import WAIT_PLANE
+    from palm.system.subsystems.planes.work.definition import WORK_PLANE
 
     names = {d.name for d in DEFAULT_PLANE_DEFINITIONS}
     assert names == {"wait", "session", "work"}
@@ -163,9 +163,9 @@ def test_install_context_ports_not_runtime_bag_in_definitions() -> None:
     """CS-008: plane install signatures take InstallContext, not runtime."""
     import inspect
 
-    from palm.system.planes.session.definition import install_session_plane
-    from palm.system.planes.wait.definition import install_wait_plane
-    from palm.system.planes.work.definition import install_work_plane
+    from palm.system.subsystems.planes.session.definition import install_session_plane
+    from palm.system.subsystems.planes.wait.definition import install_wait_plane
+    from palm.system.subsystems.planes.work.definition import install_work_plane
 
     for fn in (install_wait_plane, install_session_plane, install_work_plane):
         sig = inspect.signature(fn)
@@ -178,8 +178,8 @@ def test_supervisor_install_walks_definitions() -> None:
     import inspect
 
     from palm.system.boot.system_schedule import build_system_handlers
-    from palm.system.supervisor.definition import DEFAULT_CONTINUOUS_DEFINITIONS
-    from palm.system.supervisor.supervisor import SystemSupervisor
+    from palm.system.subsystems.supervisor.definition import DEFAULT_CONTINUOUS_DEFINITIONS
+    from palm.system.subsystems.supervisor.supervisor import SystemSupervisor
 
     names = {d.name for d in DEFAULT_CONTINUOUS_DEFINITIONS}
     assert "work_drain" in names
@@ -195,10 +195,46 @@ def test_supervisor_install_walks_definitions() -> None:
     assert "sup.install" in handlers_src
 
 
+def test_subsystem_protocol_and_package_layout() -> None:
+    """SD-016: Subsystem protocol + interfaces/subsystems packages."""
+    from palm.system.interfaces import InstallInterface, SystemInstall
+    from palm.system.subsystems import Subsystem
+    from palm.system.subsystems.planes.hub import SystemPlanes
+    from palm.system.subsystems.supervisor import SystemSupervisor
+
+    assert isinstance(SystemPlanes(), Subsystem)
+    assert isinstance(SystemSupervisor(), Subsystem)
+    assert issubclass(SystemInstall, object)
+    assert isinstance(SystemInstall(), InstallInterface) or hasattr(
+        SystemInstall(), "orchestration"
+    )
+
+
+def test_boot_context_publishes_seats() -> None:
+    """BootContext gains install / planes / supervisor during system start."""
+    from palm.system.boot.context import BootContext
+    from palm.system.runtime.base import BaseRuntime
+
+    rt = BaseRuntime()
+    try:
+        rt.start(storage_backend="memory", enable_event_outbox=True)
+        # Seats live on the shell after boot; BootContext is walk-local.
+        assert rt.install is not None
+        assert rt.planes is not None
+        assert rt.supervisor is not None
+        ctx = BootContext(schedule="system", shell=rt, install=rt.install, planes=rt.planes, supervisor=rt.supervisor)
+        assert ctx.shell is rt
+        assert ctx.install is rt.install
+        assert ctx.planes is rt.planes
+        assert ctx.supervisor is rt.supervisor
+    finally:
+        rt.stop()
+
+
 def test_runtime_install_is_first_class_interface() -> None:
     """SystemInstall peer of execution — bind explicit, snapshot via from_install."""
-    from palm.system.planes.install_context import InstallContext
-    from palm.system.ports.install import SystemInstall
+    from palm.system.subsystems.planes.install_context import InstallContext
+    from palm.system.interfaces.install import SystemInstall
     from palm.system.runtime.base import BaseRuntime
 
     rt = BaseRuntime()
@@ -506,7 +542,7 @@ def test_expand_supervisor_services_never() -> None:
 
 
 def test_native_seat_report_preferred_over_raw() -> None:
-    from palm.system.planes.hub import SystemPlanes
+    from palm.system.subsystems.planes.hub import SystemPlanes
 
     class _NativePlane:
         def doctor_snapshot(self) -> dict[str, Any]:

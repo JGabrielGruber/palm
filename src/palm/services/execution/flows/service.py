@@ -181,7 +181,7 @@ class FlowExecutionService(BaseService):
             self._session.gate_bound_session_owns(instance_id, params)
             return
         params = params if params is not None else {}
-        from palm.system.planes.session import looks_like_system_session_id
+        from palm.system.subsystems.planes.session import looks_like_system_session_id
 
         plane = getattr(self.resolve_runtime(), "session_plane", None)
         if plane is None:
@@ -357,7 +357,7 @@ class FlowExecutionService(BaseService):
 
 def _looks_like_system_session_id(value: Any) -> bool:
     """True when id is system-session shaped (not a bare instance id)."""
-    from palm.system.planes.session import looks_like_system_session_id
+    from palm.system.subsystems.planes.session import looks_like_system_session_id
 
     return looks_like_system_session_id(value)
 

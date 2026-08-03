@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import palm.providers  # noqa: F401
-from palm.system.planes.wait import WaitPlaneService
+from palm.system.subsystems.planes.wait import WaitPlaneService
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import WAIT_KIND_JOB, has_open_waits, list_wait_interests, make_job_wait
 from palm.definitions import FlowDefinition, ResourceDefinition

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.planes.wait.present import summarize_waiting_on, waiting_on_from_job
+from palm.system.subsystems.planes.wait.present import summarize_waiting_on, waiting_on_from_job
 from palm.core.orchestration import JobStatus
 from palm.core.resource.result import ProviderResult
 from palm.providers.palm.bindings.orchestration.payload import job_payload

@@ -1,30 +1,12 @@
-"""System supervisor — continuous system services for one SystemInstance (0.60).
-
-Planes carry reactive traffic. The supervisor owns **lifecycle** for long-running
-loops and worker sets (work drain, outbox poll, inbound workers, …).
-
-Install law lives on continuous **definitions** (CS-006); the supervisor walks them.
-
-See docs/VISION-0.60.md · ADR-029.
+"""
+Compatibility shim — prefer :mod:`palm.system.subsystems.supervisor`.
 """
 
 from __future__ import annotations
 
-from palm.system.supervisor.definition import (
-    DEFAULT_CONTINUOUS_DEFINITIONS,
-    ContinuousServiceDefinition,
-    ContinuousWireContext,
-)
-from palm.system.supervisor.outbox_loop import OutboxLoopService
-from palm.system.supervisor.service import CallableSystemService, SystemService
-from palm.system.supervisor.supervisor import SystemSupervisor
+import palm.system.subsystems.supervisor as _real
 
-__all__ = [
-    "CallableSystemService",
-    "ContinuousServiceDefinition",
-    "ContinuousWireContext",
-    "DEFAULT_CONTINUOUS_DEFINITIONS",
-    "OutboxLoopService",
-    "SystemService",
-    "SystemSupervisor",
-]
+__path__ = list(_real.__path__)  # type: ignore[name-defined]
+
+from palm.system.subsystems.supervisor import *  # noqa: F403, E402
+from palm.system.subsystems.supervisor import __all__ as __all__  # noqa: E402

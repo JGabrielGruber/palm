@@ -111,8 +111,8 @@ def test_nested_unpark_via_matcher_only(runtime: EmbeddedRuntime) -> None:
 
 def test_matcher_scan_discovers_owner_without_index() -> None:
     """list_jobs scan finds parents that only opened state interest (0.55.3)."""
-    from palm.system.planes.wait.index import WaitOwnerIndex
-    from palm.system.planes.wait.matcher import WaitMatcher
+    from palm.system.subsystems.planes.wait.index import WaitOwnerIndex
+    from palm.system.subsystems.planes.wait.matcher import WaitMatcher
     from palm.core.orchestration import Job
     from palm.core.wait import make_job_wait, open_wait_on_job
 

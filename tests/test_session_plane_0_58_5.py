@@ -5,7 +5,7 @@ from __future__ import annotations
 from palm.definitions import FlowDefinition
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
-from palm.system.planes.session import SessionNotFoundError, SessionPlaneService
+from palm.system.subsystems.planes.session import SessionNotFoundError, SessionPlaneService
 from palm.core.storage import StorageEngine
 import pytest
 

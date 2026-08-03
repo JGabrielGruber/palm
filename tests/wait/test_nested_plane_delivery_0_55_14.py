@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from palm.system.planes.wait.deliver import deliver_nested_wizard_completion
-from palm.system.planes.wait.matcher import WaitMatcher
+from palm.system.subsystems.planes.wait.deliver import deliver_nested_wizard_completion
+from palm.system.subsystems.planes.wait.matcher import WaitMatcher
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import has_open_waits, make_job_wait, open_wait_on_job
 

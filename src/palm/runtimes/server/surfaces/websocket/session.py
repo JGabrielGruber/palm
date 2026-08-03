@@ -31,7 +31,7 @@ from palm.runtimes.server.surfaces.websocket.frames import (
     encode_pong,
     encode_text,
 )
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     SessionClosedError,
     SessionNotFoundError,
     SessionPlaneError,
@@ -635,7 +635,7 @@ def _handle_dispatch(
         }
     except Exception as exc:
         # SI-015 / 0.58.15: map attribution refusal to stable client codes
-        from palm.system.planes.session import (
+        from palm.system.subsystems.planes.session import (
             InstanceNotOwnedError,
             SessionAttributionError,
         )

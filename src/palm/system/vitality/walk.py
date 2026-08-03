@@ -282,7 +282,7 @@ def _expand_planes(
     if hub_report is None or not hub_report.present:
         return []
 
-    from palm.system.planes.hub import get_system_planes
+    from palm.system.subsystems.planes.hub import get_system_planes
 
     hub = get_system_planes(instance)
     if hub is None:

@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING, Any
 from palm.common.triggers.registry import TriggerRegistry
 from palm.core.event import Event
 from palm.core.work import WorkIntent
-from palm.system.planes.work.schedule import ScheduleRegistry
-from palm.system.planes.work.store import WorkIntentStore
+from palm.system.subsystems.planes.work.schedule import ScheduleRegistry
+from palm.system.subsystems.planes.work.store import WorkIntentStore
 
 if TYPE_CHECKING:
     from palm.core.event import EventEngine

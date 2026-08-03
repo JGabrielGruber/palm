@@ -144,7 +144,7 @@ def require_session_service(ctx: Any) -> Any:
 
 
 def resolve_session_plane(ctx: Any) -> Any | None:
-    """Find :class:`~palm.system.planes.session.SessionPlaneService` on host or runtime.
+    """Find :class:`~palm.system.subsystems.planes.session.SessionPlaneService` on host or runtime.
 
     **System / tests only.** Product surfaces must use
     :func:`resolve_session_service` (0.58.17). Prefer ``svc.plane()`` when

@@ -14,7 +14,7 @@ from palm.core.orchestration.hooks import JobHookAdapter
 if TYPE_CHECKING:
     from palm.core.orchestration.engine import OrchestrationEngine
     from palm.core.orchestration.job import Job
-    from palm.system.planes.session.plane import SessionPlaneService
+    from palm.system.subsystems.planes.session.plane import SessionPlaneService
 
 
 class SessionOwnershipHook(JobHookAdapter):

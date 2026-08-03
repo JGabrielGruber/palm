@@ -241,6 +241,6 @@ def test_resolve_effects_prefers_execution_port() -> None:
     ],
 )
 def test_execution_port_protocol_names(name: str) -> None:
-    from palm.system.ports.execution import ExecutionPort
+    from palm.system.interfaces.execution import ExecutionPort
 
     assert hasattr(ExecutionPort, name)

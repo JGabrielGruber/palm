@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from palm.core.work import WorkIntent
 from palm.system.log import reset_system_log_for_tests
-from palm.system.planes.work.plane import WorkPlaneService
+from palm.system.subsystems.planes.work.plane import WorkPlaneService
 from palm.system.runtime.base import BaseRuntime
 
 

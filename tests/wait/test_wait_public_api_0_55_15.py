@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import palm.system.planes.wait as wait_pkg
+import palm.system.subsystems.planes.wait as wait_pkg
 
 # Locked by VISION-0.55.15 — expand only with deliberate API design.
 EXPECTED_PUBLIC = frozenset(

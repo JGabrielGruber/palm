@@ -22,7 +22,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Mapping
 
-from palm.system.planes.session.types import (
+from palm.system.subsystems.planes.session.types import (
     HOST_SESSION_ID,
     HOST_SESSION_ORIGIN,
     looks_like_system_session_id,
@@ -154,7 +154,7 @@ class BoundSurface:
         *,
         instance_id: str | None = None,
     ) -> BoundSurface:
-        """Build from a :class:`~palm.system.planes.session.SessionRecord`."""
+        """Build from a :class:`~palm.system.subsystems.planes.session.SessionRecord`."""
         sid = str(record.session_id)
         meta = dict(getattr(record, "metadata", None) or {})
         iid = instance_id

@@ -65,7 +65,7 @@ class AssistSessionService:
             product.gate_bound_session_owns(instance_id, params)
             return
         params = params if params is not None else {}
-        from palm.system.planes.session import looks_like_system_session_id
+        from palm.system.subsystems.planes.session import looks_like_system_session_id
 
         runtime = self._assist.execution.flows.resolve_runtime()
         plane = getattr(runtime, "session_plane", None)

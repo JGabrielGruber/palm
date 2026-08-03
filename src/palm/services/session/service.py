@@ -30,7 +30,7 @@ from palm.services.session.bound_surface import (
     derive_session_kind,
     derive_session_origin,
 )
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     HOST_SESSION_ID,
     HOST_SESSION_ORIGIN,
     WORK_DRAIN_ORIGIN,
@@ -42,7 +42,7 @@ from palm.system.planes.session import (
 
 if TYPE_CHECKING:
     from palm.services.system.service import SystemService
-    from palm.system.planes.session import SessionBind, SessionPlaneService, SessionRecord
+    from palm.system.subsystems.planes.session import SessionBind, SessionPlaneService, SessionRecord
     from palm.system.runtime.base import BaseRuntime
 
 

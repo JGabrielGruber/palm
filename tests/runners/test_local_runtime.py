@@ -85,7 +85,7 @@ def test_engine_doctor_includes_health(tmp_path) -> None:
 
 
 def test_bootstrap_default_local(tmp_path) -> None:
-    from palm.system.planes.workload.bootstrap import initialize_workload_engine
+    from palm.system.subsystems.planes.workload.bootstrap import initialize_workload_engine
 
     engine = WorkloadEngine()
     initialize_workload_engine(engine, work_root=tmp_path)

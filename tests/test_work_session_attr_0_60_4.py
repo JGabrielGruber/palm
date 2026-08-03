@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from palm.core.work import WorkIntent
 from palm.system.log import reset_system_log_for_tests
-from palm.system.planes.session.types import (
+from palm.system.subsystems.planes.session.types import (
     looks_like_system_session_id,
     service_session_id,
 )
-from palm.system.planes.work.session_attr import (
+from palm.system.subsystems.planes.work.session_attr import (
     attribute_reactive_start,
     reactive_origin,
 )
@@ -69,7 +69,7 @@ def test_work_plane_tick_attributes_session_on_system_submit() -> None:
             captured.append({"flow_id": flow_id, **dict(payload)})
 
         # Use real attribute path: wrap default by intercepting after attribute.
-        from palm.system.planes.work.session_attr import attribute_reactive_start as attr
+        from palm.system.subsystems.planes.work.session_attr import attribute_reactive_start as attr
 
         def submit(flow_id: str, payload: dict) -> None:
             body = attr(rt, flow_id, payload)

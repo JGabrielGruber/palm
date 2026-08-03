@@ -5,7 +5,7 @@ from __future__ import annotations
 from palm.system.boot import system_phase_ids
 from palm.system.log import get_system_log, reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
-from palm.system.supervisor import CallableSystemService, SystemSupervisor
+from palm.system.subsystems.supervisor import CallableSystemService, SystemSupervisor
 
 
 def test_supervisor_register_start_stop_status() -> None:

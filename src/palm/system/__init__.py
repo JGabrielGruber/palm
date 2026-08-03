@@ -22,7 +22,7 @@ from palm.system.effects import (
 from palm.system.instance import SystemInstance
 from palm.system.boot import HOST_PHASES, SYSTEM_PHASES, schedule_catalog, walk_schedule
 from palm.system.log import SystemLog, get_system_log
-from palm.system.ports.execution import ExecutionPort
+from palm.system.interfaces.execution import ExecutionPort
 from palm.system.runtime.base import BaseRuntime
 
 __all__ = [

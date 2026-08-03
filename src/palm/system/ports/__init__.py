@@ -1,9 +1,12 @@
-"""System interfaces (ports) — execution effects and install collaborators."""
+"""Compatibility re-export — prefer :mod:`palm.system.interfaces`."""
 
-from palm.system.ports.execution import ExecutionPort
-from palm.system.ports.install import (
+from __future__ import annotations
+
+from palm.system.interfaces import (
+    ExecutionPort,
     InstallInterface,
     SystemInstall,
+    SystemInterface,
     WirePort,
     SystemWire,
     continuous_context_from_install,
@@ -14,6 +17,7 @@ __all__ = [
     "ExecutionPort",
     "InstallInterface",
     "SystemInstall",
+    "SystemInterface",
     "WirePort",
     "SystemWire",
     "continuous_context_from_install",

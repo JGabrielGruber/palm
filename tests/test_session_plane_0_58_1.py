@@ -7,7 +7,7 @@ import pytest
 from palm.core.storage import StorageEngine
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
-from palm.system.planes.session import (
+from palm.system.subsystems.planes.session import (
     SessionNotFoundError,
     SessionPlaneService,
     SessionRecord,
@@ -16,7 +16,7 @@ from palm.system.planes.session import (
     bind_session_plane_to_runtime,
     new_session_id,
 )
-from palm.system.planes.session.types import SessionRecord as SessionRecordDirect
+from palm.system.subsystems.planes.session.types import SessionRecord as SessionRecordDirect
 
 
 def _storage() -> StorageEngine:
@@ -102,7 +102,7 @@ def test_session_plane_doctor_snapshot() -> None:
 
 
 def test_bind_session_plane_helper() -> None:
-    from palm.system.ports.install import SystemInstall
+    from palm.system.interfaces.install import SystemInstall
 
     eng = _storage()
 

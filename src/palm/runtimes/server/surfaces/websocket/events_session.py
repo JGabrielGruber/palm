@@ -48,7 +48,7 @@ from palm.runtimes.server.surfaces.websocket.frames import (
     encode_pong,
     encode_text,
 )
-from palm.system.planes.session import looks_like_system_session_id
+from palm.system.subsystems.planes.session import looks_like_system_session_id
 
 logger = logging.getLogger(__name__)
 

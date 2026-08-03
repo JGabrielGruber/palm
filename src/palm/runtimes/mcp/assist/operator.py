@@ -124,11 +124,11 @@ def rewrite_system_session_continue(
 
     **0.58.15 strict attribution:** continue paths without a system session
     resolve the owner from the plane; orphan / bare instances raise
-    :class:`~palm.system.planes.session.SessionAttributionError`.
+    :class:`~palm.system.subsystems.planes.session.SessionAttributionError`.
 
     **0.58.17:** product door only — no raw ``session_plane`` fallback.
     """
-    from palm.system.planes.session import looks_like_system_session_id
+    from palm.system.subsystems.planes.session import looks_like_system_session_id
 
     product = _resolve_session_service(ctx)
     if product is None:
@@ -231,7 +231,7 @@ def _gate_continue_owner(
     params: dict[str, Any],
 ) -> None:
     """Continue attribution via product SessionService (0.58.11 / 0.58.15 / 0.58.17)."""
-    from palm.system.planes.session import looks_like_system_session_id
+    from palm.system.subsystems.planes.session import looks_like_system_session_id
 
     if not _is_session_continue_path(path):
         return

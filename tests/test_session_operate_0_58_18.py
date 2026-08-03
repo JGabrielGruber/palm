@@ -11,7 +11,7 @@ from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
 from palm.core.storage import StorageEngine
 from palm.runtimes.mcp.assist.operator import dispatch_operator_path
-from palm.system.planes.session import InstanceNotOwnedError, SessionPlaneError
+from palm.system.subsystems.planes.session import InstanceNotOwnedError, SessionPlaneError
 
 
 def _host() -> ApplicationHost:

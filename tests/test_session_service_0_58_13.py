@@ -11,7 +11,7 @@ from palm.services.session import (
     WORK_DRAIN_ORIGIN,
     service_session_id,
 )
-from palm.system.planes.session import service_session_id as plane_service_session_id
+from palm.system.subsystems.planes.session import service_session_id as plane_service_session_id
 
 
 def _host() -> ApplicationHost:

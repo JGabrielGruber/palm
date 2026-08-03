@@ -11,7 +11,7 @@ from palm.runtimes.mcp.assist.operator import (
     dispatch_operator_path,
     rewrite_system_session_continue,
 )
-from palm.system.planes.session import SessionPlaneService, looks_like_system_session_id
+from palm.system.subsystems.planes.session import SessionPlaneService, looks_like_system_session_id
 
 
 def _storage() -> StorageEngine:

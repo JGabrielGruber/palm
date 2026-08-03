@@ -19,8 +19,8 @@ from typing import TYPE_CHECKING, Any
 from palm.app.host.workplane.work_drain_service import WorkDrainService
 from palm.common.events import wire_event_journal as _wire_event_journal
 from palm.common.events.consumers import consume_for_projections, consume_for_webhooks
-from palm.system.planes.work.inbound import InboundBindingService
-from palm.system.supervisor import CallableSystemService
+from palm.system.subsystems.planes.work.inbound import InboundBindingService
+from palm.system.subsystems.supervisor import CallableSystemService
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost

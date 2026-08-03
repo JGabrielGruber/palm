@@ -17,7 +17,7 @@ from palm.runtimes.server.surfaces.websocket.session import (
     _ConnectionState,
     handle_client_message,
 )
-from palm.system.planes.session import looks_like_system_session_id
+from palm.system.subsystems.planes.session import looks_like_system_session_id
 
 
 def test_looks_like_system_session_id() -> None:

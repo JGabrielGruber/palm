@@ -15,11 +15,11 @@ from palm.core.workload.driver import WorkloadDriver
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.record import Workload
 from palm.core.workload.spec import WorkloadSpec
-from palm.system.ports.execution import ExecutionPort
+from palm.system.interfaces.execution import ExecutionPort
 
 
 class PortResourceInvoker:
-    """Adapt :class:`~palm.system.ports.execution.ExecutionPort` to ResourceInvoker."""
+    """Adapt :class:`~palm.system.interfaces.execution.ExecutionPort` to ResourceInvoker."""
 
     __slots__ = ("_port",)
 
@@ -63,7 +63,7 @@ class PortResourceInvoker:
 
 
 class PortWorkloadDriver:
-    """Adapt :class:`~palm.system.ports.execution.ExecutionPort` to WorkloadDriver."""
+    """Adapt :class:`~palm.system.interfaces.execution.ExecutionPort` to WorkloadDriver."""
 
     __slots__ = ("_port",)
 

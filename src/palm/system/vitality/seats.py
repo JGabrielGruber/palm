@@ -1,7 +1,7 @@
 """
 Default discovery seeds for Palm living seats (0.61).
 
-**Planes:** vitality probes the live :class:`~palm.system.planes.hub.SystemPlanes`
+**Planes:** vitality probes the live :class:`~palm.system.subsystems.planes.hub.SystemPlanes`
 hub and expands members from it (same pattern as supervisor services).
 No private plane menu in vitality.
 
@@ -62,7 +62,7 @@ def _resolve_system_log(instance: Any) -> Any | None:
 
 def _resolve_planes(instance: Any) -> Any | None:
     """Hub only — never invent plane members from vitality."""
-    from palm.system.planes.hub import SystemPlanes, get_system_planes
+    from palm.system.subsystems.planes.hub import SystemPlanes, get_system_planes
 
     hub = get_system_planes(instance)
     if isinstance(hub, SystemPlanes):
