@@ -7,7 +7,8 @@
 **Seed:** [VISION-VITALITY](VISION-VITALITY.md) (opened as this theme).  
 **Theme law:** [VERSIONING.md](VERSIONING.md) (floor · growth · exit judgment) · [AGENTS.md](../AGENTS.md) §6b.  
 **Prior closed:** [VISION-0.60](VISION-0.60.md) supervisor + work plane · [VISION-0.59](VISION-0.59.md) boot · [VISION-0.58](VISION-0.58.md) session.  
-**Debt:** [SD-007](../TECH-DEBT.md#sd-007) · [CS-002](../TECH-DEBT.md#cs-002) · [OD-001](../TECH-DEBT.md#od-001) · [BI-015](../TECH-DEBT.md#bi-015).  
+**Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) · [CS-002](../TECH-DEBT.md#cs-002) · [OD-001](../TECH-DEBT.md#od-001) · [BI-015](../TECH-DEBT.md#bi-015).  
+**Mid-theme residual (named for refactor):** [SD-015](../TECH-DEBT.md#sd-015) plane install menu · [CS-006](../TECH-DEBT.md#cs-006) supervisor wire · [CS-007](../TECH-DEBT.md#cs-007) adapter lineage residue · [CS-008](../TECH-DEBT.md#cs-008) runtime closures.  
 **Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI / SI / SU · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
 
@@ -279,12 +280,25 @@ Theme stays open while José still needs proper eyes.
 
 | Debt | Theme action |
 |------|--------------|
-| **SD-007** | Pay — product Inspect rename |
-| **CS-002** | Pay down — host triple status not living truth |
-| **OD-001** | Name + demote doctor as kernel eyes |
+| **SD-007** | Pay — product Inspect rename (unpaid) |
+| **CS-002** | Pay down — host triple status not living truth (unpaid) |
+| **OD-001** | Name + demote doctor as kernel eyes (system home landed; product still doctor) |
 | **BI-015** | Use log as sample; deeper catalog may grow under vitality |
-| Seat dual APIs | Native seat report when seats open |
+| Seat dual APIs | Prefer public API raw sample; native `seat_report` only when internal truth needs it |
 | Host control_plane as law | Break for living load; bridge only temporary |
+
+### 8.1 Residual from 0.61 plane / eyes cuts (refactor backlog)
+
+Named so boy-scout and later slices do not pretend hub install is finished.
+
+| Debt | What left | Refactor toward |
+|------|-----------|-----------------|
+| **[SD-015](../TECH-DEBT.md#sd-015)** | Hub open-codes wait/session/work `install_*` | Plane **definitions** at edge; hub walks them (registry extension) |
+| **[CS-006](../TECH-DEBT.md#cs-006)** | `supervisor_wire` hand-registers work_drain/outbox | Continuous service definitions; schedule only orders |
+| **[CS-007](../TECH-DEBT.md#cs-007)** | `lineage: adapter` still in schema/counters | Drop residue; sampled/native only |
+| **[CS-008](../TECH-DEBT.md#cs-008)** | `default_submit_flow` / get_job close over runtime | Explicit wire context / ports at install |
+
+**Landed (not debt):** hub membership; collaborator `attach` (no full runtime on plane); schedule thin `install` call; vitality package + raw sample + projection + `seat_walk` capability; adapters deleted as maps.
 
 **Not the subject:** full SU-* deflation, SI surface residue, BI-003 dual root — name residual; break only if they poison discovery.
 

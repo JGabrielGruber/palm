@@ -1,6 +1,6 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** at **0.61.0** — [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed** · debt **[SD-007](#sd-007)** · **[CS-002](#cs-002)** · **[OD-001](#od-001)**. Theme **0.60 System Supervisor + Work Plane closed** at **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59 System Boot closed** at **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58 Session plane closed** at **0.58.20** — residual **SI-*** / **SU-***. Theme **0.57 closed** at **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed essay [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.2** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[SD-007](#sd-007)** · **[CS-002](#cs-002)** · **[OD-001](#od-001)** still open. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Theme (open vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**  
@@ -49,6 +49,7 @@
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 | [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
+| [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | open (named mid-theme) |
 
 ### Surface debt (SU)
 
@@ -83,12 +84,15 @@
 | [CS-003](#cs-003) | Core leaves take concrete engines (not protocols) | S2 | M | open |
 | [CS-004](#cs-004) | Definition `from_dict` forever-legacy shapes | S3 | M | open |
 | [CS-005](#cs-005) | Broad swallow `except` / empty `pass` in hot paths | S3 | M | open (= CF-007) |
+| [CS-006](#cs-006) | Supervisor continuous wire is schedule prose | S3 | M | open (**0.61** named) |
+| [CS-007](#cs-007) | Vitality `lineage: adapter` schema residue | S4 | S | open (**0.61** named) |
+| [CS-008](#cs-008) | Plane factories still close over full runtime | S3 | M | open (**0.61** named) |
 
 ### Operate diagnosis (OD)
 
 | ID | Title | Sev | Effort | Status |
 |----|-------|:---:|:------:|--------|
-| [OD-001](#od-001) | Doctor as kernel eyes (not vitality) | S2 | M | open (**0.61.0** named) |
+| [OD-001](#od-001) | Doctor as kernel eyes (not vitality) | S2 | M | open (eyes home landed; product still doctor) |
 
 ---
 
@@ -204,6 +208,50 @@ PALM.md and SYSTEM-LOW-LEVEL already draw the line. No rename required.
 
 **Target:** Product **InspectService** (`palm.services.inspect`) — top / vitality present / list / cancel — vs **system layer** (kernel) vs **system vitality** (eyes).  
 **Theme:** [VISION-0.61](docs/VISION-0.61.md) slice guide **0.61.4**. Host `host.system` → `host.inspect` (alias while migrating).
+
+**Progress (0.61.1–0.61.2):** System vitality home + projection exist. Product still `palm.services.system` + doctor path. Rename unpaid.
+
+---
+
+### SD-015 — SystemPlanes open-codes plane install
+
+<a id="sd-015"></a>
+
+**Severity:** S2 · **Effort:** M · **Theme:** **0.61** (boy-scout under registry extension)
+
+**Observation:** After hub membership landed, install policy was moved into
+`SystemPlanes.install_wait` / `install_session` / `install_work` as a **private
+menu** of three concretes. Schedule is thin (`ensure_on` + `install`), but the
+hub still **authors** each plane’s participation law. That violates
+[AGENTS §1.1](AGENTS.md) / [PALM §9](docs/PALM.md) law 4 (registry extension /
+OCP·DIP): definition at the edge; consumer walks definitions.
+
+**Smell:** *menu relocation* (schedule → hub), not finished design.
+
+**Progress (0.61 mid):**
+
+| Landed | Still debt |
+|--------|------------|
+| `SystemPlanes` hub membership (`put` / `get` / `detach` / `names`) | Open-coded `install_*` per concrete |
+| Planes take collaborators, not full runtime bag | Hub imports wait/session/work prose |
+| Schedule only seats hub + `install` | No per-plane install definition / register |
+| Bind helpers delegate to hub | Same private menu path |
+
+**Target:**
+
+```text
+Plane definition (edge: wait / session / work package)
+  → id, aliases, order/deps, collaborator recipe, factory
+SystemPlanes.install
+  → resolve order · extract deps · construct · attach · put
+Schedule
+  → ensure_on + install (unchanged thin)
+```
+
+**Do not:** rename install methods and keep the three branches.  
+**Related:** [CS-006](#cs-006) · [CS-008](#cs-008) · ADR-030 D3 · [VISION-0.61](docs/VISION-0.61.md).
+
+**Status:** open (named mid-0.61).
 
 ---
 
@@ -581,6 +629,65 @@ These must **not** remain the source of truth for living load.
 
 **Target (0.61):** System **vitality** projection is living fold ([VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) D9). Host status thins, delegates, or deletes. Do not grow a fourth host status method as truth. Align residual bus vocabulary with [EVENT-PLANE](docs/EVENT-PLANE.md).
 
+**Progress (0.61.1–0.61.2):** Projection + `project_top` exist on system. Host still exposes the triple; doctor/product still assemble outside vitality.
+
+---
+
+### CS-006 — Supervisor continuous wire is schedule prose
+
+<a id="cs-006"></a>
+
+**Severity:** S3 · **Effort:** M · **Named:** mid-**0.61**
+
+**Observation:** `SystemSupervisor` is a real consumer seat (`register` / `start` /
+`stop`). Boot still **hand-registers** `work_drain` and outbox in
+`system_schedule.supervisor_wire` with concrete knowledge of work plane +
+outbox processor. Same family as SD-015: bag exists; participation law is not
+definition-at-edge.
+
+**Target:** Continuous services declare (or register) how they attach; schedule
+only orders start. Boy-scout when supervisor/wire is touched.
+**Related:** [SD-015](#sd-015) · ADR-029 · [VISION-0.60](docs/VISION-0.60.md).
+
+---
+
+### CS-007 — Vitality `lineage: adapter` schema residue
+
+<a id="cs-007"></a>
+
+**Severity:** S4 · **Effort:** S · **Named:** mid-**0.61**
+
+**Observation:** Walk path raw-dogs public APIs (`lineage: sampled`). Adapter
+maps were deleted. Schema and projection still carry `LINEAGE_ADAPTER` /
+`adapter_count` as residual enum and counters. Docstrings still mention adapter
+pass-through.
+
+**Target:** Drop or freeze as deprecated schema residue once no emitter remains;
+do not rebuild adapter maps. Prefer `sampled` + optional `native`.
+**Related:** [OD-001](#od-001) · [VISION-0.61](docs/VISION-0.61.md) §6.3.
+
+---
+
+### CS-008 — Plane factories still close over full runtime
+
+<a id="cs-008"></a>
+
+**Severity:** S3 · **Effort:** M · **Named:** mid-**0.61**
+
+**Observation:** Planes no longer take the runtime bag in `attach`, but install
+still builds **closures over runtime**:
+
+- `default_submit_flow(runtime)` (work) — attribute + `submit_flow` via machine
+- `session_get_job_from_runtime(runtime)` — job lookup via machine
+- work `able=lambda: runtime.is_started`
+
+Collaborator *names* are clean; *extraction* still treats the runtime as a god
+object at the factory boundary.
+
+**Target:** Explicit wire context or ports passed into install definitions
+(with SD-015), not `runtime` bag plumbing in factories.
+**Related:** [SD-015](#sd-015) · feat `34a1daec` collaborator attach cut.
+
 ---
 
 ### OD-001 — Doctor as kernel eyes
@@ -601,7 +708,11 @@ These must **not** remain the source of truth for living load.
 
 **Related:** [CS-002](#cs-002) · [SD-007](#sd-007) · [VISION-0.61](docs/VISION-0.61.md) §5.1 · [ADR-030](docs/adr/030-system-vitality.md) D7.
 
-**Status:** open (named at **0.61.0**).
+**Progress (0.61.1–0.61.2):** System vitality is the observation home (seat walk +
+projection). Doctor / product `SystemService` still assemble operate truth for
+surfaces. Demote unpaid until Inspect presents projection ([SD-007](#sd-007)).
+
+**Status:** open (named at **0.61.0**; partial pay on system side only).
 
 ---
 
@@ -1031,7 +1142,7 @@ See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 
 | Seed | Debt | Spirit |
 |------|------|--------|
-| **System vitality** | SD-007 · CS-002 · OD-001 · BI-015 | **Opened as 0.61** — [VISION-0.61](docs/VISION-0.61.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) |
+| **System vitality** | SD-007 · CS-002 · OD-001 · BI-015 · **SD-015** · CS-006…008 | **Opened as 0.61** — [VISION-0.61](docs/VISION-0.61.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
