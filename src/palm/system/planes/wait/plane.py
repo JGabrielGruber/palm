@@ -240,21 +240,11 @@ class WaitPlaneService:
 
 
 def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
-    """Create wait plane, wire collaborators from *runtime*, put on hub."""
+    """Ensure hub on *runtime* and install wait via hub policy."""
     from palm.system.planes.hub import SystemPlanes
 
-    plane = WaitPlaneService()
-    orch = getattr(runtime, "orchestration", None)
-    if orch is None:
-        raise RuntimeError("runtime has no orchestration for wait plane")
-    event = getattr(runtime, "event", None)
-    plane.attach(orchestration=orch, event=event)
-    hub = getattr(runtime, "_planes", None)
-    if not isinstance(hub, SystemPlanes):
-        hub = SystemPlanes()
-        runtime._planes = hub
-    hub.put("wait", plane, aliases=("wait_plane",))
-    return plane
+    hub = SystemPlanes.ensure_on(runtime)
+    return hub.install_wait(runtime)
 
 
 __all__ = [

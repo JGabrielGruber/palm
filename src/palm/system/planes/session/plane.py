@@ -891,8 +891,8 @@ class SessionPlaneService:
         }
 
 
-def _session_get_job_from_runtime(runtime: Any) -> Any:
-    """Build a get_job callable from runtime public surface (bind helper only)."""
+def session_get_job_from_runtime(runtime: Any) -> Any:
+    """Build a get_job callable from runtime public surface (hub install / bind)."""
 
     def get_job(job_id: str) -> Any | None:
         try:
@@ -915,49 +915,20 @@ def _session_get_job_from_runtime(runtime: Any) -> Any:
     return get_job
 
 
+# Back-compat alias (internal callers)
+_session_get_job_from_runtime = session_get_job_from_runtime
+
+
 def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
-    """Wire a new (or existing) session plane on the runtime's planes hub.
+    """Ensure hub on *runtime* and install session via hub policy.
 
     Always ensures the well-known **host** service session (0.58.13) so
     internal attribution has a stable seat after start.
     """
     from palm.system.planes.hub import SystemPlanes
 
-    wait = getattr(runtime, "wait_plane", None)
-    im = getattr(runtime, "instance_manager", None)
-    get_job = _session_get_job_from_runtime(runtime)
-
-    existing = getattr(runtime, "session_plane", None)
-    if isinstance(existing, SessionPlaneService):
-        existing.attach(
-            instance_manager=im,
-            get_job=get_job,
-            wait_plane=wait,
-        )
-        try:
-            existing.ensure_host_session()
-        except Exception:
-            pass
-        return existing
-    storage = getattr(runtime, "storage", None)
-    if storage is None:
-        raise SessionPlaneError("runtime has no storage for session plane")
-    plane = SessionPlaneService(storage=storage)
-    plane.attach(
-        instance_manager=im,
-        get_job=get_job,
-        wait_plane=wait,
-    )
-    hub = getattr(runtime, "_planes", None)
-    if not isinstance(hub, SystemPlanes):
-        hub = SystemPlanes()
-        runtime._planes = hub
-    hub.put("session", plane, aliases=("session_plane",))
-    try:
-        plane.ensure_host_session()
-    except Exception:
-        pass
-    return plane
+    hub = SystemPlanes.ensure_on(runtime)
+    return hub.install_session(runtime, ensure_host=True, reuse_existing=True)
 
 
 __all__ = [
@@ -970,6 +941,7 @@ __all__ = [
     "SessionPlaneService",
     "bind_session_plane_to_runtime",
     "require_session_plane",
+    "session_get_job_from_runtime",
 ]
 
 

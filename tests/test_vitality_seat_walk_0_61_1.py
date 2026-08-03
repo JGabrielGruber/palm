@@ -79,6 +79,50 @@ def test_system_planes_put_get_detach() -> None:
     assert hub.get("wait") is None
 
 
+def test_system_planes_install_owns_policy() -> None:
+    """Hub install constructs + wires + puts; schedule only seats hub."""
+    from palm.system.planes.hub import SystemPlanes
+
+    rt = BaseRuntime()
+    try:
+        # Partial start path: use real start so storage/orch exist, but verify
+        # install is what put members (already via schedule → hub.install).
+        rt.start(storage_backend="memory", enable_event_outbox=True)
+        hub = rt.planes
+        assert hub is not None
+        assert hub.names() == ["wait", "session", "work"]
+        # Re-install is idempotent enough to re-wire and keep membership.
+        names = hub.install(rt, {})
+        assert names == ["wait", "session", "work"]
+        assert rt.wait_plane is hub.get("wait")
+        assert rt.session_plane is hub.get("session")
+        assert rt.work_plane is hub.get("work")
+    finally:
+        rt.stop()
+
+
+def test_system_planes_ensure_on_and_install_wait() -> None:
+    from palm.system.planes.hub import SystemPlanes
+    from palm.system.planes.wait.plane import WaitPlaneService
+
+    class _Orch:
+        jobs: dict = {}
+
+    class _Rt:
+        def __init__(self) -> None:
+            self.orchestration = _Orch()
+            self.event = None
+            self._planes = None
+
+    rt = _Rt()
+    hub = SystemPlanes.ensure_on(rt)
+    assert rt._planes is hub
+    plane = hub.install_wait(rt)
+    assert isinstance(plane, WaitPlaneService)
+    assert hub.get("wait") is plane
+    assert hub.get("wait_plane") is plane
+
+
 # ── unit: SeatReport ─────────────────────────────────────────────────────────
 
 

@@ -6,15 +6,18 @@ Same shape as :class:`~palm.system.supervisor.SystemSupervisor`:
 | Supervisor | SystemPlanes |
 |------------|--------------|
 | Continuous services | Reactive planes |
-| ``register`` · ``start`` · ``stop`` | ``put`` · ``detach`` |
+| ``register`` · ``start`` · ``stop`` | ``put`` · ``install`` · ``detach`` |
 | ``names`` · ``get`` · ``status`` | ``names`` · ``get`` · ``status`` |
 
 Membership is **what the hub holds**, not a table elsewhere.
-Boot constructs each plane and ``put``s it. Vitality expands from the hub.
+**Install policy** lives here (construct · wire collaborators · put).
+Boot schedule only says *when*; the hub owns *what it means to have system planes*.
+Vitality expands from the live hub.
 """
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from typing import Any
 
 
@@ -27,6 +30,8 @@ class SystemPlanes:
         # attr / seat aliases → canonical name (e.g. wait_plane → wait)
         self._aliases: dict[str, str] = {}
 
+    # ── membership ───────────────────────────────────────────────────────────
+
     def put(
         self,
         name: str,
@@ -37,7 +42,7 @@ class SystemPlanes:
         """
         Consume a plane instance under *name*.
 
-        Does not construct or wire collaborators — caller does that, then puts.
+        Prefer :meth:`install` / :meth:`install_wait` etc. for the default set.
         Replaces an existing member of the same name (detaches the old one).
         """
         key = str(name or "").strip()
@@ -137,6 +142,142 @@ class SystemPlanes:
             "seat_ids": self.seat_ids(),
             "planes": planes,
         }
+
+    # ── install (hub owns policy) ────────────────────────────────────────────
+
+    @classmethod
+    def ensure_on(cls, runtime: Any) -> SystemPlanes:
+        """Return the runtime's planes hub, creating and seating one if absent."""
+        hub = get_system_planes(runtime)
+        if hub is not None:
+            return hub
+        hub = cls()
+        runtime._planes = hub
+        return hub
+
+    def install(
+        self,
+        runtime: Any,
+        options: Mapping[str, Any] | None = None,
+        *,
+        on_host_session_error: Callable[[BaseException], None] | None = None,
+    ) -> list[str]:
+        """
+        Construct, wire collaborators, and put the default system planes.
+
+        Order: wait → session → work (session inspect may need wait).
+        Returns canonical names installed.
+        """
+        opts = dict(options or {})
+        self.install_wait(runtime)
+        self.install_session(
+            runtime,
+            ensure_host=True,
+            on_host_session_error=on_host_session_error,
+        )
+        self.install_work(runtime, opts)
+        return list(self._order)
+
+    def install_wait(self, runtime: Any) -> Any:
+        """Construct wait plane, wire orchestration/event, put as ``wait``."""
+        from palm.system.planes.wait.plane import WaitPlaneService
+
+        orch = getattr(runtime, "orchestration", None)
+        if orch is None:
+            raise RuntimeError("runtime has no orchestration for wait plane")
+        plane = WaitPlaneService()
+        plane.attach(
+            orchestration=orch,
+            event=getattr(runtime, "event", None),
+        )
+        self.put("wait", plane, aliases=("wait_plane",))
+        return plane
+
+    def install_session(
+        self,
+        runtime: Any,
+        *,
+        ensure_host: bool = True,
+        on_host_session_error: Callable[[BaseException], None] | None = None,
+        reuse_existing: bool = True,
+    ) -> Any:
+        """
+        Construct (or re-wire) session plane, put as ``session``.
+
+        Uses storage + instance_manager + get_job + wait plane from runtime/hub.
+        """
+        from palm.system.planes.session.plane import (
+            SessionPlaneService,
+            session_get_job_from_runtime,
+        )
+
+        wait = self.get("wait")
+        if wait is None:
+            wait = getattr(runtime, "wait_plane", None)
+        im = getattr(runtime, "instance_manager", None)
+        get_job = session_get_job_from_runtime(runtime)
+
+        existing = self.get("session")
+        if existing is None:
+            existing = getattr(runtime, "session_plane", None)
+        if reuse_existing and isinstance(existing, SessionPlaneService):
+            plane = existing
+            plane.attach(
+                instance_manager=im,
+                get_job=get_job,
+                wait_plane=wait,
+            )
+            if self.get("session") is not plane:
+                self.put("session", plane, aliases=("session_plane",))
+        else:
+            storage = getattr(runtime, "storage", None)
+            if storage is None:
+                from palm.system.planes.session.plane import SessionPlaneError
+
+                raise SessionPlaneError("runtime has no storage for session plane")
+            plane = SessionPlaneService(storage=storage)
+            plane.attach(
+                instance_manager=im,
+                get_job=get_job,
+                wait_plane=wait,
+            )
+            self.put("session", plane, aliases=("session_plane",))
+
+        if ensure_host:
+            try:
+                plane.ensure_host_session()
+            except Exception as exc:
+                if on_host_session_error is not None:
+                    on_host_session_error(exc)
+        return plane
+
+    def install_work(
+        self,
+        runtime: Any,
+        options: Mapping[str, Any] | None = None,
+    ) -> Any:
+        """Construct work plane, wire storage/submit/able/event, put as ``work``."""
+        from palm.system.planes.work.plane import WorkPlaneService, default_submit_flow
+
+        opts = dict(options or {})
+        storage = getattr(runtime, "storage", None)
+        if storage is None:
+            raise RuntimeError("runtime has no storage for work plane")
+        max_depth = int(opts.get("work_drain_max_depth", 8) or 8)
+        batch_size = int(opts.get("work_drain_batch_size", 10) or 10)
+        poll_interval = float(opts.get("work_drain_poll_interval", 1.0) or 1.0)
+        plane = WorkPlaneService()
+        plane.attach(
+            storage=storage,
+            submit_flow=default_submit_flow(runtime),
+            able=lambda: bool(getattr(runtime, "is_started", False)),
+            event=getattr(runtime, "event", None),
+            max_depth=max_depth,
+            batch_size=batch_size,
+            poll_interval=poll_interval,
+        )
+        self.put("work", plane, aliases=("work_plane",))
+        return plane
 
     def _resolve_key(self, name: str) -> str | None:
         raw = str(name or "").strip()

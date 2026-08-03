@@ -36,9 +36,6 @@ from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
 from palm.system.log import get_system_log
 from palm.system.planes.hub import SystemPlanes
-from palm.system.planes.session.plane import SessionPlaneService
-from palm.system.planes.wait.plane import WaitPlaneService
-from palm.system.planes.work.plane import WorkPlaneService, default_submit_flow
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.runtime.hooks import (
     AuthMiddleware,
@@ -187,49 +184,13 @@ def build_system_handlers(
 
     def planes_attach(ctx: BootContext) -> None:
         """
-        Create :class:`SystemPlanes` and put members (same pattern as supervisor).
+        Seat :class:`SystemPlanes` and let the hub install members.
 
-        The hub **consumes** planes. Schedule constructs, extracts collaborators,
-        wires each plane, then ``put``s — planes never take the full runtime.
+        Schedule owns *when*. Hub owns construct · wire · put · host session.
         """
         slog = get_system_log()
-        hub = SystemPlanes()
-        runtime._planes = hub
 
-        wait = WaitPlaneService()
-        wait.attach(
-            orchestration=runtime.orchestration,
-            event=getattr(runtime, "event", None),
-        )
-        hub.put("wait", wait, aliases=("wait_plane",))
-
-        def _get_job(job_id: str) -> Any:
-            try:
-                fn = getattr(runtime, "get_job", None)
-                if callable(fn):
-                    return fn(str(job_id))
-            except Exception:
-                pass
-            orch = getattr(runtime, "orchestration", None)
-            if orch is None:
-                return None
-            jobs = getattr(orch, "jobs", None)
-            if isinstance(jobs, dict):
-                return jobs.get(str(job_id))
-            try:
-                return orch.get_job(str(job_id))
-            except Exception:
-                return None
-
-        session = SessionPlaneService(storage=runtime.storage)
-        session.attach(
-            instance_manager=getattr(runtime, "instance_manager", None),
-            get_job=_get_job,
-            wait_plane=wait,
-        )
-        try:
-            session.ensure_host_session()
-        except Exception as exc:
+        def _on_host_session_error(exc: BaseException) -> None:
             # BI-014 — still swallowed; honesty later.
             slog.system(
                 "plane.session.host_session",
@@ -237,23 +198,13 @@ def build_system_handlers(
                 runtime=ctx.runtime,
                 reason=str(exc),
             )
-        hub.put("session", session, aliases=("session_plane",))
 
-        max_depth = int(options.get("work_drain_max_depth", 8) or 8)
-        batch_size = int(options.get("work_drain_batch_size", 10) or 10)
-        poll_interval = float(options.get("work_drain_poll_interval", 1.0) or 1.0)
-        work = WorkPlaneService()
-        work.attach(
-            storage=runtime.storage,
-            submit_flow=default_submit_flow(runtime),
-            able=lambda: bool(getattr(runtime, "is_started", False)),
-            event=getattr(runtime, "event", None),
-            max_depth=max_depth,
-            batch_size=batch_size,
-            poll_interval=poll_interval,
+        hub = SystemPlanes.ensure_on(runtime)
+        hub.install(
+            runtime,
+            options,
+            on_host_session_error=_on_host_session_error,
         )
-        hub.put("work", work, aliases=("work_plane",))
-
         slog.info(
             "plane.hub.attached",
             "system planes hub ready",

@@ -188,8 +188,8 @@ VitalityProjection snapshot (lineage)
 **Not dynamic:** filesystem package scan as physiology; heap scrape; always-green hardcoded service names.
 
 **System planes:**  
-:class:`~palm.system.planes.hub.SystemPlanes` — living seat that **consumes** members via ``put`` / ``get`` / ``detach`` / ``status`` (same shape as supervisor).  
-Boot constructs each plane and ``put``s it on the hub. Runtime ``wait_plane`` / ``session_plane`` / ``work_plane`` **read from the hub**. Vitality probes ``planes`` and expands members from the live hub.
+:class:`~palm.system.planes.hub.SystemPlanes` — living seat that **consumes** members via ``put`` / ``install`` / ``get`` / ``detach`` / ``status`` (same shape as supervisor).  
+Hub owns install policy (construct · wire collaborators · put). Boot schedule only seats the hub and calls ``install``. Runtime ``wait_plane`` / ``session_plane`` / ``work_plane`` **read from the hub**. Vitality probes ``planes`` and expands members from the live hub.
 
 **Other discovery seeds:**  
 `supervisor` (+ registered services), `execution` port, system log, boot last_walk / membership.  

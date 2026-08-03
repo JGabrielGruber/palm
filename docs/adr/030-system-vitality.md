@@ -58,9 +58,10 @@ Do **not** hardcode a closed menu of package paths as health law.
 Do **not** treat heap reflection as the architecture of record.
 
 **System planes:** :class:`~palm.system.planes.hub.SystemPlanes` is the living
-seat that **consumes** individual planes (register · attach · detach · names ·
-get · status) — same pattern as :class:`SystemSupervisor` for continuous
-services. Boot wires the hub; vitality expands plane seats from the live hub.
+seat that **consumes** individual planes (``put`` · ``install`` · ``detach`` ·
+``names`` · ``get`` · ``status``) — same pattern as :class:`SystemSupervisor`
+for continuous services. Hub owns install policy; boot schedule only seats the
+hub and calls ``install``. Vitality expands plane seats from the live hub.
 No private wait/session/work menu in vitality or the schedule.
 
 ### D4 — Seat report is the unit of truth
