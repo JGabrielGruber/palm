@@ -4,6 +4,13 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### Vitality raw sample (system eyes; product presents)
+
+- System vitality samples **raw** public seat APIs into `meta.raw` (`lineage: sampled`)
+- Removed `seat_report` from SystemLog / SystemSupervisor — seats keep public API only
+- Product / Inspect interprets raw; system does not curate doctor fields into `load`
+- `project_top` exposes `raw` + `sample_source` per seat
+
 ### 0.61.2 — Projection + registry (landed; stamp pending)
 
 - **`VitalityRegistry`** — capability catalog; enable/disable; installed vs intention

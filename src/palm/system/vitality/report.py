@@ -304,6 +304,8 @@ class SeatReport:
             warnings.append("absent_but_present")
         if self.lineage == LINEAGE_ADAPTER and self.meta.get("adapter_source") is None:
             warnings.append("adapter_without_source")
+        if self.lineage == "sampled" and "raw" not in self.meta:
+            warnings.append("sampled_without_raw")
         return warnings
 
 

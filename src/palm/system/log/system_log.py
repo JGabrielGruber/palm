@@ -149,29 +149,6 @@ class SystemLog:
         with self._lock:
             return len(self._records)
 
-    def seat_report(self) -> dict[str, Any]:
-        """Native vitality seat report (0.61+) — process log physiology.
-
-        Returns a plain ``palm.seat_report/1`` mapping. This seat does **not**
-        import ``palm.system.vitality`` (eyes observe seats; seats do not
-        depend on eyes). String literals must stay aligned with vitality schema.
-        """
-        return {
-            "schema": "palm.seat_report/1",
-            "seat_id": "system_log",
-            "kind": "log",
-            "present": True,
-            "state": "ok",
-            "load": {
-                "records": self.record_count,
-                "capacity": self.capacity,
-                "level": self.level,
-                "console": self.console,
-            },
-            "notes": [],
-            "lineage": "native",
-        }
-
     def configure(
         self,
         *,

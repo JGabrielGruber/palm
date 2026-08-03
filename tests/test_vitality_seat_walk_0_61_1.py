@@ -10,8 +10,8 @@ from palm.system.supervisor import CallableSystemService, SystemSupervisor
 from palm.system.vitality import (
     KIND_OTHER,
     KIND_PLANE,
-    LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
     SEAT_REPORT_SCHEMA,
@@ -43,20 +43,20 @@ def test_seat_report_roundtrip_and_schema() -> None:
     r = SeatReport.ok(
         "wait_plane",
         KIND_PLANE,
-        load={"open_wait_owners": 2},
-        lineage=LINEAGE_ADAPTER,
-        meta={"adapter_source": "doctor_snapshot"},
+        load={},
+        lineage=LINEAGE_SAMPLED,
+        meta={"sample_source": "doctor_snapshot", "raw": {"open_wait_owners": 2}},
     )
     d = r.to_dict()
     assert d["schema"] == SEAT_REPORT_SCHEMA
     assert d["seat_id"] == "wait_plane"
     assert d["present"] is True
     assert d["state"] == STATE_OK
-    assert d["lineage"] == LINEAGE_ADAPTER
-    assert d["load"]["open_wait_owners"] == 2
+    assert d["lineage"] == LINEAGE_SAMPLED
+    assert d["meta"]["raw"]["open_wait_owners"] == 2
     back = SeatReport.from_dict(d)
     assert back.seat_id == r.seat_id
-    assert back.load == r.load
+    assert back.meta["raw"] == r.meta["raw"]
 
 
 def test_seat_report_absent_never_present() -> None:
@@ -145,9 +145,10 @@ def test_walk_lean_shell_honest_absent() -> None:
     assert by_id[SEAT_SUPERVISOR].state == STATE_ABSENT
     assert by_id[SEAT_BOOT_MEMBERSHIP].state == STATE_ABSENT
 
-    # Process log still present (process-wide seat).
+    # Process log still present (process-wide seat); raw-sampled public API.
     assert by_id[SEAT_SYSTEM_LOG].present is True
-    assert by_id[SEAT_SYSTEM_LOG].lineage == LINEAGE_NATIVE
+    assert by_id[SEAT_SYSTEM_LOG].lineage == LINEAGE_SAMPLED
+    assert "raw" in by_id[SEAT_SYSTEM_LOG].meta
 
     # Execution absent: lean shell has no port methods.
     assert by_id[SEAT_EXECUTION].state == STATE_ABSENT
@@ -185,21 +186,21 @@ def test_walk_started_base_runtime_seats_present() -> None:
             assert by_id[sid].present is True, f"{sid} should be present"
             assert by_id[sid].state == STATE_OK, f"{sid} state={by_id[sid].state}"
 
-        # Boot membership saw phases.
+        # Boot membership saw phases (raw under meta).
         boot = by_id[SEAT_BOOT_MEMBERSHIP]
-        assert boot.load.get("phase_count", 0) > 0
-        assert boot.lineage == LINEAGE_ADAPTER  # last_boot_walk adapter
+        assert boot.lineage == LINEAGE_SAMPLED
+        assert boot.meta.get("raw", {}).get("phase_count", 0) > 0
 
-        # Planes still use doctor/status adapters.
-        assert by_id[SEAT_WAIT_PLANE].lineage == LINEAGE_ADAPTER
-        assert by_id[SEAT_WAIT_PLANE].meta.get("adapter_source") == "doctor_snapshot"
-        assert by_id[SEAT_SESSION_PLANE].lineage == LINEAGE_ADAPTER
-        assert by_id[SEAT_WORK_PLANE].lineage == LINEAGE_ADAPTER
-        assert by_id[SEAT_WORK_PLANE].meta.get("adapter_source") == "status"
-
-        # Supervisor + system log are native.
-        assert by_id[SEAT_SUPERVISOR].lineage == LINEAGE_NATIVE
-        assert by_id[SEAT_SYSTEM_LOG].lineage == LINEAGE_NATIVE
+        # Planes / supervisor / log: raw samples of public APIs — product presents.
+        assert by_id[SEAT_WAIT_PLANE].lineage == LINEAGE_SAMPLED
+        assert by_id[SEAT_WAIT_PLANE].meta.get("sample_source") == "doctor_snapshot"
+        assert "raw" in by_id[SEAT_WAIT_PLANE].meta
+        assert by_id[SEAT_SESSION_PLANE].lineage == LINEAGE_SAMPLED
+        assert by_id[SEAT_WORK_PLANE].lineage == LINEAGE_SAMPLED
+        assert by_id[SEAT_WORK_PLANE].meta.get("sample_source") == "status"
+        assert by_id[SEAT_SUPERVISOR].lineage == LINEAGE_SAMPLED
+        assert by_id[SEAT_SYSTEM_LOG].lineage == LINEAGE_SAMPLED
+        assert "capacity" in (by_id[SEAT_SYSTEM_LOG].meta.get("raw") or {})
 
         # Dynamic supervisor services (work_drain, outbox with outbox flag).
         service_ids = [
@@ -209,7 +210,8 @@ def test_walk_started_base_runtime_seats_present() -> None:
         assert supervisor_service_seat_id("outbox") in service_ids
         for sid in service_ids:
             assert by_id[sid].present is True
-            assert by_id[sid].lineage == LINEAGE_ADAPTER
+            assert by_id[sid].lineage == LINEAGE_SAMPLED
+            assert "raw" in by_id[sid].meta
 
         assert result.present_count >= 7
         assert result.error_count == 0
@@ -279,7 +281,7 @@ def test_supervisor_service_discovered_dynamically() -> None:
         sid = supervisor_service_seat_id("custom_loop")
         assert sid in by_id
         assert by_id[sid].present is True
-        assert by_id[sid].load.get("ticks") == 3
+        assert by_id[sid].meta.get("raw", {}).get("ticks") == 3
     finally:
         rt.stop()
 
@@ -354,21 +356,22 @@ def test_native_seat_report_preferred_over_adapter() -> None:
     assert "from_native" in wait.notes
 
 
-def test_system_log_and_supervisor_native_methods() -> None:
+def test_system_log_and_supervisor_have_no_seat_report() -> None:
+    """Seats expose public API; vitality samples raw — product presents."""
     reset_system_log_for_tests()
     from palm.system.log import get_system_log
 
     log = get_system_log()
-    snap = log.seat_report()
-    assert snap["lineage"] == LINEAGE_NATIVE
-    assert snap["seat_id"] == SEAT_SYSTEM_LOG
-    assert "capacity" in snap["load"]
+    assert not hasattr(log, "seat_report") or not callable(
+        getattr(type(log), "seat_report", None)
+    )
+    assert log.capacity >= 10
+    assert isinstance(log.record_count, int)
 
     sup = SystemSupervisor()
     sup.register(CallableSystemService("x"))
-    s = sup.seat_report()
-    assert s["lineage"] == LINEAGE_NATIVE
-    assert s["load"]["registered"] == ["x"]
+    assert not hasattr(SystemSupervisor, "seat_report")
+    assert "x" in sup.status()["registered"]
 
 
 # ── custom probe extension ───────────────────────────────────────────────────

@@ -33,6 +33,7 @@ from palm.system.vitality.schema import (
     COST_CHEAP,
     LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     MATURITY_INSTALLED,
     ROLE_OBSERVE,
     ROLE_TOOL,
@@ -70,6 +71,7 @@ def _summarize_seats(reports: list[SeatReport]) -> dict[str, Any]:
         "by_lineage": by_lineage,
         "native_count": by_lineage.get(LINEAGE_NATIVE, 0),
         "adapter_count": by_lineage.get(LINEAGE_ADAPTER, 0),
+        "sampled_count": by_lineage.get(LINEAGE_SAMPLED, 0),
         "present_ids": [r.seat_id for r in reports if r.present],
         "absent_ids": [r.seat_id for r in reports if r.state == STATE_ABSENT],
     }

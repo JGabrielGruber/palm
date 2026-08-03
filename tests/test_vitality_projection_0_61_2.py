@@ -10,7 +10,7 @@ from palm.system.vitality import (
     CAPABILITY_EMISSION_WINDOW,
     CAPABILITY_SEAT_WALK,
     LINEAGE_ADAPTER,
-    LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     MATURITY_INTENTION,
     SEAT_WAIT_PLANE,
     STATE_ABSENT,
@@ -116,9 +116,10 @@ def test_project_top_view_structural() -> None:
         assert "seats" in top
         wait = next(s for s in top["seats"] if s["seat_id"] == SEAT_WAIT_PLANE)
         assert wait["present"] is True
-        assert wait["lineage"] in (LINEAGE_NATIVE, LINEAGE_ADAPTER)
-        # load passed through, not re-curated by projection.
-        assert isinstance(wait.get("load"), dict)
+        assert wait["lineage"] == LINEAGE_SAMPLED
+        # Product present gets raw; system does not curate load.
+        assert isinstance(wait.get("raw"), dict)
+        assert wait.get("sample_source") == "doctor_snapshot"
     finally:
         rt.stop()
 

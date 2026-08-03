@@ -1,14 +1,18 @@
 """
-Seat-report adapters — transitional bridge from status / doctor_snapshot (0.61.1).
+Seat sampling for vitality walk (0.61.1+).
 
-**Architecture stance (0.61 plan):** adapters are **not** the vitality foundation.
-Forward work (projection, registry, inspect present) implements as if they were
-absent — discover + native reports + presence truth. Interpretation of doctor
-fields belongs in product present, not system eyes law.
+**Law:** system vitality **samples raw** from public seat APIs. It does not
+curate doctor fields into vitality ``load`` as truth. Product present
+(Inspect / top) interprets ``meta.raw``.
 
-Until seats grow native ``seat_report``, these bridges remain **honest residue**
-with ``lineage: adapter`` and ``meta.adapter_source``. Prefer native when present.
-Do not deepen adapter smarts here.
+| lineage | Meaning |
+|---------|---------|
+| ``sampled`` | Eyes called a public API; payload in ``meta.raw`` |
+| ``native``  | Seat implemented ``seat_report()`` (optional growth) |
+| ``adapter`` | Residual *interpret* bridges only — do not grow |
+
+Prefer native when a seat truly owns a report. Otherwise sample raw.
+Do not put vitality schema methods on simple seats (e.g. SystemLog).
 """
 
 from __future__ import annotations
@@ -25,8 +29,8 @@ from palm.system.vitality.schema import (
     KIND_PORT,
     KIND_SUPERVISOR,
     KIND_SUPERVISOR_SERVICE,
-    LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
     SEAT_SESSION_PLANE,
@@ -34,24 +38,49 @@ from palm.system.vitality.schema import (
     SEAT_SYSTEM_LOG,
     SEAT_WAIT_PLANE,
     SEAT_WORK_PLANE,
-    STATE_DEGRADED,
     STATE_OK,
     supervisor_service_seat_id,
 )
 
 
-def _adapter_meta(source: str, **extra: Any) -> dict[str, Any]:
-    meta: dict[str, Any] = {"adapter_source": source}
+def _raw_meta(source: str, raw: Mapping[str, Any] | None, **extra: Any) -> dict[str, Any]:
+    meta: dict[str, Any] = {
+        "sample_source": source,
+        "raw": dict(raw or {}),
+    }
     meta.update({k: v for k, v in extra.items() if v is not None})
     return meta
 
 
-def _pick(mapping: Mapping[str, Any], *keys: str) -> dict[str, Any]:
-    out: dict[str, Any] = {}
-    for key in keys:
-        if key in mapping and mapping[key] is not None:
-            out[key] = mapping[key]
-    return out
+def sample_raw(
+    seat_id: str,
+    kind: str,
+    *,
+    source: str,
+    raw: Mapping[str, Any] | None = None,
+    notes: list[str] | tuple[str, ...] | None = None,
+    present: bool = True,
+    state: str = STATE_OK,
+    extra_meta: Mapping[str, Any] | None = None,
+) -> SeatReport:
+    """Build a seat report that carries **raw** for product present.
+
+    System vitality keeps structural fields only (id, kind, present, state).
+    ``load`` stays empty unless a later native path fills vitality terms.
+    """
+    meta = _raw_meta(source, raw)
+    if extra_meta:
+        meta.update(dict(extra_meta))
+    return SeatReport(
+        seat_id=seat_id,
+        kind=kind,
+        present=present,
+        state=state,
+        load={},
+        notes=list(notes or []),
+        lineage=LINEAGE_SAMPLED,
+        meta=meta,
+    )
 
 
 def prefer_native(
@@ -59,9 +88,9 @@ def prefer_native(
     *,
     seat_id: str,
     kind: str,
-    adapter: Callable[[], SeatReport],
+    sampler: Callable[[], SeatReport],
 ) -> SeatReport:
-    """Use native ``seat_report`` when present; otherwise run *adapter*."""
+    """Use native ``seat_report`` when present; otherwise run *sampler* (raw)."""
     native = try_native_report(seat)
     if native is not None:
         report = coerce_report(
@@ -70,7 +99,6 @@ def prefer_native(
             default_kind=kind,
             default_lineage=LINEAGE_NATIVE,
         )
-        # Native must not claim adapter lineage by accident.
         if report.lineage != LINEAGE_NATIVE:
             report = SeatReport(
                 seat_id=report.seat_id or seat_id,
@@ -98,143 +126,87 @@ def prefer_native(
                 sample_ts=report.sample_ts,
             )
         return report
-    return adapter()
+    return sampler()
 
 
-# ── plane adapters ───────────────────────────────────────────────────────────
+# ── plane samples (raw public doctor/status — no field curation) ─────────────
 
 
 def adapt_wait_plane(instance: Any, plane: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
         try:
             snap = plane.doctor_snapshot()
             if not isinstance(snap, Mapping):
-                snap = {}
+                snap = {"_non_mapping": type(snap).__name__}
         except Exception as exc:
             return SeatReport.error(
                 SEAT_WAIT_PLANE,
                 KIND_PLANE,
                 reason=f"doctor_snapshot:{type(exc).__name__}: {exc}",
-                lineage=LINEAGE_ADAPTER,
-                meta=_adapter_meta("doctor_snapshot"),
+                lineage=LINEAGE_SAMPLED,
+                meta=_raw_meta("doctor_snapshot", None),
             )
-        load = _pick(
-            snap,
-            "open_wait_owners",
-            "open_wait_interests",
-            "wait_kinds",
-            "index_size",
-            "wait_plane_attached",
-            "wait_matcher_wired",
-        )
-        attached = bool(snap.get("wait_plane_attached") or snap.get("wait_matcher_wired"))
-        state = STATE_OK if attached else STATE_DEGRADED
-        notes = []
-        if not attached:
-            notes.append("matcher_not_wired")
-        note = snap.get("note")
-        if note:
-            notes.append(str(note))
-        return SeatReport(
-            seat_id=SEAT_WAIT_PLANE,
-            kind=KIND_PLANE,
-            present=True,
-            state=state,
-            load=load,
-            notes=notes,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("doctor_snapshot"),
+        return sample_raw(
+            SEAT_WAIT_PLANE,
+            KIND_PLANE,
+            source="doctor_snapshot",
+            raw=snap,
         )
 
     return prefer_native(
-        plane, seat_id=SEAT_WAIT_PLANE, kind=KIND_PLANE, adapter=_adapter
+        plane, seat_id=SEAT_WAIT_PLANE, kind=KIND_PLANE, sampler=_sample
     )
 
 
 def adapt_session_plane(instance: Any, plane: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
         try:
             snap = plane.doctor_snapshot()
             if not isinstance(snap, Mapping):
-                snap = {}
+                snap = {"_non_mapping": type(snap).__name__}
         except Exception as exc:
             return SeatReport.error(
                 SEAT_SESSION_PLANE,
                 KIND_PLANE,
                 reason=f"doctor_snapshot:{type(exc).__name__}: {exc}",
-                lineage=LINEAGE_ADAPTER,
-                meta=_adapter_meta("doctor_snapshot"),
+                lineage=LINEAGE_SAMPLED,
+                meta=_raw_meta("doctor_snapshot", None),
             )
-        counts = snap.get("counts") if isinstance(snap.get("counts"), Mapping) else {}
-        load: dict[str, Any] = {
-            "session_plane_attached": snap.get("session_plane_attached"),
-            "storage_backend": snap.get("storage_backend"),
-            "multi_attach": snap.get("multi_attach"),
-            "strict_attribution": snap.get("strict_attribution"),
-        }
-        if counts:
-            load["counts"] = dict(counts)
-        attached = bool(snap.get("session_plane_attached", True))
-        state = STATE_OK if attached else STATE_DEGRADED
-        return SeatReport(
-            seat_id=SEAT_SESSION_PLANE,
-            kind=KIND_PLANE,
-            present=True,
-            state=state,
-            load={k: v for k, v in load.items() if v is not None},
-            notes=[] if attached else ["session_plane_not_attached"],
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("doctor_snapshot"),
+        return sample_raw(
+            SEAT_SESSION_PLANE,
+            KIND_PLANE,
+            source="doctor_snapshot",
+            raw=snap,
         )
 
     return prefer_native(
-        plane, seat_id=SEAT_SESSION_PLANE, kind=KIND_PLANE, adapter=_adapter
+        plane, seat_id=SEAT_SESSION_PLANE, kind=KIND_PLANE, sampler=_sample
     )
 
 
 def adapt_work_plane(instance: Any, plane: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
         try:
             snap = plane.status() if callable(getattr(plane, "status", None)) else {}
             if not isinstance(snap, Mapping):
-                snap = {}
+                snap = {"_non_mapping": type(snap).__name__}
         except Exception as exc:
             return SeatReport.error(
                 SEAT_WORK_PLANE,
                 KIND_PLANE,
                 reason=f"status:{type(exc).__name__}: {exc}",
-                lineage=LINEAGE_ADAPTER,
-                meta=_adapter_meta("status"),
+                lineage=LINEAGE_SAMPLED,
+                meta=_raw_meta("status", None),
             )
-        load = _pick(
-            snap,
-            "attached",
-            "pending",
-            "dropped_depth",
-            "max_depth",
-            "batch_size",
-            "background",
-            "trigger_count",
-        )
-        attached = bool(snap.get("attached", True))
-        state = STATE_OK if attached else STATE_DEGRADED
-        notes = []
-        if snap.get("pending") == -1:
-            notes.append("pending_unreadable")
-            state = STATE_DEGRADED
-        return SeatReport(
-            seat_id=SEAT_WORK_PLANE,
-            kind=KIND_PLANE,
-            present=True,
-            state=state,
-            load=load,
-            notes=notes,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("status"),
+        return sample_raw(
+            SEAT_WORK_PLANE,
+            KIND_PLANE,
+            source="status",
+            raw=snap,
         )
 
     return prefer_native(
-        plane, seat_id=SEAT_WORK_PLANE, kind=KIND_PLANE, adapter=_adapter
+        plane, seat_id=SEAT_WORK_PLANE, kind=KIND_PLANE, sampler=_sample
     )
 
 
@@ -242,7 +214,7 @@ def adapt_work_plane(instance: Any, plane: Any) -> SeatReport:
 
 
 def adapt_supervisor(instance: Any, supervisor: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
         try:
             snap = (
                 supervisor.status()
@@ -250,32 +222,24 @@ def adapt_supervisor(instance: Any, supervisor: Any) -> SeatReport:
                 else {}
             )
             if not isinstance(snap, Mapping):
-                snap = {}
+                snap = {"_non_mapping": type(snap).__name__}
         except Exception as exc:
             return SeatReport.error(
                 SEAT_SUPERVISOR,
                 KIND_SUPERVISOR,
                 reason=f"status:{type(exc).__name__}: {exc}",
-                lineage=LINEAGE_ADAPTER,
-                meta=_adapter_meta("status"),
+                lineage=LINEAGE_SAMPLED,
+                meta=_raw_meta("status", None),
             )
-        load = _pick(
-            snap,
-            "service_count",
-            "running_count",
-            "running",
-            "registered",
-        )
-        return SeatReport.ok(
+        return sample_raw(
             SEAT_SUPERVISOR,
             KIND_SUPERVISOR,
-            load=load,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("status"),
+            source="status",
+            raw=snap,
         )
 
     return prefer_native(
-        supervisor, seat_id=SEAT_SUPERVISOR, kind=KIND_SUPERVISOR, adapter=_adapter
+        supervisor, seat_id=SEAT_SUPERVISOR, kind=KIND_SUPERVISOR, sampler=_sample
     )
 
 
@@ -288,39 +252,35 @@ def adapt_supervisor_service(
 ) -> SeatReport:
     seat_id = supervisor_service_seat_id(service_name)
 
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
         try:
             snap = service.status() if callable(getattr(service, "status", None)) else {}
             if not isinstance(snap, Mapping):
-                snap = {}
+                snap = {"_non_mapping": type(snap).__name__}
         except Exception as exc:
             return SeatReport.error(
                 seat_id,
                 KIND_SUPERVISOR_SERVICE,
                 reason=f"status:{type(exc).__name__}: {exc}",
-                lineage=LINEAGE_ADAPTER,
-                meta=_adapter_meta("status", service_name=service_name),
+                lineage=LINEAGE_SAMPLED,
+                meta=_raw_meta("status", None, service_name=service_name),
             )
-        load = {k: v for k, v in dict(snap).items() if k not in ("name",)}
+        raw = dict(snap)
         if running is not None:
-            load["running"] = running
-        is_running = bool(load.get("running", running))
-        notes = [] if is_running else ["registered_not_running"]
-        # Registered but idle is still ok — continuous services need not run.
-        return SeatReport.ok(
+            raw.setdefault("running", running)
+        return sample_raw(
             seat_id,
             KIND_SUPERVISOR_SERVICE,
-            load=load,
-            notes=notes,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("status", service_name=service_name),
+            source="status",
+            raw=raw,
+            extra_meta={"service_name": service_name},
         )
 
     return prefer_native(
         service,
         seat_id=seat_id,
         kind=KIND_SUPERVISOR_SERVICE,
-        adapter=_adapter,
+        sampler=_sample,
     )
 
 
@@ -328,73 +288,62 @@ def adapt_supervisor_service(
 
 
 def adapt_execution(instance: Any, port: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
-        started = bool(getattr(instance, "is_started", False))
-        has_invoke = callable(getattr(port, "invoke_resource", None))
-        has_workload = callable(getattr(port, "start_workload", None))
-        load = {
-            "instance_started": started,
-            "has_invoke_resource": has_invoke,
-            "has_start_workload": has_workload,
+    def _sample() -> SeatReport:
+        raw = {
+            "instance_started": bool(getattr(instance, "is_started", False)),
+            "has_invoke_resource": callable(getattr(port, "invoke_resource", None)),
+            "has_start_workload": callable(getattr(port, "start_workload", None)),
+            "port_type": type(port).__name__,
         }
-        # Port object present; not started is degraded (attached shell, not live).
-        state = STATE_OK if (started and has_invoke) else STATE_DEGRADED
-        notes = []
-        if not started:
-            notes.append("instance_not_started")
-        if not has_invoke:
-            notes.append("missing_invoke_resource")
-        return SeatReport(
-            seat_id=SEAT_EXECUTION,
-            kind=KIND_PORT,
-            present=True,
-            state=state,
-            load=load,
-            notes=notes,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("execution_port_probe"),
+        return sample_raw(
+            SEAT_EXECUTION,
+            KIND_PORT,
+            source="execution_port_attrs",
+            raw=raw,
         )
 
     return prefer_native(
-        port, seat_id=SEAT_EXECUTION, kind=KIND_PORT, adapter=_adapter
+        port, seat_id=SEAT_EXECUTION, kind=KIND_PORT, sampler=_sample
     )
 
 
-# ── system log ───────────────────────────────────────────────────────────────
+# ── system log (public API only — no seat_report on the log) ─────────────────
 
 
 def adapt_system_log(instance: Any, log: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
+        raw: dict[str, Any] = {"log_type": type(log).__name__}
         try:
-            records = log.recent() if callable(getattr(log, "recent", None)) else []
-            n = len(records) if records is not None else 0
+            if hasattr(log, "record_count"):
+                raw["records"] = int(log.record_count)
+            elif callable(getattr(log, "recent", None)):
+                raw["records"] = len(log.recent())
         except Exception as exc:
             return SeatReport.error(
                 SEAT_SYSTEM_LOG,
                 KIND_LOG,
-                reason=f"recent:{type(exc).__name__}: {exc}",
-                lineage=LINEAGE_ADAPTER,
-                meta=_adapter_meta("system_log_probe"),
+                reason=f"sample:{type(exc).__name__}: {exc}",
+                lineage=LINEAGE_SAMPLED,
+                meta=_raw_meta("system_log_public", raw),
             )
-        capacity = getattr(log, "capacity", None)
-        if capacity is None:
-            capacity = getattr(log, "_capacity", None)
-        level = getattr(log, "level", None)
-        load: dict[str, Any] = {"records": n}
-        if capacity is not None:
-            load["capacity"] = int(capacity)
-        if level is not None:
-            load["level"] = int(level) if isinstance(level, int) else level
-        return SeatReport.ok(
+        if hasattr(log, "capacity"):
+            try:
+                raw["capacity"] = int(log.capacity)
+            except Exception:
+                pass
+        if hasattr(log, "level"):
+            raw["level"] = log.level
+        if hasattr(log, "console"):
+            raw["console"] = bool(log.console)
+        return sample_raw(
             SEAT_SYSTEM_LOG,
             KIND_LOG,
-            load=load,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("system_log_probe"),
+            source="system_log_public",
+            raw=raw,
         )
 
     return prefer_native(
-        log, seat_id=SEAT_SYSTEM_LOG, kind=KIND_LOG, adapter=_adapter
+        log, seat_id=SEAT_SYSTEM_LOG, kind=KIND_LOG, sampler=_sample
     )
 
 
@@ -402,7 +351,7 @@ def adapt_system_log(instance: Any, log: Any) -> SeatReport:
 
 
 def adapt_boot_membership(instance: Any, walk: Any) -> SeatReport:
-    def _adapter() -> SeatReport:
+    def _sample() -> SeatReport:
         rows: list[Any]
         if walk is None:
             rows = []
@@ -410,50 +359,21 @@ def adapt_boot_membership(instance: Any, walk: Any) -> SeatReport:
             rows = list(walk)
         else:
             rows = [walk]
-        phases: list[dict[str, Any]] = []
-        ok_n = skip_n = fail_n = 0
+        phases: list[Any] = []
         for row in rows:
             if hasattr(row, "to_dict") and callable(row.to_dict):
-                d = row.to_dict()
+                phases.append(row.to_dict())
             elif isinstance(row, Mapping):
-                d = dict(row)
+                phases.append(dict(row))
             else:
-                d = {"repr": repr(row)}
-            phases.append(d)
-            outcome = str(d.get("outcome") or "")
-            if outcome == "ok":
-                ok_n += 1
-            elif outcome == "skip":
-                skip_n += 1
-            elif outcome == "fail":
-                fail_n += 1
-        load: dict[str, Any] = {
-            "phase_count": len(phases),
-            "ok": ok_n,
-            "skip": skip_n,
-            "fail": fail_n,
-            "phases": [p.get("phase") for p in phases if p.get("phase")],
-        }
-        state = STATE_OK if fail_n == 0 else STATE_DEGRADED
-        notes = []
-        if fail_n:
-            notes.append(f"boot_fail_count:{fail_n}")
-        if not phases:
-            notes.append("empty_walk")
-            state = STATE_DEGRADED
-        return SeatReport(
-            seat_id=SEAT_BOOT_MEMBERSHIP,
-            kind=KIND_BOOT,
-            present=True,
-            state=state,
-            load=load,
-            notes=notes,
-            lineage=LINEAGE_ADAPTER,
-            meta=_adapter_meta("last_boot_walk"),
+                phases.append({"repr": repr(row)})
+        return sample_raw(
+            SEAT_BOOT_MEMBERSHIP,
+            KIND_BOOT,
+            source="last_boot_walk",
+            raw={"phases": phases, "phase_count": len(phases)},
         )
 
-    # Walk list itself is not SeatReportable; still use prefer_native on
-    # instance if it grows a membership report later.
     native = try_native_report(instance)
     if native is not None:
         try:
@@ -467,8 +387,11 @@ def adapt_boot_membership(instance: Any, walk: Any) -> SeatReport:
                 return report
         except Exception:
             pass
-    return _adapter()
+    return _sample()
 
+
+# Back-compat name used by prefer_native callers in older code paths.
+# prefer_native keyword is now ``sampler``; keep export of sample_raw.
 
 __all__ = [
     "adapt_boot_membership",
@@ -480,4 +403,5 @@ __all__ = [
     "adapt_wait_plane",
     "adapt_work_plane",
     "prefer_native",
+    "sample_raw",
 ]

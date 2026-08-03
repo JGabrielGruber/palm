@@ -18,7 +18,7 @@ See [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality
 
 from __future__ import annotations
 
-from palm.system.vitality.adapters import prefer_native
+from palm.system.vitality.adapters import prefer_native, sample_raw
 from palm.system.vitality.capability import (
     CapabilityFragment,
     SampleContext,
@@ -76,6 +76,7 @@ from palm.system.vitality.schema import (
     KIND_SUPERVISOR_SERVICE,
     LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     MATURITY_INSTALLED,
     MATURITY_INTENTION,
     ROLE_OBSERVE,
@@ -137,6 +138,7 @@ __all__ = [
     "KIND_SUPERVISOR_SERVICE",
     "LINEAGE_ADAPTER",
     "LINEAGE_NATIVE",
+    "LINEAGE_SAMPLED",
     "MATURITY_INSTALLED",
     "MATURITY_INTENTION",
     "ProbeCatalog",
@@ -183,6 +185,7 @@ __all__ = [
     "prefer_native",
     "private_attr_resolver",
     "project",
+    "sample_raw",
     "project_seat_walk_only",
     "project_top",
     "reports_to_dicts",

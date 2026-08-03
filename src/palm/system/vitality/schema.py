@@ -71,13 +71,19 @@ KNOWN_STATES: Final[frozenset[str]] = frozenset(
 
 # ── Lineage ──────────────────────────────────────────────────────────────────
 
-SeatLineageName = Literal["native", "adapter"]
+SeatLineageName = Literal["native", "adapter", "sampled"]
 
 LINEAGE_NATIVE: Final[str] = "native"
+"""Seat implemented ``seat_report()`` in its own vocabulary (rare)."""
+
 LINEAGE_ADAPTER: Final[str] = "adapter"
+"""Legacy bridge that *interprets* doctor/status into vitality load — residual debt."""
+
+LINEAGE_SAMPLED: Final[str] = "sampled"
+"""Eyes read public seat API and stash **raw** under ``meta.raw``; product presents."""
 
 KNOWN_LINEAGES: Final[frozenset[str]] = frozenset(
-    {LINEAGE_NATIVE, LINEAGE_ADAPTER}
+    {LINEAGE_NATIVE, LINEAGE_ADAPTER, LINEAGE_SAMPLED}
 )
 
 # ── Well-known seat ids (discovery seeds — not a closed forever menu) ───────
@@ -177,6 +183,7 @@ __all__ = [
     "KNOWN_STATES",
     "LINEAGE_ADAPTER",
     "LINEAGE_NATIVE",
+    "LINEAGE_SAMPLED",
     "MATURITY_INSTALLED",
     "MATURITY_INTENTION",
     "ROLE_OBSERVE",

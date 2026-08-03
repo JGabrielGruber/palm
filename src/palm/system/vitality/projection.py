@@ -35,6 +35,7 @@ from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
     LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     STATE_ABSENT,
     STATE_ERROR,
     STATE_OK,
@@ -70,6 +71,7 @@ def _structural_summary(seats: list[SeatReport]) -> dict[str, Any]:
         "by_lineage": by_lineage,
         "native_count": by_lineage.get(LINEAGE_NATIVE, 0),
         "adapter_count": by_lineage.get(LINEAGE_ADAPTER, 0),
+        "sampled_count": by_lineage.get(LINEAGE_SAMPLED, 0),
         "present_ids": [r.seat_id for r in seats if r.present],
         "absent_ids": [r.seat_id for r in seats if r.state == STATE_ABSENT],
     }
@@ -138,8 +140,12 @@ class VitalitySnapshot:
                     "state": s.state,
                     "lineage": s.lineage,
                     "notes": list(s.notes),
-                    # Pass load through as-is (receive, do not re-curate).
+                    # Structural only; product present interprets meta.raw.
                     "load": dict(s.load),
+                    "raw": dict(s.meta.get("raw") or {})
+                    if isinstance(s.meta.get("raw"), dict)
+                    else s.meta.get("raw"),
+                    "sample_source": s.meta.get("sample_source"),
                 }
                 for s in self.seats
             ],

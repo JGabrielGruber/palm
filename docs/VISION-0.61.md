@@ -212,9 +212,10 @@ New seats appear by **being attached**.
 **Default seeds:** `wait_plane` · `session_plane` · `work_plane` · `supervisor` · `execution` · `system_log` · `boot_membership`  
 **Dynamic expansion:** `supervisor.<service_name>` from live registry (not a closed menu)
 
-Adapters from old `status` / `doctor_snapshot` are **transitional residue** only (`lineage: adapter`).  
-**Plan law:** forward work implements **as if adapters were not the foundation** — discover + native + receive. Do not deepen system adapter maps. Interpretation of doctor fields → product present (Inspect), not system eyes.  
-Native today: `SystemLog.seat_report` · `SystemSupervisor.seat_report`.
+**Sample law (system vitality):** eyes **sample raw** public seat APIs into `meta.raw` with `lineage: sampled`. Structural fields only (id, kind, present, state). **Product present** (Inspect / top) interprets raw.  
+Do **not** put vitality `seat_report` on simple seats (e.g. SystemLog) — public API is enough.  
+`lineage: adapter` = residual *interpret* bridges only — do not grow.  
+`lineage: native` = seat truly owns `seat_report()` (optional growth when seat truth is internal).
 
 ### 6.4 Capability catalog (registry)
 
