@@ -48,10 +48,6 @@ from palm.system.boot.shell import resolve_shell
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.system_schedule import bind_phase_handlers, build_system_handlers
 from palm.system.boot.walker import PhaseHandler, WalkedPhase, walk_schedule
-from palm.system.log.phase_ready import (
-    ensure_system_log_ready,
-    system_log_ready_handler,
-)
 
 __all__ = [
     "DEFAULT_SYSTEM_PHASE_DEFINITIONS",
@@ -67,13 +63,11 @@ __all__ = [
     "WalkedPhase",
     "bind_phase_handlers",
     "build_system_handlers",
-    "ensure_system_log_ready",
     "get_phase",
     "host_phase_ids",
     "phases_for",
     "resolve_shell",
     "schedule_catalog",
-    "system_log_ready_handler",
     "system_phase_definition",
     "system_phase_definitions",
     "system_phase_ids",

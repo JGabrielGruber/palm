@@ -281,7 +281,7 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 | Schedule uses `ctx.shell` + published seats | Thin `*_to_runtime` bridges remain |
 | `SystemPlanes.ensure_on` / `SystemSupervisor.ensure_on` | Host recovery / ApplicationHost bag digs |
 | Phase **how** co-located on subject (`phase_*.py`); boot = order + catalog + walk | Host phase definitions (same pattern) |
-| System phase catalog imports subject modules only | Drop boot/log_phase compat shim when quiet |
+| System phase catalog imports subject modules only | Drop remaining wire / `*_to_runtime` shims when quiet |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 

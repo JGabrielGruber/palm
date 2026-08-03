@@ -13,7 +13,6 @@ from palm.system.boot import (
     BootContext,
     host_phase_ids,
     schedule_catalog,
-    system_log_ready_handler,
     system_phase_ids,
     walk_schedule,
 )
@@ -22,6 +21,7 @@ from palm.system.log import (
     SystemLog,
     get_system_log,
     reset_system_log_for_tests,
+    system_log_ready_handler,
 )
 
 

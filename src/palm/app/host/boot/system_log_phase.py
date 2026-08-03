@@ -2,7 +2,7 @@
 Host early seat: SystemLog configure from boot mode (0.59.2).
 
 Linux-inspired: early console before the rest of the host schedule.
-System schedule seat lives in ``palm.system.boot.log_phase`` (purity).
+System schedule seat lives in ``palm.system.log.phase_ready`` (subject-local).
 """
 
 from __future__ import annotations
