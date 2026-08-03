@@ -891,17 +891,20 @@ class SessionPlaneService:
         }
 
 
-def session_get_job_from_runtime(runtime: Any) -> Any:
-    """Build a get_job callable from runtime public surface (hub install / bind)."""
+def make_get_job(
+    *,
+    get_job: Any | None = None,
+    orchestration: Any | None = None,
+) -> Any:
+    """Build a get_job callable from collaborator ports (CS-008)."""
 
-    def get_job(job_id: str) -> Any | None:
+    def resolve(job_id: str) -> Any | None:
         try:
-            fn = getattr(runtime, "get_job", None)
-            if callable(fn):
-                return fn(str(job_id))
+            if callable(get_job):
+                return get_job(str(job_id))
         except Exception:
             pass
-        orch = getattr(runtime, "orchestration", None)
+        orch = orchestration
         if orch is None:
             return None
         jobs = getattr(orch, "jobs", None)
@@ -912,7 +915,16 @@ def session_get_job_from_runtime(runtime: Any) -> Any:
         except Exception:
             return None
 
-    return get_job
+    return resolve
+
+
+def session_get_job_from_runtime(runtime: Any) -> Any:
+    """Compat: extract ports from *runtime* then :func:`make_get_job`."""
+    fn = getattr(runtime, "get_job", None)
+    return make_get_job(
+        get_job=fn if callable(fn) else None,
+        orchestration=getattr(runtime, "orchestration", None),
+    )
 
 
 # Back-compat alias (internal callers)
@@ -940,6 +952,7 @@ __all__ = [
     "SessionPlaneError",
     "SessionPlaneService",
     "bind_session_plane_to_runtime",
+    "make_get_job",
     "require_session_plane",
     "session_get_job_from_runtime",
 ]

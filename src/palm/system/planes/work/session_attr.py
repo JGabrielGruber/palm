@@ -32,13 +32,17 @@ def reactive_origin(flow_id: str | None, payload: Mapping[str, Any] | None) -> s
 
 
 def attribute_reactive_start(
-    runtime: Any,
+    runtime: Any | None,
     flow_id: str | None,
     payload: Mapping[str, Any] | None,
     *,
     origin: str | None = None,
+    session_plane: Any | None = None,
 ) -> dict[str, Any]:
-    """Return intent payload with system ``session_id`` for automated start."""
+    """Return intent payload with system ``session_id`` for automated start.
+
+    Prefer *session_plane* (CS-008). *runtime* remains for lookup/compat only.
+    """
     meta = dict(payload or {})
     origin_s = str(origin or "").strip() or reactive_origin(flow_id, meta)
 
@@ -56,8 +60,8 @@ def attribute_reactive_start(
         meta.setdefault("session_origin", origin_s)
         return meta
 
-    plane = getattr(runtime, "session_plane", None)
-    if plane is None:
+    plane = session_plane
+    if plane is None and runtime is not None:
         plane = getattr(runtime, "session_plane", None)
         if plane is None:
             plane = getattr(runtime, "_session_plane", None)

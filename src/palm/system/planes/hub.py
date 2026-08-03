@@ -195,19 +195,22 @@ class SystemPlanes:
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
+        ctx: InstallContext | None = None,
     ) -> list[str]:
         """
         Walk registered :class:`PlaneDefinition`\\s in order; each installs itself.
 
+        Ports come from *ctx* (or :meth:`InstallContext.from_runtime`).
         Returns canonical names installed (live membership after walk).
         """
-        ctx = InstallContext(
-            options=dict(options or {}),
+        wire = ctx or self._wire_from(
+            runtime,
+            options,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
         )
         for defn in self._sorted_definitions():
-            defn.install(self, runtime, ctx)
+            defn.install(self, wire)
         return list(self._order)
 
     def install_named(
@@ -218,21 +221,43 @@ class SystemPlanes:
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
+        ctx: InstallContext | None = None,
     ) -> Any:
         """Install one plane by name or alias via its edge definition."""
         defn = self._lookup_definition(name)
         if defn is None:
             raise KeyError(f"unknown plane definition: {name}")
-        ctx = InstallContext(
-            options=dict(options or {}),
+        wire = ctx or self._wire_from(
+            runtime,
+            options,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
         )
-        return defn.install(self, runtime, ctx)
+        return defn.install(self, wire)
+
+    def _wire_from(
+        self,
+        source: Any,
+        options: Mapping[str, Any] | None,
+        *,
+        on_host_session_error: Callable[[BaseException], None] | None,
+        reuse_existing: bool,
+    ) -> InstallContext:
+        """Prefer :meth:`PlaneWireSource.plane_wire`; else :meth:`InstallContext.from_source`."""
+        kwargs = {
+            "options": options,
+            "on_host_session_error": on_host_session_error,
+            "reuse_existing": reuse_existing,
+            "get_session_plane": lambda: self.get("session"),
+        }
+        plane_wire = getattr(source, "plane_wire", None)
+        if callable(plane_wire):
+            return plane_wire(**kwargs)
+        return InstallContext.from_source(source, **kwargs)
 
     # Thin aliases for bind helpers / tests (delegate to definitions)
-    def install_wait(self, runtime: Any) -> Any:
-        return self.install_named("wait", runtime)
+    def install_wait(self, runtime: Any, *, ctx: InstallContext | None = None) -> Any:
+        return self.install_named("wait", runtime, ctx=ctx)
 
     def install_session(
         self,
@@ -241,6 +266,7 @@ class SystemPlanes:
         ensure_host: bool = True,
         on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
+        ctx: InstallContext | None = None,
     ) -> Any:
         # ensure_host is always done by session definition when install runs;
         # swallow path uses on_host_session_error (None → silent).
@@ -250,14 +276,17 @@ class SystemPlanes:
             runtime,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
+            ctx=ctx,
         )
 
     def install_work(
         self,
         runtime: Any,
         options: Mapping[str, Any] | None = None,
+        *,
+        ctx: InstallContext | None = None,
     ) -> Any:
-        return self.install_named("work", runtime, options)
+        return self.install_named("work", runtime, options, ctx=ctx)
 
     def _sorted_definitions(self) -> list[PlaneDefinition]:
         return sorted(self._definitions, key=lambda d: (d.order, d.name))

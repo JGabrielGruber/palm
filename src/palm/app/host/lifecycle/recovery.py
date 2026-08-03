@@ -21,6 +21,39 @@ from palm.common.events.external import WebhookDispatcher, webhook_targets_from_
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
+    from palm.common.events import OutboxProcessor, OutboxStore
+
+
+class _SupervisorOutboxFacade:
+    """Host-facing store/process handle when outbox runs under system supervisor."""
+
+    def __init__(
+        self,
+        store: OutboxStore,
+        processor: OutboxProcessor,
+        *,
+        batch_size: int = 50,
+    ) -> None:
+        self._store = store
+        self._processor = processor
+        self._batch_size = max(1, int(batch_size))
+
+    @property
+    def store(self) -> OutboxStore:
+        return self._store
+
+    @property
+    def processor(self) -> OutboxProcessor:
+        return self._processor
+
+    def process_once(self) -> int:
+        return self._processor.process_batch(limit=self._batch_size)
+
+    def start(self, *, recover: bool = True) -> None:
+        return None
+
+    def stop(self, *, timeout: float = 2.0) -> None:
+        return None
 
 
 class RecoveryCoordinator:
@@ -29,7 +62,9 @@ class RecoveryCoordinator:
     def __init__(self, host: ApplicationHost) -> None:
         self._host = host
         self._compensation: CompensationCoordinator | None = None
-        self._outbox_service: OutboxBackgroundService | None = None
+        self._outbox_service: OutboxBackgroundService | _SupervisorOutboxFacade | None = (
+            None
+        )
         self._outbox_via_supervisor: bool = False
         self._webhook_dispatcher: WebhookDispatcher | None = None
         self._last_recovery: dict[str, Any] | None = None
@@ -132,6 +167,17 @@ class RecoveryCoordinator:
                         )
                     sup.start("outbox")
                     self._outbox_via_supervisor = True
+                    # Host API still exposes store / process_once for tests and ops.
+                    store = getattr(runtime, "outbox_store", None)
+                    proc = getattr(runtime, "outbox_processor", None)
+                    if store is not None and proc is not None:
+                        self._outbox_service = _SupervisorOutboxFacade(
+                            store,
+                            proc,
+                            batch_size=int(
+                                getattr(svc, "_batch_size", 50) or 50
+                            ),
+                        )
                     return
             except Exception:
                 pass
@@ -169,7 +215,9 @@ class RecoveryCoordinator:
             except Exception:
                 pass
             self._outbox_via_supervisor = False
-        if self._outbox_service is not None:
+            # Facade only — do not treat as host-owned background thread.
+            self._outbox_service = None
+        elif self._outbox_service is not None:
             self._outbox_service.stop()
             self._outbox_service = None
         if self._compensation is not None:

@@ -304,41 +304,59 @@ class WorkPlaneService:
             self.enqueue(intent)
 
 
-def _default_submit(
-    runtime: Any,
+def make_submit_flow(
+    *,
+    submit: Callable[..., Any],
+    get_session_plane: Callable[[], Any | None],
 ) -> Callable[[str, dict[str, Any]], Any]:
-    """Submit via system executor — product façade not required.
+    """Build work submit from ports (CS-008) — no runtime bag.
 
-    **0.60.4:** attribute reactive session on the system path (session plane).
+    *submit* is ``(flow_id, metadata=…, state=…) -> result``.
+    *get_session_plane* resolves the session plane at call time (after install).
     """
 
-    def submit(flow_id: str, payload: dict[str, Any]) -> Any:
+    def submit_flow(flow_id: str, payload: dict[str, Any]) -> Any:
         from palm.system.planes.work.session_attr import attribute_reactive_start
 
         body = dict(payload or {})
         seed = body.pop("_seed_state", None)
-        body = attribute_reactive_start(runtime, flow_id, body)
+        body = attribute_reactive_start(
+            None,
+            flow_id,
+            body,
+            session_plane=get_session_plane(),
+        )
         state = seed
         if isinstance(seed, dict):
             from palm.states import BlackboardState
 
             state = BlackboardState()
-            # Best-effort: many seeds are plain dict overlays.
             try:
                 for k, v in seed.items():
                     state[k] = v
             except Exception:
                 state = seed
-        return runtime.submit_flow(flow_id, metadata=body, state=state)
+        return submit(flow_id, metadata=body, state=state)
 
-    return submit
+    return submit_flow
 
 
 def default_submit_flow(
     runtime: Any,
 ) -> Callable[[str, dict[str, Any]], Any]:
-    """Public factory: submit via system executor (schedule / bind use this)."""
-    return _default_submit(runtime)
+    """Compat: extract ports from *runtime* then :func:`make_submit_flow`."""
+
+    def _submit(
+        flow_id: str,
+        metadata: dict[str, Any] | None = None,
+        state: Any = None,
+    ) -> Any:
+        return runtime.submit_flow(flow_id, metadata=metadata, state=state)
+
+    return make_submit_flow(
+        submit=_submit,
+        get_session_plane=lambda: getattr(runtime, "session_plane", None),
+    )
 
 
-__all__ = ["WorkPlaneService", "default_submit_flow"]
+__all__ = ["WorkPlaneService", "default_submit_flow", "make_submit_flow"]

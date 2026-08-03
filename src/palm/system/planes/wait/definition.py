@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from palm.system.planes.definition import InstallContext, PlaneDefinition
 from palm.system.planes.wait.plane import WaitPlaneService
@@ -13,18 +13,14 @@ if TYPE_CHECKING:
 
 def install_wait_plane(
     hub: SystemPlanes,
-    runtime: Any,
     ctx: InstallContext,
 ) -> WaitPlaneService:
-    """Construct wait plane, wire orchestration/event, put as ``wait``."""
-    orch = getattr(runtime, "orchestration", None)
+    """Construct wait plane from *ctx* ports, put as ``wait``."""
+    orch = ctx.orchestration
     if orch is None:
         raise RuntimeError("runtime has no orchestration for wait plane")
     plane = WaitPlaneService()
-    plane.attach(
-        orchestration=orch,
-        event=getattr(runtime, "event", None),
-    )
+    plane.attach(orchestration=orch, event=ctx.event)
     hub.put(WAIT_PLANE.name, plane, aliases=WAIT_PLANE.aliases)
     return plane
 

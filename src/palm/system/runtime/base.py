@@ -173,6 +173,40 @@ class BaseRuntime:
         """Continuous system services supervisor (0.60), or ``None`` before wire."""
         return self._supervisor
 
+    def plane_wire(
+        self,
+        *,
+        options: Any | None = None,
+        on_host_session_error: Any | None = None,
+        reuse_existing: bool = True,
+        get_session_plane: Any | None = None,
+    ) -> Any:
+        """
+        Named port surface for plane install (ISP / DIP).
+
+        Returns :class:`~palm.system.planes.definition.InstallContext`.
+        Definitions depend on that context, not on this bag.
+        """
+        from palm.system.planes.definition import InstallContext
+
+        return InstallContext.from_source(
+            self,
+            options,
+            on_host_session_error=on_host_session_error,
+            reuse_existing=reuse_existing,
+            get_session_plane=get_session_plane,
+        )
+
+    def continuous_wire(self, options: Any | None = None) -> Any:
+        """
+        Named port surface for continuous service install (ISP / DIP).
+
+        Returns :class:`~palm.system.supervisor.definition.ContinuousWireContext`.
+        """
+        from palm.system.supervisor.definition import ContinuousWireContext
+
+        return ContinuousWireContext.from_source(self, options)
+
     @property
     def last_boot_walk(self) -> list[Any] | None:
         """Last system boot walk results (0.59+), or ``None`` before start.

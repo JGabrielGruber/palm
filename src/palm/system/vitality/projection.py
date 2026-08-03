@@ -33,7 +33,6 @@ from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import SeatReport, coerce_report, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
-    LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
     LINEAGE_SAMPLED,
     STATE_ABSENT,
@@ -70,7 +69,6 @@ def _structural_summary(seats: list[SeatReport]) -> dict[str, Any]:
         "by_kind": by_kind,
         "by_lineage": by_lineage,
         "native_count": by_lineage.get(LINEAGE_NATIVE, 0),
-        "adapter_count": by_lineage.get(LINEAGE_ADAPTER, 0),
         "sampled_count": by_lineage.get(LINEAGE_SAMPLED, 0),
         "present_ids": [r.seat_id for r in seats if r.present],
         "absent_ids": [r.seat_id for r in seats if r.state == STATE_ABSENT],

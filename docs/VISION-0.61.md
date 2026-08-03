@@ -207,7 +207,7 @@ New seats appear by **being attached** (or registered on supervisor).
 | `state` | ok · degraded · absent · error · skipped |
 | `load` | optional (usually empty in system — product interprets raw) |
 | `notes` | short strings |
-| `lineage` | `sampled` (normal) · `native` · `adapter` (residue only) |
+| `lineage` | `sampled` (normal) · `native` (legacy `adapter` coerced to sampled) |
 | `meta` | `sample_source` + **`raw`** (uninterpreted public payload) |
 | `sample_ts` | optional ISO sample time |
 
@@ -293,10 +293,10 @@ Named so boy-scout and later slices do not pretend hub install is finished.
 
 | Debt | What left | Refactor toward |
 |------|-----------|-----------------|
-| **[SD-015](../TECH-DEBT.md#sd-015)** | ~~Hub open-codes install_*~~ → **paid** | `PlaneDefinition` at edge; hub walks catalog |
-| **[CS-006](../TECH-DEBT.md#cs-006)** | `supervisor_wire` hand-registers work_drain/outbox | Continuous service definitions; schedule only orders |
-| **[CS-007](../TECH-DEBT.md#cs-007)** | `lineage: adapter` still in schema/counters | Drop residue; sampled/native only |
-| **[CS-008](../TECH-DEBT.md#cs-008)** | `default_submit_flow` / get_job close over runtime | Explicit wire context / ports at install |
+| **[SD-015](../TECH-DEBT.md#sd-015)** | ~~open-coded install~~ → **paid** | `PlaneDefinition` at edge; hub walks catalog |
+| **[CS-006](../TECH-DEBT.md#cs-006)** | ~~schedule prose~~ → **paid** | `ContinuousServiceDefinition`; `sup.install` |
+| **[CS-007](../TECH-DEBT.md#cs-007)** | ~~adapter lineage~~ → **paid** | coerce → sampled; no `adapter_count` |
+| **[CS-008](../TECH-DEBT.md#cs-008)** | ~~runtime closures~~ → **paid** | `InstallContext` ports; `(hub, ctx)` install |
 
 **Landed (not debt):** hub membership; collaborator `attach` (no full runtime on plane); schedule thin `install` call; vitality package + raw sample + projection + `seat_walk` capability; adapters deleted as maps.
 

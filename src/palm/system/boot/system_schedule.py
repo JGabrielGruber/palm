@@ -50,11 +50,7 @@ from palm.system.runtime.job_hooks import (
     StateSnapshotHook,
 )
 from palm.system.runtime.wiring import resolve_scheduler
-from palm.system.supervisor import (
-    CallableSystemService,
-    OutboxLoopService,
-    SystemSupervisor,
-)
+from palm.system.supervisor import SystemSupervisor
 
 
 def build_system_handlers(
@@ -214,40 +210,10 @@ def build_system_handlers(
         )
 
     def supervisor_wire(ctx: BootContext) -> None:
-        """Register continuous services (work_drain, outbox) — start later."""
+        """Seat supervisor; walk continuous service definitions (CS-006)."""
         sup = SystemSupervisor()
         runtime._supervisor = sup
-        plane = runtime.work_plane
-        if plane is not None:
-            sup.register(
-                CallableSystemService(
-                    "work_drain",
-                    start=plane.start_background,
-                    stop=plane.stop_background,
-                    status=plane.status,
-                )
-            )
-        # 0.60.6 — outbox continuous when processor was wired.
-        proc = getattr(runtime, "_outbox_processor", None) or getattr(
-            runtime, "outbox_processor", None
-        )
-        store = getattr(runtime, "_outbox_store", None) or getattr(
-            runtime, "outbox_store", None
-        )
-        if proc is not None and store is not None:
-            sup.register(
-                OutboxLoopService(
-                    proc,
-                    store,
-                    poll_interval=float(
-                        options.get("outbox_poll_interval", 0.5) or 0.5
-                    ),
-                    batch_size=int(options.get("outbox_batch_size", 50) or 50),
-                    recover_on_start=bool(
-                        options.get("outbox_recover_on_startup", True)
-                    ),
-                )
-            )
+        sup.install(runtime, options)
         get_system_log().info(
             "supervisor.wire",
             "system supervisor ready",

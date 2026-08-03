@@ -150,6 +150,60 @@ def test_plane_definitions_at_edge_not_open_coded_on_hub() -> None:
     assert "WorkPlaneService" in inspect.getsource(WORK_PLANE.install)
 
 
+def test_install_context_ports_not_runtime_bag_in_definitions() -> None:
+    """CS-008: plane install signatures take InstallContext, not runtime."""
+    import inspect
+
+    from palm.system.planes.session.definition import install_session_plane
+    from palm.system.planes.wait.definition import install_wait_plane
+    from palm.system.planes.work.definition import install_work_plane
+
+    for fn in (install_wait_plane, install_session_plane, install_work_plane):
+        sig = inspect.signature(fn)
+        assert "ctx" in sig.parameters
+        assert "runtime" not in sig.parameters
+
+
+def test_supervisor_install_walks_definitions() -> None:
+    """CS-006: schedule must not open-code continuous service construct."""
+    import inspect
+
+    from palm.system.boot.system_schedule import build_system_handlers
+    from palm.system.supervisor.definition import DEFAULT_CONTINUOUS_DEFINITIONS
+    from palm.system.supervisor.supervisor import SystemSupervisor
+
+    names = {d.name for d in DEFAULT_CONTINUOUS_DEFINITIONS}
+    assert "work_drain" in names
+    assert "outbox" in names
+
+    src = inspect.getsource(SystemSupervisor.install)
+    assert "defn.register" in src
+
+    # Schedule supervisor_wire is thin
+    handlers_src = inspect.getsource(build_system_handlers)
+    assert "CallableSystemService" not in handlers_src
+    assert "OutboxLoopService" not in handlers_src
+    assert "sup.install" in handlers_src
+
+
+def test_runtime_plane_wire_is_named_port_surface() -> None:
+    """ISP/DIP: system instance exposes plane_wire → InstallContext."""
+    from palm.system.planes.definition import InstallContext
+    from palm.system.runtime.base import BaseRuntime
+
+    rt = BaseRuntime()
+    assert callable(rt.plane_wire)
+    assert callable(rt.continuous_wire)
+    ctx = rt.plane_wire(options={"work_drain_max_depth": 3})
+    assert isinstance(ctx, InstallContext)
+    assert ctx.options.get("work_drain_max_depth") == 3
+    # Hub prefers plane_wire over digging Any
+    hub = __import__(
+        "palm.system.planes.hub", fromlist=["SystemPlanes"]
+    ).SystemPlanes
+    assert "plane_wire" in __import__("inspect").getsource(hub._wire_from)
+
+
 # ── unit: SeatReport ─────────────────────────────────────────────────────────
 
 

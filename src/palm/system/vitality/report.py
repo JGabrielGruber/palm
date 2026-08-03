@@ -16,8 +16,10 @@ from palm.system.vitality.schema import (
     KNOWN_KINDS,
     KNOWN_LINEAGES,
     KNOWN_STATES,
+    LEGACY_LINEAGES,
     LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
+    LINEAGE_SAMPLED,
     SEAT_REPORT_SCHEMA,
     STATE_ABSENT,
     STATE_DEGRADED,
@@ -54,7 +56,7 @@ class SeatReport:
 
     Fields match VISION-0.61 §6.3 / ADR-030 D4. Extra structured detail may
     live under :attr:`load` (vitality counters) or :attr:`meta` (lineage
-    provenance, adapter source name, raw fragment refs — not dual truth).
+    provenance, raw fragment refs — not dual truth).
     """
 
     seat_id: str
@@ -75,6 +77,11 @@ class SeatReport:
         self.kind = str(self.kind or "").strip() or "other"
         self.state = str(self.state or "").strip() or STATE_ERROR
         self.lineage = str(self.lineage or "").strip() or LINEAGE_NATIVE
+        # CS-007: coerce legacy adapter lineage to sampled (do not emit adapter).
+        if self.lineage == LINEAGE_ADAPTER or self.lineage in LEGACY_LINEAGES:
+            self.meta = dict(self.meta or {})
+            self.meta.setdefault("legacy_lineage", LINEAGE_ADAPTER)
+            self.lineage = LINEAGE_SAMPLED
         self.schema = str(self.schema or "").strip() or SEAT_REPORT_SCHEMA
         self.present = bool(self.present)
         self.load = _clean_load(self.load)
@@ -302,9 +309,7 @@ class SeatReport:
             warnings.append(f"unknown_lineage:{self.lineage}")
         if self.state == STATE_ABSENT and self.present:
             warnings.append("absent_but_present")
-        if self.lineage == LINEAGE_ADAPTER and self.meta.get("adapter_source") is None:
-            warnings.append("adapter_without_source")
-        if self.lineage == "sampled" and "raw" not in self.meta:
+        if self.lineage == LINEAGE_SAMPLED and "raw" not in self.meta:
             warnings.append("sampled_without_raw")
         return warnings
 

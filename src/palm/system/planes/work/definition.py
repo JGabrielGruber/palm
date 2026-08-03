@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from palm.system.planes.definition import InstallContext, PlaneDefinition
-from palm.system.planes.work.plane import WorkPlaneService, default_submit_flow
+from palm.system.planes.work.plane import WorkPlaneService
 
 if TYPE_CHECKING:
     from palm.system.planes.hub import SystemPlanes
@@ -13,23 +13,26 @@ if TYPE_CHECKING:
 
 def install_work_plane(
     hub: SystemPlanes,
-    runtime: Any,
     ctx: InstallContext,
 ) -> WorkPlaneService:
-    """Construct work plane, wire storage/submit/able/event, put as ``work``."""
+    """Construct work plane from *ctx* ports, put as ``work``."""
     opts = dict(ctx.options or {})
-    storage = getattr(runtime, "storage", None)
+    storage = ctx.storage
     if storage is None:
         raise RuntimeError("runtime has no storage for work plane")
+    submit_flow = ctx.submit_flow
+    if submit_flow is None:
+        raise RuntimeError("no submit_flow port for work plane")
+    able = ctx.able if ctx.able is not None else (lambda: True)
     max_depth = int(opts.get("work_drain_max_depth", 8) or 8)
     batch_size = int(opts.get("work_drain_batch_size", 10) or 10)
     poll_interval = float(opts.get("work_drain_poll_interval", 1.0) or 1.0)
     plane = WorkPlaneService()
     plane.attach(
         storage=storage,
-        submit_flow=default_submit_flow(runtime),
-        able=lambda: bool(getattr(runtime, "is_started", False)),
-        event=getattr(runtime, "event", None),
+        submit_flow=submit_flow,
+        able=able,
+        event=ctx.event,
         max_depth=max_depth,
         batch_size=batch_size,
         poll_interval=poll_interval,

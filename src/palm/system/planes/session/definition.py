@@ -2,14 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from palm.system.planes.definition import InstallContext, PlaneDefinition
-from palm.system.planes.session.plane import (
-    SessionPlaneError,
-    SessionPlaneService,
-    session_get_job_from_runtime,
-)
+from palm.system.planes.session.plane import SessionPlaneError, SessionPlaneService
 
 if TYPE_CHECKING:
     from palm.system.planes.hub import SystemPlanes
@@ -17,23 +13,14 @@ if TYPE_CHECKING:
 
 def install_session_plane(
     hub: SystemPlanes,
-    runtime: Any,
     ctx: InstallContext,
 ) -> SessionPlaneService:
-    """
-    Construct (or re-wire) session plane, put as ``session``.
-
-    Uses storage + instance_manager + get_job + wait plane from runtime/hub.
-    """
+    """Construct (or re-wire) session plane from *ctx* ports, put as ``session``."""
     wait = hub.get("wait")
-    if wait is None:
-        wait = getattr(runtime, "wait_plane", None)
-    im = getattr(runtime, "instance_manager", None)
-    get_job = session_get_job_from_runtime(runtime)
+    im = ctx.instance_manager
+    get_job = ctx.get_job
 
     existing = hub.get("session")
-    if existing is None:
-        existing = getattr(runtime, "session_plane", None)
     if ctx.reuse_existing and isinstance(existing, SessionPlaneService):
         plane = existing
         plane.attach(
@@ -44,7 +31,7 @@ def install_session_plane(
         if hub.get("session") is not plane:
             hub.put(SESSION_PLANE.name, plane, aliases=SESSION_PLANE.aliases)
     else:
-        storage = getattr(runtime, "storage", None)
+        storage = ctx.storage
         if storage is None:
             raise SessionPlaneError("runtime has no storage for session plane")
         plane = SessionPlaneService(storage=storage)

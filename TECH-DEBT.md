@@ -84,9 +84,9 @@
 | [CS-003](#cs-003) | Core leaves take concrete engines (not protocols) | S2 | M | open |
 | [CS-004](#cs-004) | Definition `from_dict` forever-legacy shapes | S3 | M | open |
 | [CS-005](#cs-005) | Broad swallow `except` / empty `pass` in hot paths | S3 | M | open (= CF-007) |
-| [CS-006](#cs-006) | Supervisor continuous wire is schedule prose | S3 | M | open (**0.61** named) |
-| [CS-007](#cs-007) | Vitality `lineage: adapter` schema residue | S4 | S | open (**0.61** named) |
-| [CS-008](#cs-008) | Plane factories still close over full runtime | S3 | M | open (**0.61** named) |
+| [CS-006](#cs-006) | Supervisor continuous wire is schedule prose | S3 | M | ✅ paid (definitions at edge) |
+| [CS-007](#cs-007) | Vitality `lineage: adapter` schema residue | S4 | S | ✅ paid (coerce + no emit) |
+| [CS-008](#cs-008) | Plane factories still close over full runtime | S3 | M | ✅ paid (InstallContext ports) |
 
 ### Operate diagnosis (OD)
 
@@ -640,17 +640,14 @@ These must **not** remain the source of truth for living load.
 
 <a id="cs-006"></a>
 
-**Severity:** S3 · **Effort:** M · **Named:** mid-**0.61**
+**Severity:** S3 · **Effort:** M · **Named:** mid-**0.61** · **Status:** ✅ **paid**
 
-**Observation:** `SystemSupervisor` is a real consumer seat (`register` / `start` /
-`stop`). Boot still **hand-registers** `work_drain` and outbox in
-`system_schedule.supervisor_wire` with concrete knowledge of work plane +
-outbox processor. Same family as SD-015: bag exists; participation law is not
-definition-at-edge.
+**Paid shape:** `ContinuousServiceDefinition` + `ContinuousWireContext` at
+`palm.system.supervisor.definition`; `SystemSupervisor.install` walks catalog;
+schedule only `sup.install(runtime, options)`. Register law for work_drain /
+outbox lives at the edge.
 
-**Target:** Continuous services declare (or register) how they attach; schedule
-only orders start. Boy-scout when supervisor/wire is touched.
-**Related:** [SD-015](#sd-015) · ADR-029 · [VISION-0.60](docs/VISION-0.60.md).
+**Related:** [SD-015](#sd-015) · ADR-029.
 
 ---
 
@@ -658,15 +655,12 @@ only orders start. Boy-scout when supervisor/wire is touched.
 
 <a id="cs-007"></a>
 
-**Severity:** S4 · **Effort:** S · **Named:** mid-**0.61**
+**Severity:** S4 · **Effort:** S · **Named:** mid-**0.61** · **Status:** ✅ **paid**
 
-**Observation:** Walk path raw-dogs public APIs (`lineage: sampled`). Adapter
-maps were deleted. Schema and projection still carry `LINEAGE_ADAPTER` /
-`adapter_count` as residual enum and counters. Docstrings still mention adapter
-pass-through.
+**Paid:** Primary lineages are `native` | `sampled`. `LINEAGE_ADAPTER` is
+legacy-only (`LEGACY_LINEAGES`); `SeatReport` coerces adapter → sampled.
+`adapter_count` removed from structural summaries. Do not rebuild adapter maps.
 
-**Target:** Drop or freeze as deprecated schema residue once no emitter remains;
-do not rebuild adapter maps. Prefer `sampled` + optional `native`.
 **Related:** [OD-001](#od-001) · [VISION-0.61](docs/VISION-0.61.md) §6.3.
 
 ---
@@ -675,21 +669,16 @@ do not rebuild adapter maps. Prefer `sampled` + optional `native`.
 
 <a id="cs-008"></a>
 
-**Severity:** S3 · **Effort:** M · **Named:** mid-**0.61**
+**Severity:** S3 · **Effort:** M · **Named:** mid-**0.61** · **Status:** ✅ **paid**
 
-**Observation:** Planes no longer take the runtime bag in `attach`, but install
-still builds **closures over runtime**:
+**Paid:** `InstallContext` carries orchestration / event / storage /
+instance_manager / get_job / submit_flow / able ports.
+Plane definitions take `(hub, ctx)` only. `make_get_job` / `make_submit_flow`
+are port factories. System instance exposes **`plane_wire()`** /
+**`continuous_wire()`** (ISP/DIP named surface); hub prefers that over a bag.
+`from_runtime` remains a thin compat path.
 
-- `default_submit_flow(runtime)` (work) — attribute + `submit_flow` via machine
-- `session_get_job_from_runtime(runtime)` — job lookup via machine
-- work `able=lambda: runtime.is_started`
-
-Collaborator *names* are clean; *extraction* still treats the runtime as a god
-object at the factory boundary.
-
-**Target:** Explicit wire context or ports passed into install definitions
-(with SD-015), not `runtime` bag plumbing in factories.
-**Related:** [SD-015](#sd-015) · feat `34a1daec` collaborator attach cut.
+**Related:** [SD-015](#sd-015).
 
 ---
 

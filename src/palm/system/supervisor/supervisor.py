@@ -1,21 +1,37 @@
 """SystemSupervisor — register and run continuous system services (0.60.1).
 
 Empty registry is valid: boot wires the seat; later slices register services.
+Install walks :class:`~palm.system.supervisor.definition.ContinuousServiceDefinition`
+at the edge (CS-006).
 """
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from typing import Any
 
+from palm.system.supervisor.definition import (
+    DEFAULT_CONTINUOUS_DEFINITIONS,
+    ContinuousServiceDefinition,
+    ContinuousWireContext,
+)
 from palm.system.supervisor.service import SystemService
 
 
 class SystemSupervisor:
     """Lifecycle home for continuous services on one system instance."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        definitions: Sequence[ContinuousServiceDefinition] | None = None,
+    ) -> None:
         self._services: dict[str, SystemService] = {}
         self._running: set[str] = set()
+        self._definitions: tuple[ContinuousServiceDefinition, ...] = (
+            tuple(definitions)
+            if definitions is not None
+            else DEFAULT_CONTINUOUS_DEFINITIONS
+        )
 
     def register(self, service: SystemService) -> None:
         """Add or replace a service by name. Does not auto-start."""
@@ -50,6 +66,35 @@ class SystemSupervisor:
 
     def names(self) -> list[str]:
         return sorted(self._services)
+
+    def definitions(self) -> tuple[ContinuousServiceDefinition, ...]:
+        """Install catalog this supervisor walks (not live membership)."""
+        return self._definitions
+
+    def install(
+        self,
+        runtime: Any | None = None,
+        options: Mapping[str, Any] | None = None,
+        *,
+        ctx: ContinuousWireContext | None = None,
+    ) -> list[str]:
+        """
+        Walk continuous definitions; each may ``register`` a service.
+
+        Returns names registered after the walk.
+        """
+        wire = ctx
+        if wire is None:
+            if runtime is None:
+                raise ValueError("runtime or ContinuousWireContext required")
+            continuous_wire = getattr(runtime, "continuous_wire", None)
+            if callable(continuous_wire):
+                wire = continuous_wire(options)
+            else:
+                wire = ContinuousWireContext.from_source(runtime, options)
+        for defn in sorted(self._definitions, key=lambda d: (d.order, d.name)):
+            defn.register(self, wire)
+        return list(self.names())
 
     def start(self, name: str | None = None) -> list[str]:
         """Start one service by name, or all registered. Returns started names."""

@@ -9,7 +9,6 @@ from palm.system.runtime.base import BaseRuntime
 from palm.system.vitality import (
     CAPABILITY_EMISSION_WINDOW,
     CAPABILITY_SEAT_WALK,
-    LINEAGE_ADAPTER,
     LINEAGE_SAMPLED,
     MATURITY_INTENTION,
     SEAT_WAIT_PLANE,
