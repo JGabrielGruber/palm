@@ -305,9 +305,9 @@ Each slice states which modes are in the green bar.
 
 ## 10. Success criteria (floor)
 
-- [ ] Dynamic seat discovery on a live `SystemInstance`.  
-- [ ] Seat report protocol with vitality lexicon.  
-- [ ] `VitalityProjection` + registry; `seat_walk` + thin `emission_window`.  
+- [x] Dynamic seat discovery on a live `SystemInstance`.  
+- [x] Seat report protocol with vitality lexicon.  
+- [x] `VitalityProjection` + registry; `seat_walk` installed (emission_window intention until 0.61.3).  
 - [ ] Product inspect presents top/vitality from projection only.  
 - [ ] `actor_kind` partition or explicit `unknown`.  
 - [ ] InspectService rename path closed or alias residual named (SD-007).  
