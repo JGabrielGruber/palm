@@ -1,9 +1,8 @@
 """
 SeatReportable — native self-report protocol for living seats (0.61.1).
 
-Seats that implement :meth:`seat_report` are preferred over adapters.
-Adapters remain first-class honesty when native is not yet landed
-(``lineage: adapter``).
+Seats that implement :meth:`seat_report` are preferred over raw sampling.
+Otherwise vitality raw-dogs public methods/attrs into ``meta.raw``.
 """
 
 from __future__ import annotations
@@ -15,7 +14,7 @@ from palm.system.vitality.report import SeatReport
 
 @runtime_checkable
 class SeatReportable(Protocol):
-    """Object that can emit a vitality seat report without an external adapter."""
+    """Object that can emit a vitality seat report without raw sampling."""
 
     def seat_report(self) -> SeatReport | Mapping[str, Any]:
         """Return a :class:`SeatReport` or a ``palm.seat_report/1`` mapping."""

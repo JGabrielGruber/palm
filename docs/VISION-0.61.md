@@ -212,10 +212,9 @@ New seats appear by **being attached**.
 **Default seeds:** `wait_plane` · `session_plane` · `work_plane` · `supervisor` · `execution` · `system_log` · `boot_membership`  
 **Dynamic expansion:** `supervisor.<service_name>` from live registry (not a closed menu)
 
-**Sample law (system vitality):** eyes **sample raw** public seat APIs into `meta.raw` with `lineage: sampled`. Structural fields only (id, kind, present, state). **Product present** (Inspect / top) interprets raw.  
-Do **not** put vitality `seat_report` on simple seats (e.g. SystemLog) — public API is enough.  
-`lineage: adapter` = residual *interpret* bridges only — do not grow.  
-`lineage: native` = seat truly owns `seat_report()` (optional growth when seat truth is internal).
+**Sample law (system vitality):** raw-dog the live system — call public methods / read public attrs; stash in `meta.raw` (`lineage: sampled`). Structural fields only (id, kind, present, state). **No adapter maps** in system. **Product present** interprets raw.  
+Do **not** put vitality `seat_report` on simple seats — public API is enough.  
+`lineage: native` = seat truly owns `seat_report()` (optional, when truth is internal).
 
 ### 6.4 Capability catalog (registry)
 

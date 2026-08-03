@@ -8,7 +8,7 @@ Projection **receives** seat reports and capability data. It does not:
   - start/continue work
   - re-curate doctor/status field maps
   - invent living counters
-  - deepen system adapters
+  - curate doctor fields into load
 
 Inspect/product will **present** this snapshot (top). Adapters are not the
 architecture of record; native seat reports are the growth path.

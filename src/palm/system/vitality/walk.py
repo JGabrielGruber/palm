@@ -11,9 +11,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-from palm.system.vitality.adapters import adapt_supervisor_service
 from palm.system.vitality.probe import ProbeCatalog, SeatProbe
 from palm.system.vitality.protocol import try_native_report
+from palm.system.vitality.raw import sample_method
 from palm.system.vitality.report import SeatReport, coerce_report, index_by_seat_id, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
@@ -49,7 +49,7 @@ class WalkOptions:
     """When True, set ``sample_ts`` on every report."""
 
     on_probe_error: Literal["error_report", "raise"] = "error_report"
-    """How to handle probe/adapter exceptions."""
+    """How to handle probe / sample exceptions."""
 
     skip_seat_ids: frozenset[str] = field(default_factory=frozenset)
     """Hard omit of known seat ids (tests / focus)."""
@@ -243,11 +243,13 @@ def _expand_supervisor_services(
             continue
         try:
             extra.append(
-                adapt_supervisor_service(
-                    instance,
+                sample_method(
                     service,
-                    service_name=name,
-                    running=name in running,
+                    seat_id=seat_id,
+                    kind=KIND_SUPERVISOR_SERVICE,
+                    method="status",
+                    extra_raw={"running": name in running},
+                    extra_meta={"service_name": name},
                 )
             )
         except Exception as exc:

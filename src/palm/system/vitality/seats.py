@@ -1,29 +1,25 @@
 """
-Default discovery seeds for Palm living seats (0.61.1).
+Default discovery seeds for Palm living seats (0.61).
 
-These probes observe attach points that composition + boot already wire
-(0.57–0.60). They are **seeds**, not a closed forever menu: register more
-via :class:`~palm.system.vitality.probe.ProbeCatalog`.
+Probes only declare **where** to look and **which public API** to raw-sample.
+No per-seat adapter maps. Product interprets ``meta.raw``.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from palm.system.vitality.adapters import (
-    adapt_boot_membership,
-    adapt_execution,
-    adapt_session_plane,
-    adapt_supervisor,
-    adapt_system_log,
-    adapt_wait_plane,
-    adapt_work_plane,
-)
 from palm.system.vitality.probe import (
     ProbeCatalog,
     SeatProbe,
     attr_resolver,
     private_attr_resolver,
+)
+from palm.system.vitality.raw import (
+    bound_attrs_reporter,
+    bound_method_reporter,
+    bound_sequence_reporter,
+    sample_attrs,
 )
 from palm.system.vitality.report import SeatReport
 from palm.system.vitality.schema import (
@@ -43,18 +39,15 @@ from palm.system.vitality.schema import (
 
 
 def _resolve_execution(instance: Any) -> Any | None:
-    """Execution port: property or the instance itself when it is the port."""
     port = getattr(instance, "execution", None)
     if port is not None:
         return port
-    # BaseRuntime is the port structurally; still count as attached shell.
     if callable(getattr(instance, "invoke_resource", None)):
         return instance
     return None
 
 
 def _resolve_system_log(instance: Any) -> Any | None:
-    """Process system log — optional per-instance attr, else process default."""
     bound = getattr(instance, "system_log", None)
     if bound is not None:
         return bound
@@ -66,7 +59,34 @@ def _resolve_system_log(instance: Any) -> Any | None:
         return None
 
 
-def _report_system_log(instance: Any) -> SeatReport:
+def _report_execution(instance: Any, port: Any) -> SeatReport:
+    return sample_attrs(
+        port,
+        seat_id=SEAT_EXECUTION,
+        kind=KIND_PORT,
+        attrs=("invoke_resource", "start_workload"),
+        source="execution_port",
+        instance=instance,
+        instance_attrs=("is_started",),
+        extra_raw={
+            "has_invoke_resource": callable(getattr(port, "invoke_resource", None)),
+            "has_start_workload": callable(getattr(port, "start_workload", None)),
+            "port_type": type(port).__name__,
+        },
+    )
+
+
+def _report_system_log(instance: Any, log: Any) -> SeatReport:
+    return sample_attrs(
+        log,
+        seat_id=SEAT_SYSTEM_LOG,
+        kind=KIND_LOG,
+        attrs=("record_count", "capacity", "level", "console"),
+        source="system_log_public",
+    )
+
+
+def _report_system_log_instance(instance: Any) -> SeatReport:
     log = _resolve_system_log(instance)
     if log is None:
         return SeatReport.absent(
@@ -74,79 +94,82 @@ def _report_system_log(instance: Any) -> SeatReport:
             KIND_LOG,
             reason="system_log_unavailable",
         )
-    return adapt_system_log(instance, log)
+    return _report_system_log(instance, log)
 
 
 def build_default_probes() -> list[SeatProbe]:
-    """Ordered default probes for a Palm SystemInstance graph."""
+    """Ordered default probes — raw public APIs only."""
     return [
         SeatProbe(
             seat_id=SEAT_WAIT_PLANE,
             kind=KIND_PLANE,
             resolve=attr_resolver("wait_plane"),
-            report=adapt_wait_plane,
+            report=bound_method_reporter(
+                SEAT_WAIT_PLANE, KIND_PLANE, "doctor_snapshot"
+            ),
             order=10,
             tags=("core", "plane"),
-            description="Continue plane (wait interests on runtime.event)",
+            description="Continue plane — raw doctor_snapshot()",
         ),
         SeatProbe(
             seat_id=SEAT_SESSION_PLANE,
             kind=KIND_PLANE,
             resolve=attr_resolver("session_plane"),
-            report=adapt_session_plane,
+            report=bound_method_reporter(
+                SEAT_SESSION_PLANE, KIND_PLANE, "doctor_snapshot"
+            ),
             order=20,
             tags=("core", "plane"),
-            description="Session plane (outside subject lifecycle)",
+            description="Session plane — raw doctor_snapshot()",
         ),
         SeatProbe(
             seat_id=SEAT_WORK_PLANE,
             kind=KIND_PLANE,
             resolve=attr_resolver("work_plane"),
-            report=adapt_work_plane,
+            report=bound_method_reporter(SEAT_WORK_PLANE, KIND_PLANE, "status"),
             order=30,
             tags=("core", "plane"),
-            description="Start plane (WorkIntent enqueue / tick)",
+            description="Work plane — raw status()",
         ),
         SeatProbe(
             seat_id=SEAT_SUPERVISOR,
             kind=KIND_SUPERVISOR,
             resolve=attr_resolver("supervisor"),
-            report=adapt_supervisor,
+            report=bound_method_reporter(SEAT_SUPERVISOR, KIND_SUPERVISOR, "status"),
             order=40,
             tags=("core", "supervisor"),
-            description="Continuous system services supervisor",
+            description="Supervisor — raw status()",
         ),
         SeatProbe(
             seat_id=SEAT_EXECUTION,
             kind=KIND_PORT,
             resolve=_resolve_execution,
-            report=adapt_execution,
+            report=_report_execution,
             order=50,
             tags=("core", "port"),
-            description="ExecutionPort (resource + workload effects)",
+            description="ExecutionPort — raw port attrs",
         ),
         SeatProbe(
             seat_id=SEAT_SYSTEM_LOG,
             kind=KIND_LOG,
             resolve=_resolve_system_log,
-            report=lambda inst, log: adapt_system_log(inst, log),
-            report_instance=_report_system_log,
+            report=_report_system_log,
+            report_instance=_report_system_log_instance,
             order=60,
             tags=("core", "log", "process"),
-            description="Process system log ring (observation tape)",
+            description="System log — raw public attrs",
         ),
         SeatProbe(
             seat_id=SEAT_BOOT_MEMBERSHIP,
             kind=KIND_BOOT,
-            resolve=private_attr_resolver(
-                "last_boot_walk",
-                "_last_boot_walk",
+            resolve=private_attr_resolver("last_boot_walk", "_last_boot_walk"),
+            report=bound_sequence_reporter(
+                SEAT_BOOT_MEMBERSHIP, KIND_BOOT, source="last_boot_walk"
             ),
-            report=lambda inst, walk: adapt_boot_membership(inst, walk),
             when_absent="report",
             order=70,
             tags=("core", "boot"),
-            description="Last system boot walk / membership facts",
+            description="Boot walk — raw phase rows",
         ),
     ]
 
@@ -155,11 +178,6 @@ _DEFAULT: ProbeCatalog | None = None
 
 
 def default_probe_catalog(*, clone: bool = True) -> ProbeCatalog:
-    """Return the default Palm probe catalog.
-
-    When *clone* is True (default), callers get an isolated copy safe to
-    mutate for tests or composition profiles.
-    """
     global _DEFAULT
     if _DEFAULT is None:
         cat = ProbeCatalog()
@@ -169,7 +187,6 @@ def default_probe_catalog(*, clone: bool = True) -> ProbeCatalog:
 
 
 def reset_default_probe_catalog_for_tests() -> None:
-    """Drop cached default catalog (tests only)."""
     global _DEFAULT
     _DEFAULT = None
 

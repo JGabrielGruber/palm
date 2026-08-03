@@ -1,4 +1,4 @@
-"""0.61.1 — seat report protocol + dynamic walk + lineage-marked adapters."""
+"""0.61.1 — seat report protocol + dynamic walk + raw sampling."""
 
 from __future__ import annotations
 
@@ -189,9 +189,9 @@ def test_walk_started_base_runtime_seats_present() -> None:
         # Boot membership saw phases (raw under meta).
         boot = by_id[SEAT_BOOT_MEMBERSHIP]
         assert boot.lineage == LINEAGE_SAMPLED
-        assert boot.meta.get("raw", {}).get("phase_count", 0) > 0
+        assert boot.meta.get("raw", {}).get("count", 0) > 0
 
-        # Planes / supervisor / log: raw samples of public APIs — product presents.
+        # Planes / supervisor / log: raw public APIs — product presents.
         assert by_id[SEAT_WAIT_PLANE].lineage == LINEAGE_SAMPLED
         assert by_id[SEAT_WAIT_PLANE].meta.get("sample_source") == "doctor_snapshot"
         assert "raw" in by_id[SEAT_WAIT_PLANE].meta
@@ -300,10 +300,10 @@ def test_expand_supervisor_services_never() -> None:
         rt.stop()
 
 
-# ── native vs adapter lineage ────────────────────────────────────────────────
+# ── native vs raw lineage ────────────────────────────────────────────────────
 
 
-def test_native_seat_report_preferred_over_adapter() -> None:
+def test_native_seat_report_preferred_over_raw() -> None:
     class _NativePlane:
         def doctor_snapshot(self) -> dict[str, Any]:
             return {"wait_plane_attached": True, "open_wait_owners": 99}

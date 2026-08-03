@@ -10,15 +10,21 @@ plane of start/continue.
 | **0.61.1** | Seat-report protocol + dynamic walk |
 | **0.61.2** | VitalityRegistry + VitalityProjection (``seat_walk``) |
 
-**Adapter stance:** transitional residue only — not architecture of record.
-Forward design = discover + native + receive; interpret elsewhere (product).
+**Sample law:** raw-dog public seat APIs into ``meta.raw`` (``lineage: sampled``).
+Product present interprets. No adapter maps in system vitality.
 
 See [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md).
 """
 
 from __future__ import annotations
 
-from palm.system.vitality.adapters import prefer_native, sample_raw
+from palm.system.vitality.raw import (
+    prefer_native,
+    sample_attrs,
+    sample_method,
+    sample_raw,
+    sample_sequence,
+)
 from palm.system.vitality.capability import (
     CapabilityFragment,
     SampleContext,
@@ -185,7 +191,10 @@ __all__ = [
     "prefer_native",
     "private_attr_resolver",
     "project",
+    "sample_attrs",
+    "sample_method",
     "sample_raw",
+    "sample_sequence",
     "project_seat_walk_only",
     "project_top",
     "reports_to_dicts",

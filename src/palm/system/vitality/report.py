@@ -3,7 +3,7 @@ SeatReport — versioned unit of vitality truth (0.61.1).
 
 Each discovered seat contributes one report. Projection (later) folds many
 reports into a snapshot. This type is the protocol surface for native seats
-and for adapters with explicit lineage.
+and for raw-sampled public API payloads (``meta.raw``).
 """
 
 from __future__ import annotations
