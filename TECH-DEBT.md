@@ -49,7 +49,7 @@
 | [SD-012](#sd-012) | Cutover shims (fill as 0.57 moves) | S3 | — | 0.57.6–12 | ✅ deleted (0.57.12) |
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 | [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
-| [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | open (named mid-theme) |
+| [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | ✅ paid (definitions at edge) |
 
 ### Surface debt (SU)
 
@@ -230,28 +230,31 @@ OCP·DIP): definition at the edge; consumer walks definitions.
 
 **Progress (0.61 mid):**
 
-| Landed | Still debt |
-|--------|------------|
-| `SystemPlanes` hub membership (`put` / `get` / `detach` / `names`) | Open-coded `install_*` per concrete |
-| Planes take collaborators, not full runtime bag | Hub imports wait/session/work prose |
-| Schedule only seats hub + `install` | No per-plane install definition / register |
-| Bind helpers delegate to hub | Same private menu path |
+| Landed | Still related |
+|--------|---------------|
+| `SystemPlanes` hub membership | — |
+| Planes take collaborators, not full runtime bag | [CS-008](#cs-008) runtime closures in factories |
+| Schedule only seats hub + `install` | — |
+| **`PlaneDefinition` at edge** (`wait`/`session`/`work` `definition.py`) | Catalog lists defaults only |
+| Hub **walks** definitions (`defn.install`); no open-coded attach prose | Thin `install_*` aliases remain |
+| Bind helpers → `install_named` | — |
 
-**Target:**
+**Paid shape:**
 
 ```text
 Plane definition (edge: wait / session / work package)
-  → id, aliases, order/deps, collaborator recipe, factory
+  → name, aliases, order, install(hub, runtime, ctx)
+catalog.DEFAULT_PLANE_DEFINITIONS
+  → which definitions join a default system
 SystemPlanes.install
-  → resolve order · extract deps · construct · attach · put
+  → sort by order · call definition.install · membership via put
 Schedule
-  → ensure_on + install (unchanged thin)
+  → ensure_on + install
 ```
 
-**Do not:** rename install methods and keep the three branches.  
-**Related:** [CS-006](#cs-006) · [CS-008](#cs-008) · ADR-030 D3 · [VISION-0.61](docs/VISION-0.61.md).
+**Related residual:** [CS-006](#cs-006) · [CS-008](#cs-008) · ADR-030 D3 · [VISION-0.61](docs/VISION-0.61.md).
 
-**Status:** open (named mid-0.61).
+**Status:** ✅ **paid** (definitions at edge; hub walks catalog).
 
 ---
 

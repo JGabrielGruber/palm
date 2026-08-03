@@ -123,6 +123,33 @@ def test_system_planes_ensure_on_and_install_wait() -> None:
     assert hub.get("wait_plane") is plane
 
 
+def test_plane_definitions_at_edge_not_open_coded_on_hub() -> None:
+    """SD-015: install law on definitions; hub walks catalog."""
+    import inspect
+
+    from palm.system.planes.catalog import DEFAULT_PLANE_DEFINITIONS
+    from palm.system.planes.hub import SystemPlanes
+    from palm.system.planes.session.definition import SESSION_PLANE
+    from palm.system.planes.wait.definition import WAIT_PLANE
+    from palm.system.planes.work.definition import WORK_PLANE
+
+    names = {d.name for d in DEFAULT_PLANE_DEFINITIONS}
+    assert names == {"wait", "session", "work"}
+    assert WAIT_PLANE.order < SESSION_PLANE.order < WORK_PLANE.order
+
+    # Hub install body must not author wait/session/work attach prose.
+    src = inspect.getsource(SystemPlanes.install)
+    assert "WaitPlaneService" not in src
+    assert "SessionPlaneService" not in src
+    assert "WorkPlaneService" not in src
+    assert "defn.install" in src or "definition" in src.lower()
+
+    # Edge modules own the construct path.
+    assert "WaitPlaneService" in inspect.getsource(WAIT_PLANE.install)
+    assert "SessionPlaneService" in inspect.getsource(SESSION_PLANE.install)
+    assert "WorkPlaneService" in inspect.getsource(WORK_PLANE.install)
+
+
 # ── unit: SeatReport ─────────────────────────────────────────────────────────
 
 

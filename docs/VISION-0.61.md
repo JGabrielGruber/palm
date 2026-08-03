@@ -293,7 +293,7 @@ Named so boy-scout and later slices do not pretend hub install is finished.
 
 | Debt | What left | Refactor toward |
 |------|-----------|-----------------|
-| **[SD-015](../TECH-DEBT.md#sd-015)** | Hub open-codes wait/session/work `install_*` | Plane **definitions** at edge; hub walks them (registry extension) |
+| **[SD-015](../TECH-DEBT.md#sd-015)** | ~~Hub open-codes install_*~~ → **paid** | `PlaneDefinition` at edge; hub walks catalog |
 | **[CS-006](../TECH-DEBT.md#cs-006)** | `supervisor_wire` hand-registers work_drain/outbox | Continuous service definitions; schedule only orders |
 | **[CS-007](../TECH-DEBT.md#cs-007)** | `lineage: adapter` still in schema/counters | Drop residue; sampled/native only |
 | **[CS-008](../TECH-DEBT.md#cs-008)** | `default_submit_flow` / get_job close over runtime | Explicit wire context / ports at install |

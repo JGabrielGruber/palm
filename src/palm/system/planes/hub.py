@@ -9,26 +9,47 @@ Same shape as :class:`~palm.system.supervisor.SystemSupervisor`:
 | ``register`` · ``start`` · ``stop`` | ``put`` · ``install`` · ``detach`` |
 | ``names`` · ``get`` · ``status`` | ``names`` · ``get`` · ``status`` |
 
-Membership is **what the hub holds**, not a table elsewhere.
-**Install policy** lives here (construct · wire collaborators · put).
-Boot schedule only says *when*; the hub owns *what it means to have system planes*.
+Membership is **what the hub holds**.
+**Install law** lives on :class:`~palm.system.planes.definition.PlaneDefinition`
+at the edge (SD-015 / registry extension). The hub only **walks** definitions,
+orders them, and ``put``s results.
+
+Boot schedule only says *when* (``ensure_on`` + ``install``).
 Vitality expands from the live hub.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from typing import Any
+
+from palm.system.planes.catalog import (
+    DEFAULT_PLANE_DEFINITIONS,
+    definition_by_name,
+)
+from palm.system.planes.definition import InstallContext, PlaneDefinition
 
 
 class SystemPlanes:
     """Lifecycle home for system planes on one SystemInstance."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        definitions: Sequence[PlaneDefinition] | None = None,
+    ) -> None:
         self._planes: dict[str, Any] = {}
         self._order: list[str] = []
         # attr / seat aliases → canonical name (e.g. wait_plane → wait)
         self._aliases: dict[str, str] = {}
+        defs = (
+            tuple(definitions)
+            if definitions is not None
+            else DEFAULT_PLANE_DEFINITIONS
+        )
+        self._definitions: tuple[PlaneDefinition, ...] = defs
+        self._definitions_by_name: dict[str, PlaneDefinition] = {
+            d.name: d for d in defs
+        }
 
     # ── membership ───────────────────────────────────────────────────────────
 
@@ -42,7 +63,7 @@ class SystemPlanes:
         """
         Consume a plane instance under *name*.
 
-        Prefer :meth:`install` / :meth:`install_wait` etc. for the default set.
+        Prefer :meth:`install` / :meth:`install_named` (definition at edge).
         Replaces an existing member of the same name (detaches the old one).
         """
         key = str(name or "").strip()
@@ -92,11 +113,18 @@ class SystemPlanes:
         """Canonical member names in put order."""
         return list(self._order)
 
+    def definitions(self) -> tuple[PlaneDefinition, ...]:
+        """Install catalog this hub walks (not live membership)."""
+        return self._definitions
+
     def seat_id(self, name: str) -> str:
         """Observation id for a member (prefer ``*_plane`` alias if registered)."""
         key = self._resolve_key(name)
         if key is None:
             return str(name or "")
+        defn = self._definitions_by_name.get(key)
+        if defn is not None:
+            return defn.seat_id()
         for alias, target in self._aliases.items():
             if target == key and alias.endswith("_plane"):
                 return alias
@@ -140,18 +168,23 @@ class SystemPlanes:
             "plane_count": len(self._order),
             "registered": list(self._order),
             "seat_ids": self.seat_ids(),
+            "definition_names": [d.name for d in self._sorted_definitions()],
             "planes": planes,
         }
 
-    # ── install (hub owns policy) ────────────────────────────────────────────
+    # ── install (walk definitions) ───────────────────────────────────────────
 
     @classmethod
-    def ensure_on(cls, runtime: Any) -> SystemPlanes:
+    def ensure_on(
+        cls,
+        runtime: Any,
+        definitions: Sequence[PlaneDefinition] | None = None,
+    ) -> SystemPlanes:
         """Return the runtime's planes hub, creating and seating one if absent."""
         hub = get_system_planes(runtime)
         if hub is not None:
             return hub
-        hub = cls()
+        hub = cls(definitions=definitions)
         runtime._planes = hub
         return hub
 
@@ -161,37 +194,45 @@ class SystemPlanes:
         options: Mapping[str, Any] | None = None,
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
+        reuse_existing: bool = True,
     ) -> list[str]:
         """
-        Construct, wire collaborators, and put the default system planes.
+        Walk registered :class:`PlaneDefinition`\\s in order; each installs itself.
 
-        Order: wait → session → work (session inspect may need wait).
-        Returns canonical names installed.
+        Returns canonical names installed (live membership after walk).
         """
-        opts = dict(options or {})
-        self.install_wait(runtime)
-        self.install_session(
-            runtime,
-            ensure_host=True,
+        ctx = InstallContext(
+            options=dict(options or {}),
             on_host_session_error=on_host_session_error,
+            reuse_existing=reuse_existing,
         )
-        self.install_work(runtime, opts)
+        for defn in self._sorted_definitions():
+            defn.install(self, runtime, ctx)
         return list(self._order)
 
-    def install_wait(self, runtime: Any) -> Any:
-        """Construct wait plane, wire orchestration/event, put as ``wait``."""
-        from palm.system.planes.wait.plane import WaitPlaneService
-
-        orch = getattr(runtime, "orchestration", None)
-        if orch is None:
-            raise RuntimeError("runtime has no orchestration for wait plane")
-        plane = WaitPlaneService()
-        plane.attach(
-            orchestration=orch,
-            event=getattr(runtime, "event", None),
+    def install_named(
+        self,
+        name: str,
+        runtime: Any,
+        options: Mapping[str, Any] | None = None,
+        *,
+        on_host_session_error: Callable[[BaseException], None] | None = None,
+        reuse_existing: bool = True,
+    ) -> Any:
+        """Install one plane by name or alias via its edge definition."""
+        defn = self._lookup_definition(name)
+        if defn is None:
+            raise KeyError(f"unknown plane definition: {name}")
+        ctx = InstallContext(
+            options=dict(options or {}),
+            on_host_session_error=on_host_session_error,
+            reuse_existing=reuse_existing,
         )
-        self.put("wait", plane, aliases=("wait_plane",))
-        return plane
+        return defn.install(self, runtime, ctx)
+
+    # Thin aliases for bind helpers / tests (delegate to definitions)
+    def install_wait(self, runtime: Any) -> Any:
+        return self.install_named("wait", runtime)
 
     def install_session(
         self,
@@ -201,83 +242,32 @@ class SystemPlanes:
         on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
     ) -> Any:
-        """
-        Construct (or re-wire) session plane, put as ``session``.
-
-        Uses storage + instance_manager + get_job + wait plane from runtime/hub.
-        """
-        from palm.system.planes.session.plane import (
-            SessionPlaneService,
-            session_get_job_from_runtime,
+        # ensure_host is always done by session definition when install runs;
+        # swallow path uses on_host_session_error (None → silent).
+        _ = ensure_host
+        return self.install_named(
+            "session",
+            runtime,
+            on_host_session_error=on_host_session_error,
+            reuse_existing=reuse_existing,
         )
-
-        wait = self.get("wait")
-        if wait is None:
-            wait = getattr(runtime, "wait_plane", None)
-        im = getattr(runtime, "instance_manager", None)
-        get_job = session_get_job_from_runtime(runtime)
-
-        existing = self.get("session")
-        if existing is None:
-            existing = getattr(runtime, "session_plane", None)
-        if reuse_existing and isinstance(existing, SessionPlaneService):
-            plane = existing
-            plane.attach(
-                instance_manager=im,
-                get_job=get_job,
-                wait_plane=wait,
-            )
-            if self.get("session") is not plane:
-                self.put("session", plane, aliases=("session_plane",))
-        else:
-            storage = getattr(runtime, "storage", None)
-            if storage is None:
-                from palm.system.planes.session.plane import SessionPlaneError
-
-                raise SessionPlaneError("runtime has no storage for session plane")
-            plane = SessionPlaneService(storage=storage)
-            plane.attach(
-                instance_manager=im,
-                get_job=get_job,
-                wait_plane=wait,
-            )
-            self.put("session", plane, aliases=("session_plane",))
-
-        if ensure_host:
-            try:
-                plane.ensure_host_session()
-            except Exception as exc:
-                if on_host_session_error is not None:
-                    on_host_session_error(exc)
-        return plane
 
     def install_work(
         self,
         runtime: Any,
         options: Mapping[str, Any] | None = None,
     ) -> Any:
-        """Construct work plane, wire storage/submit/able/event, put as ``work``."""
-        from palm.system.planes.work.plane import WorkPlaneService, default_submit_flow
+        return self.install_named("work", runtime, options)
 
-        opts = dict(options or {})
-        storage = getattr(runtime, "storage", None)
-        if storage is None:
-            raise RuntimeError("runtime has no storage for work plane")
-        max_depth = int(opts.get("work_drain_max_depth", 8) or 8)
-        batch_size = int(opts.get("work_drain_batch_size", 10) or 10)
-        poll_interval = float(opts.get("work_drain_poll_interval", 1.0) or 1.0)
-        plane = WorkPlaneService()
-        plane.attach(
-            storage=storage,
-            submit_flow=default_submit_flow(runtime),
-            able=lambda: bool(getattr(runtime, "is_started", False)),
-            event=getattr(runtime, "event", None),
-            max_depth=max_depth,
-            batch_size=batch_size,
-            poll_interval=poll_interval,
-        )
-        self.put("work", plane, aliases=("work_plane",))
-        return plane
+    def _sorted_definitions(self) -> list[PlaneDefinition]:
+        return sorted(self._definitions, key=lambda d: (d.order, d.name))
+
+    def _lookup_definition(self, name: str) -> PlaneDefinition | None:
+        key = str(name or "").strip()
+        if key in self._definitions_by_name:
+            return self._definitions_by_name[key]
+        found = definition_by_name(key, self._definitions)
+        return found
 
     def _resolve_key(self, name: str) -> str | None:
         raw = str(name or "").strip()
