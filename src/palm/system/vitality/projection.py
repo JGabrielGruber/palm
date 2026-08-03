@@ -26,6 +26,7 @@ from palm.system.vitality.capability import (
 )
 from palm.system.vitality.capabilities import (
     BAG_SEAT_REPORTS,
+    build_seat_walk_capability,
     sample_seat_walk,
 )
 from palm.system.vitality.registry import VitalityRegistry
@@ -393,8 +394,6 @@ def project_seat_walk_only(
     # Ensure seat_walk runs even if default enable set is empty somehow.
     reg = default_vitality_registry().clone()
     if CAPABILITY_SEAT_WALK not in reg:
-        from palm.system.vitality.capabilities import build_seat_walk_capability
-
         reg.register(build_seat_walk_capability(), enabled=True)
     else:
         reg.enable(CAPABILITY_SEAT_WALK)

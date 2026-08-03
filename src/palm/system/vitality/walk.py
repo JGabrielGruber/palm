@@ -13,10 +13,12 @@ from typing import Any, Literal
 
 from palm.system.vitality.adapters import adapt_supervisor_service
 from palm.system.vitality.probe import ProbeCatalog, SeatProbe
-from palm.system.vitality.report import SeatReport, index_by_seat_id, reports_to_dicts
+from palm.system.vitality.protocol import try_native_report
+from palm.system.vitality.report import SeatReport, coerce_report, index_by_seat_id, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
     KIND_SUPERVISOR_SERVICE,
+    LINEAGE_NATIVE,
     SEAT_SUPERVISOR,
     STATE_ABSENT,
     STATE_ERROR,
@@ -137,10 +139,6 @@ def _run_probe(
             if probe.report is not None:
                 return probe.report(instance, seat)
             # Presence-only fallback when no reporter.
-            from palm.system.vitality.protocol import try_native_report
-            from palm.system.vitality.report import coerce_report
-            from palm.system.vitality.schema import LINEAGE_NATIVE
-
             native = try_native_report(seat)
             if native is not None:
                 return coerce_report(

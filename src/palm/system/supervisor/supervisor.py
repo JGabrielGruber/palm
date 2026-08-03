@@ -100,21 +100,18 @@ class SystemSupervisor:
         }
 
     def seat_report(self) -> dict[str, Any]:
-        """Native vitality seat report (0.61.1+) — supervisor physiology."""
-        from palm.system.vitality.schema import (
-            KIND_SUPERVISOR,
-            LINEAGE_NATIVE,
-            SEAT_REPORT_SCHEMA,
-            SEAT_SUPERVISOR,
-            STATE_OK,
-        )
+        """Native vitality seat report (0.61+) — supervisor physiology.
 
+        Plain ``palm.seat_report/1`` mapping. No import of
+        ``palm.system.vitality`` — seats do not depend on the eyes package.
+        Literals must stay aligned with vitality schema constants.
+        """
         return {
-            "schema": SEAT_REPORT_SCHEMA,
-            "seat_id": SEAT_SUPERVISOR,
-            "kind": KIND_SUPERVISOR,
+            "schema": "palm.seat_report/1",
+            "seat_id": "supervisor",
+            "kind": "supervisor",
             "present": True,
-            "state": STATE_OK,
+            "state": "ok",
             "load": {
                 "service_count": len(self._services),
                 "running_count": len(self._running),
@@ -122,7 +119,7 @@ class SystemSupervisor:
                 "registered": sorted(self._services),
             },
             "notes": [],
-            "lineage": LINEAGE_NATIVE,
+            "lineage": "native",
         }
 
     def _start_one(self, key: str) -> list[str]:
