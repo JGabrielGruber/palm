@@ -27,18 +27,20 @@ class ContinuousWireContext:
     outbox_store: Any = None
 
     @classmethod
-    def from_wire(
+    def from_install(
         cls,
-        wire: Any,
+        install: Any,
         options: Mapping[str, Any] | None = None,
     ) -> ContinuousWireContext:
-        """Build from :class:`~palm.system.ports.wire.SystemWire` fields only."""
+        """Build from :class:`~palm.system.ports.install.InstallInterface` fields only."""
         return cls(
             options=dict(options or {}),
-            work_plane=wire.work_plane,
-            outbox_processor=wire.outbox_processor,
-            outbox_store=wire.outbox_store,
+            work_plane=install.work_plane,
+            outbox_processor=install.outbox_processor,
+            outbox_store=install.outbox_store,
         )
+
+    from_wire = from_install  # temporary alias
 
 
 # register(supervisor, ctx) -> service or None if skipped

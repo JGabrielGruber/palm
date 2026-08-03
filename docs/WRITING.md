@@ -35,17 +35,22 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 |------|---------|
 | **Core** | Pure engines |
 | **System** | Running Palm: engines + ports + planes |
-| **Port** | Named effect interface |
-| **Plane** | System path for a kind of traffic |
+| **Port** | Named effect interface (code name; teaching word: **interface**) |
+| **Interface** | Named contract on the system shell (`execution`, `install`) |
+| **InstallInterface** | Collaborator board for subsystem install |
+| **Subsystem** | Membership + lifecycle region (planes, supervisor) |
+| **Shell** | System instance that owns interfaces and subsystems |
+| **Plane** | System path for a kind of traffic (member of planes subsystem) |
 | **Shared** | Reusable code that is not system |
 | **Product** | Userland services |
-| **Surface** | Transport adapter |
+| **Surface** | Transport adapter (`palm.runtimes` — depends on system) |
 | **Plugin** | Registry extension |
 | **Job** | Live run under orchestration |
 | **Instance** | Durable record of a run |
 | **Definition** | Declared contract of work (also: participation law at the edge for registry extension) |
 | **Interest** | Start (trigger) or continue (wait) |
 | **Registry extension** | OCP/DIP: definition at edge; consumer walks registry — [AGENTS §1.1](../AGENTS.md) · [PALM §7](PALM.md) |
+| **Seat DI** | Inject interfaces/subsystems, not ambient system instance — [AGENTS §1.2](../AGENTS.md) |
 
 ---
 

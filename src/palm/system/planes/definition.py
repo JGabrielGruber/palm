@@ -1,12 +1,12 @@
 """
 PlaneDefinition — participation law at the edge (0.61 / SD-015).
 
-**Registry extension:** each plane package owns construct + wire recipe.
+**Registry extension:** each plane package owns construct + attach recipe.
 :class:`~palm.system.planes.hub.SystemPlanes` walks definitions and ``put``s.
 
 Install ports come from :class:`~palm.system.planes.install_context.InstallContext`
-(built from :class:`~palm.system.ports.wire.SystemWire`). This module does
-**not** import wait/session/work services or dig a runtime bag.
+(built from :class:`~palm.system.ports.install.InstallInterface`). This module
+does **not** import wait/session/work services or dig a runtime bag.
 """
 
 from __future__ import annotations

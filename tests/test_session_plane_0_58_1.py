@@ -102,7 +102,7 @@ def test_session_plane_doctor_snapshot() -> None:
 
 
 def test_bind_session_plane_helper() -> None:
-    from palm.system.ports.wire import SystemWire
+    from palm.system.ports.install import SystemInstall
 
     eng = _storage()
 
@@ -111,14 +111,14 @@ def test_bind_session_plane_helper() -> None:
             self.storage = storage
             self.orchestration = type("O", (), {"jobs": {}})()
             self._planes = None
-            self._wire = SystemWire()
+            self._install = SystemInstall()
 
         @property
-        def wire(self) -> SystemWire:
-            return self._wire
+        def install(self) -> SystemInstall:
+            return self._install
 
-        def bind_system_wire(self) -> SystemWire:
-            return self._wire.bind(
+        def bind_system_install(self) -> SystemInstall:
+            return self._install.bind(
                 orchestration=self.orchestration,
                 storage=self.storage,
                 submit=lambda *a, **k: None,

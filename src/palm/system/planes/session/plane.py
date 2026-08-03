@@ -891,20 +891,34 @@ class SessionPlaneService:
         }
 
 
-def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
-    """Ensure hub on *runtime* and install session from ``runtime.wire``.
-
-    Always ensures the well-known **host** service session (0.58.13) so
-    internal attribution has a stable seat after start.
-    Requires a system instance with :attr:`wire` (and preferably
-    :meth:`bind_system_wire`).
+def bind_session_plane(
+    install: Any,
+    planes: Any,
+    *,
+    ensure_host: bool = True,
+    reuse_existing: bool = True,
+) -> SessionPlaneService:
     """
-    from palm.system.planes.hub import SystemPlanes
-    from palm.system.planes.wire_access import require_system_wire
+    Install session on the *planes* subsystem using *install* interface.
 
-    wire = require_system_wire(runtime)
-    hub = SystemPlanes.ensure_on(runtime)
-    return hub.install_session(wire, ensure_host=True, reuse_existing=True)
+    Seat-first DI — no system instance bag. Always ensures the well-known
+    **host** service session when *ensure_host* is true (0.58.13).
+    """
+    return planes.install_session(
+        install,
+        ensure_host=ensure_host,
+        reuse_existing=reuse_existing,
+    )
+
+
+def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
+    """Shell bridge: resolve install + planes seats, then :func:`bind_session_plane`."""
+    from palm.system.planes.hub import SystemPlanes
+    from palm.system.planes.install_access import require_system_install
+
+    board = require_system_install(runtime)
+    planes = SystemPlanes.ensure_on(runtime)
+    return bind_session_plane(board, planes)
 
 
 __all__ = [
@@ -915,6 +929,7 @@ __all__ = [
     "SessionNotFoundError",
     "SessionPlaneError",
     "SessionPlaneService",
+    "bind_session_plane",
     "bind_session_plane_to_runtime",
     "require_session_plane",
 ]

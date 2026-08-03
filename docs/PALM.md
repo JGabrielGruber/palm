@@ -62,14 +62,19 @@ If a piece has no home in this table, the design is incomplete. Name the home be
 | **Truth-seeking** | Explicit job status, durable instances, visible failures |
 | **Agent-operable** | Assist and MCP drive the same work path as a human |
 | **Extensible** | New capability by **registry**, not by editing core contracts (Open/Closed · dependency inversion) |
+| **Seat DI** | Inject **interfaces** and **subsystems**; do not inject the system instance as ambient DI |
 | **Local maturity, Grove horizon** | One Palm is complete; many Palms talk later by the same laws |
 
 Palm optimizes for **long clarity**, not for short cleverness.
 
 **Extension shape:** put participation **law** in a **definition at the edge**.  
-Consumers (hub, schedule, walk, product door) **hold and run** members.  
+Consumers (subsystems, schedule, walk, product door) **hold and run** members.  
 They do not grow a private menu of concretes.  
 When you touch old open-coded menus, move them toward that shape when the touch is natural.
+
+**DI shape:** the system instance is a **shell** that owns seats.  
+Call sites take the seat they need (`execution`, `install`, planes, supervisor).  
+Surfaces depend on system; system does not depend on surfaces.
 
 ---
 
@@ -79,7 +84,7 @@ These words are **stable**. Use them with one meaning only.
 
 | Concept | Meaning |
 |---------|---------|
-| **Definition** | Declared contract of work (flow, process, resource, …). Versionable. |
+| **Definition** | Declared contract of work (flow, process, resource, …). Versionable. Also: participation law at the edge. |
 | **Pattern** | How a flow shape runs (wizard, parallel, pipeline, dag, …). Plugin. |
 | **Behavior Tree (BT)** | Control-flow model: nodes tick; composition is explicit. |
 | **Job** | Live unit of execution under the orchestration engine. |
@@ -87,11 +92,15 @@ These words are **stable**. Use them with one meaning only.
 | **Session** | Outside subject (system plane): one coherent external walk; may own **many** instances. |
 | **State** | Blackboard data for the run (`BaseState` and schemas). |
 | **Resource** | Named way to **speak** to an external or internal system (provider + action). |
-| **Provider** | Plugin that implements resource speak. |
+| **Provider** | Plugin that implements resource speak. (Not a DI “provider.”) |
 | **Workload** | Isolated place for foreign work (run or long service). Not “just another resource.” |
 | **Runner** | Plugin that implements a workload runtime (host, neonroot, …). |
 | **Event** | Signal on a bus. Completers describe themselves. |
 | **Interest** | Explicit want: **start** (trigger) or **continue** (wait). |
+| **Interface** | Named contract on the system shell that others call (`execution`, `install`). Code may still say **port**. |
+| **Subsystem** | Membership + lifecycle region on the shell (planes, supervisor). |
+| **Shell** | System instance that owns interfaces and subsystems. Not the default call argument. |
+| **InstallInterface** | Living collaborator board for subsystem install (peer of execution). |
 | **Port** | Named interface for **effects** the system may perform. |
 | **Plane** | System path for one kind of traffic (event, start, continue, session, …). |
 | **Surface** | Transport only. |
@@ -460,18 +469,19 @@ Local system structure makes Grove possible later.
 3. **Register downward.**  
 4. **Registry extension.** Add peers by definition at the edge. Consumers walk registries or live membership. Do not teach consumers a private menu of concretes when a register fit exists.  
 5. **The job path is the spine.** Features must say where they sit on that path.  
-6. **Effects use named ports.** Graphs and product share them.  
+6. **Effects use named ports (interfaces).** Graphs and product share them.  
 7. **Planes are system.** Product may expose; product does not own.  
 8. **Product is userland.** Policy and envelopes, then ports.  
-9. **Surfaces stay thin.**  
-10. **Shared is not a dump.**  
+9. **Surfaces stay thin.** Surfaces depend on system; system does not depend on surfaces.  
+10. **Shared is not a dump.** No `system.common` dump either.  
 11. **Completers emit self-events.** Palm starts or continues by interest.  
 12. **Waiting is first-class.** Do not hide waits in call stacks.  
 13. **Definitions declare; instances remember; jobs run.**  
 14. **Coherence is enforced** (guards, CI).  
 15. **Break for truth before 1.0.** Record residual debt. Do not keep a structural lie for comfort.  
 16. **Incomplete maps are false maps.** When structure changes, update this file in the same theme of work.  
-17. **Boy-scout extension shape.** When you touch open-coded peer menus, move them toward registry extension if suitable; do not only relocate the menu.
+17. **Boy-scout extension shape.** When you touch open-coded peer menus, move them toward registry extension if suitable; do not only relocate the menu.  
+18. **Seat DI.** Inject interfaces and subsystems. Do not pass the system instance as ambient DI when a seat suffices.
 
 ---
 

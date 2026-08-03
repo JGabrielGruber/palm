@@ -239,17 +239,30 @@ class WaitPlaneService:
         return summarize_waiting_on(rows)
 
 
-def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
-    """Ensure hub on *runtime* and install wait from ``runtime.wire``."""
-    from palm.system.planes.hub import SystemPlanes
-    from palm.system.planes.wire_access import require_system_wire
+def bind_wait_plane(
+    install: Any,
+    planes: Any,
+) -> WaitPlaneService:
+    """
+    Install wait on the *planes* subsystem using *install* interface.
 
-    wire = require_system_wire(runtime)
-    hub = SystemPlanes.ensure_on(runtime)
-    return hub.install_wait(wire)
+    Seat-first DI — no system instance bag.
+    """
+    return planes.install_wait(install)
+
+
+def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
+    """Shell bridge: resolve install + planes seats, then :func:`bind_wait_plane`."""
+    from palm.system.planes.hub import SystemPlanes
+    from palm.system.planes.install_access import require_system_install
+
+    board = require_system_install(runtime)
+    planes = SystemPlanes.ensure_on(runtime)
+    return bind_wait_plane(board, planes)
 
 
 __all__ = [
     "WaitPlaneService",
+    "bind_wait_plane",
     "bind_wait_plane_to_runtime",
 ]

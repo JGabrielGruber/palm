@@ -169,16 +169,16 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "orchestration.start — accept jobs",
     ),
     PhaseSpec(
-        "system.wire.bind",
+        "system.install.bind",
         "system",
         "implemented",
-        "Bind SystemWire collaborator ports (peer of execution)",
+        "Bind InstallInterface collaborator ports (peer of execution)",
     ),
     PhaseSpec(
         "system.planes.attach",
         "system",
         "implemented",
-        "SystemPlanes hub: put wait, session, work from wire",
+        "SystemPlanes subsystem: put wait, session, work from install interface",
     ),
     PhaseSpec(
         "system.supervisor.wire",

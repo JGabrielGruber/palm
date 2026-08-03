@@ -11,8 +11,8 @@ Same shape as :class:`~palm.system.supervisor.SystemSupervisor`:
 
 Membership is **what the hub holds**.
 Install law lives on :class:`~palm.system.planes.definition.PlaneDefinition`.
-Collaborators come from :class:`~palm.system.ports.wire.SystemWire` via
-:class:`~palm.system.planes.install_context.InstallContext` — not a bag dig.
+Collaborators come from :class:`~palm.system.ports.install.InstallInterface`
+via :class:`~palm.system.planes.install_context.InstallContext` — not a bag dig.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from palm.system.planes.catalog import (
 )
 from palm.system.planes.definition import PlaneDefinition
 from palm.system.planes.install_context import InstallContext
-from palm.system.ports.wire import SystemWire, WirePort
+from palm.system.ports.install import InstallInterface
 
 
 class SystemPlanes:
@@ -155,20 +155,27 @@ class SystemPlanes:
     @classmethod
     def ensure_on(
         cls,
-        runtime: Any,
+        shell: Any,
         definitions: Sequence[PlaneDefinition] | None = None,
     ) -> SystemPlanes:
-        """Return the runtime's planes hub, creating and seating one if absent."""
-        hub = get_system_planes(runtime)
+        """
+        Return the shell's planes subsystem, creating and seating one if absent.
+
+        *shell* is the system instance that **owns** the subsystem seat
+        (``_planes``). Prefer holding the returned :class:`SystemPlanes` and
+        calling :meth:`install` with an :class:`InstallInterface` — do not pass
+        the shell into plane definitions.
+        """
+        hub = get_system_planes(shell)
         if hub is not None:
             return hub
         hub = cls(definitions=definitions)
-        runtime._planes = hub
+        shell._planes = hub
         return hub
 
     def install(
         self,
-        wire: WirePort | SystemWire,
+        install: InstallInterface,
         options: Mapping[str, Any] | None = None,
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
@@ -176,12 +183,12 @@ class SystemPlanes:
         ctx: InstallContext | None = None,
     ) -> list[str]:
         """
-        Walk plane definitions using *wire* (or an explicit *ctx*).
+        Walk plane definitions using *install* (or an explicit *ctx*).
 
-        *wire* is :attr:`BaseRuntime.wire` — not a system-instance bag.
+        *install* is :attr:`BaseRuntime.install` — not a system-instance bag.
         """
-        install_ctx = ctx or InstallContext.from_wire(
-            wire,
+        install_ctx = ctx or InstallContext.from_install(
+            install,
             options=options,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
@@ -194,7 +201,7 @@ class SystemPlanes:
     def install_named(
         self,
         name: str,
-        wire: WirePort | SystemWire,
+        install: InstallInterface,
         options: Mapping[str, Any] | None = None,
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
@@ -205,8 +212,8 @@ class SystemPlanes:
         defn = self._lookup_definition(name)
         if defn is None:
             raise KeyError(f"unknown plane definition: {name}")
-        install_ctx = ctx or InstallContext.from_wire(
-            wire,
+        install_ctx = ctx or InstallContext.from_install(
+            install,
             options=options,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
@@ -216,15 +223,15 @@ class SystemPlanes:
 
     def install_wait(
         self,
-        wire: WirePort | SystemWire,
+        install: InstallInterface,
         *,
         ctx: InstallContext | None = None,
     ) -> Any:
-        return self.install_named("wait", wire, ctx=ctx)
+        return self.install_named("wait", install, ctx=ctx)
 
     def install_session(
         self,
-        wire: WirePort | SystemWire,
+        install: InstallInterface,
         *,
         ensure_host: bool = True,
         on_host_session_error: Callable[[BaseException], None] | None = None,
@@ -234,7 +241,7 @@ class SystemPlanes:
         _ = ensure_host
         return self.install_named(
             "session",
-            wire,
+            install,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             ctx=ctx,
@@ -242,12 +249,12 @@ class SystemPlanes:
 
     def install_work(
         self,
-        wire: WirePort | SystemWire,
+        install: InstallInterface,
         options: Mapping[str, Any] | None = None,
         *,
         ctx: InstallContext | None = None,
     ) -> Any:
-        return self.install_named("work", wire, options, ctx=ctx)
+        return self.install_named("work", install, options, ctx=ctx)
 
     def _sorted_definitions(self) -> list[PlaneDefinition]:
         return sorted(self._definitions, key=lambda d: (d.order, d.name))
@@ -267,8 +274,9 @@ class SystemPlanes:
         return self._aliases.get(raw)
 
 
-def get_system_planes(runtime: Any) -> SystemPlanes | None:
-    hub = getattr(runtime, "_planes", None)
+def get_system_planes(shell: Any) -> SystemPlanes | None:
+    """Planes subsystem on *shell*, if seated."""
+    hub = getattr(shell, "_planes", None)
     if isinstance(hub, SystemPlanes):
         return hub
     return None

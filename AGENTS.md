@@ -24,7 +24,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · **registry extension / OCP** in §1.1 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **OD-001** · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
+**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · **registry extension / OCP** §1.1 · **seat DI** §1.2 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **OD-001** / **SD-016** · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
 
 ---
 
@@ -66,6 +66,31 @@ Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md) (floor · growth · e
 
 **Agency bar:** extension is **registration of a definition**; the core / hub / walk **only walks the registry** (or live membership that was installed from definitions).
 
+### 1.2 Seat DI — inject interfaces and subsystems
+
+**Law:** inject **interfaces** and **subsystems**. Do **not** inject the system instance as ambient DI when a call only needs a seat.
+
+| Term | Meaning | Examples |
+|------|---------|----------|
+| **Shell** | System instance that **owns** seats | `BaseRuntime` / `SystemInstance` |
+| **Interface** | Named contract others call | `execution`, **`install`** (`InstallInterface`) |
+| **Subsystem** | Membership + lifecycle region | planes (`SystemPlanes`), supervisor |
+| **Member** | One registered thing | wait plane, work_drain |
+
+| Prefer | Avoid |
+|--------|--------|
+| `planes.install(install_iface, options)` | `fn(runtime)` then dig engines |
+| `bind_wait_plane(install, planes)` | Open-coded bag scrape in helpers |
+| Depend on `InstallInterface` / `ExecutionPort` | `source: Any` + `getattr` soup |
+| Shell only for **owning** / seating | Passing shell into every definition |
+
+**Classic names:** DIP · ISP · (no ambient service locator).  
+**Smell:** *ambient system-instance DI* — everything takes `runtime` and digs.  
+**Boy scout:** when you touch a `*_to_runtime` dig, prefer seat args; keep shell bridges thin.
+
+Target layout (migrate toward): `system.interfaces` · `system.subsystems` — **not** `system.common`.  
+Map: [PALM.md](docs/PALM.md) §2 / §9 · residual [SD-016](TECH-DEBT.md#sd-016).
+
 ---
 
 ## 2. Structure (pointer only)
@@ -73,8 +98,10 @@ Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md) (floor · growth · e
 Palm is layered: **core → system / shared / kits → plugins → product → surfaces**, with **app host** for boot.
 
 - **Job path** is the spine (definition → pattern → job → effects → events).  
-- **Ports** are the shared effect contract (graphs + product): ``palm.system.ExecutionPort``.  
-- **`palm.system`** is the system home (BaseRuntime, planes, ports, executions, job hooks).  
+- **Interfaces (ports)** are shared contracts: ``ExecutionPort`` (effects), ``InstallInterface`` (install collaborators).  
+- **Subsystems** hold membership: planes, supervisor.  
+- **`palm.system`** is the system home (shell, interfaces, subsystems, boot, vitality).  
+- **Surfaces** (`palm.runtimes`) **depend on system** — never the reverse.  
 - **`palm.kits`** is exposed surface infrastructure (``INSTALLED_KITS``; server kit first).  
 - **Product** `services.system` ≠ **system layer** (kernel shape).  
 - **Capability catalog is truthful:** default ``INSTALLED_*`` only; intentions use ``INTENTION_*`` / [STUBS.md](docs/STUBS.md).
@@ -91,6 +118,7 @@ Detail, engines, planes, growth table: **[docs/PALM.md](docs/PALM.md)** only.
 - **No new engine shortcuts** for effects: use ``runtime.execution`` (or product that does).  
   Do not add edge/product calls to ``runtime.resource`` / ``runtime.orchestration`` for
   invoke/resume/workload effects without an SD-005 residual row.
+- **Seat DI:** new install/bind paths take interfaces/subsystems, not the shell as ambient bag.
 
 ---
 
@@ -217,6 +245,8 @@ When you open or plan a minor (`0.X.0` / VISION / ADR), or execute slices:
 - [ ] SRP; no new god-objects  
 - [ ] Extension via registries; registry thread-safety  
 - [ ] **Registry extension / OCP:** no new private menus in consumers when a definition+register fit; boy-scout old menus when touched (§1.1)  
+- [ ] **Seat DI:** no new ambient `runtime` dig when install/bind only needs `InstallInterface` / subsystem (§1.2)  
+ 
 - [ ] Aligns with [PALM.md](docs/PALM.md) (ports/planes/purpose)  
 - [ ] Tests updated; doubles match contracts  
 - [ ] Docs: PALM.md / ADR / STATUS as needed; STE for new text  

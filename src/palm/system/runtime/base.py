@@ -47,7 +47,7 @@ from palm.system.log import get_system_log
 from palm.system.planes.hub import SystemPlanes
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
-from palm.system.ports.wire import SystemWire
+from palm.system.ports.install import SystemInstall
 from palm.system.runtime.schedulers import QueuedScheduler
 from palm.system.runtime.wiring import SchedulerPolicy
 
@@ -105,7 +105,7 @@ class BaseRuntime:
         self._outbox_processor: OutboxProcessor | None = None
         self._planes: SystemPlanes | None = None
         self._supervisor: Any | None = None
-        self._wire = SystemWire()
+        self._install = SystemInstall()
         self._last_boot_walk: list[Any] | None = None
 
     @property
@@ -114,18 +114,23 @@ class BaseRuntime:
 
     @property
     def execution(self) -> ExecutionPort:
-        """Effect port shared by graphs and product (resource + workload)."""
+        """Effect interface shared by graphs and product (resource + workload)."""
         return self
 
     @property
-    def wire(self) -> SystemWire:
+    def install(self) -> SystemInstall:
         """
-        Collaborator wire port (peer of :attr:`execution`).
+        Collaborator install interface (peer of :attr:`execution`).
 
-        Boot binds named ports via :meth:`bind_system_wire`. Plane and
+        Boot binds named ports via :meth:`bind_system_install`. Plane and
         supervisor install read this seat — they do not dig the bag.
         """
-        return self._wire
+        return self._install
+
+    @property
+    def wire(self) -> SystemInstall:
+        """Alias of :attr:`install` (temporary; prefer ``install``)."""
+        return self._install
 
     @property
     def version(self) -> str:
@@ -185,12 +190,12 @@ class BaseRuntime:
         """Continuous system services supervisor (0.60), or ``None`` before wire."""
         return self._supervisor
 
-    def bind_system_wire(self) -> SystemWire:
+    def bind_system_install(self) -> SystemInstall:
         """
-        Explicitly bind engine collaborators onto :attr:`wire`.
+        Explicitly bind engine collaborators onto :attr:`install`.
 
         Call after engines/storage/orchestration exist (boot phase
-        ``system.wire.bind``). Re-call after planes attach to publish
+        ``system.install.bind``). Re-call after planes attach to publish
         ``work_plane`` for the supervisor.
         """
 
@@ -207,7 +212,7 @@ class BaseRuntime:
         def _able() -> bool:
             return bool(self._started)
 
-        self._wire.bind(
+        self._install.bind(
             orchestration=self.orchestration,
             event=self.event,
             storage=self.storage,
@@ -219,7 +224,11 @@ class BaseRuntime:
             outbox_processor=self._outbox_processor,
             work_plane=self.work_plane,
         )
-        return self._wire
+        return self._install
+
+    def bind_system_wire(self) -> SystemInstall:
+        """Alias of :meth:`bind_system_install` (temporary)."""
+        return self.bind_system_install()
 
     @property
     def last_boot_walk(self) -> list[Any] | None:

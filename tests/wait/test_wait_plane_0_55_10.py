@@ -67,7 +67,7 @@ def test_embedded_runtime_exposes_wait_plane() -> None:
 
 
 def test_bind_wait_plane_helper() -> None:
-    from palm.system.ports.wire import SystemWire
+    from palm.system.ports.install import SystemInstall
 
     engine = EventEngine()
     engine.initialize()
@@ -91,14 +91,14 @@ def test_bind_wait_plane_helper() -> None:
             self.event = engine
             self.orchestration = _Orch()
             self._planes = None
-            self._wire = SystemWire()
+            self._install = SystemInstall()
 
         @property
-        def wire(self) -> SystemWire:
-            return self._wire
+        def install(self) -> SystemInstall:
+            return self._install
 
-        def bind_system_wire(self) -> SystemWire:
-            return self._wire.bind(
+        def bind_system_install(self) -> SystemInstall:
+            return self._install.bind(
                 orchestration=self.orchestration,
                 event=self.event,
                 submit=lambda *a, **k: None,

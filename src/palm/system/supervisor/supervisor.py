@@ -73,7 +73,7 @@ class SystemSupervisor:
 
     def install(
         self,
-        wire: Any | None = None,
+        install: Any | None = None,
         options: Mapping[str, Any] | None = None,
         *,
         ctx: ContinuousWireContext | None = None,
@@ -81,21 +81,21 @@ class SystemSupervisor:
         """
         Walk continuous definitions; each may ``register`` a service.
 
-        *wire* is :class:`~palm.system.ports.wire.SystemWire` (or a
-        ContinuousWireContext). Prefer the system wire seat — not a bag.
+        *install* is :class:`~palm.system.ports.install.InstallInterface` (or a
+        ContinuousWireContext). Prefer the system install seat — not a bag.
 
         Returns names registered after the walk.
         """
         install_ctx = ctx
         if install_ctx is None:
-            if wire is None:
-                raise ValueError("wire or ContinuousWireContext required")
-            if isinstance(wire, ContinuousWireContext):
-                install_ctx = wire
+            if install is None:
+                raise ValueError("install interface or ContinuousWireContext required")
+            if isinstance(install, ContinuousWireContext):
+                install_ctx = install
             else:
-                from palm.system.ports.wire import continuous_context_from_wire
+                from palm.system.ports.install import continuous_context_from_install
 
-                install_ctx = continuous_context_from_wire(wire, options)
+                install_ctx = continuous_context_from_install(install, options)
         for defn in sorted(self._definitions, key=lambda d: (d.order, d.name)):
             defn.register(self, install_ctx)
         return list(self.names())

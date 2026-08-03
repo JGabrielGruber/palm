@@ -10,17 +10,20 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from palm.system.ports.execution import ExecutionPort
-from palm.system.ports.wire import WirePort
+from palm.system.ports.install import InstallInterface
 
 
 @runtime_checkable
 class SystemInstance(Protocol):
     """
-    Contract for one running Palm machine (engines + ports + planes).
+    Contract for one running Palm machine (shell of interfaces + subsystems).
 
     Supersedes the thin :class:`~palm.system.runtime.host.RuntimeHost` for new
-    code. Product and graphs resolve a system instance and call **ports**, not
-    engine fields on the edge.
+    code. Product and graphs resolve a system instance and call **interfaces**,
+    not engine fields on the edge.
+
+    **DI law:** inject :attr:`execution` / :attr:`install` (and subsystems),
+    not the whole shell, when a call only needs those seats.
     """
 
     @property
@@ -30,10 +33,10 @@ class SystemInstance(Protocol):
 
     @property
     def execution(self) -> ExecutionPort:
-        """Resource and workload effect port (and later job drive as chosen)."""
+        """Resource and workload effect interface (and later job drive as chosen)."""
         ...
 
     @property
-    def wire(self) -> WirePort:
-        """Collaborator wire port for install (peer of execution)."""
+    def install(self) -> InstallInterface:
+        """Collaborator install interface (peer of execution)."""
         ...

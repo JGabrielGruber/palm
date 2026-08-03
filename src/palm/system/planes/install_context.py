@@ -1,8 +1,8 @@
 """
-InstallContext — snapshot of wire ports for one plane-install walk.
+InstallContext — snapshot of InstallInterface ports for one plane-install walk.
 
-Built only from :class:`~palm.system.ports.wire.SystemWire` (or an explicit
-constructor for tests). Never from ``getattr`` on an arbitrary bag.
+Built only from :class:`~palm.system.ports.install.SystemInstall` (or an
+explicit constructor for tests). Never from ``getattr`` on an arbitrary bag.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
-from palm.system.ports.wire import SystemWire, WirePort
+from palm.system.ports.install import InstallInterface, SystemInstall
 
 
 def make_get_job(
@@ -65,9 +65,9 @@ class InstallContext:
     able: Callable[[], bool] | None = None
 
     @classmethod
-    def from_wire(
+    def from_install(
         cls,
-        wire: WirePort,
+        install: InstallInterface,
         *,
         options: Mapping[str, Any] | None = None,
         on_host_session_error: Callable[[BaseException], None] | None = None,
@@ -75,27 +75,28 @@ class InstallContext:
         get_session_plane: Callable[[], Any | None],
     ) -> InstallContext:
         """
-        Snapshot *wire* into install ports.
+        Snapshot *install* into install ports.
 
-        *get_session_plane* is supplied by the hub (membership), not scraped
-        from a bag. Work submit is composed here from ``wire.submit``.
+        *get_session_plane* is supplied by the planes subsystem (membership),
+        not scraped from a bag. Work submit is composed here from
+        ``install.submit``.
         """
         from palm.system.planes.work.plane import make_submit_flow
 
-        orch = wire.orchestration
-        if orch is None and isinstance(wire, SystemWire):
-            orch = wire.require_orchestration()
+        orch = install.orchestration
+        if orch is None and isinstance(install, SystemInstall):
+            orch = install.require_orchestration()
         elif orch is None:
-            raise RuntimeError("system wire: orchestration not bound")
+            raise RuntimeError("system install: orchestration not bound")
 
-        direct = wire.get_job
+        direct = install.get_job
         get_job = make_get_job(direct=direct, orchestration=orch)
 
-        raw_submit = wire.submit
-        if raw_submit is None and isinstance(wire, SystemWire):
-            raw_submit = wire.require_submit()
+        raw_submit = install.submit
+        if raw_submit is None and isinstance(install, SystemInstall):
+            raw_submit = install.require_submit()
         elif raw_submit is None:
-            raise RuntimeError("system wire: submit not bound")
+            raise RuntimeError("system install: submit not bound")
 
         def _submit(
             flow_id: str,
@@ -108,20 +109,23 @@ class InstallContext:
             submit=_submit,
             get_session_plane=get_session_plane,
         )
-        able = wire.able if wire.able is not None else (lambda: False)
+        able = install.able if install.able is not None else (lambda: False)
 
         return cls(
             options=dict(options or {}),
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             orchestration=orch,
-            event=wire.event,
-            storage=wire.storage,
-            instance_manager=wire.instance_manager,
+            event=install.event,
+            storage=install.storage,
+            instance_manager=install.instance_manager,
             get_job=get_job,
             submit_flow=submit_flow,
             able=able,
         )
+
+    # temporary alias
+    from_wire = from_install
 
 
 __all__ = [

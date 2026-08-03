@@ -8,7 +8,8 @@
 **Theme law:** [VERSIONING.md](VERSIONING.md) (floor · growth · exit judgment) · [AGENTS.md](../AGENTS.md) §6b.  
 **Prior closed:** [VISION-0.60](VISION-0.60.md) supervisor + work plane · [VISION-0.59](VISION-0.59.md) boot · [VISION-0.58](VISION-0.58.md) session.  
 **Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) · [CS-002](../TECH-DEBT.md#cs-002) · [OD-001](../TECH-DEBT.md#od-001) · [BI-015](../TECH-DEBT.md#bi-015).  
-**Mid-theme residual (named for refactor):** [SD-015](../TECH-DEBT.md#sd-015) plane install menu · [CS-006](../TECH-DEBT.md#cs-006) supervisor wire · [CS-007](../TECH-DEBT.md#cs-007) adapter lineage residue · [CS-008](../TECH-DEBT.md#cs-008) runtime closures.  
+**Mid-theme residual:** [SD-016](../TECH-DEBT.md#sd-016) ambient seat DI (open) · paid SD-015 / CS-006…008.  
+ 
 **Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI / SI / SU · Grove.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
 
@@ -296,9 +297,10 @@ Named so boy-scout and later slices do not pretend hub install is finished.
 | **[SD-015](../TECH-DEBT.md#sd-015)** | ~~open-coded install~~ → **paid** | `PlaneDefinition` at edge; hub walks catalog |
 | **[CS-006](../TECH-DEBT.md#cs-006)** | ~~schedule prose~~ → **paid** | `ContinuousServiceDefinition`; `sup.install` |
 | **[CS-007](../TECH-DEBT.md#cs-007)** | ~~adapter lineage~~ → **paid** | coerce → sampled; no `adapter_count` |
-| **[CS-008](../TECH-DEBT.md#cs-008)** | ~~runtime closures~~ → **paid** | `SystemWire` + `InstallContext.from_wire` |
+| **[CS-008](../TECH-DEBT.md#cs-008)** | ~~runtime closures~~ → **paid** | `InstallInterface` + `InstallContext.from_install` |
+| **[SD-016](../TECH-DEBT.md#sd-016)** | ambient system-instance DI | seat DI: interfaces + subsystems; package move later |
 
-**Landed (not debt):** hub membership; collaborator `attach` (no full runtime on plane); schedule thin `install` call; vitality package + raw sample + projection + `seat_walk` capability; adapters deleted as maps.
+**Landed (not debt):** hub membership; collaborator `attach`; schedule thin install; **InstallInterface** (was wire); seat-first `bind_*_plane`; vitality package + raw sample + projection + `seat_walk`; adapters deleted as maps; AGENTS §1.2 seat DI.
 
 **Not the subject:** full SU-* deflation, SI surface residue, BI-003 dual root — name residual; break only if they poison discovery.
 

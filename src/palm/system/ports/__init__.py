@@ -1,6 +1,21 @@
-"""Named ports for the Palm system layer."""
+"""System interfaces (ports) — execution effects and install collaborators."""
 
 from palm.system.ports.execution import ExecutionPort
-from palm.system.ports.wire import SystemWire, WirePort
+from palm.system.ports.install import (
+    InstallInterface,
+    SystemInstall,
+    WirePort,
+    SystemWire,
+    continuous_context_from_install,
+    continuous_context_from_wire,
+)
 
-__all__ = ["ExecutionPort", "SystemWire", "WirePort"]
+__all__ = [
+    "ExecutionPort",
+    "InstallInterface",
+    "SystemInstall",
+    "WirePort",
+    "SystemWire",
+    "continuous_context_from_install",
+    "continuous_context_from_wire",
+]

@@ -50,6 +50,7 @@
 | [SD-013](#sd-013) | Installed placeholders that lie (capability catalog) | S1 | M | 0.57.9 | ✅ gated (ST-001…005) |
 | [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
 | [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | ✅ paid (definitions at edge) |
+| [SD-016](#sd-016) | Ambient system-instance DI (seat DI incomplete) | S2 | L | **0.61**+ | open (InstallInterface + seat APIs started) |
 
 ### Surface debt (SU)
 
@@ -252,9 +253,38 @@ Schedule
   → ensure_on + install
 ```
 
-**Related residual:** [CS-006](#cs-006) · [CS-008](#cs-008) · ADR-030 D3 · [VISION-0.61](docs/VISION-0.61.md).
+**Related residual:** [CS-006](#cs-006) · [CS-008](#cs-008) · [SD-016](#sd-016) · ADR-030 D3 · [VISION-0.61](docs/VISION-0.61.md).
 
 **Status:** ✅ **paid** (definitions at edge; hub walks catalog).
+
+---
+
+### SD-016 — Ambient system-instance DI (seat DI incomplete)
+
+<a id="sd-016"></a>
+
+**Severity:** S2 · **Effort:** L · **Theme:** **0.61**+ (structural)
+
+**Observation:** Palm grew real seats (`execution`, `install`, planes, supervisor)
+but call graphs still often take the whole system instance and dig. Planes were
+the loud instance; the bug is system-wide (boot, host, surfaces).
+
+**Law (target):** inject **interfaces** and **subsystems** — not ambient shell DI.  
+[AGENTS §1.2](AGENTS.md) · [PALM §9](docs/PALM.md) law 18.
+
+| Started (0.61) | Still open |
+|----------------|------------|
+| `InstallInterface` / `SystemInstall` (was wire) | Package move `ports` → `interfaces`, planes → `subsystems` |
+| `InstallContext.from_install` | BootContext exposes seat handles |
+| `planes.install(install_iface)` | Kill ambient digs in host/product/surfaces |
+| `bind_wait_plane` / `bind_session_plane` seat APIs | Thin `*_to_runtime` bridges remain |
+| phase `system.install.bind` | Shared `Subsystem` protocol; more seat-first APIs |
+
+**Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
+
+**Related:** [SD-015](#sd-015) · [CS-008](#cs-008) · [SU-*](#surface-debt-su).
+
+**Status:** open (wedge landed; layout + call-graph incomplete).
 
 ---
 
@@ -671,14 +701,15 @@ legacy-only (`LEGACY_LINEAGES`); `SeatReport` coerces adapter → sampled.
 
 **Severity:** S3 · **Effort:** M · **Named:** mid-**0.61** · **Status:** ✅ **paid**
 
-**Paid (proper cut):** :class:`~palm.system.ports.wire.SystemWire` is a
-first-class seat peer of :class:`~palm.system.ports.execution.ExecutionPort`.
-Boot phase ``system.wire.bind`` calls :meth:`BaseRuntime.bind_system_wire`
-(explicit port assignment). Hub install takes ``runtime.wire``;
-:meth:`InstallContext.from_wire` snapshots the wire — no ``getattr`` bag scrape
-in ``planes.definition``. Continuous install uses the same wire board.
+**Paid (proper cut):** :class:`~palm.system.ports.install.InstallInterface` /
+:class:`~palm.system.ports.install.SystemInstall` is a first-class seat peer of
+:class:`~palm.system.ports.execution.ExecutionPort`. Boot phase
+``system.install.bind`` calls :meth:`BaseRuntime.bind_system_install`.
+Planes install takes the install interface;
+:meth:`InstallContext.from_install` snapshots it — no bag scrape in definitions.
+Continuous install uses the same board. Residual ambient DI: [SD-016](#sd-016).
 
-**Related:** [SD-015](#sd-015).
+**Related:** [SD-015](#sd-015) · [SD-016](#sd-016).
 
 ---
 

@@ -178,13 +178,13 @@ def build_system_handlers(
     def orchestration_start(_ctx: BootContext) -> None:
         runtime.orchestration.start()
 
-    def wire_bind(ctx: BootContext) -> None:
-        """Bind :class:`~palm.system.ports.wire.SystemWire` — named ports only."""
-        wire = runtime.bind_system_wire()
-        bound = [k for k, v in wire.status().items() if v]
+    def install_bind(ctx: BootContext) -> None:
+        """Bind :class:`~palm.system.ports.install.SystemInstall` — named ports only."""
+        board = runtime.bind_system_install()
+        bound = [k for k, v in board.status().items() if v]
         get_system_log().info(
-            "wire.bound",
-            "system wire ready",
+            "install.bound",
+            "system install interface ready",
             schedule="system",
             runtime=ctx.runtime,
             ports=",".join(bound) or "(none)",
@@ -192,9 +192,10 @@ def build_system_handlers(
 
     def planes_attach(ctx: BootContext) -> None:
         """
-        Seat :class:`SystemPlanes` and install members from :attr:`runtime.wire`.
+        Seat :class:`SystemPlanes` and install members from :attr:`runtime.install`.
 
-        Schedule owns *when*. Hub walks definitions; wire owns collaborators.
+        Schedule owns *when*. Subsystem walks definitions; install interface
+        owns collaborators.
         """
         slog = get_system_log()
 
@@ -207,27 +208,27 @@ def build_system_handlers(
                 reason=str(exc),
             )
 
-        hub = SystemPlanes.ensure_on(runtime)
-        hub.install(
-            runtime.wire,
+        planes = SystemPlanes.ensure_on(runtime)
+        planes.install(
+            runtime.install,
             options,
             on_host_session_error=_on_host_session_error,
         )
-        # Publish work plane on the wire for supervisor continuous install.
-        runtime.bind_system_wire()
+        # Publish work plane on the install board for supervisor continuous install.
+        runtime.bind_system_install()
         slog.info(
             "plane.hub.attached",
-            "system planes hub ready",
+            "system planes subsystem ready",
             schedule="system",
             runtime=ctx.runtime,
-            planes=",".join(hub.names()) or "(none)",
+            planes=",".join(planes.names()) or "(none)",
         )
 
     def supervisor_wire(ctx: BootContext) -> None:
-        """Seat supervisor; walk continuous definitions from wire (CS-006)."""
+        """Seat supervisor; walk continuous definitions from install interface."""
         sup = SystemSupervisor()
         runtime._supervisor = sup
-        sup.install(runtime.wire, options)
+        sup.install(runtime.install, options)
         get_system_log().info(
             "supervisor.wire",
             "system supervisor ready",
@@ -295,7 +296,7 @@ def build_system_handlers(
         "system.outbox.wire": outbox_wire,
         "system.hooks.install": hooks_install,
         "system.orchestration.start": orchestration_start,
-        "system.wire.bind": wire_bind,
+        "system.install.bind": install_bind,
         "system.planes.attach": planes_attach,
         "system.supervisor.wire": supervisor_wire,
         "system.bind": bind,
