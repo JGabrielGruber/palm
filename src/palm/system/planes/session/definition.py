@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from palm.system.planes.definition import InstallContext, PlaneDefinition
+from palm.system.planes.definition import PlaneDefinition
+from palm.system.planes.install_context import InstallContext
 from palm.system.planes.session.plane import SessionPlaneError, SessionPlaneService
 
 if TYPE_CHECKING:

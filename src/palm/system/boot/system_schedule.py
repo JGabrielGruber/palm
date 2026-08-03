@@ -178,11 +178,23 @@ def build_system_handlers(
     def orchestration_start(_ctx: BootContext) -> None:
         runtime.orchestration.start()
 
+    def wire_bind(ctx: BootContext) -> None:
+        """Bind :class:`~palm.system.ports.wire.SystemWire` — named ports only."""
+        wire = runtime.bind_system_wire()
+        bound = [k for k, v in wire.status().items() if v]
+        get_system_log().info(
+            "wire.bound",
+            "system wire ready",
+            schedule="system",
+            runtime=ctx.runtime,
+            ports=",".join(bound) or "(none)",
+        )
+
     def planes_attach(ctx: BootContext) -> None:
         """
-        Seat :class:`SystemPlanes` and let the hub install members.
+        Seat :class:`SystemPlanes` and install members from :attr:`runtime.wire`.
 
-        Schedule owns *when*. Hub owns construct · wire · put · host session.
+        Schedule owns *when*. Hub walks definitions; wire owns collaborators.
         """
         slog = get_system_log()
 
@@ -197,10 +209,12 @@ def build_system_handlers(
 
         hub = SystemPlanes.ensure_on(runtime)
         hub.install(
-            runtime,
+            runtime.wire,
             options,
             on_host_session_error=_on_host_session_error,
         )
+        # Publish work plane on the wire for supervisor continuous install.
+        runtime.bind_system_wire()
         slog.info(
             "plane.hub.attached",
             "system planes hub ready",
@@ -210,10 +224,10 @@ def build_system_handlers(
         )
 
     def supervisor_wire(ctx: BootContext) -> None:
-        """Seat supervisor; walk continuous service definitions (CS-006)."""
+        """Seat supervisor; walk continuous definitions from wire (CS-006)."""
         sup = SystemSupervisor()
         runtime._supervisor = sup
-        sup.install(runtime, options)
+        sup.install(runtime.wire, options)
         get_system_log().info(
             "supervisor.wire",
             "system supervisor ready",
@@ -281,6 +295,7 @@ def build_system_handlers(
         "system.outbox.wire": outbox_wire,
         "system.hooks.install": hooks_install,
         "system.orchestration.start": orchestration_start,
+        "system.wire.bind": wire_bind,
         "system.planes.attach": planes_attach,
         "system.supervisor.wire": supervisor_wire,
         "system.bind": bind,

@@ -296,7 +296,7 @@ Named so boy-scout and later slices do not pretend hub install is finished.
 | **[SD-015](../TECH-DEBT.md#sd-015)** | ~~open-coded install~~ → **paid** | `PlaneDefinition` at edge; hub walks catalog |
 | **[CS-006](../TECH-DEBT.md#cs-006)** | ~~schedule prose~~ → **paid** | `ContinuousServiceDefinition`; `sup.install` |
 | **[CS-007](../TECH-DEBT.md#cs-007)** | ~~adapter lineage~~ → **paid** | coerce → sampled; no `adapter_count` |
-| **[CS-008](../TECH-DEBT.md#cs-008)** | ~~runtime closures~~ → **paid** | `InstallContext` ports; `(hub, ctx)` install |
+| **[CS-008](../TECH-DEBT.md#cs-008)** | ~~runtime closures~~ → **paid** | `SystemWire` + `InstallContext.from_wire` |
 
 **Landed (not debt):** hub membership; collaborator `attach` (no full runtime on plane); schedule thin `install` call; vitality package + raw sample + projection + `seat_walk` capability; adapters deleted as maps.
 

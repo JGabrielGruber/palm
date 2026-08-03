@@ -47,6 +47,7 @@ from palm.system.log import get_system_log
 from palm.system.planes.hub import SystemPlanes
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
+from palm.system.ports.wire import SystemWire
 from palm.system.runtime.schedulers import QueuedScheduler
 from palm.system.runtime.wiring import SchedulerPolicy
 
@@ -104,6 +105,7 @@ class BaseRuntime:
         self._outbox_processor: OutboxProcessor | None = None
         self._planes: SystemPlanes | None = None
         self._supervisor: Any | None = None
+        self._wire = SystemWire()
         self._last_boot_walk: list[Any] | None = None
 
     @property
@@ -114,6 +116,16 @@ class BaseRuntime:
     def execution(self) -> ExecutionPort:
         """Effect port shared by graphs and product (resource + workload)."""
         return self
+
+    @property
+    def wire(self) -> SystemWire:
+        """
+        Collaborator wire port (peer of :attr:`execution`).
+
+        Boot binds named ports via :meth:`bind_system_wire`. Plane and
+        supervisor install read this seat — they do not dig the bag.
+        """
+        return self._wire
 
     @property
     def version(self) -> str:
@@ -173,39 +185,41 @@ class BaseRuntime:
         """Continuous system services supervisor (0.60), or ``None`` before wire."""
         return self._supervisor
 
-    def plane_wire(
-        self,
-        *,
-        options: Any | None = None,
-        on_host_session_error: Any | None = None,
-        reuse_existing: bool = True,
-        get_session_plane: Any | None = None,
-    ) -> Any:
+    def bind_system_wire(self) -> SystemWire:
         """
-        Named port surface for plane install (ISP / DIP).
+        Explicitly bind engine collaborators onto :attr:`wire`.
 
-        Returns :class:`~palm.system.planes.definition.InstallContext`.
-        Definitions depend on that context, not on this bag.
+        Call after engines/storage/orchestration exist (boot phase
+        ``system.wire.bind``). Re-call after planes attach to publish
+        ``work_plane`` for the supervisor.
         """
-        from palm.system.planes.definition import InstallContext
 
-        return InstallContext.from_source(
-            self,
-            options,
-            on_host_session_error=on_host_session_error,
-            reuse_existing=reuse_existing,
-            get_session_plane=get_session_plane,
+        def _get_job(job_id: str) -> Any:
+            return self.get_job(str(job_id))
+
+        def _submit(
+            flow_id: str,
+            metadata: dict[str, Any] | None = None,
+            state: Any = None,
+        ) -> Any:
+            return self.submit_flow(flow_id, metadata=metadata, state=state)
+
+        def _able() -> bool:
+            return bool(self._started)
+
+        self._wire.bind(
+            orchestration=self.orchestration,
+            event=self.event,
+            storage=self.storage,
+            instance_manager=self.instance_manager,
+            get_job=_get_job,
+            submit=_submit,
+            able=_able,
+            outbox_store=self._outbox_store,
+            outbox_processor=self._outbox_processor,
+            work_plane=self.work_plane,
         )
-
-    def continuous_wire(self, options: Any | None = None) -> Any:
-        """
-        Named port surface for continuous service install (ISP / DIP).
-
-        Returns :class:`~palm.system.supervisor.definition.ContinuousWireContext`.
-        """
-        from palm.system.supervisor.definition import ContinuousWireContext
-
-        return ContinuousWireContext.from_source(self, options)
+        return self._wire
 
     @property
     def last_boot_walk(self) -> list[Any] | None:

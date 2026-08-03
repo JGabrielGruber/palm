@@ -36,9 +36,11 @@ def test_locked_phase_tables_order() -> None:
     sys_ids = system_phase_ids()
     assert sys_ids[0] == "system.log.ready"
     assert "system.plugins.ensure" in sys_ids
+    assert "system.wire.bind" in sys_ids
     assert "system.planes.attach" in sys_ids
     assert "system.supervisor.wire" in sys_ids
     assert "system.background.start" in sys_ids
+    assert sys_ids.index("system.wire.bind") < sys_ids.index("system.planes.attach")
     assert sys_ids.index("system.planes.attach") < sys_ids.index(
         "system.supervisor.wire"
     )

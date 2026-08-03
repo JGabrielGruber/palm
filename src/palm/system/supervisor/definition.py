@@ -27,36 +27,18 @@ class ContinuousWireContext:
     outbox_store: Any = None
 
     @classmethod
-    def from_source(
+    def from_wire(
         cls,
-        source: Any,
+        wire: Any,
         options: Mapping[str, Any] | None = None,
     ) -> ContinuousWireContext:
-        """Extract ports from a *source* with named collaborators (ISP)."""
-        proc = getattr(source, "outbox_processor", None) or getattr(
-            source, "_outbox_processor", None
-        )
-        store = getattr(source, "outbox_store", None) or getattr(
-            source, "_outbox_store", None
-        )
+        """Build from :class:`~palm.system.ports.wire.SystemWire` fields only."""
         return cls(
             options=dict(options or {}),
-            work_plane=getattr(source, "work_plane", None),
-            outbox_processor=proc,
-            outbox_store=store,
+            work_plane=wire.work_plane,
+            outbox_processor=wire.outbox_processor,
+            outbox_store=wire.outbox_store,
         )
-
-    @classmethod
-    def from_runtime(
-        cls,
-        runtime: Any,
-        options: Mapping[str, Any] | None = None,
-    ) -> ContinuousWireContext:
-        """Compat: prefer ``runtime.continuous_wire(options)``."""
-        continuous_wire = getattr(runtime, "continuous_wire", None)
-        if callable(continuous_wire):
-            return continuous_wire(options)
-        return cls.from_source(runtime, options)
 
 
 # register(supervisor, ctx) -> service or None if skipped

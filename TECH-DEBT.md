@@ -671,12 +671,12 @@ legacy-only (`LEGACY_LINEAGES`); `SeatReport` coerces adapter → sampled.
 
 **Severity:** S3 · **Effort:** M · **Named:** mid-**0.61** · **Status:** ✅ **paid**
 
-**Paid:** `InstallContext` carries orchestration / event / storage /
-instance_manager / get_job / submit_flow / able ports.
-Plane definitions take `(hub, ctx)` only. `make_get_job` / `make_submit_flow`
-are port factories. System instance exposes **`plane_wire()`** /
-**`continuous_wire()`** (ISP/DIP named surface); hub prefers that over a bag.
-`from_runtime` remains a thin compat path.
+**Paid (proper cut):** :class:`~palm.system.ports.wire.SystemWire` is a
+first-class seat peer of :class:`~palm.system.ports.execution.ExecutionPort`.
+Boot phase ``system.wire.bind`` calls :meth:`BaseRuntime.bind_system_wire`
+(explicit port assignment). Hub install takes ``runtime.wire``;
+:meth:`InstallContext.from_wire` snapshots the wire — no ``getattr`` bag scrape
+in ``planes.definition``. Continuous install uses the same wire board.
 
 **Related:** [SD-015](#sd-015).
 

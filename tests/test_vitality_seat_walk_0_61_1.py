@@ -80,19 +80,16 @@ def test_system_planes_put_get_detach() -> None:
 
 
 def test_system_planes_install_owns_policy() -> None:
-    """Hub install constructs + wires + puts; schedule only seats hub."""
-    from palm.system.planes.hub import SystemPlanes
-
+    """Hub install constructs + wires + puts from runtime.wire."""
     rt = BaseRuntime()
     try:
-        # Partial start path: use real start so storage/orch exist, but verify
-        # install is what put members (already via schedule → hub.install).
         rt.start(storage_backend="memory", enable_event_outbox=True)
         hub = rt.planes
         assert hub is not None
         assert hub.names() == ["wait", "session", "work"]
-        # Re-install is idempotent enough to re-wire and keep membership.
-        names = hub.install(rt, {})
+        assert rt.wire.orchestration is not None
+        # Re-install from wire (not bag).
+        names = hub.install(rt.wire, {})
         assert names == ["wait", "session", "work"]
         assert rt.wait_plane is hub.get("wait")
         assert rt.session_plane is hub.get("session")
@@ -104,6 +101,7 @@ def test_system_planes_install_owns_policy() -> None:
 def test_system_planes_ensure_on_and_install_wait() -> None:
     from palm.system.planes.hub import SystemPlanes
     from palm.system.planes.wait.plane import WaitPlaneService
+    from palm.system.ports.wire import SystemWire
 
     class _Orch:
         jobs: dict = {}
@@ -113,11 +111,22 @@ def test_system_planes_ensure_on_and_install_wait() -> None:
             self.orchestration = _Orch()
             self.event = None
             self._planes = None
+            self._wire = SystemWire()
+            self._wire.bind(
+                orchestration=self.orchestration,
+                event=None,
+                submit=lambda *a, **k: None,
+                able=lambda: False,
+            )
+
+        @property
+        def wire(self) -> SystemWire:
+            return self._wire
 
     rt = _Rt()
     hub = SystemPlanes.ensure_on(rt)
     assert rt._planes is hub
-    plane = hub.install_wait(rt)
+    plane = hub.install_wait(rt.wire)
     assert isinstance(plane, WaitPlaneService)
     assert hub.get("wait") is plane
     assert hub.get("wait_plane") is plane
@@ -186,22 +195,28 @@ def test_supervisor_install_walks_definitions() -> None:
     assert "sup.install" in handlers_src
 
 
-def test_runtime_plane_wire_is_named_port_surface() -> None:
-    """ISP/DIP: system instance exposes plane_wire → InstallContext."""
-    from palm.system.planes.definition import InstallContext
+def test_runtime_wire_is_first_class_port() -> None:
+    """SystemWire peer of execution — bind explicit, install from wire."""
+    from palm.system.planes.install_context import InstallContext
+    from palm.system.ports.wire import SystemWire
     from palm.system.runtime.base import BaseRuntime
 
     rt = BaseRuntime()
-    assert callable(rt.plane_wire)
-    assert callable(rt.continuous_wire)
-    ctx = rt.plane_wire(options={"work_drain_max_depth": 3})
+    assert isinstance(rt.wire, SystemWire)
+    assert rt.wire.orchestration is None
+    rt.bind_system_wire()
+    assert rt.wire.orchestration is rt.orchestration
+    assert rt.wire.submit is not None
+    assert rt.wire.able is not None
+
+    ctx = InstallContext.from_wire(
+        rt.wire,
+        options={"work_drain_max_depth": 3},
+        get_session_plane=lambda: None,
+    )
     assert isinstance(ctx, InstallContext)
     assert ctx.options.get("work_drain_max_depth") == 3
-    # Hub prefers plane_wire over digging Any
-    hub = __import__(
-        "palm.system.planes.hub", fromlist=["SystemPlanes"]
-    ).SystemPlanes
-    assert "plane_wire" in __import__("inspect").getsource(hub._wire_from)
+    assert ctx.orchestration is rt.orchestration
 
 
 # ── unit: SeatReport ─────────────────────────────────────────────────────────

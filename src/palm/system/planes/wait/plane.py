@@ -240,11 +240,17 @@ class WaitPlaneService:
 
 
 def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
-    """Ensure hub on *runtime* and install wait via hub policy."""
+    """Ensure hub on *runtime* and install wait from ``runtime.wire``."""
     from palm.system.planes.hub import SystemPlanes
 
+    bind = getattr(runtime, "bind_system_wire", None)
+    if callable(bind):
+        bind()
+    wire = getattr(runtime, "wire", None)
+    if wire is None:
+        raise RuntimeError("runtime has no system wire for wait plane")
     hub = SystemPlanes.ensure_on(runtime)
-    return hub.install_wait(runtime)
+    return hub.install_wait(wire)
 
 
 __all__ = [

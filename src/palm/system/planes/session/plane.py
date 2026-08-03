@@ -896,30 +896,17 @@ def make_get_job(
     get_job: Any | None = None,
     orchestration: Any | None = None,
 ) -> Any:
-    """Build a get_job callable from collaborator ports (CS-008)."""
+    """Compat shim — prefer :func:`palm.system.planes.install_context.make_get_job`."""
+    from palm.system.planes.install_context import make_get_job as _make
 
-    def resolve(job_id: str) -> Any | None:
-        try:
-            if callable(get_job):
-                return get_job(str(job_id))
-        except Exception:
-            pass
-        orch = orchestration
-        if orch is None:
-            return None
-        jobs = getattr(orch, "jobs", None)
-        if isinstance(jobs, dict):
-            return jobs.get(str(job_id))
-        try:
-            return orch.get_job(str(job_id))
-        except Exception:
-            return None
-
-    return resolve
+    return _make(direct=get_job if callable(get_job) else None, orchestration=orchestration)
 
 
 def session_get_job_from_runtime(runtime: Any) -> Any:
-    """Compat: extract ports from *runtime* then :func:`make_get_job`."""
+    """Compat: prefer ``runtime.wire`` + install context when available."""
+    wire = getattr(runtime, "wire", None)
+    if wire is not None and getattr(wire, "get_job", None) is not None:
+        return wire.get_job
     fn = getattr(runtime, "get_job", None)
     return make_get_job(
         get_job=fn if callable(fn) else None,
@@ -932,15 +919,21 @@ _session_get_job_from_runtime = session_get_job_from_runtime
 
 
 def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
-    """Ensure hub on *runtime* and install session via hub policy.
+    """Ensure hub on *runtime* and install session from ``runtime.wire``.
 
     Always ensures the well-known **host** service session (0.58.13) so
     internal attribution has a stable seat after start.
     """
     from palm.system.planes.hub import SystemPlanes
 
+    bind = getattr(runtime, "bind_system_wire", None)
+    if callable(bind):
+        bind()
+    wire = getattr(runtime, "wire", None)
+    if wire is None:
+        raise RuntimeError("runtime has no system wire for session plane")
     hub = SystemPlanes.ensure_on(runtime)
-    return hub.install_session(runtime, ensure_host=True, reuse_existing=True)
+    return hub.install_session(wire, ensure_host=True, reuse_existing=True)
 
 
 __all__ = [

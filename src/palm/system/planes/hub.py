@@ -10,12 +10,9 @@ Same shape as :class:`~palm.system.supervisor.SystemSupervisor`:
 | ``names`` · ``get`` · ``status`` | ``names`` · ``get`` · ``status`` |
 
 Membership is **what the hub holds**.
-**Install law** lives on :class:`~palm.system.planes.definition.PlaneDefinition`
-at the edge (SD-015 / registry extension). The hub only **walks** definitions,
-orders them, and ``put``s results.
-
-Boot schedule only says *when* (``ensure_on`` + ``install``).
-Vitality expands from the live hub.
+Install law lives on :class:`~palm.system.planes.definition.PlaneDefinition`.
+Collaborators come from :class:`~palm.system.ports.wire.SystemWire` via
+:class:`~palm.system.planes.install_context.InstallContext` — not a bag dig.
 """
 
 from __future__ import annotations
@@ -27,7 +24,9 @@ from palm.system.planes.catalog import (
     DEFAULT_PLANE_DEFINITIONS,
     definition_by_name,
 )
-from palm.system.planes.definition import InstallContext, PlaneDefinition
+from palm.system.planes.definition import PlaneDefinition
+from palm.system.planes.install_context import InstallContext
+from palm.system.ports.wire import SystemWire, WirePort
 
 
 class SystemPlanes:
@@ -39,7 +38,6 @@ class SystemPlanes:
     ) -> None:
         self._planes: dict[str, Any] = {}
         self._order: list[str] = []
-        # attr / seat aliases → canonical name (e.g. wait_plane → wait)
         self._aliases: dict[str, str] = {}
         defs = (
             tuple(definitions)
@@ -51,8 +49,6 @@ class SystemPlanes:
             d.name: d for d in defs
         }
 
-    # ── membership ───────────────────────────────────────────────────────────
-
     def put(
         self,
         name: str,
@@ -60,12 +56,7 @@ class SystemPlanes:
         *,
         aliases: tuple[str, ...] | list[str] = (),
     ) -> None:
-        """
-        Consume a plane instance under *name*.
-
-        Prefer :meth:`install` / :meth:`install_named` (definition at edge).
-        Replaces an existing member of the same name (detaches the old one).
-        """
+        """Consume a plane instance under *name*."""
         key = str(name or "").strip()
         if not key:
             raise ValueError("plane name required")
@@ -87,7 +78,6 @@ class SystemPlanes:
                 self._aliases[a] = key
 
     def remove(self, name: str) -> bool:
-        """Detach (if possible) and drop a member. Returns whether it existed."""
         key = self._resolve_key(name)
         if key is None or key not in self._planes:
             return False
@@ -103,22 +93,18 @@ class SystemPlanes:
         return True
 
     def get(self, name: str) -> Any | None:
-        """Plane by canonical name (``wait``) or alias (``wait_plane``)."""
         key = self._resolve_key(name)
         if key is None:
             return None
         return self._planes.get(key)
 
     def names(self) -> list[str]:
-        """Canonical member names in put order."""
         return list(self._order)
 
     def definitions(self) -> tuple[PlaneDefinition, ...]:
-        """Install catalog this hub walks (not live membership)."""
         return self._definitions
 
     def seat_id(self, name: str) -> str:
-        """Observation id for a member (prefer ``*_plane`` alias if registered)."""
         key = self._resolve_key(name)
         if key is None:
             return str(name or "")
@@ -134,11 +120,6 @@ class SystemPlanes:
         return [self.seat_id(n) for n in self._order]
 
     def detach(self, name: str | None = None) -> list[str]:
-        """
-        Detach one member by name, or all members (reverse put order).
-
-        Clears the hub when detaching all.
-        """
         if name is not None:
             key = self._resolve_key(name)
             if key is None or key not in self._planes:
@@ -152,7 +133,6 @@ class SystemPlanes:
         return detached
 
     def status(self) -> dict[str, Any]:
-        """Public snapshot (raw sampling / doctor)."""
         planes: dict[str, Any] = {}
         for key in self._order:
             plane = self._planes.get(key)
@@ -172,8 +152,6 @@ class SystemPlanes:
             "planes": planes,
         }
 
-    # ── install (walk definitions) ───────────────────────────────────────────
-
     @classmethod
     def ensure_on(
         cls,
@@ -190,7 +168,7 @@ class SystemPlanes:
 
     def install(
         self,
-        runtime: Any,
+        wire: WirePort | SystemWire,
         options: Mapping[str, Any] | None = None,
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
@@ -198,25 +176,25 @@ class SystemPlanes:
         ctx: InstallContext | None = None,
     ) -> list[str]:
         """
-        Walk registered :class:`PlaneDefinition`\\s in order; each installs itself.
+        Walk plane definitions using *wire* (or an explicit *ctx*).
 
-        Ports come from *ctx* (or :meth:`InstallContext.from_runtime`).
-        Returns canonical names installed (live membership after walk).
+        *wire* is :attr:`BaseRuntime.wire` — not a system-instance bag.
         """
-        wire = ctx or self._wire_from(
-            runtime,
-            options,
+        install_ctx = ctx or InstallContext.from_wire(
+            wire,
+            options=options,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
+            get_session_plane=lambda: self.get("session"),
         )
         for defn in self._sorted_definitions():
-            defn.install(self, wire)
+            defn.install(self, install_ctx)
         return list(self._order)
 
     def install_named(
         self,
         name: str,
-        runtime: Any,
+        wire: WirePort | SystemWire,
         options: Mapping[str, Any] | None = None,
         *,
         on_host_session_error: Callable[[BaseException], None] | None = None,
@@ -227,53 +205,36 @@ class SystemPlanes:
         defn = self._lookup_definition(name)
         if defn is None:
             raise KeyError(f"unknown plane definition: {name}")
-        wire = ctx or self._wire_from(
-            runtime,
-            options,
+        install_ctx = ctx or InstallContext.from_wire(
+            wire,
+            options=options,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
+            get_session_plane=lambda: self.get("session"),
         )
-        return defn.install(self, wire)
+        return defn.install(self, install_ctx)
 
-    def _wire_from(
+    def install_wait(
         self,
-        source: Any,
-        options: Mapping[str, Any] | None,
+        wire: WirePort | SystemWire,
         *,
-        on_host_session_error: Callable[[BaseException], None] | None,
-        reuse_existing: bool,
-    ) -> InstallContext:
-        """Prefer :meth:`PlaneWireSource.plane_wire`; else :meth:`InstallContext.from_source`."""
-        kwargs = {
-            "options": options,
-            "on_host_session_error": on_host_session_error,
-            "reuse_existing": reuse_existing,
-            "get_session_plane": lambda: self.get("session"),
-        }
-        plane_wire = getattr(source, "plane_wire", None)
-        if callable(plane_wire):
-            return plane_wire(**kwargs)
-        return InstallContext.from_source(source, **kwargs)
-
-    # Thin aliases for bind helpers / tests (delegate to definitions)
-    def install_wait(self, runtime: Any, *, ctx: InstallContext | None = None) -> Any:
-        return self.install_named("wait", runtime, ctx=ctx)
+        ctx: InstallContext | None = None,
+    ) -> Any:
+        return self.install_named("wait", wire, ctx=ctx)
 
     def install_session(
         self,
-        runtime: Any,
+        wire: WirePort | SystemWire,
         *,
         ensure_host: bool = True,
         on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
         ctx: InstallContext | None = None,
     ) -> Any:
-        # ensure_host is always done by session definition when install runs;
-        # swallow path uses on_host_session_error (None → silent).
         _ = ensure_host
         return self.install_named(
             "session",
-            runtime,
+            wire,
             on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             ctx=ctx,
@@ -281,12 +242,12 @@ class SystemPlanes:
 
     def install_work(
         self,
-        runtime: Any,
+        wire: WirePort | SystemWire,
         options: Mapping[str, Any] | None = None,
         *,
         ctx: InstallContext | None = None,
     ) -> Any:
-        return self.install_named("work", runtime, options, ctx=ctx)
+        return self.install_named("work", wire, options, ctx=ctx)
 
     def _sorted_definitions(self) -> list[PlaneDefinition]:
         return sorted(self._definitions, key=lambda d: (d.order, d.name))
@@ -295,8 +256,7 @@ class SystemPlanes:
         key = str(name or "").strip()
         if key in self._definitions_by_name:
             return self._definitions_by_name[key]
-        found = definition_by_name(key, self._definitions)
-        return found
+        return definition_by_name(key, self._definitions)
 
     def _resolve_key(self, name: str) -> str | None:
         raw = str(name or "").strip()
@@ -308,7 +268,6 @@ class SystemPlanes:
 
 
 def get_system_planes(runtime: Any) -> SystemPlanes | None:
-    """Resolve hub from private ``_planes`` only (never via ``.planes`` property)."""
     hub = getattr(runtime, "_planes", None)
     if isinstance(hub, SystemPlanes):
         return hub

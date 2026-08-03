@@ -67,6 +67,8 @@ def test_embedded_runtime_exposes_wait_plane() -> None:
 
 
 def test_bind_wait_plane_helper() -> None:
+    from palm.system.ports.wire import SystemWire
+
     engine = EventEngine()
     engine.initialize()
 
@@ -85,9 +87,23 @@ def test_bind_wait_plane_helper() -> None:
             pass
 
     class _Rt:
-        event = engine
-        orchestration = _Orch()
-        _wait_plane = None
+        def __init__(self) -> None:
+            self.event = engine
+            self.orchestration = _Orch()
+            self._planes = None
+            self._wire = SystemWire()
+
+        @property
+        def wire(self) -> SystemWire:
+            return self._wire
+
+        def bind_system_wire(self) -> SystemWire:
+            return self._wire.bind(
+                orchestration=self.orchestration,
+                event=self.event,
+                submit=lambda *a, **k: None,
+                able=lambda: True,
+            )
 
     plane = bind_wait_plane_to_runtime(_Rt())
     assert plane.matcher is not None

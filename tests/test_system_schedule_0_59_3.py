@@ -30,6 +30,7 @@ def test_system_start_walks_full_phase_table() -> None:
         assert by_id["system.outbox.wire"].reason == "enable_event_outbox_off"
         assert by_id["system.hooks.install"].outcome == "ok"
         assert by_id["system.orchestration.start"].outcome == "ok"
+        assert by_id["system.wire.bind"].outcome == "ok"
         assert by_id["system.planes.attach"].outcome == "ok"
         assert by_id["system.supervisor.wire"].outcome == "ok"
         assert by_id["system.ready"].outcome == "ok"

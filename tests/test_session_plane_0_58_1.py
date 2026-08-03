@@ -102,12 +102,28 @@ def test_session_plane_doctor_snapshot() -> None:
 
 
 def test_bind_session_plane_helper() -> None:
+    from palm.system.ports.wire import SystemWire
+
     eng = _storage()
 
     class _Rt:
         def __init__(self, storage: StorageEngine) -> None:
             self.storage = storage
+            self.orchestration = type("O", (), {"jobs": {}})()
             self._planes = None
+            self._wire = SystemWire()
+
+        @property
+        def wire(self) -> SystemWire:
+            return self._wire
+
+        def bind_system_wire(self) -> SystemWire:
+            return self._wire.bind(
+                orchestration=self.orchestration,
+                storage=self.storage,
+                submit=lambda *a, **k: None,
+                able=lambda: True,
+            )
 
         @property
         def session_plane(self):

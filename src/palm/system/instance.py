@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from palm.system.ports.execution import ExecutionPort
+from palm.system.ports.wire import WirePort
 
 
 @runtime_checkable
@@ -30,4 +31,9 @@ class SystemInstance(Protocol):
     @property
     def execution(self) -> ExecutionPort:
         """Resource and workload effect port (and later job drive as chosen)."""
+        ...
+
+    @property
+    def wire(self) -> WirePort:
+        """Collaborator wire port for install (peer of execution)."""
         ...
