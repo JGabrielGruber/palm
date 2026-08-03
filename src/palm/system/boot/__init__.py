@@ -5,13 +5,14 @@ Palm system boot — schedule control for how the system comes up (0.59).
 
 - Phase tables (host + system)
 - Walker (order, skip/fail, SystemLog observation)
-- System start handlers (``system_schedule``) — the *rules* of system start
+- System start handlers (``system_schedule``) — *when* / order / skips
+- Assembly leaves (``boot.assembly``) — *how* engines, hooks, outbox wire
 - Later: host start handlers under app host boot
 
 **What boot does not own**
 
 - Domain reaction (event bus), EventJournal, product services, surfaces
-- Hook *implementations* as libraries (persist, auth middleware) — boot *installs* them
+- Hook *implementations* as libraries (persist, auth middleware) — assembly *installs* them
 
 **Break / harvest**
 
@@ -46,6 +47,7 @@ from palm.system.boot.phases import (
     system_phase_ids,
 )
 from palm.system.boot.skip import PhaseSkip
+from palm.system.boot.shell import resolve_shell
 from palm.system.boot.system_schedule import build_system_handlers
 from palm.system.boot.walker import PhaseHandler, WalkedPhase, walk_schedule
 
@@ -64,6 +66,7 @@ __all__ = [
     "get_phase",
     "host_phase_ids",
     "phases_for",
+    "resolve_shell",
     "schedule_catalog",
     "system_log_ready_handler",
     "system_phase_ids",

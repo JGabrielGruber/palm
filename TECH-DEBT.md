@@ -280,6 +280,7 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 | BootContext seats: engines + install/planes/supervisor | Progressive install bind (partial board earlier) |
 | Schedule uses `ctx.shell` + published seats | Thin `*_to_runtime` bridges remain |
 | `SystemPlanes.ensure_on` / `SystemSupervisor.ensure_on` | Host recovery / ApplicationHost bag digs |
+| `boot.assembly` peels hooks/engines/outbox from schedule | Host schedule debloat (if any) |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 

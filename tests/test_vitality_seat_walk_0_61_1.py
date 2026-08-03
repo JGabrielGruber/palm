@@ -193,6 +193,12 @@ def test_supervisor_install_walks_definitions() -> None:
     assert "CallableSystemService" not in handlers_src
     assert "OutboxLoopService" not in handlers_src
     assert "sup.install" in handlers_src
+    # Debloat: schedule does not open-code hook/engine assembly
+    assert "AuthMiddleware" not in handlers_src
+    assert "DriveObservabilityHook" not in handlers_src
+    assert "initialize_workload_engine" not in handlers_src
+    assert "install_orchestration_hooks" in handlers_src
+    assert "init_system_engines" in handlers_src
 
 
 def test_subsystem_protocol_and_package_layout() -> None:
