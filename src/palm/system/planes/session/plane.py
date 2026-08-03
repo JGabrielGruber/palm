@@ -891,47 +891,18 @@ class SessionPlaneService:
         }
 
 
-def make_get_job(
-    *,
-    get_job: Any | None = None,
-    orchestration: Any | None = None,
-) -> Any:
-    """Compat shim — prefer :func:`palm.system.planes.install_context.make_get_job`."""
-    from palm.system.planes.install_context import make_get_job as _make
-
-    return _make(direct=get_job if callable(get_job) else None, orchestration=orchestration)
-
-
-def session_get_job_from_runtime(runtime: Any) -> Any:
-    """Compat: prefer ``runtime.wire`` + install context when available."""
-    wire = getattr(runtime, "wire", None)
-    if wire is not None and getattr(wire, "get_job", None) is not None:
-        return wire.get_job
-    fn = getattr(runtime, "get_job", None)
-    return make_get_job(
-        get_job=fn if callable(fn) else None,
-        orchestration=getattr(runtime, "orchestration", None),
-    )
-
-
-# Back-compat alias (internal callers)
-_session_get_job_from_runtime = session_get_job_from_runtime
-
-
 def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
     """Ensure hub on *runtime* and install session from ``runtime.wire``.
 
     Always ensures the well-known **host** service session (0.58.13) so
     internal attribution has a stable seat after start.
+    Requires a system instance with :attr:`wire` (and preferably
+    :meth:`bind_system_wire`).
     """
     from palm.system.planes.hub import SystemPlanes
+    from palm.system.planes.wire_access import require_system_wire
 
-    bind = getattr(runtime, "bind_system_wire", None)
-    if callable(bind):
-        bind()
-    wire = getattr(runtime, "wire", None)
-    if wire is None:
-        raise RuntimeError("runtime has no system wire for session plane")
+    wire = require_system_wire(runtime)
     hub = SystemPlanes.ensure_on(runtime)
     return hub.install_session(wire, ensure_host=True, reuse_existing=True)
 
@@ -945,9 +916,7 @@ __all__ = [
     "SessionPlaneError",
     "SessionPlaneService",
     "bind_session_plane_to_runtime",
-    "make_get_job",
     "require_session_plane",
-    "session_get_job_from_runtime",
 ]
 
 
