@@ -1,6 +1,6 @@
 # VISION 0.61 — Living-kernel vitality
 
-**Status:** 📋 **Open** at **0.61.0** (plan).  
+**Status:** 📋 **Open** — plan **0.61.0** ✅ · seat walk **0.61.1** in progress (landed instrument; stamp when José exits slice).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [030-system-vitality.md](adr/030-system-vitality.md) **Proposed**.  
@@ -195,16 +195,25 @@ New seats appear by **being attached**.
 
 | Field | Meaning |
 |-------|---------|
-| `schema` | e.g. `palm.seat_report/1` |
+| `schema` | **`palm.seat_report/1`** (locked 0.61.1) |
 | `seat_id` | Stable id for this attachment |
-| `kind` | plane · supervisor_service · port · log · … |
+| `kind` | plane · supervisor · supervisor_service · port · log · boot · engine · other |
 | `present` | bool |
 | `state` | ok · degraded · absent · error · skipped |
 | `load` | optional counters (vitality terms) |
 | `notes` | short strings |
-| `lineage` | native report vs temporary adapter |
+| `lineage` | `native` \| `adapter` |
+| `meta` | optional provenance (e.g. `adapter_source`) |
+| `sample_ts` | optional ISO sample time |
 
-Adapters from old `status` / `doctor_snapshot` are allowed only with `lineage: adapter` and a debt path to remove them.
+**Package (locked):** `palm.system.vitality`  
+**Types:** `SeatReport` · `SeatReportable` · `SeatProbe` · `ProbeCatalog`  
+**Walk:** `discover_seats` / `seat_walk` / `walk_result`  
+**Default seeds:** `wait_plane` · `session_plane` · `work_plane` · `supervisor` · `execution` · `system_log` · `boot_membership`  
+**Dynamic expansion:** `supervisor.<service_name>` from live registry (not a closed menu)
+
+Adapters from old `status` / `doctor_snapshot` are allowed only with `lineage: adapter` and a debt path to remove them.  
+Native today: `SystemLog.seat_report` · `SystemSupervisor.seat_report`.
 
 ### 6.4 Capability catalog (registry)
 
@@ -248,7 +257,7 @@ Theme stays open while José still needs proper eyes.
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
 | **0** | Plan + map + ADR | This file · ADR-030 Proposed · STATUS · debt rows · seed open — ✅ **0.61.0** |
-| **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters lineage-marked |
+| **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters lineage-marked — **landed** (`palm.system.vitality`, schema `/1`, tests) — stamp when José exits |
 | **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; inspect/top present from projection |
 | **3** | Emission window + actor envelope | Partition or unknown; no second write path |
 | **4** | InspectService rename | SD-007; host/assist/MCP doors; product SystemService not law |

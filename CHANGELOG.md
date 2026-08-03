@@ -4,6 +4,17 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.61.1 — Seat report + dynamic walk (landed; stamp pending)
+
+- **`palm.system.vitality`** — system observation home (not a plane)
+- Schema **`palm.seat_report/1`**: `SeatReport`, `SeatReportable`, kinds/states/lineage
+- **Probe catalog** — extensible discovery seeds (not closed product menu)
+- **`discover_seats` / `seat_walk` / `walk_result`** — live instance walk; honest absent
+- Adapters from `doctor_snapshot` / `status` with **`lineage: adapter`**
+- Native reports: `SystemLog.seat_report`, `SystemSupervisor.seat_report`
+- Dynamic **`supervisor.<service>`** seats from live registry
+- Public `BaseRuntime.last_boot_walk`; tests `tests/test_vitality_seat_walk_0_61_1.py`
+
 ## [0.61.0] — 2026-08-03
 
 ### 0.61 — Living-kernel vitality (**theme open** · plan)

@@ -138,6 +138,43 @@ class SystemLog:
         self._stream = stream if stream is not None else sys.stderr
         self._records: deque[SystemLogRecord] = deque(maxlen=self._capacity)
 
+    @property
+    def capacity(self) -> int:
+        """Ring buffer capacity (max retained records)."""
+        return self._capacity
+
+    @property
+    def record_count(self) -> int:
+        """Current number of retained records."""
+        with self._lock:
+            return len(self._records)
+
+    def seat_report(self) -> dict[str, Any]:
+        """Native vitality seat report (0.61.1+) — process log physiology."""
+        from palm.system.vitality.schema import (
+            KIND_LOG,
+            LINEAGE_NATIVE,
+            SEAT_REPORT_SCHEMA,
+            SEAT_SYSTEM_LOG,
+            STATE_OK,
+        )
+
+        return {
+            "schema": SEAT_REPORT_SCHEMA,
+            "seat_id": SEAT_SYSTEM_LOG,
+            "kind": KIND_LOG,
+            "present": True,
+            "state": STATE_OK,
+            "load": {
+                "records": self.record_count,
+                "capacity": self.capacity,
+                "level": self.level,
+                "console": self.console,
+            },
+            "notes": [],
+            "lineage": LINEAGE_NATIVE,
+        }
+
     def configure(
         self,
         *,

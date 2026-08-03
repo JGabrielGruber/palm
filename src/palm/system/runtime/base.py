@@ -160,6 +160,15 @@ class BaseRuntime:
         """Continuous system services supervisor (0.60), or ``None`` before wire."""
         return self._supervisor
 
+    @property
+    def last_boot_walk(self) -> list[Any] | None:
+        """Last system boot walk results (0.59+), or ``None`` before start.
+
+        Vitality / membership observation reads this seat. Prefer this property
+        over the private ``_last_boot_walk`` field.
+        """
+        return self._last_boot_walk
+
     def start(self, **options: Any) -> None:
         """Hand control to the system boot schedule (``SYSTEM_PHASES``).
 

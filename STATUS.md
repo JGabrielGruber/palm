@@ -1,12 +1,12 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.61.0` (stamp) · **Active theme:** **`0.61` Living-kernel vitality** · **Prior closed:** **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 3, 2026 · **Theme open:** **0.61.0** ✅ plan  
+**Last Updated:** August 3, 2026 · **Theme open:** **0.61.0** ✅ plan · **0.61.1** seat walk **landed** (stamp later)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.61](docs/VISION-0.61.md) **open** · **ADR:** [030](docs/adr/030-system-vitality.md) **Proposed** · prior [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) Accepted  
 **Migration / release:** prior [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md) · [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-007** / **CS-002** / **OD-001** (vitality) · residual **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality plan open** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality seat walk live** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
@@ -15,12 +15,13 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | Spirit | Decision |
 |--------|----------|
 | **0.61 open** | Living-kernel **vitality** — system eyes (`top`); inspect present; doctor is debt |
+| **Seat walk** | **`palm.system.vitality`** — schema `palm.seat_report/1` · `discover_seats` · probe catalog · adapters |
 | **0.60 closed** | Planes = start/continue traffic; **Supervisor** = continuous services; inbound on system |
 | **Host** | Packaging — prefers system seats; product enrich residual; host status not living law |
 | **Boot law** | Two schedules; composition = membership; modes via `for_mode` |
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); catalog residual **BI-015** |
 | **Closed** | **0.60.0–0.60.9 + exit** — BI-013 closed · ADR-029 Accepted · stamp `0.60.9` |
-| **Next** | Execute **0.61.1+** (seat report → projection → emission → Inspect rename → growth) |
+| **Next** | **0.61.2+** projection + registry · emission · Inspect rename · growth (stamp 0.61.1 when José exits slice) |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · user-plane · workload remainder · Grove |
 
 ## Quick Overview
@@ -31,10 +32,11 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 **Import name:** `palm`  
 **Recommended entrypoint:** `ApplicationHost` via `create_cli_host()` for CLI, or `ApplicationHost(profile=DeploymentProfile.all_in_one())` for library use
 
-## 0.61 — Living-kernel vitality (**open** · plan `0.61.0`)
+## 0.61 — Living-kernel vitality (**open** · plan `0.61.0` · walk landed)
 
 **Vision:** [docs/VISION-0.61.md](docs/VISION-0.61.md) · **ADR:** [docs/adr/030-system-vitality.md](docs/adr/030-system-vitality.md) **Proposed**  
 **Seed essay:** [docs/VISION-VITALITY.md](docs/VISION-VITALITY.md)  
+**Package:** `palm.system.vitality` · schema **`palm.seat_report/1`**  
 **Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-007** · **CS-002** · **OD-001** · **BI-015** neighbor  
 **Map:** [docs/PALM.md](docs/PALM.md) · prior supervisor [VISION-0.60](docs/VISION-0.60.md)
 
@@ -43,7 +45,8 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 | Patch | Status |
 |-------|--------|
 | **0.61.0** | ✅ plan + ADR-030 Proposed |
-| **0.61.1+** | 📋 seat report · projection · emission · Inspect rename · growth |
+| **0.61.1** | ✅ seat report + dynamic walk landed (`discover_seats` / probes / adapters) — stamp when José exits |
+| **0.61.2+** | 📋 projection · registry · emission · Inspect rename · growth |
 
 **Floor (eyes open):** dynamic walk · seat report · projection + registry · inspect top from projection · emission identity · SD-007 path · doctor debt named.  
 **Exit:** **José’s** judgment when eyes are proper — not empty checklist death.  
@@ -60,7 +63,7 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | Layer | Role (short) |
 |-------|----------------|
 | `palm/core/` | Pure engines. No external Palm imports. |
-| **`palm/system/`** | Running Palm: `BaseRuntime`, ports, wait/work/workload planes; **session (0.58)** ([PALM.md](docs/PALM.md)). |
+| **`palm/system/`** | Running Palm: `BaseRuntime`, ports, wait/work/workload planes; **session (0.58)**; **vitality (0.61)** (`palm.system.vitality`) ([PALM.md](docs/PALM.md)). |
 | `palm/common/` | Shared libraries (plans, CQRS, transforms, persistence). No system shims. |
 | `palm/kits/` | Surface infrastructure kits (`server`, …) — install-list truth. |
 | `palm/services/` | Product (userland): definitions, execution, assist, design, … |

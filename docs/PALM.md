@@ -491,7 +491,7 @@ From theme **0.57** onward:
 | Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
 | System boot (closed) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) · [ADR-028](adr/028-system-boot.md) Accepted · residual **BI-*** |
 | Supervisor + work plane (closed) | [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted · residual host product wire |
-| System vitality (**0.61 open**) | [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Proposed · seed [VISION-VITALITY](VISION-VITALITY.md) — living kernel physiology; inspect present; doctor debt |
+| System vitality (**0.61 open**) | [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Proposed · package `palm.system.vitality` · schema `palm.seat_report/1` · seat walk landed · seed [VISION-VITALITY](VISION-VITALITY.md) |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
@@ -524,7 +524,7 @@ A map that only names **ideals** without today is also incomplete.
 | Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
 | Boot schedule + composition truth | **Theme closed** at `0.59.8` — [VISION-0.59](VISION-0.59.md) · residual **BI-*** |
 | Supervisor + work plane (start) on system | **Theme closed** at `0.60.9` — [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted |
-| Living-kernel vitality | **Theme open** at `0.61.0` — [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Proposed |
+| Living-kernel vitality | **Theme open** — plan `0.61.0` · seat walk landed (`palm.system.vitality`) — [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Proposed |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

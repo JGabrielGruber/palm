@@ -99,6 +99,32 @@ class SystemSupervisor:
             "services": services,
         }
 
+    def seat_report(self) -> dict[str, Any]:
+        """Native vitality seat report (0.61.1+) — supervisor physiology."""
+        from palm.system.vitality.schema import (
+            KIND_SUPERVISOR,
+            LINEAGE_NATIVE,
+            SEAT_REPORT_SCHEMA,
+            SEAT_SUPERVISOR,
+            STATE_OK,
+        )
+
+        return {
+            "schema": SEAT_REPORT_SCHEMA,
+            "seat_id": SEAT_SUPERVISOR,
+            "kind": KIND_SUPERVISOR,
+            "present": True,
+            "state": STATE_OK,
+            "load": {
+                "service_count": len(self._services),
+                "running_count": len(self._running),
+                "running": sorted(self._running),
+                "registered": sorted(self._services),
+            },
+            "notes": [],
+            "lineage": LINEAGE_NATIVE,
+        }
+
     def _start_one(self, key: str) -> list[str]:
         if key in self._running:
             return []
