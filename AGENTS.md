@@ -24,7 +24,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **OD-001** · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
+**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · **registry extension / OCP** in §1.1 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **OD-001** · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
 
 ---
 
@@ -35,7 +35,7 @@ When structure changes, update **PALM.md** (and ADR if needed). Keep this file a
 | **Single responsibility** | One reason to change per module |
 | **Explicit boundaries** | Clear contracts; composition and registries over magic |
 | **Core purity** | `palm/core/` never imports other Palm packages |
-| **Registry extension** | Add capability at the edge; do not edit core contracts |
+| **Registry extension** | Add capability at the edge; do not edit core contracts (see §1.1) |
 | **Documentation as code** | Docs and ADRs match the same rigor as source |
 | **Testability first** | Critical paths unit-testable in isolation |
 | **Human-first + truth-seeking** | Wait, resume, inspect, honest failure |
@@ -45,6 +45,26 @@ When structure changes, update **PALM.md** (and ADR if needed). Keep this file a
 
 Full layer laws: [PALM.md §9](docs/PALM.md).  
 Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md) (floor · growth · exit · **who decides**).
+
+### 1.1 Registry extension (OCP / DIP) — aim and boy scout
+
+**Classic names:** Open/Closed Principle · Dependency Inversion · Inversion of Control.  
+**Palm shape:** **definition at the edge; consumer only holds and runs.**
+
+| Prefer | Avoid |
+|--------|--------|
+| Participation **law** next to the subject (plane, plugin, capability, seat) | Teaching the bag a **private menu** of subjects |
+| One loop over registered definitions / members | Open-coded `if` / `install_*` branches per concrete type in core or hub |
+| New member = new definition + register | Edit hub, schedule, vitality, or product to name the new concrete |
+| Consumer depends on a small protocol | Consumer imports and wires every concrete’s prose |
+
+**When it is suitable:** new families of members; install/wire/observe of peer capabilities; anything that today would grow a switch inside a seat, schedule, or walk.  
+**When it is not forced:** pure algorithms, one-off glue with a single owner, micro-helpers that are not extension points.
+
+**Boy scout (old code):** when you **touch** a path that still open-codes a closed menu (schedule, hub, walk, doctor, wire phase), **move it toward registry extension** in that same work if the touch is natural — do not only relocate the menu.  
+**Smell name:** *menu relocation* — moving the same closed list from A to B without definitions at the edge is **not** done.
+
+**Agency bar:** extension is **registration of a definition**; the core / hub / walk **only walks the registry** (or live membership that was installed from definitions).
 
 ---
 
@@ -147,7 +167,8 @@ Purpose of each home: [PALM.md §7](docs/PALM.md). Practical table:
 - Put new logic into core engines without a pure contract reason.  
 - Put pattern-specific logic in shared/system dump (`common` pattern ban).  
 - Create a top-level package without purpose in [PALM.md](docs/PALM.md).  
-- Add dual-path policy (graphs on engines, edges only on CQRS) for one capability.
+- Add dual-path policy (graphs on engines, edges only on CQRS) for one capability.  
+- Grow a **private menu** of peers inside a consumer when registry extension fits (§1.1).
 
 ---
 
@@ -195,6 +216,7 @@ When you open or plan a minor (`0.X.0` / VISION / ADR), or execute slices:
 - [ ] Core purity  
 - [ ] SRP; no new god-objects  
 - [ ] Extension via registries; registry thread-safety  
+- [ ] **Registry extension / OCP:** no new private menus in consumers when a definition+register fit; boy-scout old menus when touched (§1.1)  
 - [ ] Aligns with [PALM.md](docs/PALM.md) (ports/planes/purpose)  
 - [ ] Tests updated; doubles match contracts  
 - [ ] Docs: PALM.md / ADR / STATUS as needed; STE for new text  
@@ -231,7 +253,7 @@ Theme discipline: [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ## 10. How to update this file
 
-Update **AGENTS.md** when **agent rules** change (checklist, MCP loop, purity, extend table, theme discipline).  
-Update **PALM.md** when **what Palm is** changes.  
+Update **AGENTS.md** when **agent rules** change (checklist, MCP loop, purity, registry extension, extend table, theme discipline).  
+Update **PALM.md** when **what Palm is** changes (including growth laws).  
 Update **VERSIONING.md** when version or theme-process law changes.  
 Do not grow this file back into a second map.

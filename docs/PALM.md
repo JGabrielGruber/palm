@@ -61,10 +61,15 @@ If a piece has no home in this table, the design is incomplete. Name the home be
 | **Human-first** | Wizards, choices, backtrack, resume after interruption |
 | **Truth-seeking** | Explicit job status, durable instances, visible failures |
 | **Agent-operable** | Assist and MCP drive the same work path as a human |
-| **Extensible** | New capability by **registry**, not by editing core contracts |
+| **Extensible** | New capability by **registry**, not by editing core contracts (Open/Closed · dependency inversion) |
 | **Local maturity, Grove horizon** | One Palm is complete; many Palms talk later by the same laws |
 
 Palm optimizes for **long clarity**, not for short cleverness.
+
+**Extension shape:** put participation **law** in a **definition at the edge**.  
+Consumers (hub, schedule, walk, product door) **hold and run** members.  
+They do not grow a private menu of concretes.  
+When you touch old open-coded menus, move them toward that shape when the touch is natural.
 
 ---
 
@@ -424,6 +429,14 @@ Each top-level part has **one purpose**.
 **Growth rule:** extend **kinds** and **registries**.  
 Do not invent a second integration grammar.
 
+**Registry extension (aim):**
+
+| Do | Do not |
+|----|--------|
+| Register a definition; core walks the registry | Edit hub / schedule / vitality with a new concrete branch |
+| Keep install and observe law next to the subject | Relocate the same closed list and call it architecture |
+| Boy-scout open menus when you touch them | Leave dual truth because “only a small switch” |
+
 ---
 
 ## 8. Grove (horizon, not the local map)
@@ -445,18 +458,20 @@ Local system structure makes Grove possible later.
 1. **One purpose per module.** If two purposes fit, split.  
 2. **Core stays pure.**  
 3. **Register downward.**  
-4. **The job path is the spine.** Features must say where they sit on that path.  
-5. **Effects use named ports.** Graphs and product share them.  
-6. **Planes are system.** Product may expose; product does not own.  
-7. **Product is userland.** Policy and envelopes, then ports.  
-8. **Surfaces stay thin.**  
-9. **Shared is not a dump.**  
-10. **Completers emit self-events.** Palm starts or continues by interest.  
-11. **Waiting is first-class.** Do not hide waits in call stacks.  
-12. **Definitions declare; instances remember; jobs run.**  
-13. **Coherence is enforced** (guards, CI).  
-14. **Break for truth before 1.0.** Record residual debt. Do not keep a structural lie for comfort.  
-15. **Incomplete maps are false maps.** When structure changes, update this file in the same theme of work.
+4. **Registry extension.** Add peers by definition at the edge. Consumers walk registries or live membership. Do not teach consumers a private menu of concretes when a register fit exists.  
+5. **The job path is the spine.** Features must say where they sit on that path.  
+6. **Effects use named ports.** Graphs and product share them.  
+7. **Planes are system.** Product may expose; product does not own.  
+8. **Product is userland.** Policy and envelopes, then ports.  
+9. **Surfaces stay thin.**  
+10. **Shared is not a dump.**  
+11. **Completers emit self-events.** Palm starts or continues by interest.  
+12. **Waiting is first-class.** Do not hide waits in call stacks.  
+13. **Definitions declare; instances remember; jobs run.**  
+14. **Coherence is enforced** (guards, CI).  
+15. **Break for truth before 1.0.** Record residual debt. Do not keep a structural lie for comfort.  
+16. **Incomplete maps are false maps.** When structure changes, update this file in the same theme of work.  
+17. **Boy-scout extension shape.** When you touch open-coded peer menus, move them toward registry extension if suitable; do not only relocate the menu.
 
 ---
 

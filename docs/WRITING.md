@@ -43,8 +43,9 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 | **Plugin** | Registry extension |
 | **Job** | Live run under orchestration |
 | **Instance** | Durable record of a run |
-| **Definition** | Declared contract of work |
+| **Definition** | Declared contract of work (also: participation law at the edge for registry extension) |
 | **Interest** | Start (trigger) or continue (wait) |
+| **Registry extension** | OCP/DIP: definition at edge; consumer walks registry — [AGENTS §1.1](../AGENTS.md) · [PALM §7](PALM.md) |
 
 ---
 
