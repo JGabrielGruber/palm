@@ -187,10 +187,9 @@ VitalityProjection snapshot (lineage)
 
 **Not dynamic:** filesystem package scan as physiology; heap scrape; always-green hardcoded service names.
 
-**System planes (definition of record):**  
-``palm.system.planes.roster.SYSTEM_PLANES`` — single **what**.  
-``attach_system_planes`` / ``detach_system_planes`` — schedule + shutdown **how**.  
-Vitality discovers plane seats from the **same** table. No private re-lists.
+**System planes:**  
+:class:`~palm.system.planes.hub.SystemPlanes` — living seat that **consumes** members via ``put`` / ``get`` / ``detach`` / ``status`` (same shape as supervisor).  
+Boot constructs each plane and ``put``s it on the hub. Runtime ``wait_plane`` / ``session_plane`` / ``work_plane`` **read from the hub**. Vitality probes ``planes`` and expands members from the live hub.
 
 **Other discovery seeds:**  
 `supervisor` (+ registered services), `execution` port, system log, boot last_walk / membership.  
@@ -214,9 +213,9 @@ New seats appear by **being attached** (or registered on supervisor).
 **Package (locked):** `palm.system.vitality`  
 **Types:** `SeatReport` · `SeatReportable` · `SeatProbe` · `ProbeCatalog`  
 **Walk:** `discover_seats` / `seat_walk` / `walk_result`  
-**Plane seeds:** from ``SYSTEM_PLANES`` roster  
+**Plane seeds:** hub seat `planes` + members expanded from live :class:`SystemPlanes`  
 **Other seeds:** `supervisor` · `execution` · `system_log` · `boot_membership`  
-**Dynamic expansion:** `supervisor.<service_name>` from live registry
+**Dynamic expansion:** plane members from hub · `supervisor.<service_name>` from registry
 
 **Sample law (system vitality):** raw-dog the live system — call public methods / read public attrs; stash in `meta.raw` (`lineage: sampled`). Structural fields only (id, kind, present, state). **No adapter maps** in system. **Product present** interprets raw.  
 Do **not** put vitality `seat_report` on simple seats — public API is enough.  

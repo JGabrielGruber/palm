@@ -90,7 +90,8 @@ KNOWN_LINEAGES: Final[frozenset[str]] = frozenset(
 # New seats appear by attachment + probe registration. These ids stay stable
 # for the seeds Palm attaches after system start (0.57–0.60 living graph).
 
-# Plane seat ids match SYSTEM_PLANES.attr (palm.system.planes.roster).
+# Planes hub + member seat ids (members expanded from live SystemPlanes).
+SEAT_PLANES: Final[str] = "planes"
 SEAT_WAIT_PLANE: Final[str] = "wait_plane"
 SEAT_SESSION_PLANE: Final[str] = "session_plane"
 SEAT_WORK_PLANE: Final[str] = "work_plane"

@@ -235,9 +235,16 @@ class WaitPlaneService:
 
 
 def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
-    """Create and attach a :class:`WaitPlaneService` on ``runtime``."""
+    """Create wait plane and put it on the runtime's :class:`SystemPlanes` hub."""
+    from palm.system.planes.hub import SystemPlanes
+
     plane = WaitPlaneService()
     plane.attach(runtime)
+    hub = getattr(runtime, "_planes", None)
+    if not isinstance(hub, SystemPlanes):
+        hub = SystemPlanes()
+        runtime._planes = hub
+    hub.put("wait", plane, aliases=("wait_plane",))
     return plane
 
 

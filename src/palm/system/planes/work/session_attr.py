@@ -58,7 +58,9 @@ def attribute_reactive_start(
 
     plane = getattr(runtime, "session_plane", None)
     if plane is None:
-        plane = getattr(runtime, "_session_plane", None)
+        plane = getattr(runtime, "session_plane", None)
+        if plane is None:
+            plane = getattr(runtime, "_session_plane", None)
     if plane is None:
         return meta
 

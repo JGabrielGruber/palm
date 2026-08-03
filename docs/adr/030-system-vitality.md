@@ -57,11 +57,11 @@ Absent seat or capability → **absent / skipped**, not fake green.
 Do **not** hardcode a closed menu of package paths as health law.  
 Do **not** treat heap reflection as the architecture of record.
 
-**System planes:** the definition of which planes a system instance runs is
-``palm.system.planes.roster.SYSTEM_PLANES``. Boot ``planes_attach`` calls
-``attach_system_planes`` (roster order); shutdown calls ``detach_system_planes``;
-vitality discovers plane seats from the **same** table. No consumer may
-re-list wait/session/work privately. (Planes ≠ composition plugins.)
+**System planes:** :class:`~palm.system.planes.hub.SystemPlanes` is the living
+seat that **consumes** individual planes (register · attach · detach · names ·
+get · status) — same pattern as :class:`SystemSupervisor` for continuous
+services. Boot wires the hub; vitality expands plane seats from the live hub.
+No private wait/session/work menu in vitality or the schedule.
 
 ### D4 — Seat report is the unit of truth
 

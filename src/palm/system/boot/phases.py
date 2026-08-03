@@ -172,7 +172,7 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "system.planes.attach",
         "system",
         "implemented",
-        "Attach SYSTEM_PLANES roster (wait, session, work)",
+        "SystemPlanes hub: put wait, session, work",
     ),
     PhaseSpec(
         "system.supervisor.wire",

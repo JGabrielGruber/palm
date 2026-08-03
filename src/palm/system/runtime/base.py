@@ -44,7 +44,7 @@ from palm.system.boot import (
     walk_schedule,
 )
 from palm.system.log import get_system_log
-from palm.system.planes.attach import detach_system_planes, get_attached_plane
+from palm.system.planes.hub import SystemPlanes
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
 from palm.system.runtime.schedulers import QueuedScheduler
@@ -102,9 +102,7 @@ class BaseRuntime:
         self._auth_enforce = False
         self._outbox_store: OutboxStore | None = None
         self._outbox_processor: OutboxProcessor | None = None
-        self._wait_plane: WaitPlaneService | None = None
-        self._session_plane: SessionPlaneService | None = None
-        self._work_plane: Any | None = None
+        self._planes: SystemPlanes | None = None
         self._supervisor: Any | None = None
         self._last_boot_walk: list[Any] | None = None
 
@@ -137,28 +135,38 @@ class BaseRuntime:
         return self._outbox_processor
 
     @property
+    def planes(self) -> SystemPlanes | None:
+        """Planes hub — consumes wait/session/work (0.61). ``None`` before attach."""
+        return self._planes
+
+    @property
     def wait_plane(self) -> WaitPlaneService | None:
-        """Continue plane (wait interest match on ``runtime.event``), or ``None``."""
-        return self._wait_plane
+        """Continue plane — from :attr:`planes` hub, or ``None``."""
+        hub = self._planes
+        return None if hub is None else hub.get("wait")  # type: ignore[return-value]
 
     @property
     def wait_matcher(self) -> Any:
         """Matcher inside the continue plane (0.55.4+), or ``None``."""
-        return None if self._wait_plane is None else self._wait_plane.matcher
+        plane = self.wait_plane
+        return None if plane is None else plane.matcher
 
     @property
     def session_plane(self) -> SessionPlaneService | None:
-        """Session plane (outside subject lifecycle), or ``None`` before start."""
-        return self._session_plane
+        """Session plane — from :attr:`planes` hub, or ``None``."""
+        hub = self._planes
+        return None if hub is None else hub.get("session")  # type: ignore[return-value]
 
     @property
     def work_plane(self) -> Any | None:
-        """Start plane (WorkIntent enqueue / tick), or ``None`` before attach."""
-        return self._work_plane
+        """Start plane — from :attr:`planes` hub, or ``None``."""
+        hub = self._planes
+        return None if hub is None else hub.get("work")
 
-    def plane(self, plane_id_or_attr: str) -> Any | None:
-        """Roster plane by id (``wait``) or attr (``wait_plane``), or ``None``."""
-        return get_attached_plane(self, plane_id_or_attr)
+    def plane(self, name: str) -> Any | None:
+        """Plane by hub name (``wait``) or alias (``wait_plane``)."""
+        hub = self._planes
+        return None if hub is None else hub.get(name)
 
     @property
     def supervisor(self) -> Any | None:
@@ -237,8 +245,12 @@ class BaseRuntime:
                 pass
             self._supervisor = None
 
-        # Reverse of SYSTEM_PLANES attach order (roster-driven).
-        detach_system_planes(self)
+        if self._planes is not None:
+            try:
+                self._planes.detach()
+            except Exception:
+                pass
+            self._planes = None
 
         self.orchestration.stop()
         if self._owns_instance_manager:

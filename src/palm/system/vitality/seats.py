@@ -1,8 +1,9 @@
 """
 Default discovery seeds for Palm living seats (0.61).
 
-**Planes** come from :data:`palm.system.planes.roster.SYSTEM_PLANES` — the
-system definition of record. Vitality does **not** own a private plane list.
+**Planes:** vitality probes the live :class:`~palm.system.planes.hub.SystemPlanes`
+hub and expands members from it (same pattern as supervisor services).
+No private plane menu in vitality.
 
 Other seeds (supervisor, execution, log, boot) declare where to look and which
 public API to raw-sample. Product interprets ``meta.raw``.
@@ -12,7 +13,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.planes.roster import SYSTEM_PLANES
 from palm.system.vitality.probe import (
     ProbeCatalog,
     SeatProbe,
@@ -20,7 +20,6 @@ from palm.system.vitality.probe import (
     private_attr_resolver,
 )
 from palm.system.vitality.raw import (
-    bound_convention_reporter,
     bound_method_reporter,
     bound_sequence_reporter,
     sample_attrs,
@@ -29,11 +28,12 @@ from palm.system.vitality.report import SeatReport
 from palm.system.vitality.schema import (
     KIND_BOOT,
     KIND_LOG,
-    KIND_PLANE,
+    KIND_OTHER,
     KIND_PORT,
     KIND_SUPERVISOR,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
+    SEAT_PLANES,
     SEAT_SUPERVISOR,
     SEAT_SYSTEM_LOG,
 )
@@ -58,6 +58,16 @@ def _resolve_system_log(instance: Any) -> Any | None:
         return get_system_log()
     except Exception:
         return None
+
+
+def _resolve_planes(instance: Any) -> Any | None:
+    """Hub only — never invent plane members from vitality."""
+    from palm.system.planes.hub import SystemPlanes, get_system_planes
+
+    hub = get_system_planes(instance)
+    if isinstance(hub, SystemPlanes):
+        return hub
+    return None
 
 
 def _report_execution(instance: Any, port: Any) -> SeatReport:
@@ -98,28 +108,18 @@ def _report_system_log_instance(instance: Any) -> SeatReport:
     return _report_system_log(instance, log)
 
 
-def _plane_probes_from_roster() -> list[SeatProbe]:
-    """Plane discovery seeds — driven only by SYSTEM_PLANES."""
-    probes: list[SeatProbe] = []
-    for i, spec in enumerate(SYSTEM_PLANES):
-        probes.append(
-            SeatProbe(
-                seat_id=spec.seat_id,
-                kind=KIND_PLANE,
-                resolve=attr_resolver(spec.attr),
-                report=bound_convention_reporter(spec.seat_id, KIND_PLANE),
-                order=10 + i,
-                tags=("core", "plane", spec.plane_id),
-                description=spec.description or f"System plane {spec.plane_id}",
-            )
-        )
-    return probes
-
-
 def build_default_probes() -> list[SeatProbe]:
-    """Ordered default probes — planes from roster; rest raw public APIs."""
+    """Ordered default probes — planes hub + supervisor + ports + log + boot."""
     return [
-        *_plane_probes_from_roster(),
+        SeatProbe(
+            seat_id=SEAT_PLANES,
+            kind=KIND_OTHER,
+            resolve=_resolve_planes,
+            report=bound_method_reporter(SEAT_PLANES, KIND_OTHER, "status"),
+            order=5,
+            tags=("core", "planes", "hub"),
+            description="SystemPlanes hub — raw status(); children expand from hub",
+        ),
         SeatProbe(
             seat_id=SEAT_SUPERVISOR,
             kind=KIND_SUPERVISOR,

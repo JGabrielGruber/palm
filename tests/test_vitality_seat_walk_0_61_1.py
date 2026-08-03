@@ -36,46 +36,47 @@ from palm.system.vitality import (
 )
 
 
-# ── unit: plane roster is system definition of record ────────────────────────
+# ── unit: SystemPlanes hub owns membership ───────────────────────────────────
 
 
-def test_plane_probes_come_from_system_roster_not_vitality_list() -> None:
-    """Vitality must not own a private plane menu — SYSTEM_PLANES does."""
-    from palm.system.planes.roster import SYSTEM_PLANES, system_plane_seat_ids
+def test_vitality_probes_planes_hub_not_private_plane_list() -> None:
+    """Default catalog has the hub seat; members expand from the live hub."""
+    from palm.system.vitality.schema import SEAT_PLANES
     from palm.system.vitality.seats import build_default_probes
 
-    plane_probes = [p for p in build_default_probes() if p.kind == KIND_PLANE]
-    assert {p.seat_id for p in plane_probes} == set(system_plane_seat_ids())
-    assert [p.seat_id for p in plane_probes] == list(system_plane_seat_ids())
-    assert len(SYSTEM_PLANES) == 3
-    assert system_plane_seat_ids() == (
-        "wait_plane",
-        "session_plane",
-        "work_plane",
-    )
+    probes = build_default_probes()
+    plane_kind = [p for p in probes if p.kind == KIND_PLANE]
+    assert plane_kind == []  # no static wait/session/work probes
+    assert any(p.seat_id == SEAT_PLANES for p in probes)
 
 
-def test_started_runtime_matches_system_plane_roster() -> None:
-    from palm.system.planes.roster import SYSTEM_PLANES, missing_roster_planes
-
+def test_started_runtime_planes_hub_consumes_members() -> None:
     rt = BaseRuntime()
     try:
         rt.start(storage_backend="memory", enable_event_outbox=True)
-        assert missing_roster_planes(rt) == ()
-        for spec in SYSTEM_PLANES:
-            assert getattr(rt, spec.attr) is not None
-            assert rt.plane(spec.plane_id) is getattr(rt, spec.attr)
+        assert rt.planes is not None
+        assert rt.planes.names() == ["wait", "session", "work"]
+        assert rt.plane("wait") is rt.wait_plane
+        assert rt.plane("wait_plane") is rt.wait_plane
+        assert rt.plane("work") is rt.work_plane
+        assert rt.session_plane is not None
     finally:
         rt.stop()
 
 
-def test_attachers_cover_every_roster_plane() -> None:
-    """Schedule attach path must not drift from SYSTEM_PLANES."""
-    from palm.system.planes import attach as plane_attach
-    from palm.system.planes.roster import SYSTEM_PLANES
+def test_system_planes_put_get_detach() -> None:
+    from palm.system.planes.hub import SystemPlanes
 
-    plane_attach._require_attachers_match_roster()
-    assert set(plane_attach._ATTACHERS) == {p.plane_id for p in SYSTEM_PLANES}
+    hub = SystemPlanes()
+    marker = object()
+    hub.put("wait", marker, aliases=("wait_plane",))
+    assert hub.get("wait") is marker
+    assert hub.get("wait_plane") is marker
+    assert hub.names() == ["wait"]
+    assert hub.seat_id("wait") == "wait_plane"
+    assert hub.detach() == ["wait"]
+    assert hub.names() == []
+    assert hub.get("wait") is None
 
 
 # ── unit: SeatReport ─────────────────────────────────────────────────────────
@@ -153,17 +154,21 @@ def test_probe_catalog_register_clone_extend() -> None:
 
 
 def test_default_probe_catalog_has_core_seeds() -> None:
+    from palm.system.vitality.schema import SEAT_PLANES
+
     ids = set(default_probe_catalog().seat_ids())
     for sid in (
-        SEAT_WAIT_PLANE,
-        SEAT_SESSION_PLANE,
-        SEAT_WORK_PLANE,
+        SEAT_PLANES,
         SEAT_SUPERVISOR,
         SEAT_EXECUTION,
         SEAT_SYSTEM_LOG,
         SEAT_BOOT_MEMBERSHIP,
     ):
         assert sid in ids
+    # Plane members are expanded from the hub — not static probes.
+    assert SEAT_WAIT_PLANE not in ids
+    assert SEAT_SESSION_PLANE not in ids
+    assert SEAT_WORK_PLANE not in ids
 
 
 # ── lean shell: honest absent ────────────────────────────────────────────────
@@ -176,14 +181,22 @@ class _LeanShell:
 
 
 def test_walk_lean_shell_honest_absent() -> None:
+    from palm.system.vitality.schema import SEAT_PLANES
+
     reset_system_log_for_tests()
-    reports = discover_seats(_LeanShell(), expand_supervisor_services="never")
+    reports = discover_seats(
+        _LeanShell(),
+        expand_supervisor_services="never",
+        expand_planes="never",
+    )
     by_id = index_by_seat_id(reports)
 
-    assert by_id[SEAT_WAIT_PLANE].state == STATE_ABSENT
-    assert by_id[SEAT_WAIT_PLANE].present is False
-    assert by_id[SEAT_SESSION_PLANE].state == STATE_ABSENT
-    assert by_id[SEAT_WORK_PLANE].state == STATE_ABSENT
+    assert by_id[SEAT_PLANES].state == STATE_ABSENT
+    assert by_id[SEAT_PLANES].present is False
+    # Members not expanded when hub is absent.
+    assert SEAT_WAIT_PLANE not in by_id
+    assert SEAT_SESSION_PLANE not in by_id
+    assert SEAT_WORK_PLANE not in by_id
     assert by_id[SEAT_SUPERVISOR].state == STATE_ABSENT
     assert by_id[SEAT_BOOT_MEMBERSHIP].state == STATE_ABSENT
 
@@ -197,11 +210,14 @@ def test_walk_lean_shell_honest_absent() -> None:
 
 
 def test_walk_no_fake_green_for_missing_planes() -> None:
+    from palm.system.vitality.schema import SEAT_PLANES
+
     reports = discover_seats(_LeanShell())
-    for r in reports:
-        if r.seat_id in (SEAT_WAIT_PLANE, SEAT_SESSION_PLANE, SEAT_WORK_PLANE):
-            assert r.present is False
-            assert r.state == STATE_ABSENT
+    by_id = index_by_seat_id(reports)
+    assert by_id[SEAT_PLANES].present is False
+    assert by_id[SEAT_PLANES].state == STATE_ABSENT
+    for sid in (SEAT_WAIT_PLANE, SEAT_SESSION_PLANE, SEAT_WORK_PLANE):
+        assert sid not in by_id
 
 
 # ── full BaseRuntime attach ──────────────────────────────────────────────────
@@ -215,7 +231,10 @@ def test_walk_started_base_runtime_seats_present() -> None:
         result = walk_result(rt)
         by_id = result.by_id()
 
+        from palm.system.vitality.schema import SEAT_PLANES
+
         for sid in (
+            SEAT_PLANES,
             SEAT_WAIT_PLANE,
             SEAT_SESSION_PLANE,
             SEAT_WORK_PLANE,
@@ -296,16 +315,15 @@ def test_detach_wait_plane_becomes_absent() -> None:
         before = index_by_seat_id(discover_seats(rt))
         assert before[SEAT_WAIT_PLANE].present is True
 
-        # Detach without full stop — simulate composition change.
-        if rt.wait_plane is not None:
-            rt.wait_plane.detach()
-        rt._wait_plane = None
+        hub = rt.planes
+        assert hub is not None
+        hub.remove("wait")
 
         after = index_by_seat_id(discover_seats(rt))
-        assert after[SEAT_WAIT_PLANE].state == STATE_ABSENT
-        assert after[SEAT_WAIT_PLANE].present is False
-        # Others still present.
+        # Removed from hub → no longer expanded as a member seat.
+        assert SEAT_WAIT_PLANE not in after or after[SEAT_WAIT_PLANE].present is False
         assert after[SEAT_SESSION_PLANE].present is True
+        assert rt.wait_plane is None
     finally:
         rt.stop()
 
@@ -346,6 +364,8 @@ def test_expand_supervisor_services_never() -> None:
 
 
 def test_native_seat_report_preferred_over_raw() -> None:
+    from palm.system.planes.hub import SystemPlanes
+
     class _NativePlane:
         def doctor_snapshot(self) -> dict[str, Any]:
             return {"wait_plane_attached": True, "open_wait_owners": 99}
@@ -362,26 +382,25 @@ def test_native_seat_report_preferred_over_raw() -> None:
                 "lineage": LINEAGE_NATIVE,
             }
 
+    hub = SystemPlanes()
+    hub.put("wait", _NativePlane(), aliases=("wait_plane",))
+
     class _Shell:
         is_started = True
-        wait_plane = _NativePlane()
-        session_plane = None
-        work_plane = None
+        _planes = hub
         supervisor = None
         execution = None
         last_boot_walk = None
 
-    # Only wait_plane + process log (+ execution absent)
     cat = default_probe_catalog()
     reports = discover_seats(
         _Shell(),
         WalkOptions(
             catalog=cat,
             expand_supervisor_services="never",
+            expand_planes="when_present",
             skip_seat_ids=frozenset(
                 {
-                    SEAT_SESSION_PLANE,
-                    SEAT_WORK_PLANE,
                     SEAT_SUPERVISOR,
                     SEAT_EXECUTION,
                     SEAT_BOOT_MEMBERSHIP,

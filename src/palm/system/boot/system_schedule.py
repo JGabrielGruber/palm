@@ -35,11 +35,10 @@ from palm.system.boot.log_phase import system_log_ready_handler
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
 from palm.system.log import get_system_log
-from palm.system.planes.attach import (
-    attach_system_planes,
-    get_attached_plane,
-    log_roster_attach_result,
-)
+from palm.system.planes.hub import SystemPlanes
+from palm.system.planes.session.plane import SessionPlaneService
+from palm.system.planes.wait.plane import WaitPlaneService
+from palm.system.planes.work.plane import WorkPlaneService
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.runtime.hooks import (
     AuthMiddleware,
@@ -142,7 +141,7 @@ def build_system_handlers(
             )
         )
         session_ownership = SessionOwnershipHook(
-            get_plane=lambda: runtime._session_plane
+            get_plane=lambda: runtime.session_plane
         )
         hooks.append(session_ownership)
         if runtime._outbox_processor is not None:
@@ -187,15 +186,59 @@ def build_system_handlers(
         runtime.orchestration.start()
 
     def planes_attach(ctx: BootContext) -> None:
-        """Attach :data:`~palm.system.planes.roster.SYSTEM_PLANES` via roster attach."""
-        attach_system_planes(runtime, options=options, ctx=ctx)
-        log_roster_attach_result(runtime, ctx)
+        """
+        Create :class:`SystemPlanes` and put members (same pattern as supervisor).
+
+        The hub **consumes** planes; constructors live here, membership on the hub.
+        """
+        slog = get_system_log()
+        hub = SystemPlanes()
+        runtime._planes = hub
+
+        wait = WaitPlaneService()
+        wait.attach(runtime)
+        hub.put("wait", wait, aliases=("wait_plane",))
+
+        session = SessionPlaneService(storage=runtime.storage)
+        session.attach(runtime)
+        try:
+            session.ensure_host_session()
+        except Exception as exc:
+            # BI-014 — still swallowed; honesty later.
+            slog.system(
+                "plane.session.host_session",
+                f"ensure_host_session swallowed: {type(exc).__name__}",
+                runtime=ctx.runtime,
+                reason=str(exc),
+            )
+        hub.put("session", session, aliases=("session_plane",))
+
+        max_depth = int(options.get("work_drain_max_depth", 8) or 8)
+        batch_size = int(options.get("work_drain_batch_size", 10) or 10)
+        poll_interval = float(options.get("work_drain_poll_interval", 1.0) or 1.0)
+        work = WorkPlaneService()
+        work.attach(
+            runtime,
+            max_depth=max_depth,
+            batch_size=batch_size,
+            poll_interval=poll_interval,
+            able=lambda: bool(getattr(runtime, "is_started", False)),
+        )
+        hub.put("work", work, aliases=("work_plane",))
+
+        slog.info(
+            "plane.hub.attached",
+            "system planes hub ready",
+            schedule="system",
+            runtime=ctx.runtime,
+            planes=",".join(hub.names()) or "(none)",
+        )
 
     def supervisor_wire(ctx: BootContext) -> None:
         """Register continuous services (work_drain, outbox) — start later."""
         sup = SystemSupervisor()
         runtime._supervisor = sup
-        plane = get_attached_plane(runtime, "work")
+        plane = runtime.work_plane
         if plane is not None:
             sup.register(
                 CallableSystemService(

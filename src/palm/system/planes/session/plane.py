@@ -886,11 +886,13 @@ class SessionPlaneService:
 
 
 def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
-    """Attach a new (or existing) session plane on ``runtime`` and return it.
+    """Attach a new (or existing) session plane on the runtime's planes hub.
 
     Always ensures the well-known **host** service session (0.58.13) so
     internal attribution has a stable seat after start.
     """
+    from palm.system.planes.hub import SystemPlanes
+
     existing = getattr(runtime, "session_plane", None)
     if isinstance(existing, SessionPlaneService):
         existing.attach(runtime)
@@ -904,8 +906,11 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
         raise SessionPlaneError("runtime has no storage for session plane")
     plane = SessionPlaneService(storage=storage)
     plane.attach(runtime)
-    if hasattr(runtime, "_session_plane"):
-        runtime._session_plane = plane
+    hub = getattr(runtime, "_planes", None)
+    if not isinstance(hub, SystemPlanes):
+        hub = SystemPlanes()
+        runtime._planes = hub
+    hub.put("session", plane, aliases=("session_plane",))
     try:
         plane.ensure_host_session()
     except Exception:

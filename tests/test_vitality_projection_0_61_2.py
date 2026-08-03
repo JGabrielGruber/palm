@@ -138,13 +138,17 @@ def test_projection_receives_reports_no_second_walk_in_bag() -> None:
 
 
 def test_lean_shell_projection_honest_absent() -> None:
+    from palm.system.vitality.schema import SEAT_PLANES
+
     class _Lean:
         is_started = False
 
     snap = project_seat_walk_only(_Lean())
-    assert snap.summary["absent_count"] >= 4
+    assert snap.summary["absent_count"] >= 3
     by_id = snap.seat_by_id()
-    assert by_id[SEAT_WAIT_PLANE].state == STATE_ABSENT
+    assert by_id[SEAT_PLANES].state == STATE_ABSENT
+    # Members only expand when hub is present — not fake-absent from a menu.
+    assert SEAT_WAIT_PLANE not in by_id
 
 
 def test_disabled_seat_walk_empty_seats() -> None:

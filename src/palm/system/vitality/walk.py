@@ -13,12 +13,14 @@ from typing import Any, Literal
 
 from palm.system.vitality.probe import ProbeCatalog, SeatProbe
 from palm.system.vitality.protocol import try_native_report
-from palm.system.vitality.raw import sample_method
+from palm.system.vitality.raw import sample_by_convention, sample_method
 from palm.system.vitality.report import SeatReport, coerce_report, index_by_seat_id, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
+    KIND_PLANE,
     KIND_SUPERVISOR_SERVICE,
     LINEAGE_NATIVE,
+    SEAT_PLANES,
     SEAT_SUPERVISOR,
     STATE_ABSENT,
     STATE_ERROR,
@@ -38,6 +40,9 @@ class WalkOptions:
 
     expand_supervisor_services: ExpandPolicy = "when_present"
     """Discover ``supervisor.<name>`` seats from the live registry."""
+
+    expand_planes: ExpandPolicy = "when_present"
+    """Discover plane seats from the live :class:`SystemPlanes` hub."""
 
     include_tags: frozenset[str] | None = None
     """If set, only probes that carry at least one of these tags."""
@@ -266,6 +271,62 @@ def _expand_supervisor_services(
     return extra
 
 
+def _expand_planes(
+    instance: Any,
+    reports: list[SeatReport],
+    options: WalkOptions,
+) -> list[SeatReport]:
+    """Dynamically discover planes from the live SystemPlanes hub."""
+    by_id = index_by_seat_id(reports)
+    hub_report = by_id.get(SEAT_PLANES)
+    if hub_report is None or not hub_report.present:
+        return []
+
+    from palm.system.planes.hub import get_system_planes
+
+    hub = get_system_planes(instance)
+    if hub is None:
+        return []
+
+    extra: list[SeatReport] = []
+    for plane_id in hub.names():
+        seat_id = hub.seat_id(plane_id)
+        if seat_id in options.skip_seat_ids:
+            continue
+        plane = hub.get(plane_id)
+        if plane is None:
+            extra.append(
+                SeatReport.absent(
+                    seat_id,
+                    KIND_PLANE,
+                    reason="registered_but_unattached",
+                    meta={"plane_id": plane_id},
+                )
+            )
+            continue
+        try:
+            extra.append(
+                sample_by_convention(
+                    plane,
+                    seat_id=seat_id,
+                    kind=KIND_PLANE,
+                    extra_meta={"plane_id": plane_id},
+                )
+            )
+        except Exception as exc:
+            if options.on_probe_error == "raise":
+                raise
+            extra.append(
+                SeatReport.error(
+                    seat_id,
+                    KIND_PLANE,
+                    reason=f"plane:{type(exc).__name__}: {exc}",
+                    meta={"plane_id": plane_id},
+                )
+            )
+    return extra
+
+
 def discover_seats(
     instance: Any,
     options: WalkOptions | None = None,
@@ -290,6 +351,7 @@ def discover_seats(
         data = {
             "catalog": options.catalog,
             "expand_supervisor_services": options.expand_supervisor_services,
+            "expand_planes": options.expand_planes,
             "include_tags": options.include_tags,
             "exclude_tags": options.exclude_tags,
             "stamp": options.stamp,
@@ -310,7 +372,17 @@ def discover_seats(
             continue
         reports.append(_stamp(report, options))
 
-    # Dynamic expansion: supervisor services follow composition, not a menu.
+    # Dynamic expansion: planes from SystemPlanes hub (not a vitality menu).
+    expand_p = options.expand_planes
+    should_expand_planes = expand_p == "always" or (
+        expand_p == "when_present"
+        and any(r.seat_id == SEAT_PLANES and r.present for r in reports)
+    )
+    if should_expand_planes:
+        for extra in _expand_planes(instance, reports, options):
+            reports.append(_stamp(extra, options))
+
+    # Dynamic expansion: supervisor services follow registration, not a menu.
     expand = options.expand_supervisor_services
     should_expand = expand == "always" or (
         expand == "when_present"

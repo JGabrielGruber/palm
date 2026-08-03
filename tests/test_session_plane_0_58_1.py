@@ -105,19 +105,22 @@ def test_bind_session_plane_helper() -> None:
     eng = _storage()
 
     class _Rt:
-        _session_plane = None
-
         def __init__(self, storage: StorageEngine) -> None:
             self.storage = storage
+            self._planes = None
 
         @property
         def session_plane(self):
-            return self._session_plane
+            if self._planes is None:
+                return None
+            return self._planes.get("session")
 
     rt = _Rt(eng)
     plane = bind_session_plane_to_runtime(rt)
     assert plane.is_attached
-    assert rt._session_plane is plane
+    assert rt.session_plane is plane
+    assert rt._planes is not None
+    assert rt._planes.get("session") is plane
     rec = plane.open(session_id="sess-bind")
     assert plane.get(rec.session_id) is not None
 
