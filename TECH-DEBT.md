@@ -281,6 +281,7 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 | Schedule uses `ctx.shell` + published seats | Thin `*_to_runtime` bridges remain |
 | `SystemPlanes.ensure_on` / `SystemSupervisor.ensure_on` | Host recovery / ApplicationHost bag digs |
 | `boot.assembly` peels hooks/engines/outbox from schedule | Host schedule debloat (if any) |
+| System **phase definitions** + catalog (schedule binds only) | Host phase definitions (same pattern) |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 

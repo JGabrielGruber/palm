@@ -188,17 +188,20 @@ def test_supervisor_install_walks_definitions() -> None:
     src = inspect.getsource(SystemSupervisor.install)
     assert "defn.register" in src
 
-    # Schedule supervisor_wire is thin
+    # Schedule is catalog bind only (phase definitions own bodies)
     handlers_src = inspect.getsource(build_system_handlers)
     assert "CallableSystemService" not in handlers_src
     assert "OutboxLoopService" not in handlers_src
-    assert "sup.install" in handlers_src
-    # Debloat: schedule does not open-code hook/engine assembly
     assert "AuthMiddleware" not in handlers_src
-    assert "DriveObservabilityHook" not in handlers_src
-    assert "initialize_workload_engine" not in handlers_src
-    assert "install_orchestration_hooks" in handlers_src
-    assert "init_system_engines" in handlers_src
+    assert "bind_phase_handlers" in handlers_src
+    assert "definitions_for_phases" in handlers_src
+
+    from palm.system.boot.catalog import DEFAULT_SYSTEM_PHASE_DEFINITIONS
+    from palm.system.boot.phases import system_phase_ids
+
+    catalog_ids = {d.id for d in DEFAULT_SYSTEM_PHASE_DEFINITIONS}
+    for pid in system_phase_ids():
+        assert pid in catalog_ids, f"missing phase definition for {pid}"
 
 
 def test_subsystem_protocol_and_package_layout() -> None:

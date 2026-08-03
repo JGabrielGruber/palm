@@ -5,9 +5,11 @@ Palm system boot — schedule control for how the system comes up (0.59).
 
 - Phase tables (host + system)
 - Walker (order, skip/fail, SystemLog observation)
-- System start handlers (``system_schedule``) — *when* / order / skips
-- Assembly leaves (``boot.assembly``) — *how* engines, hooks, outbox wire
-- Later: host start handlers under app host boot
+- Phase table (``phases``) — *when* / order
+- Phase definitions + catalog — *how* each system phase runs (OCP)
+- Assembly leaves (``boot.assembly``) — shared construct helpers
+- Schedule bind (``system_schedule``) — catalog → walker handlers
+- Later: host phase definitions under app host boot
 
 **What boot does not own**
 
@@ -32,7 +34,13 @@ Observation: ``palm.system.log``. Map: docs/VISION-0.59.md · ADR-028.
 
 from __future__ import annotations
 
+from palm.system.boot.catalog import (
+    DEFAULT_SYSTEM_PHASE_DEFINITIONS,
+    system_phase_definition,
+    system_phase_definitions,
+)
 from palm.system.boot.context import BootContext
+from palm.system.boot.definition import PhaseDefinition
 from palm.system.boot.log_phase import ensure_system_log_ready, system_log_ready_handler
 from palm.system.boot.phases import (
     HOST_PHASES,
@@ -48,19 +56,22 @@ from palm.system.boot.phases import (
 )
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.shell import resolve_shell
-from palm.system.boot.system_schedule import build_system_handlers
+from palm.system.boot.system_schedule import bind_phase_handlers, build_system_handlers
 from palm.system.boot.walker import PhaseHandler, WalkedPhase, walk_schedule
 
 __all__ = [
+    "DEFAULT_SYSTEM_PHASE_DEFINITIONS",
     "HOST_PHASES",
     "SYSTEM_PHASES",
     "BootContext",
+    "PhaseDefinition",
     "PhaseHandler",
     "PhaseSeat",
     "PhaseSkip",
     "PhaseSpec",
     "ScheduleName",
     "WalkedPhase",
+    "bind_phase_handlers",
     "build_system_handlers",
     "ensure_system_log_ready",
     "get_phase",
@@ -69,6 +80,8 @@ __all__ = [
     "resolve_shell",
     "schedule_catalog",
     "system_log_ready_handler",
+    "system_phase_definition",
+    "system_phase_definitions",
     "system_phase_ids",
     "walk_schedule",
 ]
