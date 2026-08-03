@@ -97,8 +97,48 @@ SUPERVISOR_SERVICE_PREFIX: Final[str] = "supervisor."
 
 # ── Walk options / capability seed (registry body lands 0.61.2) ─────────────
 
+# ── Snapshot / capability ids (0.61.2+) ──────────────────────────────────────
+
+VITALITY_SNAPSHOT_SCHEMA: Final[str] = "palm.vitality_snapshot/1"
+"""Versioned projection snapshot document id."""
+
+CAPABILITY_FRAGMENT_SCHEMA: Final[str] = "palm.vitality_fragment/1"
+"""Versioned capability fragment document id."""
+
 CAPABILITY_SEAT_WALK: Final[str] = "seat_walk"
-"""Capability id reserved for projection/registry (0.61.2+). Walk exists now."""
+"""Core observe: discover seats + fold seat reports (landed 0.61.1/0.61.2)."""
+
+CAPABILITY_EMISSION_WINDOW: Final[str] = "emission_window"
+"""Observe: recent emissions + actor partition (body 0.61.3+)."""
+
+CAPABILITY_BOOT_MEMBERSHIP: Final[str] = "boot_membership"
+"""Optional observe: boot walk context as capability (seat also exists)."""
+
+CAPABILITY_SYSTEM_LOG_TAIL: Final[str] = "system_log_tail"
+"""Optional observe: system log sample (BI-015 neighbor)."""
+
+CAPABILITY_PROCESS_RESOURCES: Final[str] = "process_resources"
+"""Optional observe: RSS/CPU/threads (stdlib; mode-gated)."""
+
+CAPABILITY_LOADED_BULK: Final[str] = "loaded_bulk"
+"""Optional observe: light size of attached seats — visibility not shame."""
+
+CAPABILITY_BENCHMARK: Final[str] = "benchmark"
+"""Active tool (intention until ready)."""
+
+CAPABILITY_MONITOR_AGENT: Final[str] = "monitor_agent"
+"""Active tool (intention until ready)."""
+
+# Maturity / role for registry growth
+MATURITY_INSTALLED: Final[str] = "installed"
+MATURITY_INTENTION: Final[str] = "intention"
+
+ROLE_OBSERVE: Final[str] = "observe"
+ROLE_TOOL: Final[str] = "tool"
+
+COST_CHEAP: Final[str] = "cheap"
+COST_MODERATE: Final[str] = "moderate"
+COST_EXPENSIVE: Final[str] = "expensive"
 
 
 def supervisor_service_seat_id(service_name: str) -> str:
@@ -112,7 +152,18 @@ def supervisor_service_seat_id(service_name: str) -> str:
 
 
 __all__ = [
+    "CAPABILITY_BENCHMARK",
+    "CAPABILITY_BOOT_MEMBERSHIP",
+    "CAPABILITY_EMISSION_WINDOW",
+    "CAPABILITY_FRAGMENT_SCHEMA",
+    "CAPABILITY_LOADED_BULK",
+    "CAPABILITY_MONITOR_AGENT",
+    "CAPABILITY_PROCESS_RESOURCES",
     "CAPABILITY_SEAT_WALK",
+    "CAPABILITY_SYSTEM_LOG_TAIL",
+    "COST_CHEAP",
+    "COST_EXPENSIVE",
+    "COST_MODERATE",
     "KIND_BOOT",
     "KIND_ENGINE",
     "KIND_LOG",
@@ -126,6 +177,10 @@ __all__ = [
     "KNOWN_STATES",
     "LINEAGE_ADAPTER",
     "LINEAGE_NATIVE",
+    "MATURITY_INSTALLED",
+    "MATURITY_INTENTION",
+    "ROLE_OBSERVE",
+    "ROLE_TOOL",
     "SEAT_BOOT_MEMBERSHIP",
     "SEAT_EXECUTION",
     "SEAT_REPORT_SCHEMA",
@@ -143,5 +198,6 @@ __all__ = [
     "SeatKindName",
     "SeatLineageName",
     "SeatStateName",
+    "VITALITY_SNAPSHOT_SCHEMA",
     "supervisor_service_seat_id",
 ]

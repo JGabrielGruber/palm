@@ -1,8 +1,14 @@
 """
-Seat-report adapters — temporary lineage from status / doctor_snapshot (0.61.1).
+Seat-report adapters — transitional bridge from status / doctor_snapshot (0.61.1).
 
-Adapters are **first-class honesty**, not shame. Mark ``lineage: adapter`` and
-``meta.adapter_source``. Prefer native :meth:`seat_report` when the seat grows it.
+**Architecture stance (0.61 plan):** adapters are **not** the vitality foundation.
+Forward work (projection, registry, inspect present) implements as if they were
+absent — discover + native reports + presence truth. Interpretation of doctor
+fields belongs in product present, not system eyes law.
+
+Until seats grow native ``seat_report``, these bridges remain **honest residue**
+with ``lineage: adapter`` and ``meta.adapter_source``. Prefer native when present.
+Do not deepen adapter smarts here.
 """
 
 from __future__ import annotations

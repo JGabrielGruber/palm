@@ -1,0 +1,220 @@
+"""0.61.2 — VitalityRegistry + VitalityProjection (seat_walk fold)."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+from palm.system.vitality import (
+    CAPABILITY_EMISSION_WINDOW,
+    CAPABILITY_SEAT_WALK,
+    LINEAGE_ADAPTER,
+    LINEAGE_NATIVE,
+    MATURITY_INTENTION,
+    SEAT_WAIT_PLANE,
+    STATE_ABSENT,
+    STATE_OK,
+    STATE_SKIPPED,
+    VITALITY_SNAPSHOT_SCHEMA,
+    CapabilityFragment,
+    ProjectionOptions,
+    SampleContext,
+    VitalityCapability,
+    VitalityProjection,
+    VitalityRegistry,
+    default_vitality_registry,
+    discover_seats,
+    project,
+    project_seat_walk_only,
+    project_top,
+    reset_default_vitality_registry_for_tests,
+)
+
+
+def setup_function() -> None:
+    reset_default_vitality_registry_for_tests()
+    reset_system_log_for_tests()
+
+
+# ── registry ─────────────────────────────────────────────────────────────────
+
+
+def test_default_registry_has_seat_walk_enabled() -> None:
+    reg = default_vitality_registry()
+    assert CAPABILITY_SEAT_WALK in reg
+    assert reg.is_enabled(CAPABILITY_SEAT_WALK)
+    assert CAPABILITY_EMISSION_WINDOW in reg
+    assert not reg.is_enabled(CAPABILITY_EMISSION_WINDOW)
+    row = next(r for r in reg.catalog() if r["id"] == CAPABILITY_EMISSION_WINDOW)
+    assert row["maturity"] == MATURITY_INTENTION
+
+
+def test_registry_enable_disable_clone() -> None:
+    reg = default_vitality_registry()
+    reg.enable(CAPABILITY_EMISSION_WINDOW)
+    assert reg.is_enabled(CAPABILITY_EMISSION_WINDOW)
+    clone = reg.clone()
+    clone.disable(CAPABILITY_EMISSION_WINDOW)
+    assert reg.is_enabled(CAPABILITY_EMISSION_WINDOW)
+    assert not clone.is_enabled(CAPABILITY_EMISSION_WINDOW)
+
+
+def test_custom_capability_registration() -> None:
+    calls: list[str] = []
+
+    def _sample(inst: Any, ctx: SampleContext) -> CapabilityFragment:
+        calls.append("x")
+        return CapabilityFragment.ok("custom_eye", {"n": 1})
+
+    reg = VitalityRegistry()
+    reg.register(
+        VitalityCapability(id="custom_eye", sample=_sample, order=1),
+        enabled=True,
+    )
+    snap = VitalityProjection(reg).sample(object())
+    assert "custom_eye" in snap.fragments
+    assert snap.fragments["custom_eye"].data["n"] == 1
+    assert calls == ["x"]
+
+
+# ── projection fold ──────────────────────────────────────────────────────────
+
+
+def test_project_started_runtime_seat_walk() -> None:
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=True)
+    try:
+        snap = project(rt)
+        assert snap.schema == VITALITY_SNAPSHOT_SCHEMA
+        assert CAPABILITY_SEAT_WALK in snap.fragments
+        frag = snap.fragments[CAPABILITY_SEAT_WALK]
+        assert frag.present is True
+        assert frag.state == STATE_OK
+        assert len(snap.seats) > 0
+        assert snap.summary["present_count"] > 0
+        assert SEAT_WAIT_PLANE in snap.summary["present_ids"]
+
+        # Lineage ties seats to seat_walk capability.
+        seat_lines = [row for row in snap.lineage if row.get("seat_id")]
+        assert any(row["seat_id"] == SEAT_WAIT_PLANE for row in seat_lines)
+        assert all(row["capability_id"] == CAPABILITY_SEAT_WALK for row in seat_lines)
+
+        # Intention caps not sampled by default.
+        assert CAPABILITY_EMISSION_WINDOW not in snap.fragments
+    finally:
+        rt.stop()
+
+
+def test_project_top_view_structural() -> None:
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        top = project_top(rt)
+        assert top["schema"] == VITALITY_SNAPSHOT_SCHEMA
+        assert "summary" in top
+        assert "seats" in top
+        wait = next(s for s in top["seats"] if s["seat_id"] == SEAT_WAIT_PLANE)
+        assert wait["present"] is True
+        assert wait["lineage"] in (LINEAGE_NATIVE, LINEAGE_ADAPTER)
+        # load passed through, not re-curated by projection.
+        assert isinstance(wait.get("load"), dict)
+    finally:
+        rt.stop()
+
+
+def test_projection_receives_reports_no_second_walk_in_bag() -> None:
+    """seat_walk stores reports in bag; projection does not invent seats."""
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        direct = discover_seats(rt)
+        snap = project_seat_walk_only(rt)
+        assert len(snap.seats) == len(direct)
+        assert {s.seat_id for s in snap.seats} == {s.seat_id for s in direct}
+    finally:
+        rt.stop()
+
+
+def test_lean_shell_projection_honest_absent() -> None:
+    class _Lean:
+        is_started = False
+
+    snap = project_seat_walk_only(_Lean())
+    assert snap.summary["absent_count"] >= 4
+    by_id = snap.seat_by_id()
+    assert by_id[SEAT_WAIT_PLANE].state == STATE_ABSENT
+
+
+def test_disabled_seat_walk_empty_seats() -> None:
+    reg = default_vitality_registry()
+    reg.disable(CAPABILITY_SEAT_WALK)
+    snap = VitalityProjection(reg).sample(object())
+    assert CAPABILITY_SEAT_WALK not in snap.fragments
+    assert snap.seats == []
+    assert snap.summary["seat_count"] == 0
+
+
+def test_only_unknown_capability_skipped() -> None:
+    reg = default_vitality_registry()
+    snap = VitalityProjection(reg).sample(
+        object(),
+        ProjectionOptions(only=frozenset({"no_such_cap"})),
+    )
+    assert snap.fragments["no_such_cap"].state == STATE_SKIPPED
+    assert "no_such_cap" in snap.skipped_capabilities
+
+
+def test_extra_enable_intention_returns_skipped_body() -> None:
+    """Intention stub is registered; enabling it yields skipped fragment, not fake ok."""
+    reg = default_vitality_registry()
+    snap = VitalityProjection(reg).sample(
+        object(),
+        ProjectionOptions(
+            only=frozenset({CAPABILITY_EMISSION_WINDOW}),
+            extra_enable=frozenset({CAPABILITY_EMISSION_WINDOW}),
+        ),
+    )
+    # only= filters list; emission is intention and sample returns skipped
+    frag = snap.fragments[CAPABILITY_EMISSION_WINDOW]
+    assert frag.state == STATE_SKIPPED
+    assert "intention_not_implemented" in frag.notes[0]
+
+
+def test_capability_error_becomes_error_fragment() -> None:
+    def _boom(inst: Any, ctx: SampleContext) -> CapabilityFragment:
+        raise RuntimeError("cap_fail")
+
+    reg = VitalityRegistry()
+    reg.register(
+        VitalityCapability(id="boom", sample=_boom),
+        enabled=True,
+    )
+    snap = VitalityProjection(reg).sample(object())
+    assert snap.fragments["boom"].state == "error"
+    assert "cap_fail" in snap.fragments["boom"].notes[0]
+
+
+def test_snapshot_to_dict_schema() -> None:
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        d = project(rt).to_dict()
+        assert d["schema"] == VITALITY_SNAPSHOT_SCHEMA
+        assert CAPABILITY_SEAT_WALK in d["fragments"]
+        assert isinstance(d["seats"], list)
+        assert isinstance(d["lineage"], list)
+    finally:
+        rt.stop()
+
+
+def test_projection_does_not_start_services() -> None:
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=True)
+    try:
+        assert rt.supervisor is not None
+        assert rt.supervisor.status()["running_count"] == 0
+        project(rt)
+        assert rt.supervisor.status()["running_count"] == 0
+    finally:
+        rt.stop()

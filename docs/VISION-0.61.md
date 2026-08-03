@@ -1,6 +1,6 @@
 # VISION 0.61 — Living-kernel vitality
 
-**Status:** 📋 **Open** — plan **0.61.0** ✅ · seat walk **0.61.1** in progress (landed instrument; stamp when José exits slice).  
+**Status:** 📋 **Open** — plan **0.61.0** ✅ · seat walk **0.61.1** landed · projection **0.61.2** landed (stamps when José exits slices).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [030-system-vitality.md](adr/030-system-vitality.md) **Proposed**.  
@@ -212,22 +212,26 @@ New seats appear by **being attached**.
 **Default seeds:** `wait_plane` · `session_plane` · `work_plane` · `supervisor` · `execution` · `system_log` · `boot_membership`  
 **Dynamic expansion:** `supervisor.<service_name>` from live registry (not a closed menu)
 
-Adapters from old `status` / `doctor_snapshot` are allowed only with `lineage: adapter` and a debt path to remove them.  
+Adapters from old `status` / `doctor_snapshot` are **transitional residue** only (`lineage: adapter`).  
+**Plan law:** forward work implements **as if adapters were not the foundation** — discover + native + receive. Do not deepen system adapter maps. Interpretation of doctor fields → product present (Inspect), not system eyes.  
 Native today: `SystemLog.seat_report` · `SystemSupervisor.seat_report`.
 
 ### 6.4 Capability catalog (registry)
 
-| Id | Role |
-|----|------|
-| `seat_walk` | Discover + fold seat reports |
-| `emission_window` | Recent yield / wait heat / fail + actor partition |
-| `boot_membership` | Last walk / membership context |
-| `system_log_tail` | Operate tape sample (BI-015 neighbor) |
-| `process_resources` | RSS/CPU/threads (stdlib) |
-| `loaded_bulk` | Light size of attached seats/modules — visibility not shame |
-| `benchmark` / `monitor_agent` | Grow when ready; intention stubs OK |
+| Id | Role | Maturity (0.61.2) |
+|----|------|-------------------|
+| `seat_walk` | Discover + fold seat reports | **installed** · enabled |
+| `emission_window` | Recent yield / wait heat / fail + actor partition | intention stub |
+| `boot_membership` | Last walk / membership context | intention stub |
+| `system_log_tail` | Operate tape sample (BI-015 neighbor) | intention stub |
+| `process_resources` | RSS/CPU/threads (stdlib) | intention stub |
+| `loaded_bulk` | Light size of attached seats/modules — visibility not shame | intention stub |
+| `benchmark` / `monitor_agent` | Grow when ready | intention stubs |
 
-Projection: iterate enabled capabilities → merge → snapshot with `capability_id` lineage.
+**Locked (0.61.2):** `VitalityRegistry` · `VitalityCapability` · `CapabilityFragment` · `VitalityProjection` · snapshot schema **`palm.vitality_snapshot/1`**  
+**API:** `project` / `project_top` / `project_seat_walk_only`  
+Projection: iterate **enabled** capabilities → fragment → merge → snapshot with `capability_id` + seat lineage.  
+Projection **receives** seat reports; it does not re-curate load fields.
 
 ### 6.5 Emission identity
 
@@ -257,8 +261,8 @@ Theme stays open while José still needs proper eyes.
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
 | **0** | Plan + map + ADR | This file · ADR-030 Proposed · STATUS · debt rows · seed open — ✅ **0.61.0** |
-| **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters lineage-marked — **landed** (`palm.system.vitality`, schema `/1`, tests) — stamp when José exits |
-| **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; inspect/top present from projection |
+| **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters residue — **landed** — stamp when José exits |
+| **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; `project` / `project_top` — **landed** — stamp when José exits |
 | **3** | Emission window + actor envelope | Partition or unknown; no second write path |
 | **4** | InspectService rename | SD-007; host/assist/MCP doors; product SystemService not law |
 | **5+** | Growth | Native reports; optional caps; host status compost; doctor thin; tools |

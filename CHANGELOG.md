@@ -4,6 +4,16 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.61.2 — Projection + registry (landed; stamp pending)
+
+- **`VitalityRegistry`** — capability catalog; enable/disable; installed vs intention
+- **`VitalityProjection`** — enabled caps → fragments → **`palm.vitality_snapshot/1`**
+- **`seat_walk`** installed capability; other catalog ids as intention stubs
+- **`project` / `project_top` / `project_seat_walk_only`** — present path for inspect/top
+- Projection **receives** reports (structural summary only); does not deepen adapters
+- Adapter stance named: transitional residue, not architecture of record
+- Tests: `tests/test_vitality_projection_0_61_2.py`
+
 ### 0.61.1 — Seat report + dynamic walk (landed; stamp pending)
 
 - **`palm.system.vitality`** — system observation home (not a plane)
