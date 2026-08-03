@@ -73,7 +73,8 @@ class SessionPlaneService:
 
     Lifecycle:
     * construct with :class:`SessionStore` (or storage engine)
-    * :meth:`attach` / :meth:`detach` — plane↔runtime link (not instances)
+    * :meth:`attach` / :meth:`detach` — optional inspect collaborators
+      (instance manager, job resolve, wait plane). Not a full runtime bag.
     * :meth:`open` / :meth:`get` / :meth:`close` / :meth:`list_sessions`
     * :meth:`attach_instance` / :meth:`detach_instance` — multi-attach (0.58.2)
     * :meth:`set_active_instance` / :attr:`SessionRecord.active_instance_id` (0.58.10)
@@ -96,7 +97,10 @@ class SessionPlaneService:
             self._store = SessionStore(storage)
         else:
             raise TypeError("SessionPlaneService requires store= or storage=")
-        self._runtime: Any | None = None
+        self._wired = False
+        self._instance_manager: Any | None = None
+        self._get_job: Any | None = None
+        self._wait_plane: Any | None = None
 
     @property
     def store(self) -> SessionStore:
@@ -104,15 +108,28 @@ class SessionPlaneService:
 
     @property
     def is_attached(self) -> bool:
-        return self._runtime is not None
+        """True after :meth:`attach` (install path). Store works without it."""
+        return self._wired
 
-    def attach(self, runtime: Any) -> None:
-        """Bind plane to a system instance (BaseRuntime)."""
-        self._runtime = runtime
+    def attach(
+        self,
+        *,
+        instance_manager: Any | None = None,
+        get_job: Any | None = None,
+        wait_plane: Any | None = None,
+    ) -> None:
+        """Wire optional inspect collaborators. Callers extract them."""
+        self._instance_manager = instance_manager
+        self._get_job = get_job
+        self._wait_plane = wait_plane
+        self._wired = True
 
     def detach(self) -> None:
-        """Unbind from runtime. Session records stay in StorageEngine."""
-        self._runtime = None
+        """Clear inspect collaborators. Session records stay in StorageEngine."""
+        self._instance_manager = None
+        self._get_job = None
+        self._wait_plane = None
+        self._wired = False
 
     def open(
         self,
@@ -735,14 +752,12 @@ class SessionPlaneService:
             "instance_id": instance_id,
             "session_id": session_id,
         }
-        rt = self._runtime
-        if rt is None:
+        manager = self._instance_manager
+        if manager is None:
             return row
         inst = None
         try:
-            manager = getattr(rt, "instance_manager", None)
-            if manager is not None:
-                inst = manager.get(instance_id)
+            inst = manager.get(instance_id)
         except Exception:
             inst = None
         if inst is None:
@@ -764,10 +779,10 @@ class SessionPlaneService:
             resolved = getattr(inst, "session_id", None)
         if resolved:
             row["session_id"] = resolved
-        job = self._resolve_job(rt, getattr(inst, "job_id", None))
+        job = self._resolve_job(getattr(inst, "job_id", None))
         waits: list[dict[str, Any]] = []
         if job is not None:
-            waits = self._waiting_on_for_job(rt, job)
+            waits = self._waiting_on_for_job(job)
         if not waits:
             # Fallback: interests on durable instance state (resume-shaped).
             waits = self._waiting_on_from_instance(inst)
@@ -796,28 +811,19 @@ class SessionPlaneService:
         except Exception:
             return []
 
-    def _resolve_job(self, runtime: Any, job_id: str | None) -> Any | None:
+    def _resolve_job(self, job_id: str | None) -> Any | None:
         if not job_id:
             return None
-        try:
-            get_job = getattr(runtime, "get_job", None)
-            if callable(get_job):
-                return get_job(str(job_id))
-        except Exception:
-            pass
-        orch = getattr(runtime, "orchestration", None)
-        if orch is None:
+        get_job = self._get_job
+        if not callable(get_job):
             return None
-        jobs = getattr(orch, "jobs", None)
-        if isinstance(jobs, dict):
-            return jobs.get(str(job_id))
         try:
-            return orch.get_job(str(job_id))
+            return get_job(str(job_id))
         except Exception:
             return None
 
-    def _waiting_on_for_job(self, runtime: Any, job: Any) -> list[dict[str, Any]]:
-        wait_plane = getattr(runtime, "wait_plane", None)
+    def _waiting_on_for_job(self, job: Any) -> list[dict[str, Any]]:
+        wait_plane = self._wait_plane
         if wait_plane is not None and hasattr(wait_plane, "waiting_on_for_job"):
             try:
                 return list(wait_plane.waiting_on_for_job(job) or [])
@@ -885,17 +891,49 @@ class SessionPlaneService:
         }
 
 
+def _session_get_job_from_runtime(runtime: Any) -> Any:
+    """Build a get_job callable from runtime public surface (bind helper only)."""
+
+    def get_job(job_id: str) -> Any | None:
+        try:
+            fn = getattr(runtime, "get_job", None)
+            if callable(fn):
+                return fn(str(job_id))
+        except Exception:
+            pass
+        orch = getattr(runtime, "orchestration", None)
+        if orch is None:
+            return None
+        jobs = getattr(orch, "jobs", None)
+        if isinstance(jobs, dict):
+            return jobs.get(str(job_id))
+        try:
+            return orch.get_job(str(job_id))
+        except Exception:
+            return None
+
+    return get_job
+
+
 def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
-    """Attach a new (or existing) session plane on the runtime's planes hub.
+    """Wire a new (or existing) session plane on the runtime's planes hub.
 
     Always ensures the well-known **host** service session (0.58.13) so
     internal attribution has a stable seat after start.
     """
     from palm.system.planes.hub import SystemPlanes
 
+    wait = getattr(runtime, "wait_plane", None)
+    im = getattr(runtime, "instance_manager", None)
+    get_job = _session_get_job_from_runtime(runtime)
+
     existing = getattr(runtime, "session_plane", None)
     if isinstance(existing, SessionPlaneService):
-        existing.attach(runtime)
+        existing.attach(
+            instance_manager=im,
+            get_job=get_job,
+            wait_plane=wait,
+        )
         try:
             existing.ensure_host_session()
         except Exception:
@@ -905,7 +943,11 @@ def bind_session_plane_to_runtime(runtime: Any) -> SessionPlaneService:
     if storage is None:
         raise SessionPlaneError("runtime has no storage for session plane")
     plane = SessionPlaneService(storage=storage)
-    plane.attach(runtime)
+    plane.attach(
+        instance_manager=im,
+        get_job=get_job,
+        wait_plane=wait,
+    )
     hub = getattr(runtime, "_planes", None)
     if not isinstance(hub, SystemPlanes):
         hub = SystemPlanes()

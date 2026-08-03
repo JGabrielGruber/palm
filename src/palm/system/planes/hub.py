@@ -37,7 +37,7 @@ class SystemPlanes:
         """
         Consume a plane instance under *name*.
 
-        Does not construct or attach the plane to the runtime — caller does that.
+        Does not construct or wire collaborators — caller does that, then puts.
         Replaces an existing member of the same name (detaches the old one).
         """
         key = str(name or "").strip()

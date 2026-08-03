@@ -38,7 +38,8 @@ def test_wait_plane_attach_and_resume() -> None:
 
     plane = WaitPlaneService()
     plane.open_on_job(owner, make_job_wait("child-p"))
-    plane.attach(_Rt())
+    rt = _Rt()
+    plane.attach(orchestration=rt.orchestration, event=rt.event)
     assert plane.matcher is not None
     plane.handle_payload(
         "job.completed",

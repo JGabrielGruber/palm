@@ -28,7 +28,8 @@ class WorkPlaneService:
     """Start plane: WorkIntent queue + schedules + trigger attach + tick.
 
     Lifecycle:
-    * :meth:`attach` — bind storage, submit callback, optional event bus
+    * :meth:`attach` — wire storage, submit callback, optional event bus
+      (callers pass collaborators; no full runtime bag)
     * :meth:`detach` — clear bus subscriptions
     * :meth:`start_background` / :meth:`stop_background` — continuous tick
       (also registered on :class:`~palm.system.supervisor.SystemSupervisor`)
@@ -46,7 +47,6 @@ class WorkPlaneService:
         self._event_engine: EventEngine | None = None
         self._subs: list[Any] = []
         self._dropped_depth = 0
-        self._runtime: Any | None = None
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self._bg_started = False
@@ -81,36 +81,34 @@ class WorkPlaneService:
 
     def attach(
         self,
-        runtime: Any,
         *,
-        submit_flow: Callable[[str, dict[str, Any]], Any] | None = None,
+        storage: StorageEngine,
+        submit_flow: Callable[[str, dict[str, Any]], Any],
         able: Callable[[], bool] | None = None,
+        event: EventEngine | None = None,
         max_depth: int = 8,
         batch_size: int = 10,
         poll_interval: float = 1.0,
         attach_events: bool = True,
     ) -> None:
-        """Bind storage and effectors on a started (or starting) system instance."""
+        """Wire storage and effectors. Callers own extraction from the machine."""
         if self._store is not None:
             self.detach()
 
-        storage: StorageEngine = runtime.storage
         if not getattr(storage, "is_initialized", True):
             raise RuntimeError("work plane requires initialized storage")
 
-        self._runtime = runtime
         self._store = WorkIntentStore(storage)
         self._schedules = ScheduleRegistry(storage, self._store)
         self._max_depth = max(1, int(max_depth))
         self._batch_size = max(1, int(batch_size))
         self._poll_interval = max(0.05, float(poll_interval))
-        self._able = able or (lambda: bool(getattr(runtime, "is_started", True)))
-        self._submit_flow = submit_flow or _default_submit(runtime)
+        self._able = able if able is not None else (lambda: True)
+        self._submit_flow = submit_flow
         self._dropped_depth = 0
 
-        if attach_events:
-            event = getattr(runtime, "event", None)
-            if event is not None and getattr(event, "is_initialized", False):
+        if attach_events and event is not None:
+            if getattr(event, "is_initialized", False):
                 self.attach_event_engine(event)
 
     def set_submit_flow(
@@ -133,7 +131,6 @@ class WorkPlaneService:
         self._store = None
         self._schedules = None
         self._submit_flow = None
-        self._runtime = None
         self._triggers = TriggerRegistry()
         self._dropped_depth = 0
 
@@ -337,4 +334,11 @@ def _default_submit(
     return submit
 
 
-__all__ = ["WorkPlaneService"]
+def default_submit_flow(
+    runtime: Any,
+) -> Callable[[str, dict[str, Any]], Any]:
+    """Public factory: submit via system executor (schedule / bind use this)."""
+    return _default_submit(runtime)
+
+
+__all__ = ["WorkPlaneService", "default_submit_flow"]

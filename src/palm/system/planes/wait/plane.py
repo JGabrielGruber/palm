@@ -1,8 +1,9 @@
 """WaitPlaneService — first-class **continue** plane (0.55.10).
 
-Peer of work-drain (**start**): completer events on ``runtime.event`` match
-open wait interests and resume or fail owner jobs. Runtimes attach this service
-at start; completers never import it (register-downward).
+Peer of work-drain (**start**): completer events on the event engine match
+open wait interests and resume or fail owner jobs. Boot / bind helpers
+wire collaborators; the plane never holds a full runtime.
+Completers never import this plane (register-downward).
 """
 
 from __future__ import annotations
@@ -32,14 +33,14 @@ class WaitPlaneService:
     """Continue plane: interest open/close + event match → resume/fail.
 
     Lifecycle:
-    * :meth:`attach` — bind to a runtime's orchestration + ``runtime.event``
+    * :meth:`attach` — wire orchestration + optional event engine
     * :meth:`detach` — unsubscribe
     """
 
     def __init__(self) -> None:
         self._index = WaitOwnerIndex()
         self._matcher: WaitMatcher | None = None
-        self._runtime: Any | None = None
+        self._orchestration: Any | None = None
 
     @property
     def matcher(self) -> WaitMatcher | None:
@@ -53,12 +54,21 @@ class WaitPlaneService:
     def is_attached(self) -> bool:
         return self._matcher is not None and bool(getattr(self._matcher, "_subs", None))
 
-    def attach(self, runtime: Any) -> WaitMatcher:
-        """Wire matcher to ``runtime.event`` and orchestration job store."""
+    def attach(
+        self,
+        *,
+        orchestration: Any,
+        event: EventEngine | None = None,
+    ) -> WaitMatcher:
+        """Wire matcher to orchestration job store and optional event bus.
+
+        Callers (boot schedule, bind helpers) extract collaborators — the plane
+        does not take or store a full runtime.
+        """
         if self._matcher is not None:
             self.detach()
-        self._runtime = runtime
-        orch = runtime.orchestration
+        orch = orchestration
+        self._orchestration = orch
 
         def get_job(job_id: str) -> Any:
             try:
@@ -111,7 +121,6 @@ class WaitPlaneService:
             resume_owner=resume_owner,
             fail_owner=fail_owner,
         )
-        event: EventEngine | None = getattr(runtime, "event", None)
         if event is not None:
             matcher.attach_events(event)
         self._matcher = matcher
@@ -124,14 +133,12 @@ class WaitPlaneService:
             self._matcher.detach_events()
             self._matcher = None
         self._index.clear()
-        self._runtime = None
+        self._orchestration = None
 
     def rebuild_index(self) -> int:
         """Rebuild target→owners index from live jobs' open interests. Returns count."""
         self._index.clear()
-        if self._runtime is None:
-            return 0
-        orch = getattr(self._runtime, "orchestration", None)
+        orch = self._orchestration
         if orch is None:
             return 0
         n = 0
@@ -195,10 +202,8 @@ class WaitPlaneService:
     def doctor_snapshot(self, jobs: list[Any] | None = None) -> dict[str, Any]:
         """Compact continue-plane health for doctor / control plane."""
         job_list = jobs
-        if job_list is None and self._runtime is not None:
-            orch = getattr(self._runtime, "orchestration", None)
-            if orch is not None:
-                job_list = list(orch.jobs.values())
+        if job_list is None and self._orchestration is not None:
+            job_list = list(self._orchestration.jobs.values())
         job_list = job_list or []
         open_owners = 0
         open_interests = 0
@@ -235,11 +240,15 @@ class WaitPlaneService:
 
 
 def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
-    """Create wait plane and put it on the runtime's :class:`SystemPlanes` hub."""
+    """Create wait plane, wire collaborators from *runtime*, put on hub."""
     from palm.system.planes.hub import SystemPlanes
 
     plane = WaitPlaneService()
-    plane.attach(runtime)
+    orch = getattr(runtime, "orchestration", None)
+    if orch is None:
+        raise RuntimeError("runtime has no orchestration for wait plane")
+    event = getattr(runtime, "event", None)
+    plane.attach(orchestration=orch, event=event)
     hub = getattr(runtime, "_planes", None)
     if not isinstance(hub, SystemPlanes):
         hub = SystemPlanes()

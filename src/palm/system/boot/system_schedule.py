@@ -38,7 +38,7 @@ from palm.system.log import get_system_log
 from palm.system.planes.hub import SystemPlanes
 from palm.system.planes.session.plane import SessionPlaneService
 from palm.system.planes.wait.plane import WaitPlaneService
-from palm.system.planes.work.plane import WorkPlaneService
+from palm.system.planes.work.plane import WorkPlaneService, default_submit_flow
 from palm.system.planes.workload.bootstrap import initialize_workload_engine
 from palm.system.runtime.hooks import (
     AuthMiddleware,
@@ -189,18 +189,44 @@ def build_system_handlers(
         """
         Create :class:`SystemPlanes` and put members (same pattern as supervisor).
 
-        The hub **consumes** planes; constructors live here, membership on the hub.
+        The hub **consumes** planes. Schedule constructs, extracts collaborators,
+        wires each plane, then ``put``s — planes never take the full runtime.
         """
         slog = get_system_log()
         hub = SystemPlanes()
         runtime._planes = hub
 
         wait = WaitPlaneService()
-        wait.attach(runtime)
+        wait.attach(
+            orchestration=runtime.orchestration,
+            event=getattr(runtime, "event", None),
+        )
         hub.put("wait", wait, aliases=("wait_plane",))
 
+        def _get_job(job_id: str) -> Any:
+            try:
+                fn = getattr(runtime, "get_job", None)
+                if callable(fn):
+                    return fn(str(job_id))
+            except Exception:
+                pass
+            orch = getattr(runtime, "orchestration", None)
+            if orch is None:
+                return None
+            jobs = getattr(orch, "jobs", None)
+            if isinstance(jobs, dict):
+                return jobs.get(str(job_id))
+            try:
+                return orch.get_job(str(job_id))
+            except Exception:
+                return None
+
         session = SessionPlaneService(storage=runtime.storage)
-        session.attach(runtime)
+        session.attach(
+            instance_manager=getattr(runtime, "instance_manager", None),
+            get_job=_get_job,
+            wait_plane=wait,
+        )
         try:
             session.ensure_host_session()
         except Exception as exc:
@@ -218,11 +244,13 @@ def build_system_handlers(
         poll_interval = float(options.get("work_drain_poll_interval", 1.0) or 1.0)
         work = WorkPlaneService()
         work.attach(
-            runtime,
+            storage=runtime.storage,
+            submit_flow=default_submit_flow(runtime),
+            able=lambda: bool(getattr(runtime, "is_started", False)),
+            event=getattr(runtime, "event", None),
             max_depth=max_depth,
             batch_size=batch_size,
             poll_interval=poll_interval,
-            able=lambda: bool(getattr(runtime, "is_started", False)),
         )
         hub.put("work", work, aliases=("work_plane",))
 

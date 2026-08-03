@@ -48,7 +48,8 @@ def test_rebuild_index_from_live_jobs() -> None:
         event = type("E", (), {"subscribe": lambda *a, **k: type("S", (), {"unsubscribe": lambda s: None})()})()
         orchestration = _Orch()
 
-    plane.attach(_Rt())
+    rt = _Rt()
+    plane.attach(orchestration=rt.orchestration, event=rt.event)
     assert "rebuild-o" in plane.index.owners_for(kind=WAIT_KIND_JOB, target_id="c-rebuild")
     plane.detach()
     assert len(plane.index) == 0

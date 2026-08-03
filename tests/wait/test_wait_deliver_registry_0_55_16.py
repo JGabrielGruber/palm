@@ -119,7 +119,8 @@ def test_plane_resume_uses_registry_not_nested_only() -> None:
             event = None
 
         plane = WaitPlaneService()
-        plane.attach(_Runtime())
+        rt = _Runtime()
+        plane.attach(orchestration=rt.orchestration, event=rt.event)
         plane.handle_payload(
             "job.completed",
             {"job_id": "child-p", "status": "SUCCEEDED"},
