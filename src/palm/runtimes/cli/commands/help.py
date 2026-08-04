@@ -19,6 +19,8 @@ def cmd_help(ctx: CliContext, _args: list[str]) -> int:
   status <id>               Instance detail (job + wizard read models)
   doctor                    Full engine health report
   doctor --dashboard        Dashboard (supports --full / -r)
+  benchmark [recipe] [-n N] Vitality load tool (opt-in; Inspect present)
+  benchmark log_fill --json Recipe: idle · pulse · walk · log_fill
 
 [bold]Assist[/] [dim](conversational operator guidance — 0.21)[/]
   assist list               Registered assist scenarios

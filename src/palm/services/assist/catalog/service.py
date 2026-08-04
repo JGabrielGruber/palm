@@ -32,6 +32,21 @@ class AssistCatalogService:
         """Full vitality snapshot via product inspect door."""
         return self._assist.inspect.vitality(self._assist.resolve_runtime())
 
+    def benchmark(
+        self,
+        *,
+        recipe: str = "pulse",
+        iterations: int = 10,
+        store_full_snapshots: bool = False,
+    ) -> dict[str, Any]:
+        """Opt-in vitality benchmark via product inspect door (not everyday top)."""
+        return self._assist.inspect.benchmark(
+            self._assist.resolve_runtime(),
+            recipe=recipe,
+            iterations=iterations,
+            store_full_snapshots=store_full_snapshots,
+        )
+
     def list_flows(self) -> list[dict[str, Any]]:
         return self._assist.definitions.list_flows()
 

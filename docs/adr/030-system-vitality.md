@@ -103,6 +103,10 @@ recipes `idle` · `pulse` · `walk` · `log_fill`; nested observe-only projectio
 (before/after); pure `diff_load_points`; consumes projection (no second metric
 law). Workload placement later.
 
+**Progress (0.61.11):** Product present — `InspectService.benchmark` /
+`present_benchmark`; CLI `palm benchmark` (and assist catalog thin pass-through).
+Surfaces do not thrash or invent load counters; they call the inspect door.
+
 ### D6 — Product door is Inspect
 
 Rename product **`palm.services.system` / `SystemService`** to **`palm.services.inspect` / `InspectService`** (**SD-007**).

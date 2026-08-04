@@ -281,7 +281,8 @@ Theme stays open while José still needs proper eyes.
 | **8** | `process_resources` | Stdlib RSS/CPU/threads · top `process` · units honest — **landed** — stamp when José exits |
 | **9** | `loaded_bulk` | Attached seats · module LOC · composition · top `bulk` · not shame — **landed** — stamp when José exits |
 | **10** | `benchmark` tool | Recipe · observe snapshot₀/₁ · pure diff · off by default — **landed** — stamp when José exits |
-| **11+** | Growth | `monitor_agent`; native reports; remaining stubs |
+| **11** | Inspect + CLI present | `InspectService.benchmark` · `palm benchmark` thin surface — **landed** — stamp when José exits |
+| **12+** | Growth | Deeper recipes; `monitor_agent`; native reports; remaining stubs |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
 
 ---

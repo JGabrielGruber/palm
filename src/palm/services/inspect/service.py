@@ -7,6 +7,9 @@ collides with the system layer or the supervisor continuous-loop protocol.
 
 0.61.6 / OD-001: ``doctor`` is demoted to **anatomy packaging** — nests living
 eyes from projection; does not invent seat law.
+
+0.61.11: ``benchmark`` presents the vitality tool (opt-in thrash via
+``run_benchmark``); not enabled on everyday ``top`` / ``project``.
 """
 
 from __future__ import annotations
@@ -26,12 +29,17 @@ from palm.common.services.base import BaseService
 from palm.common.services.errors import InstanceNotFoundServiceError
 from palm.kits.server.diagnostics import build_doctor_report
 from palm.services.inspect.present import (
+    present_benchmark,
     present_doctor,
     present_top,
     present_vitality,
     present_vitality_for_doctor,
 )
-from palm.system.vitality import ProjectionOptions
+from palm.system.vitality import (
+    DEFAULT_ITERATIONS,
+    DEFAULT_RECIPE,
+    ProjectionOptions,
+)
 
 
 def _application_host_from(runtime: Any) -> Any | None:
@@ -70,6 +78,9 @@ class InspectService(BaseService):
     Living eyes: :meth:`top` and :meth:`vitality` read
     :mod:`palm.system.vitality` only.
 
+    :meth:`benchmark` presents the opt-in load tool (recipe → snapshot diff).
+    Not part of everyday ``top``; thrash only when called.
+
     :meth:`doctor` is a **legacy verb** (OD-001): anatomy packaging that nests
     projection output. Prefer ``top`` / ``vitality`` for operate physiology.
 
@@ -94,6 +105,27 @@ class InspectService(BaseService):
     ) -> dict[str, Any]:
         """Full vitality snapshot — projection only (not doctor assembly)."""
         return present_vitality(runtime, options, **kwargs)
+
+    def benchmark(
+        self,
+        runtime: Any,
+        *,
+        recipe: str = DEFAULT_RECIPE,
+        iterations: int = DEFAULT_ITERATIONS,
+        mode: str | None = None,
+        store_full_snapshots: bool = False,
+    ) -> dict[str, Any]:
+        """Opt-in vitality benchmark present — system tool, product envelope.
+
+        Does not enable thrash on :meth:`top` / everyday projection.
+        """
+        return present_benchmark(
+            runtime,
+            recipe=recipe,
+            iterations=iterations,
+            mode=mode,
+            store_full_snapshots=store_full_snapshots,
+        )
 
     def doctor(self, runtime: Any) -> dict[str, Any]:
         """Legacy anatomy packaging — nests vitality; does not invent seat law.

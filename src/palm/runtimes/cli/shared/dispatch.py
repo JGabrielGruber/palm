@@ -29,6 +29,18 @@ def _invocation_to_line(inv: CliInvocation) -> str | None:
     if inv.command == "doctor":
         return "doctor --dashboard" if inv.dashboard else "doctor"
 
+    if inv.command == "benchmark":
+        parts = ["benchmark"]
+        if inv.benchmark_recipe:
+            parts.extend(["--recipe", str(inv.benchmark_recipe)])
+        if inv.benchmark_iterations is not None:
+            parts.extend(["-n", str(inv.benchmark_iterations)])
+        if inv.benchmark_full:
+            parts.append("--full")
+        if inv.output_format == "json":
+            parts.extend(["--format", "json"])
+        return " ".join(parts)
+
     if inv.command == "status":
         if inv.brief:
             return "status --brief"

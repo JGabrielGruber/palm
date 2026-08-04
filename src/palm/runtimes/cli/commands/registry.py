@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 
 from palm.runtimes.cli.commands import (
     assist,
+    benchmark,
     diagnostics,
     flow,
     instance,
@@ -82,6 +83,8 @@ def build_registry() -> CommandRegistry:
     # Host diagnostics (CQRS read models + dashboard)
     reg.register("status", diagnostics.cmd_status)
     reg.register("doctor", diagnostics.cmd_doctor)
+    # Vitality tool present (InspectService.benchmark — opt-in thrash)
+    reg.register("benchmark", benchmark.cmd_benchmark)
 
     # Assist (host.assist — conversational operator guidance)
     reg.register("assist list", assist.cmd_assist_list)

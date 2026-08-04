@@ -19,6 +19,9 @@ examples:
   palm status --full          detailed dashboard view
   palm status -r              live refresh (2s, Ctrl+C to stop)
   palm doctor                 full engine health report
+  palm benchmark              vitality load tool (opt-in; Inspect present)
+  palm benchmark pulse -n 50
+  palm benchmark log_fill --json
   palm flow start onboard
   palm start parallel-demo
   palm --storage-backend filesystem wizard start onboard
@@ -66,6 +69,10 @@ class CliInvocation:
     host_workers: int | None = None
     host_bind: str | None = None
     host_port: int | None = None
+    # Vitality benchmark (0.61.11) — opt-in tool present via Inspect
+    benchmark_recipe: str | None = None
+    benchmark_iterations: int | None = None
+    benchmark_full: bool = False
 
 
 def add_global_arguments(parser: argparse.ArgumentParser) -> None:
@@ -165,6 +172,35 @@ def build_parser() -> argparse.ArgumentParser:
         "--dashboard",
         action="store_true",
         help="Show projection dashboard instead of full doctor report",
+    )
+
+    bench_p = sub.add_parser(
+        "benchmark",
+        help="Vitality load benchmark (opt-in tool via InspectService)",
+    )
+    bench_p.add_argument(
+        "recipe_pos",
+        nargs="?",
+        default=None,
+        help="Recipe name: idle | pulse | walk | log_fill (default: pulse)",
+    )
+    bench_p.add_argument(
+        "--recipe",
+        "-r",
+        default=None,
+        help="Recipe (overrides positional): idle | pulse | walk | log_fill",
+    )
+    bench_p.add_argument(
+        "-n",
+        "--iterations",
+        type=int,
+        default=None,
+        help="Recipe iterations (default: 10)",
+    )
+    bench_p.add_argument(
+        "--full",
+        action="store_true",
+        help="Include full before/after vitality snapshots in JSON body",
     )
 
     proc = sub.add_parser("process", help="Process definition commands")
@@ -294,4 +330,11 @@ def invocation_from_namespace(args: argparse.Namespace) -> CliInvocation:
         host_workers=getattr(args, "workers", None),
         host_bind=getattr(args, "host", None),
         host_port=getattr(args, "port", None),
+        benchmark_recipe=(
+            getattr(args, "recipe", None) or getattr(args, "recipe_pos", None)
+        ),
+        benchmark_iterations=getattr(args, "iterations", None),
+        benchmark_full=bool(getattr(args, "full", False))
+        if getattr(args, "command", None) == "benchmark"
+        else False,
     )

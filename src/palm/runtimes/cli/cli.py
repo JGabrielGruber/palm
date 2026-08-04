@@ -46,7 +46,7 @@ def main(argv: list[str] | None = None) -> int:
     if inv.command is None:
         inv.command = "repl"
 
-    show_banner = inv.command not in ("repl", "doctor", "status")
+    show_banner = inv.command not in ("repl", "doctor", "status", "benchmark")
     ctx = bootstrap_runtime(invocation=inv, show_banner=show_banner)
     registry = build_registry()
     exit_code = 0

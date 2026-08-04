@@ -1,19 +1,30 @@
 """Present system vitality for surfaces (product door).
 
 Law (ADR-030 / VISION-0.61): truth lives in ``palm.system.vitality``.
-Product **reads** ``project`` / ``project_top`` and shapes operate envelopes.
-Does not invent seat counters or a second observation home.
+Product **reads** ``project`` / ``project_top`` / ``run_benchmark`` and shapes
+operate envelopes. Does not invent seat counters or a second observation home.
 
 0.61.6 / OD-001: legacy ``doctor`` is **anatomy packaging** only. Living eyes
 are :func:`present_top` / :func:`present_vitality`. Doctor may nest those;
 it must not invent living seat law.
+
+0.61.11: :func:`present_benchmark` — product door for the vitality **tool**
+(opt-in thrash). System owns recipe + diff; product only presents.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from palm.system.vitality import ProjectionOptions, project, project_top
+from palm.system.vitality import (
+    CAPABILITY_BENCHMARK,
+    DEFAULT_ITERATIONS,
+    DEFAULT_RECIPE,
+    ProjectionOptions,
+    project,
+    project_top,
+    run_benchmark,
+)
 
 # Provenance tag for product envelopes that nest projection.
 SOURCE_VITALITY = "palm.system.vitality"
@@ -24,9 +35,13 @@ DOCTOR_ROLE = "anatomy_packaging"
 OPERATE_EYES_PATHS = (
     "inspect/top",
     "inspect/vitality",
+    "inspect/benchmark",
     "assist/top",
     "assist/vitality",
 )
+
+BENCHMARK_KIND = "benchmark_present"
+BENCHMARK_ROLE = "tool_present"
 
 DOCTOR_DEMOTE_NOTE = (
     "Living physiology is system vitality (inspect top / vitality). "
@@ -58,6 +73,56 @@ def present_vitality(
     body = snap.to_dict()
     body["source"] = SOURCE_VITALITY
     return body
+
+
+def present_benchmark(
+    instance: Any,
+    *,
+    recipe: str = DEFAULT_RECIPE,
+    iterations: int = DEFAULT_ITERATIONS,
+    mode: str | None = None,
+    store_full_snapshots: bool = False,
+) -> dict[str, Any]:
+    """Present vitality benchmark tool — opt-in; does not invent metrics.
+
+    Calls :func:`~palm.system.vitality.run_benchmark` and wraps the fragment
+    in a product envelope (source / kind / role). Surfaces must not thrash
+    outside this door or re-measure process/seats privately.
+    """
+    frag = run_benchmark(
+        instance,
+        recipe=recipe,
+        iterations=iterations,
+        mode=mode,
+        store_full_snapshots=store_full_snapshots,
+    )
+    data = dict(frag.data or {})
+    envelope: dict[str, Any] = {
+        "source": SOURCE_VITALITY,
+        "kind": BENCHMARK_KIND,
+        "role": BENCHMARK_ROLE,
+        "eyes_law": SOURCE_VITALITY,
+        "capability_id": CAPABILITY_BENCHMARK,
+        "present": frag.present,
+        "state": frag.state,
+        "notes": list(frag.notes),
+        "recipe": data.get("recipe"),
+        "iterations": data.get("iterations"),
+        "recipe_meta": data.get("recipe_meta"),
+        "summary": data.get("summary"),
+        "before": data.get("before"),
+        "after": data.get("after"),
+        "diff": data.get("diff"),
+        "timing": data.get("timing"),
+        "known_recipes": data.get("known_recipes"),
+        "sample_ts": data.get("sample_ts"),
+    }
+    if store_full_snapshots:
+        envelope["before_snapshot"] = data.get("before_snapshot")
+        envelope["after_snapshot"] = data.get("after_snapshot")
+    if frag.state != "ok":
+        envelope["error_notes"] = list(frag.notes)
+    return envelope
 
 
 def present_vitality_for_doctor(top: dict[str, Any]) -> dict[str, Any]:
@@ -141,10 +206,13 @@ __all__ = [
     "SOURCE_VITALITY",
     "DOCTOR_KIND",
     "DOCTOR_ROLE",
+    "BENCHMARK_KIND",
+    "BENCHMARK_ROLE",
     "OPERATE_EYES_PATHS",
     "DOCTOR_DEMOTE_NOTE",
     "present_top",
     "present_vitality",
+    "present_benchmark",
     "present_vitality_for_doctor",
     "present_doctor",
 ]
