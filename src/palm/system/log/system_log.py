@@ -196,7 +196,8 @@ class SystemLog:
             if self.console:
                 try:
                     print(record.format_console(), file=self._stream, flush=True)
-                except Exception:
+                except OSError:
+                    # Documented ignore: console I/O must not break ring emit (CS-005).
                     pass
         return record
 

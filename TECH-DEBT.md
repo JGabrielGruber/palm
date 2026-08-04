@@ -63,7 +63,7 @@
 | [SU-001](#su-001) | Explorer SSR bypasses product (engine fields) | S2 | M | open |
 | [SU-002](#su-002) | Explorer / forms god-files (size + mixed roles) | S2 | L | open |
 | [SU-003](#su-003) | MCP dual stack (assist meta + domain tools + fat in_process) | S2 | L | open |
-| [SU-004](#su-004) | MCP legacy module names still in tree | S3 | S | open |
+| [SU-004](#su-004) | MCP legacy module names still in tree | S3 | S | ✅ deleted (empty stubs) |
 | [SU-005](#su-005) | CLI legacy alias forest locks old phrases | S3 | M | open |
 | [SU-006](#su-006) | Surface transport kit split (`common.runtimes.server` vs `runtimes.server`) | S2 | L | ✅ kit home (`palm.kits.server`) |
 | [SU-007](#su-007) | WebSocket / Portal maturity vs dual frame homes | S3 | M | open |
@@ -88,7 +88,7 @@
 | [CS-002](#cs-002) | Triple observability names on host | S2 | M | ✅ paid (0.61.7 demotion; triple aliases residual) |
 | [CS-003](#cs-003) | Core leaves take concrete engines (not protocols) | S2 | M | open |
 | [CS-004](#cs-004) | Definition `from_dict` forever-legacy shapes | S3 | M | open |
-| [CS-005](#cs-005) | Broad swallow `except` / empty `pass` in hot paths | S3 | M | open (= CF-007) |
+| [CS-005](#cs-005) | Broad swallow `except` / empty `pass` in hot paths | S3 | M | partial (hot paths logged; residual elsewhere) |
 | [CS-006](#cs-006) | Supervisor continuous wire is schedule prose | S3 | M | ✅ paid (definitions at edge) |
 | [CS-007](#cs-007) | Vitality `lineage: adapter` schema residue | S4 | S | ✅ paid (coerce + no emit) |
 | [CS-008](#cs-008) | Plane factories still close over full runtime | S3 | M | ✅ paid (InstallContext ports) |
@@ -578,7 +578,7 @@ Mixed HTML, forms, and orchestration concerns.
 
 ### SU-004 — MCP legacy module names
 
-**Severity:** S3 · **Effort:** S
+**Severity:** S3 · **Effort:** S · **Status:** ✅ **deleted**
 
 **Observation:** Tiny re-export stubs still named as if they were eras:
 
@@ -586,7 +586,7 @@ Mixed HTML, forms, and orchestration concerns.
 - `mcp/debug_tools.py`  
 - `mcp/phase5_tools.py`
 
-**Target:** Delete or one `mcp/legacy.py` with explicit deprecation; stop phase numbers in module names.
+**Paid:** Empty stubs deleted (no importers). Domain tools live under `mcp/*/tools.py`; assist under `mcp/assist/`. No phase-era module names at the MCP package root.
 
 ---
 
@@ -861,6 +861,17 @@ Blocks a clean port without a core **protocol** for invoke.
 ### CS-005 — Broad swallow / empty pass
 
 See **CF-007**. Prefer explicit error or documented ignore.
+
+**Progress (capacity residual):** Hot-path honesty without changing fail-closed job lifecycle:
+
+| Site | Change |
+|------|--------|
+| Job hooks (`outbox_drain`, `session_ownership`, `instance_persistence`) | Log + documented ignore (must not break orchestration) |
+| Host `RecoveryCoordinator` outbox supervisor paths | `debug` + `exc_info` instead of empty `pass` |
+| `SystemLog` console print | Narrow to `OSError` |
+| **BI-014** system start host session | Fail closed (no swallow) |
+
+**Residual:** product/kit/runner sites still open-code broad `except` — boy-scout on touch.
 
 ---
 
@@ -1143,7 +1154,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 | [BI-011](#bi-011) | Accidental import-order “features” (fill as found) | harvest | residual bucket |
 | [BI-012](#bi-012) | Rules stuck in surface/host that belong in system schedule | harvest | residual bucket |
 | [BI-013](#bi-013) | Work **start** (WorkIntent drain) lives on host workplane | system work plane + supervisor | ✅ closed (0.60.9 exit) |
-| BI-014 | `ensure_host_session` swallows Exception on system start | honesty | **residual** |
+| BI-014 | `ensure_host_session` swallows Exception on system start | honesty | ✅ paid (fail closed) |
 | [BI-015](#bi-015) | System log narrative (depth / modes / catalog) | seats ✅; catalog later | **residual** |
 
 ### BI-001 — Dual start graphs

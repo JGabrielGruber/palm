@@ -489,7 +489,7 @@ Core MCP registration is split for maintainability:
 | Module | Role |
 |--------|------|
 | `server.py` | `create_mcp_server()` orchestrator |
-| `tools.py` | Tier 1–2 operator tools |
+| `*/tools.py` | Domain operator tools (flows, system, assist, …) |
 | `resources.py` | Definition catalogs and agent guide |
 
 ### Plain-string wizard input

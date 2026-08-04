@@ -43,11 +43,9 @@ def install_session_plane(
         )
         hub.put(SESSION_PLANE.name, plane, aliases=SESSION_PLANE.aliases)
 
-    try:
-        plane.ensure_host_session()
-    except Exception as exc:
-        if ctx.on_host_session_error is not None:
-            ctx.on_host_session_error(exc)
+    # BI-014: host service session is required when the session plane installs.
+    # Fail closed — do not swallow storage / plane errors at system start.
+    plane.ensure_host_session()
     return plane
 
 

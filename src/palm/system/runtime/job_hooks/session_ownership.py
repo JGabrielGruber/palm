@@ -6,6 +6,7 @@ jobs — only labels ownership via :meth:`SessionPlaneService.attach_instance`.
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
@@ -15,6 +16,8 @@ if TYPE_CHECKING:
     from palm.core.orchestration.engine import OrchestrationEngine
     from palm.core.orchestration.job import Job
     from palm.system.subsystems.planes.session.plane import SessionPlaneService
+
+_log = logging.getLogger(__name__)
 
 
 class SessionOwnershipHook(JobHookAdapter):
@@ -68,7 +71,12 @@ class SessionOwnershipHook(JobHookAdapter):
                 plane.open(session_id=sid, metadata={"via": "job_path"})
             plane.attach_instance(sid, iid)
         except Exception:
-            # Ownership is best-effort for job path; never break orchestration.
+            # Documented ignore: ownership is best-effort; never break orchestration (CS-005).
+            _log.exception(
+                "session ownership attach failed session_id=%s instance_id=%s",
+                sid,
+                iid,
+            )
             return
 
 

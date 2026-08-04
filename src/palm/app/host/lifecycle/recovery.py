@@ -10,6 +10,7 @@ back-reference. Behaviour-preserving.
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 from palm.app.host.events import HostEventType
@@ -22,6 +23,8 @@ from palm.common.events.external import WebhookDispatcher, webhook_targets_from_
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
     from palm.common.events import OutboxProcessor, OutboxStore
+
+_log = logging.getLogger(__name__)
 
 
 class _SupervisorOutboxFacade:
@@ -127,7 +130,8 @@ class RecoveryCoordinator:
                         recovery["outbox_pending"] = store.pending_count()
                         recovery["outbox_via"] = "supervisor"
                 except Exception:
-                    pass
+                    # Documented ignore: pending count is status-only (CS-005).
+                    _log.debug("outbox pending count via supervisor failed", exc_info=True)
 
         # 0.51.5: no projection layer (lean composition) → nothing to rebuild.
         if host.composition.has("projections") and host.settings.rebuild_projections_on_startup:
@@ -180,7 +184,8 @@ class RecoveryCoordinator:
                         )
                     return
             except Exception:
-                pass
+                # Fall through to host-owned outbox service (CS-005: log, do not hide).
+                _log.debug("supervisor outbox start failed; using host service", exc_info=True)
         self._outbox_service = OutboxBackgroundService(
             host._app.storage,
             host._event,
@@ -213,7 +218,8 @@ class RecoveryCoordinator:
                 if sup is not None and sup.get("outbox") is not None:
                     sup.stop("outbox")
             except Exception:
-                pass
+                # Documented ignore: stop best-effort on shutdown (CS-005).
+                _log.debug("supervisor outbox stop failed", exc_info=True)
             self._outbox_via_supervisor = False
             # Facade only — do not treat as host-owned background thread.
             self._outbox_service = None

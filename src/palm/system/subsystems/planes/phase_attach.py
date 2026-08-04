@@ -24,21 +24,9 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         board = shell.bind_system_install()
         ctx.publish(install=board)
 
-    def _on_host_session_error(exc: BaseException) -> None:
-        # BI-014 — still swallowed; honesty later.
-        slog.system(
-            "plane.session.host_session",
-            f"ensure_host_session swallowed: {type(exc).__name__}",
-            runtime=ctx.runtime,
-            reason=str(exc),
-        )
-
     planes = SystemPlanes.ensure_on(shell)
-    planes.install(
-        board,
-        options,
-        on_host_session_error=_on_host_session_error,
-    )
+    # BI-014: session plane ensure_host_session fails closed (walker logs phase_fail).
+    planes.install(board, options)
     board = shell.bind_system_install()
     ctx.publish(planes=planes, install=board)
     slog.info(

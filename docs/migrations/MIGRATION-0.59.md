@@ -51,7 +51,7 @@ Palm is pre-1.0. This theme makes **start controllable** and **composition truth
 | **BI-009** | Settings / profile / options triple override clarity |
 | **BI-010** | Surface chrome bulk → [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
 | **BI-013** | Work **start** on host workplane (may stay host-owned) |
-| **BI-014** | `ensure_host_session` swallow Exception |
+| **BI-014** | ~~`ensure_host_session` swallow Exception~~ ✅ paid (fail closed at plane install) |
 | **BI-015** | System log richer catalog / sinks |
 | **BI-004 / BI-005** | Fine-grain plugin vs hooks narrative (schedules walk; residual docs/edge cases) |
 

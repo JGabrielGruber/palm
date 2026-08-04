@@ -54,7 +54,6 @@ class InstallContext:
     """
 
     options: Mapping[str, Any] = field(default_factory=dict)
-    on_host_session_error: Callable[[BaseException], None] | None = None
     reuse_existing: bool = True
     orchestration: Any = None
     event: Any = None
@@ -70,7 +69,6 @@ class InstallContext:
         install: InstallInterface,
         *,
         options: Mapping[str, Any] | None = None,
-        on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
         get_session_plane: Callable[[], Any | None],
     ) -> InstallContext:
@@ -113,7 +111,6 @@ class InstallContext:
 
         return cls(
             options=dict(options or {}),
-            on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             orchestration=orch,
             event=install.event,

@@ -17,7 +17,7 @@ via :class:`~palm.system.subsystems.planes.install_context.InstallContext` — n
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from palm.system.subsystems.planes.catalog import (
@@ -183,7 +183,6 @@ class SystemPlanes:
         install: InstallInterface,
         options: Mapping[str, Any] | None = None,
         *,
-        on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
         ctx: InstallContext | None = None,
     ) -> list[str]:
@@ -195,7 +194,6 @@ class SystemPlanes:
         install_ctx = ctx or InstallContext.from_install(
             install,
             options=options,
-            on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             get_session_plane=lambda: self.get("session"),
         )
@@ -209,7 +207,6 @@ class SystemPlanes:
         install: InstallInterface,
         options: Mapping[str, Any] | None = None,
         *,
-        on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
         ctx: InstallContext | None = None,
     ) -> Any:
@@ -220,7 +217,6 @@ class SystemPlanes:
         install_ctx = ctx or InstallContext.from_install(
             install,
             options=options,
-            on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             get_session_plane=lambda: self.get("session"),
         )
@@ -239,7 +235,6 @@ class SystemPlanes:
         install: InstallInterface,
         *,
         ensure_host: bool = True,
-        on_host_session_error: Callable[[BaseException], None] | None = None,
         reuse_existing: bool = True,
         ctx: InstallContext | None = None,
     ) -> Any:
@@ -247,7 +242,6 @@ class SystemPlanes:
         return self.install_named(
             "session",
             install,
-            on_host_session_error=on_host_session_error,
             reuse_existing=reuse_existing,
             ctx=ctx,
         )
