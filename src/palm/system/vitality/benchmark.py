@@ -1,19 +1,21 @@
 """
-Benchmark tool — controlled load recipe + snapshot diff (0.61.10).
+Benchmark tool — controlled load recipe + snapshot diff (0.61.10+).
 
 **Law (ADR-030 / VISION-VITALITY §15.4):**
   - Registered **tool** capability — consumes projection; no second metric law.
   - ``snapshot₀ → recipe → snapshot₁ → diff`` (RSS/CPU · seats · emissions · bulk).
   - Nested samples are **observe-only** (tools disabled) so this never re-enters.
   - **default_enabled=False** — everyday ``project()`` must not thrash.
-  - Light in-process recipes first; workload placement may grow later.
+  - Recipes use real seats (work plane, walk, log) — not vanity status loops alone.
 
-**Not law:** vanity per-flow timings alone; health grades; silent job mutation.
+**Not law:** vanity per-flow timings alone; health grades; silent job mutation
+for product paths (benchmark may enqueue disposable intents and drain them).
 """
 
 from __future__ import annotations
 
 import time
+import uuid
 from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any
@@ -33,6 +35,8 @@ RECIPE_IDLE: str = "idle"
 RECIPE_PULSE: str = "pulse"
 RECIPE_WALK: str = "walk"
 RECIPE_LOG_FILL: str = "log_fill"
+RECIPE_WORK_CYCLE: str = "work_cycle"
+RECIPE_PROJECT_STRESS: str = "project_stress"
 
 KNOWN_RECIPES: frozenset[str] = frozenset(
     {
@@ -40,12 +44,18 @@ KNOWN_RECIPES: frozenset[str] = frozenset(
         RECIPE_PULSE,
         RECIPE_WALK,
         RECIPE_LOG_FILL,
+        RECIPE_WORK_CYCLE,
+        RECIPE_PROJECT_STRESS,
     }
 )
 
-DEFAULT_RECIPE: str = RECIPE_PULSE
+# Default: real start-plane path so CLI deltas mean something.
+DEFAULT_RECIPE: str = RECIPE_WORK_CYCLE
 DEFAULT_ITERATIONS: int = 10
 MAX_ITERATIONS: int = 500
+
+# Disposable target — not a real flow; tick fails honestly and drains queue.
+_BENCHMARK_FLOW_TARGET: str = "__vitality.benchmark.no_flow"
 
 _BAG_RECIPE = "benchmark_recipe"
 _BAG_ITERATIONS = "benchmark_iterations"
@@ -132,11 +142,136 @@ def _run_log_fill(_instance: Any, n: int) -> dict[str, Any]:
     return {"kind": RECIPE_LOG_FILL, "ops": ops, "requested": n, "channel": "system_log"}
 
 
+def _run_work_cycle(instance: Any, n: int) -> dict[str, Any]:
+    """Real start-plane path: enqueue WorkIntents, then tick to drain.
+
+    Targets a missing flow so submit fails honestly (no silent product job).
+    Peak pending is recorded in recipe_meta — the story when before/after
+    pending returns to ~0 after drain.
+    """
+    from palm.core.work import WorkIntent
+
+    work = getattr(instance, "work_plane", None)
+    if work is None or not getattr(work, "is_attached", False):
+        # Honest fallback — still a recipe result, not a fake green work path.
+        base = _run_pulse(instance, n)
+        base["fallback"] = "pulse"
+        base["note"] = "work_plane_unavailable"
+        return base
+
+    enqueue_fn = getattr(work, "enqueue", None)
+    tick_fn = getattr(work, "tick", None)
+    status_fn = getattr(work, "status", None)
+    if not callable(enqueue_fn) or not callable(tick_fn):
+        base = _run_pulse(instance, n)
+        base["fallback"] = "pulse"
+        base["note"] = "work_plane_no_enqueue_tick"
+        return base
+
+    run_token = uuid.uuid4().hex[:12]
+    enqueued = 0
+    for i in range(n):
+        intent = WorkIntent(
+            kind="run_flow",
+            target=_BENCHMARK_FLOW_TARGET,
+            payload={
+                "_vitality_benchmark": True,
+                "i": i,
+                "run": run_token,
+            },
+            # Unique coalesce so N means N intents (not one).
+            coalesce_key=f"vitality.benchmark.work_cycle.{run_token}.{i}",
+        )
+        rid = enqueue_fn(intent)
+        if rid:
+            enqueued += 1
+
+    peak_pending: int | None = None
+    if callable(status_fn):
+        try:
+            peak_pending = int((status_fn() or {}).get("pending") or 0)
+        except Exception:
+            peak_pending = None
+
+    submit_ok = 0
+    processed = 0
+    ticks = 0
+    # Drain until empty or safety bound (batch may be small).
+    max_ticks = max(3, (enqueued // 5) + 5)
+    for _ in range(max_ticks):
+        ticks += 1
+        pending_before = None
+        if callable(status_fn):
+            try:
+                pending_before = int((status_fn() or {}).get("pending") or 0)
+            except Exception:
+                pending_before = None
+        try:
+            done = int(tick_fn(limit=max(enqueued, 10)) or 0)
+        except Exception:
+            done = 0
+        submit_ok += done
+        pending_now = None
+        if callable(status_fn):
+            try:
+                pending_now = int((status_fn() or {}).get("pending") or 0)
+            except Exception:
+                pending_now = None
+        if pending_before is not None and pending_now is not None:
+            processed += max(0, pending_before - pending_now)
+        if pending_now == 0:
+            break
+
+    pending_after = None
+    if callable(status_fn):
+        try:
+            pending_after = int((status_fn() or {}).get("pending") or 0)
+        except Exception:
+            pending_after = None
+
+    return {
+        "kind": RECIPE_WORK_CYCLE,
+        "ops": enqueued,
+        "requested": n,
+        "enqueued": enqueued,
+        # submit_ok = successful flow starts (0 when target flow is missing).
+        "submit_ok": submit_ok,
+        # processed = intents cleared from pending (ok or fail-ack).
+        "processed": processed,
+        "ticks": ticks,
+        "peak_pending": peak_pending,
+        "pending_after": pending_after,
+        "path": "work_plane.enqueue+tick",
+        "target": _BENCHMARK_FLOW_TARGET,
+        "note": "missing_flow_fails_on_tick_by_design; processed clears queue",
+    }
+
+
+def _run_project_stress(instance: Any, n: int) -> dict[str, Any]:
+    """Repeat observe-only projection — measures eyes cost under self-load."""
+    ops = 0
+    last_seats = None
+    for _ in range(n):
+        # Fresh context each time — no bag carry between samples.
+        snap = _project_observe(instance, SampleContext())
+        ops += 1
+        last_seats = (getattr(snap, "summary", None) or {}).get("present_count")
+    return {
+        "kind": RECIPE_PROJECT_STRESS,
+        "ops": ops,
+        "requested": n,
+        "path": "vitality.project_observe",
+        "last_present_count": last_seats,
+    }
+
+
 _RECIPES: dict[str, Callable[[Any, int], dict[str, Any]]] = {
     RECIPE_IDLE: _run_idle,
     RECIPE_PULSE: _run_pulse,
     RECIPE_WALK: _run_walk,
     RECIPE_LOG_FILL: _run_log_fill,
+    RECIPE_WORK_CYCLE: _run_work_cycle,
+    RECIPE_PROJECT_STRESS: _run_project_stress,
 }
 
 
@@ -368,8 +503,10 @@ __all__ = [
     "MAX_ITERATIONS",
     "RECIPE_IDLE",
     "RECIPE_LOG_FILL",
+    "RECIPE_PROJECT_STRESS",
     "RECIPE_PULSE",
     "RECIPE_WALK",
+    "RECIPE_WORK_CYCLE",
     "diff_load_points",
     "extract_load_points",
     "run_benchmark",

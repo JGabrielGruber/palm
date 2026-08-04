@@ -20,7 +20,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **Emission window** | `emission_window` installed — system-log sample + `actor_kind` partition · optional work heat |
 | **Process resources** | `process_resources` installed (0.61.8) — stdlib RSS/CPU/threads · labeled units · top `process` |
 | **Loaded bulk** | `loaded_bulk` installed (0.61.9) — attached seats · module LOC · composition counts · top `bulk` · visibility not shame |
-| **Benchmark** | system tool (0.61.10) · **Inspect present + CLI** (0.61.11) · `palm benchmark` · off everyday top |
+| **Benchmark** | system tool · Inspect/CLI present · human units · recipes `work_cycle` (default) · `project_stress` · off everyday top |
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · `host.inspect` · top/vitality/benchmark · **SD-007** paid |
 | **Doctor** | Legacy verb only (**OD-001** ✅) — `kind=legacy_doctor` · anatomy packaging nests top |
 | **Adapter law** | Residue only — forward work as if not foundation; interpret in product present |
@@ -29,7 +29,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **Boot law** | Two schedules; composition = membership; modes via `for_mode` |
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); catalog residual **BI-015** |
 | **Closed** | **0.60.0–0.60.9 + exit** — BI-013 closed · ADR-029 Accepted · stamp `0.60.9` |
-| **Next** | deepen recipes / dogfood CLI · `monitor_agent` later · stamps when José exits |
+| **Next** | dogfood CLI · recipe growth as needed · `monitor_agent` later · stamps when José exits |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · user-plane · workload remainder · Grove |
 
 ## Quick Overview
@@ -64,7 +64,8 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 | **0.61.9** | ✅ `loaded_bulk` (attached seats · modules · composition) — stamp when José exits |
 | **0.61.10** | ✅ `benchmark` tool (recipe · snapshot diff; off by default) — stamp when José exits |
 | **0.61.11** | ✅ Inspect + CLI present for benchmark (`palm benchmark`) — stamp when José exits |
-| **0.61.12+** | 📋 deepen recipes · `monitor_agent` · growth |
+| **0.61.12** | ✅ human CLI units + deeper recipes (`work_cycle` default · `project_stress`) — stamp when José exits |
+| **0.61.13+** | 📋 dogfood · `monitor_agent` · growth |
 
 **Floor (eyes open):** dynamic walk · seat report · projection + registry · inspect top · emission identity · SD-007 · OD-001 · CS-002.  
 **Exit:** **José’s** judgment when eyes are proper — not empty checklist death.  

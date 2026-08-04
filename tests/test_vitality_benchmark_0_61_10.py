@@ -7,10 +7,12 @@ from palm.system.runtime.base import BaseRuntime
 from palm.system.vitality import (
     CAPABILITY_BENCHMARK,
     CAPABILITY_SEAT_WALK,
+    DEFAULT_RECIPE,
     MATURITY_INSTALLED,
     RECIPE_IDLE,
     RECIPE_LOG_FILL,
     RECIPE_PULSE,
+    RECIPE_WORK_CYCLE,
     ROLE_TOOL,
     STATE_OK,
     STATE_SKIPPED,
@@ -146,10 +148,30 @@ def test_extra_enable_runs_tool_once() -> None:
         )
         frag = snap.fragments[CAPABILITY_BENCHMARK]
         assert frag.state == STATE_OK
-        assert frag.data["recipe"] == RECIPE_PULSE
+        assert frag.data["recipe"] == DEFAULT_RECIPE == RECIPE_WORK_CYCLE
         top = snap.top_view()
         assert "benchmark" in top
-        assert top["benchmark"]["summary"]["recipe"] == RECIPE_PULSE
+        assert top["benchmark"]["summary"]["recipe"] == RECIPE_WORK_CYCLE
+    finally:
+        rt.stop()
+
+
+def test_work_cycle_enqueues_and_drains() -> None:
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=True)
+    try:
+        frag = run_benchmark(rt, recipe=RECIPE_WORK_CYCLE, iterations=7)
+        assert frag.state == STATE_OK
+        meta = frag.data["recipe_meta"]
+        assert meta["kind"] == RECIPE_WORK_CYCLE
+        assert meta["enqueued"] == 7
+        assert meta["path"] == "work_plane.enqueue+tick"
+        assert meta.get("peak_pending", 0) >= 1
+        # Missing flow → submit_ok 0; intents still leave the pending queue.
+        assert meta.get("submit_ok", 0) == 0
+        assert meta.get("processed", 0) >= 1
+        assert meta.get("pending_after") in (0, None) or meta.get("pending_after") == 0
+        assert rt.work_plane.status()["pending"] == 0
     finally:
         rt.stop()
 
@@ -168,7 +190,7 @@ def test_bag_skip_and_unknown_recipe_fallback() -> None:
         ctx2.bag["benchmark_iterations"] = 2
         frag2 = sample_benchmark(rt, ctx2)
         assert frag2.state == STATE_OK
-        assert frag2.data["recipe"] == RECIPE_PULSE
+        assert frag2.data["recipe"] == DEFAULT_RECIPE == RECIPE_WORK_CYCLE
         assert any("unknown_recipe_fallback" in n for n in frag2.notes)
     finally:
         rt.stop()

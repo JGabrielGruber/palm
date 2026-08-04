@@ -107,6 +107,11 @@ law). Workload placement later.
 `present_benchmark`; CLI `palm benchmark` (and assist catalog thin pass-through).
 Surfaces do not thrash or invent load counters; they call the inspect door.
 
+**Progress (0.61.12):** CLI human units (MiB · ms) by default (`--raw` / `--json`
+keep machine numbers). Recipes deepened: `work_cycle` (default — enqueue + tick
+missing-flow intents on work plane; peak_pending in recipe story) and
+`project_stress` (observe projection self-cost).
+
 ### D6 — Product door is Inspect
 
 Rename product **`palm.services.system` / `SystemService`** to **`palm.services.inspect` / `InspectService`** (**SD-007**).
