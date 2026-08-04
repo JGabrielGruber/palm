@@ -1,10 +1,11 @@
 # ADR-031 — Multi-claimer work drain (exclusive claim first)
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-08-04  
-**Theme:** [VISION-0.62](../VISION-0.62.md) (**open** at `0.62.0`)  
+**Theme:** [VISION-0.62](../VISION-0.62.md) (**closed** at `0.62.8`)  
 **Map:** [PALM.md](../PALM.md)  
-**Debt:** [SD-017](../../TECH-DEBT.md#sd-017) · [SD-018](../../TECH-DEBT.md#sd-018) · residual [SD-019](../../TECH-DEBT.md#sd-019)  
+**Migration:** [MIGRATION-0.62](../migrations/MIGRATION-0.62.md) · **Release:** [RELEASE-0.62.8](../releases/RELEASE-0.62.8.md)  
+**Debt:** [SD-017](../../TECH-DEBT.md#sd-017) ✅ · [SD-018](../../TECH-DEBT.md#sd-018) ✅ · residual [SD-019](../../TECH-DEBT.md#sd-019)  
 **Related:** [ADR-025](025-reactive-interests.md) · [ADR-029](029-system-supervisor.md) · [ADR-030](030-system-vitality.md) · [WORK-DRAIN](../WORK-DRAIN.md)
 
 ---
@@ -14,9 +15,9 @@
 1. Palm has **reactive interests** ([ADR-025](025-reactive-interests.md)): start (WorkIntent) and continue (wait).  
 2. **Work plane + supervisor** own start traffic and continuous drain ([ADR-029](029-system-supervisor.md)). Host dual drain is removed.  
 3. **Vitality** can run load recipes ([ADR-030](030-system-vitality.md)) — `work_cycle` is the real start-path story.  
-4. `WorkIntentStore.claim_due` is **not exclusive**: read entry → set `claimed`. No `claimed_by`, no lease, no reclaim.  
-5. Continuous drain is **one thread** (`palm-work-plane`) with serial `submit_flow`. QueuedScheduler is effectively one job-drive worker.  
-6. Palm needs **capacity** on the start path without inventing a second queue or lying about host cores.  
+4. At theme open, `WorkIntentStore.claim_due` was **not exclusive**: read entry → set `claimed`. No `claimed_by`, no lease, no reclaim.  
+5. Continuous drain was **one thread** with serial `submit_flow`. QueuedScheduler was one job-drive worker.  
+6. Palm needed **capacity** on the start path without inventing a second queue or lying about host cores.  
 7. Pre-1.0 may break ugly shapes when homes are wrong. Theme exit is **José’s judgment**.
 
 ---
@@ -161,8 +162,7 @@ When exclusive claim + reclaim hold, workers (if shipped) are safe where claimed
 ## Status notes
 
 - **0.62.0** — plan + this ADR **Proposed**.  
-- Execution starts **0.62.1** (exclusive claim).  
-- **0.62.1–0.62.3** — exclusive claim + reclaim (SD-017 ✅).  
+- **0.62.1–0.62.3** — exclusive claim + reclaim (**SD-017** ✅).  
 - **0.62.4–0.62.6** — N drain workers + honesty + bench.  
-- **0.62.7** — orchestration exclusive drive + Queued pool (SD-018 ✅).  
-- Accept at theme exit when José judges capacity proper. Residual: **SD-019**.
+- **0.62.7** — orchestration exclusive drive + Queued pool (**SD-018** ✅).  
+- **0.62.8** — theme exit · José judged capacity proper · this ADR **Accepted**. Residual: **SD-019**.

@@ -1,17 +1,18 @@
 # VISION 0.62 — Multi-claimer work drain (execution capacity)
 
-**Status:** 📋 **Theme open** at **0.62.0** (plan).  
+**Status:** ✅ **Theme closed** at **0.62.8** (exit).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
-**ADR:** [031-multi-claimer-work-drain.md](adr/031-multi-claimer-work-drain.md) **Proposed**.  
+**ADR:** [031-multi-claimer-work-drain.md](adr/031-multi-claimer-work-drain.md) **Accepted**.  
+**Migration:** [MIGRATION-0.62](migrations/MIGRATION-0.62.md) · **Release:** [RELEASE-0.62.8](releases/RELEASE-0.62.8.md).  
 **Theme law:** [VERSIONING.md](VERSIONING.md) (floor · growth · exit judgment) · [AGENTS.md](../AGENTS.md) §6b.  
-**Debt:** Theme pay [SD-017](../TECH-DEBT.md#sd-017) · [SD-018](../TECH-DEBT.md#sd-018) · residual [SD-019](../TECH-DEBT.md#sd-019) · neighbors BI-013 residual · BI-009 · SD-016.  
+**Debt paid:** [SD-017](../TECH-DEBT.md#sd-017) ✅ · [SD-018](../TECH-DEBT.md#sd-018) ✅ · residual [SD-019](../TECH-DEBT.md#sd-019) · neighbors BI-013 residual · BI-009 · SD-016.  
 **Prior closed:** [VISION-0.61](VISION-0.61.md) vitality · [VISION-0.60](VISION-0.60.md) supervisor + work plane.  
-**Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · Grove · workload remainder.  
+**Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · Grove · workload remainder · storage CAS.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).  
 **Work drain law:** [WORK-DRAIN](WORK-DRAIN.md).
 
-**Who decides exit:** José Gabriel Gruber — [VERSIONING.md](VERSIONING.md) *Who decides*.
+**Exit judgment (2026-08-04):** José judged in-process capacity proper — exclusive claim + reclaim, multi-claimer drain, exclusive job drive + Queued pool, vitality 1 vs K, residual multi-process CAS named. Theme closed; not empty checklist.
 
 ---
 
@@ -36,8 +37,8 @@ Give Palm a **safe concurrent start path** on the existing work plane.
 | Concept | Meaning |
 |---------|---------|
 | **Floor** | Claim is exclusive and reclaimable, even with one drain worker. Same claim API for `workers=1`. |
-| **Growth line** | Theme may grow while José keeps it open — N workers, drive-path honesty, knobs, benchmarks. |
-| **Exit** | José’s judgment when capacity is proper and residual is honest — not empty checklist death. |
+| **Growth line** | N workers, drive-path concurrency, knobs, benchmarks — **paid** under theme. |
+| **Exit** | ✅ José’s judgment (2026-08-04) — capacity proper; residual honest (**SD-019**). |
 
 Do not kill ambition to satisfy dead process notes.  
 Do not ship permanent workarounds to stay “thin.”  
@@ -245,8 +246,9 @@ Theme stays open while José still needs proper capacity.
 | **4** | N drain workers | `work_drain_workers` default 1 · plane/supervisor worker set |
 | **5** | Drive-path honesty | Pay concurrent submit safety **or** name residual |
 | **6** | Benchmark proof | 1 vs K · reclaim · contention recipes |
-| **7+** | Docs + knobs + residual | WORK-DRAIN · MIGRATION · BI-009-clean · SD-019 named |
-| **exit** | José judges | ADR Accepted · residual named · stamp |
+| **7** | Concurrent job drive | Orchestration lock · exclusive drive · Queued pool · **0.62.7** |
+| **8** | Docs + residual + exit | WORK-DRAIN · MIGRATION · SD-019 named · **0.62.8** |
+| **exit** | José judges | ✅ ADR Accepted · residual named · stamp `0.62.8` |
 
 **Hard rule:** Do not ship `workers>1` as “done” before exclusive claim + reclaim.
 
@@ -308,16 +310,20 @@ Shape floor so later CAS is a plug-in, not a rewrite.
 
 José closes the theme when:
 
-1. Exclusive claim + reclaim hold under concurrent claimers.  
-2. Default path stays correct at `workers=1`.  
-3. N workers (when shipped) are safe where claimed.  
-4. Vitality (or equivalent) can show honest 1 vs K.  
-5. Residual multi-process / drive path is **named**, not hidden.  
-6. ADR-031 Accepted (or waived honestly).  
-7. Spine green on declared modes.
+1. Exclusive claim + reclaim hold under concurrent claimers. ✅  
+2. Default path stays correct at `workers=1`. ✅  
+3. N workers (when shipped) are safe where claimed. ✅  
+4. Vitality (or equivalent) can show honest 1 vs K. ✅  
+5. Residual multi-process is **named**, not hidden. ✅ **SD-019**  
+6. ADR-031 Accepted. ✅  
+7. Spine green on declared modes. ✅  
 
 **Exit is not** residual-zero or every growth row checked.
 
+**Theme closed** at `0.62.8` (2026-08-04).  
+**Not paid in 0.62:** multi-process shared claim CAS (**SD-019**); full seat DI (**SD-016**); surface deflation; Grove.
+
 ---
 
-*Palm grows where the sun meets the sea.*
+*Palm grows where the sun meets the sea.*  
+*Safe claim. Honest pools. Residual named.*

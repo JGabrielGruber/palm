@@ -1,38 +1,39 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.62.0` (plan stamp) · **Active theme:** **`0.62` Multi-claimer work drain** · **Prior closed:** **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 4, 2026 · **Theme open:** **0.62.0** — plan · ADR-031 Proposed  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Open theme:** [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed** · closed [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**  
-**Migration / release:** prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md) · (0.62 migration when contracts break)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** (0.62 pay) · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.62.8` · **Active theme:** *(none — capacity closed)* · **Prior closed:** **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
+**Last Updated:** August 4, 2026 · **Theme closed:** **0.62.8** — ADR-031 Accepted · José exit  
+**System map:** [docs/PALM.md](docs/PALM.md) · closed [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · closed [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**  
+**Migration / release:** [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md) · prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** ✅ · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (open plan)** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (closed)** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed** → closed [VISION-0.61](docs/VISION-0.61.md) · residual [TECH-DEBT.md](TECH-DEBT.md) (**SD-017**…**019**).
+Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → closed [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** → residual [TECH-DEBT.md](TECH-DEBT.md) (**SD-019** · **SD-016** · SU/BI).
 
 | Spirit | Decision |
 |--------|----------|
-| **0.62 open** | Multi-claimer work drain — exclusive claim first, then N workers; plan at `0.62.0` |
-| **Floor** | Exclusive claim + reclaim (same API at `workers=1`) — **SD-017** |
-| **Growth** | N drain workers · drive honesty · vitality 1 vs K — **SD-018** |
-| **Residual** | Multi-process shared claim needs CAS — **SD-019** (not floor); one drain owner per store |
+| **0.62 closed** | Multi-claimer capacity proper; stamp `0.62.8` · ADR-031 Accepted |
+| **Floor paid** | Exclusive claim + reclaim (same API at `workers=1`) — **SD-017** ✅ |
+| **Growth paid** | N drain workers · exclusive drive · Queued pool · vitality 1 vs K — **SD-018** ✅ |
+| **Residual** | Multi-process shared claim needs CAS — **SD-019**; one drain owner per store |
 | **0.61 closed** | Living-kernel **vitality** — eyes proper; stamp `0.61.13` · ADR-030 Accepted |
 | **Vitality home** | **`palm.system.vitality`** — seat walk · projection · registry · process/bulk/benchmark |
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next** | José exit judgment when capacity feels proper · residual **SD-019** (multi-process CAS) |
-| **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · `monitor_agent` · user-plane · workload remainder · Grove |
+| **Next seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · **SD-019** storage CAS · **SD-016** seat DI · residual BI · Grove |
+| **Later** | `monitor_agent` · user-plane · workload remainder |
 
-## 0.62 — Multi-claimer work drain (**open** · plan `0.62.0`)
+## 0.62 — Multi-claimer work drain (**closed** · theme exit `0.62.8`)
 
-**Vision:** [docs/VISION-0.62.md](docs/VISION-0.62.md) · **ADR:** [docs/adr/031-multi-claimer-work-drain.md](docs/adr/031-multi-claimer-work-drain.md) **Proposed**  
-**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-017** (floor) · **SD-018** (growth) · residual **SD-019**  
+**Vision:** [docs/VISION-0.62.md](docs/VISION-0.62.md) · **ADR:** [docs/adr/031-multi-claimer-work-drain.md](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
+**Migration:** [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · **Release:** [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
+**Debt paid:** [TECH-DEBT.md](TECH-DEBT.md) **SD-017** ✅ · **SD-018** ✅ · residual **SD-019**  
 **Map:** [docs/PALM.md](docs/PALM.md) · prior eyes [VISION-0.61](docs/VISION-0.61.md) · prior start home [VISION-0.60](docs/VISION-0.60.md)
 
-**Theme purpose:** Safe concurrent **start** path — exclusive claim + reclaim, then multi-claimer drain under supervisor; vitality proves 1 vs K. Not surface compost. Not Grove. Not multi-process CAS floor. Not “threads = all host cores.”
+**Theme purpose:** Safe concurrent **start** path — exclusive claim + reclaim, multi-claimer drain under supervisor, exclusive job drive + Queued pool; vitality proves 1 vs K. Not surface compost. Not Grove. Not multi-process CAS. Not “threads = all host cores.”
 
 | Patch | Status |
 |-------|--------|
@@ -44,11 +45,11 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62
 | **0.62.5** | ✅ drive-path honesty **named** (claim ≠ host cores / GIL) |
 | **0.62.6** | ✅ benchmark `work_cycle` multi-claimer (`workers=K`) |
 | **0.62.7** | ✅ orchestration lock + exclusive drive + QueuedScheduler pool (`queued_workers`) |
-| **0.62.8+** | polish / José exit |
-| **exit** | José · ADR Accepted · residual named |
+| **0.62.8** | ✅ docs + residual honesty + **theme exit** |
+| **exit** | ✅ ADR-031 Accepted · residual **SD-019** named · stamp `0.62.8` |
 
-**Hard rule:** Do not ship `workers>1` as done before exclusive claim + reclaim.  
-**Progress:** **SD-017** ✅ · **SD-018** ✅ (drain N + drive pool + exclusive drive) · **SD-019** residual.
+**Floor (safe claim):** met. **Growth (pools + drive):** met. **Exit:** José judged capacity proper (2026-08-04).  
+**Not paid in 0.62:** multi-process shared claim CAS (**SD-019**) · full seat DI (**SD-016**) · surface deflation · Grove.
 
 ## Quick Overview
 

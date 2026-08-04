@@ -4,17 +4,22 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-## [0.62.0] — 2026-08-04
+## [0.62.8] — 2026-08-04
 
-### 0.62 — Multi-claimer work drain (**theme open** · plan)
+### 0.62 — Multi-claimer work drain (**theme closed**)
 
-Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-claimer-work-drain.md) **Proposed** · Debt: [SD-017](TECH-DEBT.md#sd-017) · [SD-018](TECH-DEBT.md#sd-018) · residual [SD-019](TECH-DEBT.md#sd-019)
+Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · Migration: [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · Release: [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)
+
+#### Theme exit (0.62.8)
+- **ADR-031 Accepted** — José judged in-process capacity proper  
+- Residual named: **SD-019** (multi-process shared claim needs storage CAS); one drain owner per store  
+- Stamp `0.62.8` · [WORK-DRAIN](docs/WORK-DRAIN.md) knobs · migration + release notes  
 
 #### Plan (0.62.0)
 - **Theme open** — exclusive claim first, then multi-claimer drain under supervisor  
 - Floor: claimer/lease + reclaim (same API at `workers=1`)  
-- Growth: N workers · drive honesty · vitality **1 vs K**  
-- Residual: multi-process shared claim needs storage CAS (not floor); one drain owner per store  
+- Growth: N workers · drive concurrency · vitality **1 vs K**  
+- Residual: multi-process shared claim needs storage CAS (not floor)  
 
 #### Floor (0.62.1–0.62.3) — exclusive claim
 - Core `WorkIntent.claimed_by` / `lease_until`  
@@ -29,7 +34,7 @@ Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-clai
 - Multi-worker background drain test
 
 #### Honesty + proof (0.62.5–0.62.6)
-- Drive residual named: claim pool ≠ job-drive cores (QueuedScheduler N=1 unproven parallel jobs)  
+- Product honesty: claim pool ≠ host-core job parallelism (GIL)  
 - `run_benchmark(..., workers=K)` multi-claimer `work_cycle` · wall_ms in recipe_meta
 
 #### Concurrent job drive (0.62.7)
