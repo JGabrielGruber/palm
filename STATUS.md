@@ -113,7 +113,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.60.9** | ✅ Lean seats without host |
 | **exit** | ✅ ADR-029 Accepted · BI-013 closed · stamp `0.60.9` |
 
-**Residual after 0.60:** host product enrich/catalog wire · WorkDrainService fallback · BI-003 product assembly · surface deflation.
+**Residual after 0.60:** host product enrich/catalog wire · BI-003 product assembly · surface deflation.  
+**Paid residual:** host `WorkDrainService` fallback removed — one start plane (`runtime.work_plane`); host packaging only.
 
 ---
 

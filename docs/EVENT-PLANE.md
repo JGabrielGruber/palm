@@ -29,7 +29,7 @@ host.event.emit("job.completed", job_id="j-1")
 
 | Verb | Interest | Reaction on `runtime.event` | Home |
 |------|----------|-----------------------------|------|
-| **Start** | Trigger (rule / inbound / schedule) | Enqueue **WorkIntent** → drain → new job | [WORK-DRAIN](WORK-DRAIN.md), `WorkDrainService` |
+| **Start** | Trigger (rule / inbound / schedule) | Enqueue **WorkIntent** → drain → new job | [WORK-DRAIN](WORK-DRAIN.md), `WorkPlaneService` |
 | **Continue** | **Wait interest** on parked owner | **resume_job** / fail owner per policy | `palm.core.wait`, **`WaitPlaneService`** (`palm.common.wait`) |
 
 Same event type may feed **both** paths (e.g. `flow.session.succeeded` can start a reaction flow *and* unpark a waiter). Do not merge resume into WorkIntent kinds.
@@ -55,7 +55,7 @@ Same event type may feed **both** paths (e.g. `flow.session.succeeded` can start
 ## Wiring (ApplicationHost + BaseRuntime)
 
 - `InboundBindingService` (`mode: internal`) → `_runtime_event_engine()`
-- `WorkDrainService` trigger subscriptions → `_runtime_event_engine()`
+- Work plane trigger subscriptions → system event engine / host rebind
 - `OrchestrationEngine` → `runtime.event` (set at runtime bootstrap)
 - **`WaitPlaneService`** → `runtime.event` via `BaseRuntime` (**always** wired; sole continue path; public door **0.55.15**) — [ADR-025](adr/025-reactive-interests.md)
 - Event journal + outbox reliable delivery → `host.event`

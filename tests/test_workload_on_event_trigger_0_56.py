@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from examples.definitions.workload_followup import WORKLOAD_FOLLOWUP_FLOW
-from palm.app.host.workplane.work_drain_service import WorkDrainService
 from palm.common.triggers import parse_triggers
 from palm.common.triggers.registry import TriggerRegistry
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
+from palm.system.subsystems.planes.work.plane import WorkPlaneService
 
 
 def test_parse_on_workload_trigger() -> None:
@@ -72,12 +72,13 @@ def test_work_drain_enqueues_on_workload_stopped() -> None:
     submitted: list[str] = []
     engine = EventEngine()
     engine.initialize()
-    drain = WorkDrainService(
-        storage,
+    drain = WorkPlaneService()
+    drain.attach(
+        storage=storage,
         submit_flow=lambda f, _p: submitted.append(f),
-        event_engine=engine,
+        event=engine,
+        attach_events=True,
     )
-    drain.attach_events(engine)
     drain.reload_triggers(
         [
             {

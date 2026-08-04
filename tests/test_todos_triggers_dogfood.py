@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from examples.definitions.todos.analytics import TODO_ANALYTICS_FLOW
-from palm.app.host.workplane.work_drain_service import WorkDrainService
 from palm.common.triggers import parse_triggers
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
+from palm.system.subsystems.planes.work.plane import WorkPlaneService
 
 
 def test_todo_analytics_flow_declares_triggers() -> None:
@@ -26,12 +26,13 @@ def test_put_palm_todos_enqueues_todo_analytics() -> None:
     submitted: list[str] = []
     engine = EventEngine()
     engine.initialize()
-    drain = WorkDrainService(
-        storage,
+    drain = WorkPlaneService()
+    drain.attach(
+        storage=storage,
         submit_flow=lambda f, _p: submitted.append(f),
-        event_engine=engine,
+        event=engine,
+        attach_events=True,
     )
-    drain.attach_events(engine)
     drain.reload_triggers(
         [
             {

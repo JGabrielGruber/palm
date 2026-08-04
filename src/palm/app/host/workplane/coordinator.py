@@ -1,22 +1,16 @@
 """
-WorkPlaneCoordinator (T2 / 0.48.3, seam 4) — owns the host's deferred-work plane.
+WorkPlaneCoordinator — host packaging over system start plane + inbound + journal.
 
-Extracted from ``ApplicationHost``: the WorkIntent drain, inbound resource
-bindings, and event-journal catch-up/redrive — their wiring, reload, tick, and
-drain operations, plus the three slots (`_work_drain`/`_inbound`/`_event_journal`).
-The host holds one of these and delegates; the public methods
-(`reload_work_triggers`, `tick_work`, `drain_journal_*`, `redrive_journal`) keep
-identical signatures.
-
-Reads other host state (execution, definitions, runtime event engine, …) through
-a back-reference, as ``HostObservability`` does; behaviour is preserved.
+Owns host slots (`_work_drain` / `_inbound` / `_event_journal`). ``_work_drain`` is
+the system :class:`~palm.system.subsystems.planes.work.plane.WorkPlaneService` when
+attached (rebind submit / able / catalog); never a second host drain stack.
+Public host methods (`reload_work_triggers`, `tick_work`, …) stay thin delegates.
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from palm.app.host.workplane.work_drain_service import WorkDrainService
 from palm.common.events import wire_event_journal as _wire_event_journal
 from palm.common.events.consumers import consume_for_projections, consume_for_webhooks
 from palm.system.subsystems.planes.work.inbound import InboundBindingService
@@ -59,14 +53,26 @@ class WorkPlaneCoordinator:
     # ── wiring (called during host start) ────────────────────────────────────
 
     def wire_work_drain(self) -> None:
-        """WorkIntent queue + trigger attach (0.37). Drain is explicit via tick().
+        """Bind host packaging onto the system start plane (fail closed).
 
-        **0.60.5:** Prefer system ``runtime.work_plane`` when the spawned system
-        already attached the start plane. Rebind submit for session enrich.
-        Fall back to host :class:`WorkDrainService` when no plane is present.
+        **0.60.5 / residual pay:** one owner — ``runtime.work_plane``. Host only
+        rebinds product submit (session enrich), able gate, and drain knobs.
+        No second host ``WorkDrainService`` queue.
         """
         host = self._host
         if not host._app.storage.is_initialized:
+            return
+
+        plane = None
+        try:
+            runtime = host._app.runtime()
+            plane = getattr(runtime, "work_plane", None)
+        except Exception:
+            plane = None
+
+        if plane is None or not getattr(plane, "is_attached", False):
+            # Fail closed: start law lives on the system plane only.
+            self._work_drain = None
             return
 
         def _submit(flow_id: str, payload: dict[str, Any]) -> Any:
@@ -100,42 +106,17 @@ class WorkPlaneCoordinator:
             return host._execution.flows.submit_flow_body(submit_body)
 
         settings = host.settings
-        plane = None
-        try:
-            runtime = host._app.runtime()
-            plane = getattr(runtime, "work_plane", None)
-        except Exception:
-            plane = None
-
-        if plane is not None and getattr(plane, "is_attached", False):
-            # One start plane — host rebinds product submit + host-able gate.
-            if hasattr(plane, "set_submit_flow"):
-                plane.set_submit_flow(_submit)
-            else:
-                plane._submit_flow = _submit
-            plane._able = lambda: bool(host._started)
-            plane._max_depth = max(1, int(settings.work_drain_max_depth))
-            plane._batch_size = max(1, int(settings.work_drain_batch_size))
-            plane._poll_interval = max(
-                0.05, float(settings.work_drain_poll_interval)
-            )
-            self._work_drain = plane
-            self.reload_work_triggers()
-            return
-
-        self._work_drain = WorkDrainService(
-            host._app.storage,
-            submit_flow=_submit,
-            event_engine=host._runtime_event_engine(),
-            able=lambda: host._started,
-            max_depth=int(settings.work_drain_max_depth),
-            poll_interval=float(settings.work_drain_poll_interval),
-            batch_size=int(settings.work_drain_batch_size),
+        if hasattr(plane, "set_submit_flow"):
+            plane.set_submit_flow(_submit)
+        else:
+            plane._submit_flow = _submit
+        plane._able = lambda: bool(host._started)
+        plane._max_depth = max(1, int(settings.work_drain_max_depth))
+        plane._batch_size = max(1, int(settings.work_drain_batch_size))
+        plane._poll_interval = max(
+            0.05, float(settings.work_drain_poll_interval)
         )
-        job_events = host._runtime_event_engine()
-        if job_events.is_initialized:
-            self._work_drain.attach_events(job_events)
-        # Load triggers from flow catalog (after examples/definitions already loaded)
+        self._work_drain = plane
         self.reload_work_triggers()
 
     def wire_inbound(self) -> None:

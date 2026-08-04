@@ -1167,7 +1167,9 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 
 **Progress (0.60.1–0.60.9):** `SystemSupervisor` · `WorkPlaneService` · system session attr · supervised work_drain + outbox · inbound under `planes.work` · host prefers plane/supervisor · lean BaseRuntime seats without host.  
 
-**Residual:** host coordinator still wires product session enrich + definition catalog; host `WorkDrainService` fallback; ExecutionPort job-start expand optional; BI-003 ServerContext product wire separate.  
+**Residual:** host coordinator still wires product session enrich + definition catalog; ExecutionPort job-start expand optional; BI-003 ServerContext product wire separate.  
+
+**Paid residual:** host `WorkDrainService` fallback removed — coordinator binds packaging onto system `work_plane` only (fail closed if unattached).  
 
 **Status:** ✅ **closed** at **0.60.9** theme exit.
 

@@ -23,10 +23,10 @@ Execution does **not** happen on the HTTP or event reader thread. Something must
 
 | Mode | When | Use case |
 |------|------|----------|
-| **Explicit** | `host.tick_work(limit=N)` | Tests, scripts, `all_in_one` / embedded CLI |
-| **Background** | `WorkDrainService.start_background()` | `palm host server`, production reactive paths |
+| **Explicit** | `host.tick_work(limit=N)` or `runtime.work_plane.tick` | Tests, scripts, `all_in_one` / embedded CLI |
+| **Background** | Supervised `work_drain` → `work_plane.start_background()` | `palm host server`, production reactive paths |
 
-Background drain polls the durable store (like the outbox service), claims due intents, and submits flows when the host is able.
+Background drain is a **supervisor** service over the system **work plane** (not a host-private queue). It polls the durable store, claims due intents, and submits flows when the host is able.
 
 ## Enable background drain
 

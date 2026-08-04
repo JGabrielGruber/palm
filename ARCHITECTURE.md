@@ -965,12 +965,12 @@ Palm’s orchestration bus carries **two peer verbs** under one law ([VISION-GRO
 
 | Verb | Plane | Action |
 |------|-------|--------|
-| **Start** | Work drain (`WorkDrainService` / workplane) | **WorkIntent** → drain → new job |
+| **Start** | **WorkPlaneService** (`runtime.work_plane`) + supervised `work_drain` | **WorkIntent** → drain → new job |
 | **Continue** | **WaitPlaneService** (`runtime.wait_plane`) | match interest → **resume_job** / fail owner |
 
 ```text
 runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail owner
-               └──►  WorkDrainService (start)     ──►  WorkIntent → drain
+               └──►  WorkPlaneService (start)     ──►  WorkIntent → tick / supervised drain
 ```
 
 | Concern | Location |
@@ -978,8 +978,8 @@ runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail 
 | Pure interest + state helpers | `palm/core/wait/` (`palm.wait.interests` on state) |
 | Pure WorkIntent | `palm/core/work/` |
 | **WaitPlaneService** + matcher/policy/present | `palm/common/wait/` (`plane.py` is the façade) |
-| Work drain / trigger registry | `palm/app/host/workplane/`, `palm/common/work/` |
-| Runtime wire | `BaseRuntime.wait_plane` always attached at start |
+| Work plane / store / triggers | `palm/system/.../planes/work/` · host packaging `palm/app/host/workplane/` |
+| Runtime wire | `BaseRuntime.wait_plane` / `work_plane` at system boot |
 | Nested wizard park | `open_nested_park` → `kind=job` interest (meta holds step/payload); plane unparks; no `set_child_wait` façade |
 | Operator surfaces | `waiting_on` via `present`; doctor `reactive_interests` from plane snapshot |
 

@@ -1,14 +1,17 @@
-"""0.37 — drain + resource.changed enqueue."""
+"""0.37 — drain + resource.changed enqueue (system work plane)."""
 
 from __future__ import annotations
 
-from palm.app.host.workplane.work_drain_service import WorkDrainService
+from collections.abc import Callable
+from typing import Any
+
 from palm.common.cqrs.bus import CommandBus, QueryBus
 from palm.common.cqrs.schemas import CqrsSchemaRegistry
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
 from palm.core.work import WorkIntent
 from palm.services.execution.providers.service import ProviderExecutionService
+from palm.system.subsystems.planes.work.plane import WorkPlaneService
 
 
 def _storage() -> StorageEngine:
@@ -18,6 +21,30 @@ def _storage() -> StorageEngine:
     return s
 
 
+def _plane(
+    storage: StorageEngine,
+    submit_flow: Callable[[str, dict[str, Any]], Any],
+    *,
+    event: EventEngine | None = None,
+    able: Callable[[], bool] | None = None,
+    max_depth: int = 8,
+    batch_size: int = 10,
+    poll_interval: float = 1.0,
+) -> WorkPlaneService:
+    plane = WorkPlaneService()
+    plane.attach(
+        storage=storage,
+        submit_flow=submit_flow,
+        able=able if able is not None else (lambda: True),
+        event=event,
+        max_depth=max_depth,
+        batch_size=batch_size,
+        poll_interval=poll_interval,
+        attach_events=event is not None,
+    )
+    return plane
+
+
 def test_drain_runs_submit() -> None:
     storage = _storage()
     submitted: list[str] = []
@@ -25,7 +52,7 @@ def test_drain_runs_submit() -> None:
     def submit(flow_id: str, payload: dict) -> None:
         submitted.append(flow_id)
 
-    drain = WorkDrainService(storage, submit_flow=submit, able=lambda: True)
+    drain = _plane(storage, submit)
     drain.enqueue(WorkIntent(kind="run_flow", target="my-flow"))
     n = drain.tick()
     assert n == 1
@@ -38,10 +65,11 @@ def test_resource_changed_enqueues_trigger() -> None:
     submitted: list[str] = []
     engine = EventEngine()
     engine.initialize()
-    drain = WorkDrainService(
-        storage, submit_flow=lambda f, p: submitted.append(f), event_engine=engine
+    drain = _plane(
+        storage,
+        lambda f, p: submitted.append(f),
+        event=engine,
     )
-    drain.attach_events(engine)
     drain.reload_triggers(
         [
             {
