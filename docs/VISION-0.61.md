@@ -1,13 +1,13 @@
 # VISION 0.61 — Living-kernel vitality
 
-**Status:** 📋 **Open** — plan **0.61.0** ✅ · eyes **0.61.1**–**0.61.6** landed (stamps when José exits slices).  
+**Status:** 📋 **Open** — plan **0.61.0** ✅ · eyes **0.61.1**–**0.61.7** landed (stamps when José exits slices).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
 **ADR:** [030-system-vitality.md](adr/030-system-vitality.md) **Proposed**.  
 **Seed:** [VISION-VITALITY](VISION-VITALITY.md) (opened as this theme).  
 **Theme law:** [VERSIONING.md](VERSIONING.md) (floor · growth · exit judgment) · [AGENTS.md](../AGENTS.md) §6b.  
 **Prior closed:** [VISION-0.60](VISION-0.60.md) supervisor + work plane · [VISION-0.59](VISION-0.59.md) boot · [VISION-0.58](VISION-0.58.md) session.  
-**Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) ✅ · [OD-001](../TECH-DEBT.md#od-001) ✅ · [CS-002](../TECH-DEBT.md#cs-002) open · [BI-015](../TECH-DEBT.md#bi-015).  
+**Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) ✅ · [OD-001](../TECH-DEBT.md#od-001) ✅ · [CS-002](../TECH-DEBT.md#cs-002) ✅ · [BI-015](../TECH-DEBT.md#bi-015).  
 **Mid-theme residual:** [SD-016](../TECH-DEBT.md#sd-016) ambient seat DI (open) · paid SD-015 / CS-006…008.  
 **Dogfood:** host.start → primary → seat walk (install + planes + supervisor) — eyes on system under composition root; host itself is not a vitality seat yet.  
  
@@ -144,7 +144,7 @@ Do not invent more `doctor_*` as the system API.
 | Product `doctor` envelope | `kind=legacy_doctor` · `role=anatomy_packaging` · nests `top` |
 | Plane `doctor_snapshot` | Transitional residual; migrate to seat report |
 | Assist/MCP `doctor` alias | Verb kept; body **reads** vitality + packaging |
-| Host triple status | **CS-002** — do not grow; thin, delegate, or delete |
+| Host triple status | **CS-002** ✅ demoted — `packaging_status` + residual aliases |
 
 ---
 
@@ -276,7 +276,8 @@ Theme stays open while José still needs proper eyes.
 | **4** | InspectService rename | SD-007; host/assist doors; product SystemService not law — **landed** (wire `system/*` residual) — stamp when José exits |
 | **5** | Inspect present from projection | `top` / `vitality` product door; doctor nests top — **landed** — stamp when José exits |
 | **6** | Doctor demotion (OD-001) | `legacy_doctor` envelope · anatomy packaging · eyes_law — **landed** — stamp when José exits |
-| **7+** | Growth | Host status compost (CS-002); native reports; optional caps; tools |
+| **7** | Host status compost (CS-002) | `packaging_status` · demotion markers · triple residual — **landed** — stamp when José exits |
+| **8+** | Growth | Optional caps (`process_resources`); tools (`benchmark`); native reports |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
 
 ---
@@ -286,7 +287,7 @@ Theme stays open while José still needs proper eyes.
 | Debt | Theme action |
 |------|--------------|
 | **SD-007** | ✅ paid — product Inspect rename (0.61.4; wire/alias residual) |
-| **CS-002** | Pay down — host triple status not living truth (unpaid) |
+| **CS-002** | ✅ paid — host packaging demoted (0.61.7); triple aliases residual |
 | **OD-001** | ✅ paid — doctor demoted (0.61.6); packaging residual + plane dual names named |
 | **BI-015** | Use log as sample; deeper catalog may grow under vitality |
 | Seat dual APIs | Prefer public API raw sample; native `seat_report` only when internal truth needs it |
@@ -337,8 +338,8 @@ Each slice states which modes are in the green bar.
 - [x] Product inspect presents top/vitality from projection only.  
 - [x] InspectService rename path closed; alias residual named (SD-007).  
 - [x] Doctor demoted (OD-001); anatomy packaging only; eyes via top/vitality.  
-- [ ] Ugly dual paths broken or named — no silent workaround architecture (CS-002 open).  
-- [ ] PALM names vitality as system observation.  
+- [x] Host status demoted (CS-002); packaging residual named; living eyes = vitality.  
+- [ ] PALM names vitality as system observation (growth polish).  
 - [ ] ADR-030 Accepted at exit.  
 - [ ] Spine green on declared modes.
 

@@ -38,11 +38,29 @@ def _application_host_from(runtime: Any) -> Any | None:
     """Resolve ApplicationHost (ServerRuntime.host is the bind address string)."""
     for attr in ("application_host", "host_bridge", "_host_bridge"):
         cand = getattr(runtime, attr, None)
-        if cand is not None and hasattr(cand, "control_plane_status"):
+        if cand is not None and (
+            hasattr(cand, "packaging_status") or hasattr(cand, "control_plane_status")
+        ):
             return cand
     cand = getattr(runtime, "host", None)
-    if cand is not None and hasattr(cand, "control_plane_status"):
+    if cand is not None and (
+        hasattr(cand, "packaging_status") or hasattr(cand, "control_plane_status")
+    ):
         return cand
+    return None
+
+
+def _host_packaging(host: Any) -> dict[str, Any] | None:
+    """Residual host packaging bag (CS-002) — not living seat law."""
+    if host is None:
+        return None
+    try:
+        if hasattr(host, "packaging_status"):
+            return host.packaging_status()
+        if hasattr(host, "control_plane_status"):
+            return host.control_plane_status()
+    except Exception:
+        return None
     return None
 
 
@@ -82,13 +100,9 @@ class InspectService(BaseService):
 
         Prefer :meth:`top` / :meth:`vitality` for living eyes (OD-001 demotion).
         """
-        control_plane = None
         host = _application_host_from(runtime)
-        if host is not None and hasattr(host, "control_plane_status"):
-            try:
-                control_plane = host.control_plane_status()
-            except Exception:
-                control_plane = None
+        # CS-002: packaging residual only — living eyes nest from projection below.
+        control_plane = _host_packaging(host)
         anatomy = build_doctor_report(runtime, control_plane=control_plane)
         try:
             top = self.top(runtime)

@@ -860,16 +860,27 @@ class ApplicationHost:
         """Process due WorkIntents (and optional schedule triggers). Returns count."""
         return self._workplane.tick_work(limit=limit, schedules=schedules)
 
+    def packaging_status(self) -> dict[str, Any]:
+        """Single residual packaging bag (CS-002) — not living seat law.
+
+        Prefer :meth:`~palm.services.inspect.InspectService.top` /
+        :meth:`~palm.services.inspect.InspectService.vitality` for living eyes.
+        """
+        return self._observability.packaging_status()
+
     def event_plane_status(self) -> dict[str, Any]:
-        """Which EventEngine each reactive surface uses (0.45.5 doctor contract)."""
+        """Residual bus packaging (CS-002) — prefer packaging_status / inspect top."""
         return self._observability.event_plane_status()
 
     def ops_status(self) -> dict[str, Any]:
-        """Operator ergonomics — invoke routes, storage, event-log durability (0.45.8)."""
+        """Residual ops packaging (CS-002) — prefer packaging_status / inspect top."""
         return self._observability.ops_status()
 
     def control_plane_status(self) -> dict[str, Any]:
-        """Pending work + journal lag for doctor/ops (0.38 / 0.40.3)."""
+        """Residual work/journal/boot packaging (CS-002) — not living seat law.
+
+        Same body as :meth:`packaging_status`. Prefer that name for new callers.
+        """
         return self._observability.control_plane_status()
 
     def drain_journal_webhooks(self, *, limit: int = 50, on_entry: Any | None = None) -> int:

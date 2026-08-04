@@ -149,13 +149,19 @@ def run_doctor(ctx: CliContext) -> int:
     elif not summaries:
         console.print("[dim]No process instances yet — try[/] [cyan]flow start onboard[/]")
 
+    # Host packaging residual (CS-002) — living eyes are inspect top/vitality.
+    console.print(
+        "[dim]Living eyes: inspect top / vitality (system vitality). "
+        "Host ops / event-plane tables below are packaging residual (CS-002).[/]"
+    )
+
     if hasattr(host, "ops_status"):
         try:
             ops = host.ops_status()
         except Exception:
             ops = {}
         if ops:
-            ops_table = Table(title="Ops", show_lines=True)
+            ops_table = Table(title="Ops (packaging residual)", show_lines=True)
             ops_table.add_column("Item", style="cyan")
             ops_table.add_column("Value", style="green")
             ops_table.add_row("invoke (short)", str(ops.get("invoke_route_short", "—")))
@@ -178,7 +184,7 @@ def run_doctor(ctx: CliContext) -> int:
         except Exception:
             ep = {}
         if ep:
-            ep_table = Table(title="Event Plane", show_lines=True)
+            ep_table = Table(title="Event Plane (packaging residual)", show_lines=True)
             ep_table.add_column("Surface", style="cyan")
             ep_table.add_column("Bus", style="green")
             ep_table.add_row("orchestration", str(ep.get("orchestration_bus", "—")))

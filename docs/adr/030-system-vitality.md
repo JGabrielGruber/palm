@@ -143,6 +143,12 @@ Host `event_plane_status` / `ops_status` / `control_plane_status` (**CS-002**) m
 
 Break or thin host status when vitality replaces it. Name residual bridges.
 
+**Progress (0.61.7 / CS-002 ✅):** Host bags stamped `role=host_packaging` ·
+`eyes_law` · `operate_paths`. Single **`packaging_status()`** entry (control-plane
+body). Triple methods are residual aliases. Characterization tests assert
+domain key **supersets** + demotion (no frozen dual-truth equality as law).
+Doctor/CLI treat host status as packaging residual only.
+
 ### D10 — Modes, cost, and forbidden magic
 
 - Modes gate expensive capabilities (`safe` / `test` cheap by default).  

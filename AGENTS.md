@@ -24,7 +24,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · **registry extension / OCP** §1.1 · **seat DI** §1.2 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **CS-002** / **SD-016** · **OD-001** ✅ · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
+**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · **registry extension / OCP** §1.1 · **seat DI** §1.2 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **SD-016** · **CS-002** ✅ · **OD-001** ✅ · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
 
 ---
 

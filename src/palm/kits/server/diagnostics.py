@@ -116,14 +116,19 @@ def build_doctor_report(
 
     cp = control_plane if isinstance(control_plane, dict) else {}
     if not cp:
-        # ServerRuntime.host is bind address; prefer host_bridge / application_host
+        # ServerRuntime.host is bind address; prefer host packaging residual (CS-002).
         for attr in ("application_host", "host_bridge", "_host_bridge", "host"):
             host = getattr(runtime, attr, None)
-            if host is not None and hasattr(host, "control_plane_status"):
-                try:
+            if host is None:
+                continue
+            try:
+                if hasattr(host, "packaging_status"):
+                    cp = dict(host.packaging_status() or {})
+                elif hasattr(host, "control_plane_status"):
                     cp = dict(host.control_plane_status() or {})
-                except Exception:
-                    cp = {}
+            except Exception:
+                cp = {}
+            if cp:
                 break
 
     # Soft issues from control plane lag / backlog

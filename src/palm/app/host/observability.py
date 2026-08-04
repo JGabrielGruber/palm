@@ -1,15 +1,16 @@
 """
-HostObservability — the ApplicationHost's status/observability reports (T2 / 0.48.1, PD-018).
+HostObservability — residual packaging status for ApplicationHost (CS-002).
 
-Extracted from ``ApplicationHost`` so the composition root no longer owns the
-three status vocabularies. Behavior-preserving: the JSON shapes are frozen by
-``tests/test_host_status_characterization_0_48.py``. The host keeps
-``event_plane_status``/``ops_status``/``control_plane_status`` as 1-line
-delegators (public API unchanged).
+0.48.1 (PD-018): extracted the three status reports from the composition root.
+0.61.7 (CS-002): demoted — these bags are **host packaging residual**, not
+living-load law. Living eyes live in ``palm.system.vitality`` and are
+presented via ``InspectService.top`` / ``.vitality``.
 
-For now this reads the live host collaborators (`_work_drain`, `_inbound`,
-`_event_journal`, `_outbox_service`, …) through a back-reference; later seams
-(work-plane / runtime coordinators) formalize those into held collaborators.
+Public host methods ``event_plane_status`` / ``ops_status`` /
+``control_plane_status`` remain thin residual aliases for consumers.
+Prefer :meth:`packaging_status` when a single packaging bag is needed.
+
+Do **not** grow a fourth host status method as living truth.
 """
 
 from __future__ import annotations
@@ -26,15 +27,55 @@ from palm.system.log import get_system_log
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
 
+# CS-002 demotion markers — packaging residual, not seat / vitality law.
+PACKAGING_ROLE = "host_packaging"
+EYES_LAW = "palm.system.vitality"
+OPERATE_EYES_PATHS = (
+    "inspect/top",
+    "inspect/vitality",
+    "assist/top",
+    "assist/vitality",
+)
+PACKAGING_NOTE = (
+    "Host packaging residual (CS-002). Living load eyes: InspectService.top / "
+    "vitality → palm.system.vitality. Do not treat this bag as seat law."
+)
+
+
+def _with_packaging_markers(
+    bag: dict[str, Any],
+    *,
+    extra_note: str | None = None,
+) -> dict[str, Any]:
+    """Stamp demotion markers; preserve domain notes when present."""
+    out = dict(bag)
+    out["role"] = PACKAGING_ROLE
+    out["eyes_law"] = EYES_LAW
+    out["operate_paths"] = list(OPERATE_EYES_PATHS)
+    domain = extra_note if extra_note is not None else bag.get("note")
+    if isinstance(domain, str) and domain.strip() and domain.strip() != PACKAGING_NOTE:
+        out["note"] = f"{PACKAGING_NOTE} | {domain}"
+    else:
+        out["note"] = PACKAGING_NOTE
+    return out
+
 
 class HostObservability:
-    """Owns the host's event-plane / ops / control-plane status reports."""
+    """Owns residual host packaging reports (not living vitality)."""
 
     def __init__(self, host: ApplicationHost) -> None:
         self._host = host
 
+    def packaging_status(self) -> dict[str, Any]:
+        """Single residual packaging bag (control-plane body + demotion).
+
+        Prefer this over the triple method names for new packaging consumers.
+        Living eyes remain ``inspect.top`` / ``inspect.vitality``.
+        """
+        return self.control_plane_status()
+
     def event_plane_status(self) -> dict[str, Any]:
-        """Which EventEngine each reactive surface uses (0.45.5 doctor contract)."""
+        """Residual bus/packaging map (0.45.5). Not living seat law."""
         host = self._host
         orchestration_bus = "host_fallback"
         try:
@@ -53,31 +94,34 @@ class HostObservability:
             except Exception:
                 internal_bindings = 0
         slog = get_system_log()
-        return {
-            "orchestration_bus": orchestration_bus,
-            "host_coordination_bus": "host",
-            "inbound_internal_bus": orchestration_bus,
-            "work_drain_bus": orchestration_bus,
-            "journal_bus": "host",
-            "internal_inbound_bindings": internal_bindings,
-            "orchestration_event_types": [
-                "job.completed",
-                "flow.session.succeeded",
-                "flow.session.failed",
-            ],
-            "system_log_level": slog.level,
-            "system_log_recent": [r.to_dict() for r in slog.recent(limit=15)],
-            "note": (
-                "Orchestration events emit on runtime.event when the runtime is "
-                "started; host.event is coordination only (host.started, journal, "
-                "outbox). Internal inbound and work-drain subscribe to the "
-                "orchestration bus. system_log_* is process narrative (0.59.1a), "
-                "not the domain event bus."
-            ),
-        }
+        domain_note = (
+            "Orchestration events emit on runtime.event when the runtime is "
+            "started; host.event is coordination only (host.started, journal, "
+            "outbox). Internal inbound and work-drain subscribe to the "
+            "orchestration bus. system_log_* is process narrative (0.59.1a), "
+            "not the domain event bus."
+        )
+        return _with_packaging_markers(
+            {
+                "orchestration_bus": orchestration_bus,
+                "host_coordination_bus": "host",
+                "inbound_internal_bus": orchestration_bus,
+                "work_drain_bus": orchestration_bus,
+                "journal_bus": "host",
+                "internal_inbound_bindings": internal_bindings,
+                "orchestration_event_types": [
+                    "job.completed",
+                    "flow.session.succeeded",
+                    "flow.session.failed",
+                ],
+                "system_log_level": slog.level,
+                "system_log_recent": [r.to_dict() for r in slog.recent(limit=15)],
+            },
+            extra_note=domain_note,
+        )
 
     def ops_status(self) -> dict[str, Any]:
-        """Operator ergonomics — invoke routes, storage, event-log durability (0.45.8)."""
+        """Residual operator ergonomics packaging (0.45.8). Not living seat law."""
         host = self._host
         storage = host._app.storage
         backend_name = storage.backend_name if storage is not None else None
@@ -112,18 +156,20 @@ class HostObservability:
                 "server profile: set PALM_STORAGE_BACKEND=filesystem (or postgres) "
                 "so instances, kv tails, and work queue survive restart"
             )
-        return {
-            "invoke_route": "POST /v1/api/providers/{provider}/{resource_ref}/invoke",
-            "invoke_route_short": "POST /v1/api/resources/{resource_ref}/invoke",
-            "storage_backend": backend_name,
-            "storage_durable": durable,
-            "event_log_durable": event_log_durable,
-            "event_log_note": event_log_note,
-            "server_profile_hint": server_hint,
-        }
+        return _with_packaging_markers(
+            {
+                "invoke_route": "POST /v1/api/providers/{provider}/{resource_ref}/invoke",
+                "invoke_route_short": "POST /v1/api/resources/{resource_ref}/invoke",
+                "storage_backend": backend_name,
+                "storage_durable": durable,
+                "event_log_durable": event_log_durable,
+                "event_log_note": event_log_note,
+                "server_profile_hint": server_hint,
+            }
+        )
 
     def control_plane_status(self) -> dict[str, Any]:
-        """Pending work + journal lag for doctor/ops (0.38 / 0.40.3)."""
+        """Residual work/journal/boot packaging (0.38 / 0.40.3). Not living seat law."""
         host = self._host
         work_pending = 0
         if host.work_drain is not None:
@@ -155,35 +201,46 @@ class HostObservability:
             except Exception:
                 inbound_bindings = []
         boot_mode = getattr(host, "boot_mode", None)
-        return {
-            "work_pending": work_pending,
-            "work_drain_running": bg,
-            "work_drain_background": bg,
-            "work_dropped_depth": dropped,
-            "schedules": schedules,
-            "schedule_count": len(schedules),
-            "outbox_pending": outbox_pending,
-            "journal": journal_status,
-            "journal_consumers": list(DEFAULT_JOURNAL_CONSUMERS),
-            "inbound_bindings": inbound_bindings,
-            "inbound_count": len(inbound_bindings),
-            "boot": {
-                "mode": None if boot_mode is None else boot_mode.name,
-                "mode_detail": None if boot_mode is None else boot_mode.to_dict(),
-                "modes_available": list(list_boot_modes()),
-                "phase_tables": schedule_catalog(),
-                "membership": host.membership_snapshot(),
-                "last_walk": getattr(host, "boot_walk", None),
-                "note": (
-                    "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
-                    "server/prod CI use server_port=0. CompositionProfile is the sole "
-                    "membership switch (0.59.5); deployment feeds resolver only; "
-                    "modes + PhaseSkip strictness."
-                ),
+        domain_note = (
+            "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
+            "server/prod CI use server_port=0. CompositionProfile is the sole "
+            "membership switch (0.59.5); deployment feeds resolver only; "
+            "modes + PhaseSkip strictness."
+        )
+        return _with_packaging_markers(
+            {
+                "work_pending": work_pending,
+                "work_drain_running": bg,
+                # Residual alias (compat); same as work_drain_running.
+                "work_drain_background": bg,
+                "work_dropped_depth": dropped,
+                "schedules": schedules,
+                "schedule_count": len(schedules),
+                "outbox_pending": outbox_pending,
+                "journal": journal_status,
+                "journal_consumers": list(DEFAULT_JOURNAL_CONSUMERS),
+                "inbound_bindings": inbound_bindings,
+                "inbound_count": len(inbound_bindings),
+                "boot": {
+                    "mode": None if boot_mode is None else boot_mode.name,
+                    "mode_detail": None if boot_mode is None else boot_mode.to_dict(),
+                    "modes_available": list(list_boot_modes()),
+                    "phase_tables": schedule_catalog(),
+                    "membership": host.membership_snapshot(),
+                    "last_walk": getattr(host, "boot_walk", None),
+                    "note": domain_note,
+                },
+                "event_plane": self.event_plane_status(),
+                "ops": self.ops_status(),
             },
-            "event_plane": self.event_plane_status(),
-            "ops": self.ops_status(),
-        }
+            extra_note=domain_note,
+        )
 
 
-__all__ = ["HostObservability"]
+__all__ = [
+    "HostObservability",
+    "PACKAGING_ROLE",
+    "EYES_LAW",
+    "OPERATE_EYES_PATHS",
+    "PACKAGING_NOTE",
+]

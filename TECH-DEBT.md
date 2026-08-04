@@ -1,6 +1,6 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.6** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[CS-002](#cs-002)** open · **[OD-001](#od-001)** ✅ paid · **[SD-007](#sd-007)** ✅ paid. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.7** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Theme (open vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**  
@@ -81,7 +81,7 @@
 | ID | Title | Sev | Effort | Status |
 |----|-------|:---:|:------:|--------|
 | [CS-001](#cs-001) | Layer bulk: `runtimes` + `common` dominate LOC | S2 | — | open (metric) |
-| [CS-002](#cs-002) | Triple observability names on host | S2 | M | **0.61** pay down (= CF-001) |
+| [CS-002](#cs-002) | Triple observability names on host | S2 | M | ✅ paid (0.61.7 demotion; triple aliases residual) |
 | [CS-003](#cs-003) | Core leaves take concrete engines (not protocols) | S2 | M | open |
 | [CS-004](#cs-004) | Definition `from_dict` forever-legacy shapes | S3 | M | open |
 | [CS-005](#cs-005) | Broad swallow `except` / empty `pass` in hot paths | S3 | M | open (= CF-007) |
@@ -660,7 +660,9 @@ Approx. Python LOC under `src/palm/`:
 
 ### CS-002 — Triple observability names
 
-**Severity:** S2 · **Theme:** **0.61** (pay down)
+<a id="cs-002"></a>
+
+**Severity:** S2 · **Theme:** **0.61**
 
 See **CF-001** / PD-018. Host exposes `event_plane_status`, `ops_status`, `control_plane_status`.  
 These must **not** remain the source of truth for living load.
@@ -668,8 +670,19 @@ These must **not** remain the source of truth for living load.
 **Target (0.61):** System **vitality** projection is living fold ([VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) D9). Host status thins, delegates, or deletes. Do not grow a fourth host status method as truth. Align residual bus vocabulary with [EVENT-PLANE](docs/EVENT-PLANE.md).
 
 **Progress (0.61.5):** Living fold is **`InspectService.top`** (system projection).
-Host still exposes the triple; do not grow a fourth. Doctor may nest top but must
-not treat host status as vitality law.
+
+**Progress (0.61.7):** Host bags demoted — `role=host_packaging` · `eyes_law` ·
+`operate_paths`. Single entry **`host.packaging_status()`** (same body as
+control_plane). Triple methods remain **thin residual aliases**. Doctor nests
+packaging only. Characterization tests no longer freeze dual-truth key equality
+as law (superset + demotion stamps). CLI doctor labels ops/event-plane residual.
+
+**Residual (named):** triple method names for consumers; nested event_plane/ops
+inside packaging bag; bus string ids; `work_drain_background` alias; boot
+membership inside packaging (anatomy, not seat law). Do not grow a fourth living
+status method.
+
+**Status:** ✅ **paid** (0.61.7) — host status is not living law; residual aliases named.
 
 ---
 

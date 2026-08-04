@@ -1,21 +1,22 @@
-"""Characterization tests for the three ApplicationHost status reports (T2 / 0.48.0).
+"""Characterization tests for residual host packaging status (T2 / 0.48 · CS-002).
 
-These pin the *complete* JSON shape and stable literal values of
-``event_plane_status`` / ``ops_status`` / ``control_plane_status`` so the
-0.48 ``HostObservability`` extraction (seam 3) is provably behavior-preserving.
-They assert the full key set — not just a scenario key — and exercise the
-degrade-to-fallback branches. If a later refactor changes a key, that is a
-contract change and must be intentional (and mirrored here).
+0.48 pinned JSON shapes for the ``HostObservability`` extraction.
+0.61.7 (CS-002): those bags are **host packaging residual**, not living-load
+law. Tests assert packaging domain keys still exist (superset OK for demotion
+markers) and that demotion stamps are present. Living eyes are
+``inspect.top`` / ``inspect.vitality`` → ``palm.system.vitality``.
 
-See docs/VISION-0.48.md and docs/adr/018-application-host-decomposition.md.
+See docs/VISION-0.61.md · TECH-DEBT CS-002 · ADR-030 D9.
 """
 
 from __future__ import annotations
 
 from palm.app import ApplicationHost, DeploymentProfile
+from palm.app.host.observability import EYES_LAW, PACKAGING_ROLE
 from palm.app.settings import PalmSettings
 from palm.common.events.consumers import DEFAULT_JOURNAL_CONSUMERS
 
+# Domain keys (packaging residual). Demotion markers may also be present.
 EVENT_PLANE_KEYS = {
     "orchestration_bus",
     "host_coordination_bus",
@@ -56,10 +57,21 @@ CONTROL_PLANE_KEYS = {
     "ops",
 }
 
+DEMOTION_KEYS = {"role", "eyes_law", "operate_paths", "note"}
+
+
+def _assert_packaging_demotion(bag: dict) -> None:
+    assert bag["role"] == PACKAGING_ROLE
+    assert bag["eyes_law"] == EYES_LAW
+    assert "inspect/top" in bag["operate_paths"]
+    assert isinstance(bag["note"], str) and "CS-002" in bag["note"]
+
 
 def test_event_plane_status_full_contract(host: ApplicationHost) -> None:
     ep = host.event_plane_status()
-    assert set(ep) == EVENT_PLANE_KEYS
+    assert EVENT_PLANE_KEYS <= set(ep)
+    assert DEMOTION_KEYS <= set(ep)
+    _assert_packaging_demotion(ep)
     # Stable literals — coordination/journal always ride the host bus.
     assert ep["host_coordination_bus"] == "host"
     assert ep["journal_bus"] == "host"
@@ -73,12 +85,13 @@ def test_event_plane_status_full_contract(host: ApplicationHost) -> None:
     assert ep["work_drain_bus"] == ep["orchestration_bus"]
     assert ep["orchestration_bus"] in {"runtime", "host_fallback"}
     assert isinstance(ep["internal_inbound_bindings"], int)
-    assert isinstance(ep["note"], str) and ep["note"]
 
 
 def test_ops_status_full_contract(host: ApplicationHost) -> None:
     ops = host.ops_status()
-    assert set(ops) == OPS_KEYS
+    assert OPS_KEYS <= set(ops)
+    assert DEMOTION_KEYS <= set(ops)
+    _assert_packaging_demotion(ops)
     assert ops["invoke_route"] == "POST /v1/api/providers/{provider}/{resource_ref}/invoke"
     assert ops["invoke_route_short"] == "POST /v1/api/resources/{resource_ref}/invoke"
     assert isinstance(ops["storage_durable"], bool)
@@ -90,42 +103,46 @@ def test_ops_status_full_contract(host: ApplicationHost) -> None:
 
 def test_control_plane_status_full_contract(host: ApplicationHost) -> None:
     cp = host.control_plane_status()
-    assert set(cp) == CONTROL_PLANE_KEYS
+    assert CONTROL_PLANE_KEYS <= set(cp)
+    assert DEMOTION_KEYS <= set(cp)
+    _assert_packaging_demotion(cp)
     # Counts are consistent with their lists.
     assert cp["schedule_count"] == len(cp["schedules"])
     assert cp["inbound_count"] == len(cp["inbound_bindings"])
     assert cp["journal_consumers"] == list(DEFAULT_JOURNAL_CONSUMERS)
-    # work_drain_background is a live alias of work_drain_running (dropped in 0.48.1?).
+    # work_drain_background residual alias of work_drain_running.
     assert cp["work_drain_background"] == cp["work_drain_running"]
     assert isinstance(cp["work_pending"], int)
     assert isinstance(cp["outbox_pending"], int)
-    # Composition: control-plane nests the other two reports verbatim in shape.
-    assert set(cp["event_plane"]) == EVENT_PLANE_KEYS
-    assert set(cp["ops"]) == OPS_KEYS
+    # Nested residual bags also demoted.
+    assert EVENT_PLANE_KEYS <= set(cp["event_plane"])
+    assert OPS_KEYS <= set(cp["ops"])
+    _assert_packaging_demotion(cp["event_plane"])
+    _assert_packaging_demotion(cp["ops"])
 
 
 def test_status_reports_degrade_without_started_workplane() -> None:
-    """Fallback branches: an unstarted host still returns well-formed reports.
-
-    Pins the ``except Exception``/``is None`` degrade paths that seams 3-5 move.
-    """
+    """Fallback branches: an unstarted host still returns well-formed packaging."""
     host = ApplicationHost(
         settings=PalmSettings.for_tests(load_examples=False),
         profile=DeploymentProfile.all_in_one(),
     )
     # No start() — _work_drain / _inbound / _event_journal are None.
     ep = host.event_plane_status()
-    assert set(ep) == EVENT_PLANE_KEYS
+    assert EVENT_PLANE_KEYS <= set(ep)
     assert ep["orchestration_bus"] == "host_fallback"
     assert ep["internal_inbound_bindings"] == 0
+    _assert_packaging_demotion(ep)
 
     cp = host.control_plane_status()
-    assert set(cp) == CONTROL_PLANE_KEYS
+    assert CONTROL_PLANE_KEYS <= set(cp)
     assert cp["work_pending"] == 0
     assert cp["outbox_pending"] == 0
     assert cp["work_drain_running"] is False
     assert cp["schedules"] == []
     assert cp["inbound_bindings"] == []
+    _assert_packaging_demotion(cp)
 
     ops = host.ops_status()
-    assert set(ops) == OPS_KEYS
+    assert OPS_KEYS <= set(ops)
+    _assert_packaging_demotion(ops)
