@@ -1,0 +1,159 @@
+# ADR-031 — Multi-claimer work drain (exclusive claim first)
+
+**Status:** Proposed  
+**Date:** 2026-08-04  
+**Theme:** [VISION-0.62](../VISION-0.62.md) (**open** at `0.62.0`)  
+**Map:** [PALM.md](../PALM.md)  
+**Debt:** [SD-017](../../TECH-DEBT.md#sd-017) · [SD-018](../../TECH-DEBT.md#sd-018) · residual [SD-019](../../TECH-DEBT.md#sd-019)  
+**Related:** [ADR-025](025-reactive-interests.md) · [ADR-029](029-system-supervisor.md) · [ADR-030](030-system-vitality.md) · [WORK-DRAIN](../WORK-DRAIN.md)
+
+---
+
+## Context
+
+1. Palm has **reactive interests** ([ADR-025](025-reactive-interests.md)): start (WorkIntent) and continue (wait).  
+2. **Work plane + supervisor** own start traffic and continuous drain ([ADR-029](029-system-supervisor.md)). Host dual drain is removed.  
+3. **Vitality** can run load recipes ([ADR-030](030-system-vitality.md)) — `work_cycle` is the real start-path story.  
+4. `WorkIntentStore.claim_due` is **not exclusive**: read entry → set `claimed`. No `claimed_by`, no lease, no reclaim.  
+5. Continuous drain is **one thread** (`palm-work-plane`) with serial `submit_flow`. QueuedScheduler is effectively one job-drive worker.  
+6. Palm needs **capacity** on the start path without inventing a second queue or lying about host cores.  
+7. Pre-1.0 may break ugly shapes when homes are wrong. Theme exit is **José’s judgment**.
+
+---
+
+## Decision
+
+### D1 — Exclusive claim is the floor
+
+Multi-claimer **starts with exclusive claim and reclaim**, not with `workers=N`.
+
+| Floor | Growth |
+|-------|--------|
+| `claim_due` exclusive (`pending` → `claimed` for one claimer) | N continuous drain workers |
+| Lease / visibility timeout + `reclaim_expired` | Drive-path concurrency as proven |
+| Same API at `workers=1` | Benchmark 1 vs K |
+
+Do **not** ship `work_drain_workers>1` as success before exclusive claim + reclaim hold.
+
+### D2 — One start owner
+
+Continuous drain remains on **system work plane + supervisor** only.
+
+| Prefer | Avoid |
+|--------|--------|
+| Plane tick + supervised workers | Host `WorkDrainService` resurrection |
+| Fail closed if plane unattached | Second start queue “for performance” |
+
+### D3 — Durable claim shape
+
+`WorkIntent` (core) carries claim identity:
+
+| Field | Role |
+|-------|------|
+| `claimed_by` | Claimer id holding the lease |
+| `lease_until` | When another claimer may reclaim |
+
+Store API (names lock in code):
+
+```text
+claim_due(limit, *, claimer_id, now=None, lease_seconds=...) -> list[WorkIntent]
+reclaim_expired(*, now=None) -> int
+```
+
+In-process atomicity uses a store lock (or single-writer mutex) around claim/ack/fail/index.  
+Core stays pure; store I/O stays system.
+
+### D4 — Default workers = 1
+
+| Knob | Default | Meaning |
+|------|---------|---------|
+| `work_drain_workers` | **1** | Continuous drain loops (name may lock) |
+| Existing poll / batch / depth | Unchanged spirit | Storm guards stay |
+
+New knobs resolve through settings/composition without triple-override chaos ([BI-009](../../TECH-DEBT.md#bi-009)).
+
+### D5 — Worker set home (prefer plane-owned count)
+
+**Preferred first shape:** work plane owns worker count; N threads each call `tick` against the exclusive store.
+
+Supervisor still **registers** `work_drain` as one continuous service (or one definition that configures N).  
+Do not open-code a closed menu of peers in boot schedule prose ([CS-006](../../TECH-DEBT.md#cs-006) spirit / registry extension).
+
+### D6 — Multi-process / multi-runtime is residual
+
+| Layer | Stance |
+|-------|--------|
+| In-process multi-claimer | Theme subject after exclusive claim |
+| Multi-runtime roles (`worker_count`) | Not a shared claim pool; **one continuous drain owner per work-intent store** |
+| Multi-process shared durable store | [SD-019](../../TECH-DEBT.md#sd-019) — needs storage CAS; **not floor** |
+
+Do **not** implement `BaseBackend` CAS in this theme unless José expands scope.  
+Shape claim fields so later CAS is a plug-in, not a rewrite.
+
+### D7 — Drive path honesty
+
+Floor does **not** require parallel job drive. Floor requires **safe claim**.
+
+Exit growth either:
+
+1. Proves concurrent `submit_flow` / orchestration safety, or  
+2. **Names** residual: claim pool scale ≠ job-drive cores (QueuedScheduler N=1, unlocked map, …).
+
+### D8 — Honest capacity (GIL)
+
+In-process multi-claimer improves **start-queue throughput** under I/O-bound and wait-heavy work.  
+It is **not** a product promise that one Python process uses all host CPU cores.  
+Heavy CPU stays in **workloads / processes / peer Palms**.
+
+### D9 — Vitality proves capacity
+
+Use existing vitality benchmark path (`work_cycle` and extensions) for **1 vs K**, reclaim, and contention.  
+Vitality does **not** schedule claimers.
+
+### D10 — Exit is José’s judgment
+
+When exclusive claim + reclaim hold, workers (if shipped) are safe where claimed, proof is honest, residual is named, and declared green bars hold — **José** accepts this ADR and closes the theme.
+
+---
+
+## Consequences
+
+### Positive
+
+- Multi-claimer becomes extension of exclusive claim, not a rewrite.  
+- One start path stays true.  
+- Benchmarks already in house can dogfood capacity.  
+- Multi-process residual is honest (SD-019).
+
+### Negative / cost
+
+- Core `WorkIntent` schema grows claim fields.  
+- Store paths need lock discipline and reclaim tests.  
+- Drive-path concurrency may remain residual at exit.  
+- Two processes on one store remain unsupported until SD-019.
+
+### Risks if ignored
+
+- Flipping `workers=N` without exclusive claim corrupts the queue.  
+- Treating multi-runtime as multi-claimer double-drains shared storage.  
+- Claiming “multi-core” without workloads lies to operators.
+
+---
+
+## Alternatives considered
+
+| Alternative | Why not |
+|-------------|---------|
+| Multi-process CAS first | Wrong rung; backend has no atomic claim; delays in-process floor |
+| Host drain pool parallel to plane | Dual start path; undoes 0.60 residual pay |
+| Only thread pool, no lease fields | Blocks reclaim and multi-process later |
+| Vitality schedules workers | Eyes must not start work ([ADR-030](030-system-vitality.md)) |
+| N QueuedScheduler workers as floor | Drive path ≠ claim exclusivity; optional growth |
+
+---
+
+## Status notes
+
+- **0.62.0** — plan + this ADR **Proposed**.  
+- Execution starts **0.62.1** (exclusive claim).  
+- Accept at theme exit when José judges capacity proper.

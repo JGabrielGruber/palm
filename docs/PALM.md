@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [VISION-0.61](VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](VISION-VITALITY.md) (seed essay) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [VISION-0.62](VISION-0.62.md) (multi-claimer capacity **open** plan `0.62.0`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Proposed** · [VISION-0.61](VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](VISION-VITALITY.md) (seed essay) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -518,6 +518,7 @@ From theme **0.57** onward:
 | System boot (closed) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) · [ADR-028](adr/028-system-boot.md) Accepted · residual **BI-*** |
 | Supervisor + work plane (closed) | [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted · residual host product wire |
 | System vitality (**0.61 closed**) | [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted · package `palm.system.vitality` · schema `palm.seat_report/1` · inspect present · stamp `0.61.13` · seed [VISION-VITALITY](VISION-VITALITY.md) |
+| Multi-claimer capacity (**0.62 open**) | [VISION-0.62](VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Proposed · exclusive claim first · residual multi-process CAS [SD-019](../TECH-DEBT.md#sd-019) |
 | Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
@@ -551,6 +552,7 @@ A map that only names **ideals** without today is also incomplete.
 | Boot schedule + composition truth | **Theme closed** at `0.59.8` — [VISION-0.59](VISION-0.59.md) · residual **BI-*** |
 | Supervisor + work plane (start) on system | **Theme closed** at `0.60.9` — [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted |
 | Living-kernel vitality | **Theme closed** at `0.61.13` — `palm.system.vitality` + Inspect present — [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted |
+| Multi-claimer work drain | **Theme open** at `0.62.0` (plan) — exclusive claim first — [VISION-0.62](VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Proposed |
 | Grove multi-Palm | **Horizon** — not local incomplete |
 
 **Incomplete structure is stated here on purpose.**  

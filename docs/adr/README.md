@@ -45,11 +45,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [028](028-system-boot.md) | System boot schedule + composition truth (0.59) | Accepted |
 | [029](029-system-supervisor.md) | System supervisor + work plane on SystemInstance (0.60) | Accepted |
 | [030](030-system-vitality.md) | System vitality — living-kernel observation (0.61) | Accepted |
+| [031](031-multi-claimer-work-drain.md) | Multi-claimer work drain — exclusive claim first (0.62) | Proposed |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
-**Next free number:** 031.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** all **closed** (ADR-026…030 Accepted). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
+**Next free number:** 032.  
+**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** all **closed** (ADR-026…030 Accepted). Capacity **0.62 open** (ADR-031 Proposed). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
 
 ## How to add an ADR
 

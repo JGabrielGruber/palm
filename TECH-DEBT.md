@@ -1,8 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality closed** at **`0.61.13`** — **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅ · residual **[BI-015](#bi-015)** · **[SD-016](#sd-016)**. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.62 Multi-claimer work drain open** at **`0.62.0`** (plan) — pay **[SD-017](#sd-017)** · **[SD-018](#sd-018)** · residual **[SD-019](#sd-019)**. [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed**. Theme **0.61 Living-kernel vitality closed** at **`0.61.13`** — **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅ · residual **[BI-015](#bi-015)** · **[SD-016](#sd-016)**. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
+**Theme (open capacity):** [docs/VISION-0.62.md](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed**  
 **Theme (closed vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted** · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
 **Theme (closed supervisor):** [docs/VISION-0.60.md](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Accepted** · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)  
 **Theme (closed boot):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Accepted** · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
@@ -51,6 +52,9 @@
 | [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
 | [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | ✅ paid (definitions at edge) |
 | [SD-016](#sd-016) | Ambient system-instance DI (seat DI incomplete) | S2 | L | **0.61**+ | open (boot engine seats + ensure_on; host residual) |
+| [SD-017](#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.2** | open (floor) |
+| [SD-018](#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.5** | open (growth) |
+| [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
 
 ### Surface debt (SU)
 
@@ -290,6 +294,69 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 **Related:** [SD-015](#sd-015) · [CS-008](#cs-008) · [SU-*](#surface-debt-su).
 
 **Status:** open (boot seat DI improved; host/surfaces residual).
+
+---
+
+### SD-017 — WorkIntent claim not exclusive
+
+<a id="sd-017"></a>
+
+**Severity:** S1 · **Effort:** M · **Theme:** **0.62** floor ([VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md))
+
+**Observation:** `WorkIntentStore.claim_due` is read entry → set `status=claimed`.  
+`WorkIntent` has no `claimed_by` / `lease_until`. No reclaim / visibility timeout.  
+Two claimers can take the same intent or race the pending index and coalesce keys.
+
+**Pay:** Exclusive `claim_due(..., claimer_id=)` · lease fields on core intent · `reclaim_expired` · owner-aware ack/fail when multi-claimer on · concurrent claim tests.  
+In-process atomicity: store lock (or single-writer mutex). Same API at `workers=1`.
+
+**Do not:** Flip `work_drain_workers>1` as success before this row is paid.
+
+**Related:** [SD-018](#sd-018) · [SD-019](#sd-019) · [BI-013](#bi-013) (home closed; packaging residual).
+
+**Status:** open (floor of 0.62).
+
+---
+
+### SD-018 — Work drain single-claimer by construction
+
+<a id="sd-018"></a>
+
+**Severity:** S2 · **Effort:** M · **Theme:** **0.62** growth
+
+**Observation:** Continuous drain is one daemon thread (`palm-work-plane`): claim batch then serial `submit_flow`.  
+QueuedScheduler is one job-drive worker. Orchestration job map concurrency is unproven.  
+Architecture (supervisor + work plane) fits multi-claimer; code does not.
+
+**Pay growth:** N drain workers (default **1**) under plane/supervisor; exclusive store only.  
+Drive-path concurrent submit: **prove or name residual** (claim pool ≠ job-drive cores).
+
+**Related:** [SD-017](#sd-017) · supervisor continuous defs · vitality `work_cycle` 1 vs K.
+
+**Status:** open (growth of 0.62).
+
+---
+
+### SD-019 — Multi-process / multi-runtime shared claim needs storage CAS
+
+<a id="sd-019"></a>
+
+**Severity:** S2 · **Effort:** L · **Theme:** residual after 0.62 (not floor)
+
+**Observation:** `BaseBackend` is get/set/delete only. No atomic compare-and-set claim.  
+Two OS processes (or two continuous drain owners) on one durable store can double-claim even with lease fields on disk.
+
+**Product law until paid:** **one continuous work-drain owner per work-intent store.**  
+Multi-runtime `worker_count` is not a shared claim pool.
+
+**Pay later:** Storage-native claim or CAS; fencing tokens as needed.  
+Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
+
+**Do not:** Block 0.62 floor on multi-process CAS. Do not market multi-host claim pool without this.
+
+**Related:** [SD-017](#sd-017) · Grove scale-out (different home).
+
+**Status:** open residual (named at 0.62.0).
 
 ---
 
@@ -1198,12 +1265,14 @@ See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 
 | Seed | Debt | Spirit |
 |------|------|--------|
-| **System vitality** | SD-007 · CS-002 · OD-001 · BI-015 · **SD-015** · CS-006…008 | **Opened as 0.61** — [VISION-0.61](docs/VISION-0.61.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) |
+| **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Opened as 0.62** — [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
 | **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh |
+
+**Closed (not a seed):** **System vitality** — [VISION-0.61](docs/VISION-0.61.md) closed · [ADR-030](docs/adr/030-system-vitality.md) Accepted · residual BI-015 · SD-016.
 
 **Closed (not a seed):** **System supervisor + work plane** — [BI-013](#bi-013) ✅ · [VISION-0.60](docs/VISION-0.60.md) closed.  
 

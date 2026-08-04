@@ -1,29 +1,52 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.61.13` (stamp) · **Active theme:** *none* (between themes) · **Prior closed:** **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 4, 2026 · **Theme exit:** **0.61.13** ✅ — ADR-030 Accepted · eyes proper (José)  
-**System map:** [docs/PALM.md](docs/PALM.md) · **Closed theme:** [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted** · prior [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) Accepted  
-**Migration / release:** [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md) · prior [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **CS-002** ✅ · **OD-001** ✅ · **SD-007** ✅ · residual **BI-*** / **SI-*** / **SU-*** / **SD-016** / **BI-015** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.62.0` (plan stamp) · **Active theme:** **`0.62` Multi-claimer work drain** · **Prior closed:** **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
+**Last Updated:** August 4, 2026 · **Theme open:** **0.62.0** — plan · ADR-031 Proposed  
+**System map:** [docs/PALM.md](docs/PALM.md) · **Open theme:** [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed** · closed [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**  
+**Migration / release:** prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md) · (0.62 migration when contracts break)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** (0.62 pay) · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (open plan)** · [Grove](docs/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → closed [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted** · residual [TECH-DEBT.md](TECH-DEBT.md) · [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · [VISION-GROVE](docs/VISION-GROVE.md).
+Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed** → closed [VISION-0.61](docs/VISION-0.61.md) · residual [TECH-DEBT.md](TECH-DEBT.md) (**SD-017**…**019**).
 
 | Spirit | Decision |
 |--------|----------|
+| **0.62 open** | Multi-claimer work drain — exclusive claim first, then N workers; plan at `0.62.0` |
+| **Floor** | Exclusive claim + reclaim (same API at `workers=1`) — **SD-017** |
+| **Growth** | N drain workers · drive honesty · vitality 1 vs K — **SD-018** |
+| **Residual** | Multi-process shared claim needs CAS — **SD-019** (not floor); one drain owner per store |
 | **0.61 closed** | Living-kernel **vitality** — eyes proper; stamp `0.61.13` · ADR-030 Accepted |
 | **Vitality home** | **`palm.system.vitality`** — seat walk · projection · registry · process/bulk/benchmark |
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
-| **Doctor / host status** | Packaging residual only (**OD-001** ✅ · **CS-002** ✅) |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Boot law** | Two schedules; composition = membership; modes via `for_mode` |
-| **System log** | Observation tape live; catalog residual **BI-015** |
-| **Next** | José opens next theme (capacity / multi-claimer / surface / Grove / residual) — no forced open |
+| **Next execute** | **0.62.1** exclusive claim model (no feature code in 0.62.0) |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · `monitor_agent` · user-plane · workload remainder · Grove |
+
+## 0.62 — Multi-claimer work drain (**open** · plan `0.62.0`)
+
+**Vision:** [docs/VISION-0.62.md](docs/VISION-0.62.md) · **ADR:** [docs/adr/031-multi-claimer-work-drain.md](docs/adr/031-multi-claimer-work-drain.md) **Proposed**  
+**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-017** (floor) · **SD-018** (growth) · residual **SD-019**  
+**Map:** [docs/PALM.md](docs/PALM.md) · prior eyes [VISION-0.61](docs/VISION-0.61.md) · prior start home [VISION-0.60](docs/VISION-0.60.md)
+
+**Theme purpose:** Safe concurrent **start** path — exclusive claim + reclaim, then multi-claimer drain under supervisor; vitality proves 1 vs K. Not surface compost. Not Grove. Not multi-process CAS floor. Not “threads = all host cores.”
+
+| Patch | Status |
+|-------|--------|
+| **0.62.0** | ✅ plan + ADR-031 Proposed + debt rows |
+| **0.62.1** | exclusive claim model |
+| **0.62.2** | reclaim / visibility timeout |
+| **0.62.3** | plane tick claimer identity |
+| **0.62.4** | N drain workers (default 1) |
+| **0.62.5** | drive-path honesty (pay or name) |
+| **0.62.6** | benchmark proof 1 vs K |
+| **0.62.7+** | docs / knobs / residual |
+| **exit** | José · ADR Accepted · residual named |
+
+**Hard rule:** Do not ship `workers>1` as done before exclusive claim + reclaim.
 
 ## Quick Overview
 

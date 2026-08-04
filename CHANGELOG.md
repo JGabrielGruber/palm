@@ -4,6 +4,19 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.62.0] — 2026-08-04
+
+### 0.62 — Multi-claimer work drain (**theme open** · plan)
+
+Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-claimer-work-drain.md) **Proposed** · Debt: [SD-017](TECH-DEBT.md#sd-017) · [SD-018](TECH-DEBT.md#sd-018) · residual [SD-019](TECH-DEBT.md#sd-019)
+
+#### Plan (0.62.0)
+- **Theme open** — exclusive claim first, then multi-claimer drain under supervisor  
+- Floor: claimer/lease + reclaim (same API at `workers=1`)  
+- Growth: N workers · drive honesty · vitality **1 vs K**  
+- Residual: multi-process shared claim needs storage CAS (not floor); one drain owner per store  
+- No feature code in this stamp — execute from **0.62.1**
+
 ## [0.61.13] — 2026-08-04
 
 ### 0.61 — Living-kernel vitality (**theme closed**)
