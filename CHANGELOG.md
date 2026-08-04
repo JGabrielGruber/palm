@@ -15,7 +15,18 @@ Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-clai
 - Floor: claimer/lease + reclaim (same API at `workers=1`)  
 - Growth: N workers · drive honesty · vitality **1 vs K**  
 - Residual: multi-process shared claim needs storage CAS (not floor); one drain owner per store  
-- No feature code in this stamp — execute from **0.62.1**
+
+#### Floor (0.62.1–0.62.3) — exclusive claim
+- Core `WorkIntent.claimed_by` / `lease_until`  
+- `WorkIntentStore`: store lock · exclusive `claim_due(claimer_id=…)` · `reclaim_expired` · owner-aware ack/fail  
+- `WorkPlaneService.tick` passes claimer + reclaim; status exposes claim heat  
+- Concurrent claim tests — two claimers never share one intent (**SD-017** ✅)
+
+#### Growth (0.62.4) — N drain workers
+- Plane-owned `workers` (default **1**); distinct claimer ids per thread  
+- Settings: `work_drain_workers` · `work_drain_lease_seconds`  
+- Install options + host coordinator rebind  
+- Multi-worker background drain test
 
 ## [0.61.13] — 2026-08-04
 

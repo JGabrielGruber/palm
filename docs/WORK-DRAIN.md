@@ -57,6 +57,13 @@ Related knobs:
 | `PALM_WORK_DRAIN_POLL_INTERVAL` | `1.0` | Background poll seconds |
 | `PALM_WORK_DRAIN_BATCH_SIZE` | `10` | Intents per tick |
 | `PALM_WORK_DRAIN_MAX_DEPTH` | `8` | Drop intents beyond depth (storm guard) |
+| `PALM_WORK_DRAIN_WORKERS` | `1` | Continuous claimers (0.62; exclusive claim required) |
+| `PALM_WORK_DRAIN_LEASE_SECONDS` | `60` | Claim visibility timeout before reclaim |
+
+**0.62 exclusive claim:** each due intent is leased to one claimer (`claimed_by` / `lease_until`).  
+Expired leases return to pending. Default remains one background worker.  
+Multi-process shared store is **not** supported yet (one continuous drain owner per store).  
+Capacity theme: [VISION-0.62](VISION-0.62.md).
 
 ## Explicit drain (embedded / tests)
 

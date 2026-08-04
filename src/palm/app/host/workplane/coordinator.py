@@ -116,6 +116,13 @@ class WorkPlaneCoordinator:
         plane._poll_interval = max(
             0.05, float(settings.work_drain_poll_interval)
         )
+        plane._workers = max(
+            1, int(getattr(settings, "work_drain_workers", 1) or 1)
+        )
+        plane._lease_seconds = max(
+            0.1,
+            float(getattr(settings, "work_drain_lease_seconds", 60.0) or 60.0),
+        )
         self._work_drain = plane
         self.reload_work_triggers()
 

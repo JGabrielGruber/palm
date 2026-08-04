@@ -25,6 +25,9 @@ class WorkIntent:
     depth: int = 0
     status: str = "pending"  # pending | claimed | done | failed
     last_error: str | None = None
+    # Exclusive claim (0.62) — multi-claimer lease; empty when pending
+    claimed_by: str | None = None
+    lease_until: str | None = None  # ISO timestamp
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -39,6 +42,8 @@ class WorkIntent:
             "depth": self.depth,
             "status": self.status,
             "last_error": self.last_error,
+            "claimed_by": self.claimed_by,
+            "lease_until": self.lease_until,
         }
 
     @classmethod
@@ -63,6 +68,16 @@ class WorkIntent:
             depth=int(data.get("depth") or 0),
             status=str(data.get("status") or "pending"),
             last_error=data.get("last_error"),
+            claimed_by=(
+                str(data["claimed_by"])
+                if data.get("claimed_by") is not None
+                else None
+            ),
+            lease_until=(
+                str(data["lease_until"])
+                if data.get("lease_until") is not None
+                else None
+            ),
         )
 
     def is_due(self, *, now: datetime | None = None) -> bool:
@@ -76,6 +91,21 @@ class WorkIntent:
         if due.tzinfo is None:
             due = due.replace(tzinfo=UTC)
         return current >= due
+
+    def lease_expired(self, *, now: datetime | None = None) -> bool:
+        """True when claimed lease time is past (or missing while claimed)."""
+        if self.status != "claimed":
+            return False
+        if not self.lease_until:
+            return True
+        try:
+            until = datetime.fromisoformat(self.lease_until)
+        except ValueError:
+            return True
+        current = now or datetime.now(UTC)
+        if until.tzinfo is None:
+            until = until.replace(tzinfo=UTC)
+        return current >= until
 
 
 __all__ = ["WorkIntent"]

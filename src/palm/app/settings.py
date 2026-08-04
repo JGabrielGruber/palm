@@ -59,6 +59,9 @@ class PalmSettings(BaseSettings):
     work_drain_poll_interval: float = 1.0
     work_drain_batch_size: int = 10
     work_drain_max_depth: int = 8
+    # 0.62 — multi-claimer drain (default 1; needs exclusive claim)
+    work_drain_workers: int = 1
+    work_drain_lease_seconds: float = 60.0
     rebuild_projections_on_startup: bool = True
     projection_rebuild_batch_size: int = 100
     projection_rebuild_max_instances: int = 5000

@@ -28,6 +28,9 @@ def install_work_plane(
     max_depth = int(opts.get("work_drain_max_depth", 8) or 8)
     batch_size = int(opts.get("work_drain_batch_size", 10) or 10)
     poll_interval = float(opts.get("work_drain_poll_interval", 1.0) or 1.0)
+    workers = int(opts.get("work_drain_workers", 1) or 1)
+    lease_seconds = float(opts.get("work_drain_lease_seconds", 60.0) or 60.0)
+    claimer_id = str(opts.get("work_drain_claimer_id") or "default")
     plane = WorkPlaneService()
     plane.attach(
         storage=storage,
@@ -37,6 +40,9 @@ def install_work_plane(
         max_depth=max_depth,
         batch_size=batch_size,
         poll_interval=poll_interval,
+        workers=workers,
+        lease_seconds=lease_seconds,
+        claimer_id=claimer_id,
     )
     hub.put(WORK_PLANE.name, plane, aliases=WORK_PLANE.aliases)
     return plane

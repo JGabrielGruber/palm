@@ -52,8 +52,8 @@
 | [SD-014](#sd-014) | No unified system boot phase table; composition not full truth | S2 | L | **0.59** | ✅ closed (0.59.8 exit) |
 | [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | ✅ paid (definitions at edge) |
 | [SD-016](#sd-016) | Ambient system-instance DI (seat DI incomplete) | S2 | L | **0.61**+ | open (boot engine seats + ensure_on; host residual) |
-| [SD-017](#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.2** | open (floor) |
-| [SD-018](#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.5** | open (growth) |
+| [SD-017](#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.3** | ✅ paid (exclusive claim + reclaim + plane claimer) |
+| [SD-018](#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.5** | partial (N workers ✅; drive residual) |
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
 
 ### Surface debt (SU)
@@ -310,11 +310,12 @@ Two claimers can take the same intent or race the pending index and coalesce key
 **Pay:** Exclusive `claim_due(..., claimer_id=)` · lease fields on core intent · `reclaim_expired` · owner-aware ack/fail when multi-claimer on · concurrent claim tests.  
 In-process atomicity: store lock (or single-writer mutex). Same API at `workers=1`.
 
-**Do not:** Flip `work_drain_workers>1` as success before this row is paid.
+**Progress (0.62.1–0.62.3):** `WorkIntent.claimed_by` / `lease_until` · store `RLock` · exclusive `claim_due` · `reclaim_expired` · owner-aware `ack`/`fail` · plane `tick(claimer_id=…, reclaim=…)` · concurrent claim tests.  
+**Do not:** Flip `work_drain_workers>1` as success before multi-worker growth (**SD-018**).
 
 **Related:** [SD-018](#sd-018) · [SD-019](#sd-019) · [BI-013](#bi-013) (home closed; packaging residual).
 
-**Status:** open (floor of 0.62).
+**Status:** ✅ **paid** (0.62.1–0.62.3 floor).
 
 ---
 
@@ -331,9 +332,12 @@ Architecture (supervisor + work plane) fits multi-claimer; code does not.
 **Pay growth:** N drain workers (default **1**) under plane/supervisor; exclusive store only.  
 Drive-path concurrent submit: **prove or name residual** (claim pool ≠ job-drive cores).
 
+**Progress (0.62.4):** `work_drain_workers` (default 1) · plane starts N poll threads with distinct claimer ids · settings + install options · multi-worker background test.  
+**Residual:** concurrent `submit_flow` / QueuedScheduler / orchestration map safety (**0.62.5** name or pay).
+
 **Related:** [SD-017](#sd-017) · supervisor continuous defs · vitality `work_cycle` 1 vs K.
 
-**Status:** open (growth of 0.62).
+**Status:** partial (N workers landed; drive residual open).
 
 ---
 

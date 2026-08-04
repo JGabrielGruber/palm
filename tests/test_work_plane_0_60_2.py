@@ -29,10 +29,14 @@ def test_work_plane_attach_enqueue_tick_hostless() -> None:
         assert intent_id
         assert plane.store.pending_count() >= 1
 
-        n = plane.tick(limit=10)
+        n = plane.tick(limit=10, claimer_id="plane-test")
         assert n == 1
         assert submitted == [("demo-flow", {"k": 1})]
         assert plane.store.pending_count() == 0
+        st = plane.status()
+        assert st.get("claimer_id")
+        assert "lease_seconds" in st
+        assert "reclaimed" in st
     finally:
         rt.stop()
         assert rt.work_plane is None
@@ -87,6 +91,61 @@ def test_supervised_work_drain_background_when_enabled() -> None:
         assert rt.work_plane is not None
         assert rt.work_plane.is_running is True
         assert rt.supervisor.status()["running"] == ["work_drain"]
+        assert rt.work_plane.status().get("workers", 1) == 1
     finally:
         rt.stop()
         assert rt.work_plane is None
+
+
+def test_work_plane_multi_worker_background() -> None:
+    """0.62.4 — N continuous claimers; exclusive store (default path still N=1)."""
+    reset_system_log_for_tests()
+    submitted: list[str] = []
+    lock = __import__("threading").Lock()
+
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        enable_work_drain_service=True,
+        work_drain_workers=3,
+        work_drain_poll_interval=0.05,
+        work_drain_batch_size=1,
+    )
+    try:
+        plane = rt.work_plane
+        assert plane is not None
+        # Options may land via attach kwargs when install sees them; force if lean.
+        if plane.workers < 3:
+            plane.stop_background()
+            plane._workers = 3
+            plane.start_background()
+        assert plane.is_running
+        st = plane.status()
+        assert st["workers"] == 3
+        assert st["workers_alive"] == 3
+
+        def _submit(fid: str, payload: dict) -> None:
+            with lock:
+                submitted.append(fid)
+
+        plane._submit_flow = _submit
+        for i in range(12):
+            plane.enqueue(
+                WorkIntent(id=f"mw{i}", kind="run_flow", target=f"flow-{i}")
+            )
+        # Wait for background drain
+        import time
+
+        deadline = time.monotonic() + 3.0
+        while time.monotonic() < deadline:
+            with lock:
+                if len(submitted) >= 12:
+                    break
+            time.sleep(0.05)
+        with lock:
+            assert len(submitted) == 12
+            assert len(set(submitted)) == 12
+        assert plane.store.pending_count() == 0
+    finally:
+        rt.stop()

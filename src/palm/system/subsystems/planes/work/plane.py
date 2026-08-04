@@ -17,7 +17,11 @@ from palm.common.triggers.registry import TriggerRegistry
 from palm.core.event import Event
 from palm.core.work import WorkIntent
 from palm.system.subsystems.planes.work.schedule import ScheduleRegistry
-from palm.system.subsystems.planes.work.store import WorkIntentStore
+from palm.system.subsystems.planes.work.store import (
+    DEFAULT_CLAIMER_ID,
+    DEFAULT_LEASE_SECONDS,
+    WorkIntentStore,
+)
 
 if TYPE_CHECKING:
     from palm.core.event import EventEngine
@@ -44,11 +48,15 @@ class WorkPlaneService:
         self._max_depth = 8
         self._batch_size = 10
         self._poll_interval = 1.0
+        self._lease_seconds = DEFAULT_LEASE_SECONDS
+        self._claimer_id = DEFAULT_CLAIMER_ID
+        self._workers = 1
         self._event_engine: EventEngine | None = None
         self._subs: list[Any] = []
         self._dropped_depth = 0
+        self._reclaimed = 0
         self._stop = threading.Event()
-        self._thread: threading.Thread | None = None
+        self._threads: list[threading.Thread] = []
         self._bg_started = False
 
     @property
@@ -89,6 +97,9 @@ class WorkPlaneService:
         max_depth: int = 8,
         batch_size: int = 10,
         poll_interval: float = 1.0,
+        lease_seconds: float = DEFAULT_LEASE_SECONDS,
+        claimer_id: str = DEFAULT_CLAIMER_ID,
+        workers: int = 1,
         attach_events: bool = True,
     ) -> None:
         """Wire storage and effectors. Callers own extraction from the machine."""
@@ -103,9 +114,13 @@ class WorkPlaneService:
         self._max_depth = max(1, int(max_depth))
         self._batch_size = max(1, int(batch_size))
         self._poll_interval = max(0.05, float(poll_interval))
+        self._lease_seconds = max(0.1, float(lease_seconds))
+        self._claimer_id = str(claimer_id or DEFAULT_CLAIMER_ID)
+        self._workers = max(1, int(workers))
         self._able = able if able is not None else (lambda: True)
         self._submit_flow = submit_flow
         self._dropped_depth = 0
+        self._reclaimed = 0
 
         if attach_events and event is not None:
             if getattr(event, "is_initialized", False):
@@ -133,6 +148,7 @@ class WorkPlaneService:
         self._submit_flow = None
         self._triggers = TriggerRegistry()
         self._dropped_depth = 0
+        self._reclaimed = 0
 
     def attach_event_engine(self, event_engine: EventEngine) -> None:
         """Subscribe start-path event types (resource / flow / workload)."""
@@ -208,14 +224,31 @@ class WorkPlaneService:
             return 0
         return len(self._schedules.tick(limit=self._batch_size))
 
-    def tick(self, *, limit: int | None = None) -> int:
-        """Claim and execute due work. Returns number of intents processed."""
+    def tick(
+        self,
+        *,
+        limit: int | None = None,
+        claimer_id: str | None = None,
+        reclaim: bool = True,
+    ) -> int:
+        """Claim and execute due work. Returns number of intents processed.
+
+        Uses exclusive claim (``claimer_id`` + lease). Optional reclaim of
+        expired leases runs first when ``reclaim`` is true.
+        """
         if self._store is None or self._submit_flow is None:
             return 0
         if not self._able():
             return 0
+        cid = str(claimer_id or self._claimer_id or DEFAULT_CLAIMER_ID)
+        if reclaim:
+            self._reclaimed += self._store.reclaim_expired()
         batch = self._batch_size if limit is None else max(1, int(limit))
-        claimed = self._store.claim_due(limit=batch)
+        claimed = self._store.claim_due(
+            limit=batch,
+            claimer_id=cid,
+            lease_seconds=self._lease_seconds,
+        )
         done = 0
         for intent in claimed:
             try:
@@ -223,49 +256,66 @@ class WorkPlaneService:
                     self._submit_flow(intent.target, dict(intent.payload))
                 else:
                     raise ValueError(f"unsupported work kind {intent.kind!r}")
-                self._store.ack(intent.id)
+                self._store.ack(intent.id, claimer_id=cid)
                 done += 1
             except Exception as exc:
-                self._store.fail(intent.id, str(exc))
+                self._store.fail(intent.id, str(exc), claimer_id=cid)
         return done
 
     @property
     def is_running(self) -> bool:
-        return (
-            self._bg_started
-            and self._thread is not None
-            and self._thread.is_alive()
-        )
+        if not self._bg_started:
+            return False
+        return any(t.is_alive() for t in self._threads)
+
+    @property
+    def workers(self) -> int:
+        return self._workers
 
     def start_background(self) -> None:
-        """Continuous poll loop (supervisor or host may call)."""
+        """Continuous poll loop(s) (supervisor or host may call).
+
+        Starts ``workers`` daemon threads (default 1). Each thread has a
+        distinct claimer id under exclusive claim (0.62).
+        """
         if self._bg_started:
             return
         self._stop.clear()
-        self._thread = threading.Thread(
-            target=self._poll_loop,
-            name="palm-work-plane",
-            daemon=True,
-        )
-        self._thread.start()
+        n = max(1, int(self._workers))
+        base = self._claimer_id or DEFAULT_CLAIMER_ID
+        self._threads = []
+        for i in range(n):
+            claimer = base if n == 1 else f"{base}-{i}"
+            # Only worker 0 ticks schedules (avoid N schedule enqueues).
+            th = threading.Thread(
+                target=self._poll_loop,
+                name=f"palm-work-plane-{i}" if n > 1 else "palm-work-plane",
+                args=(claimer, i == 0),
+                daemon=True,
+            )
+            th.start()
+            self._threads.append(th)
         self._bg_started = True
 
     def stop_background(self, *, timeout: float = 2.0) -> None:
         if not self._bg_started:
             return
         self._stop.set()
-        if self._thread is not None:
-            self._thread.join(timeout=timeout)
-        self._thread = None
+        per = timeout / max(1, len(self._threads)) if self._threads else timeout
+        for th in self._threads:
+            th.join(timeout=per)
+        self._threads = []
         self._bg_started = False
 
-    def _poll_loop(self) -> None:
+    def _poll_loop(self, claimer: str, tick_schedules: bool) -> None:
+        # Stable claimer id for this continuous thread (0.62 exclusive claim).
         while not self._stop.wait(self._poll_interval):
             try:
                 if not self._able():
                     continue
-                self.tick_schedules()
-                self.tick(limit=self._batch_size)
+                if tick_schedules:
+                    self.tick_schedules()
+                self.tick(limit=self._batch_size, claimer_id=claimer, reclaim=True)
             except Exception:
                 continue
 
@@ -276,6 +326,7 @@ class WorkPlaneService:
                 pending = len(self._store.list_pending())
             except Exception:
                 pending = -1
+        alive = sum(1 for t in self._threads if t.is_alive())
         return {
             "attached": self.is_attached,
             "pending": pending,
@@ -284,6 +335,11 @@ class WorkPlaneService:
             "batch_size": self._batch_size,
             "background": self.is_running,
             "trigger_count": len(getattr(self._triggers, "_specs", []) or []),
+            "claimer_id": self._claimer_id,
+            "lease_seconds": self._lease_seconds,
+            "reclaimed": self._reclaimed,
+            "workers": self._workers,
+            "workers_alive": alive,
         }
 
     def _payload(self, event: Event) -> dict[str, Any]:

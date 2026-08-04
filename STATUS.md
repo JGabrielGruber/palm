@@ -23,7 +23,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next execute** | **0.62.1** exclusive claim model (no feature code in 0.62.0) |
+| **Next execute** | **0.62.5** drive-path honesty · **0.62.6** benchmark 1 vs K |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · `monitor_agent` · user-plane · workload remainder · Grove |
 
 ## 0.62 — Multi-claimer work drain (**open** · plan `0.62.0`)
@@ -37,16 +37,17 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62
 | Patch | Status |
 |-------|--------|
 | **0.62.0** | ✅ plan + ADR-031 Proposed + debt rows |
-| **0.62.1** | exclusive claim model |
-| **0.62.2** | reclaim / visibility timeout |
-| **0.62.3** | plane tick claimer identity |
-| **0.62.4** | N drain workers (default 1) |
+| **0.62.1** | ✅ exclusive claim model (`claimed_by` / `lease_until` · store lock) |
+| **0.62.2** | ✅ reclaim / visibility timeout |
+| **0.62.3** | ✅ plane tick claimer identity + reclaim on poll · status heat |
+| **0.62.4** | ✅ N drain workers (default 1) · `work_drain_workers` / lease settings |
 | **0.62.5** | drive-path honesty (pay or name) |
 | **0.62.6** | benchmark proof 1 vs K |
 | **0.62.7+** | docs / knobs / residual |
 | **exit** | José · ADR Accepted · residual named |
 
-**Hard rule:** Do not ship `workers>1` as done before exclusive claim + reclaim.
+**Hard rule:** Do not ship `workers>1` as done before exclusive claim + reclaim.  
+**Progress:** **SD-017** floor paid in code (0.62.1–0.62.3); **SD-018** still open (single continuous worker).
 
 ## Quick Overview
 
