@@ -33,6 +33,7 @@ from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import SeatReport, coerce_report, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_EMISSION_WINDOW,
+    CAPABILITY_PROCESS_RESOURCES,
     CAPABILITY_SEAT_WALK,
     LINEAGE_NATIVE,
     LINEAGE_SAMPLED,
@@ -171,6 +172,15 @@ class VitalitySnapshot:
                     if isinstance(summary, dict)
                     else None
                 ),
+            }
+        pr = self.fragments.get(CAPABILITY_PROCESS_RESOURCES)
+        if pr is not None and pr.present and isinstance(pr.data, dict):
+            pr_summary = pr.data.get("summary")
+            top["process"] = {
+                "state": pr.state,
+                "summary": dict(pr_summary) if isinstance(pr_summary, dict) else {},
+                "notes": list(pr.notes),
+                # Full raw rusage/proc stays on fragment; top stays light.
             }
         return top
 

@@ -1,7 +1,8 @@
 """
 Default vitality capabilities (0.61.2+).
 
-**Installed core observe:** ``seat_walk`` · ``emission_window`` (0.61.3).  
+**Installed observe:** ``seat_walk`` · ``emission_window`` (0.61.3) ·
+``process_resources`` (0.61.8, stdlib).  
 Other catalog ids may exist as intention stubs (disabled) so the registry
 shape is honest about growth without fake-green bodies.
 
@@ -20,6 +21,7 @@ from palm.system.vitality.capability import (
     intention_stub,
 )
 from palm.system.vitality.emission_window import sample_emission_window
+from palm.system.vitality.process_resources import sample_process_resources
 from palm.system.vitality.report import SeatReport, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_BENCHMARK,
@@ -135,8 +137,25 @@ def build_emission_window_capability() -> VitalityCapability:
     )
 
 
+def build_process_resources_capability() -> VitalityCapability:
+    return VitalityCapability(
+        id=CAPABILITY_PROCESS_RESOURCES,
+        sample=sample_process_resources,
+        role=ROLE_OBSERVE,
+        maturity=MATURITY_INSTALLED,
+        default_enabled=True,
+        cost=COST_CHEAP,
+        description=(
+            "Host-process RSS/CPU/threads (stdlib resource + optional /proc); "
+            "units labeled; not a health grade"
+        ),
+        tags=("observe", "load", "process"),
+        order=50,
+    )
+
+
 def build_default_capabilities() -> list[VitalityCapability]:
-    """Installed core + intention stubs for catalog honesty."""
+    """Installed observe + intention stubs for catalog honesty."""
     return [
         build_seat_walk_capability(),
         build_emission_window_capability(),
@@ -154,13 +173,7 @@ def build_default_capabilities() -> list[VitalityCapability]:
             order=40,
             tags=("observe", "intention"),
         ),
-        intention_stub(
-            CAPABILITY_PROCESS_RESOURCES,
-            role=ROLE_OBSERVE,
-            description="RSS/CPU/threads (stdlib; mode-gated later)",
-            order=50,
-            tags=("observe", "intention"),
-        ),
+        build_process_resources_capability(),
         intention_stub(
             CAPABILITY_LOADED_BULK,
             role=ROLE_OBSERVE,
@@ -190,7 +203,9 @@ __all__ = [
     "BAG_SEAT_WALK_RESULT",
     "build_default_capabilities",
     "build_emission_window_capability",
+    "build_process_resources_capability",
     "build_seat_walk_capability",
     "sample_emission_window",
+    "sample_process_resources",
     "sample_seat_walk",
 ]

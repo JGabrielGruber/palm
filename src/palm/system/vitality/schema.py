@@ -156,7 +156,7 @@ CAPABILITY_SYSTEM_LOG_TAIL: Final[str] = "system_log_tail"
 """Optional observe: system log sample (BI-015 neighbor)."""
 
 CAPABILITY_PROCESS_RESOURCES: Final[str] = "process_resources"
-"""Optional observe: RSS/CPU/threads (stdlib; mode-gated)."""
+"""Optional observe: RSS/CPU/threads (stdlib; installed 0.61.8)."""
 
 CAPABILITY_LOADED_BULK: Final[str] = "loaded_bulk"
 """Optional observe: light size of attached seats — visibility not shame."""

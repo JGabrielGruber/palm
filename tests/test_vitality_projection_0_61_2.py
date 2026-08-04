@@ -8,6 +8,7 @@ from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 from palm.system.vitality import (
     CAPABILITY_EMISSION_WINDOW,
+    CAPABILITY_LOADED_BULK,
     CAPABILITY_PROCESS_RESOURCES,
     CAPABILITY_SEAT_WALK,
     LINEAGE_SAMPLED,
@@ -49,11 +50,15 @@ def test_default_registry_has_seat_walk_enabled() -> None:
     assert reg.is_enabled(CAPABILITY_EMISSION_WINDOW)
     row = next(r for r in reg.catalog() if r["id"] == CAPABILITY_EMISSION_WINDOW)
     assert row["maturity"] == MATURITY_INSTALLED
-    # Intention stubs remain disabled by default.
+    # process_resources installed + enabled (0.61.8); other intentions still off.
     assert CAPABILITY_PROCESS_RESOURCES in reg
-    assert not reg.is_enabled(CAPABILITY_PROCESS_RESOURCES)
+    assert reg.is_enabled(CAPABILITY_PROCESS_RESOURCES)
+    pr = next(r for r in reg.catalog() if r["id"] == CAPABILITY_PROCESS_RESOURCES)
+    assert pr["maturity"] == MATURITY_INSTALLED
+    assert CAPABILITY_LOADED_BULK in reg
+    assert not reg.is_enabled(CAPABILITY_LOADED_BULK)
     intention = next(
-        r for r in reg.catalog() if r["id"] == CAPABILITY_PROCESS_RESOURCES
+        r for r in reg.catalog() if r["id"] == CAPABILITY_LOADED_BULK
     )
     assert intention["maturity"] == MATURITY_INTENTION
 
@@ -108,9 +113,10 @@ def test_project_started_runtime_seat_walk() -> None:
         assert any(row["seat_id"] == SEAT_WAIT_PLANE for row in seat_lines)
         assert all(row["capability_id"] == CAPABILITY_SEAT_WALK for row in seat_lines)
 
-        # Core emission_window installed (0.61.3); other intentions still off.
+        # Installed observe caps run by default; intention stubs stay off.
         assert CAPABILITY_EMISSION_WINDOW in snap.fragments
-        assert CAPABILITY_PROCESS_RESOURCES not in snap.fragments
+        assert CAPABILITY_PROCESS_RESOURCES in snap.fragments
+        assert CAPABILITY_LOADED_BULK not in snap.fragments
     finally:
         rt.stop()
 
@@ -185,11 +191,11 @@ def test_extra_enable_intention_returns_skipped_body() -> None:
     snap = VitalityProjection(reg).sample(
         object(),
         ProjectionOptions(
-            only=frozenset({CAPABILITY_PROCESS_RESOURCES}),
-            extra_enable=frozenset({CAPABILITY_PROCESS_RESOURCES}),
+            only=frozenset({CAPABILITY_LOADED_BULK}),
+            extra_enable=frozenset({CAPABILITY_LOADED_BULK}),
         ),
     )
-    frag = snap.fragments[CAPABILITY_PROCESS_RESOURCES]
+    frag = snap.fragments[CAPABILITY_LOADED_BULK]
     assert frag.state == STATE_SKIPPED
     assert "intention_not_implemented" in frag.notes[0]
 
