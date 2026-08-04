@@ -114,6 +114,12 @@ New system contracts must **not** use `doctor_*` as the physiology API.
 Assist/MCP may keep a `doctor` **alias** if the body consumes vitality.  
 `build_doctor_report` must not remain the place that invents living counters.
 
+**Progress (0.61.6 / OD-001 ✅):** Product doctor envelope is
+`kind=legacy_doctor` · `role=anatomy_packaging` · `eyes_law` + `operate_paths`.
+Nests projection `top` / vitality pointer. Anatomy bag =
+storage/registries/jobs/control_plane residual. Plane `doctor_snapshot` and
+host control_plane remain named residual (seat report + **CS-002**).
+
 ### D8 — Emission identity
 
 Aggregates that may later inform Design or probes carry:

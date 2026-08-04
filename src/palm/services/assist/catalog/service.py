@@ -21,6 +21,7 @@ class AssistCatalogService:
         self._assist = assist
 
     def doctor(self) -> dict[str, Any]:
+        """Legacy anatomy packaging (OD-001) — prefer :meth:`top` / :meth:`vitality`."""
         return self._assist.inspect.doctor(self._assist.resolve_runtime())
 
     def top(self) -> dict[str, Any]:

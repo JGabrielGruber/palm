@@ -6,9 +6,20 @@ import shim.
 
 0.61.5: :meth:`InspectService.top` / :meth:`InspectService.vitality` present
 system vitality projection only.
+
+0.61.6 / OD-001: :meth:`InspectService.doctor` is demoted anatomy packaging.
 """
 
-from palm.services.inspect.present import present_top, present_vitality
+from palm.services.inspect.present import (
+    present_doctor,
+    present_top,
+    present_vitality,
+)
 from palm.services.inspect.service import InspectService
 
-__all__ = ["InspectService", "present_top", "present_vitality"]
+__all__ = [
+    "InspectService",
+    "present_doctor",
+    "present_top",
+    "present_vitality",
+]

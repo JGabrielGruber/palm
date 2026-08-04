@@ -75,7 +75,9 @@ def test_doctor_nests_projection_top() -> None:
         assert "summary" in report["top"]
         assert report["vitality"]["source"] == "palm.system.vitality"
         assert "note" in report["vitality"]
-        # Legacy packaging still present (OD-001 residual anatomy).
+        # Demoted envelope (0.61.6 / OD-001) + anatomy packaging residual.
+        assert report.get("kind") == "legacy_doctor"
+        assert report.get("role") == "anatomy_packaging"
         assert "status" in report
         assert "jobs" in report
     finally:

@@ -256,6 +256,7 @@ class AssistService(BaseService):
         return self._sessions.handoff(session_id)
 
     def doctor(self) -> dict[str, Any]:
+        """Legacy anatomy packaging (OD-001) — prefer :meth:`top` / :meth:`vitality`."""
         return self._catalog.doctor()
 
     def top(self) -> dict[str, Any]:

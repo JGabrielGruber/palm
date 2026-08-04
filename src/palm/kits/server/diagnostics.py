@@ -1,4 +1,12 @@
-"""Server diagnostics — JSON doctor report for REST and operator tooling."""
+"""Server diagnostics — anatomy packaging for the legacy doctor verb.
+
+0.61.6 / OD-001: this module builds **anatomy packaging** only (storage,
+registries, job counts, contributor sections, host control_plane residual).
+It does **not** invent living seat law. Living eyes live in
+``palm.system.vitality`` and are presented via ``InspectService.top`` /
+``.vitality``. Prefer those paths; call this only as residual packaging
+consumed by :meth:`InspectService.doctor` / CLI health dumps.
+"""
 
 from __future__ import annotations
 
@@ -11,13 +19,24 @@ from palm.system.subsystems.planes.wait.present import waiting_on_from_job
 from palm.core.registry import pattern_registry, provider_registry, storage_registry
 from palm.core.transform.registry import transform_registry
 
+# OD-001 residual marker — not living seat law.
+_ANATOMY_ROLE = "anatomy_packaging"
+_ANATOMY_NOTE = (
+    "Anatomy packaging residual (OD-001). Living eyes: InspectService.top / "
+    "vitality → palm.system.vitality. Do not treat this bag as seat law."
+)
+
 
 def build_doctor_report(
     runtime: Any,
     *,
     control_plane: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Assemble a compact engine health report without Rich CLI output."""
+    """Assemble anatomy packaging (storage, registries, jobs) — not vitality.
+
+    Residual for the legacy ``doctor`` verb. Does not invent seat reports or
+    projection summary. Prefer :meth:`~palm.services.inspect.InspectService.top`.
+    """
     issues: list[str] = []
 
     storage = getattr(runtime, "storage", None)
@@ -149,6 +168,8 @@ def build_doctor_report(
         registries["workload_runtimes"] = []
 
     return {
+        "role": _ANATOMY_ROLE,
+        "note": _ANATOMY_NOTE,
         "status": "ok" if not issues else "degraded",
         "version": __version__,
         "runtime": getattr(runtime, "runtime_name", "unknown"),
@@ -163,6 +184,7 @@ def build_doctor_report(
         "neonroot": neonroot,
         "workload_host": workload_host,
         "workloads": workloads,
+        # control_plane from host is CS-002 residual — packaging, not living law.
         "control_plane": cp or {
             "work_pending": 0,
             "work_drain_running": False,
@@ -176,6 +198,7 @@ def build_doctor_report(
             "open_wait_interests": open_wait_interests,
             "wait_kinds": wait_kind_counts,
         },
+        # Plane doctor_snapshot residual — transitional (seat report later).
         "reactive_interests": reactive,
         "issues": issues,
     }

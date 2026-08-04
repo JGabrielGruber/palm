@@ -4,6 +4,9 @@
 collides with the system layer or the supervisor continuous-loop protocol.
 
 0.61.5: ``top`` / ``vitality`` present **only** from system vitality projection.
+
+0.61.6 / OD-001: ``doctor`` is demoted to **anatomy packaging** — nests living
+eyes from projection; does not invent seat law.
 """
 
 from __future__ import annotations
@@ -23,6 +26,7 @@ from palm.common.services.base import BaseService
 from palm.common.services.errors import InstanceNotFoundServiceError
 from palm.kits.server.diagnostics import build_doctor_report
 from palm.services.inspect.present import (
+    present_doctor,
     present_top,
     present_vitality,
     present_vitality_for_doctor,
@@ -46,8 +50,10 @@ class InspectService(BaseService):
     """Product present door — composes CQRS into business-shaped methods.
 
     Living eyes: :meth:`top` and :meth:`vitality` read
-    :mod:`palm.system.vitality` only. Doctor remains a legacy packaging verb
-    that **nests** projection output (OD-001 demotion path).
+    :mod:`palm.system.vitality` only.
+
+    :meth:`doctor` is a **legacy verb** (OD-001): anatomy packaging that nests
+    projection output. Prefer ``top`` / ``vitality`` for operate physiology.
 
     Supervisor continuous loops keep the unrelated protocol name
     ``SystemService`` under ``palm.system.supervisor``.
@@ -72,7 +78,10 @@ class InspectService(BaseService):
         return present_vitality(runtime, options, **kwargs)
 
     def doctor(self, runtime: Any) -> dict[str, Any]:
-        """Legacy health packaging — nests vitality top; does not invent seat law."""
+        """Legacy anatomy packaging — nests vitality; does not invent seat law.
+
+        Prefer :meth:`top` / :meth:`vitality` for living eyes (OD-001 demotion).
+        """
         control_plane = None
         host = _application_host_from(runtime)
         if host is not None and hasattr(host, "control_plane_status"):
@@ -80,19 +89,16 @@ class InspectService(BaseService):
                 control_plane = host.control_plane_status()
             except Exception:
                 control_plane = None
-        report = build_doctor_report(runtime, control_plane=control_plane)
+        anatomy = build_doctor_report(runtime, control_plane=control_plane)
         try:
             top = self.top(runtime)
-            report["top"] = top
-            report["vitality"] = present_vitality_for_doctor(top)
+            return present_doctor(
+                anatomy,
+                top=top,
+                vitality=present_vitality_for_doctor(top),
+            )
         except Exception as exc:
-            report["top"] = {"error": str(exc), "source": "palm.system.vitality"}
-            report["vitality"] = {
-                "source": "palm.system.vitality",
-                "error": str(exc),
-                "note": "Projection sample failed; doctor packaging still returned.",
-            }
-        return report
+            return present_doctor(anatomy, top_error=str(exc))
 
     def list_jobs(
         self,

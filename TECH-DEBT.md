@@ -1,6 +1,6 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.2** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[CS-002](#cs-002)** · **[OD-001](#od-001)** still open · **[SD-007](#sd-007)** ✅ paid. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.6** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[CS-002](#cs-002)** open · **[OD-001](#od-001)** ✅ paid · **[SD-007](#sd-007)** ✅ paid. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Theme (open vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**  
@@ -93,7 +93,7 @@
 
 | ID | Title | Sev | Effort | Status |
 |----|-------|:---:|:------:|--------|
-| [OD-001](#od-001) | Doctor as kernel eyes (not vitality) | S2 | M | open (inspect presents projection; doctor still packaging) |
+| [OD-001](#od-001) | Doctor as kernel eyes (not vitality) | S2 | M | ✅ paid (0.61.6 demotion; packaging residual named) |
 
 ---
 
@@ -739,10 +739,18 @@ Continuous install uses the same board. Residual ambient DI: [SD-016](#sd-016).
 **Related:** [CS-002](#cs-002) · [SD-007](#sd-007) · [VISION-0.61](docs/VISION-0.61.md) §5.1 · [ADR-030](docs/adr/030-system-vitality.md) D7.
 
 **Progress (0.61.5):** Product **`InspectService.top` / `.vitality`** present
-**only** from system projection. Legacy **`doctor`** nests `top` + vitality
-pointer; still assembles storage/jobs/control_plane anatomy (not living seat law).
+**only** from system projection.
 
-**Status:** open (operate eyes path paid on inspect; doctor packaging residual).
+**Progress (0.61.6):** Doctor **demoted** — envelope `kind=legacy_doctor` ·
+`role=anatomy_packaging` · `eyes_law` + `operate_paths` · nests projection
+`top` / vitality pointer · nested `anatomy` bag. `build_doctor_report` is
+anatomy packaging only (no seat invent). Verb may stay on assist/MCP/CLI.
+
+**Residual (named, not unpaid eyes debt):** plane `doctor_snapshot` transitional
+(toward seat report); host `control_plane` in packaging → **[CS-002](#cs-002)**;
+flat packaging keys for consumers; wire `system/doctor` alias paths.
+
+**Status:** ✅ **paid** (0.61.6) — doctor is not kernel eyes; residual packaging + CS-002/plane dual names named.
 
 ---
 
