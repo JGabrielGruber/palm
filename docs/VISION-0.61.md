@@ -234,7 +234,7 @@ Do **not** put vitality `seat_report` on simple seats — public API is enough.
 | `boot_membership` | Last walk / membership context | intention stub |
 | `system_log_tail` | Operate tape sample (BI-015 neighbor) | intention stub |
 | `process_resources` | RSS/CPU/threads (stdlib; labeled units) | **installed** · enabled (0.61.8) |
-| `loaded_bulk` | Light size of attached seats/modules — visibility not shame | intention stub |
+| `loaded_bulk` | Light size of attached seats/modules — visibility not shame | **installed** · enabled (0.61.9) |
 | `benchmark` / `monitor_agent` | Grow when ready | intention stubs |
 
 **Locked (0.61.2):** `VitalityRegistry` · `VitalityCapability` · `CapabilityFragment` · `VitalityProjection` · snapshot schema **`palm.vitality_snapshot/1`**  
@@ -278,7 +278,8 @@ Theme stays open while José still needs proper eyes.
 | **6** | Doctor demotion (OD-001) | `legacy_doctor` envelope · anatomy packaging · eyes_law — **landed** — stamp when José exits |
 | **7** | Host status compost (CS-002) | `packaging_status` · demotion markers · triple residual — **landed** — stamp when José exits |
 | **8** | `process_resources` | Stdlib RSS/CPU/threads · top `process` · units honest — **landed** — stamp when José exits |
-| **9+** | Growth | Optional caps (`loaded_bulk`); tools (`benchmark`); native reports |
+| **9** | `loaded_bulk` | Attached seats · module LOC · composition · top `bulk` · not shame — **landed** — stamp when José exits |
+| **10+** | Growth | Tools (`benchmark`); native reports; remaining stubs |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
 
 ---

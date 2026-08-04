@@ -159,7 +159,7 @@ CAPABILITY_PROCESS_RESOURCES: Final[str] = "process_resources"
 """Optional observe: RSS/CPU/threads (stdlib; installed 0.61.8)."""
 
 CAPABILITY_LOADED_BULK: Final[str] = "loaded_bulk"
-"""Optional observe: light size of attached seats — visibility not shame."""
+"""Optional observe: light size of attached seats (installed 0.61.9)."""
 
 CAPABILITY_BENCHMARK: Final[str] = "benchmark"
 """Active tool (intention until ready)."""

@@ -82,7 +82,7 @@ Eyes grow via a **capability registry**, not a closed `if` forest in BaseRuntime
 | Capability role | Examples |
 |-----------------|----------|
 | Core observe | `seat_walk`, `emission_window` |
-| Optional observe | `process_resources` (**installed 0.61.8**), `loaded_bulk`, `system_log_tail`, `boot_membership` |
+| Optional observe | `process_resources` (**installed 0.61.8**), `loaded_bulk` (**installed 0.61.9**), `system_log_tail`, `boot_membership` |
 | Active tools (later bodies) | `benchmark`, `monitor_agent` |
 
 Projection law: iterate **enabled** capabilities → each returns a typed fragment → merge → snapshot.  
@@ -91,7 +91,11 @@ Intention vs installed maturity applies when a tool is experimental.
 
 **Progress (0.61.8):** `process_resources` body — stdlib `resource` + optional
 `/proc/self/status`; units labeled; top folds light `process.summary`; not a
-health grade. Remaining optional observe still intention until grown.
+health grade.
+
+**Progress (0.61.9):** `loaded_bulk` body — resolve attached seats only; type /
+module LOC / public callables / composition cardinality; top folds light
+`bulk.summary`; **visibility not shame**; not a full tree genome scan.
 
 ### D6 — Product door is Inspect
 

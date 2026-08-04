@@ -11,6 +11,7 @@ plane of start/continue.
 | **0.61.2** | VitalityRegistry + VitalityProjection (``seat_walk``) |
 | **0.61.3** | ``emission_window`` + actor_kind partition |
 | **0.61.8** | ``process_resources`` (stdlib RSS/CPU/threads) |
+| **0.61.9** | ``loaded_bulk`` (attached seats · modules · composition) |
 
 **Sample law:** raw-dog public seat APIs into ``meta.raw`` (``lineage: sampled``).
 Product present interprets. No adapter maps in system vitality.
@@ -36,9 +37,11 @@ from palm.system.vitality.capability import (
 from palm.system.vitality.capabilities import (
     build_default_capabilities,
     build_emission_window_capability,
+    build_loaded_bulk_capability,
     build_process_resources_capability,
     build_seat_walk_capability,
     sample_emission_window,
+    sample_loaded_bulk,
     sample_process_resources,
     sample_seat_walk,
 )
@@ -210,6 +213,7 @@ __all__ = [
     "build_default_capabilities",
     "build_default_probes",
     "build_emission_window_capability",
+    "build_loaded_bulk_capability",
     "build_process_resources_capability",
     "build_seat_walk_capability",
     "coerce_actor_kind",
@@ -227,6 +231,7 @@ __all__ = [
     "project",
     "sample_attrs",
     "sample_emission_window",
+    "sample_loaded_bulk",
     "sample_method",
     "sample_process_resources",
     "sample_raw",

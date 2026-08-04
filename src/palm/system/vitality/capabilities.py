@@ -2,7 +2,7 @@
 Default vitality capabilities (0.61.2+).
 
 **Installed observe:** ``seat_walk`` · ``emission_window`` (0.61.3) ·
-``process_resources`` (0.61.8, stdlib).  
+``process_resources`` (0.61.8) · ``loaded_bulk`` (0.61.9).  
 Other catalog ids may exist as intention stubs (disabled) so the registry
 shape is honest about growth without fake-green bodies.
 
@@ -21,6 +21,7 @@ from palm.system.vitality.capability import (
     intention_stub,
 )
 from palm.system.vitality.emission_window import sample_emission_window
+from palm.system.vitality.loaded_bulk import sample_loaded_bulk
 from palm.system.vitality.process_resources import sample_process_resources
 from palm.system.vitality.report import SeatReport, reports_to_dicts
 from palm.system.vitality.schema import (
@@ -154,6 +155,23 @@ def build_process_resources_capability() -> VitalityCapability:
     )
 
 
+def build_loaded_bulk_capability() -> VitalityCapability:
+    return VitalityCapability(
+        id=CAPABILITY_LOADED_BULK,
+        sample=sample_loaded_bulk,
+        role=ROLE_OBSERVE,
+        maturity=MATURITY_INSTALLED,
+        default_enabled=True,
+        cost=COST_CHEAP,
+        description=(
+            "Light bulk of attached seats / loaded modules "
+            "(LOC · public callables · composition counts); visibility not shame"
+        ),
+        tags=("observe", "bulk", "structure"),
+        order=60,
+    )
+
+
 def build_default_capabilities() -> list[VitalityCapability]:
     """Installed observe + intention stubs for catalog honesty."""
     return [
@@ -174,13 +192,7 @@ def build_default_capabilities() -> list[VitalityCapability]:
             tags=("observe", "intention"),
         ),
         build_process_resources_capability(),
-        intention_stub(
-            CAPABILITY_LOADED_BULK,
-            role=ROLE_OBSERVE,
-            description="Light bulk of attached seats — visibility not shame",
-            order=60,
-            tags=("observe", "intention"),
-        ),
+        build_loaded_bulk_capability(),
         intention_stub(
             CAPABILITY_BENCHMARK,
             role=ROLE_TOOL,
@@ -203,9 +215,11 @@ __all__ = [
     "BAG_SEAT_WALK_RESULT",
     "build_default_capabilities",
     "build_emission_window_capability",
+    "build_loaded_bulk_capability",
     "build_process_resources_capability",
     "build_seat_walk_capability",
     "sample_emission_window",
+    "sample_loaded_bulk",
     "sample_process_resources",
     "sample_seat_walk",
 ]

@@ -33,6 +33,7 @@ from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import SeatReport, coerce_report, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_EMISSION_WINDOW,
+    CAPABILITY_LOADED_BULK,
     CAPABILITY_PROCESS_RESOURCES,
     CAPABILITY_SEAT_WALK,
     LINEAGE_NATIVE,
@@ -181,6 +182,15 @@ class VitalitySnapshot:
                 "summary": dict(pr_summary) if isinstance(pr_summary, dict) else {},
                 "notes": list(pr.notes),
                 # Full raw rusage/proc stays on fragment; top stays light.
+            }
+        lb = self.fragments.get(CAPABILITY_LOADED_BULK)
+        if lb is not None and lb.present and isinstance(lb.data, dict):
+            lb_summary = lb.data.get("summary")
+            top["bulk"] = {
+                "state": lb.state,
+                "summary": dict(lb_summary) if isinstance(lb_summary, dict) else {},
+                "notes": list(lb.notes),
+                # Per-seat / full module table stays on fragment.
             }
         return top
 
