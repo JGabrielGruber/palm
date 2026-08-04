@@ -90,7 +90,7 @@ def test_host_default_composition_builds_all_services() -> None:
     try:
         assert host.composition.services == CP.all_in_one().services
         for name in (
-            "system",
+            "inspect",
             "session",
             "definitions",
             "execution",
@@ -99,6 +99,8 @@ def test_host_default_composition_builds_all_services() -> None:
             "analytics",
         ):
             assert getattr(host, name) is not None
+        # SD-007 migration alias
+        assert host.system is host.inspect
     finally:
         host.shutdown()
 
@@ -112,12 +114,13 @@ def test_host_embedded_composition_builds_core_only() -> None:
     host.start()
     try:
         assert host.composition.services == (
-            "system",
+            "inspect",
             "session",
             "definitions",
             "execution",
         )
-        assert host.system is not None
+        assert host.inspect is not None
+        assert host.system is host.inspect
         assert host.session is not None
         assert host.definitions is not None
         assert host.execution is not None

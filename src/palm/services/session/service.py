@@ -41,7 +41,7 @@ from palm.system.subsystems.planes.session import (
 )
 
 if TYPE_CHECKING:
-    from palm.services.system.service import SystemService
+    from palm.services.inspect.service import InspectService
     from palm.system.subsystems.planes.session import SessionBind, SessionPlaneService, SessionRecord
     from palm.system.runtime.base import BaseRuntime
 
@@ -79,13 +79,17 @@ class SessionService(BaseService):
         commands: Any,
         queries: Any,
         schemas: Any,
-        system: SystemService,
+        inspect: InspectService | None = None,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
         strict_attribution: bool = True,
+        system: InspectService | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
-        self._system = system
+        door = inspect if inspect is not None else system
+        if door is None:
+            raise TypeError("SessionService requires inspect= (or system= alias)")
+        self._inspect = door
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
         # 0.58.15: when plane ready, continue/start must be attributed.
@@ -102,8 +106,14 @@ class SessionService(BaseService):
         raise RuntimeError("SessionService requires a runtime or runtime_resolver")
 
     @property
-    def system(self) -> SystemService:
-        return self._system
+    def inspect(self) -> InspectService:
+        """Product inspect door (0.61.4 / SD-007)."""
+        return self._inspect
+
+    @property
+    def system(self) -> InspectService:
+        """Deprecated alias for :attr:`inspect` (SD-007 migration)."""
+        return self._inspect
 
     def plane(self) -> SessionPlaneService:
         """System session plane on the resolved runtime.
@@ -510,7 +520,7 @@ class SessionService(BaseService):
         if not iid:
             return False
         try:
-            view = self._system.inspect_instance(iid)
+            view = self._inspect.inspect_instance(iid)
             return view is not None
         except Exception:
             return False
@@ -749,7 +759,7 @@ class SessionService(BaseService):
             return owner
         # Instance repository meta may lag plane reverse index.
         try:
-            view = self._system.inspect_instance(iid)
+            view = self._inspect.inspect_instance(iid)
             if isinstance(view, dict):
                 meta = view.get("metadata") if isinstance(view.get("metadata"), dict) else view
                 raw = None
@@ -785,7 +795,7 @@ class SessionService(BaseService):
         if not iid:
             return None
         try:
-            view = self._system.inspect_instance(iid)
+            view = self._inspect.inspect_instance(iid)
         except Exception:
             view = None
         if isinstance(view, dict):
@@ -821,7 +831,7 @@ class SessionService(BaseService):
 
         Owner gate applies. Does **not** invent session-private resume or
         cancel outside the attach list. Drive cancel through
-        :meth:`~palm.services.system.service.SystemService.cancel_job`.
+        :meth:`~palm.services.inspect.service.InspectService.cancel_job`.
 
         When neither *instance_id* nor *job_id* is given, cancels the continue
         focus (active → waiting → last).
@@ -867,7 +877,7 @@ class SessionService(BaseService):
                 "reason": "no_job_id_for_instance",
             }
 
-        result = self._system.cancel_job(jid)
+        result = self._inspect.cancel_job(jid)
         out: dict[str, Any] = {
             "kind": "session_cancel_owned",
             "session_id": sid,
@@ -890,7 +900,7 @@ class SessionService(BaseService):
         """Cancel jobs for all owned instances that resolve a job id (0.58.18).
 
         *only_waiting* limits cancel to instances with open waits. Still
-        drives :meth:`~palm.services.system.service.SystemService.cancel_job`
+        drives :meth:`~palm.services.inspect.service.InspectService.cancel_job`
         per instance — no private session cancel path.
         """
         sid = str(session_id or "").strip()
@@ -941,7 +951,7 @@ class SessionService(BaseService):
         if not jid:
             return None
         try:
-            job = self._system.get_job(jid)
+            job = self._inspect.get_job(jid)
         except Exception:
             job = None
         if isinstance(job, dict):

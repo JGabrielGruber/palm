@@ -671,7 +671,7 @@ flowchart TB
 
 | Service | Access | Responsibility |
 |---------|--------|----------------|
-| `SystemService` | `host.system`, `ctx.system` | Inspect, doctor, job/instance lists, snapshots, cancel |
+| `InspectService` | `host.inspect`, `ctx.inspect` (`host.system` alias) | Inspect, doctor, job/instance lists, snapshots, cancel |
 | `DefinitionService` | `host.definitions`, `ctx.definitions` | Flow/process/resource catalog + CRUD + `validate_flow` |
 | `FlowExecutionService` | `host.execution.flows` | `dispatch()`, `FlowSession`, session REPL |
 | `ProviderExecutionService` | `host.execution.providers` | `invoke(provider, resource_ref, params)` |

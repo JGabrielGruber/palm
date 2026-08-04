@@ -1,6 +1,6 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.2** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[SD-007](#sd-007)** · **[CS-002](#cs-002)** · **[OD-001](#od-001)** still open. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.2** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[CS-002](#cs-002)** · **[OD-001](#od-001)** still open · **[SD-007](#sd-007)** ✅ paid. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Theme (open vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**  
@@ -41,7 +41,7 @@
 | [SD-004](#sd-004) | `PatternBuildContext` is an engine bag | S1 | M | 0.57.4 | ✅ done (execution + resolve helpers) |
 | [SD-005](#sd-005) | Edge and product call engines by field | S2 | L | 0.57.5–7, 0.57.11–12 | ✅ done for known product edges |
 | [SD-006](#sd-006) | `PalmKernel` name vs system instance | S3 | S | 0.57.2 docs + code | ✅ done (0.57.2) |
-| [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | **0.61** Inspect rename | open (theme) |
+| [SD-007](#sd-007) | Product `SystemService` vs system layer name | S3 | S | **0.61.4** Inspect rename | ✅ paid (aliases residual) |
 | [SD-008](#sd-008) | Session plane has no system home | S2 | M | **0.58** | ✅ closed (0.58.20 exit) |
 | [SD-009](#sd-009) | Workload dual bind (leaf engine + service) | S1 | M | 0.57.3–5, 0.57.12 | ✅ service path on port; leaves already port-driver |
 | [SD-010](#sd-010) | STE rewrite backlog (legacy dense docs) | S4 | L | ongoing | open |
@@ -198,19 +198,21 @@ PALM.md and SYSTEM-LOW-LEVEL already draw the line. No rename required.
 
 ### SD-007 — Product `SystemService` vs system layer
 
-**Severity:** S3 · **Effort:** S · **Theme:** **0.61**
+**Severity:** S3 · **Effort:** S · **Theme:** **0.61.4** · **Status:** ✅ **paid**
 
-**Observation:** `palm.services.system` is doctor/health/inspect product.  
-**System layer** is the kernel shape. Same English word, two purposes.
+**Observation:** Product door was named `palm.services.system` / `SystemService`, colliding with the system layer and supervisor loop protocol.
+
+**Paid (0.61.4):**
+- Law home: **`palm.services.inspect` / `InspectService`**
+- Composition service id: **`inspect`**
+- Host / context door: **`host.inspect` / `ctx.inspect`**
+- Assist / session / flows take **`inspect=`** (constructors accept temporary `system=` alias)
 
 **Not the same as:**
-- **`InstanceManager`** (`palm.common.managers`) — infra cache over `InstanceRepository`, not a product service domain.
-- Supervisor continuous protocol **`SystemService`** (`palm.system.supervisor`) — loop contract; keep that name; document vs product Inspect ([ADR-030](docs/adr/030-system-vitality.md) D6).
+- Supervisor continuous protocol **`SystemService`** (`palm.system.supervisor`) — loop contract; name kept ([ADR-030](docs/adr/030-system-vitality.md) D6).
+- Wire paths / MCP tool group still labeled `system/*` / `palm_system_*` (operate transport; not product law).
 
-**Target:** Product **InspectService** (`palm.services.inspect`) — top / vitality present / list / cancel — vs **system layer** (kernel) vs **system vitality** (eyes).  
-**Theme:** [VISION-0.61](docs/VISION-0.61.md) slice guide **0.61.4**. Host `host.system` → `host.inspect` (alias while migrating).
-
-**Progress (0.61.1–0.61.2):** System vitality home + projection exist. Product still `palm.services.system` + doctor path. Rename unpaid.
+**Residual aliases (drop later):** `palm.services.system` re-export · `SystemService = InspectService` · `host.system` / `ctx.system` / `assist.system` properties.
 
 ---
 

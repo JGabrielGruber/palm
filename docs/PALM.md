@@ -314,13 +314,14 @@ Then call **system ports** (target). Today many paths call engines on a resolved
 | **Design** | Propose → impact → commit definition change |
 | **Execution** | Run flows, processes, provider invoke, workloads |
 | **Assist** | Meta-surface: discover, drive, present next step |
-| **System** (product name) | Doctor / health style operator queries — **not** the kernel layer |
+| **Inspect** (product door) | Doctor / top / list / cancel present — **not** the kernel layer (**SD-007** paid 0.61.4) |
 | **Analytics** | Datasets and dashboards |
 
-**Name clash (tell the truth):**  
-Product package `palm.services.system` is **operator system info**.  
-**System layer** in this map is the **kernel shape**.  
-Do not confuse the two. Prefer “product SystemService” vs “system layer” in speech.
+**Name law (tell the truth):**  
+Product package **`palm.services.inspect` / `InspectService`** is the operator present door.  
+**System layer** in this map is the **kernel shape** (`palm.system`).  
+Supervisor continuous loops keep protocol name **`SystemService`** under `palm.system.supervisor` — different concept.  
+Import/host aliases (`palm.services.system`, `host.system`) are temporary migration only.
 
 **CQRS** is how many edges ask product.  
 CQRS is transport and schema discipline.  
@@ -415,7 +416,7 @@ Each top-level part has **one purpose**.
 | `palm.system` | System home: runtime, planes, ports | — |
 | `palm.common` | Shared libraries (plans, CQRS, transforms, …) | — |
 | `palm.kits` | Surface kits (`server`, …) | SD-011 ✅ |
-| `services.system` | Doctor/health **product** | Do not call it the kernel |
+| `services.inspect` | Operator present **product** (`InspectService`) | Do not call it the kernel; not supervisor `SystemService` |
 
 ---
 

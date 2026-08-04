@@ -174,7 +174,7 @@ def test_system_log_boot_start_carries_membership() -> None:
         starts = [r for r in slog.recent() if r.event == "boot.start"]
         assert starts
         fields = starts[0].fields
-        assert "system" in str(fields.get("services", ""))
+        assert "inspect" in str(fields.get("services", ""))
         assert "capabilities" in fields
         assert host.membership_snapshot()["services"]
     finally:

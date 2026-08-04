@@ -10,7 +10,7 @@ from palm.services.design.registry import design_commands, list_design_mcp_alias
 from palm.services.execution.flows.registry import flow_commands
 from palm.services.execution.processes.registry import process_commands
 from palm.services.execution.providers.registry import invoke_verbs
-from palm.services.system.registry import observe_verbs
+from palm.services.inspect.registry import observe_verbs
 
 
 def build_assist_routes_catalog() -> dict[str, Any]:

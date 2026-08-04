@@ -114,8 +114,8 @@ def test_cancel_owned_gates_and_drives_system() -> None:
             svc.cancel_owned(sid, instance_id="inst-foreign")
 
         # Stub system cancel + job resolution
-        original_cancel = svc._system.cancel_job
-        original_inspect = svc._system.inspect_instance
+        original_cancel = svc._inspect.cancel_job
+        original_inspect = svc._inspect.inspect_instance
         calls: list[str] = []
 
         def _cancel(job_id: str, **kwargs: Any) -> dict[str, Any]:
@@ -127,8 +127,8 @@ def test_cancel_owned_gates_and_drives_system() -> None:
                 return {"instance_id": "inst-own", "job_id": "job-own-1"}
             return {"instance_id": instance_id}
 
-        svc._system.cancel_job = _cancel  # type: ignore[method-assign]
-        svc._system.inspect_instance = _inspect  # type: ignore[method-assign]
+        svc._inspect.cancel_job = _cancel  # type: ignore[method-assign]
+        svc._inspect.inspect_instance = _inspect  # type: ignore[method-assign]
         try:
             result = svc.cancel_owned(sid, instance_id="inst-own")
             assert result["kind"] == "session_cancel_owned"
@@ -145,8 +145,8 @@ def test_cancel_owned_gates_and_drives_system() -> None:
             assert result2["instance_id"] == "inst-own"
             assert calls == ["job-own-1"]
         finally:
-            svc._system.cancel_job = original_cancel  # type: ignore[method-assign]
-            svc._system.inspect_instance = original_inspect  # type: ignore[method-assign]
+            svc._inspect.cancel_job = original_cancel  # type: ignore[method-assign]
+            svc._inspect.inspect_instance = original_inspect  # type: ignore[method-assign]
     finally:
         host.shutdown()
 
@@ -221,8 +221,8 @@ def test_operator_cancel_all_owned() -> None:
         def _cancel(job_id: str, **kwargs: Any) -> dict[str, Any]:
             return {"found": True, "job_id": job_id, "cancelled": True, "status": "CANCELLED"}
 
-        svc._system.inspect_instance = _inspect  # type: ignore[method-assign]
-        svc._system.cancel_job = _cancel  # type: ignore[method-assign]
+        svc._inspect.inspect_instance = _inspect  # type: ignore[method-assign]
+        svc._inspect.cancel_job = _cancel  # type: ignore[method-assign]
 
         out = dispatch_operator_path(
             host, ["system", "session", sid, "cancel", "all"], {}

@@ -1,4 +1,4 @@
-"""Tests for SystemService."""
+"""Tests for InspectService (product present door; SD-007)."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from palm.common.cqrs.query import (
 )
 from palm.common.cqrs.schemas import CqrsSchemaRegistry
 from palm.common.services.errors import InstanceNotFoundServiceError
-from palm.services.system import SystemService
+from palm.services.inspect import InspectService
 
 
 class _QueryBusStub:
@@ -35,7 +35,7 @@ class _QueryBusStub:
 def test_system_list_jobs_uses_list_job_status_query() -> None:
     registry = CqrsSchemaRegistry()
     queries = _QueryBusStub({ListJobStatusQuery: [{"job_id": "j1", "status": "RUNNING"}]})
-    svc = SystemService(commands=CommandBus(), queries=queries, schemas=registry)
+    svc = InspectService(commands=CommandBus(), queries=queries, schemas=registry)
 
     rows = svc.list_jobs(status="RUNNING", limit=5)
     assert rows == [{"job_id": "j1", "status": "RUNNING"}]
@@ -51,7 +51,7 @@ def test_system_inspect_instance_uses_inspect_query() -> None:
             InspectInstanceQuery: {"instance_id": "inst_1", "pattern": "wizard"},
         }
     )
-    svc = SystemService(commands=CommandBus(), queries=queries, schemas=registry)
+    svc = InspectService(commands=CommandBus(), queries=queries, schemas=registry)
 
     view = svc.inspect_instance("inst_1")
     assert view["pattern"] == "wizard"
@@ -65,7 +65,7 @@ def test_system_inspect_instance_raises_when_missing() -> None:
             InspectInstanceQuery: None,
         }
     )
-    svc = SystemService(commands=CommandBus(), queries=queries, schemas=registry)
+    svc = InspectService(commands=CommandBus(), queries=queries, schemas=registry)
 
     try:
         svc.inspect_instance("missing")
@@ -77,7 +77,7 @@ def test_system_inspect_instance_raises_when_missing() -> None:
 def test_system_inspect_job_uses_job_context_query() -> None:
     registry = CqrsSchemaRegistry()
     queries = _QueryBusStub({GetJobContextQuery: {"found": True, "job_id": "j1"}})
-    svc = SystemService(commands=CommandBus(), queries=queries, schemas=registry)
+    svc = InspectService(commands=CommandBus(), queries=queries, schemas=registry)
 
     payload = svc.inspect_job("j1")
     assert payload["job_id"] == "j1"

@@ -98,6 +98,8 @@ Rename product **`palm.services.system` / `SystemService`** to **`palm.services.
 | `host.system` (product) | `host.inspect` (temporary alias OK while migrating) |
 | Doctor / top / list / cancel | Methods on InspectService that **read** system vitality and CQRS |
 
+**Progress (0.61.4):** law home + host door landed; import/host `system` aliases residual; wire `system/*` paths may stay until surface compost.
+
 Supervisor continuous protocol keeps the name **SystemService** for loops. Document the distinction in PALM / this ADR.
 
 ### D7 — Doctor is legacy debt, not lexicon law

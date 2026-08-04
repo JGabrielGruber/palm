@@ -253,7 +253,7 @@ Prefer declared session/assist metadata. Do not guess bots from timing alone.
 |---------|------|
 | Vitality projection + registry | `palm.system.vitality` |
 | Seat report protocol | same (types / helpers) |
-| Product present door | `palm.services.inspect` (`InspectService`) |
+| Product present door | `palm.services.inspect` (`InspectService`) · law 0.61.4; `services.system` shim residual |
 | Continuous loop protocol | `palm.system.supervisor` (`SystemService` = loop contract — different concept) |
 | Doctor report assembly | Legacy under kits/product — **consumer or compost** |
 
@@ -272,8 +272,8 @@ Theme stays open while José still needs proper eyes.
 | **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters residue — **landed** — stamp when José exits |
 | **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; `project` / `project_top` — **landed** — stamp when José exits |
 | **3** | Emission window + actor envelope | Partition or unknown; no second write path — **landed** thin body (system log + work heat) — stamp when José exits |
-| **4** | InspectService rename | SD-007; host/assist/MCP doors; product SystemService not law |
-| **5+** | Growth | Native reports; optional caps; host status compost; doctor thin; tools |
+| **4** | InspectService rename | SD-007; host/assist doors; product SystemService not law — **landed** (wire `system/*` residual) — stamp when José exits |
+| **5+** | Growth | Present from projection; native reports; optional caps; host status compost; doctor thin; tools |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
 
 ---
@@ -282,7 +282,7 @@ Theme stays open while José still needs proper eyes.
 
 | Debt | Theme action |
 |------|--------------|
-| **SD-007** | Pay — product Inspect rename (unpaid) |
+| **SD-007** | ✅ paid — product Inspect rename (0.61.4; wire/alias residual) |
 | **CS-002** | Pay down — host triple status not living truth (unpaid) |
 | **OD-001** | Name + demote doctor as kernel eyes (system home landed; product still doctor) |
 | **BI-015** | Use log as sample; deeper catalog may grow under vitality |
@@ -332,7 +332,7 @@ Each slice states which modes are in the green bar.
 - [x] `VitalityProjection` + registry; `seat_walk` installed.  
 - [x] Thin `emission_window` installed; `actor_kind` partition or explicit `unknown`.  
 - [ ] Product inspect presents top/vitality from projection only.  
-- [ ] InspectService rename path closed or alias residual named (SD-007).  
+- [x] InspectService rename path closed; alias residual named (SD-007).  
 - [ ] Doctor marked debt; new truth not invented in doctor assembly.  
 - [ ] Ugly dual paths broken or named — no silent workaround architecture.  
 - [ ] PALM names vitality as system observation.  

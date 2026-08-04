@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from typing import Literal, Self
 
 ServiceName = Literal[
-    "system",
+    "inspect",
     "session",
     "definitions",
     "execution",
@@ -45,7 +45,7 @@ Capability = Literal[
 
 #: The full service set the host builds today (pinned to CORE_SERVICE_PROVIDERS by tests).
 ALL_SERVICES: tuple[ServiceName, ...] = (
-    "system",
+    "inspect",
     "session",
     "definitions",
     "execution",
@@ -56,7 +56,7 @@ ALL_SERVICES: tuple[ServiceName, ...] = (
 #: Minimal services for an embedded/library shape — no assist/design/analytics chrome.
 #: Includes product ``session`` (0.58.12) so core submit paths have the surface door.
 CORE_SERVICES: tuple[ServiceName, ...] = (
-    "system",
+    "inspect",
     "session",
     "definitions",
     "execution",

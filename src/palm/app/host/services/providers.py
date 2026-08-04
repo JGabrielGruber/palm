@@ -6,12 +6,13 @@ Core services and their construction, declared as dependency-ordered
 ``HostServiceRegistry.build_all(ctx)``.
 
 Construction order encoded by ``depends_on``:
-``system`` → ``session`` → ``definitions`` → ``execution`` →
+``inspect`` → ``session`` → ``definitions`` → ``execution`` →
 ``assist``/``design``/``analytics``.
 The ``assist.bind_analytics(analytics)`` cross-wire stays an explicit host
 post-build step (a mutual link, not a construction dependency).
 
 **0.58.12:** product ``session`` is the surface door over the system session plane.
+**0.61.4 / SD-007:** product inspect door is ``inspect`` (was ``system``).
 """
 
 from __future__ import annotations
@@ -29,18 +30,18 @@ from palm.services.execution.flows import FlowExecutionService
 from palm.services.execution.processes import ProcessExecutionService
 from palm.services.execution.providers import ProviderExecutionService
 from palm.services.execution.workloads import WorkloadExecutionService
+from palm.services.inspect import InspectService
 from palm.services.session import SessionService
-from palm.services.system import SystemService
 
 
-def _build_system(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
-    return SystemService(**ctx.bus_kwargs)
+def _build_inspect(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
+    return InspectService(**ctx.bus_kwargs)
 
 
 def _build_session(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
     return SessionService(
         **ctx.bus_kwargs,
-        system=built["system"],
+        inspect=built["inspect"],
         runtime_resolver=ctx.resolve_execution_runtime,
         strict_attribution=bool(
             getattr(ctx.settings, "session_strict_attribution", True)
@@ -55,7 +56,7 @@ def _build_definitions(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
     flows = FlowExecutionService(
         **ctx.bus_kwargs,
-        system=built["system"],
+        inspect=built["inspect"],
         session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
     )
@@ -86,7 +87,7 @@ def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
         **ctx.bus_kwargs,
         definitions=built["definitions"],
         execution=built["execution"],
-        system=built["system"],
+        inspect=built["inspect"],
         session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
     )
@@ -121,18 +122,18 @@ def _build_analytics(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 
 CORE_SERVICE_PROVIDERS: tuple[ServiceProvider, ...] = (
-    ServiceProvider("system", _build_system),
-    ServiceProvider("session", _build_session, depends_on=("system",)),
+    ServiceProvider("inspect", _build_inspect),
+    ServiceProvider("session", _build_session, depends_on=("inspect",)),
     ServiceProvider("definitions", _build_definitions),
     ServiceProvider(
         "execution",
         _build_execution,
-        depends_on=("system", "definitions", "session"),
+        depends_on=("inspect", "definitions", "session"),
     ),
     ServiceProvider(
         "assist",
         _build_assist,
-        depends_on=("definitions", "execution", "system", "session"),
+        depends_on=("definitions", "execution", "inspect", "session"),
     ),
     ServiceProvider("design", _build_design, depends_on=("definitions",)),
     ServiceProvider("analytics", _build_analytics, depends_on=("definitions", "execution")),

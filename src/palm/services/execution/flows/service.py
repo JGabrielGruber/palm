@@ -21,7 +21,7 @@ from palm.services.execution.flows.session import FlowSession
 if TYPE_CHECKING:
     from palm.system.runtime.base import BaseRuntime
     from palm.services.session.service import SessionService
-    from palm.services.system.service import SystemService
+    from palm.services.inspect.service import InspectService
 
 
 class FlowExecutionService(BaseService):
@@ -33,13 +33,17 @@ class FlowExecutionService(BaseService):
         commands: Any,
         queries: Any,
         schemas: Any,
-        system: SystemService,
+        inspect: InspectService | None = None,
         session: SessionService | None = None,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
+        system: InspectService | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
-        self._system = system
+        door = inspect if inspect is not None else system
+        if door is None:
+            raise TypeError("FlowExecutionService requires inspect= (or system= alias)")
+        self._inspect = door
         self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
@@ -279,7 +283,7 @@ class FlowExecutionService(BaseService):
 
     def inspect_session(self, session_id: str) -> dict[str, Any]:
         """Delegate to system inspect for session status views."""
-        return self._system.inspect_instance(self._resolve_instance_id(session_id))
+        return self._inspect.inspect_instance(self._resolve_instance_id(session_id))
 
     def get_instance_metadata(self, session_id: str) -> dict[str, Any]:
         """Return durable metadata for an instance (or system session → resolve)."""

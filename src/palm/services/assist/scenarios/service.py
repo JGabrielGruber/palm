@@ -76,7 +76,7 @@ class AssistScenarioService:
         from palm.core.orchestration import JobStatus
 
         flows = self._assist.catalog.list_flows()
-        waiting = self._assist.system.list_instances(
+        waiting = self._assist.inspect.list_instances(
             status=JobStatus.WAITING_FOR_INPUT.value,
             include_terminal=False,
             limit=50,

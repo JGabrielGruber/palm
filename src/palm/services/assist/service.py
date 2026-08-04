@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from palm.services.definitions.service import DefinitionService
     from palm.services.execution.service import ExecutionService
     from palm.services.session.service import SessionService
-    from palm.services.system.service import SystemService
+    from palm.services.inspect.service import InspectService
 
 
 class AssistService(BaseService):
@@ -45,16 +45,20 @@ class AssistService(BaseService):
         schemas: Any,
         definitions: DefinitionService,
         execution: ExecutionService,
-        system: SystemService,
+        inspect: InspectService | None = None,
         session: SessionService | None = None,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
         analytics: Any | None = None,
+        system: InspectService | None = None,
     ) -> None:
+        door = inspect if inspect is not None else system
+        if door is None:
+            raise TypeError("AssistService requires inspect= (or system= alias)")
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._definitions = definitions
         self._execution = execution
-        self._system = system
+        self._inspect = door
         self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
@@ -98,8 +102,14 @@ class AssistService(BaseService):
         return self._execution
 
     @property
-    def system(self) -> SystemService:
-        return self._system
+    def inspect(self) -> InspectService:
+        """Product inspect door (0.61.4 / SD-007)."""
+        return self._inspect
+
+    @property
+    def system(self) -> InspectService:
+        """Deprecated alias for :attr:`inspect` (SD-007 migration)."""
+        return self._inspect
 
     @property
     def product_session(self) -> SessionService | None:

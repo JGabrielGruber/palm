@@ -7,8 +7,8 @@ with declarative providers: each service declares what it depends on, and
 register-and-drain shape T3 established (``common/cqrs/service_contributors`` et al.),
 applied to service *construction*.
 
-Public API is unchanged — the host still exposes ``host.system``/``host.execution``/…
-as thin accessors over the slots this registry fills.
+Public API: host exposes ``host.inspect`` (alias ``host.system``) /
+``host.execution``/… as thin accessors over the slots this registry fills.
 """
 
 from __future__ import annotations

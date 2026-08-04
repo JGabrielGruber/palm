@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from palm.services.design import DesignService
     from palm.services.execution import ExecutionService
     from palm.services.session import SessionService
-    from palm.services.system import SystemService
+    from palm.services.inspect import InspectService
 
 
 class _RuntimeKernelView:
@@ -94,7 +94,7 @@ class ServerContext:
         if host is None:
             self._build_standalone_services(runtime)
         else:
-            self._system = host.system
+            self._inspect = host.inspect
             self._session = host.session
             self._definitions = host.definitions
             self._execution = host.execution
@@ -132,7 +132,7 @@ class ServerContext:
             resolve_execution_runtime=self.resolve_execution_runtime,
         )
         built = core_service_registry().build_all(service_ctx, only=self.composition.services)
-        self._system = built.get("system")
+        self._inspect = built.get("inspect")
         self._session = built.get("session")
         self._definitions = built.get("definitions")
         self._execution = built.get("execution")
@@ -198,13 +198,19 @@ class ServerContext:
     def schemas(self) -> CqrsSchemaRegistry:
         if self._host is not None:
             return self._host.schemas
-        return self._system.schemas
+        return self._inspect.schemas
 
     @property
-    def system(self) -> SystemService:
+    def inspect(self) -> InspectService:
+        """Product inspect door (0.61.4 / SD-007)."""
         if self._host is not None:
-            return self._host.system
-        return self._system
+            return self._host.inspect
+        return self._inspect
+
+    @property
+    def system(self) -> InspectService:
+        """Deprecated alias for :attr:`inspect` (SD-007 migration)."""
+        return self.inspect
 
     @property
     def session(self) -> SessionService | None:
@@ -257,7 +263,7 @@ class ServerContext:
         self._host = host
         self._command_bus = host.commands
         self._query_bus = host.queries
-        self._system = host.system
+        self._inspect = host.inspect
         self._session = host.session
         self._definitions = host.definitions
         self._execution = host.execution

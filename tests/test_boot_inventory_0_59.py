@@ -131,7 +131,7 @@ def test_spine_host_post_start_contracts(spine_settings: PalmSettings) -> None:
         assert host.definitions is not None
         assert host.execution is not None
         # Composition membership truth (0.59.5).
-        assert "system" in host.composition.services
+        assert "inspect" in host.composition.services
         assert "session" in host.composition.services
         assert host.composition.has("projections")
         assert host.membership_snapshot()["services"]

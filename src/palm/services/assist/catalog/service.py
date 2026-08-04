@@ -21,14 +21,14 @@ class AssistCatalogService:
         self._assist = assist
 
     def doctor(self) -> dict[str, Any]:
-        return self._assist.system.doctor(self._assist.resolve_runtime())
+        return self._assist.inspect.doctor(self._assist.resolve_runtime())
 
     def list_flows(self) -> list[dict[str, Any]]:
         return self._assist.definitions.list_flows()
 
     def list_waiting(self, *, limit: int = 50) -> list[dict[str, Any]]:
         """Jobs/instances waiting for interactive input (assist-only friendly)."""
-        rows = self._assist.system.list_jobs(
+        rows = self._assist.inspect.list_jobs(
             status=JobStatus.WAITING_FOR_INPUT.value,
             limit=limit,
         )

@@ -24,7 +24,7 @@ class AssistSessionService:
     def get(self, session_id: str) -> AssistSession:
         # 0.58.9: session_id may be system subject — resolve primary instance.
         instance_id = self._resolve_instance_id(session_id)
-        view = self._assist.system.inspect_instance(instance_id)
+        view = self._assist.inspect.inspect_instance(instance_id)
         flow_id = flow_id_from_view(view)
         scenario_id = scenario_id_from_view(view, flow_id)
         return AssistSession(

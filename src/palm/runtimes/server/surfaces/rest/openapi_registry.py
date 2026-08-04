@@ -18,7 +18,7 @@ from palm.services.definitions.registry import catalog_verbs
 from palm.services.execution.flows.registry import flow_commands
 from palm.services.execution.processes.registry import process_commands
 from palm.services.execution.providers.registry import invoke_verbs
-from palm.services.system.registry import observe_verbs
+from palm.services.inspect.registry import observe_verbs
 
 _SERVICE_GROUPS = {
     "assist": "Assist",

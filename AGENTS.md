@@ -104,7 +104,7 @@ Palm is layered: **core → system / shared / kits → plugins → product → s
 - **`palm.system`** is the system home (shell, interfaces, subsystems, boot, vitality).  
 - **Surfaces** (`palm.runtimes`) **depend on system** — never the reverse.  
 - **`palm.kits`** is exposed surface infrastructure (``INSTALLED_KITS``; server kit first).  
-- **Product** `services.system` ≠ **system layer** (kernel shape).  
+- **Product** `services.inspect` (`InspectService`) ≠ **system layer** (kernel shape); supervisor loop protocol still named `SystemService`.  
 - **Capability catalog is truthful:** default ``INSTALLED_*`` only; intentions use ``INTENTION_*`` / [STUBS.md](docs/STUBS.md).
 
 Detail, engines, planes, growth table: **[docs/PALM.md](docs/PALM.md)** only.

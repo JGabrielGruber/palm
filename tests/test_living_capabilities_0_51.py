@@ -110,7 +110,7 @@ def test_services_not_gated_by_capabilities_yet() -> None:
         )
         # ... yet every service is still built (services are a separate axis)
         for name in (
-            "system",
+            "inspect",
             "session",
             "definitions",
             "execution",

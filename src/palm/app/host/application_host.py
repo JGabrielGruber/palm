@@ -144,7 +144,7 @@ class ApplicationHost:
         self._worker_coordinator: Any | None = None
         self._event_recorder = HostEventRecorder()
         self._schema_registry: Any | None = None
-        self._system: Any | None = None
+        self._inspect: Any | None = None
         self._session: Any | None = None
         self._definitions: Any | None = None
         self._execution: Any | None = None
@@ -240,9 +240,14 @@ class ApplicationHost:
         return self._schema_registry
 
     @property
+    def inspect(self):
+        """Product inspect door — doctor / list / cancel / present (0.61.4 / SD-007)."""
+        return self._inspect
+
+    @property
     def system(self):
-        """Operational inspect/debug service API."""
-        return self._system
+        """Deprecated alias for :attr:`inspect` (SD-007 migration)."""
+        return self._inspect
 
     @property
     def session(self):
@@ -805,7 +810,7 @@ class ApplicationHost:
         # Build only the services this app is composed of (+ their transitive deps).
         # Default composition (all_in_one) is full services, so this is behaviour-preserving.
         built = core_service_registry().build_all(service_ctx, only=self.composition.services)
-        self._system = built.get("system")
+        self._inspect = built.get("inspect")
         self._session = built.get("session")
         self._definitions = built.get("definitions")
         self._execution = built.get("execution")
