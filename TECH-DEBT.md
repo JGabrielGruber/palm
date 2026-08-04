@@ -93,7 +93,7 @@
 
 | ID | Title | Sev | Effort | Status |
 |----|-------|:---:|:------:|--------|
-| [OD-001](#od-001) | Doctor as kernel eyes (not vitality) | S2 | M | open (eyes home landed; product still doctor) |
+| [OD-001](#od-001) | Doctor as kernel eyes (not vitality) | S2 | M | open (inspect presents projection; doctor still packaging) |
 
 ---
 
@@ -667,7 +667,9 @@ These must **not** remain the source of truth for living load.
 
 **Target (0.61):** System **vitality** projection is living fold ([VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) D9). Host status thins, delegates, or deletes. Do not grow a fourth host status method as truth. Align residual bus vocabulary with [EVENT-PLANE](docs/EVENT-PLANE.md).
 
-**Progress (0.61.1–0.61.2):** Projection + `project_top` exist on system. Host still exposes the triple; doctor/product still assemble outside vitality.
+**Progress (0.61.5):** Living fold is **`InspectService.top`** (system projection).
+Host still exposes the triple; do not grow a fourth. Doctor may nest top but must
+not treat host status as vitality law.
 
 ---
 
@@ -736,11 +738,11 @@ Continuous install uses the same board. Residual ambient DI: [SD-016](#sd-016).
 
 **Related:** [CS-002](#cs-002) · [SD-007](#sd-007) · [VISION-0.61](docs/VISION-0.61.md) §5.1 · [ADR-030](docs/adr/030-system-vitality.md) D7.
 
-**Progress (0.61.1–0.61.2):** System vitality is the observation home (seat walk +
-projection). Doctor / product `SystemService` still assemble operate truth for
-surfaces. Demote unpaid until Inspect presents projection ([SD-007](#sd-007)).
+**Progress (0.61.5):** Product **`InspectService.top` / `.vitality`** present
+**only** from system projection. Legacy **`doctor`** nests `top` + vitality
+pointer; still assembles storage/jobs/control_plane anatomy (not living seat law).
 
-**Status:** open (named at **0.61.0**; partial pay on system side only).
+**Status:** open (operate eyes path paid on inspect; doctor packaging residual).
 
 ---
 

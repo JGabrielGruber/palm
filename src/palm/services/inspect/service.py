@@ -2,6 +2,8 @@
 
 0.61.4 / SD-007: renamed from product ``SystemService`` so English no longer
 collides with the system layer or the supervisor continuous-loop protocol.
+
+0.61.5: ``top`` / ``vitality`` present **only** from system vitality projection.
 """
 
 from __future__ import annotations
@@ -20,6 +22,12 @@ from palm.common.cqrs.query import (
 from palm.common.services.base import BaseService
 from palm.common.services.errors import InstanceNotFoundServiceError
 from palm.kits.server.diagnostics import build_doctor_report
+from palm.services.inspect.present import (
+    present_top,
+    present_vitality,
+    present_vitality_for_doctor,
+)
+from palm.system.vitality import ProjectionOptions
 
 
 def _application_host_from(runtime: Any) -> Any | None:
@@ -37,13 +45,34 @@ def _application_host_from(runtime: Any) -> Any | None:
 class InspectService(BaseService):
     """Product present door — composes CQRS into business-shaped methods.
 
-    Reads system vitality / doctor packaging; does not own kernel counters.
+    Living eyes: :meth:`top` and :meth:`vitality` read
+    :mod:`palm.system.vitality` only. Doctor remains a legacy packaging verb
+    that **nests** projection output (OD-001 demotion path).
+
     Supervisor continuous loops keep the unrelated protocol name
     ``SystemService`` under ``palm.system.supervisor``.
     """
 
+    def top(
+        self,
+        runtime: Any,
+        options: ProjectionOptions | None = None,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Living load ``top`` — vitality projection present only."""
+        return present_top(runtime, options, **kwargs)
+
+    def vitality(
+        self,
+        runtime: Any,
+        options: ProjectionOptions | None = None,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Full vitality snapshot — projection only (not doctor assembly)."""
+        return present_vitality(runtime, options, **kwargs)
+
     def doctor(self, runtime: Any) -> dict[str, Any]:
-        """Engine health report for operators (includes control_plane when host-backed)."""
+        """Legacy health packaging — nests vitality top; does not invent seat law."""
         control_plane = None
         host = _application_host_from(runtime)
         if host is not None and hasattr(host, "control_plane_status"):
@@ -51,7 +80,19 @@ class InspectService(BaseService):
                 control_plane = host.control_plane_status()
             except Exception:
                 control_plane = None
-        return build_doctor_report(runtime, control_plane=control_plane)
+        report = build_doctor_report(runtime, control_plane=control_plane)
+        try:
+            top = self.top(runtime)
+            report["top"] = top
+            report["vitality"] = present_vitality_for_doctor(top)
+        except Exception as exc:
+            report["top"] = {"error": str(exc), "source": "palm.system.vitality"}
+            report["vitality"] = {
+                "source": "palm.system.vitality",
+                "error": str(exc),
+                "note": "Projection sample failed; doctor packaging still returned.",
+            }
+        return report
 
     def list_jobs(
         self,

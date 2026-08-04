@@ -170,6 +170,12 @@ class AssistService(BaseService):
         if parsed.kind == AssistCommandKind.DOCTOR:
             return self._catalog.doctor()
 
+        if parsed.kind == AssistCommandKind.TOP:
+            return self._catalog.top()
+
+        if parsed.kind == AssistCommandKind.VITALITY:
+            return self._catalog.vitality()
+
         if parsed.kind == AssistCommandKind.CATALOG_FLOWS:
             return self._catalog.list_flows()
 
@@ -251,6 +257,14 @@ class AssistService(BaseService):
 
     def doctor(self) -> dict[str, Any]:
         return self._catalog.doctor()
+
+    def top(self) -> dict[str, Any]:
+        """Living load top via inspect → vitality projection."""
+        return self._catalog.top()
+
+    def vitality(self) -> dict[str, Any]:
+        """Full vitality snapshot via inspect → projection."""
+        return self._catalog.vitality()
 
     def list_flows(self) -> list[dict[str, Any]]:
         return self._catalog.list_flows()

@@ -15,6 +15,7 @@ _DELEGATED_PREFIXES = frozenset(
         "definitions",
         "design",
         "system",
+        "inspect",  # 0.61.5 product door alias for operate paths
         "providers",
         "workloads",
     },
@@ -47,7 +48,7 @@ def dispatch_operator_path(
         return dispatch_definitions(ctx, path, params)
     if prefix == "design":
         return ctx.design.dispatch(path, params)
-    if prefix == "system":
+    if prefix in ("system", "inspect"):
         return dispatch_system(ctx, path, params)
     if prefix == "providers":
         return dispatch_providers(ctx, path, params)
@@ -260,9 +261,18 @@ def _gate_continue_owner(
 
 
 def dispatch_system(ctx: Any, path: list[str], params: dict[str, Any]) -> Any:
+    """Operate door for inspect product (paths may still say ``system/*``)."""
     params = params or {}
+    # Normalize inspect/* → system/* for residual wire matching (SD-007 residual).
+    if path and path[0] == "inspect":
+        path = ["system", *path[1:]]
+    door = getattr(ctx, "inspect", None) or ctx.system
     if path == ["system", "doctor"]:
-        return ctx.system.doctor(ctx.runtime)
+        return door.doctor(ctx.runtime)
+    if path == ["system", "top"]:
+        return door.top(ctx.runtime)
+    if path == ["system", "vitality"]:
+        return door.vitality(ctx.runtime)
     # 0.58.8 / 0.58.12 / 0.58.17 / 0.58.18 — session journey + operate (product door)
     if len(path) >= 3 and path[0] == "system" and path[1] == "session":
         door = _resolve_session_service(ctx)

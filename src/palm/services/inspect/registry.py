@@ -7,6 +7,8 @@ from typing import Literal
 
 ObserveOperation = Literal[
     "doctor",
+    "top",
+    "vitality",
     "list_jobs",
     "get_job",
     "inspect_job",
@@ -30,7 +32,9 @@ class ObserveVerb:
 
 
 _registry: list[ObserveVerb] = [
-    ObserveVerb("doctor", "doctor", "Engine health report"),
+    ObserveVerb("doctor", "doctor", "Engine health report (legacy; nests vitality top)"),
+    ObserveVerb("top", "top", "Living load top from vitality projection"),
+    ObserveVerb("vitality", "vitality", "Full vitality snapshot from projection"),
     ObserveVerb("list_jobs", "list_jobs", "List orchestration jobs"),
     ObserveVerb("get_job", "get_job", "Get job status"),
     ObserveVerb("inspect_job", "inspect_job", "Inspect job context"),

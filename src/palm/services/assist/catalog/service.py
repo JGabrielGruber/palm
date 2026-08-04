@@ -23,6 +23,14 @@ class AssistCatalogService:
     def doctor(self) -> dict[str, Any]:
         return self._assist.inspect.doctor(self._assist.resolve_runtime())
 
+    def top(self) -> dict[str, Any]:
+        """Living load top — vitality projection via product inspect door."""
+        return self._assist.inspect.top(self._assist.resolve_runtime())
+
+    def vitality(self) -> dict[str, Any]:
+        """Full vitality snapshot via product inspect door."""
+        return self._assist.inspect.vitality(self._assist.resolve_runtime())
+
     def list_flows(self) -> list[dict[str, Any]]:
         return self._assist.definitions.list_flows()
 

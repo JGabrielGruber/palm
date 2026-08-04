@@ -273,7 +273,8 @@ Theme stays open while José still needs proper eyes.
 | **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; `project` / `project_top` — **landed** — stamp when José exits |
 | **3** | Emission window + actor envelope | Partition or unknown; no second write path — **landed** thin body (system log + work heat) — stamp when José exits |
 | **4** | InspectService rename | SD-007; host/assist doors; product SystemService not law — **landed** (wire `system/*` residual) — stamp when José exits |
-| **5+** | Growth | Present from projection; native reports; optional caps; host status compost; doctor thin; tools |
+| **5** | Inspect present from projection | `top` / `vitality` product door; doctor nests top — **landed** — stamp when José exits |
+| **6+** | Growth | Doctor demotion; native reports; optional caps; host status compost; tools |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
 
 ---
@@ -331,7 +332,7 @@ Each slice states which modes are in the green bar.
 - [x] Seat report protocol with vitality lexicon.  
 - [x] `VitalityProjection` + registry; `seat_walk` installed.  
 - [x] Thin `emission_window` installed; `actor_kind` partition or explicit `unknown`.  
-- [ ] Product inspect presents top/vitality from projection only.  
+- [x] Product inspect presents top/vitality from projection only.  
 - [x] InspectService rename path closed; alias residual named (SD-007).  
 - [ ] Doctor marked debt; new truth not invented in doctor assembly.  
 - [ ] Ugly dual paths broken or named — no silent workaround architecture.  

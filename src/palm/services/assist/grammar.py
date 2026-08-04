@@ -21,6 +21,8 @@ class AssistCommandKind(Enum):
     INSTANCE = "instance"
     INSTANCE_VERB = "instance_verb"
     DOCTOR = "doctor"
+    TOP = "top"
+    VITALITY = "vitality"
     CATALOG_FLOWS = "catalog_flows"
     CATALOG_WAITING = "catalog_waiting"
     DISCOVER = "discover"
@@ -84,6 +86,10 @@ def parse_assist_command(path: list[str] | tuple[str, ...]) -> ParsedAssistComma
         )
     if segments == ("doctor",):
         return ParsedAssistCommand(kind=AssistCommandKind.DOCTOR)
+    if segments == ("top",):
+        return ParsedAssistCommand(kind=AssistCommandKind.TOP)
+    if segments == ("vitality",):
+        return ParsedAssistCommand(kind=AssistCommandKind.VITALITY)
     if segments == ("catalog", "flows"):
         return ParsedAssistCommand(kind=AssistCommandKind.CATALOG_FLOWS)
     if segments == ("catalog", "waiting"):
