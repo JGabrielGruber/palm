@@ -235,7 +235,8 @@ Do **not** put vitality `seat_report` on simple seats — public API is enough.
 | `system_log_tail` | Operate tape sample (BI-015 neighbor) | intention stub |
 | `process_resources` | RSS/CPU/threads (stdlib; labeled units) | **installed** · enabled (0.61.8) |
 | `loaded_bulk` | Light size of attached seats/modules — visibility not shame | **installed** · enabled (0.61.9) |
-| `benchmark` / `monitor_agent` | Grow when ready | intention stubs |
+| `benchmark` | Controlled recipe + observe snapshot diff | **installed** · **off by default** (0.61.10) |
+| `monitor_agent` | Grow when ready | intention stub |
 
 **Locked (0.61.2):** `VitalityRegistry` · `VitalityCapability` · `CapabilityFragment` · `VitalityProjection` · snapshot schema **`palm.vitality_snapshot/1`**  
 **API:** `project` / `project_top` / `project_seat_walk_only`  
@@ -279,7 +280,8 @@ Theme stays open while José still needs proper eyes.
 | **7** | Host status compost (CS-002) | `packaging_status` · demotion markers · triple residual — **landed** — stamp when José exits |
 | **8** | `process_resources` | Stdlib RSS/CPU/threads · top `process` · units honest — **landed** — stamp when José exits |
 | **9** | `loaded_bulk` | Attached seats · module LOC · composition · top `bulk` · not shame — **landed** — stamp when José exits |
-| **10+** | Growth | Tools (`benchmark`); native reports; remaining stubs |
+| **10** | `benchmark` tool | Recipe · observe snapshot₀/₁ · pure diff · off by default — **landed** — stamp when José exits |
+| **11+** | Growth | `monitor_agent`; native reports; remaining stubs |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
 
 ---

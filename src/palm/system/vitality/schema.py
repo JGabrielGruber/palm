@@ -162,7 +162,7 @@ CAPABILITY_LOADED_BULK: Final[str] = "loaded_bulk"
 """Optional observe: light size of attached seats (installed 0.61.9)."""
 
 CAPABILITY_BENCHMARK: Final[str] = "benchmark"
-"""Active tool (intention until ready)."""
+"""Active tool: recipe + observe snapshot diff (installed 0.61.10; off by default)."""
 
 CAPABILITY_MONITOR_AGENT: Final[str] = "monitor_agent"
 """Active tool (intention until ready)."""

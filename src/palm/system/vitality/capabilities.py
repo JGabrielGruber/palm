@@ -1,8 +1,9 @@
 """
 Default vitality capabilities (0.61.2+).
 
-**Installed observe:** ``seat_walk`` · ``emission_window`` (0.61.3) ·
-``process_resources`` (0.61.8) · ``loaded_bulk`` (0.61.9).  
+**Installed observe:** ``seat_walk`` · ``emission_window`` ·
+``process_resources`` · ``loaded_bulk``.  
+**Installed tool (off by default):** ``benchmark`` (0.61.10).  
 Other catalog ids may exist as intention stubs (disabled) so the registry
 shape is honest about growth without fake-green bodies.
 
@@ -20,6 +21,7 @@ from palm.system.vitality.capability import (
     VitalityCapability,
     intention_stub,
 )
+from palm.system.vitality.benchmark import sample_benchmark
 from palm.system.vitality.emission_window import sample_emission_window
 from palm.system.vitality.loaded_bulk import sample_loaded_bulk
 from palm.system.vitality.process_resources import sample_process_resources
@@ -34,6 +36,7 @@ from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
     CAPABILITY_SYSTEM_LOG_TAIL,
     COST_CHEAP,
+    COST_MODERATE,
     LINEAGE_NATIVE,
     LINEAGE_SAMPLED,
     MATURITY_INSTALLED,
@@ -193,13 +196,7 @@ def build_default_capabilities() -> list[VitalityCapability]:
         ),
         build_process_resources_capability(),
         build_loaded_bulk_capability(),
-        intention_stub(
-            CAPABILITY_BENCHMARK,
-            role=ROLE_TOOL,
-            description="Benchmark tool (grow when ready)",
-            order=100,
-            tags=("tool", "intention"),
-        ),
+        build_benchmark_capability(),
         intention_stub(
             CAPABILITY_MONITOR_AGENT,
             role=ROLE_TOOL,
@@ -210,14 +207,35 @@ def build_default_capabilities() -> list[VitalityCapability]:
     ]
 
 
+def build_benchmark_capability() -> VitalityCapability:
+    """Active tool — off by default so everyday project() does not thrash."""
+    return VitalityCapability(
+        id=CAPABILITY_BENCHMARK,
+        sample=sample_benchmark,
+        role=ROLE_TOOL,
+        maturity=MATURITY_INSTALLED,
+        default_enabled=False,
+        cost=COST_MODERATE,
+        description=(
+            "Controlled load recipe between two observe projections; "
+            "diff RSS/CPU · seats · emissions · bulk (run via run_benchmark "
+            "or extra_enable; not on by default)"
+        ),
+        tags=("tool", "benchmark", "load"),
+        order=100,
+    )
+
+
 __all__ = [
     "BAG_SEAT_REPORTS",
     "BAG_SEAT_WALK_RESULT",
+    "build_benchmark_capability",
     "build_default_capabilities",
     "build_emission_window_capability",
     "build_loaded_bulk_capability",
     "build_process_resources_capability",
     "build_seat_walk_capability",
+    "sample_benchmark",
     "sample_emission_window",
     "sample_loaded_bulk",
     "sample_process_resources",

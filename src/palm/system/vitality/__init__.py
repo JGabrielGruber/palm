@@ -12,6 +12,7 @@ plane of start/continue.
 | **0.61.3** | ``emission_window`` + actor_kind partition |
 | **0.61.8** | ``process_resources`` (stdlib RSS/CPU/threads) |
 | **0.61.9** | ``loaded_bulk`` (attached seats · modules · composition) |
+| **0.61.10** | ``benchmark`` tool (recipe · snapshot diff; off by default) |
 
 **Sample law:** raw-dog public seat APIs into ``meta.raw`` (``lineage: sampled``).
 Product present interprets. No adapter maps in system vitality.
@@ -34,12 +35,26 @@ from palm.system.vitality.capability import (
     VitalityCapability,
     intention_stub,
 )
+from palm.system.vitality.benchmark import (
+    DEFAULT_ITERATIONS,
+    DEFAULT_RECIPE,
+    KNOWN_RECIPES,
+    RECIPE_IDLE,
+    RECIPE_LOG_FILL,
+    RECIPE_PULSE,
+    RECIPE_WALK,
+    diff_load_points,
+    extract_load_points,
+    run_benchmark,
+)
 from palm.system.vitality.capabilities import (
+    build_benchmark_capability,
     build_default_capabilities,
     build_emission_window_capability,
     build_loaded_bulk_capability,
     build_process_resources_capability,
     build_seat_walk_capability,
+    sample_benchmark,
     sample_emission_window,
     sample_loaded_bulk,
     sample_process_resources,
@@ -165,8 +180,11 @@ __all__ = [
     "COST_MODERATE",
     "CapabilityFragment",
     "DEFAULT_EMISSION_WINDOW_LIMIT",
+    "DEFAULT_ITERATIONS",
+    "DEFAULT_RECIPE",
     "KIND_BOOT",
     "KNOWN_ACTOR_KINDS",
+    "KNOWN_RECIPES",
     "KIND_ENGINE",
     "KIND_LOG",
     "KIND_OTHER",
@@ -181,6 +199,10 @@ __all__ = [
     "MATURITY_INTENTION",
     "ProbeCatalog",
     "ProjectionOptions",
+    "RECIPE_IDLE",
+    "RECIPE_LOG_FILL",
+    "RECIPE_PULSE",
+    "RECIPE_WALK",
     "ROLE_OBSERVE",
     "ROLE_TOOL",
     "SEAT_BOOT_MEMBERSHIP",
@@ -210,6 +232,7 @@ __all__ = [
     "VitalitySnapshot",
     "WalkOptions",
     "attr_resolver",
+    "build_benchmark_capability",
     "build_default_capabilities",
     "build_default_probes",
     "build_emission_window_capability",
@@ -220,7 +243,9 @@ __all__ = [
     "coerce_report",
     "default_probe_catalog",
     "default_vitality_registry",
+    "diff_load_points",
     "discover_seats",
+    "extract_load_points",
     "fixed_probes",
     "has_seat_report",
     "index_by_seat_id",
@@ -229,7 +254,9 @@ __all__ = [
     "prefer_native",
     "private_attr_resolver",
     "project",
+    "run_benchmark",
     "sample_attrs",
+    "sample_benchmark",
     "sample_emission_window",
     "sample_loaded_bulk",
     "sample_method",

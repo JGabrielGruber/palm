@@ -32,6 +32,7 @@ from palm.system.vitality.capabilities import (
 from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import SeatReport, coerce_report, reports_to_dicts
 from palm.system.vitality.schema import (
+    CAPABILITY_BENCHMARK,
     CAPABILITY_EMISSION_WINDOW,
     CAPABILITY_LOADED_BULK,
     CAPABILITY_PROCESS_RESOURCES,
@@ -191,6 +192,15 @@ class VitalitySnapshot:
                 "summary": dict(lb_summary) if isinstance(lb_summary, dict) else {},
                 "notes": list(lb.notes),
                 # Per-seat / full module table stays on fragment.
+            }
+        bm = self.fragments.get(CAPABILITY_BENCHMARK)
+        if bm is not None and bm.present and isinstance(bm.data, dict):
+            bm_summary = bm.data.get("summary")
+            top["benchmark"] = {
+                "state": bm.state,
+                "summary": dict(bm_summary) if isinstance(bm_summary, dict) else {},
+                "notes": list(bm.notes),
+                # Full before/after/diff stays on fragment.
             }
         return top
 

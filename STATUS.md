@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.61.0` (stamp) · **Active theme:** **`0.61` Living-kernel vitality** · **Prior closed:** **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 4, 2026 · **Theme open:** **0.61.0** ✅ · **0.61.1**–**0.61.9** eyes + load/bulk (walk · projection · emission · Inspect · present · doctor · host packaging · process_resources · loaded_bulk; stamps later)  
+**Last Updated:** August 4, 2026 · **Theme open:** **0.61.0** ✅ · **0.61.1**–**0.61.10** eyes + load/bulk + benchmark tool (walk · projection · emission · Inspect · present · doctor · host packaging · process_resources · loaded_bulk · benchmark; stamps later)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.61](docs/VISION-0.61.md) **open** · **ADR:** [030](docs/adr/030-system-vitality.md) **Proposed** · prior [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) Accepted  
 **Migration / release:** prior [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md) · [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **CS-002** ✅ · **OD-001** ✅ · **SD-007** ✅ · residual **BI-*** / **SI-*** / **SU-*** / **SD-016** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -20,6 +20,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **Emission window** | `emission_window` installed — system-log sample + `actor_kind` partition · optional work heat |
 | **Process resources** | `process_resources` installed (0.61.8) — stdlib RSS/CPU/threads · labeled units · top `process` |
 | **Loaded bulk** | `loaded_bulk` installed (0.61.9) — attached seats · module LOC · composition counts · top `bulk` · visibility not shame |
+| **Benchmark** | `benchmark` tool installed (0.61.10) — **off by default** · `run_benchmark` · recipe → observe snapshot diff |
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · `host.inspect` · **top/vitality from projection** · **SD-007** paid |
 | **Doctor** | Legacy verb only (**OD-001** ✅) — `kind=legacy_doctor` · anatomy packaging nests top |
 | **Adapter law** | Residue only — forward work as if not foundation; interpret in product present |
@@ -28,7 +29,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **Boot law** | Two schedules; composition = membership; modes via `for_mode` |
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); catalog residual **BI-015** |
 | **Closed** | **0.60.0–0.60.9 + exit** — BI-013 closed · ADR-029 Accepted · stamp `0.60.9` |
-| **Next** | **0.61.10+** tools (`benchmark`) · optional stubs · stamps when José exits |
+| **Next** | **0.61.11+** `monitor_agent` · remaining stubs · stamps when José exits |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · user-plane · workload remainder · Grove |
 
 ## Quick Overview
@@ -61,7 +62,8 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 | **0.61.7** | ✅ host status compost (CS-002) — stamp when José exits |
 | **0.61.8** | ✅ `process_resources` (stdlib RSS/CPU/threads) — stamp when José exits |
 | **0.61.9** | ✅ `loaded_bulk` (attached seats · modules · composition) — stamp when José exits |
-| **0.61.10+** | 📋 tools (`benchmark`) · growth |
+| **0.61.10** | ✅ `benchmark` tool (recipe · snapshot diff; off by default) — stamp when José exits |
+| **0.61.11+** | 📋 `monitor_agent` · growth |
 
 **Floor (eyes open):** dynamic walk · seat report · projection + registry · inspect top · emission identity · SD-007 · OD-001 · CS-002.  
 **Exit:** **José’s** judgment when eyes are proper — not empty checklist death.  
