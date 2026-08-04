@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.61.0` (stamp) · **Active theme:** **`0.61` Living-kernel vitality** · **Prior closed:** **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 3, 2026 · **Theme open:** **0.61.0** ✅ · **0.61.1** walk landed · **0.61.2** projection landed (stamps later)  
+**Last Updated:** August 4, 2026 · **Theme open:** **0.61.0** ✅ · **0.61.1** walk · **0.61.2** projection · **0.61.3** emission_window (stamps later)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.61](docs/VISION-0.61.md) **open** · **ADR:** [030](docs/adr/030-system-vitality.md) **Proposed** · prior [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) Accepted  
 **Migration / release:** prior [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md) · [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-007** / **CS-002** / **OD-001** (vitality) · residual **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -17,13 +17,14 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **0.61 open** | Living-kernel **vitality** — system eyes (`top`); inspect present; doctor is debt |
 | **Seat walk** | **`palm.system.vitality`** — `palm.seat_report/1` · `discover_seats` · probe catalog |
 | **Projection** | `VitalityRegistry` + `VitalityProjection` · `palm.vitality_snapshot/1` · `project` / `project_top` |
+| **Emission window** | `emission_window` installed — system-log sample + `actor_kind` partition · optional work heat |
 | **Adapter law** | Residue only — forward work as if not foundation; interpret in product present |
 | **0.60 closed** | Planes = start/continue traffic; **Supervisor** = continuous services; inbound on system |
 | **Host** | Packaging — prefers system seats; product enrich residual; host status not living law |
 | **Boot law** | Two schedules; composition = membership; modes via `for_mode` |
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); catalog residual **BI-015** |
 | **Closed** | **0.60.0–0.60.9 + exit** — BI-013 closed · ADR-029 Accepted · stamp `0.60.9` |
-| **Next** | **0.61.3+** emission window · Inspect rename · growth (stamps when José exits) · host dogfood walk live |
+| **Next** | **0.61.4+** Inspect rename · growth (stamps when José exits) · host dogfood walk live |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · user-plane · workload remainder · Grove |
 
 ## Quick Overview
@@ -49,7 +50,8 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 | **0.61.0** | ✅ plan + ADR-030 Proposed |
 | **0.61.1** | ✅ seat report + dynamic walk — stamp when José exits |
 | **0.61.2** | ✅ projection + registry (`seat_walk`) — stamp when José exits |
-| **0.61.3+** | 📋 emission · Inspect rename · growth |
+| **0.61.3** | ✅ thin `emission_window` + actor_kind partition — stamp when José exits |
+| **0.61.4+** | 📋 Inspect rename · growth |
 
 **Floor (eyes open):** dynamic walk · seat report · projection + registry · inspect top from projection · emission identity · SD-007 path · doctor debt named.  
 **Exit:** **José’s** judgment when eyes are proper — not empty checklist death.  

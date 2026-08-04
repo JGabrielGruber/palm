@@ -32,6 +32,7 @@ from palm.system.vitality.capabilities import (
 from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import SeatReport, coerce_report, reports_to_dicts
 from palm.system.vitality.schema import (
+    CAPABILITY_EMISSION_WINDOW,
     CAPABILITY_SEAT_WALK,
     LINEAGE_NATIVE,
     LINEAGE_SAMPLED,
@@ -126,7 +127,7 @@ class VitalitySnapshot:
 
         Product may decorate further. System does not invent doctor health.
         """
-        return {
+        top: dict[str, Any] = {
             "schema": self.schema,
             "sample_ts": self.sample_ts,
             "summary": dict(self.summary),
@@ -157,6 +158,21 @@ class VitalitySnapshot:
             },
             "lineage": list(self.lineage),
         }
+        em = self.fragments.get(CAPABILITY_EMISSION_WINDOW)
+        if em is not None and em.present and isinstance(em.data, dict):
+            summary = em.data.get("summary")
+            top["emissions"] = {
+                "state": em.state,
+                "summary": dict(summary) if isinstance(summary, dict) else {},
+                "heat": em.data.get("heat"),
+                # Full window stays on fragment; top stays light.
+                "sample_count": (
+                    (summary or {}).get("emission_count")
+                    if isinstance(summary, dict)
+                    else None
+                ),
+            }
+        return top
 
 
 @dataclass

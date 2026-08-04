@@ -121,7 +121,33 @@ CAPABILITY_SEAT_WALK: Final[str] = "seat_walk"
 """Core observe: discover seats + fold seat reports (landed 0.61.1/0.61.2)."""
 
 CAPABILITY_EMISSION_WINDOW: Final[str] = "emission_window"
-"""Observe: recent emissions + actor partition (body 0.61.3+)."""
+"""Observe: recent emissions + actor partition (0.61.3 body)."""
+
+# ── Emission identity (ADR-030 D8) ───────────────────────────────────────────
+
+ACTOR_KIND_HUMAN: Final[str] = "human"
+ACTOR_KIND_AGENT: Final[str] = "agent"
+ACTOR_KIND_PROBE: Final[str] = "probe"
+ACTOR_KIND_SYSTEM: Final[str] = "system"
+ACTOR_KIND_PEER: Final[str] = "peer"
+ACTOR_KIND_UNKNOWN: Final[str] = "unknown"
+
+KNOWN_ACTOR_KINDS: Final[frozenset[str]] = frozenset(
+    {
+        ACTOR_KIND_HUMAN,
+        ACTOR_KIND_AGENT,
+        ACTOR_KIND_PROBE,
+        ACTOR_KIND_SYSTEM,
+        ACTOR_KIND_PEER,
+        ACTOR_KIND_UNKNOWN,
+    }
+)
+
+CHANNEL_SYSTEM_LOG: Final[str] = "system_log"
+CHANNEL_WORK_PLANE: Final[str] = "work_plane"
+
+DEFAULT_EMISSION_WINDOW_LIMIT: Final[int] = 40
+"""Default max system-log records folded into one emission_window sample."""
 
 CAPABILITY_BOOT_MEMBERSHIP: Final[str] = "boot_membership"
 """Optional observe: boot walk context as capability (seat also exists)."""
@@ -164,6 +190,12 @@ def supervisor_service_seat_id(service_name: str) -> str:
 
 
 __all__ = [
+    "ACTOR_KIND_AGENT",
+    "ACTOR_KIND_HUMAN",
+    "ACTOR_KIND_PEER",
+    "ACTOR_KIND_PROBE",
+    "ACTOR_KIND_SYSTEM",
+    "ACTOR_KIND_UNKNOWN",
     "CAPABILITY_BENCHMARK",
     "CAPABILITY_BOOT_MEMBERSHIP",
     "CAPABILITY_EMISSION_WINDOW",
@@ -173,10 +205,14 @@ __all__ = [
     "CAPABILITY_PROCESS_RESOURCES",
     "CAPABILITY_SEAT_WALK",
     "CAPABILITY_SYSTEM_LOG_TAIL",
+    "CHANNEL_SYSTEM_LOG",
+    "CHANNEL_WORK_PLANE",
     "COST_CHEAP",
     "COST_EXPENSIVE",
     "COST_MODERATE",
+    "DEFAULT_EMISSION_WINDOW_LIMIT",
     "KIND_BOOT",
+    "KNOWN_ACTOR_KINDS",
     "KIND_ENGINE",
     "KIND_LOG",
     "KIND_OTHER",

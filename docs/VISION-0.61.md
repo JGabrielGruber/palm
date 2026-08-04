@@ -226,10 +226,10 @@ Do **not** put vitality `seat_report` on simple seats — public API is enough.
 
 ### 6.4 Capability catalog (registry)
 
-| Id | Role | Maturity (0.61.2) |
+| Id | Role | Maturity (0.61.3) |
 |----|------|-------------------|
 | `seat_walk` | Discover + fold seat reports | **installed** · enabled |
-| `emission_window` | Recent yield / wait heat / fail + actor partition | intention stub |
+| `emission_window` | Recent system-log yield + actor partition; optional work heat | **installed** · enabled |
 | `boot_membership` | Last walk / membership context | intention stub |
 | `system_log_tail` | Operate tape sample (BI-015 neighbor) | intention stub |
 | `process_resources` | RSS/CPU/threads (stdlib) | intention stub |
@@ -271,7 +271,7 @@ Theme stays open while José still needs proper eyes.
 | **0** | Plan + map + ADR | This file · ADR-030 Proposed · STATUS · debt rows · seed open — ✅ **0.61.0** |
 | **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters residue — **landed** — stamp when José exits |
 | **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; `project` / `project_top` — **landed** — stamp when José exits |
-| **3** | Emission window + actor envelope | Partition or unknown; no second write path |
+| **3** | Emission window + actor envelope | Partition or unknown; no second write path — **landed** thin body (system log + work heat) — stamp when José exits |
 | **4** | InspectService rename | SD-007; host/assist/MCP doors; product SystemService not law |
 | **5+** | Growth | Native reports; optional caps; host status compost; doctor thin; tools |
 | **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
@@ -329,9 +329,9 @@ Each slice states which modes are in the green bar.
 
 - [x] Dynamic seat discovery on a live `SystemInstance`.  
 - [x] Seat report protocol with vitality lexicon.  
-- [x] `VitalityProjection` + registry; `seat_walk` installed (emission_window intention until 0.61.3).  
+- [x] `VitalityProjection` + registry; `seat_walk` installed.  
+- [x] Thin `emission_window` installed; `actor_kind` partition or explicit `unknown`.  
 - [ ] Product inspect presents top/vitality from projection only.  
-- [ ] `actor_kind` partition or explicit `unknown`.  
 - [ ] InspectService rename path closed or alias residual named (SD-007).  
 - [ ] Doctor marked debt; new truth not invented in doctor assembly.  
 - [ ] Ugly dual paths broken or named — no silent workaround architecture.  

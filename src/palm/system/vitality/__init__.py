@@ -9,6 +9,7 @@ plane of start/continue.
 |-------|--------|
 | **0.61.1** | Seat-report protocol + dynamic walk |
 | **0.61.2** | VitalityRegistry + VitalityProjection (``seat_walk``) |
+| **0.61.3** | ``emission_window`` + actor_kind partition |
 
 **Sample law:** raw-dog public seat APIs into ``meta.raw`` (``lineage: sampled``).
 Product present interprets. No adapter maps in system vitality.
@@ -33,9 +34,12 @@ from palm.system.vitality.capability import (
 )
 from palm.system.vitality.capabilities import (
     build_default_capabilities,
+    build_emission_window_capability,
     build_seat_walk_capability,
+    sample_emission_window,
     sample_seat_walk,
 )
+from palm.system.vitality.emission_window import coerce_actor_kind
 from palm.system.vitality.probe import (
     ProbeCatalog,
     SeatProbe,
@@ -60,6 +64,12 @@ from palm.system.vitality.report import (
     reports_to_dicts,
 )
 from palm.system.vitality.schema import (
+    ACTOR_KIND_AGENT,
+    ACTOR_KIND_HUMAN,
+    ACTOR_KIND_PEER,
+    ACTOR_KIND_PROBE,
+    ACTOR_KIND_SYSTEM,
+    ACTOR_KIND_UNKNOWN,
     CAPABILITY_BENCHMARK,
     CAPABILITY_BOOT_MEMBERSHIP,
     CAPABILITY_EMISSION_WINDOW,
@@ -69,9 +79,13 @@ from palm.system.vitality.schema import (
     CAPABILITY_PROCESS_RESOURCES,
     CAPABILITY_SEAT_WALK,
     CAPABILITY_SYSTEM_LOG_TAIL,
+    CHANNEL_SYSTEM_LOG,
+    CHANNEL_WORK_PLANE,
     COST_CHEAP,
     COST_EXPENSIVE,
     COST_MODERATE,
+    DEFAULT_EMISSION_WINDOW_LIMIT,
+    KNOWN_ACTOR_KINDS,
     KIND_BOOT,
     KIND_ENGINE,
     KIND_LOG,
@@ -123,6 +137,12 @@ from palm.system.vitality.walk import (
 )
 
 __all__ = [
+    "ACTOR_KIND_AGENT",
+    "ACTOR_KIND_HUMAN",
+    "ACTOR_KIND_PEER",
+    "ACTOR_KIND_PROBE",
+    "ACTOR_KIND_SYSTEM",
+    "ACTOR_KIND_UNKNOWN",
     "CAPABILITY_BENCHMARK",
     "CAPABILITY_BOOT_MEMBERSHIP",
     "CAPABILITY_EMISSION_WINDOW",
@@ -132,11 +152,15 @@ __all__ = [
     "CAPABILITY_PROCESS_RESOURCES",
     "CAPABILITY_SEAT_WALK",
     "CAPABILITY_SYSTEM_LOG_TAIL",
+    "CHANNEL_SYSTEM_LOG",
+    "CHANNEL_WORK_PLANE",
     "COST_CHEAP",
     "COST_EXPENSIVE",
     "COST_MODERATE",
     "CapabilityFragment",
+    "DEFAULT_EMISSION_WINDOW_LIMIT",
     "KIND_BOOT",
+    "KNOWN_ACTOR_KINDS",
     "KIND_ENGINE",
     "KIND_LOG",
     "KIND_OTHER",
@@ -182,7 +206,9 @@ __all__ = [
     "attr_resolver",
     "build_default_capabilities",
     "build_default_probes",
+    "build_emission_window_capability",
     "build_seat_walk_capability",
+    "coerce_actor_kind",
     "coerce_report",
     "default_probe_catalog",
     "default_vitality_registry",
@@ -196,6 +222,7 @@ __all__ = [
     "private_attr_resolver",
     "project",
     "sample_attrs",
+    "sample_emission_window",
     "sample_method",
     "sample_raw",
     "sample_sequence",

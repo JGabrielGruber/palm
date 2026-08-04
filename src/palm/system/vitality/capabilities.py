@@ -1,13 +1,12 @@
 """
-Default vitality capabilities (0.61.2).
+Default vitality capabilities (0.61.2+).
 
-``seat_walk`` is the installed core observe path. Other catalog ids may exist
-as intention stubs (disabled) so the registry shape is honest about growth
-without fake-green bodies.
+**Installed core observe:** ``seat_walk`` · ``emission_window`` (0.61.3).  
+Other catalog ids may exist as intention stubs (disabled) so the registry
+shape is honest about growth without fake-green bodies.
 
-**Law:** capabilities *receive* seat reports; they do not re-curate doctor
-fields. Adapter lineage on seats is pass-through truth, not a foundation to
-deepen here.
+**Law:** capabilities *receive* seat reports / existing rings; they do not
+re-curate doctor fields or invent a second write path for the same fact.
 """
 
 from __future__ import annotations
@@ -20,6 +19,7 @@ from palm.system.vitality.capability import (
     VitalityCapability,
     intention_stub,
 )
+from palm.system.vitality.emission_window import sample_emission_window
 from palm.system.vitality.report import SeatReport, reports_to_dicts
 from palm.system.vitality.schema import (
     CAPABILITY_BENCHMARK,
@@ -40,7 +40,7 @@ from palm.system.vitality.schema import (
     STATE_ERROR,
     STATE_OK,
 )
-from palm.system.vitality.walk import WalkOptions, discover_seats, walk_result
+from palm.system.vitality.walk import WalkOptions, walk_result
 
 
 BAG_SEAT_REPORTS = "seat_reports"
@@ -118,17 +118,28 @@ def build_seat_walk_capability() -> VitalityCapability:
     )
 
 
+def build_emission_window_capability() -> VitalityCapability:
+    return VitalityCapability(
+        id=CAPABILITY_EMISSION_WINDOW,
+        sample=sample_emission_window,
+        role=ROLE_OBSERVE,
+        maturity=MATURITY_INSTALLED,
+        default_enabled=True,
+        cost=COST_CHEAP,
+        description=(
+            "Recent system-log emissions + actor_kind partition; "
+            "optional work_plane heat (no second write path)"
+        ),
+        tags=("core", "observe", "emission"),
+        order=20,
+    )
+
+
 def build_default_capabilities() -> list[VitalityCapability]:
     """Installed core + intention stubs for catalog honesty."""
     return [
         build_seat_walk_capability(),
-        intention_stub(
-            CAPABILITY_EMISSION_WINDOW,
-            role=ROLE_OBSERVE,
-            description="Emission window + actor_kind partition (0.61.3+)",
-            order=20,
-            tags=("observe", "intention"),
-        ),
+        build_emission_window_capability(),
         intention_stub(
             CAPABILITY_BOOT_MEMBERSHIP,
             role=ROLE_OBSERVE,
@@ -178,6 +189,8 @@ __all__ = [
     "BAG_SEAT_REPORTS",
     "BAG_SEAT_WALK_RESULT",
     "build_default_capabilities",
+    "build_emission_window_capability",
     "build_seat_walk_capability",
+    "sample_emission_window",
     "sample_seat_walk",
 ]
