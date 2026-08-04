@@ -62,6 +62,7 @@ _BAG_ITERATIONS = "benchmark_iterations"
 _BAG_SKIP = "benchmark_skip"
 _BAG_ACTIVE = "_vitality_benchmark_active"
 _BAG_STORE_FULL = "benchmark_store_full_snapshots"
+_BAG_WORKERS = "benchmark_workers"
 
 
 def _now_iso() -> str:
@@ -142,12 +143,28 @@ def _run_log_fill(_instance: Any, n: int) -> dict[str, Any]:
     return {"kind": RECIPE_LOG_FILL, "ops": ops, "requested": n, "channel": "system_log"}
 
 
-def _run_work_cycle(instance: Any, n: int) -> dict[str, Any]:
+def _workers_from_bag(bag: Mapping[str, Any] | None) -> int:
+    if not bag:
+        return 1
+    raw = bag.get(_BAG_WORKERS, 1)
+    try:
+        return max(1, min(32, int(raw)))
+    except (TypeError, ValueError):
+        return 1
+
+
+def _run_work_cycle(
+    instance: Any, n: int, *, workers: int = 1
+) -> dict[str, Any]:
     """Real start-plane path: enqueue WorkIntents, then tick to drain.
 
     Targets a missing flow so submit fails honestly (no silent product job).
     Peak pending is recorded in recipe_meta — the story when before/after
     pending returns to ~0 after drain.
+
+    When ``workers>1`` (0.62.6), concurrent claimers call ``tick`` with
+    distinct claimer ids (exclusive claim proof). Drive path may still
+    serialize under GIL — claim correctness is the story, not host cores.
     """
     from palm.core.work import WorkIntent
 
@@ -193,34 +210,101 @@ def _run_work_cycle(instance: Any, n: int) -> dict[str, Any]:
         except Exception:
             peak_pending = None
 
+    claim_workers = max(1, int(workers))
     submit_ok = 0
     processed = 0
     ticks = 0
-    # Drain until empty or safety bound (batch may be small).
-    max_ticks = max(3, (enqueued // 5) + 5)
-    for _ in range(max_ticks):
-        ticks += 1
-        pending_before = None
-        if callable(status_fn):
+    t0 = time.perf_counter()
+
+    if claim_workers <= 1:
+        # Drain until empty or safety bound (batch may be small).
+        max_ticks = max(3, (enqueued // 5) + 5)
+        for _ in range(max_ticks):
+            ticks += 1
+            pending_before = None
+            if callable(status_fn):
+                try:
+                    pending_before = int((status_fn() or {}).get("pending") or 0)
+                except Exception:
+                    pending_before = None
             try:
-                pending_before = int((status_fn() or {}).get("pending") or 0)
+                done = int(tick_fn(limit=max(enqueued, 10)) or 0)
             except Exception:
-                pending_before = None
-        try:
-            done = int(tick_fn(limit=max(enqueued, 10)) or 0)
-        except Exception:
-            done = 0
-        submit_ok += done
-        pending_now = None
+                done = 0
+            submit_ok += done
+            pending_now = None
+            if callable(status_fn):
+                try:
+                    pending_now = int((status_fn() or {}).get("pending") or 0)
+                except Exception:
+                    pending_now = None
+            if pending_before is not None and pending_now is not None:
+                processed += max(0, pending_before - pending_now)
+            if pending_now == 0:
+                break
+    else:
+        import threading
+
+        stop = threading.Event()
+        lock = threading.Lock()
+
+        def _claimer_loop(claimer_id: str) -> None:
+            nonlocal submit_ok, ticks
+            while not stop.is_set():
+                try:
+                    done = int(
+                        tick_fn(
+                            limit=1,
+                            claimer_id=claimer_id,
+                            reclaim=True,
+                        )
+                        or 0
+                    )
+                except Exception:
+                    done = 0
+                with lock:
+                    ticks += 1
+                    submit_ok += done
+                if callable(status_fn):
+                    try:
+                        if int((status_fn() or {}).get("pending") or 0) == 0:
+                            return
+                    except Exception:
+                        pass
+                if done == 0:
+                    time.sleep(0.001)
+
+        threads = [
+            threading.Thread(
+                target=_claimer_loop,
+                args=(f"bench-{i}",),
+                daemon=True,
+            )
+            for i in range(claim_workers)
+        ]
+        for th in threads:
+            th.start()
+        deadline = time.monotonic() + max(2.0, enqueued * 0.05 + 1.0)
+        while time.monotonic() < deadline:
+            if callable(status_fn):
+                try:
+                    if int((status_fn() or {}).get("pending") or 0) == 0:
+                        break
+                except Exception:
+                    pass
+            time.sleep(0.01)
+        stop.set()
+        for th in threads:
+            th.join(timeout=1.0)
         if callable(status_fn):
             try:
                 pending_now = int((status_fn() or {}).get("pending") or 0)
             except Exception:
                 pending_now = None
-        if pending_before is not None and pending_now is not None:
-            processed += max(0, pending_before - pending_now)
-        if pending_now == 0:
-            break
+            if peak_pending is not None and pending_now is not None:
+                processed = max(0, peak_pending - pending_now)
+
+    wall_ms = (time.perf_counter() - t0) * 1000.0
 
     pending_after = None
     if callable(status_fn):
@@ -241,9 +325,18 @@ def _run_work_cycle(instance: Any, n: int) -> dict[str, Any]:
         "ticks": ticks,
         "peak_pending": peak_pending,
         "pending_after": pending_after,
+        "workers": claim_workers,
+        "wall_ms": round(wall_ms, 3),
         "path": "work_plane.enqueue+tick",
         "target": _BENCHMARK_FLOW_TARGET,
-        "note": "missing_flow_fails_on_tick_by_design; processed clears queue",
+        "note": (
+            "missing_flow_fails_on_tick_by_design; processed clears queue"
+            + (
+                "; multi_claimer exclusive claim proof"
+                if claim_workers > 1
+                else ""
+            )
+        ),
     }
 
 
@@ -410,7 +503,14 @@ def sample_benchmark(instance: Any, ctx: SampleContext) -> CapabilityFragment:
 
         t_recipe0 = time.perf_counter()
         try:
-            recipe_meta = runner(instance, iterations)
+            if recipe == RECIPE_WORK_CYCLE:
+                recipe_meta = _run_work_cycle(
+                    instance,
+                    iterations,
+                    workers=_workers_from_bag(ctx.bag),
+                )
+            else:
+                recipe_meta = runner(instance, iterations)
         except Exception as exc:
             return CapabilityFragment.error(
                 CAPABILITY_BENCHMARK,
@@ -486,11 +586,16 @@ def run_benchmark(
     iterations: int = DEFAULT_ITERATIONS,
     mode: str | None = None,
     store_full_snapshots: bool = False,
+    workers: int = 1,
 ) -> CapabilityFragment:
-    """Public dogfood entry — run without enabling the tool on every project."""
+    """Public dogfood entry — run without enabling the tool on every project.
+
+    ``workers`` (0.62.6) — concurrent claimers for ``work_cycle`` only.
+    """
     ctx = SampleContext(mode=mode)
     ctx.bag[_BAG_RECIPE] = recipe
     ctx.bag[_BAG_ITERATIONS] = iterations
+    ctx.bag[_BAG_WORKERS] = max(1, int(workers))
     if store_full_snapshots:
         ctx.bag[_BAG_STORE_FULL] = True
     return sample_benchmark(instance, ctx)

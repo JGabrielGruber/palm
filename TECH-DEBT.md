@@ -333,11 +333,12 @@ Architecture (supervisor + work plane) fits multi-claimer; code does not.
 Drive-path concurrent submit: **prove or name residual** (claim pool ≠ job-drive cores).
 
 **Progress (0.62.4):** `work_drain_workers` (default 1) · plane starts N poll threads with distinct claimer ids · settings + install options · multi-worker background test.  
-**Residual:** concurrent `submit_flow` / QueuedScheduler / orchestration map safety (**0.62.5** name or pay).
+**Progress (0.62.5 residual named):** claim pool scale ≠ job-drive cores. Concurrent claimers may call `submit_flow` in parallel; InlineScheduler drives on caller; QueuedScheduler remains one job worker; orchestration `_jobs` map concurrency is **unproven**. Product truth: multi-claimer improves **start-queue throughput** under I/O/wait, not host-core job parallelism. Full concurrent job drive is later residual (or Grove/workloads).  
+**Progress (0.62.6):** `run_benchmark(..., workers=K)` multi-claimer `work_cycle` proof.
 
 **Related:** [SD-017](#sd-017) · supervisor continuous defs · vitality `work_cycle` 1 vs K.
 
-**Status:** partial (N workers landed; drive residual open).
+**Status:** partial (N workers + honesty + benchmark; concurrent job-drive unpaid).
 
 ---
 

@@ -28,6 +28,10 @@ Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-clai
 - Install options + host coordinator rebind  
 - Multi-worker background drain test
 
+#### Honesty + proof (0.62.5–0.62.6)
+- Drive residual named: claim pool ≠ job-drive cores (QueuedScheduler N=1 unproven parallel jobs)  
+- `run_benchmark(..., workers=K)` multi-claimer `work_cycle` · wall_ms in recipe_meta
+
 ## [0.61.13] — 2026-08-04
 
 ### 0.61 — Living-kernel vitality (**theme closed**)

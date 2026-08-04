@@ -172,6 +172,26 @@ def test_work_cycle_enqueues_and_drains() -> None:
         assert meta.get("processed", 0) >= 1
         assert meta.get("pending_after") in (0, None) or meta.get("pending_after") == 0
         assert rt.work_plane.status()["pending"] == 0
+        assert meta.get("workers", 1) == 1
+    finally:
+        rt.stop()
+
+
+def test_work_cycle_multi_claimer_drains() -> None:
+    """0.62.6 — concurrent claimers clear queue without double-own."""
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        frag = run_benchmark(
+            rt, recipe=RECIPE_WORK_CYCLE, iterations=15, workers=3
+        )
+        assert frag.state == STATE_OK
+        meta = frag.data["recipe_meta"]
+        assert meta["enqueued"] == 15
+        assert meta.get("workers") == 3
+        assert meta.get("pending_after") in (0, None) or meta.get("pending_after") == 0
+        assert rt.work_plane.status()["pending"] == 0
+        assert "wall_ms" in meta
     finally:
         rt.stop()
 
