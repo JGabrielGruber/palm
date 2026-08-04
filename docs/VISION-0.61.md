@@ -313,7 +313,8 @@ Named so boy-scout and later slices do not pretend hub install is finished.
 
 **Landed (not debt):** hub membership; collaborator `attach`; **InstallInterface**; `system.interfaces` / `system.subsystems`; `Subsystem` protocol; BootContext seats; seat-first `bind_*_plane`; vitality package; AGENTS §1.2.
 
-**Not the subject:** full SU-* deflation, SI surface residue, BI-003 dual root — name residual; break only if they poison discovery.
+**Not the subject:** full SU-* deflation, SI surface residue — name residual; break only if they poison discovery.  
+**Neighbor residual paid (0.61.13):** BI-003 **floor** — shared product packaging (`apply_product_packaging`); dual types retained (scout 0.51.6).
 
 **Rule:** If vitality needs a permanent workaround, **break the shape** or **open a debt row**. Do not ship the workaround as architecture.
 

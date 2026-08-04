@@ -1,5 +1,9 @@
 """
-ServerContext — bridges runtimes, ApplicationHost, and CQRS buses.
+ServerContext — surface-facing single-runtime view + lean composition root.
+
+Retained as a type (ADR-019 / scout 0.51.6): surfaces need ``ctx.runtime`` as a
+property; ApplicationHost keeps multi-runtime ``runtime(name)``. Product services
+build through the same ``core_service_registry`` + shared packaging helper.
 """
 
 from __future__ import annotations
@@ -7,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from palm.app.host.composition import CompositionProfile
-from palm.app.host.services import HostServiceContext, core_service_registry
+from palm.app.host.services import HostServiceContext, apply_product_packaging, core_service_registry
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.bus import CommandBus, QueryBus
 from palm.common.cqrs.command import Command
@@ -68,15 +72,13 @@ class ServerContext:
        (``wire_standalone_buses``). It is the server-side sibling of
        ``CompositionProfile.embedded()``: one genome, a leaner phenotype.
 
-    It builds its services through the **same** ``core_service_registry()`` that
-    :class:`~palm.app.host.ApplicationHost` uses (0.50.5e) — the two composition
-    roots share one service genome. What stays distinct is *dispatch*: an attached
-    host routes commands/queries through its projection-ful buses (routing,
-    recovery, webhooks); host-less, the local buses serve reads live from the
-    runtime. That difference is the phenotype, not accidental duplication — so
-    ``ServerContext`` is retained, not dissolved (see ADR-019 Status / VISION-0.50).
-    Folding it into ``ApplicationHost`` would first require modeling projections as
-    a capability so the assembler can express this lean shape — a future theme.
+    Services build through the **same** ``core_service_registry()`` and shared
+    :func:`~palm.app.host.services.packaging.apply_product_packaging` as
+    :class:`~palm.app.host.application_host.ApplicationHost` (BI-003 packaging
+    residual). What stays distinct is *dispatch phenotype*: an attached host
+    routes through projection-ful buses; host-less, local buses serve reads live
+    from the runtime. The type is **retained** (ADR-019 · scout 0.51.6) — dual
+    *types* for host vs surface view; one *assembly law* for product services.
     """
 
     def __init__(
@@ -85,9 +87,11 @@ class ServerContext:
         *,
         host: ApplicationHost | None = None,
         plan_registry: PlanRegistry | None = None,
+        settings: PalmSettings | None = None,
     ) -> None:
         self._runtime = runtime
         self._host = host
+        self._settings = settings if settings is not None else PalmSettings()
         self.plan_registry = plan_registry or PlanRegistry()
         self._command_bus = host.commands if host is not None else CommandBus()
         self._query_bus = host.queries if host is not None else QueryBus()
@@ -105,16 +109,10 @@ class ServerContext:
     def _build_standalone_services(self, runtime: BaseRuntime) -> None:
         """Construct and wire services for standalone (host-less) server mode.
 
-        Builds through the very same ``core_service_registry()`` ApplicationHost
-        uses (0.50.5e): the runtime is presented as a kernel via
-        :class:`_RuntimeKernelView`, the runtime↔kernel seam
-        (:meth:`resolve_execution_runtime`) is the resolver, and the composition
-        selects which services to build. Both composition roots now assemble
-        services one way — the convergence ADR-019 aimed at.
-
-        Behaviour-preserving: ``event=None`` keeps the host-less provider service
-        from emitting (there is no standalone coordination event plane, as before),
-        and ``PalmSettings()`` analytics defaults equal the prior hard-coded config.
+        Same ``core_service_registry`` + product packaging as ApplicationHost.
+        ``event=None`` keeps host-less providers from emitting (no standalone
+        coordination event plane). Settings come from the constructor (or
+        default :class:`PalmSettings`) so MCP/bootstrap config is not silent.
         """
         wire_standalone_buses(
             self._command_bus,
@@ -128,30 +126,25 @@ class ServerContext:
             schemas=build_schema_registry(),
             app=_RuntimeKernelView(runtime),
             event=None,
-            settings=PalmSettings(),
+            settings=self._settings,
             resolve_execution_runtime=self.resolve_execution_runtime,
         )
         built = core_service_registry().build_all(service_ctx, only=self.composition.services)
-        self._inspect = built.get("inspect")
-        self._session = built.get("session")
-        self._definitions = built.get("definitions")
-        self._execution = built.get("execution")
-        self._assist = built.get("assist")
-        self._design = built.get("design")
-        self._analytics = built.get("analytics")
-
-        from palm.services._cqrs_wiring import wire_all_service_cqrs_from_runtime
-        from palm.services.design.contributors import wire_builtin_design_contributors
-
-        if self._design is not None:
-            wire_builtin_design_contributors()
-        wire_all_service_cqrs_from_runtime(
-            self._command_bus,
-            self._query_bus,
-            runtime,
-            design=self._design,
-            execution=self._execution,
+        bag = apply_product_packaging(
+            built,
+            command_bus=self._command_bus,
+            query_bus=self._query_bus,
+            repository=runtime.repository,
+            instance_manager=runtime.instance_manager,
+            storage=getattr(runtime, "storage", None),
         )
+        self._inspect = bag.inspect
+        self._session = bag.session
+        self._definitions = bag.definitions
+        self._execution = bag.execution
+        self._assist = bag.assist
+        self._design = bag.design
+        self._analytics = bag.analytics
 
     @property
     def runtime(self) -> BaseRuntime:
@@ -162,26 +155,24 @@ class ServerContext:
         return self._host
 
     @property
+    def settings(self) -> PalmSettings:
+        """Settings used for standalone service build (host path uses ``host.settings``)."""
+        if self._host is not None:
+            return self._host.settings
+        return self._settings
+
+    @property
     def composition(self) -> CompositionProfile:
         """What this server context is composed of.
 
         An attached host contributes its ``CompositionProfile``; standalone, the
-        server context *is* the server shape. The first step of 0.50.5 — both
-        composition roots now speak the same ``composition`` language, en route to
-        ``ServerContext`` dissolving into ``CompositionProfile.server()``.
+        server context *is* the server shape. Both roots speak the same
+        ``composition`` language (0.50.5+); the type stays as the surface view.
         """
         return self._host.composition if self._host is not None else CompositionProfile.server()
 
     def resolve_execution_runtime(self, runtime_name: str | None = None) -> BaseRuntime:
-        """The runtime services execute on — the bridge seam toward a shared assembler.
-
-        0.50.5c: names the interface a unified ``core_service_registry().build_all``
-        will call, uniformly, from either composition root. Host-attached defers to the
-        host's resolver (routes by name); standalone is the single server runtime. The
-        remaining bridge (0.50.5d) adapts ``runtime.repository``/``runtime.storage`` to
-        the kernel-shape the service providers expect, after which this context's
-        service build collapses into the registry and ``ServerContext`` dissolves.
-        """
+        """Runtime services execute on — host routes by name; standalone is this runtime."""
         if self._host is not None:
             return self._host._resolve_execution_runtime(runtime_name)
         return self._runtime

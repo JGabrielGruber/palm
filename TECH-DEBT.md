@@ -1060,7 +1060,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 |----|--------------------|--------------|--------|
 | [BI-001](#bi-001) | Dual start graphs (host vs runtime) not fully walked | inventory + stubs | ✅ paid 0.59.4 (dual root → BI-003) |
 | [BI-002](#bi-002) | CompositionProfile not sole membership truth | membership | ✅ paid 0.59.5 (surface bulk → BI-010) |
-| [BI-003](#bi-003) | ServerContext vs ApplicationHost second root | dual root | **residual** (exit) |
+| [BI-003](#bi-003) | Product packaging dual path (types retained) | shared packaging | **residual** (growth: registry seats / enrich) |
 | [BI-004](#bi-004) | Plugin ensure order vs plane attach order implicit | system schedule | partial ✅ walked; residual edge cases |
 | [BI-005](#bi-005) | Job hooks assembled ad hoc in BaseRuntime.start | system phase | partial ✅ phase seat; residual body clarity |
 | [BI-006](#bi-006) | Work drain / recover / projections capability OR logic | host schedule + modes | ✅ work_drain OR gone; mode forbid; outbox dual still BI-009-ish |
@@ -1095,7 +1095,10 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 ### BI-003 — Dual composition root
 
 **Observation:** `ServerContext` lean path vs `ApplicationHost` (ADR-019 refined).  
-**Pay:** only if boot schedule makes fold cheap; else residual after 0.59.
+**Law (refined):** dual **types** stay (surface single-runtime view vs multi-runtime host) — scout 0.51.6. Dual **assembly law** is refused: one `core_service_registry` + shared product packaging.  
+**Progress (0.61 residual):** `apply_product_packaging` shared by host `_wire_cqrs` and host-less `ServerContext`; assist↔analytics, dashboards, design CQRS; standalone accepts real `PalmSettings`; parity pins in `tests/test_product_packaging_parity.py`.  
+**Not paid:** packaging as registry/install seats at the edge; workplane session enrich + definition catalog still host coordinator (BI-013 residual); lean-host MCP dogfood chrome.  
+**Do not:** delete `ServerContext` or re-type surfaces onto the host.
 
 ### BI-004 — Plugin ensure vs plane attach
 

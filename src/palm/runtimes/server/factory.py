@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from palm.app.settings import PalmSettings
 from palm.runtimes.server.app import ServerApp, create_server_app
 from palm.runtimes.server.context import ServerContext
 from palm.runtimes.server.surfaces import default_surfaces
@@ -20,12 +21,18 @@ def build_server_context(
     runtime: ServerRuntime,
     *,
     host: ApplicationHost | None = None,
+    settings: PalmSettings | None = None,
 ) -> ServerContext:
-    """Create a server context sharing the runtime plan registry."""
+    """Create a server context sharing the runtime plan registry.
+
+    ``settings`` is used for host-less product build (analytics knobs, session
+    policy). When ``host`` is attached, host settings win via the host surface.
+    """
     return ServerContext(
         runtime,
         host=host,
         plan_registry=runtime.plan_registry,
+        settings=settings,
     )
 
 

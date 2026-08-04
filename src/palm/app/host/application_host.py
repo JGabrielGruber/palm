@@ -64,8 +64,7 @@ from palm.core.storage import StorageEngine
 from palm.patterns.wizard.bindings.cqrs.projection import (
     WizardProgressReadModel,
 )
-from palm.services._cqrs_wiring import wire_all_service_cqrs
-from palm.services.design.contributors import wire_builtin_design_contributors
+from palm.app.host.services.packaging import apply_product_packaging
 from palm.system.boot import HOST_PHASES, BootContext, walk_schedule
 from palm.system.log import get_system_log
 
@@ -810,43 +809,32 @@ class ApplicationHost:
         # Build only the services this app is composed of (+ their transitive deps).
         # Default composition (all_in_one) is full services, so this is behaviour-preserving.
         built = core_service_registry().build_all(service_ctx, only=self.composition.services)
-        self._inspect = built.get("inspect")
-        self._session = built.get("session")
-        self._definitions = built.get("definitions")
-        self._execution = built.get("execution")
-        self._assist = built.get("assist")
-        self._design = built.get("design")
-        self._analytics = built.get("analytics")
-        if self._assist is not None and self._analytics is not None:
-            self._assist.bind_analytics(self._analytics)
-        self._wire_dashboard_store()
+        # Shared product identity (BI-003): assist↔analytics, dashboards, design CQRS.
+        bag = apply_product_packaging(
+            built,
+            command_bus=self._command_bus,
+            query_bus=self._query_bus,
+            repository=self._app.repository(),
+            instance_manager=self._app.instance_manager,
+            storage=self._app.storage,
+        )
+        self._inspect = bag.inspect
+        self._session = bag.session
+        self._definitions = bag.definitions
+        self._execution = bag.execution
+        self._assist = bag.assist
+        self._design = bag.design
+        self._analytics = bag.analytics
+        # Host-only packaging: workplane seats (not product service identity).
         self._workplane.wire_work_drain()
         self._workplane.wire_event_journal()
         self._workplane.wire_inbound()
-        if self._design is not None:
-            wire_builtin_design_contributors()
-        wire_all_service_cqrs(
-            self._command_bus,
-            self._query_bus,
-            repository=self._app.repository(),
-            instance_manager=self._app.instance_manager,
-            design=self._design,
-            execution=self._execution,
-        )
 
     def _attach_projections(self) -> None:
         if not self.composition.has("projections"):
             return
         self._projection_manager.attach(self._event)
         self._projection_manager.attach_runtimes(self._app)
-
-    def _wire_dashboard_store(self) -> None:
-        """0.41 — durable dashboard definitions on host storage."""
-        if not self._app.storage.is_initialized:
-            return
-        from palm.services.analytics.dashboards import attach_dashboard_store
-
-        attach_dashboard_store(self._app.storage)
 
     def reload_work_triggers(self) -> int:
         """Reload definition triggers into the work drain (after design/example load)."""

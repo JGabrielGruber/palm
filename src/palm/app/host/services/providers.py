@@ -8,8 +8,9 @@ Core services and their construction, declared as dependency-ordered
 Construction order encoded by ``depends_on``:
 ``inspect`` → ``session`` → ``definitions`` → ``execution`` →
 ``assist``/``design``/``analytics``.
-The ``assist.bind_analytics(analytics)`` cross-wire stays an explicit host
-post-build step (a mutual link, not a construction dependency).
+The ``assist.bind_analytics(analytics)`` cross-wire is a shared post-build
+packaging step (:func:`~palm.app.host.services.packaging.apply_product_packaging`),
+not a construction dependency — both host and host-less ServerContext call it.
 
 **0.58.12:** product ``session`` is the surface door over the system session plane.
 **0.61.4 / SD-007:** product inspect door is ``inspect`` (was ``system``).

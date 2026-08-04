@@ -56,18 +56,20 @@ def _bootstrap_server_context() -> ServerContext:
     from palm.runtimes.server import ServerRuntime
     from palm.runtimes.server.factory import build_server_context
 
-    if _runtime_holder is not None and _runtime_holder.is_started:
-        return build_server_context(_runtime_holder)
-
     from palm.app.bootstrap import load_definitions_for_repository
     from palm.app.settings import PalmSettings
 
+    # One settings object for definitions load + product packaging (BI-003).
+    settings = PalmSettings()
+    if _runtime_holder is not None and _runtime_holder.is_started:
+        return build_server_context(_runtime_holder, settings=settings)
+
     runtime = ServerRuntime(host="127.0.0.1", port=0)
     runtime.start(http=False)
-    load_definitions_for_repository(runtime.repository, PalmSettings())
+    load_definitions_for_repository(runtime.repository, settings)
     _runtime_holder = runtime
     atexit.register(shutdown_in_process_runtime)
-    return build_server_context(runtime)
+    return build_server_context(runtime, settings=settings)
 
 
 def shutdown_in_process_runtime() -> None:

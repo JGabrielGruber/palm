@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.61.0` (stamp) · **Active theme:** **`0.61` Living-kernel vitality** · **Prior closed:** **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 4, 2026 · **Theme open:** **0.61.0** ✅ · **0.61.1**–**0.61.11** eyes + load/bulk + benchmark tool + Inspect/CLI present (stamps later)  
+**Last Updated:** August 4, 2026 · **Theme open:** **0.61.0** ✅ · **0.61.1**–**0.61.12** eyes + load + benchmark · **BI-003** shared product packaging residual paid (stamps later)  
 **System map:** [docs/PALM.md](docs/PALM.md) · **Theme:** [VISION-0.61](docs/VISION-0.61.md) **open** · **ADR:** [030](docs/adr/030-system-vitality.md) **Proposed** · prior [VISION-0.60](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) Accepted  
 **Migration / release:** prior [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md) · [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **CS-002** ✅ · **OD-001** ✅ · **SD-007** ✅ · residual **BI-*** / **SI-*** / **SU-*** / **SD-016** · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-VITALITY](docs/VISION-VITALITY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -30,6 +30,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.61
 | **System log** | Observation tape live — [SYSTEM-LOG](docs/SYSTEM-LOG.md); catalog residual **BI-015** |
 | **Closed** | **0.60.0–0.60.9 + exit** — BI-013 closed · ADR-029 Accepted · stamp `0.60.9` |
 | **Next** | dogfood CLI · recipe growth as needed · `monitor_agent` later · stamps when José exits |
+| **BI-003** | Floor paid — one product packaging helper; ServerContext type stays; enrich/catalog host residual |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · user-plane · workload remainder · Grove |
 
 ## Quick Overview
@@ -65,7 +66,8 @@ Palm is a lightweight, Python-first orchestration engine built on a clean **Beha
 | **0.61.10** | ✅ `benchmark` tool (recipe · snapshot diff; off by default) — stamp when José exits |
 | **0.61.11** | ✅ Inspect + CLI present for benchmark (`palm benchmark`) — stamp when José exits |
 | **0.61.12** | ✅ human CLI units + deeper recipes (`work_cycle` default · `project_stress`) — stamp when José exits |
-| **0.61.13+** | 📋 dogfood · `monitor_agent` · growth |
+| **0.61.13** | ✅ BI-003 product packaging shared (host + host-less ServerContext) — stamp when José exits |
+| **0.61.14+** | 📋 dogfood · `monitor_agent` · growth |
 
 **Floor (eyes open):** dynamic walk · seat report · projection + registry · inspect top · emission identity · SD-007 · OD-001 · CS-002.  
 **Exit:** **José’s** judgment when eyes are proper — not empty checklist death.  
@@ -113,8 +115,8 @@ Palm is layered and registry-driven. Core stays pure. The **job path** is the sp
 | **0.60.9** | ✅ Lean seats without host |
 | **exit** | ✅ ADR-029 Accepted · BI-013 closed · stamp `0.60.9` |
 
-**Residual after 0.60:** host product enrich/catalog wire · BI-003 product assembly · surface deflation.  
-**Paid residual:** host `WorkDrainService` fallback removed — one start plane (`runtime.work_plane`); host packaging only.
+**Residual after 0.60:** host product enrich/catalog wire · surface deflation · BI-003 growth (packaging as seats).  
+**Paid residual:** host `WorkDrainService` fallback removed — one start plane; **BI-003 floor** — shared `apply_product_packaging` (types retained, dual assembly refused).
 
 ---
 
