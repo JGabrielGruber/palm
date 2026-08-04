@@ -4,10 +4,16 @@ Orchestration engine — job lifecycle and execution coordination.
 Delegates execution to a :class:`~palm.core.orchestration.mode.base_mode.OrchestrationMode`
 (job scheduler) and optional :class:`~palm.core.event.EventEngine` /
 :class:`~palm.core.context.ContextEngine` for observability and scoped state.
+
+Membership (``_jobs``) is protected by an ``RLock``. Drive slices are exclusive
+per job (``begin_drive`` / ``end_drive``) so multi-worker QueuedScheduler and
+concurrent callers cannot double-drive the same job. Lifecycle transitions still
+go only through :meth:`apply_result`.
 """
 
 from __future__ import annotations
 
+import threading
 import uuid
 from typing import TYPE_CHECKING, Any
 
@@ -39,6 +45,12 @@ class OrchestrationEngine(BasePalmEngine):
 
     Call :meth:`initialize` with an :class:`~palm.core.orchestration.mode.base_mode.OrchestrationMode`
     before submitting work (e.g. a runtime-specific mode or a test double).
+
+    Concurrency law (0.62 growth):
+
+    - Job map membership is thread-safe (``RLock``).
+    - At most one drive owner per job at a time (``begin_drive`` / ``end_drive``).
+    - Modes may run **N** workers; each job slice is still serial.
     """
 
     def __init__(self) -> None:
@@ -47,7 +59,10 @@ class OrchestrationEngine(BasePalmEngine):
         self._event_engine: EventEngine | None = None
         self._context_engine: ContextEngine | None = None
         self._hooks: list[JobHook] = []
+        self._lock = threading.RLock()
         self._jobs: dict[str, Job] = {}
+        # job_id → driver token (thread name or explicit id) while a slice runs
+        self._driving: dict[str, str] = {}
         self._running = False
         self.max_concurrent_jobs = 128
 
@@ -70,7 +85,13 @@ class OrchestrationEngine(BasePalmEngine):
 
     @property
     def jobs(self) -> dict[str, Job]:
-        return dict(self._jobs)
+        with self._lock:
+            return dict(self._jobs)
+
+    def driving_job_ids(self) -> frozenset[str]:
+        """Return job ids currently held by a drive slice (observability)."""
+        with self._lock:
+            return frozenset(self._driving)
 
     def start(self) -> None:
         if self._running:
@@ -86,7 +107,9 @@ class OrchestrationEngine(BasePalmEngine):
 
         self._mode.shutdown(timeout=timeout)
 
-        for job in list(self._jobs.values()):
+        with self._lock:
+            live = list(self._jobs.values())
+        for job in live:
             # Waiting jobs are parked for input — not cancelled on shutdown.
             if job.status == JobStatus.RUNNING:
                 try:
@@ -101,9 +124,11 @@ class OrchestrationEngine(BasePalmEngine):
 
         self._mode.on_engine_shutdown(self)
         self._running = False
+        with self._lock:
+            remaining = len(self._jobs)
         self._emit(
             OrchestrationEventType.ENGINE_SHUTDOWN,
-            {"jobs_remaining": len(self._jobs)},
+            {"jobs_remaining": remaining},
         )
 
     def is_running(self) -> bool:
@@ -120,13 +145,7 @@ class OrchestrationEngine(BasePalmEngine):
         if not self.is_running():
             self.start()
 
-        if len(self._jobs) >= self.max_concurrent_jobs:
-            raise OrchestratorError(f"Maximum concurrent jobs ({self.max_concurrent_jobs}) reached")
-
         jid = job_id or f"job-{uuid.uuid4().hex[:12]}"
-        if jid in self._jobs:
-            raise OrchestratorError(f"Job id already exists: {jid}")
-
         job_state = state if state is not None else JobState()
         job = Job(
             id=jid,
@@ -134,7 +153,15 @@ class OrchestrationEngine(BasePalmEngine):
             state=job_state,
             metadata=dict(metadata or {}),
         )
-        self._jobs[jid] = job
+
+        with self._lock:
+            if len(self._jobs) >= self.max_concurrent_jobs:
+                raise OrchestratorError(
+                    f"Maximum concurrent jobs ({self.max_concurrent_jobs}) reached"
+                )
+            if jid in self._jobs:
+                raise OrchestratorError(f"Job id already exists: {jid}")
+            self._jobs[jid] = job
 
         self._bind_job_context(job)
         self._emit(
@@ -149,12 +176,14 @@ class OrchestrationEngine(BasePalmEngine):
         return job
 
     def get_job(self, job_id: str) -> Job:
-        if job_id not in self._jobs:
-            raise JobNotFoundError(job_id)
-        return self._jobs[job_id]
+        with self._lock:
+            if job_id not in self._jobs:
+                raise JobNotFoundError(job_id)
+            return self._jobs[job_id]
 
     def list_jobs(self, status: JobStatus | None = None) -> list[Job]:
-        jobs = list(self._jobs.values())
+        with self._lock:
+            jobs = list(self._jobs.values())
         if status is not None:
             jobs = [job for job in jobs if job.status == status]
         return jobs
@@ -232,23 +261,58 @@ class OrchestrationEngine(BasePalmEngine):
         """Build an :class:`~palm.core.orchestration.execution_context.ExecutionContext` for a job."""
         return ExecutionContext(job=job)
 
+    def begin_drive(self, job: Job, *, driver_id: str | None = None) -> bool:
+        """
+        Claim exclusive ownership of one drive slice for ``job``.
+
+        Returns ``False`` if the job is terminal, unknown, or already being driven.
+        Pair every successful claim with :meth:`end_drive` (``drive_job`` does this).
+        """
+        token = driver_id or threading.current_thread().name
+        with self._lock:
+            registered = self._jobs.get(job.id)
+            if registered is None:
+                return False
+            if registered.is_terminal:
+                return False
+            if job.id in self._driving:
+                return False
+            self._driving[job.id] = token
+            return True
+
+    def end_drive(self, job: Job) -> None:
+        """Release the drive slice claim for ``job`` (idempotent)."""
+        with self._lock:
+            self._driving.pop(job.id, None)
+
+    def is_driving(self, job_id: str) -> bool:
+        """Return whether ``job_id`` currently has an active drive owner."""
+        with self._lock:
+            return job_id in self._driving
+
     def apply_result(self, job: Job, result: RunResult) -> None:
         """
         Apply a runner outcome — the single authority for job lifecycle transitions.
 
         Schedulers and runners must not mutate ``job.status`` directly; they produce
         a :class:`~palm.core.orchestration.run_result.RunResult` and delegate here.
-        """
-        if job.is_terminal and result.status != job.status:
-            return
 
-        if result.status != job.status:
-            job._transition_to(result.status, result=result.result, error=result.error)
-        else:
-            if result.result is not None:
-                job.result = result.result
-            if result.error is not None:
-                job.error = result.error
+        Status mutation is under the engine lock so concurrent cancel/drive see a
+        consistent lifecycle. Publish/hooks run outside the lock.
+        """
+        with self._lock:
+            if job.is_terminal and result.status != job.status:
+                return
+
+            if result.status != job.status:
+                job._transition_to(
+                    result.status, result=result.result, error=result.error
+                )
+            else:
+                if result.result is not None:
+                    job.result = result.result
+                if result.error is not None:
+                    job.error = result.error
 
         self._publish_job_status(job)
         self._notify_job_status_changed(job, result)
@@ -410,4 +474,6 @@ class OrchestrationEngine(BasePalmEngine):
 
     def _do_shutdown(self) -> None:
         self.stop()
-        self._jobs.clear()
+        with self._lock:
+            self._jobs.clear()
+            self._driving.clear()

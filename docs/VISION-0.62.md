@@ -62,7 +62,7 @@ This theme is **not** “threads use all host cores.”
 1. **Work plane + supervisor** are live ([VISION-0.60](VISION-0.60.md)). Start law has a home.  
 2. **Host dual drain** is gone — multi-claimer attaches to **one** owner only.  
 3. **Vitality + benchmarks** exist ([VISION-0.61](VISION-0.61.md)) — eyes can prove 1 vs K.  
-4. **Code is single-claimer by construction** — `claim_due` is read→set; one `palm-work-plane` thread; QueuedScheduler N=1; orchestration concurrency unproven.  
+4. **Code was single-claimer by construction** — exclusive claim + multi-claimer drain + (0.62.7) exclusive job drive + Queued pool close the in-process capacity spine.  
 5. Further growth without exclusive claim ships dual-claim corruption as architecture.
 
 **Thesis:** Capacity starts with **safe claim**, then **N workers**, not with pool size theater.
@@ -190,17 +190,24 @@ Later multi-process: same fields; CAS on backend ([SD-019](../TECH-DEBT.md#sd-01
 Default **`work_drain_workers=1`**.  
 Settings/composition resolve knobs without triple-override chaos ([BI-009](../TECH-DEBT.md#bi-009)).
 
-### 6.3 Drive path (growth honesty)
+### 6.3 Drive path (growth — **0.62.7 paid**)
 
-Floor does **not** require parallel job drive. Floor requires **safe claim**.
+Floor required **safe claim** only. Growth paid concurrent **job drive** without rewriting orchestration law:
 
-| Path | Today | Implication |
-|------|-------|-------------|
-| InlineScheduler | Drive on caller | Concurrent ticks → concurrent submit risk |
-| QueuedScheduler | One job-drive worker | Claim parallel ≠ job parallel |
-| Orchestration map | Unlocked | Prove or lock before “parallel jobs” claims |
+| Path | Law |
+|------|-----|
+| Orchestration map | `RLock` membership |
+| Drive slice | `begin_drive` / `end_drive` — one owner per job |
+| `drive_job` | Acquires exclusive drive; drop duplicate queue items |
+| QueuedScheduler | Worker **pool** (`workers=N`, default **1**) |
+| Settings | `queued_workers` / `PALM_QUEUED_WORKERS` |
 
-Exit growth either pays concurrent drive **or names** residual: claim pool scale ≠ job-drive cores.
+| Path | Behavior |
+|------|----------|
+| InlineScheduler | Drive on caller; exclusive drive still holds if multi-threaded |
+| QueuedScheduler N | Up to N **different** jobs drive at once; serial **per job** |
+
+Honesty: claim pool + drive pool improve **overlap** under I/O/wait. They are **not** “all host cores for Python patterns” — workloads / processes remain the CPU home.
 
 ### 6.4 Benchmarks (dogfood)
 

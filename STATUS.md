@@ -23,7 +23,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next** | José exit judgment when capacity feels proper · residual concurrent job-drive / SD-019 |
+| **Next** | José exit judgment when capacity feels proper · residual **SD-019** (multi-process CAS) |
 | **Later seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · residual BI · `monitor_agent` · user-plane · workload remainder · Grove |
 
 ## 0.62 — Multi-claimer work drain (**open** · plan `0.62.0`)
@@ -41,13 +41,14 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → open [VISION-0.62
 | **0.62.2** | ✅ reclaim / visibility timeout |
 | **0.62.3** | ✅ plane tick claimer identity + reclaim on poll · status heat |
 | **0.62.4** | ✅ N drain workers (default 1) · `work_drain_workers` / lease settings |
-| **0.62.5** | ✅ drive-path honesty **named** (claim ≠ job cores; QueuedScheduler N=1 residual) |
+| **0.62.5** | ✅ drive-path honesty **named** (claim ≠ host cores / GIL) |
 | **0.62.6** | ✅ benchmark `work_cycle` multi-claimer (`workers=K`) |
-| **0.62.7+** | docs polish / knobs / José exit |
+| **0.62.7** | ✅ orchestration lock + exclusive drive + QueuedScheduler pool (`queued_workers`) |
+| **0.62.8+** | polish / José exit |
 | **exit** | José · ADR Accepted · residual named |
 
 **Hard rule:** Do not ship `workers>1` as done before exclusive claim + reclaim.  
-**Progress:** **SD-017** ✅ · **SD-018** partial (N workers + honesty + bench; concurrent job-drive residual) · **SD-019** residual.
+**Progress:** **SD-017** ✅ · **SD-018** ✅ (drain N + drive pool + exclusive drive) · **SD-019** residual.
 
 ## Quick Overview
 

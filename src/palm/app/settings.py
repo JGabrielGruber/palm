@@ -37,6 +37,8 @@ class PalmSettings(BaseSettings):
     auth_roles: list[str] = Field(default_factory=lambda: ["user"])
     load_example_definitions: bool = True
     default_scheduler: SchedulerPolicy = "inline"
+    # 0.62 — QueuedScheduler drive pool (default 1; needs exclusive drive)
+    queued_workers: int = 1
     max_concurrent_jobs: int | None = None
     enable_state_snapshot: bool = False
     snapshot_on_status: list[str] = Field(

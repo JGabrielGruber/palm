@@ -59,11 +59,17 @@ Related knobs:
 | `PALM_WORK_DRAIN_MAX_DEPTH` | `8` | Drop intents beyond depth (storm guard) |
 | `PALM_WORK_DRAIN_WORKERS` | `1` | Continuous claimers (0.62; exclusive claim required) |
 | `PALM_WORK_DRAIN_LEASE_SECONDS` | `60` | Claim visibility timeout before reclaim |
+| `PALM_QUEUED_WORKERS` | `1` | QueuedScheduler job-drive pool (0.62.7; exclusive drive per job) |
 
 **0.62 exclusive claim:** each due intent is leased to one claimer (`claimed_by` / `lease_until`).  
-Expired leases return to pending. Default remains one background worker.  
+Expired leases return to pending. Default remains one background claimer.  
+
+**0.62.7 job drive:** daemon/server surfaces use `QueuedScheduler`. Raise `PALM_QUEUED_WORKERS` for concurrent drive of **different** jobs (one owner per job). Independent of `PALM_WORK_DRAIN_WORKERS`.  
+
 Multi-process shared store is **not** supported yet (one continuous drain owner per store).  
-Capacity theme: [VISION-0.62](VISION-0.62.md).
+Capacity theme: [VISION-0.62](VISION-0.62.md).  
+
+Honesty: claim + drive pools improve **overlap** under I/O/wait — not all host cores for Python patterns.
 
 ## Explicit drain (embedded / tests)
 

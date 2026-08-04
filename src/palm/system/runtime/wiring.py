@@ -48,7 +48,12 @@ def resolve_scheduler(
 
     runner = resolve_runner(options)
     if policy == "queued":
-        return QueuedScheduler(runner=runner)
+        workers = options.get("queued_workers", 1)
+        try:
+            n = max(1, int(workers or 1))
+        except (TypeError, ValueError):
+            n = 1
+        return QueuedScheduler(runner=runner, workers=n)
     return InlineScheduler(runner=runner)
 
 

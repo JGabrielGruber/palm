@@ -218,6 +218,7 @@ def runtime_start_options(settings: PalmSettings, **overrides: Any) -> dict[str,
         "auth_roles": list(settings.auth_roles),
         "scheduler": settings.default_scheduler,
         "enable_event_outbox": settings.enable_event_outbox,
+        "queued_workers": max(1, int(settings.queued_workers or 1)),
     }
     if settings.max_concurrent_jobs is not None:
         options["max_concurrent_jobs"] = settings.max_concurrent_jobs

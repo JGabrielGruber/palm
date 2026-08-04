@@ -1,8 +1,12 @@
 """
-QueuedScheduler — background-thread job scheduling via a work queue.
+QueuedScheduler — background job scheduling via a work queue.
 
-Runs jobs asynchronously in a dedicated worker thread while preserving the
+Runs jobs asynchronously on one or more worker threads while preserving the
 canonical drive loop: ``JobRunner.run`` → ``RunResult`` → ``apply_result``.
+
+Default ``workers=1`` matches the historical single-thread daemon. Raise
+``workers`` (or ``PALM_QUEUED_WORKERS``) for concurrent *job* drive under
+exclusive per-job ownership on :class:`~palm.core.orchestration.engine.OrchestrationEngine`.
 """
 
 from __future__ import annotations
@@ -34,11 +38,16 @@ class _WorkItem:
 
 class QueuedScheduler(OrchestrationMode):
     """
-    Enqueue submitted and resumed jobs for a background worker to drive.
+    Enqueue submitted and resumed jobs for background worker(s) to drive.
 
     Suitable for daemon and long-lived runtimes where callers should not block
     on pattern execution. For synchronous in-process use, prefer
     :class:`~palm.system.runtime.schedulers.inline.InlineScheduler`.
+
+    **Concurrency:** ``workers`` controls how many drive slices may run at once
+    across *different* jobs. The engine still enforces one drive owner per job.
+    This is I/O/wait overlap and start/drive capacity — not “all host cores for
+    Python patterns.”
     """
 
     def __init__(
@@ -46,6 +55,7 @@ class QueuedScheduler(OrchestrationMode):
         *,
         runner: JobRunner,
         budget: int = 10_000,
+        workers: int = 1,
         name: str = "QueuedScheduler",
     ) -> None:
         if runner is None:
@@ -53,8 +63,9 @@ class QueuedScheduler(OrchestrationMode):
         super().__init__(name=name)
         self._runner = runner
         self._budget = budget
+        self._workers = max(1, int(workers))
         self._queue: queue.Queue[_WorkItem | object] = queue.Queue()
-        self._thread: threading.Thread | None = None
+        self._threads: list[threading.Thread] = []
         self._stop = threading.Event()
         self._running = False
 
@@ -62,27 +73,44 @@ class QueuedScheduler(OrchestrationMode):
     def runner(self) -> JobRunner:
         return self._runner
 
+    @property
+    def workers(self) -> int:
+        """Configured drive worker count (at least 1)."""
+        return self._workers
+
+    @property
+    def workers_alive(self) -> int:
+        """How many worker threads are still alive."""
+        return sum(1 for t in self._threads if t.is_alive())
+
     def start(self) -> None:
         if self._running:
             return
         self._stop.clear()
-        self._thread = threading.Thread(
-            target=self._worker,
-            name=self.name,
-            daemon=True,
-        )
-        self._thread.start()
+        self._threads = []
+        for i in range(self._workers):
+            thread = threading.Thread(
+                target=self._worker,
+                name=f"{self.name}-{i}",
+                daemon=True,
+            )
+            thread.start()
+            self._threads.append(thread)
         self._running = True
 
     def shutdown(self, *, timeout: float = 5.0) -> None:
         if not self._running:
             return
         self._stop.set()
-        self._queue.put(_SENTINEL)
-        thread = self._thread
-        if thread is not None and thread.is_alive():
-            thread.join(timeout=timeout)
-        self._thread = None
+        # One sentinel per worker so each loop can exit
+        for _ in range(self._workers):
+            self._queue.put(_SENTINEL)
+        deadline = time.monotonic() + timeout
+        for thread in self._threads:
+            remaining = max(0.0, deadline - time.monotonic())
+            if thread.is_alive():
+                thread.join(timeout=remaining)
+        self._threads = []
         self._running = False
 
     def is_running(self) -> bool:
@@ -115,6 +143,7 @@ class QueuedScheduler(OrchestrationMode):
         self._queue.put(_WorkItem(engine=engine, job=job, budget=self._budget))
 
     def _worker(self) -> None:
+        driver_id = threading.current_thread().name
         while not self._stop.is_set():
             try:
                 item = self._queue.get(timeout=0.1)
@@ -132,6 +161,12 @@ class QueuedScheduler(OrchestrationMode):
             work = item
             try:
                 if not work.job.is_terminal:
-                    drive_job(work.engine, self._runner, work.job, budget=work.budget)
+                    drive_job(
+                        work.engine,
+                        self._runner,
+                        work.job,
+                        budget=work.budget,
+                        driver_id=driver_id,
+                    )
             finally:
                 self._queue.task_done()

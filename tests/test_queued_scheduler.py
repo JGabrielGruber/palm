@@ -24,7 +24,7 @@ def _two_step_config() -> WizardConfig:
 
 @pytest.fixture
 def queued_engine() -> OrchestrationEngine:
-    scheduler = QueuedScheduler(runner=TestRunner())
+    scheduler = QueuedScheduler(runner=TestRunner(), workers=1)
     events = EventEngine()
     context = ContextEngine()
     events.initialize()
@@ -46,12 +46,39 @@ def queued_engine() -> OrchestrationEngine:
 def test_queued_scheduler_drives_job_in_background(queued_engine: OrchestrationEngine) -> None:
     scheduler = queued_engine.scheduler
     assert isinstance(scheduler, QueuedScheduler)
+    assert scheduler.workers == 1
 
     job = queued_engine.submit({"steps": 1, "final_status": "SUCCEEDED", "result": "ok"})
     assert job.status == JobStatus.PENDING
     assert scheduler.wait_until_idle()
     assert job.status == JobStatus.SUCCEEDED
     assert job.result == "ok"
+
+
+def test_queued_scheduler_multi_worker_idle() -> None:
+    scheduler = QueuedScheduler(runner=TestRunner(), workers=3)
+    events = EventEngine()
+    context = ContextEngine()
+    events.initialize()
+    context.initialize()
+    engine = OrchestrationEngine()
+    engine.initialize(
+        scheduler=scheduler,
+        event_engine=events,
+        context_engine=context,
+    )
+    engine.start()
+    jobs = [
+        engine.submit({"steps": 1, "final_status": "SUCCEEDED", "result": i})
+        for i in range(6)
+    ]
+    assert scheduler.wait_until_idle(timeout=10.0)
+    assert all(j.status == JobStatus.SUCCEEDED for j in jobs)
+    assert scheduler.workers == 3
+    engine.stop()
+    scheduler.shutdown()
+    context.shutdown()
+    events.shutdown()
 
 
 def test_queued_scheduler_wizard_flow() -> None:

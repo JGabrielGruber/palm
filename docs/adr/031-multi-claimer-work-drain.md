@@ -90,18 +90,24 @@ Do not open-code a closed menu of peers in boot schedule prose ([CS-006](../../T
 Do **not** implement `BaseBackend` CAS in this theme unless José expands scope.  
 Shape claim fields so later CAS is a plug-in, not a rewrite.
 
-### D7 — Drive path honesty
+### D7 — Drive path (growth after claim floor)
 
 Floor does **not** require parallel job drive. Floor requires **safe claim**.
 
-Exit growth either:
+Growth (0.62.7) pays concurrent **job drive** without rewriting orchestration:
 
-1. Proves concurrent `submit_flow` / orchestration safety, or  
-2. **Names** residual: claim pool scale ≠ job-drive cores (QueuedScheduler N=1, unlocked map, …).
+| Law | Shape |
+|-----|--------|
+| Membership | `OrchestrationEngine` `RLock` on `_jobs` |
+| Exclusive drive | `begin_drive` / `end_drive` — one owner per job |
+| Drive entry | `drive_job` acquires; duplicate queue items no-op |
+| Queued pool | `QueuedScheduler(workers=N)` · `queued_workers` / `PALM_QUEUED_WORKERS` (default **1**) |
+
+Serial **per job**; parallel **across jobs**. Claim pool and drive pool are independent knobs.
 
 ### D8 — Honest capacity (GIL)
 
-In-process multi-claimer improves **start-queue throughput** under I/O-bound and wait-heavy work.  
+In-process multi-claimer + Queued **N** improve **start-queue and job-drive overlap** under I/O-bound and wait-heavy work.  
 It is **not** a product promise that one Python process uses all host CPU cores.  
 Heavy CPU stays in **workloads / processes / peer Palms**.
 
@@ -129,7 +135,7 @@ When exclusive claim + reclaim hold, workers (if shipped) are safe where claimed
 
 - Core `WorkIntent` schema grows claim fields.  
 - Store paths need lock discipline and reclaim tests.  
-- Drive-path concurrency may remain residual at exit.  
+- Drive exclusivity + pool add concurrency discipline (hooks/re-entrancy still product care).  
 - Two processes on one store remain unsupported until SD-019.
 
 ### Risks if ignored
@@ -156,4 +162,7 @@ When exclusive claim + reclaim hold, workers (if shipped) are safe where claimed
 
 - **0.62.0** — plan + this ADR **Proposed**.  
 - Execution starts **0.62.1** (exclusive claim).  
-- Accept at theme exit when José judges capacity proper.
+- **0.62.1–0.62.3** — exclusive claim + reclaim (SD-017 ✅).  
+- **0.62.4–0.62.6** — N drain workers + honesty + bench.  
+- **0.62.7** — orchestration exclusive drive + Queued pool (SD-018 ✅).  
+- Accept at theme exit when José judges capacity proper. Residual: **SD-019**.

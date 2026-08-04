@@ -181,7 +181,7 @@ Core has **no** imports from other Palm packages.
 | Engine / area | Purpose |
 |---------------|---------|
 | **BehaviorTreeEngine** | Run BT nodes and patterns |
-| **OrchestrationEngine** | Job lifecycle, drive, hooks, results |
+| **OrchestrationEngine** | Job lifecycle, drive, hooks, results · membership `RLock` · exclusive drive per job (0.62) |
 | **ContextEngine** | Scopes and state wiring |
 | **StorageEngine** | Persistence backend coordination |
 | **ResourceEngine** | Invoke providers (speak) |

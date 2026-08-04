@@ -1,6 +1,6 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.62 Multi-claimer work drain open** at **`0.62.0`** (plan) — pay **[SD-017](#sd-017)** · **[SD-018](#sd-018)** · residual **[SD-019](#sd-019)**. [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed**. Theme **0.61 Living-kernel vitality closed** at **`0.61.13`** — **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅ · residual **[BI-015](#bi-015)** · **[SD-016](#sd-016)**. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.62 Multi-claimer work drain open** at **`0.62.0`** (plan) — **[SD-017](#sd-017)** ✅ · **[SD-018](#sd-018)** ✅ · residual **[SD-019](#sd-019)**. [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed**. Theme **0.61 Living-kernel vitality closed** at **`0.61.13`** — **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅ · residual **[BI-015](#bi-015)** · **[SD-016](#sd-016)**. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
 **Theme (open capacity):** [docs/VISION-0.62.md](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Proposed**  
@@ -53,7 +53,7 @@
 | [SD-015](#sd-015) | SystemPlanes open-codes wait/session/work install | S2 | M | **0.61** boy-scout | ✅ paid (definitions at edge) |
 | [SD-016](#sd-016) | Ambient system-instance DI (seat DI incomplete) | S2 | L | **0.61**+ | open (boot engine seats + ensure_on; host residual) |
 | [SD-017](#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.3** | ✅ paid (exclusive claim + reclaim + plane claimer) |
-| [SD-018](#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.5** | partial (N workers ✅; drive residual) |
+| [SD-018](#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.7** | ✅ drain N + Queued pool + exclusive drive |
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
 
 ### Surface debt (SU)
@@ -325,20 +325,20 @@ In-process atomicity: store lock (or single-writer mutex). Same API at `workers=
 
 **Severity:** S2 · **Effort:** M · **Theme:** **0.62** growth
 
-**Observation:** Continuous drain is one daemon thread (`palm-work-plane`): claim batch then serial `submit_flow`.  
-QueuedScheduler is one job-drive worker. Orchestration job map concurrency is unproven.  
-Architecture (supervisor + work plane) fits multi-claimer; code does not.
+**Observation:** Continuous drain was one daemon thread (`palm-work-plane`): claim batch then serial `submit_flow`.  
+QueuedScheduler was one job-drive worker; orchestration job map concurrency was unproven.
 
 **Pay growth:** N drain workers (default **1**) under plane/supervisor; exclusive store only.  
-Drive-path concurrent submit: **prove or name residual** (claim pool ≠ job-drive cores).
+Drive-path concurrent job drive: membership lock + exclusive drive + QueuedScheduler pool.
 
 **Progress (0.62.4):** `work_drain_workers` (default 1) · plane starts N poll threads with distinct claimer ids · settings + install options · multi-worker background test.  
-**Progress (0.62.5 residual named):** claim pool scale ≠ job-drive cores. Concurrent claimers may call `submit_flow` in parallel; InlineScheduler drives on caller; QueuedScheduler remains one job worker; orchestration `_jobs` map concurrency is **unproven**. Product truth: multi-claimer improves **start-queue throughput** under I/O/wait, not host-core job parallelism. Full concurrent job drive is later residual (or Grove/workloads).  
-**Progress (0.62.6):** `run_benchmark(..., workers=K)` multi-claimer `work_cycle` proof.
+**Progress (0.62.5 residual named):** claim pool scale ≠ host-core job parallelism (GIL / patterns).  
+**Progress (0.62.6):** `run_benchmark(..., workers=K)` multi-claimer `work_cycle` proof.  
+**Progress (0.62.7):** orchestration `RLock` membership · `begin_drive` / `end_drive` exclusive per job · `drive_job` acquires · `QueuedScheduler(workers=N)` pool · settings `queued_workers` / `PALM_QUEUED_WORKERS` · concurrent submit + multi-worker drive tests. Product truth: multi-claimer improves **start-queue** throughput; Queued **N** improves **job-drive overlap** under I/O/wait — still not “all host cores for Python patterns” (workloads / processes).
 
-**Related:** [SD-017](#sd-017) · supervisor continuous defs · vitality `work_cycle` 1 vs K.
+**Related:** [SD-017](#sd-017) · supervisor continuous defs · vitality `work_cycle` 1 vs K · residual [SD-019](#sd-019).
 
-**Status:** partial (N workers + honesty + benchmark; concurrent job-drive unpaid).
+**Status:** ✅ **paid** (drain N + drive pool + exclusive drive; GIL/host-core honesty remains product law).
 
 ---
 

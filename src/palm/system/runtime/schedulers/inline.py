@@ -58,4 +58,5 @@ class InlineScheduler(OrchestrationMode):
             self._drive(engine, job)
 
     def _drive(self, engine: OrchestrationEngine, job: Job) -> None:
+        # Exclusive drive on the engine; False means another owner already drives.
         drive_job(engine, self._runner, job, budget=self._budget)

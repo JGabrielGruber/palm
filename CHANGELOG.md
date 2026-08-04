@@ -32,6 +32,14 @@ Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-clai
 - Drive residual named: claim pool ≠ job-drive cores (QueuedScheduler N=1 unproven parallel jobs)  
 - `run_benchmark(..., workers=K)` multi-claimer `work_cycle` · wall_ms in recipe_meta
 
+#### Concurrent job drive (0.62.7)
+- **OrchestrationEngine** — `RLock` on job membership; `begin_drive` / `end_drive` exclusive drive per job; `apply_result` status under lock  
+- **`drive_job`** — acquires exclusive drive; returns `False` on conflict (safe double-queue drop)  
+- **QueuedScheduler** — worker **pool** (`workers=N`, default **1**); one sentinel per worker on shutdown  
+- Settings: `queued_workers` / `PALM_QUEUED_WORKERS` · `resolve_scheduler` wires pool  
+- Tests: concurrent submit, exclusive drive, multi-worker overlap (**SD-018** ✅)  
+- Honesty: drive pool = job **overlap** under I/O/wait — not host-core pattern parallelism
+
 ## [0.61.13] — 2026-08-04
 
 ### 0.61 — Living-kernel vitality (**theme closed**)
