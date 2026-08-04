@@ -1,9 +1,9 @@
 # Palm — Technical debt (live)
 
-**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality open** — eyes **0.61.1–0.61.7** landed (stamps when José exits slices); plane hub half-moves named **[SD-015](#sd-015)** · **[CS-006](#cs-006)** · **[CS-007](#cs-007)**. Theme debt **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
+**Status:** Live register from **0.57.1**. Theme **0.61 Living-kernel vitality closed** at **`0.61.13`** — **[CS-002](#cs-002)** ✅ · **[OD-001](#od-001)** ✅ · **[SD-007](#sd-007)** ✅ · residual **[BI-015](#bi-015)** · **[SD-016](#sd-016)**. [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**. Theme **0.60** closed **0.60.9** — **[BI-013](#bi-013)** ✅. Theme **0.59** closed **0.59.8** — **[SD-014](#sd-014)** ✅ · residual **[BI-*](#bi-boot-impact-inventory)**. Theme **0.58** closed **0.58.20**. Theme **0.57** closed **0.57.14**. Surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md). Vitality seed [VISION-VITALITY](docs/VISION-VITALITY.md).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [docs/PALM.md](docs/PALM.md) · **Low-level plan:** [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md)  
-**Theme (open vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Proposed**  
+**Theme (closed vitality):** [docs/VISION-0.61.md](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted** · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
 **Theme (closed supervisor):** [docs/VISION-0.60.md](docs/VISION-0.60.md) · [ADR-029](docs/adr/029-system-supervisor.md) **Accepted** · [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)  
 **Theme (closed boot):** [docs/VISION-0.59.md](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) **Accepted** · [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)  
 **Theme (closed):** [docs/VISION-0.58.md](docs/VISION-0.58.md) · [ADR-027](docs/adr/027-session-plane.md) **Accepted** · [docs/VISION-0.57.md](docs/VISION-0.57.md) · [ADR-026](docs/adr/026-palm-system-layer.md) **Accepted**
@@ -1082,7 +1082,7 @@ on session record only ([VISION-0.58 §4.3–4.4](docs/VISION-0.58.md), ADR-027 
 **Progress (0.59.3):** System schedule fully walked; boot owns handlers; runtime package init cleaned.  
 **Progress (0.59.4):** Host schedule fully walked; host boot owns handlers; ApplicationHost thin handoff.  
 **Progress (0.59.5):** Membership truth — composition sole gate; deployment feeds resolver only.  
-**Pay residual:** dual root (BI-003).
+**Pay residual:** BI-003 growth only (packaging seats / enrich); floor paid at 0.61.13.
 
 ### BI-002 — Composition membership truth
 

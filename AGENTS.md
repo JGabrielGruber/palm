@@ -16,7 +16,7 @@ For AI coding agents and human developers who change code.
 | **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) (SD/SU/ST/CS) · [docs/STUBS.md](docs/STUBS.md) intentions · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md) |
 | How to write docs | [docs/WRITING.md](docs/WRITING.md) (ASD-STE100 · VISION floor/growth) |
 | Version + **theme discipline** | [docs/VERSIONING.md](docs/VERSIONING.md) — floor · growth · exit; **José** decides; ambition over empty process |
-| Project status / themes | [STATUS.md](STATUS.md) · [docs/VISION-0.61.md](docs/VISION-0.61.md) (**open** vitality) · [docs/VISION-0.60.md](docs/VISION-0.60.md) (**closed** supervisor + work plane) · [docs/VISION-0.59.md](docs/VISION-0.59.md) (**closed** boot) · [docs/VISION-0.58.md](docs/VISION-0.58.md) (**closed** session) · [docs/VISION-SURFACE-DEFLATION.md](docs/VISION-SURFACE-DEFLATION.md) (queue) · [docs/VISION-VITALITY.md](docs/VISION-VITALITY.md) (seed essay) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed** system) |
+| Project status / themes | [STATUS.md](STATUS.md) · [docs/VISION-0.61.md](docs/VISION-0.61.md) (**closed** vitality) · [docs/VISION-0.60.md](docs/VISION-0.60.md) (**closed** supervisor + work plane) · [docs/VISION-0.59.md](docs/VISION-0.59.md) (**closed** boot) · [docs/VISION-0.58.md](docs/VISION-0.58.md) (**closed** session) · [docs/VISION-SURFACE-DEFLATION.md](docs/VISION-SURFACE-DEFLATION.md) (queue) · [docs/VISION-VITALITY.md](docs/VISION-VITALITY.md) (seed essay) · [docs/VISION-0.57.md](docs/VISION-0.57.md) (**closed** system) |
 | Multi-Palm horizon | [docs/VISION-GROVE.md](docs/VISION-GROVE.md) |
 | MCP operate | [docs/MCP.md](docs/MCP.md) · skill [docs/skills/palm/SKILL.md](docs/skills/palm/SKILL.md) |
 
@@ -24,7 +24,7 @@ For AI coding agents and human developers who change code.
 **Do not** paste a second full architecture into this file.  
 When structure changes, update **PALM.md** (and ADR if needed). Keep this file as **rules for agents**.
 
-**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **open** · [ADR-030](docs/adr/030-system-vitality.md) Proposed · stamp `0.61.0` · **registry extension / OCP** §1.1 · **seat DI** §1.2 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **SD-016** · **CS-002** ✅ · **OD-001** ✅ · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
+**Last updated:** August 2026 · map [PALM.md](docs/PALM.md) · theme [VISION-0.61](docs/VISION-0.61.md) **closed** · [ADR-030](docs/adr/030-system-vitality.md) Accepted · stamp `0.61.13` · **registry extension / OCP** §1.1 · **seat DI** §1.2 · theme law [VERSIONING.md](docs/VERSIONING.md) · residual **BI-*** / **SD-016** / **BI-015** · **CS-002** ✅ · **OD-001** ✅ · **SD-007** ✅ · queue [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)
 
 ---
 

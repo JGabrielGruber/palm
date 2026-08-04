@@ -1,11 +1,13 @@
 # ADR-030 — System vitality (living-kernel observation)
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-08-03  
-**Theme:** [VISION-0.61](../VISION-0.61.md) (**open** at `0.61.0`)  
+**Accepted:** 2026-08-04 (theme exit `0.61.13`)  
+**Theme:** [VISION-0.61](../VISION-0.61.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Seed:** [VISION-VITALITY](../VISION-VITALITY.md)  
-**Debt:** [SD-007](../../TECH-DEBT.md#sd-007) · [CS-002](../../TECH-DEBT.md#cs-002) · [OD-001](../../TECH-DEBT.md#od-001) · [BI-015](../../TECH-DEBT.md#bi-015)  
+**Debt:** [SD-007](../../TECH-DEBT.md#sd-007) ✅ · [CS-002](../../TECH-DEBT.md#cs-002) ✅ · [OD-001](../../TECH-DEBT.md#od-001) ✅ · residual [BI-015](../../TECH-DEBT.md#bi-015) · [SD-016](../../TECH-DEBT.md#sd-016)  
+**Release:** [RELEASE-0.61.13](../releases/RELEASE-0.61.13.md) · [MIGRATION-0.61](../migrations/MIGRATION-0.61.md)  
 **Related:** [ADR-026](026-palm-system-layer.md) · [ADR-028](028-system-boot.md) · [ADR-029](029-system-supervisor.md) · [ADR-025](025-reactive-interests.md) · [SYSTEM-LOG](../SYSTEM-LOG.md)
 
 ---
@@ -226,3 +228,4 @@ See [VISION-0.61](../VISION-0.61.md) §7.
 | Date | Status |
 |------|--------|
 | 2026-08-03 | **Proposed** with theme open `0.61.0` |
+| 2026-08-04 | **Accepted** at theme exit `0.61.13` — José judged eyes proper |

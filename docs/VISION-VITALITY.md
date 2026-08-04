@@ -1,8 +1,8 @@
 # VISION — System vitality (queue seed)
 
-**Status:** ✅ **Opened as [VISION-0.61](VISION-0.61.md)** at **0.61.0** · ADR [030](adr/030-system-vitality.md) **Proposed**. This file remains the **seed essay** (horizons, energy lens, capability catalog depth). Theme plan is authoritative for slices.  
+**Status:** ✅ **Opened and closed as [VISION-0.61](VISION-0.61.md)** · stamp **`0.61.13`** · ADR [030](adr/030-system-vitality.md) **Accepted**. This file remains the **seed essay** (horizons, energy lens, capability catalog depth). Theme plan is authoritative for what landed.  
 **Language:** ASD-STE100 (practical).  
-**Map:** [PALM.md](PALM.md) · theme [VISION-0.61](VISION-0.61.md) · supervisor [VISION-0.60](VISION-0.60.md) (**closed**) · [ADR-029](adr/029-system-supervisor.md) · session [VISION-0.58](VISION-0.58.md) · system log [SYSTEM-LOG](SYSTEM-LOG.md) · [BI-015](../TECH-DEBT.md#bi-015) · [OD-001](../TECH-DEBT.md#od-001)  
+**Map:** [PALM.md](PALM.md) · theme [VISION-0.61](VISION-0.61.md) (**closed**) · supervisor [VISION-0.60](VISION-0.60.md) (**closed**) · [ADR-029](adr/029-system-supervisor.md) · session [VISION-0.58](VISION-0.58.md) · system log [SYSTEM-LOG](SYSTEM-LOG.md) · residual [BI-015](../TECH-DEBT.md#bi-015) · [OD-001](../TECH-DEBT.md#od-001) ✅  
 **North star:** [VISION-GROVE](VISION-GROVE.md)  
 **Lens (archive):** [Energy Dissipation Heuristic v1.1](../archive/Energy_Dissipation_Heuristic_v1.1.pdf)  
 **Related queue:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (boundary heat) · residual BI / SI / SU · CS-* smells in [TECH-DEBT](../TECH-DEBT.md)

@@ -56,6 +56,6 @@ Palm is pre-1.0. This theme makes **reactive start and continuous services** liv
 |------|------|
 | Host product wire for enrich/catalog | Thin residual on coordinator |
 | Host `WorkDrainService` fallback | **Removed** — plane only; fail closed if unattached |
-| **BI-003** | ServerContext product assembly (not plane seats) |
+| **BI-003** | Floor paid in 0.61.13 (`apply_product_packaging`); growth residual named |
 | ExecutionPort explicit `submit_flow` | Optional expand; plane uses executor path |
 | Surface deflation | [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |

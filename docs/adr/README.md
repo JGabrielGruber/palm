@@ -44,12 +44,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [027](027-session-plane.md) | Session plane — system glue, multi-instance (0.58) | Accepted |
 | [028](028-system-boot.md) | System boot schedule + composition truth (0.59) | Accepted |
 | [029](029-system-supervisor.md) | System supervisor + work plane on SystemInstance (0.60) | Accepted |
-| [030](030-system-vitality.md) | System vitality — living-kernel observation (0.61) | Proposed |
+| [030](030-system-vitality.md) | System vitality — living-kernel observation (0.61) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
 **Next free number:** 031.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** all **closed** (ADR-026…029 Accepted). Theme **0.61** vitality open ([VISION-0.61](../VISION-0.61.md)). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
+**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** all **closed** (ADR-026…030 Accepted). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
 
 ## How to add an ADR
 

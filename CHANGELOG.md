@@ -4,46 +4,25 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### Vitality raw sample (system eyes; product presents)
+## [0.61.13] — 2026-08-04
 
-- System vitality **raw-dogs** public seat APIs into `meta.raw` (`lineage: sampled`)
-- Deleted `adapters.py` — generic `raw.py` (`sample_method` / `sample_attrs` / `sample_sequence`)
-- Removed `seat_report` from SystemLog / SystemSupervisor — public API only
-- Product / Inspect interprets raw; system does not curate into `load`
-- `project_top` exposes `raw` + `sample_source` per seat
+### 0.61 — Living-kernel vitality (**theme closed**)
 
-### 0.61.2 — Projection + registry (landed; stamp pending)
+Vision: [VISION-0.61](docs/VISION-0.61.md) · ADR: [030](docs/adr/030-system-vitality.md) **Accepted** · Migration: [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · Release: [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)
 
-- **`VitalityRegistry`** — capability catalog; enable/disable; installed vs intention
-- **`VitalityProjection`** — enabled caps → fragments → **`palm.vitality_snapshot/1`**
-- **`seat_walk`** installed capability; other catalog ids as intention stubs
-- **`project` / `project_top` / `project_seat_walk_only`** — present path for inspect/top
-- Projection **receives** reports (structural summary only); does not deepen adapters
-- Adapter stance named: transitional residue, not architecture of record
-- Tests: `tests/test_vitality_projection_0_61_2.py`
+#### Theme exit (0.61.13)
+- **ADR-030 Accepted** — José judged eyes proper  
+- Residual named: **BI-015**, **SD-016**, enrich/catalog packaging, BI-003 growth, `monitor_agent`, surface deflation  
+- Stamp `0.61.13` · neighbor BI-003 product packaging floor under theme
 
-### 0.61.1 — Seat report + dynamic walk (landed; stamp pending)
-
-- **`palm.system.vitality`** — system observation home (not a plane)
-- Schema **`palm.seat_report/1`**: `SeatReport`, `SeatReportable`, kinds/states/lineage
-- **Probe catalog** — extensible discovery seeds (not closed product menu)
-- **`discover_seats` / `seat_walk` / `walk_result`** — live instance walk; honest absent
-- Adapters from `doctor_snapshot` / `status` with **`lineage: adapter`**
-- Native reports: `SystemLog.seat_report`, `SystemSupervisor.seat_report`
-- Dynamic **`supervisor.<service>`** seats from live registry
-- Public `BaseRuntime.last_boot_walk`; tests `tests/test_vitality_seat_walk_0_61_1.py`
-
-## [0.61.0] — 2026-08-03
-
-### 0.61 — Living-kernel vitality (**theme open** · plan)
-
-Vision: [VISION-0.61](docs/VISION-0.61.md) · ADR: [030](docs/adr/030-system-vitality.md) **Proposed** · seed essay: [VISION-VITALITY](docs/VISION-VITALITY.md)
-
-#### Plan (0.61.0)
-- Theme open: system-intrinsic vitality (living `top`); dynamic seat discovery; Inspect product door; doctor marked debt (**OD-001**)
-- ADR-030 Proposed (homes, registry, emission identity, no workaround architecture)
-- STATUS / AGENTS / PALM / LIBRARY / TECH-DEBT pointers; seed essay → opened as 0.61
-- **Theme discipline (project standard):** [VERSIONING.md](docs/VERSIONING.md) floor · growth · exit; **José** as sole human authority (*Who decides*); [AGENTS.md](AGENTS.md) §6b; [WRITING.md](docs/WRITING.md) VISION rules; [PHILOSOPHY.md](PHILOSOPHY.md) metabolism — ambition over empty process; proper homes over dual-truth workarounds
+#### Added / paid (0.61.0–0.61.13)
+- **`palm.system.vitality`** — seat walk, seat reports (`palm.seat_report/1`), projection + registry  
+- **`emission_window`** · **`process_resources`** · **`loaded_bulk`** · **`benchmark`** (off everyday top)  
+- **InspectService** product door (**SD-007**) — top / vitality / benchmark present  
+- **Doctor demotion (OD-001)** · **host status packaging (CS-002)**  
+- CLI human units + recipes (`work_cycle` default)  
+- Plane-only work drain (host `WorkDrainService` removed)  
+- Shared `apply_product_packaging` (host + host-less ServerContext)
 
 ## [0.60.9] — 2026-08-01
 

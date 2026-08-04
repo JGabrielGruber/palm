@@ -15,7 +15,7 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 | `docs/adr/` | Decisions — index [adr/README.md](adr/README.md); **ADR or explicit waive** (AGENTS §5) |
 | `docs/migrations/`, `docs/releases/` | Point-in-time notes |
 | `docs/VERSIONING.md` | Version scheme + **theme discipline** (floor · growth · exit; **José** decides) |
-| `docs/VISION-*.md` | Theme plans (optional later move to `docs/vision/`) — **0.61** vitality: [VISION-0.61.md](VISION-0.61.md) · seed essay [VISION-VITALITY](VISION-VITALITY.md) · **0.60** supervisor: [VISION-0.60.md](VISION-0.60.md) · queue: [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · **0.58** session: [VISION-0.58.md](VISION-0.58.md) · **0.57** system: [VISION-0.57.md](VISION-0.57.md) |
+| `docs/VISION-*.md` | Theme plans (optional later move to `docs/vision/`) — **0.61** vitality **closed**: [VISION-0.61.md](VISION-0.61.md) · seed essay [VISION-VITALITY](VISION-VITALITY.md) · **0.60** supervisor: [VISION-0.60.md](VISION-0.60.md) · queue: [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · **0.58** session: [VISION-0.58.md](VISION-0.58.md) · **0.57** system: [VISION-0.57.md](VISION-0.57.md) |
 | `docs/llms.txt`, `docs/mcp.txt`, `docs/MCP.md`, `docs/skills/` | Agent progressive disclosure |
 | Landing assets | `docs/index.html`, `docs/styles/`, `docs/images/` (today). Intended home: `docs/site/` after assemble (0.52.7) — see [site/README.md](site/README.md) |
 

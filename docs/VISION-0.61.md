@@ -1,18 +1,18 @@
 # VISION 0.61 — Living-kernel vitality
 
-**Status:** 📋 **Open** — plan **0.61.0** ✅ · eyes **0.61.1**–**0.61.7** landed (stamps when José exits slices).  
+**Status:** ✅ **Theme closed** at **0.61.13** (exit).  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map:** [PALM.md](PALM.md) — read first.  
-**ADR:** [030-system-vitality.md](adr/030-system-vitality.md) **Proposed**.  
-**Seed:** [VISION-VITALITY](VISION-VITALITY.md) (opened as this theme).  
+**ADR:** [030-system-vitality.md](adr/030-system-vitality.md) **Accepted**.  
+**Seed:** [VISION-VITALITY](VISION-VITALITY.md) (seed essay; theme opened and closed as this file).  
 **Theme law:** [VERSIONING.md](VERSIONING.md) (floor · growth · exit judgment) · [AGENTS.md](../AGENTS.md) §6b.  
+**Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) ✅ · [OD-001](../TECH-DEBT.md#od-001) ✅ · [CS-002](../TECH-DEBT.md#cs-002) ✅ · residual [BI-015](../TECH-DEBT.md#bi-015) · [SD-016](../TECH-DEBT.md#sd-016).  
+**Release:** [RELEASE-0.61.13](releases/RELEASE-0.61.13.md) · [MIGRATION-0.61](migrations/MIGRATION-0.61.md).  
 **Prior closed:** [VISION-0.60](VISION-0.60.md) supervisor + work plane · [VISION-0.59](VISION-0.59.md) boot · [VISION-0.58](VISION-0.58.md) session.  
-**Debt:** Theme pay [SD-007](../TECH-DEBT.md#sd-007) ✅ · [OD-001](../TECH-DEBT.md#od-001) ✅ · [CS-002](../TECH-DEBT.md#cs-002) ✅ · [BI-015](../TECH-DEBT.md#bi-015).  
-**Mid-theme residual:** [SD-016](../TECH-DEBT.md#sd-016) ambient seat DI (open) · paid SD-015 / CS-006…008.  
-**Dogfood:** host.start → primary → seat walk (install + planes + supervisor) — eyes on system under composition root; host itself is not a vitality seat yet.  
- 
-**Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI / SI / SU · Grove.  
+**Queue later:** [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · residual BI / SI / SU · Grove · `monitor_agent`.  
 **North star:** [VISION-GROVE](VISION-GROVE.md).
+
+**Exit judgment (2026-08-04):** José judged living eyes proper — floor met, growth tools real, residual named. Theme closed; not empty checklist.
 
 ---
 
@@ -270,21 +270,21 @@ Theme stays open while José still needs proper eyes.
 
 | Order | Slice spirit | Result |
 |------:|--------------|--------|
-| **0** | Plan + map + ADR | This file · ADR-030 Proposed · STATUS · debt rows · seed open — ✅ **0.61.0** |
-| **1** | Seat report + dynamic walk | Protocol + discover; honest absent; adapters residue — **landed** — stamp when José exits |
-| **2** | Projection + registry (`seat_walk`) | Snapshot with lineage; `project` / `project_top` — **landed** — stamp when José exits |
-| **3** | Emission window + actor envelope | Partition or unknown; no second write path — **landed** thin body (system log + work heat) — stamp when José exits |
-| **4** | InspectService rename | SD-007; host/assist doors; product SystemService not law — **landed** (wire `system/*` residual) — stamp when José exits |
-| **5** | Inspect present from projection | `top` / `vitality` product door; doctor nests top — **landed** — stamp when José exits |
-| **6** | Doctor demotion (OD-001) | `legacy_doctor` envelope · anatomy packaging · eyes_law — **landed** — stamp when José exits |
-| **7** | Host status compost (CS-002) | `packaging_status` · demotion markers · triple residual — **landed** — stamp when José exits |
-| **8** | `process_resources` | Stdlib RSS/CPU/threads · top `process` · units honest — **landed** — stamp when José exits |
-| **9** | `loaded_bulk` | Attached seats · module LOC · composition · top `bulk` · not shame — **landed** — stamp when José exits |
-| **10** | `benchmark` tool | Recipe · observe snapshot₀/₁ · pure diff · off by default — **landed** — stamp when José exits |
-| **11** | Inspect + CLI present | `InspectService.benchmark` · `palm benchmark` thin surface — **landed** — stamp when José exits |
-| **12** | Human units + deeper recipes | CLI MiB/ms; `work_cycle` default; `project_stress` — **landed** — stamp when José exits |
-| **13+** | Growth | `monitor_agent`; native reports; remaining stubs |
-| **exit** | ADR Accepted · residual named · stamp · migration if needed | When **José** judges eyes proper |
+| **0** | Plan + map + ADR | ✅ **0.61.0** |
+| **1** | Seat report + dynamic walk | ✅ **0.61.1** |
+| **2** | Projection + registry (`seat_walk`) | ✅ **0.61.2** |
+| **3** | Emission window + actor envelope | ✅ **0.61.3** |
+| **4** | InspectService rename | ✅ **0.61.4** (SD-007) |
+| **5** | Inspect present from projection | ✅ **0.61.5** |
+| **6** | Doctor demotion (OD-001) | ✅ **0.61.6** |
+| **7** | Host status compost (CS-002) | ✅ **0.61.7** |
+| **8** | `process_resources` | ✅ **0.61.8** |
+| **9** | `loaded_bulk` | ✅ **0.61.9** |
+| **10** | `benchmark` tool | ✅ **0.61.10** |
+| **11** | Inspect + CLI present | ✅ **0.61.11** |
+| **12** | Human units + deeper recipes | ✅ **0.61.12** |
+| **13** | BI-003 product packaging floor (neighbor) | ✅ **0.61.13** |
+| **exit** | ADR Accepted · residual named · stamp · migration | ✅ **0.61.13** — José judged eyes proper |
 
 ---
 
@@ -346,11 +346,11 @@ Each slice states which modes are in the green bar.
 - [x] InspectService rename path closed; alias residual named (SD-007).  
 - [x] Doctor demoted (OD-001); anatomy packaging only; eyes via top/vitality.  
 - [x] Host status demoted (CS-002); packaging residual named; living eyes = vitality.  
-- [ ] PALM names vitality as system observation (growth polish).  
-- [ ] ADR-030 Accepted at exit.  
-- [ ] Spine green on declared modes.
+- [x] PALM names vitality as system observation (closed theme).  
+- [x] ADR-030 Accepted at exit.  
+- [x] Spine green on declared modes (exit judgment).
 
-Growth beyond this floor may continue under **0.61** until exit.
+**Theme closed** at `0.61.13`. Growth leftovers (`monitor_agent`, deeper emission) are residual or later themes — not open 0.61.
 
 ---
 
@@ -386,4 +386,4 @@ Growth beyond this floor may continue under **0.61** until exit.
 
 ---
 
-*Open the eyes. Then growth is not blind.*
+*Eyes open. Theme closed. Growth is no longer blind.*
