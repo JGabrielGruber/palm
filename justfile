@@ -254,6 +254,9 @@ website-build-all: website-css website-build
 website-preview:
     python -m http.server 8765 --directory website/dist
 
+# Build all + preview
+website-dev: website-build-all website-preview
+
 # ---- Living Library (docs only; not palmengine.org) ----
 
 # Living Library → docs/_build/ (wiki + reference inventory). No website.
