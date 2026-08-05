@@ -373,29 +373,6 @@
             <p class="text-zinc-400 text-sm"><code class="text-xs">palm status</code> — projection-backed overview.</p>
           </figcaption>
         </figure>
-        <!-- Placeholders for José -->
-        <figure class="flex-none w-[min(100%,28rem)] snap-center bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden">
-          <div class="aspect-video placeholder-shot flex flex-col items-center justify-center p-6 text-center">
-            <p class="text-zinc-500 text-xs font-bold tracking-widest mb-2">PLACEHOLDER</p>
-            <p class="text-zinc-300 text-sm font-medium mb-1">Vitality / Inspect top</p>
-            <p class="text-zinc-500 text-xs max-w-xs">Terminal or CLI capture of living-kernel vitality (seat walk / top). Suggested file: <code class="text-zinc-400">images/screenshots/palm-vitality-top.webp</code></p>
-          </div>
-          <figcaption class="p-5">
-            <h3 class="font-semibold text-zinc-400 mb-1">Vitality eyes</h3>
-            <p class="text-zinc-500 text-sm">Awaiting screenshot — physiology of the running system.</p>
-          </figcaption>
-        </figure>
-        <figure class="flex-none w-[min(100%,28rem)] snap-center bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden">
-          <div class="aspect-video placeholder-shot flex flex-col items-center justify-center p-6 text-center">
-            <p class="text-zinc-500 text-xs font-bold tracking-widest mb-2">PLACEHOLDER</p>
-            <p class="text-zinc-300 text-sm font-medium mb-1">MCP / palm_assist</p>
-            <p class="text-zinc-500 text-xs max-w-xs">IDE or inspector showing assist-first MCP operate. Suggested: <code class="text-zinc-400">images/screenshots/palm-assist-mcp.webp</code></p>
-          </div>
-          <figcaption class="p-5">
-            <h3 class="font-semibold text-zinc-400 mb-1">Agent operate</h3>
-            <p class="text-zinc-500 text-sm">Awaiting screenshot — agents on the same job path.</p>
-          </figcaption>
-        </figure>
       </div>
     </div>
   </section>
@@ -410,7 +387,7 @@
       <div class="grid lg:grid-cols-2 gap-8">
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
           <h3 class="text-lg font-semibold text-teal-400 mb-4">Install &amp; doctor</h3>
-          <pre class="bg-black border border-zinc-800 rounded-2xl p-5 font-mono text-sm overflow-x-auto text-zinc-300"><code>pip install "palmengine[cli]"
+          <pre class="bg-black border border-zinc-800 rounded-2xl p-5 font-mono text-sm text-zinc-300 grid"><code class="overflow-x-auto">pip install "palmengine[cli]"
 palm version --full
 palm doctor
 palm status
@@ -418,7 +395,7 @@ palm repl</code></pre>
         </div>
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
           <h3 class="text-lg font-semibold text-teal-400 mb-4">Library host</h3>
-          <pre class="bg-black border border-zinc-800 rounded-2xl p-5 font-mono text-sm overflow-x-auto text-zinc-300"><code>from palm.app import ApplicationHost, DeploymentProfile
+          <pre class="bg-black border border-zinc-800 rounded-2xl p-5 font-mono text-sm text-zinc-300 grid"><code class="overflow-x-auto">from palm.app import ApplicationHost, DeploymentProfile
 
 with ApplicationHost(
     profile=DeploymentProfile.all_in_one()
@@ -428,7 +405,7 @@ with ApplicationHost(
         </div>
         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 lg:col-span-2">
           <h3 class="text-lg font-semibold text-teal-400 mb-4">Agents (MCP)</h3>
-          <pre class="bg-black border border-zinc-800 rounded-2xl p-5 font-mono text-sm overflow-x-auto text-zinc-300"><code>pip install "palmengine[mcp]"
+          <pre class="bg-black border border-zinc-800 rounded-2xl p-5 font-mono text-sm text-zinc-300 grid"><code class="overflow-x-auto">pip install "palmengine[mcp]"
 # Prefer palm_assist — see docs/MCP.md
 # PALM_MCP_IN_PROCESS=1  optional in-process surface</code></pre>
           <p class="text-zinc-500 text-sm mt-4">
