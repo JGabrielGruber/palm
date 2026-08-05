@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-29  
 **Package version:** `0.57.14` (`palmengine`)  
-**Theme:** [VISION-0.57](../VISION-0.57.md) · [ADR-026](../adr/026-palm-system-layer.md) **Accepted**  
+**Theme:** [VISION-0.57](../vision/closed/VISION-0.57.md) · [ADR-026](../adr/026-palm-system-layer.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · [SYSTEM-LOW-LEVEL](../SYSTEM-LOW-LEVEL.md)  
 **Migration:** [MIGRATION-0.57](../migrations/MIGRATION-0.57.md)  
 **Previous stamp:** `0.54.10` (0.55–0.56 shipped as slice commits without embedded release)
@@ -75,7 +75,7 @@ Yes — package moves for system, planes, executions, and server kit. **No dual-
 ## Next
 
 - Optional **SU-*** surface work (explorer, MCP, CLI weight)  
-- **Session plane** theme when ready ([VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md))  
-- Grove / multi-Palm still north star ([VISION-GROVE](../VISION-GROVE.md))  
+- **Session plane** theme when ready ([VISION-SESSION-PLANE](../vision/closed/VISION-SESSION-PLANE.md))  
+- Grove / multi-Palm still north star ([VISION-GROVE](../vision/VISION-GROVE.md))  
 
 *First name the tree. Then grow the branch.*

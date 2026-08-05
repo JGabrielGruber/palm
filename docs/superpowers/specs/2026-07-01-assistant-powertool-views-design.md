@@ -3,7 +3,7 @@
 **Status:** Approved (July 1, 2026)  
 **Version target:** 0.20.0 (spec) · 0.20.1–0.20.5 (implementation) · [0.21 expansion spec](2026-07-01-assistant-expansion-design.md)  
 **Builds on:** [0.19.0 shipped](../../migrations/MIGRATION-0.19.md) · [Assist domain](2026-07-01-assist-domain-design.md)  
-**Vision:** [docs/VISION-0.18-ASSIST.md](../../VISION-0.18-ASSIST.md)
+**Vision:** [docs/VISION-0.18-ASSIST.md](../../vision/closed/VISION-0.18-ASSIST.md)
 
 ---
 

@@ -1,6 +1,6 @@
 # Migration — 0.62 Multi-claimer work drain
 
-**Theme:** [VISION-0.62](../VISION-0.62.md) (**closed**) · **ADR:** [031](../adr/031-multi-claimer-work-drain.md) **Accepted**  
+**Theme:** [VISION-0.62](../vision/closed/VISION-0.62.md) (**closed**) · **ADR:** [031](../adr/031-multi-claimer-work-drain.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · **Release:** [RELEASE-0.62.8](../releases/RELEASE-0.62.8.md) · **Work drain:** [WORK-DRAIN](../WORK-DRAIN.md)
 
 Palm is pre-1.0. This theme makes the **start path** and **job-drive path** safe under in-process concurrency. Defaults stay single-worker. Multi-process shared claim is **not** supported.
@@ -76,5 +76,5 @@ Do not run two OS processes (or two continuous drain owners) against the same du
 |------|------|
 | **SD-019** | Multi-process / multi-runtime shared claim needs storage CAS |
 | **SD-016** | Ambient seat DI (boy-scout) |
-| Surface deflation | [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| Surface deflation | [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) |
 | Grove | Multi-Palm mesh (not shared claim index) |

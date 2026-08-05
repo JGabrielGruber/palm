@@ -1,6 +1,6 @@
 # Migration — 0.59 System boot + composition truth
 
-**Theme:** [VISION-0.59](../VISION-0.59.md) (**closed**) · **ADR:** [028](../adr/028-system-boot.md) **Accepted**  
+**Theme:** [VISION-0.59](../vision/closed/VISION-0.59.md) (**closed**) · **ADR:** [028](../adr/028-system-boot.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · **Release:** [RELEASE-0.59.8](../releases/RELEASE-0.59.8.md)  
 **Inventory:** [BOOT-INVENTORY.md](../BOOT-INVENTORY.md) · **Log:** [SYSTEM-LOG.md](../SYSTEM-LOG.md)
 
@@ -49,7 +49,7 @@ Palm is pre-1.0. This theme makes **start controllable** and **composition truth
 | **BI-003** | Dual composition root (`ServerContext` vs host) |
 | **BI-007** | Remaining hand-built hosts (fixture + dogfood paid; not full suite force) |
 | **BI-009** | Settings / profile / options triple override clarity |
-| **BI-010** | Surface chrome bulk → [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| **BI-010** | Surface chrome bulk → [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) |
 | **BI-013** | Work **start** on host workplane (may stay host-owned) |
 | **BI-014** | ~~`ensure_host_session` swallow Exception~~ ✅ paid (fail closed at plane install) |
 | **BI-015** | System log richer catalog / sinks |

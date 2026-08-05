@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-04  
 **Package version:** `0.62.8` (`palmengine`)  
-**Theme:** [VISION-0.62](../VISION-0.62.md) · [ADR-031](../adr/031-multi-claimer-work-drain.md) **Accepted**  
+**Theme:** [VISION-0.62](../vision/closed/VISION-0.62.md) · [ADR-031](../adr/031-multi-claimer-work-drain.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.62](../migrations/MIGRATION-0.62.md)  
 **Previous stamp:** `0.61.13`

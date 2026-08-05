@@ -1,6 +1,6 @@
 # Inbound demo — webhook → inbox → WorkIntent
 
-Definition pack for [VISION-0.43](../../../docs/VISION-0.43.md) / [0.44](../../../docs/VISION-0.44.md):
+Definition pack for [VISION-0.43](../../../docs/vision/closed/VISION-0.43.md) / [0.44](../../../docs/vision/closed/VISION-0.44.md):
 resources that **listen** via `metadata.inbound` (no separate definition kind).
 
 ## Resources

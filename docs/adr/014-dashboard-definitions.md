@@ -25,5 +25,5 @@
 
 ## References
 
-- [VISION-0.36](../VISION-0.36.md)
+- [VISION-0.36](../vision/closed/VISION-0.36.md)
 - `palm/definitions/dashboard.py`, `palm/services/analytics/dashboards.py`

@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-01  
 **Package version:** `0.59.8` (`palmengine`)  
-**Theme:** [VISION-0.59](../VISION-0.59.md) · [ADR-028](../adr/028-system-boot.md) **Accepted**  
+**Theme:** [VISION-0.59](../vision/closed/VISION-0.59.md) · [ADR-028](../adr/028-system-boot.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.59](../migrations/MIGRATION-0.59.md)  
 **Previous stamp:** `0.58.20`
@@ -66,5 +66,5 @@ Mild / pre-1.0:
 ## Next
 
 - Residual **BI-*** when touched (not a blank theme promise)  
-- [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) for surface chrome  
-- Grove / multi-Palm ([VISION-GROVE](../VISION-GROVE.md)) when local control is enough  
+- [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) for surface chrome  
+- Grove / multi-Palm ([VISION-GROVE](../vision/VISION-GROVE.md)) when local control is enough  

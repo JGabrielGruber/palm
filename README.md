@@ -2,7 +2,7 @@
 
 **Palm** is a lightweight, Python-first orchestration engine built on a clean **Behavior Tree** foundation. It coordinates interactive wizards, data pipelines, and—over time—compute-heavy workloads with explicit contracts, durable state, and human-first tooling.
 
-**Current release:** `0.62.8` — capacity closed · [VISION-0.62](docs/VISION-0.62.md) · vitality [VISION-0.61](docs/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
+**Current release:** `0.62.8` — capacity closed · [VISION-0.62](docs/vision/closed/VISION-0.62.md) · vitality [VISION-0.61](docs/vision/closed/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
 
 ### Experimental — no long-term support
 
@@ -10,7 +10,7 @@ Palm is **pre-1.0** and **experimental**. APIs, packages, and behaviors may brea
 
 Use Palm to explore, dogfood, and build. Pin versions deliberately. Read [STATUS.md](STATUS.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [MIGRATION](docs/migrations/) notes when you upgrade. Structure and honesty matter more than comfort paths while the organism is still growing.
 
-**Growth seed (not an open theme):** organism assembly + tree scale — [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md).
+**Growth seed (not an open theme):** organism assembly + tree scale — [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md).
 
 ---
 
@@ -57,7 +57,7 @@ Palm aims to be **simple at the core and powerful at the edges**:
 
 Behavior Trees are the control-flow foundation for **business**. Organism topology is a different care (assembly seed) — do not confuse the two. Cross-cutting concerns belong in system seats and thin surfaces — not buried in step JSON.
 
-**Read next:** [docs/PALM.md](docs/PALM.md) · [STATUS.md](STATUS.md) · [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) · [PHILOSOPHY.md](PHILOSOPHY.md)
+**Read next:** [docs/PALM.md](docs/PALM.md) · [STATUS.md](STATUS.md) · [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md) · [PHILOSOPHY.md](PHILOSOPHY.md)
 
 ---
 
@@ -80,9 +80,9 @@ Behavior Trees are the control-flow foundation for **business**. Organism topolo
 | **Flow REST (0.16)** | `/v1/api/flows/{flow_id}/session/{session_id}/…` — create, inspect, input, backtrack |
 | **Definitions REST (0.16)** | `/v1/api/definitions/…` — catalog reads + CRUD writes |
 | **Definition revisions (0.24)** | Append-only flow revisions, `flow_revision` pin, impact query, instance migrate — [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) |
-| **Design Service (0.25+)** | Propose → impact → commit · **one-shot** `palm_design_publish_*` / `palm_assist(params={body})` — [VISION-0.25.md](docs/VISION-0.25.md) |
+| **Design Service (0.25+)** | Propose → impact → commit · **one-shot** `palm_design_publish_*` / `palm_assist(params={body})` — [VISION-0.25.md](docs/vision/closed/VISION-0.25.md) |
 | **Local resources (0.28–0.29)** | `kv` / `file` / tiered backends; coconut-npc cross-session profile |
-| **MCP (0.16–0.31)** | `palm-mcp` · **`palm_assist` meta-tool** · `PALM_MCP_SURFACE=assist` slim catalog · `palm://agent/card` progressive docs — [docs/MCP.md](docs/MCP.md) · [VISION-0.31.md](docs/VISION-0.31.md) |
+| **MCP (0.16–0.31)** | `palm-mcp` · **`palm_assist` meta-tool** · `PALM_MCP_SURFACE=assist` slim catalog · `palm://agent/card` progressive docs — [docs/MCP.md](docs/MCP.md) · [VISION-0.31.md](docs/vision/closed/VISION-0.31.md) |
 | **Dashboard** | `palm status` — projection-backed Rich overview; `--full`, `-r` live refresh |
 | **DX** | Rich examples, `palm doctor`, `palm resource *`, `just` quality recipes |
 
@@ -442,7 +442,7 @@ palm resource describe fetch-customer
 palm resource invoke fetch-customer customer_id=42
 ```
 
-Full guide: [docs/VISION-0.12.md](docs/VISION-0.12.md) · [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md)
+Full guide: [docs/vision/closed/VISION-0.12.md](docs/vision/closed/VISION-0.12.md) · [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md)
 
 ---
 
@@ -452,7 +452,7 @@ High-level direction (not all shipped yet). Full detail in [SCOPE.md](SCOPE.md).
 
 | Theme | Direction |
 |-------|-----------|
-| **Runtimes** | WebSocket Assist channel + Portal backend ([VISION-0.32](docs/VISION-0.32.md)), persistent plan registry, richer server auth |
+| **Runtimes** | WebSocket Assist channel + Portal backend ([VISION-0.32](docs/vision/closed/VISION-0.32.md)), persistent plan registry, richer server auth |
 | **Middleware** | Runtime-level auth/observability; optional BT guard nodes for step policy |
 | **Compute** | `KernelLeaf` GPU nodes, resident kernels, dataset staging (Parquet → context → kernel → artifact) |
 | **Observability** | Structured events, long-running job management |
@@ -478,7 +478,7 @@ xychart
 | Document | Contents |
 |----------|----------|
 | [SCOPE.md](SCOPE.md) | Purpose, horizon, experimental honesty (not a frozen old roadmap) |
-| [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) | Organism truth · tree scale (queue seed) |
+| [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md) | Organism truth · tree scale (queue seed) |
 | [PHILOSOPHY.md](PHILOSOPHY.md) | Spirit — grown, not built; glory and shackles |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers, BT control flow, middleware model, engines |
 | [DEVELOPMENT.md](DEVELOPMENT.md) | Setup, tests, adding patterns/backends |

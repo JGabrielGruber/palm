@@ -28,8 +28,8 @@ It is built so a person, an agent, or another Palm can participate mid-flight wi
 
 - Dataset capture, training flows, TinyML and model bodies as **places**  
 - Light centers and work/support places under one genome  
-- Grove: many Palms, continuous interface — [VISION-GROVE](docs/VISION-GROVE.md)  
-- Tree first, mesh later — [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md)
+- Grove: many Palms, continuous interface — [VISION-GROVE](docs/vision/VISION-GROVE.md)  
+- Tree first, mesh later — [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
 
 Palm optimizes for **long clarity** and **honest scale**, not for short cleverness or fake stability.
 
@@ -71,9 +71,9 @@ Detail and proof live in [STATUS.md](STATUS.md) and [PALM.md](docs/PALM.md). Sho
 | Not this season’s promise | Where it lives instead |
 |---------------------------|-------------------------|
 | Full multi-process shared claim pool | Residual [SD-019](TECH-DEBT.md#sd-019) · assembly + place book path |
-| Opened assembly engine in code | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) seed |
-| Full Grove org crown / mesh | [VISION-GROVE](docs/VISION-GROVE.md) |
-| Surface compost complete | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
+| Opened assembly engine in code | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) seed |
+| Full Grove org crown / mesh | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
+| Surface compost complete | [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | Every GPU/TinyML body as polished product | Workload place + runners; archive prototypes are history only |
 | Enterprise LTS / frozen APIs | Pre-1.0 experimental policy |
 | Import from `archive/` | Forbidden — [AGENTS.md](AGENTS.md) |
@@ -89,11 +89,11 @@ Ordered by **organism need**, not marketing.
 | Horizon | Intent | Doc |
 |---------|--------|-----|
 | **Now** | Hold closed seasons honest; residual debt named; dogfood spine | [STATUS.md](STATUS.md) |
-| **Near structure** | Assembly: authoritative DNA, definition-ready, tree places | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) |
-| **Workload growth** | Placement, cancel/ownership, more runners, peer place | [VISION-0.56](docs/VISION-0.56.md) |
-| **Surface honesty** | Thin faces; assist-first; drop pre-plane furniture | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
+| **Near structure** | Assembly: authoritative DNA, definition-ready, tree places | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| **Workload growth** | Placement, cancel/ownership, more runners, peer place | [VISION-0.56](docs/vision/VISION-0.56.md) |
+| **Surface honesty** | Thin faces; assist-first; drop pre-plane furniture | [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | **Capacity beyond one process** | CAS or single-owner law; workers as placed Palms | SD-019 · assembly |
-| **Grove** | Many palms, trust, continuous interface | [VISION-GROVE](docs/VISION-GROVE.md) |
+| **Grove** | Many palms, trust, continuous interface | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
 | **Living work** | Datasets, train flows, TinyML/model places under Palm | Assembly + workload |
 
 Theme open/close is **José’s** judgment. Slice tables are guides. Prefer proper homes over thin ships.
@@ -125,8 +125,8 @@ Palm is succeeding when:
 | [PHILOSOPHY.md](PHILOSOPHY.md) | Spirit |
 | [AGENTS.md](AGENTS.md) | Rules for contributors and agents |
 | [TECH-DEBT.md](TECH-DEBT.md) | Live debt |
-| [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) | Organism truth · tree scale |
-| [docs/VISION-GROVE.md](docs/VISION-GROVE.md) | Multi-Palm north star |
+| [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md) | Organism truth · tree scale |
+| [docs/vision/VISION-GROVE.md](docs/vision/VISION-GROVE.md) | Multi-Palm north star |
 | [README.md](README.md) | Install, quick start, experimental notice |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Dense layer detail |
 | [CHANGELOG.md](CHANGELOG.md) | History |

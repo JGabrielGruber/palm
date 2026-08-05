@@ -4,7 +4,7 @@
 
 **Accepted** — July 2026 (0.54.0 **replan**).  
 **Supersedes** the earlier “library pipeline / DocsService in 0.54” framing of ADR-023 drafts.  
-Sibling of [ADR-022](022-neonroot-provider.md). Docs product domain deferred past [VISION-0.55](../VISION-0.55.md) Reactive Interests and workload/session foundations.
+Sibling of [ADR-022](022-neonroot-provider.md). Docs product domain deferred past [VISION-0.55](../vision/closed/VISION-0.55.md) Reactive Interests and workload/session foundations.
 
 ## Context
 
@@ -46,4 +46,4 @@ Palm’s purpose test is: **business rules as definitions; foreign code only in 
 
 ## References
 
-- [VISION-0.54](../VISION-0.54.md) · [VISION-0.55](../VISION-0.55.md) · [VISION-0.53](../VISION-0.53.md) · [ADR-022](022-neonroot-provider.md)  
+- [VISION-0.54](../vision/closed/VISION-0.54.md) · [VISION-0.55](../vision/closed/VISION-0.55.md) · [VISION-0.53](../vision/closed/VISION-0.53.md) · [ADR-022](022-neonroot-provider.md)  

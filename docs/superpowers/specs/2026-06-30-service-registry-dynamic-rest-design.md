@@ -264,6 +264,6 @@ CLI/REPL: `ReplSession` lives under `execution/flows/`; CLI imports from `palm.s
 
 ## References
 
-- [0.15 vision](../../VISION-0.15.md) — foundation this breaks forward from
+- [0.15 vision](../../vision/closed/VISION-0.15.md) — foundation this breaks forward from
 - [ADR 004](../../adr/004-cqrs-schemas-service-layer.md) — superseded for **service package location** by this design; CQRS-in-services principle remains
 - [Implementation plan](../plans/2026-06-30-service-registry-dynamic-rest.md)

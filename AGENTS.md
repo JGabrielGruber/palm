@@ -17,8 +17,8 @@ Not the system map. Not the theme history. Not the debt ledger.
 | **Spirit** | [PHILOSOPHY.md](PHILOSOPHY.md) |
 | **Theme discipline** | [docs/VERSIONING.md](docs/VERSIONING.md) — floor · growth · exit; **José** decides |
 | **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) · intentions [docs/STUBS.md](docs/STUBS.md) |
-| **Near structure (organism · tree)** | [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) |
-| **Multi-Palm horizon** | [docs/VISION-GROVE.md](docs/VISION-GROVE.md) |
+| **Vision (current)** | [docs/vision/](docs/vision/README.md) — assembly · workload · surface seed · Grove |
+| **Vision (closed)** | [docs/vision/closed/](docs/vision/closed/) — history, grouped |
 | **Docs voice** | [docs/WRITING.md](docs/WRITING.md) |
 | **Operate via MCP** | [docs/MCP.md](docs/MCP.md) · [docs/skills/palm/SKILL.md](docs/skills/palm/SKILL.md) |
 | **Low-level system** | [docs/SYSTEM-LOW-LEVEL.md](docs/SYSTEM-LOW-LEVEL.md) when you touch seats/ports |
@@ -82,7 +82,7 @@ Layers: **core → system / shared / kits → plugins → product → surfaces**
 - **System** owns shell, interfaces, subsystems (planes, supervisor), boot, vitality.  
 - **Surfaces** depend on system — never reverse.  
 - **Workload** = place book (runners under `palm/runners/`, not surfaces).  
-- **Assembly** (seed) = organism truth between boot and business — [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md).  
+- **Assembly** (seed) = organism truth between boot and business — [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md).  
 - **Flows** = business rules. Do not encode cluster topology as a customer flow.
 
 Full map: **[docs/PALM.md](docs/PALM.md)** only.
@@ -154,7 +154,7 @@ Homes and purpose: [PALM.md §7](docs/PALM.md).
 | Change | Update |
 |--------|--------|
 | Layers / ports / planes / growth law | [PALM.md](docs/PALM.md) |
-| Theme open/close / present | [STATUS.md](STATUS.md) · `docs/VISION-0.X.md` |
+| Theme open/close / present | [STATUS.md](STATUS.md) · [docs/vision/](docs/vision/) · closed under `docs/vision/closed/` |
 | Significant decision | ADR in `docs/adr/` (or `ADR: waived — …`) |
 | Debt / intention | [TECH-DEBT.md](TECH-DEBT.md) · [STUBS.md](docs/STUBS.md) |
 | Version / theme process | [VERSIONING.md](docs/VERSIONING.md) |
@@ -215,7 +215,7 @@ Long clarity over short cleverness.
 **Proper homes over thin lies. Ambition over empty process.**  
 **Present purpose over doomed past.**
 
-[PHILOSOPHY.md](PHILOSOPHY.md) · [VERSIONING.md](docs/VERSIONING.md) · [VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md)
+[PHILOSOPHY.md](PHILOSOPHY.md) · [VERSIONING.md](docs/VERSIONING.md) · [VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md)
 
 ---
 

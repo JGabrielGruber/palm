@@ -1,6 +1,6 @@
 # Plan: MCP Meta-Surface (0.31) — open-ended
 
-**Vision:** [docs/VISION-0.31.md](../../VISION-0.31.md)  
+**Vision:** [docs/VISION-0.31.md](../../vision/closed/VISION-0.31.md)  
 **Design:** [2026-07-08-mcp-meta-surface-design.md](../specs/2026-07-08-mcp-meta-surface-design.md)  
 **Status:** 0.31.0–0.31.4 ✅ · 0.31.5+ open  
 

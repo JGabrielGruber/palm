@@ -8,8 +8,8 @@
 
 | Track | Docs |
 |-------|------|
-| WebSocket + Portal | [VISION-0.32](../VISION-0.32.md) · [design](../superpowers/specs/2026-07-09-websocket-assist-portal-design.md) · [plan](../superpowers/plans/2026-07-09-websocket-assist-portal-0.32.md) |
-| Prior MCP surface | [VISION-0.31](../VISION-0.31.md) · [RELEASE-0.31.5](RELEASE-0.31.5.md) |
+| WebSocket + Portal | [VISION-0.32](../vision/closed/VISION-0.32.md) · [design](../superpowers/specs/2026-07-09-websocket-assist-portal-design.md) · [plan](../superpowers/plans/2026-07-09-websocket-assist-portal-0.32.md) |
+| Prior MCP surface | [VISION-0.31](../vision/closed/VISION-0.31.md) · [RELEASE-0.31.5](RELEASE-0.31.5.md) |
 
 ## What lands (summary)
 

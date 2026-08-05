@@ -8,8 +8,8 @@
 
 | Track | Docs |
 |-------|------|
-| MCP meta-surface | [VISION-0.31](../VISION-0.31.md) · [design](../superpowers/specs/2026-07-08-mcp-meta-surface-design.md) · [plan](../superpowers/plans/2026-07-08-mcp-meta-surface-0.31.md) |
-| Assist design entry | [VISION-0.30](../VISION-0.30.md) · [MIGRATION-0.30](../migrations/MIGRATION-0.30.md) |
+| MCP meta-surface | [VISION-0.31](../vision/closed/VISION-0.31.md) · [design](../superpowers/specs/2026-07-08-mcp-meta-surface-design.md) · [plan](../superpowers/plans/2026-07-08-mcp-meta-surface-0.31.md) |
+| Assist design entry | [VISION-0.30](../vision/closed/VISION-0.30.md) · [MIGRATION-0.30](../migrations/MIGRATION-0.30.md) |
 
 ## What lands (summary)
 

@@ -10,7 +10,7 @@
 
 **Design spec:** [docs/superpowers/specs/2026-07-03-definition-revisioning-design.md](../specs/2026-07-03-definition-revisioning-design.md)
 
-**Vision:** [docs/VISION-0.24.md](../../VISION-0.24.md)
+**Vision:** [docs/VISION-0.24.md](../../vision/closed/VISION-0.24.md)
 
 **Prerequisite:** 0.23.1 shipped; 0.23.2 mutation-gate cleanup committed (optional bundle)
 

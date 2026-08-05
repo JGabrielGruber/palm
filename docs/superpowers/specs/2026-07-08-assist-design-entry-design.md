@@ -8,7 +8,7 @@
 | **Status** | **Approved** (design review consensus; product: promote 0.30.0 docs; bare assist stays operator-entry; design as sibling domain) |
 | **Target track** | **0.30 Assist design entry** |
 | **Depends on** | Assist 0.18–0.23 (shipped), Design Service 0.25+ (shipped), compositional design 0.27+, document/KV 0.28–0.29 |
-| **Vision** | [docs/VISION-0.30.md](../../VISION-0.30.md) |
+| **Vision** | [docs/VISION-0.30.md](../../vision/closed/VISION-0.30.md) |
 | **Plan** | [docs/superpowers/plans/2026-07-08-assist-design-entry-0.30.md](../plans/2026-07-08-assist-design-entry-0.30.md) |
 | **Delivery** | Sequential phase commits on master when good enough (short branches optional for tracking) |
 

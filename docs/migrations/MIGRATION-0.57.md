@@ -1,6 +1,6 @@
 # Migration — 0.57 Palm System
 
-**Theme:** [VISION-0.57](../VISION-0.57.md) · **ADR:** [026-palm-system-layer](../adr/026-palm-system-layer.md)  
+**Theme:** [VISION-0.57](../vision/closed/VISION-0.57.md) · **ADR:** [026-palm-system-layer](../adr/026-palm-system-layer.md)  
 **Map:** [PALM.md](../PALM.md) · **Release:** [RELEASE-0.57.14](../releases/RELEASE-0.57.14.md)
 
 Palm is pre-1.0. This theme **breaks import paths** for truth. There are no long-lived shims.
@@ -42,7 +42,7 @@ See [STUBS.md](../STUBS.md) and [TECH-DEBT.md](../../TECH-DEBT.md) ST-001…005.
 |------|------|
 | Reactive law (0.55) | Unchanged — start / continue on `runtime.event` |
 | Workload engine scout (0.56) | Engine + runners stay; **product list/doctor/stop** go through ExecutionPort |
-| Session product | Still a **future theme** ([VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md)); not a 0.57 residual |
+| Session product | Still a **future theme** ([VISION-SESSION-PLANE](../vision/closed/VISION-SESSION-PLANE.md)); not a 0.57 residual |
 
 ## Product guidance
 

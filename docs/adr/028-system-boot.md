@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-01  
 **Accepted:** 2026-08-01 (theme exit `0.59.8`)  
-**Theme:** [VISION-0.59](../VISION-0.59.md) (**closed**)  
+**Theme:** [VISION-0.59](../vision/closed/VISION-0.59.md) (**closed**)  
 **Inventory:** [BOOT-INVENTORY.md](../BOOT-INVENTORY.md)  
 **System log:** [SYSTEM-LOG.md](../SYSTEM-LOG.md) (seats live; richer catalog residual **BI-015**)  
 **Map:** [PALM.md](../PALM.md)  
@@ -182,11 +182,11 @@ Do not make system log the wait/work path.
 - [x] `safe`/`test` + full shapes dogfooded (**0.59.6**–**0.59.7**).  
 - [x] Membership truth on migrated path (**0.59.5**).  
 - [x] System log seats live; richer catalog residual **BI-015**.  
-- [x] [VISION-0.59](../VISION-0.59.md) closed with residual named.
+- [x] [VISION-0.59](../vision/closed/VISION-0.59.md) closed with residual named.
 
 ---
 
 ## Notes
 
-Illustrative phase lists live in [VISION-0.59](../VISION-0.59.md) and [SD-014](../../TECH-DEBT.md#sd-014).  
+Illustrative phase lists live in [VISION-0.59](../vision/closed/VISION-0.59.md) and [SD-014](../../TECH-DEBT.md#sd-014).  
 They are **spirit**, not frozen public API, until inventory freezes ids.

@@ -8,7 +8,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
 
-Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · Migration: [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · Release: [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)
+Vision: [VISION-0.62](docs/vision/closed/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · Migration: [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · Release: [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)
 
 #### Theme exit (0.62.8)
 - **ADR-031 Accepted** — José judged in-process capacity proper  
@@ -49,7 +49,7 @@ Vision: [VISION-0.62](docs/VISION-0.62.md) · ADR: [031](docs/adr/031-multi-clai
 
 ### 0.61 — Living-kernel vitality (**theme closed**)
 
-Vision: [VISION-0.61](docs/VISION-0.61.md) · ADR: [030](docs/adr/030-system-vitality.md) **Accepted** · Migration: [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · Release: [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)
+Vision: [VISION-0.61](docs/vision/closed/VISION-0.61.md) · ADR: [030](docs/adr/030-system-vitality.md) **Accepted** · Migration: [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · Release: [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)
 
 #### Theme exit (0.61.13)
 - **ADR-030 Accepted** — José judged eyes proper  
@@ -69,7 +69,7 @@ Vision: [VISION-0.61](docs/VISION-0.61.md) · ADR: [030](docs/adr/030-system-vit
 
 ### 0.60 — System Supervisor + Work Plane (**theme closed**)
 
-Vision: [VISION-0.60](docs/VISION-0.60.md) · ADR: [029](docs/adr/029-system-supervisor.md) **Accepted** · Migration: [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · Release: [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)
+Vision: [VISION-0.60](docs/vision/closed/VISION-0.60.md) · ADR: [029](docs/adr/029-system-supervisor.md) **Accepted** · Migration: [MIGRATION-0.60](docs/migrations/MIGRATION-0.60.md) · Release: [RELEASE-0.60.9](docs/releases/RELEASE-0.60.9.md)
 
 #### Added / paid (0.60.0–0.60.9)
 - **`SystemSupervisor`** — continuous services registry + lifecycle on `SystemInstance`  
@@ -88,7 +88,7 @@ Vision: [VISION-0.60](docs/VISION-0.60.md) · ADR: [029](docs/adr/029-system-sup
 
 ### 0.59 — System Boot + Composition Truth (**theme closed**)
 
-Vision: [VISION-0.59](docs/VISION-0.59.md) · ADR: [028](docs/adr/028-system-boot.md) **Accepted** · Migration: [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · Release: [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)
+Vision: [VISION-0.59](docs/vision/closed/VISION-0.59.md) · ADR: [028](docs/adr/028-system-boot.md) **Accepted** · Migration: [MIGRATION-0.59](docs/migrations/MIGRATION-0.59.md) · Release: [RELEASE-0.59.8](docs/releases/RELEASE-0.59.8.md)
 
 #### Added / paid (0.59.0–0.59.8)
 - **Host + system boot phase tables** walked in code (`HOST_PHASES` / `SYSTEM_PHASES`); boot packages own handlers  
@@ -107,13 +107,13 @@ Vision: [VISION-0.59](docs/VISION-0.59.md) · ADR: [028](docs/adr/028-system-boo
 
 ### 0.58 — Session plane (**theme closed**)
 
-Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-plane.md) **Accepted** · Migration: [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · Release: [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)
+Vision: [VISION-0.58](docs/vision/closed/VISION-0.58.md) · ADR: [027](docs/adr/027-session-plane.md) **Accepted** · Migration: [MIGRATION-0.58](docs/migrations/MIGRATION-0.58.md) · Release: [RELEASE-0.58.20](docs/releases/RELEASE-0.58.20.md)
 
 #### Added (0.58.0 plan)
 - Theme plan: session as **system glue**, multi-instance, bind law (not user plane)  
 - [ADR-027](docs/adr/027-session-plane.md) Proposed  
 - Tech debt **SI-001…014** session impact inventory; **SD-008** theme-active  
-- [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md) marked **superseded**
+- [VISION-SESSION-PLANE](docs/vision/closed/VISION-SESSION-PLANE.md) marked **superseded**
 
 #### Added (0.58.1)
 - **`palm.system.planes.session`** — `SessionRecord`, `SessionStatus`, `SessionStore` on **StorageEngine**, `SessionPlaneService`  
@@ -205,8 +205,8 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 - **Not** one junk-drawer root for all automation; workloads inherit job session only  
 
 #### Documented (close plan) — remaining 0.58.14–0.58.20 + exit
-- [VISION-0.58 §4.3–4.4](docs/VISION-0.58.md) — session owns **BoundSurface**; session metadata ≠ job metadata  
-- [VISION-0.58 §6.2](docs/VISION-0.58.md) — ordered close slices: BoundSurface → strict attribution → inherit-or-service → kit door → operate → rename → docs → exit  
+- [VISION-0.58 §4.3–4.4](docs/vision/closed/VISION-0.58.md) — session owns **BoundSurface**; session metadata ≠ job metadata  
+- [VISION-0.58 §6.2](docs/vision/closed/VISION-0.58.md) — ordered close slices: BoundSurface → strict attribution → inherit-or-service → kit door → operate → rename → docs → exit  
 - ADR-027 **D13–D14** · TECH-DEBT **SI-016** · STATUS table  
 
 #### Added (0.58.14) — BoundSurface + session context metadata
@@ -271,7 +271,7 @@ Vision: [VISION-0.58](docs/VISION-0.58.md) · ADR: [027](docs/adr/027-session-pl
 
 #### Theme exit (0.58.20)
 - **ADR-027 Accepted** · **SD-008 closed**  
-- **[VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md)** named — surface compost / walk handles later; not paid in 0.58  
+- **[VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md)** named — surface compost / walk handles later; not paid in 0.58  
 - **MIGRATION-0.58** · **RELEASE-0.58.20** · stamp `0.58.20`  
 - Residual seeds: SI-002 family, SU-*, SD-014, user-plane impersonation, API/SDK docs when value unlocks  
 
@@ -282,7 +282,7 @@ Embedded release covering **0.55–0.57** (previous stamp `0.54.10`).
 
 ### 0.57 — Palm System (**theme closed**)
 
-Logical slices **0.57.0–0.57.14**. Vision: [VISION-0.57](docs/VISION-0.57.md)
+Logical slices **0.57.0–0.57.14**. Vision: [VISION-0.57](docs/vision/closed/VISION-0.57.md)
 
 #### Added
 - **`palm.system`** — system instance: `BaseRuntime`, **ExecutionPort**, wait/work/workload **planes**, executions, job hooks  
@@ -301,7 +301,7 @@ Logical slices **0.57.0–0.57.14**. Vision: [VISION-0.57](docs/VISION-0.57.md)
 
 #### Residual (not blocking close)
 - **SU-*** surface debt (explorer, MCP dual stack, CLI weight) — optional  
-- **SD-008** session plane — opened as theme **0.58** ([VISION-0.58](docs/VISION-0.58.md))
+- **SD-008** session plane — opened as theme **0.58** ([VISION-0.58](docs/vision/closed/VISION-0.58.md))
 
 #### Slice log
 - **0.57.0–1** — Plan, map, ADR, debt archive, low-level  
@@ -314,7 +314,7 @@ Logical slices **0.57.0–0.57.14**. Vision: [VISION-0.57](docs/VISION-0.57.md)
 
 ### 0.56 — Workload (**scout embedded**)
 
-Vision: [VISION-0.56](docs/VISION-0.56.md) · ADR: [024](docs/adr/024-workload-engine.md)
+Vision: [VISION-0.56](docs/vision/VISION-0.56.md) · ADR: [024](docs/adr/024-workload-engine.md)
 
 - WorkloadEngine + leaf foundation; host/neonroot runners  
 - Product `execution.workloads` over port (0.57 rebind)  
@@ -323,7 +323,7 @@ Vision: [VISION-0.56](docs/VISION-0.56.md) · ADR: [024](docs/adr/024-workload-e
 ### 0.55 — Reactive Interests (**theme closed · embedded**)
 
 Logical slices **0.55.0–0.55.16** (was unstamped until this release).  
-Vision: [VISION-0.55](docs/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-interests.md) · migration: [MIGRATION-0.55](docs/migrations/MIGRATION-0.55.md)
+Vision: [VISION-0.55](docs/vision/closed/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-interests.md) · migration: [MIGRATION-0.55](docs/migrations/MIGRATION-0.55.md)
 
 #### Added
 - **Wait interest** (`palm.core.wait`) — durable `palm.wait.interests` on job/instance state  
@@ -335,12 +335,12 @@ Vision: [VISION-0.55](docs/VISION-0.55.md) · ADR: [025](docs/adr/025-reactive-i
 #### Notes
 - **Start** = WorkIntent drain; **continue** = wait interest  
 - Inverted completer→parent resume removed  
-- Session plane remains queued: [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md)
+- Session plane remains queued: [VISION-SESSION-PLANE](docs/vision/closed/VISION-SESSION-PLANE.md)
 
 ## [0.54.10] — 2026-07-26
 
 Embedded release of the **0.54 Hermetic Jobs** theme (0.54.0–0.54.10).  
-Vision: [VISION-0.54](docs/VISION-0.54.md) · ADR: [023-hermetic-jobs](docs/adr/023-hermetic-jobs.md) · notes: [RELEASE-0.54.10](docs/releases/RELEASE-0.54.10.md)
+Vision: [VISION-0.54](docs/vision/closed/VISION-0.54.md) · ADR: [023-hermetic-jobs](docs/adr/023-hermetic-jobs.md) · notes: [RELEASE-0.54.10](docs/releases/RELEASE-0.54.10.md)
 
 ### Added
 - Hermetic job contract (`neonroot` spawn / seed / allowlist) and [HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md) / [HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md)
@@ -354,7 +354,7 @@ Vision: [VISION-0.54](docs/VISION-0.54.md) · ADR: [023-hermetic-jobs](docs/adr/
 
 ### Changed
 - Discarded interim 0.54 library product stack (`common.library`, `providers/library`, `services/docs`)
-- Next theme (opened as plan): [VISION-0.55](docs/VISION-0.55.md) **Reactive Interests** (session plane deferred to [VISION-SESSION-PLANE](docs/VISION-SESSION-PLANE.md))
+- Next theme (opened as plan): [VISION-0.55](docs/vision/closed/VISION-0.55.md) **Reactive Interests** (session plane deferred to [VISION-SESSION-PLANE](docs/vision/closed/VISION-SESSION-PLANE.md))
 
 ### Slice log
 - **0.54.0** — Replan + discard product stack  
@@ -381,7 +381,7 @@ axis is authoritative (scattered `enable_*` flags unified); and a **lean, projec
 [MIGRATION-0.49.md](docs/migrations/MIGRATION-0.49.md)); behaviour-preserving throughout, hermetic CI green at each
 theme's close. New: [PHILOSOPHY.md](PHILOSOPHY.md).
 
-### 0.51 — Living Capabilities (the composition profile's third axis comes alive · [VISION-0.51](docs/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md))
+### 0.51 — Living Capabilities (the composition profile's third axis comes alive · [VISION-0.51](docs/vision/closed/VISION-0.51.md) · [ADR-020](docs/adr/020-living-capabilities.md))
 - **0.51.0** — Plan + ADR-020. Grounded in the code: `composition.capabilities` had been declared since 0.50.1 and read by nothing; the machinery it should gate was still scattered across `settings.enable_*` + deployment flags + unconditional wiring.
 - **0.51.1** — Resolver comes alive: `composition_profile_from_settings` **derives** `capabilities` from the `enable_*` flags (pinned against today's wiring). Declared → *derived*, not yet gating.
 - **0.51.2** — Compensation + webhook gate on `composition.has(...)` instead of `settings.enable_*` (settings refine, never bypass).
@@ -390,7 +390,7 @@ theme's close. New: [PHILOSOPHY.md](PHILOSOPHY.md).
 - **0.51.5** — **Projections become a capability** — `has("projections")` gates the projection layer, so `ApplicationHost` can assemble the lean, projection-less shape (the 0.50.5f blocker removed). Default shapes keep projections.
 - **0.51.6** — Scouted the `ServerContext` fold-in ([SCOUT](docs/SCOUT-0.51.6-serverctx-foldin.md)): evidence says the type **stays** (`ctx.runtime` is a single-runtime view the multi-runtime host can't be). Took the contained half — a lean `ApplicationHost` serves reads direct-from-runtime (reused `StandaloneQueryHandlers`). Deferred-import ratchet **219 → 218**.
 
-### 0.50 — Composition Profiles (declare the app's shape · [VISION-0.50](docs/VISION-0.50.md) · [ADR-019](docs/adr/019-composition-profiles.md))
+### 0.50 — Composition Profiles (declare the app's shape · [VISION-0.50](docs/vision/closed/VISION-0.50.md) · [ADR-019](docs/adr/019-composition-profiles.md))
 - **0.50.0–0.50.1** — Plan + ADR-019; `CompositionProfile` skeleton (name-tuples + presets + `composition_profile_from_settings` seam), `all_in_one().services` pinned to `CORE_SERVICE_PROVIDERS`.
 - **0.50.2** — `ApplicationHost` assembles services from `composition.services` via a dependency-closure `HostServiceRegistry.build_all(only=…)` — **the embedded shape is real** (core-3, starts clean).
 - **0.50.3** — Surfaces driven by `composition.surfaces` (`default_surfaces(ctx, only=…)`).
@@ -415,14 +415,14 @@ theme's close. New: [PHILOSOPHY.md](PHILOSOPHY.md).
 debt themes; public API stable (one internal import-path move — see [MIGRATION-0.48.md](docs/migrations/MIGRATION-0.48.md)).
 
 ### T2 — Decompose `ApplicationHost` (0.48 · PD-009/010/013/018)
-- **0.48.0** — Plan: [VISION-0.48](docs/VISION-0.48.md) + [ADR-018](docs/adr/018-application-host-decomposition.md) + characterization tests freezing the 3 status reports' JSON contract.
+- **0.48.0** — Plan: [VISION-0.48](docs/vision/closed/VISION-0.48.md) + [ADR-018](docs/adr/018-application-host-decomposition.md) + characterization tests freezing the 3 status reports' JSON contract.
 - **0.48.1** — `app/host/observability.py::HostObservability` — the three status reports extracted (PD-018).
 - **0.48.2** — `app/host/services/` — the 6 core services build via a dependency-ordered `HostServiceRegistry` (PD-010).
 - **0.48.3** — `app/host/workplane/` — `WorkPlaneCoordinator` (work-drain / inbound / journal) + folds in the flat service files.
 - **0.48.4** — `app/host/lifecycle/` — `RuntimeSpawner` + `RecoveryCoordinator`.
 - **0.48.5–0.48.6** — `app/host/wiring/` (projections + CQRS bus handlers); **found & fixed a latent `services → server → ServerContext → services` import cycle** via lazy composition-root exports in `common/runtimes/server/__init__`.
 - **0.48.7** — Relocated `ServerContext`/`ServerApp` `common → runtimes/server/` — **PD-013 closed**; upward imports **5 → 3**; server infra stays in `common`. (import-path MIGRATION.)
-- **0.48.8** — Removed 8 dead host `@property` accessors (whole-repo zero-consumer sweep). `ApplicationHost` **1164 → 629 LOC**; T2 structurally complete (the final <350 shrink via facades moves to [VISION-0.50](docs/VISION-0.50.md), the app-composition-profile theme).
+- **0.48.8** — Removed 8 dead host `@property` accessors (whole-repo zero-consumer sweep). `ApplicationHost` **1164 → 629 LOC**; T2 structurally complete (the final <350 shrink via facades moves to [VISION-0.50](docs/vision/closed/VISION-0.50.md), the app-composition-profile theme).
 
 ### T3 — Break the import cycles, cont'd (0.47.5–0.47.9 · PD-012 closed)
 - **0.47.5 (a–d)** — Pattern + provider **registry inversion**: registries move into `common/{patterns,providers}/_registry`; plugins register downward; registration-by-side-effect autoloads removed; back-compat shims retired.
@@ -498,7 +498,7 @@ Fixed all **22** pre-existing failures on master (the suite was red and undetect
 - Wire ``store_resource`` / ``store_action`` — persist envelope via resource invoke before WorkIntent
 - ``mode=poll`` background worker (HTTP GET ``url`` or pull-invoke listening resource)
 - Stream prefers WebSocket transport; HTTP journal poll fallback
-- ``inbound_demo`` pack adds ``inbound-inbox`` resource; Vision: [VISION-0.44](docs/VISION-0.44.md)
+- ``inbound_demo`` pack adds ``inbound-inbox`` resource; Vision: [VISION-0.44](docs/vision/closed/VISION-0.44.md)
 
 ### 0.43.1 — Fix server startup circular import (0.42.3 regression)
 - Move RFC6455 WebSocket frame codec to ``palm.common.websocket.frames``
@@ -510,7 +510,7 @@ Fixed all **22** pre-existing failures on master (the suite was red and undetect
 - `parse_inbound_spec` · `InboundBindingService` (webhook + palm stream)
 - REST `POST/GET /v1/api/inbound…` → WorkIntent (202); doctor `control_plane.inbound_*`
 - Event `inbound.received`; pack `examples/definitions/inbound_demo/`
-- Vision: [VISION-0.43](docs/VISION-0.43.md)
+- Vision: [VISION-0.43](docs/vision/closed/VISION-0.43.md)
 
 ### 0.42.3 — Native WebSocket events client (palm provider)
 - `PalmEventsWebSocketClient` for `/ws/v1/events` (stdlib RFC6455)
@@ -538,13 +538,13 @@ Fixed all **22** pre-existing failures on master (the suite was red and undetect
 
 ### Docs
 
-- **0.40+ charter** — [VISION-0.40](docs/VISION-0.40.md): composition-first mesh; 0.36–0.39 open debt; trains 0.40–0.42 (triggers dogfood → durable UX → event transport / provider consumer). [VISION-0.36](docs/VISION-0.36.md) §12a landed vs open.
+- **0.40+ charter** — [VISION-0.40](docs/vision/closed/VISION-0.40.md): composition-first mesh; 0.36–0.39 open debt; trains 0.40–0.42 (triggers dogfood → durable UX → event transport / provider consumer). [VISION-0.36](docs/vision/closed/VISION-0.36.md) §12a landed vs open.
 
 ## [0.39.0] — 2026-07-10
 
 **Bundled release since 0.34.5** — **Analytics data plane** (0.35–0.36) · **WorkIntent / triggers / journal** (0.37–0.38) · **Dashboards** (0.39) · **Palm provider system inspect** + ops datasets.
 
-**Checklist:** [RELEASE-0.39.0.md](docs/releases/RELEASE-0.39.0.md) · **Vision:** [VISION-0.35](docs/VISION-0.35.md) · [VISION-0.36](docs/VISION-0.36.md)
+**Checklist:** [RELEASE-0.39.0.md](docs/releases/RELEASE-0.39.0.md) · **Vision:** [VISION-0.35](docs/vision/closed/VISION-0.35.md) · [VISION-0.36](docs/vision/closed/VISION-0.36.md)
 
 ### Added — Analytics data plane (0.35–0.36)
 
@@ -573,7 +573,7 @@ Fixed all **22** pre-existing failures on master (the suite was red and undetect
 
 **Bundled release since 0.32.10** — **Assist modularity** (0.33) + **operator remote** menu/open/chat L0 (0.34). No Bot; Assist is the navigation remote; Portal/MCP are clients.
 
-**Checklist:** [RELEASE-0.34.5.md](docs/releases/RELEASE-0.34.5.md) · **Vision:** [VISION-0.33](docs/VISION-0.33.md) · [VISION-0.34](docs/VISION-0.34.md)
+**Checklist:** [RELEASE-0.34.5.md](docs/releases/RELEASE-0.34.5.md) · **Vision:** [VISION-0.33](docs/vision/closed/VISION-0.33.md) · [VISION-0.34](docs/vision/closed/VISION-0.34.md)
 
 ### Added — Assist modularity (0.33)
 
@@ -609,11 +609,11 @@ just palm-server
 
 **Bundled release since 0.31.5** — **WebSocket Assist** transport + **Portal dogfood chat** (0.32.0–0.32.10). Same Assist meta-dispatch brain as MCP; human real-time channel for floating UI / future PWA.
 
-**Checklist:** [RELEASE-0.32.10.md](docs/releases/RELEASE-0.32.10.md) · **Vision:** [VISION-0.32.md](docs/VISION-0.32.md)
+**Checklist:** [RELEASE-0.32.10.md](docs/releases/RELEASE-0.32.10.md) · **Vision:** [VISION-0.32.md](docs/vision/closed/VISION-0.32.md)
 
 ### Added — WebSocket Assist (0.32.0–0.32.3)
 
-- **0.32 foundation** — [VISION-0.32.md](docs/VISION-0.32.md); design [spec](docs/superpowers/specs/2026-07-09-websocket-assist-portal-design.md) + [plan](docs/superpowers/plans/2026-07-09-websocket-assist-portal-0.32.md).
+- **0.32 foundation** — [VISION-0.32.md](docs/vision/closed/VISION-0.32.md); design [spec](docs/superpowers/specs/2026-07-09-websocket-assist-portal-design.md) + [plan](docs/superpowers/plans/2026-07-09-websocket-assist-portal-0.32.md).
 - **0.32.1 transport MVP** — pure-Python RFC6455 on stdlib HTTP; `GET /ws/v1/assist`; `hello` / `ping`/`pong`; surface info `live`.
 - **0.32.2 assist channel** — `dispatch` frames → shared path/alias/params spine → assistant `turn` payloads.
 - **0.32.3 Portal input schema + continuity** — structured ``input`` (widget, field_type, choices, collection) on **WebSocket** turns; **MCP omits** ``input`` by default; WS ``bind`` / auto-bind; hello auth mode.
@@ -650,7 +650,7 @@ just palm-server   # or: uv run palm server
 
 ### Added — MCP meta-surface (0.31)
 
-- **0.31 foundation** — [VISION-0.31.md](docs/VISION-0.31.md); [design](docs/superpowers/specs/2026-07-08-mcp-meta-surface-design.md) + open [plan](docs/superpowers/plans/2026-07-08-mcp-meta-surface-0.31.md).
+- **0.31 foundation** — [VISION-0.31.md](docs/vision/closed/VISION-0.31.md); [design](docs/superpowers/specs/2026-07-08-mcp-meta-surface-design.md) + open [plan](docs/superpowers/plans/2026-07-08-mcp-meta-surface-0.31.md).
 - **0.31.1 surface profiles** — `PALM_MCP_SURFACE=full|assist|core|experimental`; assist-only ≈1 tool; `just mcp-inventory` / `scripts/mcp_catalog_inventory.py`.
 - **0.31.2 assist-complete paths** — aliases `assist/doctor`, `assist/catalog/flows`, `assist/catalog/waiting`, `flows/session-resume`; assistant envelopes; CTAs use aliases.
 - **0.31.3 progressive docs** — L0 short tool description; L1 `palm://agent/card` (`docs/mcp-card.txt`); L2 full guide on demand; publish CTAs → `palm_assist`.
@@ -673,7 +673,7 @@ just palm-server   # or: uv run palm server
 
 ### Added — Assist design entry & weak-LLM MCP (0.30)
 
-- **0.30 foundation** — [VISION-0.30.md](docs/VISION-0.30.md); design [spec](docs/superpowers/specs/2026-07-08-assist-design-entry-design.md) + [plan](docs/superpowers/plans/2026-07-08-assist-design-entry-0.30.md).
+- **0.30 foundation** — [VISION-0.30.md](docs/vision/closed/VISION-0.30.md); design [spec](docs/superpowers/specs/2026-07-08-assist-design-entry-design.md) + [plan](docs/superpowers/plans/2026-07-08-assist-design-entry-0.30.md).
 - **0.30.1 design discovery CTAs** — operator-entry intents `create-flow` / `improve-flow`; assistant action merge + `OperatorViewContext.intent`; `inspect_catalog` propose CTA; metadata `handoff_none_hints`.
 - **0.30.2 design-entry scenario** — `design-entry` / `design-entry/start`; Design tool CTAs only (no catalog writes on start).
 - **0.30.3 design handoff** — `kind: design` with `design_action` / `base_flow_id` / `suggested_name`; post-terminal re-entry CTAs; [MIGRATION-0.30.md](docs/migrations/MIGRATION-0.30.md).
@@ -1150,7 +1150,7 @@ just palm-server   # or: uv run palm server
 
 **Stable MCP proxy** — single `palm_assist` dispatch tool for agent config stability.
 
-Migration: [MIGRATION-0.19.md](docs/migrations/MIGRATION-0.19.md) · Vision: [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
+Migration: [MIGRATION-0.19.md](docs/migrations/MIGRATION-0.19.md) · Vision: [docs/vision/closed/VISION-0.18-ASSIST.md](docs/vision/closed/VISION-0.18-ASSIST.md)
 
 ### Added
 
@@ -1169,7 +1169,7 @@ Migration: [MIGRATION-0.19.md](docs/migrations/MIGRATION-0.19.md) · Vision: [do
 
 **Assist domain MVP** — fifth service for conversational operator guidance and handoff.
 
-Migration: [MIGRATION-0.18.md](docs/migrations/MIGRATION-0.18.md) · Vision: [docs/VISION-0.18-ASSIST.md](docs/VISION-0.18-ASSIST.md)
+Migration: [MIGRATION-0.18.md](docs/migrations/MIGRATION-0.18.md) · Vision: [docs/vision/closed/VISION-0.18-ASSIST.md](docs/vision/closed/VISION-0.18-ASSIST.md)
 
 ### Added
 
@@ -1278,7 +1278,7 @@ Migration: [MIGRATION-0.17.md](docs/migrations/MIGRATION-0.17.md) · Plan: [docs
 
 **Services are the API** — domain services in `palm/services/`, per-service REST under `/v1/api/…`, MCP remounted by service domain. Breaking release for integrators on legacy `/v1/wizards` and monolithic MCP tool names.
 
-Vision: [docs/VISION-0.16.md](docs/VISION-0.16.md) · ADR: [docs/adr/005-service-domain-api.md](docs/adr/005-service-domain-api.md) · Migration: [MIGRATION-0.16.md](docs/migrations/MIGRATION-0.16.md) · MCP: [docs/MCP.md](docs/MCP.md)
+Vision: [docs/vision/closed/VISION-0.16.md](docs/vision/closed/VISION-0.16.md) · ADR: [docs/adr/005-service-domain-api.md](docs/adr/005-service-domain-api.md) · Migration: [MIGRATION-0.16.md](docs/migrations/MIGRATION-0.16.md) · MCP: [docs/MCP.md](docs/MCP.md)
 
 ### Added
 
@@ -1313,7 +1313,7 @@ Vision: [docs/VISION-0.16.md](docs/VISION-0.16.md) · ADR: [docs/adr/005-service
 
 **Service layer release** — CQRS schemas, `palm.common.services`, in-process MCP, REST schema dedupe, and legacy cleanup. PyPI packages the full 0.15 track (internal milestones 0.15.1–0.15.3 on master).
 
-Vision: [docs/VISION-0.15.md](docs/VISION-0.15.md) · ADR: [docs/adr/004-cqrs-schemas-service-layer.md](docs/adr/004-cqrs-schemas-service-layer.md) · MCP: [docs/MCP.md](docs/MCP.md)
+Vision: [docs/vision/closed/VISION-0.15.md](docs/vision/closed/VISION-0.15.md) · ADR: [docs/adr/004-cqrs-schemas-service-layer.md](docs/adr/004-cqrs-schemas-service-layer.md) · MCP: [docs/MCP.md](docs/MCP.md)
 
 ### Added
 
@@ -1409,7 +1409,7 @@ Guide: [docs/MCP.md](docs/MCP.md) · Agent context: [docs/llms.txt](docs/llms.tx
 
 **Wizard Experience release** — first-class `/v1/wizards` REST surface, HTMX-powered Explorer workspace, and rich collection-step UI.
 
-Vision: [docs/VISION-0.13.md](docs/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md) · Phases: [src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md)
+Vision: [docs/vision/closed/VISION-0.13.md](docs/vision/closed/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md](docs/wiki/guides/explorer-wizard.md) · Phases: [src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md)
 
 ### Added
 
@@ -1439,7 +1439,7 @@ Vision: [docs/VISION-0.13.md](docs/VISION-0.13.md) · Guide: [EXPLORER-WIZARD.md
 
 **Compositional Power release** — Resources as first-class, declarative citizens; Palm calling Palm via the `palm` provider; Explorer resource hub.
 
-Vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
+Vision: [docs/vision/closed/VISION-0.12.md](docs/vision/closed/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
 
 ### Added (Phase 1)
 

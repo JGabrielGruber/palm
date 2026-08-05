@@ -23,4 +23,4 @@ The ADR sequence in `docs/adr/` runs **001–012**, then **014** onward. Number 
 
 - [docs/adr/README.md](README.md)  
 - [TECH-DEBT.md](../../TECH-DEBT.md) PD-020  
-- [VISION-0.52](../VISION-0.52.md)  
+- [VISION-0.52](../vision/closed/VISION-0.52.md)  

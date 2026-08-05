@@ -95,8 +95,8 @@ External feedback described a Design Service. Palm adapts it as a **sixth user-f
 
 ## References
 
-- [VISION-0.25.md](../VISION-0.25.md)
-- [VISION-0.24.md](../VISION-0.24.md)
+- [VISION-0.25.md](../vision/closed/VISION-0.25.md)
+- [VISION-0.24.md](../vision/closed/VISION-0.24.md)
 - [Design Service design spec](../superpowers/specs/2026-07-03-design-service-design.md)
 - [Design Service+ plan](../superpowers/plans/2026-07-07-design-service-plus.md)
 - [ADR-007](007-definition-revisioning.md) — revisioning and migration foundation

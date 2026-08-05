@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-30  
 **Package version:** `0.58.20` (`palmengine`)  
-**Theme:** [VISION-0.58](../VISION-0.58.md) · [ADR-027](../adr/027-session-plane.md) **Accepted**  
+**Theme:** [VISION-0.58](../vision/closed/VISION-0.58.md) · [ADR-027](../adr/027-session-plane.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.58](../migrations/MIGRATION-0.58.md)  
 **Previous stamp:** `0.57.14`
@@ -21,7 +21,7 @@ Palm has a **true session plane** in the system layer.
 - **Operate** — focus, list waiting, cancel-owned under gate  
 - **Agents taught** — skill / MCP / wiki: session ≠ instance  
 
-**0.58 is closed** for structure. Residual **SI-*** / **SU-*** remain. Surface compost is named, not paid: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
+**0.58 is closed** for structure. Residual **SI-*** / **SU-*** remain. Surface compost is named, not paid: [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md).
 
 ---
 
@@ -61,7 +61,7 @@ Yes — product paths and envelopes separate system `session_id` from continue `
 
 ## Next
 
-- Residual **SI-002** family / **SU-*** — optional; [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md)  
+- Residual **SI-002** family / **SU-*** — optional; [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md)  
 - **[SD-014](../../TECH-DEBT.md#sd-014)** boot phases — later theme  
 - Other named dogfoods / API·SDK docs when they unlock value  
-- Grove / multi-Palm north star ([VISION-GROVE](../VISION-GROVE.md))  
+- Grove / multi-Palm north star ([VISION-GROVE](../vision/VISION-GROVE.md))  

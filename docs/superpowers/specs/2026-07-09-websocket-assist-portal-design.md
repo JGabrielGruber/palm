@@ -7,7 +7,7 @@
 | **Status** | **In progress** — 0.32.1 transport ✅ · 0.32.2 assist channel ✅ |
 | **Target track** | **0.32 WebSocket Assist + Portal backend** |
 | **Depends on** | Assist 0.18–0.30, MCP dispatch 0.19–0.31, ServerRuntime surfaces |
-| **Vision** | [docs/VISION-0.32.md](../../VISION-0.32.md) |
+| **Vision** | [docs/VISION-0.32.md](../../vision/closed/VISION-0.32.md) |
 | **Plan** | [docs/superpowers/plans/2026-07-09-websocket-assist-portal-0.32.md](../plans/2026-07-09-websocket-assist-portal-0.32.md) |
 | **ADR** | Required before Portal polish — freeze frame schema |
 
@@ -475,9 +475,9 @@ Exact path freeze in ADR.
 
 ## 15. References
 
-- [VISION-0.32.md](../../VISION-0.32.md)
-- [VISION-0.18-ASSIST.md](../../VISION-0.18-ASSIST.md)
-- [VISION-0.31.md](../../VISION-0.31.md)
+- [VISION-0.32.md](../../vision/closed/VISION-0.32.md)
+- [VISION-0.18-ASSIST.md](../../vision/closed/VISION-0.18-ASSIST.md)
+- [VISION-0.31.md](../../vision/closed/VISION-0.31.md)
 - [ADR-006](../../adr/006-assist-domain.md)
 - ARCHITECTURE.md runtimes table
 - `WebSocketSurface` stub

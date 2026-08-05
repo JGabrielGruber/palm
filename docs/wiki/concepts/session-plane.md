@@ -1,6 +1,6 @@
 # Session plane (concept)
 
-**Status:** Living · theme [VISION-0.58](../../VISION-0.58.md) · map [PALM.md](../../PALM.md) · ADR [027](../../adr/027-session-plane.md)
+**Status:** Living · theme [VISION-0.58](../../vision/closed/VISION-0.58.md) · map [PALM.md](../../PALM.md) · ADR [027](../../adr/027-session-plane.md)
 
 ## One idea
 

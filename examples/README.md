@@ -182,7 +182,7 @@ curl -s -X POST 'http://localhost:8080/v1/api/definitions/instances/<instance_id
 
 **Branching wizard reference** — hub-and-spoke topic menu, transform chain
 (`string_format`, `lookup`), and `route_on_answer` / `complete_on` routing.
-Dogfood profile for compositional interactive workflows (see [VISION-0.27.md](../docs/VISION-0.27.md));
+Dogfood profile for compositional interactive workflows (see [VISION-0.27.md](../docs/vision/closed/VISION-0.27.md));
 not a game-NPC product direction.
 
 ```bash

@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-07-29  
 **Accepted:** 2026-07-29 with theme exit **0.57.14**  
-**Theme:** [VISION-0.57](../VISION-0.57.md) · [MIGRATION-0.57](../migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](../releases/RELEASE-0.57.14.md)  
+**Theme:** [VISION-0.57](../vision/closed/VISION-0.57.md) · [MIGRATION-0.57](../migrations/MIGRATION-0.57.md) · [RELEASE-0.57.14](../releases/RELEASE-0.57.14.md)  
 **Map:** [PALM.md](../PALM.md)
 
 ---
@@ -86,7 +86,7 @@ Package paths may move in later slices. **Purposes in PALM.md are normative now.
 
 ## Follow-up (closed with 0.57.14)
 
-- [x] Execute [VISION-0.57](../VISION-0.57.md) structure slices per [SYSTEM-LOW-LEVEL](../SYSTEM-LOW-LEVEL.md).  
+- [x] Execute [VISION-0.57](../vision/closed/VISION-0.57.md) structure slices per [SYSTEM-LOW-LEVEL](../SYSTEM-LOW-LEVEL.md).  
 - [x] Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SD-* largely paid; **SU-*** optional; **SD-008** session → future theme). Era archive under `docs/audit/`.  
 - [x] System boundary + ExecutionPort + kits in code (`palm.system`, `palm.kits`).  
 - [x] ARCHITECTURE / STATUS link [PALM.md](../PALM.md); AGENTS stays rules-only.  
@@ -100,4 +100,4 @@ Package paths may move in later slices. **Purposes in PALM.md are normative now.
 - [ADR-002](002-pattern-apps-and-common-boundaries.md) common boundaries (partial; now refined).  
 - [ADR-024](024-workload-engine.md) workload plane.  
 - [ADR-025](025-reactive-interests.md) start / continue law.  
-- [VISION-GROVE](../VISION-GROVE.md).
+- [VISION-GROVE](../vision/VISION-GROVE.md).

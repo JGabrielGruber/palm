@@ -81,5 +81,5 @@ None. `palm_assist` is additive.
 ## References
 
 - [docs/MCP.md](../MCP.md) — full tool inventory (per-domain + assist proxy)
-- [docs/VISION-0.18-ASSIST.md](../VISION-0.18-ASSIST.md)
+- [docs/VISION-0.18-ASSIST.md](../vision/closed/VISION-0.18-ASSIST.md)
 - [RELEASE-0.19.0.md](../releases/RELEASE-0.19.0.md)

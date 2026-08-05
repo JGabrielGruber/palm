@@ -1,6 +1,6 @@
 # Migration — 0.60 System supervisor + work plane
 
-**Theme:** [VISION-0.60](../VISION-0.60.md) (**closed**) · **ADR:** [029](../adr/029-system-supervisor.md) **Accepted**  
+**Theme:** [VISION-0.60](../vision/closed/VISION-0.60.md) (**closed**) · **ADR:** [029](../adr/029-system-supervisor.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · **Release:** [RELEASE-0.60.9](../releases/RELEASE-0.60.9.md)
 
 Palm is pre-1.0. This theme makes **reactive start and continuous services** live on the **system instance**. Host stays packaging.
@@ -58,4 +58,4 @@ Palm is pre-1.0. This theme makes **reactive start and continuous services** liv
 | Host `WorkDrainService` fallback | **Removed** — plane only; fail closed if unattached |
 | **BI-003** | Floor paid in 0.61.13 (`apply_product_packaging`); growth residual named |
 | ExecutionPort explicit `submit_flow` | Optional expand; plane uses executor path |
-| Surface deflation | [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| Surface deflation | [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) |

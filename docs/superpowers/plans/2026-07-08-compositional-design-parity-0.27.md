@@ -6,7 +6,7 @@
 
 **Architecture:** Business rules stay in `DesignService` / `DefinitionService` (ADR-008). Prompt binding per ADR-010. Pattern design contributors extended, not core engines modified.
 
-**Vision:** [docs/VISION-0.27.md](../../VISION-0.27.md)  
+**Vision:** [docs/VISION-0.27.md](../../vision/closed/VISION-0.27.md)  
 **ADR:** [docs/adr/010-prompt-state-interpolation.md](../../adr/010-prompt-state-interpolation.md)
 
 **Depends on:** 0.26.0 shipped (CQRS parity, design dispatch, MCP guides)

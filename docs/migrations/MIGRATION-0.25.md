@@ -2,7 +2,7 @@
 
 **Releases:** 0.25.0 MVP · 0.25.2–0.25.4 completion (durable proposals, auto-migrate, agent safety)  
 **Prior:** [MIGRATION-0.24.md](MIGRATION-0.24.md)  
-**Vision:** [docs/VISION-0.25.md](../VISION-0.25.md) · **ADR:** [docs/adr/008-design-service.md](../adr/008-design-service.md)
+**Vision:** [docs/VISION-0.25.md](../vision/closed/VISION-0.25.md) · **ADR:** [docs/adr/008-design-service.md](../adr/008-design-service.md)
 
 ---
 

@@ -8,10 +8,10 @@
 
 | Track | Docs |
 |-------|------|
-| Assist design entry | [VISION-0.30](../VISION-0.30.md) · [MIGRATION-0.30](../migrations/MIGRATION-0.30.md) |
-| Compositional design | [VISION-0.27](../VISION-0.27.md) · [ADR-010](../adr/010-prompt-state-interpolation.md) · [ADR-012](../adr/012-wizard-branch-step.md) |
-| Local documents / KV | [VISION-0.28](../VISION-0.28.md) · [ADR-011](../adr/011-local-document-resources.md) |
-| Design Service (prior) | [VISION-0.25](../VISION-0.25.md) · [MIGRATION-0.25](../migrations/MIGRATION-0.25.md) |
+| Assist design entry | [VISION-0.30](../vision/closed/VISION-0.30.md) · [MIGRATION-0.30](../migrations/MIGRATION-0.30.md) |
+| Compositional design | [VISION-0.27](../vision/closed/VISION-0.27.md) · [ADR-010](../adr/010-prompt-state-interpolation.md) · [ADR-012](../adr/012-wizard-branch-step.md) |
+| Local documents / KV | [VISION-0.28](../vision/closed/VISION-0.28.md) · [ADR-011](../adr/011-local-document-resources.md) |
+| Design Service (prior) | [VISION-0.25](../vision/closed/VISION-0.25.md) · [MIGRATION-0.25](../migrations/MIGRATION-0.25.md) |
 
 ## What lands (summary)
 

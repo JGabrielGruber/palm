@@ -2,7 +2,7 @@
 
 Human-first narrative for operators and builders. **Constitution** (philosophy, architecture rules, status) stays at the **repo root**; this tree is the library’s guides and concepts.
 
-See also: [Living Library contract](../LIBRARY.md) · [VISION-0.52](../VISION-0.52.md)
+See also: [Living Library contract](../LIBRARY.md) · [VISION-0.52](../vision/closed/VISION-0.52.md)
 
 ## Guides
 
@@ -16,7 +16,7 @@ See also: [Living Library contract](../LIBRARY.md) · [VISION-0.52](../VISION-0.
 | Concept | Status |
 |---------|--------|
 | [Session plane](concepts/session-plane.md) | Living — session ≠ instance; BoundSurface (0.58 closed) |
-| Surface deflation (queue) | Seed — [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| Surface deflation (queue) | Seed — [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) |
 | [Composition profiles](concepts/composition-profiles.md) | Stub — shelves reserved |
 | [Register downward](concepts/register-downward.md) | Stub — shelves reserved |
 

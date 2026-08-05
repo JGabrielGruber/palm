@@ -1,6 +1,6 @@
 # Migration — 0.55 Reactive Interests
 
-**Theme:** [VISION-0.55](../VISION-0.55.md) · **ADR:** [025-reactive-interests](../adr/025-reactive-interests.md)
+**Theme:** [VISION-0.55](../vision/closed/VISION-0.55.md) · **ADR:** [025-reactive-interests](../adr/025-reactive-interests.md)
 
 ## Breaking (post-theme cleanup)
 
@@ -100,5 +100,5 @@ Module: `palm.patterns.wizard.bindings.resource.nested_park`.
 
 ## References
 
-- [EVENT-PLANE](../EVENT-PLANE.md) · [WORK-DRAIN](../WORK-DRAIN.md) · [VISION-GROVE](../VISION-GROVE.md) §4  
-- [VISION-0.56](../VISION-0.56.md) — consumes `kind=workload`
+- [EVENT-PLANE](../EVENT-PLANE.md) · [WORK-DRAIN](../WORK-DRAIN.md) · [VISION-GROVE](../vision/VISION-GROVE.md) §4  
+- [VISION-0.56](../vision/VISION-0.56.md) — consumes `kind=workload`

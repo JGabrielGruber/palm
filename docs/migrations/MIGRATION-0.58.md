@@ -1,6 +1,6 @@
 # Migration — 0.58 Session plane
 
-**Theme:** [VISION-0.58](../VISION-0.58.md) (**closed**) · **ADR:** [027](../adr/027-session-plane.md) **Accepted**  
+**Theme:** [VISION-0.58](../vision/closed/VISION-0.58.md) (**closed**) · **ADR:** [027](../adr/027-session-plane.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · **Release:** [RELEASE-0.58.20](../releases/RELEASE-0.58.20.md)
 
 Palm is pre-1.0. This theme **breaks the product lie** that `session_id` ≡ `instance_id`. Soft-land remains for some path segments and MCP params; do not rely on it forever.
@@ -44,6 +44,6 @@ Palm is pre-1.0. This theme **breaks the product lie** that `session_id` ≡ `in
 | Open | Kind |
 |------|------|
 | **SI-002** / **SI-006** / **SI-007** / **SI-010** / **SI-016** | Residual honesty — see TECH-DEBT |
-| **SU-*** surface weight / explorer / MCP dual stack | Optional; [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| **SU-*** surface weight / explorer / MCP dual stack | Optional; [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) |
 | **SD-014** boot phases | ✅ paid in **0.59** — residual **BI-*** |
 | User plane impersonation | Later (ADR-027 D11) |

@@ -8,9 +8,9 @@
 
 | Track | Docs |
 |-------|------|
-| Assist modularity | [VISION-0.33](../VISION-0.33.md) |
-| Operator remote | [VISION-0.34](../VISION-0.34.md) |
-| Prior WS/Portal | [VISION-0.32](../VISION-0.32.md) · [RELEASE-0.32.10](RELEASE-0.32.10.md) |
+| Assist modularity | [VISION-0.33](../vision/closed/VISION-0.33.md) |
+| Operator remote | [VISION-0.34](../vision/closed/VISION-0.34.md) |
+| Prior WS/Portal | [VISION-0.32](../vision/closed/VISION-0.32.md) · [RELEASE-0.32.10](RELEASE-0.32.10.md) |
 
 ## What lands (summary)
 

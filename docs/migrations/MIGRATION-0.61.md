@@ -1,6 +1,6 @@
 # Migration — 0.61 Living-kernel vitality
 
-**Theme:** [VISION-0.61](../VISION-0.61.md) (**closed**) · **ADR:** [030](../adr/030-system-vitality.md) **Accepted**  
+**Theme:** [VISION-0.61](../vision/closed/VISION-0.61.md) (**closed**) · **ADR:** [030](../adr/030-system-vitality.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · **Release:** [RELEASE-0.61.13](../releases/RELEASE-0.61.13.md)
 
 Palm is pre-1.0. This theme adds **system-intrinsic eyes** on the living process. Product and surfaces only **present**. Doctor and host status are demoted packaging.
@@ -60,4 +60,4 @@ Temporary `host.system` / import aliases may remain; they are residual, not the 
 | Host enrich/catalog on workplane coordinator | Packaging (BI-013 residual) |
 | BI-003 growth | Packaging as registry seats; not type-kill |
 | `monitor_agent` | Intention / later continuous watch product |
-| Surface deflation | [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| Surface deflation | [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) |

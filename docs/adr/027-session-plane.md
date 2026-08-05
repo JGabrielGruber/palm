@@ -3,10 +3,10 @@
 **Status:** Accepted  
 **Date:** 2026-07-30  
 **Accepted:** 2026-07-30 (theme exit **0.58.20**)  
-**Theme:** [VISION-0.58](../VISION-0.58.md) (**closed**)  
+**Theme:** [VISION-0.58](../vision/closed/VISION-0.58.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Migration / release:** [MIGRATION-0.58](../migrations/MIGRATION-0.58.md) · [RELEASE-0.58.20](../releases/RELEASE-0.58.20.md)  
-**Supersedes (plan only):** watch-first sketch in [VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md)
+**Supersedes (plan only):** watch-first sketch in [VISION-SESSION-PLANE](../vision/closed/VISION-SESSION-PLANE.md)
 
 ---
 
@@ -94,7 +94,7 @@ Session ≠ instance remains. Active ≠ owner pass.
 Support, admin, or team “act on behalf of” must **not** break D9 by dual-owning instances.  
 Future user-plane maturity should use **impersonation**, **delegate grants**, or **elevated inspect**  
 under the **owning** session (or an explicit grant record). That is a later theme.  
-See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + continue is **SI-015** (**paid 0.58.11**).
+See [VISION-0.58 §7.1](../vision/closed/VISION-0.58.md). Owner gate for bound session + continue is **SI-015** (**paid 0.58.11**).
 
 ---
 
@@ -142,12 +142,12 @@ See [VISION-0.58 §7.1](../VISION-0.58.md). Owner gate for bound session + conti
 
 ## Follow-up
 
-- [x] Execute [VISION-0.58](../VISION-0.58.md) slices through **0.58.13**.  
-- [x] Execute close plan **0.58.14–0.58.20** ([VISION-0.58 §6.2](../VISION-0.58.md)).  
+- [x] Execute [VISION-0.58](../vision/closed/VISION-0.58.md) slices through **0.58.13**.  
+- [x] Execute close plan **0.58.14–0.58.20** ([VISION-0.58 §6.2](../vision/closed/VISION-0.58.md)).  
 - [x] Close **SD-008** at theme exit; residual SI honest.  
 - [x] Accept this ADR at theme exit **0.58.20**.  
 - [ ] Later: user plane + session impersonation / delegate grants (D11).  
-- [ ] Later: surface deflation / walk handles — [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) (SI-002 family, SU-*).
+- [ ] Later: surface deflation / walk handles — [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) (SI-002 family, SU-*).
 
 ### D12 — Service sessions for automated start (0.58.13)
 
@@ -188,5 +188,5 @@ gate. Surfaces must not invent private session resume or unowned cancel.
 ## References
 
 - [ADR-025](025-reactive-interests.md) · [ADR-026](026-palm-system-layer.md) · [ADR-024](024-workload-engine.md)  
-- [VISION-0.58](../VISION-0.58.md) (§4.1 ownership vs active; §7.1 growth) · [VISION-GROVE](../VISION-GROVE.md) · [EVENT-PLANE](../EVENT-PLANE.md)  
+- [VISION-0.58](../vision/closed/VISION-0.58.md) (§4.1 ownership vs active; §7.1 growth) · [VISION-GROVE](../vision/VISION-GROVE.md) · [EVENT-PLANE](../EVENT-PLANE.md)  
 - Live debt: [TECH-DEBT.md](../../TECH-DEBT.md) (SI-015 ✅ 0.58.11; later impersonation seed)

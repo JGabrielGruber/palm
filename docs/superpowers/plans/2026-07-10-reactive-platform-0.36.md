@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Land the first two trains of [VISION-0.36](../../VISION-0.36.md): (A) virtual analytics views + schema/doctor/assist discovery (0.36), then (B) WorkIntent enqueue + definition triggers + `resource.changed` drain-when-able (0.37 foundation).
+**Goal:** Land the first two trains of [VISION-0.36](../../vision/closed/VISION-0.36.md): (A) virtual analytics views + schema/doctor/assist discovery (0.36), then (B) WorkIntent enqueue + definition triggers + `resource.changed` drain-when-able (0.37 foundation).
 
 **Architecture:** Analytics remains a thin read path. Virtual views are declared on `metadata.analytics` and evaluated at query time via existing transforms (`count_by`). Deferred reactions use pure `WorkIntent` data (core), durable enqueue via extended outbox (common), and host drain when able—never a fat WorkEngine that runs flows inside core. Triggers are definition metadata → enqueue only.
 
 **Tech Stack:** Python 3.12, existing `AnalyticsService`, `count_by` transform, `OutboxStore` / `OutboxBackgroundService`, `ApplicationHost`, `DefinitionService`, pytest, `examples/definitions/todos/`.
 
-**Spec:** [docs/VISION-0.36.md](../../VISION-0.36.md) · baseline code: `src/palm/services/analytics/`, `src/palm/common/events/outbox.py`, `src/palm/app/host/outbox_service.py`
+**Spec:** [docs/VISION-0.36.md](../../vision/closed/VISION-0.36.md) · baseline code: `src/palm/services/analytics/`, `src/palm/common/events/outbox.py`, `src/palm/app/host/outbox_service.py`
 
 **Out of scope for this plan:** 0.38 journal offsets, 0.39 DashboardDefinition, Bot, analytics joins, OLAP.
 

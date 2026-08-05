@@ -10,7 +10,7 @@
 - [ ] `just check` passes (lint, typecheck, test-quick, guard-core)
 - [ ] `just test-full` green (optional but recommended before PyPI)
 - [ ] `just docs-build` — Tailwind CSS rebuilt if `docs/` changed
-- [ ] Review [EXPLORER-WIZARD.md](../wiki/guides/explorer-wizard.md) and [docs/VISION-0.13.md](../VISION-0.13.md)
+- [ ] Review [EXPLORER-WIZARD.md](../wiki/guides/explorer-wizard.md) and [docs/VISION-0.13.md](../vision/closed/VISION-0.13.md)
 
 ## Build & verify
 

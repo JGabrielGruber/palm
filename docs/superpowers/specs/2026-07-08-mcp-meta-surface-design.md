@@ -7,7 +7,7 @@
 | **Status** | **Approved draft for 0.31 track** (open-ended) |
 | **Target track** | **0.31 MCP meta-surface** |
 | **Depends on** | Assist 0.30.x, MCP adapter, Design Service |
-| **Vision** | [docs/VISION-0.31.md](../../VISION-0.31.md) |
+| **Vision** | [docs/VISION-0.31.md](../../vision/closed/VISION-0.31.md) |
 | **Plan** | [docs/superpowers/plans/2026-07-08-mcp-meta-surface-0.31.md](../plans/2026-07-08-mcp-meta-surface-0.31.md) |
 
 ---
@@ -212,8 +212,8 @@ Or host-side MCP gateway outside Palm. Track remains open.
 
 ## References
 
-- [VISION-0.31.md](../../VISION-0.31.md)
-- [VISION-0.30.md](../../VISION-0.30.md) · [ADR-006](../../adr/006-assist-domain.md)
+- [VISION-0.31.md](../../vision/closed/VISION-0.31.md)
+- [VISION-0.30.md](../../vision/closed/VISION-0.30.md) · [ADR-006](../../adr/006-assist-domain.md)
 - [docs/MCP.md](../../MCP.md) · [docs/mcp.txt](../../mcp.txt)
 - Baseline inventory: in-process `list_tools()` size analysis (2026-07-08)
 - Industry: progressive disclosure / meta-tool / Code Mode (external feedback)

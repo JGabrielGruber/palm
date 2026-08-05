@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-01  
 **Accepted:** 2026-08-01 (theme exit `0.60.9`)  
-**Theme:** [VISION-0.60](../VISION-0.60.md) (**closed**)  
+**Theme:** [VISION-0.60](../vision/closed/VISION-0.60.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Debt:** [BI-013](../../TECH-DEBT.md) ✅ closed at exit · residual host product wire  
 **Release:** [RELEASE-0.60.9](../releases/RELEASE-0.60.9.md) · [MIGRATION-0.60](../migrations/MIGRATION-0.60.md)  
@@ -151,7 +151,7 @@ Spine and reactive law regressions fix in-theme.
 
 ## Follow-up (theme)
 
-- [x] Execute [VISION-0.60](../VISION-0.60.md) slices (0.60.1–0.60.9).  
+- [x] Execute [VISION-0.60](../vision/closed/VISION-0.60.md) slices (0.60.1–0.60.9).  
 - [x] Accept this ADR at theme exit.  
 - [x] Update [PALM.md](../PALM.md), STATUS, TECH-DEBT, [MIGRATION-0.60](../migrations/MIGRATION-0.60.md).  
 - [x] Host re-exports for inbound; product enrich path residual named.
@@ -161,4 +161,4 @@ Spine and reactive law regressions fix in-theme.
 ## References
 
 - Live code: `palm.system.planes.work`, `palm.system.planes.wait`, `palm.app.host.workplane`, host `background.work_drain` phase.  
-- [VISION-0.60](../VISION-0.60.md) · [TECH-DEBT.md](../../TECH-DEBT.md) BI-013.
+- [VISION-0.60](../vision/closed/VISION-0.60.md) · [TECH-DEBT.md](../../TECH-DEBT.md) BI-013.

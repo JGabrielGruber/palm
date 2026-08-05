@@ -17,7 +17,7 @@ plane of start/continue.
 **Sample law:** raw-dog public seat APIs into ``meta.raw`` (``lineage: sampled``).
 Product present interprets. No adapter maps in system vitality.
 
-See [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md).
+See [VISION-0.61](../../../../docs/vision/closed/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md).
 """
 
 from __future__ import annotations

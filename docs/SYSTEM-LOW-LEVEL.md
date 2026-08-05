@@ -3,7 +3,7 @@
 **Status:** Normative map for **0.57** structure (**theme closed** at 0.57.14). Keep true when system packages move.  
 **Language:** ASD-STE100 Simplified Technical English.  
 **Map (high level):** [PALM.md](PALM.md)  
-**Plan:** [VISION-0.57.md](VISION-0.57.md) · **ADR:** [026-palm-system-layer.md](adr/026-palm-system-layer.md)  
+**Plan:** [VISION-0.57.md](vision/closed/VISION-0.57.md) · **ADR:** [026-palm-system-layer.md](adr/026-palm-system-layer.md)  
 **Debt:** [TECH-DEBT.md](../TECH-DEBT.md) (SD-*)
 
 This file is the **low-level** definition.  
@@ -347,7 +347,7 @@ the protocols structurally.
 
 ### Theme exit
 
-- [x] [VISION-0.57 §10](VISION-0.57.md) exit criteria — met at **0.57.14**  
+- [x] [VISION-0.57 §10](vision/closed/VISION-0.57.md) exit criteria — met at **0.57.14**  
 - [ ] ADR-026 → Accepted  
 
 ---

@@ -1,8 +1,8 @@
 # Scout: 0.51.6 — the ServerContext fold-in (read-only assessment)
 
 *A scouting spike, not a plan. Evidence gathered before committing to (or declining) the
-fold-in that [ADR-019](adr/019-composition-profiles.md) / [0.50.5f](VISION-0.50.md) left
-"reachable once a lean `ApplicationHost` exists" — which [0.51.5](VISION-0.51.md) now
+fold-in that [ADR-019](adr/019-composition-profiles.md) / [0.50.5f](vision/closed/VISION-0.50.md) left
+"reachable once a lean `ApplicationHost` exists" — which [0.51.5](vision/closed/VISION-0.51.md) now
 delivers.*
 
 ## The question

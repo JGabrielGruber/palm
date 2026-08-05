@@ -6,7 +6,7 @@
 
 **Architecture:** Metadata (ops) and state (blackboard) are separate submission planes. Internal inbound before examples — no loopback dogfood.
 
-**Spec:** [docs/VISION-0.45.md](../../VISION-0.45.md) · [design spec](../specs/2026-07-15-reactive-data-plane-design.md)
+**Spec:** [docs/VISION-0.45.md](../../vision/closed/VISION-0.45.md) · [design spec](../specs/2026-07-15-reactive-data-plane-design.md)
 
 ---
 
@@ -28,7 +28,7 @@
 
 # 0.45.0 — Docs (complete when committed)
 
-- [x] [docs/VISION-0.45.md](../../VISION-0.45.md)
+- [x] [docs/VISION-0.45.md](../../vision/closed/VISION-0.45.md)
 - [x] [design spec](../specs/2026-07-15-reactive-data-plane-design.md)
 - [x] This plan
 - [ ] Version bump `0.45.0`

@@ -13,7 +13,7 @@
 > **at the service-build layer**, and `ServerContext` is **retained** as the lean server composition
 > root. Fully folding it into `ApplicationHost` would need **projections modeled as a capability** (so
 > the assembler can express the lean shape) — a coherent *future* theme (0.51+), not a 0.50 slice. See
-> the revised-understanding note in [VISION-0.50](../VISION-0.50.md).
+> the revised-understanding note in [VISION-0.50](../vision/closed/VISION-0.50.md).
 
 ## Context
 

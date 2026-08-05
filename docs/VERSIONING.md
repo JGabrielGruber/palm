@@ -139,7 +139,7 @@ just bump-version 0.X.N        # → scripts/sync_version.py --set
 
 This propagates the stamp to the **auto-synced** surfaces: `README.md`, `STATUS.md`, `ARCHITECTURE.md`,
 `DEVELOPMENT.md`, `SCOPE.md`, `docs/llms.txt`, `docs/mcp.txt`, `docs/DOCKER.md`, `docs/index.html`, plus
-MCP/Grok **doc mirrors** ([0.52.1](VISION-0.52.md)). Verify with `uv run python scripts/sync_version.py --check`
+MCP/Grok **doc mirrors** ([0.52.1](vision/closed/VISION-0.52.md)). Verify with `uv run python scripts/sync_version.py --check`
 and `just docs-check`.
 
 ## Publishing
@@ -153,4 +153,4 @@ typically not published. Release gate: `just release-prep` (docs-check + full-ch
 Themes sequence by **intent and dependency**, not by rigid T-number order alone.  
 `TECH-DEBT.md` is the live ledger; pay or name residual when a theme moves.  
 Security / one-line quick-wins may land early regardless of theme.  
-See also [VISION-0.61](VISION-0.61.md) for a theme that states floor vs growth explicitly.
+See also [VISION-0.61](vision/closed/VISION-0.61.md) for a theme that states floor vs growth explicitly.

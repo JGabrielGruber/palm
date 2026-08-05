@@ -28,7 +28,7 @@ palm_assist(params={session_id, flow_id: "coconut-npc", value: "YourName"})
 
 Or pick **coconut-npc** from operator-entry. Resources `load-coconut-player` / `save-coconut-player` auto-run between steps; if stuck: **Resume resource step** or `palm_system_doctor`.
 
-Hub-and-spoke wizard: transforms + `route_on_answer` + loop-back to topic menu. Regression profile for compositional workflows ([VISION-0.27.md](../../../../VISION-0.27.md)).
+Hub-and-spoke wizard: transforms + `route_on_answer` + loop-back to topic menu. Regression profile for compositional workflows ([VISION-0.27.md](../../../vision/closed/VISION-0.27.md)).
 
 ```bash
 palm flow start coconut-npc

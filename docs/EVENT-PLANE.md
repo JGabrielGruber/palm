@@ -1,7 +1,7 @@
 # Event plane — host vs runtime buses
 
 **Status:** 0.45.5 contract · **0.55 Reactive Interests** (wait matcher + composition catalog)  
-**See also:** [VISION-0.45](VISION-0.45.md) · [VISION-0.55](VISION-0.55.md) · [ADR-025](adr/025-reactive-interests.md) · [WORK-DRAIN](WORK-DRAIN.md) · [VISION-GROVE](VISION-GROVE.md) §4
+**See also:** [VISION-0.45](vision/closed/VISION-0.45.md) · [VISION-0.55](vision/closed/VISION-0.55.md) · [ADR-025](adr/025-reactive-interests.md) · [WORK-DRAIN](WORK-DRAIN.md) · [VISION-GROVE](vision/VISION-GROVE.md) §4
 
 Palm runs **two** in-process `EventEngine` instances when `ApplicationHost` is started with a runtime:
 
@@ -25,7 +25,7 @@ host.event.emit("job.completed", job_id="j-1")
 
 ## Two verbs on one bus (0.55)
 
-[Grove Law of Reactive Interests](VISION-GROVE.md): completers speak of themselves; Palm **starts** or **continues** by matching interest.
+[Grove Law of Reactive Interests](vision/VISION-GROVE.md): completers speak of themselves; Palm **starts** or **continues** by matching interest.
 
 | Verb | Interest | Reaction on `runtime.event` | Home |
 |------|----------|-----------------------------|------|

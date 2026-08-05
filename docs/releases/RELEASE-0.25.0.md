@@ -4,7 +4,7 @@
 
 **Bundles:** 0.24.1–0.24.4 (revisioning & migration) · 0.25.0–0.25.5 (Design Service completion)
 
-**Vision:** [docs/VISION-0.24.md](../VISION-0.24.md) · [docs/VISION-0.25.md](../VISION-0.25.md)  
+**Vision:** [docs/VISION-0.24.md](../vision/closed/VISION-0.24.md) · [docs/VISION-0.25.md](../vision/closed/VISION-0.25.md)  
 **ADRs:** [007](../adr/007-definition-revisioning.md) · [008](../adr/008-design-service.md)  
 **Migration:** [MIGRATION-0.24.md](../migrations/MIGRATION-0.24.md) · [MIGRATION-0.25.md](../migrations/MIGRATION-0.25.md)
 

@@ -1,7 +1,7 @@
 # Transform rules & batch semantics
 
 **Status:** 0.45.7 contract  
-**See also:** [VISION-0.45](VISION-0.45.md) Phase A / 0.45.7 hygiene
+**See also:** [VISION-0.45](vision/closed/VISION-0.45.md) Phase A / 0.45.7 hygiene
 
 ## TransformLeaf auto-batch (default `batch: null`)
 

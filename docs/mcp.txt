@@ -24,7 +24,7 @@ Palm = **stateful, path-driven workflow engine** with strong interactive wizard 
 | **MCP Tools** | Write/act — create, input, resume, cancel |
 | **Design (0.25+)** | Safe catalog writes — `palm_design_*` propose → impact → commit |
 
-**Vocabulary law (0.58):** `session_id` ≠ `instance_id`. Prefer `instance_id` to continue a walk. System journey stays `system/session/{id}`. Detail: skill `session-management` · [VISION-0.58](VISION-0.58.md).
+**Vocabulary law (0.58):** `session_id` ≠ `instance_id`. Prefer `instance_id` to continue a walk. System journey stays `system/session/{id}`. Detail: skill `session-management` · [VISION-0.58](vision/closed/VISION-0.58.md).
 
 **Golden rules**:
 - **Run a flow** → start with `palm_assist()` unless you have continue `instance_id` or explicit `flow_id`.

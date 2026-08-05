@@ -8,8 +8,8 @@
 
 | Track | Docs |
 |-------|------|
-| BI / analytics | [VISION-0.35](../VISION-0.35.md) |
-| Reactive platform | [VISION-0.36](../VISION-0.36.md) |
+| BI / analytics | [VISION-0.35](../vision/closed/VISION-0.35.md) |
+| Reactive platform | [VISION-0.36](../vision/closed/VISION-0.36.md) |
 | Dashboards | [ADR-014](../adr/014-dashboard-definitions.md) |
 | Plan | [plans/2026-07-10-reactive-platform-0.36.md](../superpowers/plans/2026-07-10-reactive-platform-0.36.md) |
 

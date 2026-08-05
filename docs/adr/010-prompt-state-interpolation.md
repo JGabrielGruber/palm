@@ -6,7 +6,7 @@
 
 ## Context
 
-Palm binds `{{ state.key }}` placeholders in **resource definition params** and resource IDs ([VISION-0.12](VISION-0.12.md), `ResourceEngine.invoke()`). Wizard step `prompt` and `title` strings are **static** at runtime — computed answers and transform outputs (e.g. `mood_line`, `greeting_line`) do not appear in operator-facing copy unless authors add extra transform-only “display” steps.
+Palm binds `{{ state.key }}` placeholders in **resource definition params** and resource IDs ([VISION-0.12](../vision/closed/VISION-0.12.md), `ResourceEngine.invoke()`). Wizard step `prompt` and `title` strings are **static** at runtime — computed answers and transform outputs (e.g. `mood_line`, `greeting_line`) do not appear in operator-facing copy unless authors add extra transform-only “display” steps.
 
 Dogfooding the **`coconut-npc`** reference flow (branching wizard built via MCP design tools) showed that hub-menu prompts should reflect prior choices without workarounds. The same gap affects approval wizards, personalized summaries, and assist-presented questions — not game NPCs specifically.
 
@@ -42,6 +42,6 @@ Dogfooding the **`coconut-npc`** reference flow (branching wizard built via MCP 
 
 ## References
 
-- [VISION-0.27.md](../VISION-0.27.md)
-- [VISION-0.12.md](../VISION-0.12.md) — resource param binding
+- [VISION-0.27.md](../vision/closed/VISION-0.27.md)
+- [VISION-0.12.md](../vision/closed/VISION-0.12.md) — resource param binding
 - `examples/definitions/coconut/npc.py`

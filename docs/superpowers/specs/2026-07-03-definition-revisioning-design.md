@@ -2,8 +2,8 @@
 
 **Status:** Approved (July 3, 2026)  
 **Version target:** 0.24 vision · **Implementation:** 0.24.1 (revisions) · 0.24.2 (migration rules) · 0.24.3 (execution hooks)  
-**Builds on:** [0.16 services API](../../VISION-0.16.md) · [0.23 mutation guard](../../migrations/MIGRATION-0.23.md)  
-**Vision:** [docs/VISION-0.24.md](../../VISION-0.24.md)  
+**Builds on:** [0.16 services API](../../vision/closed/VISION-0.16.md) · [0.23 mutation guard](../../migrations/MIGRATION-0.23.md)  
+**Vision:** [docs/VISION-0.24.md](../../vision/closed/VISION-0.24.md)  
 **Blocks:** [Design Service (0.25)](2026-07-03-design-service-design.md)
 
 ---
@@ -277,7 +277,7 @@ Schemas register via `CqrsSchemaRegistry` contributor on definitions domain.
 
 ## References
 
-- Vision: [VISION-0.24.md](../../VISION-0.24.md)
+- Vision: [VISION-0.24.md](../../vision/closed/VISION-0.24.md)
 - ADR: [007-definition-revisioning.md](../../adr/007-definition-revisioning.md)
 - Plan: [definition-revisioning.md](../plans/2026-07-03-definition-revisioning.md)
 - Deferred: [design-service-design.md](2026-07-03-design-service-design.md)

@@ -66,7 +66,7 @@ Contributors and agents needed a single story for:
 
 ## References
 
-- [docs/VISION-0.15.md](../VISION-0.15.md)
+- [docs/VISION-0.15.md](../vision/closed/VISION-0.15.md)
 - [docs/superpowers/specs/2026-06-30-cqrs-schemas-service-layer-design.md](../superpowers/specs/2026-06-30-cqrs-schemas-service-layer-design.md)
 - [AGENTS.md](../../AGENTS.md) — extension table and MCP conventions
 - [docs/MCP.md](../MCP.md) — in-process operator setup

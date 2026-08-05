@@ -68,6 +68,6 @@ ADR-004 (0.15) established a service layer in `palm.common.services` composing s
 ## References
 
 - [ADR-004](004-cqrs-schemas-service-layer.md)
-- [VISION-0.16](../VISION-0.16.md)
+- [VISION-0.16](../vision/closed/VISION-0.16.md)
 - [MIGRATION-0.16](../migrations/MIGRATION-0.16.md)
 - [Design spec](../superpowers/specs/2026-06-30-service-registry-dynamic-rest-design.md)

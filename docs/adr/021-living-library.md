@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** — July 2026 (0.52.0, theme: **The Living Library**).  
-Planned in [VISION-0.52](../VISION-0.52.md). Implements TECH-DEBT **T6** direction (docs-as-code) with a longer product arc (docs as service; **neonroot runners in 0.53**; Palm-pipeline build in **0.54**).
+Planned in [VISION-0.52](../vision/closed/VISION-0.52.md). Implements TECH-DEBT **T6** direction (docs-as-code) with a longer product arc (docs as service; **neonroot runners in 0.53**; Palm-pipeline build in **0.54**).
 
 ## Context
 
@@ -48,8 +48,8 @@ A natural product destination is **docs as a Palm service** (queryable, SSR-serv
 
 ### 5. Palm-pipeline dogfood is 0.54 (runners in 0.53)
 
-- **0.53** — NeonRoot as a Palm provider (hermetic spawn / tool images) — [VISION-0.53](../VISION-0.53.md), [ADR-022](022-neonroot-provider.md).
-- **0.54** — build the library **using a Palm pipeline** on those runners — [VISION-0.54](../VISION-0.54.md).
+- **0.53** — NeonRoot as a Palm provider (hermetic spawn / tool images) — [VISION-0.53](../vision/closed/VISION-0.53.md), [ADR-022](022-neonroot-provider.md).
+- **0.54** — build the library **using a Palm pipeline** on those runners — [VISION-0.54](../vision/closed/VISION-0.54.md).
 - **Not** a Palm step that shells out to `just docs-build` and calls it dogfood.
 - 0.52 therefore **must not over-invest** in a Python-only docs platform that 0.54 would re-own as orchestration; keep the 0.52 builder thin and replaceable as the *work unit*.
 
@@ -84,7 +84,7 @@ The handcrafted product story (`index.html` / site) **stays**. Wiki and referenc
 
 ## References
 
-- [VISION-0.52](../VISION-0.52.md)  
+- [VISION-0.52](../vision/closed/VISION-0.52.md)  
 - [TECH-DEBT.md](../../TECH-DEBT.md) T6 (PD-019…021, PD-031)  
 - [VERSIONING.md](../VERSIONING.md)  
 - [PHILOSOPHY.md](../../PHILOSOPHY.md)  

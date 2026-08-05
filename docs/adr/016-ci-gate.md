@@ -54,6 +54,6 @@ the T2 complexity debt (PD-009). Blocking CI on mypy would block on the refactor
 ## References
 
 - [TECH-DEBT.md](../../TECH-DEBT.md) — PD-001/005/006/007, theme T1
-- [docs/VISION-0.46.md](../VISION-0.46.md) — the T1 safety-net plan
+- [docs/VISION-0.46.md](../vision/closed/VISION-0.46.md) — the T1 safety-net plan
 - `ci/Containerfile`, `.pre-commit-config.yaml`, `justfile` (`ci`, `ci-image`, `ci-sandbox`)
 - NeonRoot — `~/Projects/neonroot` (the maintainer's sovereign workspace/sandbox tool)

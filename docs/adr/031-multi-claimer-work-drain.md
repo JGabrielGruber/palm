@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-08-04  
-**Theme:** [VISION-0.62](../VISION-0.62.md) (**closed** at `0.62.8`)  
+**Theme:** [VISION-0.62](../vision/closed/VISION-0.62.md) (**closed** at `0.62.8`)  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.62](../migrations/MIGRATION-0.62.md) · **Release:** [RELEASE-0.62.8](../releases/RELEASE-0.62.8.md)  
 **Debt:** [SD-017](../../TECH-DEBT.md#sd-017) ✅ · [SD-018](../../TECH-DEBT.md#sd-018) ✅ · residual [SD-019](../../TECH-DEBT.md#sd-019)  

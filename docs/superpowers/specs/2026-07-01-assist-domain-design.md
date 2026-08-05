@@ -2,8 +2,8 @@
 
 **Status:** Approved (July 1, 2026)  
 **Version target:** 0.18.0 (MVP) · 0.19.0 (stable MCP proxy)  
-**Builds on:** [0.16.5 shipped](../../VISION-0.16.md) · [0.17 service completion](2026-07-01-0.17-service-completion-design.md)  
-**Vision:** [docs/VISION-0.18-ASSIST.md](../../VISION-0.18-ASSIST.md)
+**Builds on:** [0.16.5 shipped](../../vision/closed/VISION-0.16.md) · [0.17 service completion](2026-07-01-0.17-service-completion-design.md)  
+**Vision:** [docs/VISION-0.18-ASSIST.md](../../vision/closed/VISION-0.18-ASSIST.md)
 
 ---
 
@@ -334,7 +334,7 @@ FlowDefinition(
 
 ## References
 
-- [VISION-0.18-ASSIST.md](../../VISION-0.18-ASSIST.md)
+- [VISION-0.18-ASSIST.md](../../vision/closed/VISION-0.18-ASSIST.md)
 - [0.17 service completion design](2026-07-01-0.17-service-completion-design.md)
 - [ADR-005](../../adr/005-service-domain-api.md)
 - [docs/MCP.md](../../MCP.md)

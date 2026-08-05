@@ -3,7 +3,7 @@
 **Status:** 0.25.0 MVP shipped (local) · completion per [ADR-008](../../adr/008-design-service.md) + [plan](../plans/2026-07-07-design-service-plus.md)  
 **Version target:** 0.25.0 MVP ✅ · final release bundles 0.24 + 0.25  
 **Depends on:** [ADR-007 definition revisioning](../../adr/007-definition-revisioning.md) · [0.24.1+ implementation](../plans/2026-07-03-definition-revisioning.md) ✅  
-**Vision:** [VISION-0.25.md](../../VISION-0.25.md)
+**Vision:** [VISION-0.25.md](../../vision/closed/VISION-0.25.md)
 
 ---
 
@@ -148,6 +148,6 @@ Stretch goals after core commit path works:
 ## References
 
 - Foundation: [definition-revisioning-design.md](2026-07-03-definition-revisioning-design.md)
-- Vision: [VISION-0.25.md](../../VISION-0.25.md)
+- Vision: [VISION-0.25.md](../../vision/closed/VISION-0.25.md)
 - Assist precedent: [assist-domain-design.md](2026-07-01-assist-domain-design.md)
 - ADR: [007-definition-revisioning.md](../../adr/007-definition-revisioning.md)

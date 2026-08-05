@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-01  
 **Package version:** `0.60.9` (`palmengine`)  
-**Theme:** [VISION-0.60](../VISION-0.60.md) · [ADR-029](../adr/029-system-supervisor.md) **Accepted**  
+**Theme:** [VISION-0.60](../vision/closed/VISION-0.60.md) · [ADR-029](../adr/029-system-supervisor.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.60](../migrations/MIGRATION-0.60.md)  
 **Previous stamp:** `0.59.8`

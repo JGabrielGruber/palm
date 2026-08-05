@@ -4,7 +4,7 @@
 
 **Accepted** — July 2026 (0.53.0 planning).  
 Sibling of [ADR-003](003-provider-apps.md) (provider apps), [ADR-016](016-ci-gate.md) (NeonRoot CI).  
-Planned in [VISION-0.53](../VISION-0.53.md). Docs **pipeline** dogfood is **[VISION-0.54](../VISION-0.54.md)**, not this ADR.
+Planned in [VISION-0.53](../vision/closed/VISION-0.53.md). Docs **pipeline** dogfood is **[VISION-0.54](../vision/closed/VISION-0.54.md)**, not this ADR.
 
 ## Context
 
@@ -40,10 +40,10 @@ Planned in [VISION-0.53](../VISION-0.53.md). Docs **pipeline** dogfood is **[VIS
 
 - **Keep NeonRoot justfile-only.** Rejected — leaves isolation outside the product language and blocks honest 0.54 dogfood.
 - **Generic `container` provider (Docker/Podman).** Deferred — wider surface, weaker fit to existing ADR-016 choice.
-- **Docs pipeline in 0.53.** Rejected — runners first; pipeline second ([VISION-0.54](../VISION-0.54.md)).
+- **Docs pipeline in 0.53.** Rejected — runners first; pipeline second ([VISION-0.54](../vision/closed/VISION-0.54.md)).
 - **Shell provider.** Rejected — unrestricted shell is not hermetic and breaks the isolation story.
 
 ## References
 
-- [VISION-0.53](../VISION-0.53.md) · [VISION-0.54](../VISION-0.54.md) · [VISION-0.52](../VISION-0.52.md)  
+- [VISION-0.53](../vision/closed/VISION-0.53.md) · [VISION-0.54](../vision/closed/VISION-0.54.md) · [VISION-0.52](../vision/closed/VISION-0.52.md)  
 - [ADR-016](016-ci-gate.md) · [ADR-003](003-provider-apps.md) · [PROVIDER-APPS.md](../PROVIDER-APPS.md)  

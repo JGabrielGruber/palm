@@ -74,7 +74,7 @@ Compositional side effects already work via wizard `step_kind: resource` and `Re
 
 ## References
 
-- [VISION-0.18-ASSIST.md](../VISION-0.18-ASSIST.md)
+- [VISION-0.18-ASSIST.md](../vision/closed/VISION-0.18-ASSIST.md)
 - [Assist design spec](../superpowers/specs/2026-07-01-assist-domain-design.md)
 - [Assist implementation plan](../superpowers/plans/2026-07-01-assist-domain.md)
 - [ADR-005](005-service-domain-api.md)

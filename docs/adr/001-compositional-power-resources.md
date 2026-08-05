@@ -78,6 +78,6 @@ Phase 4 ships `PalmProvider` at `palm/providers/palm/` with:
 
 ## Links
 
-- [VISION-0.12.md](../VISION-0.12.md)
+- [VISION-0.12.md](../vision/closed/VISION-0.12.md)
 - [ARCHITECTURE.md](../../ARCHITECTURE.md)
 - [SCOPE.md](../../SCOPE.md)

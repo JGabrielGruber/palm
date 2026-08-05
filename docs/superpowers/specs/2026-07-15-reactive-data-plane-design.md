@@ -4,7 +4,7 @@
 |-------|--------|
 | **Date** | 2026-07-15 |
 | **Status** | Approved for 0.45 track |
-| **Vision** | [docs/VISION-0.45.md](../../VISION-0.45.md) |
+| **Vision** | [docs/VISION-0.45.md](../../vision/closed/VISION-0.45.md) |
 | **Plan** | [docs/superpowers/plans/2026-07-15-reactive-data-plane-0.45.md](../plans/2026-07-15-reactive-data-plane-0.45.md) |
 
 ---

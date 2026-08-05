@@ -1,7 +1,7 @@
 # NeonRoot tool images (Sovereign Runners)
 
 Palm’s hermetic runners live as NeonRoot images. The **product** talks to them via
-`palm.providers.neonroot` ([VISION-0.53](../docs/VISION-0.53.md)); **just** recipes
+`palm.providers.neonroot` ([VISION-0.53](../docs/vision/closed/VISION-0.53.md)); **just** recipes
 build and spawn them for day-to-day ops.
 
 | Image | Containerfile | Purpose | Recipe |

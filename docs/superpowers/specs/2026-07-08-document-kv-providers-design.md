@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-08  
 **Status:** Proposed  
-**Vision:** [VISION-0.28.md](../../VISION-0.28.md)
+**Vision:** [VISION-0.28.md](../../vision/closed/VISION-0.28.md)
 
 ---
 

@@ -10,7 +10,7 @@
 
 **Design spec:** [docs/superpowers/specs/2026-07-01-assist-domain-design.md](../specs/2026-07-01-assist-domain-design.md)
 
-**Vision:** [docs/VISION-0.18-ASSIST.md](../../VISION-0.18-ASSIST.md)
+**Vision:** [docs/VISION-0.18-ASSIST.md](../../vision/closed/VISION-0.18-ASSIST.md)
 
 **Prerequisite:** [0.17 service completion](2026-07-01-0.17-service-completion.md) shipped (system REST, processes, palm provider remote, OpenAPI)
 

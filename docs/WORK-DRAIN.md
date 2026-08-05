@@ -2,7 +2,7 @@
 
 **WorkIntent** is Palm's deferred-work queue (0.37+): enqueue at signal time, **run when able**.
 
-This is the **start** verb of [Reactive Interests](VISION-0.55.md) / [ADR-025](adr/025-reactive-interests.md):
+This is the **start** verb of [Reactive Interests](vision/closed/VISION-0.55.md) / [ADR-025](adr/025-reactive-interests.md):
 
 | Verb | Unit | Outcome |
 |------|------|---------|
@@ -67,7 +67,7 @@ Expired leases return to pending. Default remains one background claimer.
 **0.62.7 job drive:** daemon/server surfaces use `QueuedScheduler`. Raise `PALM_QUEUED_WORKERS` for concurrent drive of **different** jobs (one owner per job). Independent of `PALM_WORK_DRAIN_WORKERS`.  
 
 Multi-process shared store is **not** supported yet (one continuous drain owner per store) — residual [SD-019](../TECH-DEBT.md#sd-019).  
-Capacity theme **closed:** [VISION-0.62](VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · stamp `0.62.8`.  
+Capacity theme **closed:** [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · stamp `0.62.8`.  
 
 Honesty: claim + drive pools improve **overlap** under I/O/wait — not all host cores for Python patterns.
 
@@ -109,7 +109,7 @@ completer self-event (job.completed · flow.session.* · workload.*)
 
 Catalog: [EVENT-PLANE](EVENT-PLANE.md) § Trigger ↔ wait composition catalog.
 
-Inbound specifically: [inbound_demo README](../examples/definitions/inbound_demo/README.md) · [VISION-0.43](VISION-0.43.md).
+Inbound specifically: [inbound_demo README](../examples/definitions/inbound_demo/README.md) · [VISION-0.43](vision/closed/VISION-0.43.md).
 
 ## Flow submission (0.45.6)
 

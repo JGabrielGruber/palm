@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.12+, existing ResourceEngine/StorageEngine, ProviderApp pattern from `rest`/`palm`.
 
-**Vision:** [docs/VISION-0.28.md](../../VISION-0.28.md)  
+**Vision:** [docs/VISION-0.28.md](../../vision/closed/VISION-0.28.md)  
 **Design:** [docs/superpowers/specs/2026-07-08-document-kv-providers-design.md](../specs/2026-07-08-document-kv-providers-design.md)
 
 **Depends on:** 0.27 shipped (design propose_resource, resource preflight, coconut-npc example)

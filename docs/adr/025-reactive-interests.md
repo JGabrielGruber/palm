@@ -2,8 +2,8 @@
 
 ## Status
 
-**Accepted** — with **0.55.0** (canonical plan: [VISION-0.55](../VISION-0.55.md)).  
-**North star:** [VISION-GROVE](../VISION-GROVE.md) §4.  
+**Accepted** — with **0.55.0** (canonical plan: [VISION-0.55](../vision/closed/VISION-0.55.md)).  
+**North star:** [VISION-GROVE](../vision/VISION-GROVE.md) §4.  
 Supplements [EVENT-PLANE](../EVENT-PLANE.md) and existing work-drain / child-wait practice; does not remove WorkIntent.
 
 ## Context
@@ -11,9 +11,9 @@ Supplements [EVENT-PLANE](../EVENT-PLANE.md) and existing work-drain / child-wai
 1. Palm already has a strong **start** path: definition/inbound/schedule triggers → **WorkIntent** → drain → new job ([WORK-DRAIN](../WORK-DRAIN.md), host workplane).
 2. **Continue** for nested flows exists as wizard child-wait: parent parks; completion often **reaches up** via parent job id on the child and `ChildCompletionHook` → `resume_parent_after_child`. Effective, but inverted: the completer knows the waiter.
 3. Long steps (hermetic run-code, future workloads) need **park without locking** the process; blocking invoke is not the Grove shape.
-4. [VISION-GROVE](../VISION-GROVE.md) requires: completers emit self-events; interest is explicit; Palm matches — so later peer palms need only trust + target id + events.
-5. Former 0.55 “Session plane” is deferred ([VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md)); watches must sit **on** this law, not before it.
-6. Workload plane ([VISION-0.56](../VISION-0.56.md), [ADR-024](024-workload-engine.md)) needs a **wait kind socket**, not a second resume engine.
+4. [VISION-GROVE](../vision/VISION-GROVE.md) requires: completers emit self-events; interest is explicit; Palm matches — so later peer palms need only trust + target id + events.
+5. Former 0.55 “Session plane” is deferred ([VISION-SESSION-PLANE](../vision/closed/VISION-SESSION-PLANE.md)); watches must sit **on** this law, not before it.
+6. Workload plane ([VISION-0.56](../vision/VISION-0.56.md), [ADR-024](024-workload-engine.md)) needs a **wait kind socket**, not a second resume engine.
 
 ## Decision
 
@@ -60,7 +60,7 @@ Core stays free of wizard and workload SDKs.
 
 ### D8 — Surfaces and Grove
 
-Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs must allow later filters by session **and** wait target ([VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md), Grove walk).
+Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs must allow later filters by session **and** wait target ([VISION-SESSION-PLANE](../vision/closed/VISION-SESSION-PLANE.md), Grove walk).
 
 ## Consequences
 
@@ -69,7 +69,7 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 - One grammar for async continue; workload and peers plug in as kinds.  
 - Removes long-term need for completer→waiter wiring.  
 - Aligns start (already mature) with continue (now first-class).  
-- Steers complexity toward [VISION-GROVE](../VISION-GROVE.md).
+- Steers complexity toward [VISION-GROVE](../vision/VISION-GROVE.md).
 
 ### Trade-offs
 
@@ -108,9 +108,9 @@ Inspect, list-waiting, doctor, and Assist expose open wait interest. Designs mus
 
 ## Theme status
 
-**Law closed** with **0.55.9** (inverted unpark removed). **0.55.10** seats structure as **`WaitPlaneService`** (continue plane peer of work-drain) — [VISION-0.55.10](../VISION-0.55.10.md).
+**Law closed** with **0.55.9** (inverted unpark removed). **0.55.10** seats structure as **`WaitPlaneService`** (continue plane peer of work-drain) — [VISION-0.55.10](../vision/closed/VISION-0.55.10.md).
 
 ## References
 
-- [VISION-0.55](../VISION-0.55.md) · [VISION-GROVE](../VISION-GROVE.md) · [VISION-0.56](../VISION-0.56.md) · [VISION-SESSION-PLANE](../VISION-SESSION-PLANE.md)  
+- [VISION-0.55](../vision/closed/VISION-0.55.md) · [VISION-GROVE](../vision/VISION-GROVE.md) · [VISION-0.56](../vision/VISION-0.56.md) · [VISION-SESSION-PLANE](../vision/closed/VISION-SESSION-PLANE.md)  
 - [EVENT-PLANE](../EVENT-PLANE.md) · [WORK-DRAIN](../WORK-DRAIN.md) · [ADR-024](024-workload-engine.md)  

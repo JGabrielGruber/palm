@@ -32,7 +32,7 @@ You operate Palm through MCP — **prefer `palm_assist` only** (required when `P
 
 Prefer `instance_id` for continue params. Legacy `session_id` in tool params may fill the continue handle when the value is **not** a system `sess-…` id.
 
-Detail: `references/session-management.md` · map [PALM.md](../../../PALM.md) session plane · [VISION-0.58](../../../VISION-0.58.md).
+Detail: `references/session-management.md` · map [PALM.md](../../../PALM.md) session plane · [VISION-0.58](../../vision/closed/VISION-0.58.md).
 
 ## Core principles
 

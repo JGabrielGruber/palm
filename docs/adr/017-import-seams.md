@@ -7,7 +7,7 @@
 ## Context
 
 T3 (PD-012) drove the **upward, cycle-forcing function-local `palm` imports** from **35 → 5** across
-0.47 (see [VISION-0.47](../VISION-0.47.md)). The technique throughout was *dependency inversion*: move
+0.47 (see [VISION-0.47](../vision/closed/VISION-0.47.md)). The technique throughout was *dependency inversion*: move
 the shared **state** (registries) below `common`, and have higher layers **register downward** instead
 of `common` reaching up. Landed inversions:
 

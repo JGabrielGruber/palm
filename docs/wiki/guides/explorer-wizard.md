@@ -123,5 +123,5 @@ Register examples from `examples/definitions/` before submitting by `flow_name` 
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) — Wizard REST + Explorer section
 - [MIGRATION-WIZARD-PHASES.md](src/palm/patterns/wizard/MIGRATION-WIZARD-PHASES.md) — Phase BT refactor
-- [docs/VISION-0.13.md](docs/VISION-0.13.md) — Release vision
+- [docs/VISION-0.13.md](../../vision/closed/VISION-0.13.md) — Release vision
 - [CHANGELOG.md](CHANGELOG.md) — `[0.13.0]` release notes

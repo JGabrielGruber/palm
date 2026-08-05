@@ -1,6 +1,6 @@
 # Plan: Assist Design Entry (0.30)
 
-**Vision:** [docs/VISION-0.30.md](../../VISION-0.30.md)  
+**Vision:** [docs/VISION-0.30.md](../../vision/closed/VISION-0.30.md)  
 **Design:** [2026-07-08-assist-design-entry-design.md](../specs/2026-07-08-assist-design-entry-design.md)  
 **Status:** 0.30.0–0.30.8 ✅  
 

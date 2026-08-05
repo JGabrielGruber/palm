@@ -1,7 +1,7 @@
 # Hermetic jobs (0.54)
 
 **Purpose test:** Palm schedules work as **definitions**; foreign tools run only via
-**NeonRoot** (tmpfs workspaces). See [VISION-0.54](VISION-0.54.md) · [ADR-023](adr/023-hermetic-jobs.md).
+**NeonRoot** (tmpfs workspaces). See [VISION-0.54](vision/closed/VISION-0.54.md) · [ADR-023](adr/023-hermetic-jobs.md).
 
 ## Glossary (0.56 workload plane)
 
@@ -117,4 +117,4 @@ invokes). Set ``drain_ready: false`` for one node per tick.
 
 ## Docs product domain
 
-Optional Living Library business process → [VISION-0.55](VISION-0.55.md), not this theme.
+Optional Living Library business process → [VISION-0.55](vision/closed/VISION-0.55.md), not this theme.

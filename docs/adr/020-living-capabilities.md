@@ -3,7 +3,7 @@
 ## Status
 
 **Accepted** — July 2026 (0.51, theme: Living Capabilities). Sibling of
-[ADR-019](019-composition-profiles.md); planned in [VISION-0.51](../VISION-0.51.md).
+[ADR-019](019-composition-profiles.md); planned in [VISION-0.51](../vision/closed/VISION-0.51.md).
 
 > **Landed (0.51.1–0.51.6).** All capabilities now gate on `composition.has(...)` (resolver
 > derives them, pinned; settings/deployment refine). Decisions 1–2 and 4 held as written.

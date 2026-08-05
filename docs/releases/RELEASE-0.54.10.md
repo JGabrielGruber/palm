@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-26  
 **Package version:** `0.54.10` (`palmengine`)  
-**Theme:** [VISION-0.54](../VISION-0.54.md) · [ADR-023](../adr/023-hermetic-jobs.md)  
+**Theme:** [VISION-0.54](../vision/closed/VISION-0.54.md) · [ADR-023](../adr/023-hermetic-jobs.md)  
 **Previous stamp:** `0.51.6` (debt/import/host work; 0.52–0.54 shipped as slice commits without embedded release)
 
 ---
@@ -16,7 +16,7 @@ Palm can run **definition-driven multi-step work** where foreign code only execu
 - **Dogfood flows** — smoke, fan-out, CI slice, Assist **run-code**  
 - **Portal** — resource steps auto-advance; long NeonRoot runs wait out the session drive  
 
-**0.54 is closed.** Next: [VISION-0.55](../VISION-0.55.md) **Session plane** (session lifecycle + multi-event subscriptions for Assist and dashboard). Docs product dogfood deferred past that.
+**0.54 is closed.** Next: [VISION-0.55](../vision/closed/VISION-0.55.md) **Session plane** (session lifecycle + multi-event subscriptions for Assist and dashboard). Docs product dogfood deferred past that.
 
 ---
 

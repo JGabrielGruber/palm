@@ -1,6 +1,6 @@
 # Plan: WebSocket Assist & Portal Backend (0.32) — open-ended
 
-**Vision:** [docs/VISION-0.32.md](../../VISION-0.32.md)  
+**Vision:** [docs/VISION-0.32.md](../../vision/closed/VISION-0.32.md)  
 **Design:** [2026-07-09-websocket-assist-portal-design.md](../specs/2026-07-09-websocket-assist-portal-design.md)  
 **Status:** 0.32.0–0.32.5 ✅ · 0.32.6+ open  
 

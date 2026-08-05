@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-04  
 **Package version:** `0.61.13` (`palmengine`)  
-**Theme:** [VISION-0.61](../VISION-0.61.md) · [ADR-030](../adr/030-system-vitality.md) **Accepted**  
+**Theme:** [VISION-0.61](../vision/closed/VISION-0.61.md) · [ADR-030](../adr/030-system-vitality.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.61](../migrations/MIGRATION-0.61.md)  
 **Previous stamp:** `0.60.9`

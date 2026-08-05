@@ -599,7 +599,7 @@ Host tests: `tests/test_application_host_cqrs.py`, `tests/test_cqrs_phase4.py`, 
 
 Palm should **orchestrate** work as definitions; foreign toolchains run only in
 **NeonRoot** (tmpfs workspaces). See [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md),
-[docs/HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md), [docs/VISION-0.54.md](docs/VISION-0.54.md).
+[docs/HERMETIC-RUN-DIR.md](docs/HERMETIC-RUN-DIR.md), [docs/vision/closed/VISION-0.54.md](docs/vision/closed/VISION-0.54.md).
 
 | Mode | Use |
 |------|-----|
@@ -632,7 +632,7 @@ resource `hermetic-run-script` / `neonroot.run_script` → store `stdout` /
 - [SCOPE.md](SCOPE.md) — vision, scope, and roadmap
 - [ARCHITECTURE.md](ARCHITECTURE.md) — ApplicationHost, CQRS, reliability
 - [docs/HERMETIC-JOBS.md](docs/HERMETIC-JOBS.md) — hermetic job contract
-- [docs/VISION-0.54.md](docs/VISION-0.54.md) · [docs/VISION-0.55.md](docs/VISION-0.55.md)
+- [docs/vision/closed/VISION-0.54.md](docs/vision/closed/VISION-0.54.md) · [docs/vision/closed/VISION-0.55.md](docs/vision/closed/VISION-0.55.md)
 - [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
 - [README.md](README.md) — quick start and CLI
 - [CHANGELOG.md](CHANGELOG.md) — release history

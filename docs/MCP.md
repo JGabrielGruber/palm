@@ -35,7 +35,7 @@ uv run --extra mcp python scripts/mcp_catalog_inventory.py --surface assist --js
 | Publish flow | `alias="design/publish"`, `params={body: …}` |
 | Run flow | `params={flow_id: "…"}` |
 
-Vision: [VISION-0.31.md](VISION-0.31.md).
+Vision: [VISION-0.31.md](vision/closed/VISION-0.31.md).
 
 Migration from 0.15 tool names: [MIGRATION-0.16.md](migrations/MIGRATION-0.16.md)
 
@@ -80,7 +80,7 @@ flowchart LR
 
 **Operator loop:** definitions → create → inspect → input → wait on children → resume.
 
-**Vocabulary (0.58):** `session_id` = system subject (`sess-…`) only; `instance_id` = product continue handle; path segment **`instance`** (legacy `session` may parse). Product door: **SessionService** / **BoundSurface**. System journey: `system/session/{id}`. REST: `/v1/api/…/instance/{instance_id}`. See [VISION-0.58](VISION-0.58.md) · skill `session-management`.
+**Vocabulary (0.58):** `session_id` = system subject (`sess-…`) only; `instance_id` = product continue handle; path segment **`instance`** (legacy `session` may parse). Product door: **SessionService** / **BoundSurface**. System journey: `system/session/{id}`. REST: `/v1/api/…/instance/{instance_id}`. See [VISION-0.58](vision/closed/VISION-0.58.md) · skill `session-management`.
 
 ### Dual backend
 

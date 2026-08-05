@@ -2,7 +2,7 @@
 
 **Status:** ✅ **Basic shipped** (theme **0.59** · slice **0.59.1a**). Grow verbosity with schedule migration.  
 **Code:** `palm.system.log` · wired on `ApplicationHost.start` / `BaseRuntime.start`  
-**Theme:** [VISION-0.59](VISION-0.59.md) · inventory [BOOT-INVENTORY](BOOT-INVENTORY.md) · [ADR-028](adr/028-system-boot.md) **Proposed**  
+**Theme:** [VISION-0.59](vision/closed/VISION-0.59.md) · inventory [BOOT-INVENTORY](BOOT-INVENTORY.md) · [ADR-028](adr/028-system-boot.md) **Proposed**  
 **Debt:** [BI-015](../TECH-DEBT.md#bi-015) · parent [SD-014](../TECH-DEBT.md#sd-014) · related [CS-002](../TECH-DEBT.md#cs-002)  
 **Map:** [PALM.md](PALM.md) · event plane [EVENT-PLANE](EVENT-PLANE.md) · domain journal `palm.common.events.journal`  
 **Language:** ASD-STE100 (practical).

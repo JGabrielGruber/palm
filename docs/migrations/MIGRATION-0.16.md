@@ -6,7 +6,7 @@
 
 0.16 replaces transport-shaped REST (`/v1/wizards`, `/v1/jobs`, monolithic handlers) with **service-domain APIs** under `/v1/api/…`. MCP tools are regrouped to mirror the same three services.
 
-**Vision:** [docs/VISION-0.16.md](../VISION-0.16.md)  
+**Vision:** [docs/VISION-0.16.md](../vision/closed/VISION-0.16.md)  
 **Design:** [docs/superpowers/specs/2026-06-30-service-registry-dynamic-rest-design.md](../superpowers/specs/2026-06-30-service-registry-dynamic-rest-design.md)
 
 ---
@@ -214,6 +214,6 @@ These were on the old incremental 0.16 roadmap; they return **on the new service
 
 ## References
 
-- [docs/VISION-0.16.md](../VISION-0.16.md)
+- [docs/VISION-0.16.md](../vision/closed/VISION-0.16.md)
 - [docs/adr/005-service-domain-api.md](../adr/005-service-domain-api.md)
 - [RELEASE-0.16.0.md](../releases/RELEASE-0.16.0.md) (at release)

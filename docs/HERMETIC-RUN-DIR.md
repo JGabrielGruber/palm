@@ -76,4 +76,4 @@ No in-engine `exec`. Policy hardcodes image allowlists and max payload size.
 | Palm job state | Handles, status, tails |
 | Palm product storage / host paths | Only **promoted** outputs |
 
-See [HERMETIC-JOBS.md](HERMETIC-JOBS.md) · [VISION-0.54](VISION-0.54.md) · NeonRoot 0.2 docs.
+See [HERMETIC-JOBS.md](HERMETIC-JOBS.md) · [VISION-0.54](vision/closed/VISION-0.54.md) · NeonRoot 0.2 docs.

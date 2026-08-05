@@ -3,7 +3,7 @@
 **Goal:** Complete Design Service and ship **one PyPI release** bundling 0.24 revisioning/migration (0.24.1–0.24.4) and 0.25 design orchestration.
 
 **ADR:** [docs/adr/008-design-service.md](../../adr/008-design-service.md)  
-**Vision:** [docs/VISION-0.25.md](../../VISION-0.25.md)  
+**Vision:** [docs/VISION-0.25.md](../../vision/closed/VISION-0.25.md)  
 **Spec:** [docs/superpowers/specs/2026-07-03-design-service-design.md](../specs/2026-07-03-design-service-design.md)  
 **Foundation:** [definition-revisioning plan](2026-07-03-definition-revisioning.md) (0.24.1–0.24.4 ✅ local)
 

@@ -3,9 +3,9 @@
 **Status:** Accepted  
 **Date:** 2026-08-03  
 **Accepted:** 2026-08-04 (theme exit `0.61.13`)  
-**Theme:** [VISION-0.61](../VISION-0.61.md) (**closed**)  
+**Theme:** [VISION-0.61](../vision/closed/VISION-0.61.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
-**Seed:** [VISION-VITALITY](../VISION-VITALITY.md)  
+**Seed:** [VISION-VITALITY](../vision/closed/VISION-VITALITY.md)  
 **Debt:** [SD-007](../../TECH-DEBT.md#sd-007) ✅ · [CS-002](../../TECH-DEBT.md#cs-002) ✅ · [OD-001](../../TECH-DEBT.md#od-001) ✅ · residual [BI-015](../../TECH-DEBT.md#bi-015) · [SD-016](../../TECH-DEBT.md#sd-016)  
 **Release:** [RELEASE-0.61.13](../releases/RELEASE-0.61.13.md) · [MIGRATION-0.61](../migrations/MIGRATION-0.61.md)  
 **Related:** [ADR-026](026-palm-system-layer.md) · [ADR-028](028-system-boot.md) · [ADR-029](029-system-supervisor.md) · [ADR-025](025-reactive-interests.md) · [SYSTEM-LOG](../SYSTEM-LOG.md)
@@ -184,7 +184,7 @@ Doctor/CLI treat host status as packaging residual only.
 
 ### D11 — Theme exit is José’s judgment
 
-**Floor** (“eyes open”) is defined in [VISION-0.61](../VISION-0.61.md).  
+**Floor** (“eyes open”) is defined in [VISION-0.61](../vision/closed/VISION-0.61.md).  
 Theme **exit** is when **José Gabriel Gruber** judges eyes proper, ADR Accepted, residual named, and declared green bars hold.  
 Agents propose and implement. They do not close the theme by checklist alone.  
 Do not force exit to satisfy empty process notes while ambition still has proper work under the same home.
@@ -219,7 +219,7 @@ Do not force exit to satisfy empty process notes while ambition still has proper
 ## Implementation notes (non-normative)
 
 Suggested early order: seat report + walk → projection + `seat_walk` → emission window → Inspect rename → optional caps and host compost.  
-See [VISION-0.61](../VISION-0.61.md) §7.
+See [VISION-0.61](../vision/closed/VISION-0.61.md) §7.
 
 ---
 

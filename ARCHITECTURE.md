@@ -3,7 +3,7 @@
 **Palm Engine** · **0.62.8** · System seasons through capacity · August 2026 · PyPI: `palmengine`
 
 High-level technical architecture for Palm: layers, engines, control flow, middleware, and extension.  
-**Map first:** [docs/PALM.md](docs/PALM.md) · **Scope / courage:** [SCOPE.md](SCOPE.md) · **Assembly seed:** [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md)
+**Map first:** [docs/PALM.md](docs/PALM.md) · **Scope / courage:** [SCOPE.md](SCOPE.md) · **Assembly seed:** [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md)
 
 ---
 
@@ -17,7 +17,7 @@ Three ideas recur everywhere:
 2. **Definitions as contract** — `FlowDefinition` / `ProcessDefinition` describe *what* to run; `palm.common` builds and submits *how*.
 3. **Hybrid middleware** — cross-cutting concerns (auth, observability, persistence) live primarily at the **runtime**; optional **BT guard nodes** handle step-level policy without polluting step definitions.
 
-4. **Definition lifecycle (0.24+)** — Catalog definitions gain **append-only revisions**; instances pin `flow_id` + `flow_revision` while retaining a resume snapshot. Migration rules (transform registry) upgrade live instances. **Design Service (0.25)** orchestrates propose/validate/impact/commit on top — see [VISION-0.24](docs/VISION-0.24.md).
+4. **Definition lifecycle (0.24+)** — Catalog definitions gain **append-only revisions**; instances pin `flow_id` + `flow_revision` while retaining a resume snapshot. Migration rules (transform registry) upgrade live instances. **Design Service (0.25)** orchestrates propose/validate/impact/commit on top — see [VISION-0.24](docs/vision/closed/VISION-0.24.md).
 
 5. **Register downward** — registry *state* lives in the low layers (`core`/`common`); higher layers (`patterns`, `providers`, `services`, `app`) register *into* it on import. `common` never reaches up for a plugin — the plugin reaches down. This single inversion is behind every registry in [§Registries](#registries), and it's why the dependency arrows all point at `core`.
 
@@ -683,7 +683,7 @@ flowchart TB
 
 **MCP:** `PalmInProcessBackend` calls services on `ServerContext` when `PALM_MCP_IN_PROCESS=1` (default in `.grok/config.toml`). `PalmRestClient` remains for remote-only mode.
 
-ADR: [docs/adr/004-cqrs-schemas-service-layer.md](docs/adr/004-cqrs-schemas-service-layer.md) · Vision: [docs/VISION-0.15.md](docs/VISION-0.15.md)
+ADR: [docs/adr/004-cqrs-schemas-service-layer.md](docs/adr/004-cqrs-schemas-service-layer.md) · Vision: [docs/vision/closed/VISION-0.15.md](docs/vision/closed/VISION-0.15.md)
 
 | Piece | Location | Role |
 |-------|----------|------|
@@ -860,7 +860,7 @@ Static typing is enforced project-wide via **mypy strict** (`just typecheck` / `
 ## Resource layer (0.12 — Compositional Power)
 
 **Status:** Shipped in 0.12.9 (Phases 1–6 complete).
-**Documents:** [docs/VISION-0.12.md](docs/VISION-0.12.md) · [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
+**Documents:** [docs/vision/closed/VISION-0.12.md](docs/vision/closed/VISION-0.12.md) · [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
 
 0.12 elevates Resources to the same declarative tier as flows and processes.
 
@@ -943,11 +943,11 @@ Do **not** read this as doom or “Palm cannot.” Read it as **named next wood*
 
 | Care | Intent | Doc |
 |------|--------|-----|
-| **Workload / place book** | Named places (spawn or adopt); readiness; local and remote process | [VISION-0.56](docs/VISION-0.56.md) · scout live |
-| **Assembly** | Organism truth between boot and business; authoritative DNA; tree topology | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) · seed |
+| **Workload / place book** | Named places (spawn or adopt); readiness; local and remote process | [VISION-0.56](docs/vision/VISION-0.56.md) · scout live |
+| **Assembly** | Organism truth between boot and business; authoritative DNA; tree topology | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · seed |
 | **Tree scale** | Light center, work/support places, projection from truth home | VISION-ASSEMBLY |
 | **Datasets / train / TinyML** | Business flows + bodies as places under one genome | SCOPE · assembly + workload |
-| **Grove** | Many palms, continuous interface (org crown later) | [VISION-GROVE](docs/VISION-GROVE.md) |
+| **Grove** | Many palms, continuous interface (org crown later) | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
 
 Archive GPU batch prototypes under `archive/experimental/gpubatches/` are **history and R&D**, not the architecture of record. New work places compute through **workload runners** and product paths — not archive imports.
 
@@ -966,7 +966,7 @@ New production code must not import from `archive/`.
 
 ## Reactive Interests (0.55) — start and continue planes
 
-Palm’s orchestration bus carries **two peer verbs** under one law ([VISION-GROVE](docs/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-interests.md), [VISION-0.55](docs/VISION-0.55.md)). **0.55.10** seats continue as a first-class plane ([VISION-0.55.10](docs/VISION-0.55.10.md)):
+Palm’s orchestration bus carries **two peer verbs** under one law ([VISION-GROVE](docs/vision/VISION-GROVE.md) §4, [ADR-025](docs/adr/025-reactive-interests.md), [VISION-0.55](docs/vision/closed/VISION-0.55.md)). **0.55.10** seats continue as a first-class plane ([VISION-0.55.10](docs/vision/closed/VISION-0.55.10.md)):
 
 | Verb | Plane | Action |
 |------|-------|--------|
@@ -988,7 +988,7 @@ runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail 
 | Nested wizard park | `open_nested_park` → `kind=job` interest (meta holds step/payload); plane unparks; no `set_child_wait` façade |
 | Operator surfaces | `waiting_on` via `present`; doctor `reactive_interests` from plane snapshot |
 
-**Rules:** completers emit self-events only; **no** inverted parent-resume hooks; do not fold resume into WorkIntent kinds; new async parks open a wait kind into the continue plane. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/VISION-0.56.md](docs/VISION-0.56.md) (uses `kind=workload` socket).
+**Rules:** completers emit self-events only; **no** inverted parent-resume hooks; do not fold resume into WorkIntent kinds; new async parks open a wait kind into the continue plane. Event catalog: [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md). Start plane: [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md). Workload product engine: [docs/vision/VISION-0.56.md](docs/vision/VISION-0.56.md) (uses `kind=workload` socket).
 
 ---
 
@@ -1011,10 +1011,10 @@ runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail 
 
 - [docs/PALM.md](docs/PALM.md) — canonical system map
 - [SCOPE.md](SCOPE.md) — purpose, horizon, experimental honesty
-- [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) — organism truth · tree scale (seed)
-- [docs/VISION-0.55.md](docs/VISION-0.55.md) — Reactive Interests
-- [docs/VISION-0.56.md](docs/VISION-0.56.md) — Workload plane
-- [docs/VISION-GROVE.md](docs/VISION-GROVE.md) — Grove north star
+- [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md) — organism truth · tree scale (seed)
+- [docs/vision/closed/VISION-0.55.md](docs/vision/closed/VISION-0.55.md) — Reactive Interests
+- [docs/vision/VISION-0.56.md](docs/vision/VISION-0.56.md) — Workload plane
+- [docs/vision/VISION-GROVE.md](docs/vision/VISION-GROVE.md) — Grove north star
 - [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md) — host vs runtime buses
 - [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md) — WorkIntent start path
 - [PHILOSOPHY.md](PHILOSOPHY.md) — spirit (including glory and shackles)

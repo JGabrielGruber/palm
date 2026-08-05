@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [VISION-0.62](VISION-0.62.md) (multi-claimer capacity **closed** `0.62.8`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Accepted** · [VISION-0.61](VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-ASSEMBLY](VISION-ASSEMBLY.md) (queue seed · organism truth) · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](VISION-VITALITY.md) (seed essay) · [VISION-0.57](VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [VISION-0.62](vision/closed/VISION-0.62.md) (multi-claimer capacity **closed** `0.62.8`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Accepted** · [VISION-0.61](vision/closed/VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](vision/closed/VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](vision/closed/VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](vision/closed/VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) (queue seed · organism truth) · [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](vision/closed/VISION-VITALITY.md) (seed essay) · [VISION-0.57](vision/closed/VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](vision/VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (agent rules only — not a second map) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -258,12 +258,12 @@ A **plane** is system traffic of one kind.
 | Plane | Verb / role | Home (intent) |
 |-------|-------------|----------------|
 | **Event** | Signals; completers speak of self | `runtime.event` (orchestration bus) |
-| **Work (start)** | Trigger → WorkIntent → new job | **0.60 closed:** `runtime.work_plane` + session attr + inbound under `planes.work` · continuous services on **supervisor** — [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted. |
+| **Work (start)** | Trigger → WorkIntent → new job | **0.60 closed:** `runtime.work_plane` + session attr + inbound under `planes.work` · continuous services on **supervisor** — [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted. |
 | **Wait (continue)** | Interest → resume or fail parked work | Wait plane on system (`runtime.wait_plane`) |
-| **Session** (0.58 **closed**) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; **strict attribution**; **inherit-or-service** reactive start. **Product** `SessionService` / kit `resolve_session_service` is the surface door. **BoundSurface**. **Operate:** focus / list waiting / cancel-owned. **Vocabulary:** `session_id` = system subject (`sess-…`); `instance_id` = continue; path segment `instance`. Session metadata ≠ job metadata. Active ≠ foreign pass. Plane remains law. Theme: [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted. Surface compost residual: [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md). |
+| **Session** (0.58 **closed**) | Outside subject + service attribution + surface context | System `planes.session`: bind; exclusive attach; **active focus**; **owner gate**; **strict attribution**; **inherit-or-service** reactive start. **Product** `SessionService` / kit `resolve_session_service` is the surface door. **BoundSurface**. **Operate:** focus / list waiting / cancel-owned. **Vocabulary:** `session_id` = system subject (`sess-…`); `instance_id` = continue; path segment `instance`. Session metadata ≠ job metadata. Active ≠ foreign pass. Plane remains law. Theme: [VISION-0.58](vision/closed/VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted. Surface compost residual: [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md). |
 | **Workload** | Isolation lifecycle events and placement | Workload engine + runners |
 
-**Supervisor** (0.60 **closed**): not a plane. Continuous system services (work drain, outbox, inbound workers) live under **`SystemSupervisor`** on the system instance. Planes carry traffic; supervisor runs loops. See [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted.
+**Supervisor** (0.60 **closed**): not a plane. Continuous system services (work drain, outbox, inbound workers) live under **`SystemSupervisor`** on the system instance. Planes carry traffic; supervisor runs loops. See [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted.
 
 **Host bus** (`host.event`) is for host coordination (start, shutdown, outbox process).  
 **Do not** put job lifecycle only on the host bus. See [EVENT-PLANE](EVENT-PLANE.md).
@@ -277,7 +277,7 @@ A **plane** is system traffic of one kind.
 5. Same bus may feed both verbs. Verbs stay distinct.
 
 This law is **system law**. It is not a feature flag.  
-Detail: [VISION-GROVE](VISION-GROVE.md) §4 · [ADR-025](adr/025-reactive-interests.md).
+Detail: [VISION-GROVE](vision/VISION-GROVE.md) §4 · [ADR-025](adr/025-reactive-interests.md).
 
 ### 5.5 Shared — not the system dump
 
@@ -372,7 +372,7 @@ The host **wires** system instances and product.
 **Law:** plugins stay on `INSTALLED_*`. Planes are **not** plugins.  
 **Law:** one composition root walks the host phase table — no private boot via import side effects.  
 **Law:** system log is **observation**; event buses remain **reaction**; EventJournal remains **durable domain facts**.  
-**Theme closed:** [VISION-0.59](VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) **Accepted** · [SD-014](../TECH-DEBT.md#sd-014) ✅ · residual **BI-*** · [RELEASE-0.59.8](releases/RELEASE-0.59.8.md).
+**Theme closed:** [VISION-0.59](vision/closed/VISION-0.59.md) · [ADR-028](adr/028-system-boot.md) **Accepted** · [SD-014](../TECH-DEBT.md#sd-014) ✅ · residual **BI-*** · [RELEASE-0.59.8](releases/RELEASE-0.59.8.md).
 
 ### 5.9 Reliability and truth aids
 
@@ -433,7 +433,7 @@ Each top-level part has **one purpose**.
 | New operator domain | **Product** service + CQRS |
 | New transport | **Surface** |
 | New deployment shape | **Composition / deployment profile** |
-| New boot mode or phase | **Boot schedule** (host or system) — not import-order side effects ([VISION-0.59](VISION-0.59.md)) |
+| New boot mode or phase | **Boot schedule** (host or system) — not import-order side effects ([VISION-0.59](vision/closed/VISION-0.59.md)) |
 | New event reaction | **Trigger or wait interest** on the event plane — not a private hook web |
 
 **Growth rule:** extend **kinds** and **registries**.  
@@ -451,7 +451,7 @@ Do not invent a second integration grammar.
 
 ## 8. Grove and tree scale (horizon)
 
-[VISION-GROVE](VISION-GROVE.md) is the **multi-Palm organization** north star:
+[VISION-GROVE](vision/VISION-GROVE.md) is the **multi-Palm organization** north star:
 
 - many Palms (user, service, capacity),
 - talk by flows, events, and interests,
@@ -459,7 +459,7 @@ Do not invent a second integration grammar.
 
 **Near path to many processes** is not mesh-first. It is **tree-shaped scale**:
 
-- [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — organism truth between boot and business; authoritative DNA; definition-ready  
+- [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — organism truth between boot and business; authoritative DNA; definition-ready  
 - Workload as **place book** (spawn or adopt; readiness gates work)  
 - Light center as a **chosen rule** (refuse heavy body / ground on purpose)  
 - Home points up; projection from truth home; invalidate when authority is down  
@@ -515,19 +515,19 @@ From theme **0.57** onward:
 | Live debt (SD/SU/ST/CS) | [TECH-DEBT.md](../TECH-DEBT.md) |
 | Intention stubs | [STUBS.md](STUBS.md) |
 | Debt archive (PD era) | [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md) |
-| Theme plan | [VISION-0.57](VISION-0.57.md) |
+| Theme plan | [VISION-0.57](vision/closed/VISION-0.57.md) |
 | Structural ADR | [ADR-026](adr/026-palm-system-layer.md) |
-| Start / continue law | [VISION-0.55](VISION-0.55.md) · [ADR-025](adr/025-reactive-interests.md) |
+| Start / continue law | [VISION-0.55](vision/closed/VISION-0.55.md) · [ADR-025](adr/025-reactive-interests.md) |
 | Event buses | [EVENT-PLANE](EVENT-PLANE.md) |
 | Start drain | [WORK-DRAIN](WORK-DRAIN.md) |
-| Workload scout | [VISION-0.56](VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
-| Session plane (closed) | [VISION-0.58](VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
-| System boot (closed) | [VISION-0.59](VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) · [ADR-028](adr/028-system-boot.md) Accepted · residual **BI-*** |
-| Supervisor + work plane (closed) | [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted · residual host product wire |
-| System vitality (**0.61 closed**) | [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted · package `palm.system.vitality` · schema `palm.seat_report/1` · inspect present · stamp `0.61.13` · seed [VISION-VITALITY](VISION-VITALITY.md) |
-| Multi-claimer capacity (**0.62 closed**) | [VISION-0.62](VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · exclusive claim + multi-claimer + Queued pool · stamp `0.62.8` · residual multi-process CAS [SD-019](../TECH-DEBT.md#sd-019) |
-| Assembly (queue seed) | [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — organism truth between boot and business; tree scale; place book; not an open theme |
-| Multi-Palm horizon | [VISION-GROVE](VISION-GROVE.md) — org crown later; tree-first path in assembly seed |
+| Workload scout | [VISION-0.56](vision/VISION-0.56.md) · [ADR-024](adr/024-workload-engine.md) |
+| Session plane (closed) | [VISION-0.58](vision/closed/VISION-0.58.md) · [ADR-027](adr/027-session-plane.md) Accepted · residual [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) |
+| System boot (closed) | [VISION-0.59](vision/closed/VISION-0.59.md) · [BOOT-INVENTORY](BOOT-INVENTORY.md) · [SYSTEM-LOG](SYSTEM-LOG.md) · [ADR-028](adr/028-system-boot.md) Accepted · residual **BI-*** |
+| Supervisor + work plane (closed) | [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted · residual host product wire |
+| System vitality (**0.61 closed**) | [VISION-0.61](vision/closed/VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted · package `palm.system.vitality` · schema `palm.seat_report/1` · inspect present · stamp `0.61.13` · seed [VISION-VITALITY](vision/closed/VISION-VITALITY.md) |
+| Multi-claimer capacity (**0.62 closed**) | [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · exclusive claim + multi-claimer + Queued pool · stamp `0.62.8` · residual multi-process CAS [SD-019](../TECH-DEBT.md#sd-019) |
+| Assembly (queue seed) | [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — organism truth between boot and business; tree scale; place book; not an open theme |
+| Multi-Palm horizon | [VISION-GROVE](vision/VISION-GROVE.md) — org crown later; tree-first path in assembly seed |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Agent rules | [AGENTS.md](../AGENTS.md) — points here for structure |
 | Version and theme status | [STATUS.md](../STATUS.md) |
@@ -550,18 +550,18 @@ A map that only names **ideals** without today is also incomplete.
 | Patterns / providers / storages registries | **Real** |
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
-| Workload plane (place book) | **Scout** (0.56) — engine, runners, product path; multi-process **control** via named places — remainder + [VISION-ASSEMBLY](VISION-ASSEMBLY.md) |
+| Workload plane (place book) | **Scout** (0.56) — engine, runners, product path; multi-process **control** via named places — remainder + [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) |
 | Named system layer in packages | **Live** — `palm.system` holds shell, `interfaces/`, `subsystems/` (planes, supervisor), boot, vitality, executions (**0.57+**; seat DI **0.61**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |
 | Live debt register | **Real** — residual **BI-*** / **SU-*** / **SI-*** / **SD-019** — [TECH-DEBT.md](../TECH-DEBT.md) · [STUBS.md](STUBS.md) |
-| Surface thinness | **Law** — bulk/bypass as SU-*; compost seed [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
-| Session plane | **Theme closed 0.58.20** — [VISION-0.58](VISION-0.58.md) · multi-instance system glue (not user plane) |
-| Boot schedule + composition truth | **Theme closed** at `0.59.8` — [VISION-0.59](VISION-0.59.md) · residual **BI-*** |
-| Supervisor + work plane (start) on system | **Theme closed** at `0.60.9` — [VISION-0.60](VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted |
-| Living-kernel vitality | **Theme closed** at `0.61.13` — `palm.system.vitality` + Inspect present — [VISION-0.61](VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted |
-| Multi-claimer work drain | **Theme closed** at `0.62.8` — exclusive claim + drain N + exclusive drive + Queued pool — [VISION-0.62](VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · residual [SD-019](../TECH-DEBT.md#sd-019) |
-| Assembly (organism truth) | **Queue seed** — [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — not open; steward between boot and business |
+| Surface thinness | **Law** — bulk/bypass as SU-*; compost seed [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) |
+| Session plane | **Theme closed 0.58.20** — [VISION-0.58](vision/closed/VISION-0.58.md) · multi-instance system glue (not user plane) |
+| Boot schedule + composition truth | **Theme closed** at `0.59.8` — [VISION-0.59](vision/closed/VISION-0.59.md) · residual **BI-*** |
+| Supervisor + work plane (start) on system | **Theme closed** at `0.60.9` — [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted |
+| Living-kernel vitality | **Theme closed** at `0.61.13` — `palm.system.vitality` + Inspect present — [VISION-0.61](vision/closed/VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted |
+| Multi-claimer work drain | **Theme closed** at `0.62.8` — exclusive claim + drain N + exclusive drive + Queued pool — [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · residual [SD-019](../TECH-DEBT.md#sd-019) |
+| Assembly (organism truth) | **Queue seed** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — not open; steward between boot and business |
 | Grove multi-Palm | **Horizon** — tree path first; org crown later |
 
 **Incomplete structure is stated here on purpose.**  
