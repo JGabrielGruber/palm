@@ -64,7 +64,7 @@ SYNC_SURFACE_FILES = (
     ROOT / "ARCHITECTURE.md",
     ROOT / "DEVELOPMENT.md",
     ROOT / "SCOPE.md",
-    ROOT / "docs/index.html",
+    ROOT / "website/index.html",
     ROOT / "docs/llms.txt",
 )
 
@@ -87,15 +87,15 @@ def check_sync_surfaces(version: str, errors: list[str]) -> None:
         if version not in text:
             errors.append(f"{rel}: missing current version {version!r} (run sync-version)")
 
-    index_html = (ROOT / "docs/index.html").read_text(encoding="utf-8")
+    index_html = (ROOT / "website/index.html").read_text(encoding="utf-8")
     for field in ("version", "softwareVersion"):
         pattern = re.compile(rf'"{field}":\s*"{re.escape(version)}"')
         if not pattern.search(index_html):
-            errors.append(f"docs/index.html: JSON-LD {field!r} not set to {version!r}")
+            errors.append(f"website/index.html: JSON-LD {field!r} not set to {version!r}")
 
     hero_pattern = re.compile(rf"\bv{re.escape(version)}\b")
     if not hero_pattern.search(index_html):
-        errors.append(f"docs/index.html: hero badge missing v{version}")
+        errors.append(f"website/index.html: hero badge missing v{version}")
 
 
 def check_stale_architecture_refs(errors: list[str]) -> None:
@@ -193,7 +193,7 @@ def check_grok_palm_skill_sync(errors: list[str]) -> None:
 def check_stale_versions(errors: list[str]) -> None:
     """Flag outdated version stamps on active public surfaces (not changelogs/migrations)."""
     scan_paths = [
-        ROOT / "docs/index.html",
+        ROOT / "website/index.html",
         ROOT / "docs/llms.txt",
         ROOT / "README.md",
         ROOT / "STATUS.md",

@@ -69,11 +69,13 @@ def _register_targets(version: str) -> None:
             rf"\g<1>{version}",
         ),
     ]
-    index = ROOT / "docs/index.html"
+    index = ROOT / "website/index.html"
     SYNC_TARGETS[index] = [
         (re.compile(r'("version": ")[^"]+(")'), rf'\g<1>{version}\g<2>'),
         (re.compile(r'("softwareVersion": ")[^"]+(")'), rf'\g<1>{version}\g<2>'),
-        (re.compile(r"(>v)[0-9.]+( —)"), rf"\g<1>{version}\g<2>"),
+        # Hero badge: v0.62.8
+        (re.compile(r"(>v)[0-9.]+(</span>)"), rf"\g<1>{version}\g<2>"),
+        (re.compile(r"(v)[0-9.]+(</span>\s*<span class=\"text-zinc-500\">)"), rf"\g<1>{version}\g<2>"),
     ]
 
 
