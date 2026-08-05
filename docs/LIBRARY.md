@@ -17,7 +17,7 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 | **`docs/vision/`** | Theme plans — [index](vision/README.md) · **current:** [ASSEMBLY](vision/VISION-ASSEMBLY.md) · [0.56 workload](vision/VISION-0.56.md) · [SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) · [GROVE](vision/VISION-GROVE.md) · **closed:** [vision/closed/](vision/closed/) |
 | **`TECH-DEBT.md` (root)** | Live open residual + master index · paid detail [audit/TECH-DEBT-PAID.md](audit/TECH-DEBT-PAID.md) · PD era [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md) |
 | `docs/llms.txt`, `docs/mcp.txt`, `docs/MCP.md`, `docs/skills/` | Agent progressive disclosure |
-| Landing assets | `docs/index.html`, `docs/styles/`, `docs/images/` (today). Intended home: `docs/site/` after assemble (0.52.7) — see [site/README.md](site/README.md) |
+| **Landing (website)** | Repo root [`website/`](../website/) — palmengine.org showcase · assembled into `_build/deploy` by `just docs-build` · [website/README.md](../website/README.md) · [site/README.md](site/README.md) |
 
 ## BUILD (only the builder writes)
 

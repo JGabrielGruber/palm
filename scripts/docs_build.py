@@ -10,12 +10,12 @@ Layout written under ``docs/_build/`` (gitignored)::
     wiki/                     # copy of docs/wiki
     library/                  # LIBRARY.md + adr index
     reference/index.html      # minimal generated reference
-    deploy/                   # edge-ready assemble (landing + wiki + reference)
-        index.html, styles/, images/, …
+    deploy/                   # edge-ready assemble (website + wiki + reference)
+        index.html, styles/, images/, …   # from repo website/
         wiki/, library/, reference/, robots.txt, sitemap.xml
 
 Cloudflare (or any static host) may point assets at ``docs/_build/deploy`` after
-this script runs — the historical ``docs/`` root deploy is not a design limit.
+this script runs. Landing SOURCE is ``website/`` (not ``docs/index.html``).
 """
 
 from __future__ import annotations
@@ -34,6 +34,7 @@ from version_utils import ROOT, read_version  # noqa: E402
 
 DOCS = ROOT / "docs"
 BUILD = DOCS / "_build"
+WEBSITE = ROOT / "website"
 WIKI_SRC = DOCS / "wiki"
 ADR_SRC = DOCS / "adr"
 SERVICES_SRC = ROOT / "src" / "palm" / "services"
@@ -220,11 +221,12 @@ def assemble_deploy() -> None:
     _rm_tree(deploy)
     deploy.mkdir(parents=True)
 
-    # Landing (today's site soul at docs/ root)
+    # Landing (website/ canopy — brand showcase)
+    site = WEBSITE if (WEBSITE / "index.html").is_file() else DOCS
     for name in ("index.html", "robots.txt", "sitemap.xml"):
-        _copy_file(DOCS / name, deploy / name)
-    _copytree(DOCS / "styles", deploy / "styles")
-    _copytree(DOCS / "images", deploy / "images")
+        _copy_file(site / name, deploy / name)
+    _copytree(site / "styles", deploy / "styles")
+    _copytree(site / "images", deploy / "images")
 
     # Built library slices
     _copytree(BUILD / "wiki", deploy / "wiki")

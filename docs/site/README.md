@@ -1,18 +1,15 @@
 # Site — landing soul
 
-**SOURCE (edit these):** still at the **`docs/` root** until a later move into this folder:
+**SOURCE (2026-08+):** repo root **[`website/`](../../website/)** — dedicated canopy for palmengine.org.
 
-- `docs/index.html`, `docs/styles/`, `docs/images/`, `docs/robots.txt`, `docs/sitemap.xml`
+| Was | Now |
+|-----|-----|
+| `docs/index.html`, `docs/styles/`, `docs/images/` | `website/index.html`, `website/styles/`, `website/images/` |
+| Raw `docs/` deploy | **Build required:** `just docs-build` → `docs/_build/deploy` |
 
-**BUILD (0.52.6+):** `just docs-build` copies those assets into **`docs/_build/deploy/`** together with wiki + generated reference. That deploy tree is the **edge canopy** — not a limit of Cloudflare; Workers/Pages can point `assets.directory` at `_build/deploy` and run the builder on each push (see `docs/wrangler.jsonc`).
+**BUILD:** `scripts/docs_build.py` copies `website/` into the deploy canopy together with wiki + reference.
 
-**Hermetic / thin desk (0.53.4):**
+**Wrangler:** `docs/wrangler.jsonc` → `assets.directory: _build/deploy`.  
+Cloudflare **must** run the build from the monorepo (see `website/README.md`).
 
-| Recipe | Image | Role |
-|--------|-------|------|
-| `just docs-image` | palm-docs | Build image (uv + Tailwind CLI; see `ci/Containerfile.docs`) |
-| `just docs-css-sandbox` | palm-docs | Rebuild CSS; seeds **`docs/` only** (never full repo / `data/`) |
-| `just docs-build-sandbox` | palm-docs | Hermetic verify of Living Library builder (**git-archive** seed) |
-| `just docs-css` | host | Optional full-weight path (`docs/package.json` + npx) |
-
-Do **not** hand-edit anything under `docs/_build/`.
+Do **not** hand-edit `docs/_build/`.

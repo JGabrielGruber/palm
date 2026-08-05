@@ -5,13 +5,19 @@
   "observability": {
     "enabled": true
   },
-  // Living Library (0.52.6+): static canopy is the *assembled* tree from
-  // `just docs-build` → docs/_build/deploy (landing + wiki + reference).
-  // Cloudflare Pages / Workers static assets: set build command to
-  //   uv run python scripts/docs_build.py
-  // (from repo root) or `just docs-build`, with root directory `docs` and
-  // output/assets directory `_build/deploy`. If you still deploy raw `docs/`
-  // without a build step, switch assets.directory back to "." temporarily.
+  // Deploy canopy = Living Library assemble:
+  //   From **repo root**:  uv run python scripts/docs_build.py
+  //                    or  just docs-build
+  //   Output: docs/_build/deploy  (website/ + wiki + reference)
+  //
+  // Cloudflare Pages / Workers static assets:
+  //   Root directory:     docs
+  //   Build command:      cd .. && uv run python scripts/docs_build.py
+  //                       (or set root to repo and: just docs-build;
+  //                        then set assets path accordingly)
+  //   Assets directory:   _build/deploy
+  //
+  // Do **not** deploy without the build step — assets.directory will be missing.
   "assets": {
     "directory": "_build/deploy"
   },
