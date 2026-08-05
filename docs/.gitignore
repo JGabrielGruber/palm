@@ -1,0 +1,3 @@
+# Optional host Node for legacy docs Tailwind path (prefer website/)
+node_modules/
+*.lock

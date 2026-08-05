@@ -10,7 +10,10 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+/dist/
+# palmengine.org static BUILD (committed or CI-produced; not Python sdist)
+!website/dist/
+!website/dist/**
 downloads/
 eggs/
 .eggs/
