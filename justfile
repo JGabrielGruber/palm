@@ -239,7 +239,7 @@ publish: build
 
 # Tailwind for website/styles (host Node or npx). Prefer website-css-sandbox on thin desks.
 website-css:
-    bash scripts/docs_css.sh
+    bash scripts/website_css.sh
 
 # Assemble static canopy → website/dist (Cloudflare assets.directory).
 website-build:
@@ -250,9 +250,9 @@ website-build:
 # CSS then dist (what you usually run before commit/deploy).
 website-build-all: website-css website-build
 
-# Aliases (old names) — prefer website-*
-docs-css: website-css
-docs-build-site: website-build
+# Previeww
+website-preview:
+    python -m http.server 8765 --directory website/dist
 
 # ---- Living Library (docs only; not palmengine.org) ----
 

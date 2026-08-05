@@ -17,7 +17,7 @@
   // Or commit website/dist and set build command empty / "true",
   // assets still: website/dist
   "assets": {
-    "directory": "dist"
+    "directory": "."
   },
   "compatibility_flags": [
     "nodejs_compat"

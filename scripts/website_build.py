@@ -24,6 +24,7 @@ DIST = WEBSITE / "dist"
 PUBLISH = (
     "index.html",
     "robots.txt",
+    "llms.txt",
     "sitemap.xml",
     "styles",
     "images",

@@ -1,3 +1,4 @@
 node_modules/
 *.lock
 # package.json may exist for optional host Tailwind; do not ignore dist/
+!dist/

@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "description": "Optional host Tailwind for docs/ landing CSS. Prefer `just docs-css-sandbox` (palm-docs NeonRoot image, 0.53.4) so the workspace stays Node-free. Pins match ci/Containerfile.docs.",
+  "dependencies": {
+    "@tailwindcss/cli": "4.3.0",
+    "tailwindcss": "4.3.0"
+  }
+}
