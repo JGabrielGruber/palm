@@ -2,11 +2,15 @@
 
 **Status:** 🌴 **North star** — multi-theme horizon, not a single minor plan.  
 **Role:** Steer growth and complexity so near-term themes compound into a **grove of Palms** that talk through organization flows, reactive interests, and shared genome.  
-**Does not replace:** per-minor [VISION-0.X](VERSIONING.md) plans. Those remain the execution rhythm; this document is the **territory they aim toward**.
+**Does not replace:** per-minor [VISION-0.X](VERSIONING.md) plans. Those remain the execution rhythm; this document is the **territory they aim toward**.  
+**Does not block:** local courage. Near work is [VISION-ASSEMBLY](VISION-ASSEMBLY.md) (organism truth, tree of places) and the closed system seasons. Grove is **not** a gate you must pass before Palm may scale a process tree.
 
-> *Palm grows where the sun meets the sea. A grove is many palms, one light, continuous conversation.*
+> *Palm grows where the sun meets the sea. A grove is many palms, one light, continuous conversation.*  
+> *Tree first. Organization when the verbs are boring.*
 
 **Related near themes:** [VISION-0.55](VISION-0.55.md) **Reactive Interests** · [VISION-0.56](VISION-0.56.md) workload · [VISION-SESSION-PLANE](VISION-SESSION-PLANE.md) · [EVENT-PLANE](EVENT-PLANE.md) · [WORK-DRAIN](WORK-DRAIN.md) · [ADR-025](adr/025-reactive-interests.md) · [ADR-024](adr/024-workload-engine.md) · [PHILOSOPHY](../PHILOSOPHY.md)
+
+**Near structure (before full org crown):** [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — organism truth between boot and business; **tree first** (home up, place book, projection). Grove remains multi-Palm organization and continuous interface. Assembly is the tangible path that makes a grove of processes honest without requiring mesh or org catalog on day one.
 
 ---
 

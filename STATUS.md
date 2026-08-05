@@ -1,12 +1,12 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.62.8` · **Active theme:** *(none — capacity closed)* · **Prior closed:** **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 4, 2026 · **Theme closed:** **0.62.8** — ADR-031 Accepted · José exit  
+**Last Updated:** August 5, 2026 · **Theme closed:** **0.62.8** — ADR-031 Accepted · José exit  
 **System map:** [docs/PALM.md](docs/PALM.md) · closed [VISION-0.62](docs/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · closed [VISION-0.61](docs/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**  
 **Migration / release:** [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md) · prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** ✅ · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · paid residual **SU-004** · **BI-014** · **CS-005** (hot-path partial) · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** ✅ · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · paid residual **SU-004** · **BI-014** · **CS-005** (hot-path partial) · surface seed [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · assembly seed [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (closed)** · [Grove](docs/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-book scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (closed)** · [assembly seed](docs/VISION-ASSEMBLY.md) · tree-before-mesh · [Grove](docs/VISION-GROVE.md) horizon.
 
 ### Agent resume (after compact)
 
@@ -23,8 +23,9 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → closed [VISION-0.
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next seeds** | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · **SD-019** storage CAS · **SD-016** seat DI · residual BI · Grove |
-| **Later** | `monitor_agent` · user-plane · workload remainder |
+| **Next seeds** | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) (organism truth · tree scale) · [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) · **SD-019** · **SD-016** · residual BI · workload remainder · Grove |
+| **Later** | `monitor_agent` · user-plane · Grove org crown |
+| **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 
 ## 0.62 — Multi-claimer work drain (**closed** · theme exit `0.62.8`)
 
@@ -310,17 +311,19 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 
 ## Horizon
 
-**North star:** [**The Grove**](docs/VISION-GROVE.md) — Palm Organization; deepen **start / continue / place / speak / trust**.
+**North star:** [**The Grove**](docs/VISION-GROVE.md) — multi-Palm organization (later).  
+**Near structure seed:** [**Assembly**](docs/VISION-ASSEMBLY.md) — organism truth between boot and business; tree scale; place book; projection.
 
 - **0.59** System boot + composition truth — **closed** at `0.59.8` ([VISION-0.59](docs/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) Accepted · [SD-014](TECH-DEBT.md#sd-014) closed)  
 - **0.58** Session plane — **closed**  
 - **0.55** Reactive Interests — law closed  
-- **0.56** Workload plane — scout; cancel/ownership consume session  
+- **0.56** Workload plane — scout; cancel/ownership consume session; **place book** for multi-process (see assembly seed)  
 - **0.57** System layer — closed  
+- **Assembly** seed ([VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md)) — not open; authoritative DNA + definition-ready  
 - Surface deflation seed ([VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md))  
 - Docs dogfood domain (post boot + workload)  
 - Adapter runners via workloads (PD-022)  
 - Peer / org dogfood (Grove later seasons)  
 - Shared plane-store framework — **ponder later**
 
-See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-GROVE.md](docs/VISION-GROVE.md).
+See [TECH-DEBT.md](TECH-DEBT.md), [docs/VERSIONING.md](docs/VERSIONING.md), [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md), [docs/VISION-GROVE.md](docs/VISION-GROVE.md).

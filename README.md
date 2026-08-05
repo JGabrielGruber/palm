@@ -2,7 +2,15 @@
 
 **Palm** is a lightweight, Python-first orchestration engine built on a clean **Behavior Tree** foundation. It coordinates interactive wizards, data pipelines, and—over time—compute-heavy workloads with explicit contracts, durable state, and human-first tooling.
 
-**Current release:** `0.62.8` — **vitality closed** (`palm.system.vitality` · Inspect door) · [VISION-0.61](docs/VISION-0.61.md) · [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
+**Current release:** `0.62.8` — capacity closed · [VISION-0.62](docs/VISION-0.62.md) · vitality [VISION-0.61](docs/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
+
+### Experimental — no long-term support
+
+Palm is **pre-1.0** and **experimental**. APIs, packages, and behaviors may break between minors. There is **no LTS**, no stability guarantee, and no promise of backward compatibility until a future 1.0 decision by **José Gabriel Gruber**.
+
+Use Palm to explore, dogfood, and build. Pin versions deliberately. Read [STATUS.md](STATUS.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [MIGRATION](docs/migrations/) notes when you upgrade. Structure and honesty matter more than comfort paths while the organism is still growing.
+
+**Growth seed (not an open theme):** organism assembly + tree scale — [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md).
 
 ---
 
@@ -40,12 +48,16 @@ Optional extras: `[cli]`, `[test]`, `[dev]`, `[all]`, `[postgres]`, `[mongodb]`.
 
 Palm aims to be **simple at the core and powerful at the edges**:
 
-- **Human-first** — interactive wizards, Rich CLI feedback, backtracking, resume after interruption
-- **Truth-seeking** — pluggable state, persistent process instances, transactional commits
-- **Extensible** — patterns, providers, and storages register at the edge; core stays pure
-- **Ambitious but honest** — from onboarding wizards to multi-flow data pipelines and planned GPU kernel nodes
+- **Human-first** — interactive wizards, Assist, MCP, backtracking, resume after interruption
+- **Truth-seeking** — durable instances, one start path, one continue path, named debt
+- **Extensible** — patterns, providers, storages, runners register at the edge; core stays pure
+- **Alive as a system** — boot, planes, supervisor, vitality, capacity (in-process multi-claimer)
+- **Ambitious with a map** — workload **place book** (local and remote process); **assembly** seed (organism truth between boot and business); **tree-shaped** scale before mesh; Grove as multi-Palm horizon
+- **Fit for living work** — datasets, training flows, TinyML and model bodies as places under one genome
 
-Behavior Trees are the control-flow foundation. Steps are nodes. Cross-cutting concerns (auth, guards, observability) belong in **runtimes** and optional **BT guard nodes**—not buried in step definitions.
+Behavior Trees are the control-flow foundation for **business**. Organism topology is a different care (assembly seed) — do not confuse the two. Cross-cutting concerns belong in system seats and thin surfaces — not buried in step JSON.
+
+**Read next:** [docs/PALM.md](docs/PALM.md) · [STATUS.md](STATUS.md) · [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) · [PHILOSOPHY.md](PHILOSOPHY.md)
 
 ---
 
@@ -465,7 +477,9 @@ xychart
 
 | Document | Contents |
 |----------|----------|
-| [SCOPE.md](SCOPE.md) | Vision, in/out of scope, roadmap, experimental areas |
+| [SCOPE.md](SCOPE.md) | Purpose, horizon, experimental honesty (not a frozen old roadmap) |
+| [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) | Organism truth · tree scale (queue seed) |
+| [PHILOSOPHY.md](PHILOSOPHY.md) | Spirit — grown, not built; glory and shackles |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers, BT control flow, middleware model, engines |
 | [DEVELOPMENT.md](DEVELOPMENT.md) | Setup, tests, adding patterns/backends |
 | [AGENTS.md](AGENTS.md) | Rules for contributors and AI agents |

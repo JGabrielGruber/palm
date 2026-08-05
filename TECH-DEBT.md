@@ -1286,7 +1286,8 @@ See [docs/SYSTEM-LOG.md](docs/SYSTEM-LOG.md).
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
-| **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh |
+| **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh; place book for assembly |
+| **Assembly / organism truth** | host/profile glue · catalog wire · definition-ready gap | Boot ≠ business-ready — [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) (queue seed; not open) |
 
 **Closed (not a seed):** **System vitality** — [VISION-0.61](docs/VISION-0.61.md) closed · [ADR-030](docs/adr/030-system-vitality.md) Accepted · residual BI-015 · SD-016.
 

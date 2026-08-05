@@ -227,6 +227,39 @@ my own tidiness — was the whole of the work.
 
 ---
 
+## On glory and shackles
+
+There is a quiet poison that enters a living codebase when **old maps outrank living purpose**.
+A roadmap frozen on a long-closed minor. A sentence that says “we cannot” when the organism
+already grew the wood. A tone of doom that confuses *experimental honesty* with *smallness*.
+Those are shackles. They do not protect Palm. They teach every new reader — human or agent —
+to flinch where they should tend.
+
+Palm is **pre-1.0** and may break. That is not shame. That is the price of refusing permanent
+lies so the structure can become true. Honesty says what is not ready; courage says what the
+genome is for. Both belong. Doom alone is a dead letter.
+
+The glory we keep discovering is simple and hard: **one genome, many roles; tree before mesh;
+place before chaos; assembly before business pretends.** Boot raises the system. Assembly
+(when it lands) makes the organism true from authoritative DNA and tracked places. Orchestration
+runs business rules. Workload holds the place book — spawn or adopt — so multi-process and
+network process are *controlled life*, not hope. Flows stay business. Topology stays organism.
+Grove remains the far light of many palms in conversation. None of that kills what already
+works. It names the next wood.
+
+Dead docs that point to doom must be pruned in their season — the same as dead code. Courage
+is a fitness function too. A codebase that only lists limits forgets why anyone entered the
+garden. Palm remembers: **purpose first, residual named, ambition not starved by process.**
+
+## On the little lives
+
+Palm is a fitting home for datasets, training journeys, and small runtimes — TinyML and larger
+models as bodies in the place book. Those little guys are not a side quest. They are future
+leaves on the same tree. The center stays efficient so they can live well; the book tracks
+whether their place is up; business flows may train and serve without lying when ground is
+down. We grow Palm so they have a great time — and so the human and the agent still find a
+door home.
+
 ## The soul of Palm, in a few lines
 
 - It is **grown, not built** — organic, pruned, resilient; a few dead leaves never kill it.
@@ -242,11 +275,15 @@ my own tidiness — was the whole of the work.
 - It keeps the **human in the loop**.
 - It is **tended, not maintained** — a garden, not a machine; it repays care with growth.
 - Its **map yields to its territory** — coherent enough to refute its own plan; scout before you spend.
+- It prunes **shackles of dead maps** — experimental honesty without doom; purpose over flinch.
+- It aims for a **tree of places** under one genome — assembly, workload, light centers — so
+  scale is named life, not chaos.
 - And it is **coherent enough to love** — it rewards understanding with joy.
 
 Palm grows where the sun meets the sea. Tend it honestly, and it will endure. 🌴🌱
 
 ---
+
 
 *Written across the seasons that closed T2 and T3, cut the 0.48.8 release, stood up Composition
 Profiles (0.50), and brought the capability axis alive (0.51) — including the two moments the

@@ -50,7 +50,7 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
 **Next free number:** 032.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** all **closed** (ADR-026…031 Accepted). Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Surface compost seed: [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
+**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** all **closed** (ADR-026…031 Accepted). Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) · [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md).
 
 ## How to add an ADR
 

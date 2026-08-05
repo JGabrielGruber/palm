@@ -1,8 +1,9 @@
 # ARCHITECTURE.md
 
-**Palm Engine** · **0.62.8** · Provider apps + Wizard Experience + Compositional Power · June 2026 · PyPI: `palmengine`
+**Palm Engine** · **0.62.8** · System seasons through capacity · August 2026 · PyPI: `palmengine`
 
-High-level technical architecture for Palm: layers, engines, control flow, middleware, and extension. For product scope and roadmap, see [SCOPE.md](SCOPE.md).
+High-level technical architecture for Palm: layers, engines, control flow, middleware, and extension.  
+**Map first:** [docs/PALM.md](docs/PALM.md) · **Scope / courage:** [SCOPE.md](SCOPE.md) · **Assembly seed:** [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md)
 
 ---
 
@@ -936,15 +937,19 @@ Recursion guardrails (depth limits, cycle detection, child job linkage on parent
 
 ---
 
-## Future: compute & data (beyond 0.12)
+## Growth: places, assembly, living work (beyond closed seasons)
 
-Not yet in the main package, but aligned with the BT model:
+Do **not** read this as doom or “Palm cannot.” Read it as **named next wood**.
 
-- **KernelLeaf** — GPU-resident kernels, fixed VRAM buffers, batch ticks
-- **Resource staging** — Parquet or large artifacts as `ResourceDefinition`-backed stages flowing through `ResourceLeaf` into kernel nodes
-- **Compositional GPU pipelines** — `palm` provider sub-flows coordinating CPU staging and kernel execution
+| Care | Intent | Doc |
+|------|--------|-----|
+| **Workload / place book** | Named places (spawn or adopt); readiness; local and remote process | [VISION-0.56](docs/VISION-0.56.md) · scout live |
+| **Assembly** | Organism truth between boot and business; authoritative DNA; tree topology | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) · seed |
+| **Tree scale** | Light center, work/support places, projection from truth home | VISION-ASSEMBLY |
+| **Datasets / train / TinyML** | Business flows + bodies as places under one genome | SCOPE · assembly + workload |
+| **Grove** | Many palms, continuous interface (org crown later) | [VISION-GROVE](docs/VISION-GROVE.md) |
 
-Prototypes under `archive/experimental/gpubatches/` explore batch GPU execution; they inform design but are not part of the supported architecture until promoted with tests and documentation.
+Archive GPU batch prototypes under `archive/experimental/gpubatches/` are **history and R&D**, not the architecture of record. New work places compute through **workload runners** and product paths — not archive imports.
 
 ---
 
@@ -990,25 +995,30 @@ runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail 
 ## Design goals (summary)
 
 - **Core purity** — testable engines, zero domain coupling
-- **BT-native control flow** — steps, guards, and kernels are nodes
-- **Registry extension** — patterns, providers, storages without forked core
+- **BT-native business control flow** — steps and guards are nodes (assembly topology is a different care)
+- **Registry extension** — patterns, providers, storages, runners without forked core
 - **Durable truth** — definitions + instances survive restarts
 - **Reactive interests** — start (WorkIntent) and continue (wait) on one bus
-- **Runtime middleware** — auth and ops at the edge; guards in the tree when needed
-- **One engine, many surfaces** — embedded, CLI, server, and daemon share `palm.common`
+- **System seats** — boot, planes, supervisor, vitality; thin surfaces
+- **Place book** — workload tracks bodies; readiness gates honesty
+- **Organism assembly (seed)** — definition-ready after system, before business pretends
+- **Tree before mesh** — scale as named places under home, not chaos
+- **One genome, many surfaces** — embedded, CLI, server, daemon, MCP
 
 ---
 
 ## Related documents
 
-- [SCOPE.md](SCOPE.md) — vision, in/out of scope, roadmap
-- [docs/VISION-0.12.md](docs/VISION-0.12.md) — 0.12 Resource System vision
+- [docs/PALM.md](docs/PALM.md) — canonical system map
+- [SCOPE.md](SCOPE.md) — purpose, horizon, experimental honesty
+- [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) — organism truth · tree scale (seed)
 - [docs/VISION-0.55.md](docs/VISION-0.55.md) — Reactive Interests
-- [docs/VISION-GROVE.md](docs/VISION-GROVE.md) — Grove north star (Law §4)
-- [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md) — host vs runtime buses; trigger ↔ wait catalog
+- [docs/VISION-0.56.md](docs/VISION-0.56.md) — Workload plane
+- [docs/VISION-GROVE.md](docs/VISION-GROVE.md) — Grove north star
+- [docs/EVENT-PLANE.md](docs/EVENT-PLANE.md) — host vs runtime buses
 - [docs/WORK-DRAIN.md](docs/WORK-DRAIN.md) — WorkIntent start path
-- [docs/adr/025-reactive-interests.md](docs/adr/025-reactive-interests.md) — wait + trigger ADR
+- [PHILOSOPHY.md](PHILOSOPHY.md) — spirit (including glory and shackles)
 - [README.md](README.md) — quick start and CLI
-- [MIGRATION-0.10.md](docs/migrations/MIGRATION-0.10.md) — upgrade from 0.9.x bootstrap paths
+- [STATUS.md](STATUS.md) — themes and seeds
 - [DEVELOPMENT.md](DEVELOPMENT.md) — contributor guide
 - [AGENTS.md](AGENTS.md) — contribution rules

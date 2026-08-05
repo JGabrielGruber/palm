@@ -1,210 +1,137 @@
-# Palm Engine — Project Scope & Roadmap
+# Palm Engine — Scope & horizon
 
-**Version:** 0.62.8 (shipping) · **Last updated:** July 2026
+**Version:** 0.62.8 · **Last updated:** August 2026  
+**Map first:** [docs/PALM.md](docs/PALM.md) · **Status:** [STATUS.md](STATUS.md) · **Spirit:** [PHILOSOPHY.md](PHILOSOPHY.md)
 
-This document describes what Palm is for, what it does today, and where it is headed. For layer-by-layer technical detail, see [ARCHITECTURE.md](ARCHITECTURE.md). For day-to-day usage, see [README.md](README.md).
-
----
-
-## Vision
-
-Palm Engine is a **lightweight, Python-first orchestration engine** built on a clean **Behavior Tree (BT)** foundation. It is designed to coordinate human-in-the-loop workflows, data pipelines, and—over time—compute-heavy workloads such as ML and GPU batch processing.
-
-Palm should feel approachable on day one and remain honest as complexity grows: explicit contracts, durable state, and extension through registries—not hidden magic.
+This file answers **what Palm is for** and **where courage points**.  
+It does **not** replace the system map or the live theme register.  
+When this file fights [PALM.md](docs/PALM.md) or [STATUS.md](STATUS.md), **those win**.
 
 ---
 
-## Philosophy
+## What Palm is for
 
-| Principle | What it means in practice |
-|-----------|---------------------------|
-| **Simple at the core, powerful at the edges** | `palm.core` stays pure and small; `palm.common`, patterns, and runtimes carry coordination and integration logic. |
-| **Human-first** | Interactive wizards, Rich CLI feedback, backtracking, and resume after interruption. |
-| **Truth-seeking & high-agency** | Pluggable `BaseState`, visible job lifecycle, persistent instances, transactional commits. |
-| **Durable & transactional** | Definitions and process instances persist; commits succeed or fail explicitly. |
-| **Scale of ambition** | From a two-step onboarding wizard to multi-flow data/ML pipelines on shared resources. |
+Palm is a **Python-first orchestration organism** on a **Behavior Tree** spine.
 
-Behavior Trees are the **control-flow foundation**: steps are nodes, composition is explicit, and cross-cutting behavior belongs in the tree or runtime—not buried in ad hoc step options.
+It holds **human and automated work** in one model: define → run → wait → resume → place foreign work → speak to systems.  
+It is built so a person, an agent, or another Palm can participate mid-flight without a second product.
 
----
+**Near purpose (living):**
 
-## In scope (today — 0.6.0)
+- Interactive wizards, assist, MCP, durable instances  
+- Reactive **start** and **continue** (one law each)  
+- Named **system** (boot, planes, supervisor, vitality, capacity)  
+- **Workload** as the place book (isolate, spawn, adopt, readiness)  
+- **Assembly** (seed) — organism truth between boot and business; tree-shaped scale  
 
-### Orchestration & control flow
+**Horizon purpose:**
 
-- Behavior-tree execution with pluggable blackboard state (`BaseState`)
-- Job lifecycle via `OrchestrationEngine` (pending → running → waiting → terminal)
-- Registered patterns: **wizard**, **DAG**, **ETL** (wizard is the most capable today)
+- Dataset capture, training flows, TinyML and model bodies as **places**  
+- Light centers and work/support places under one genome  
+- Grove: many Palms, continuous interface — [VISION-GROVE](docs/VISION-GROVE.md)  
+- Tree first, mesh later — [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md)
 
-### Definitions & persistence
-
-- Declarative `FlowDefinition` and `ProcessDefinition` with serialization
-- `DefinitionRepository` — register and persist flow/process catalogs
-- `InstanceRepository` — durable `ProcessInstance` snapshots with status history
-- Optional **state snapshot history** (`StateSnapshotHook`) — bounded blackboard captures for audit and debugging (off by default)
-- Resume across runtime restarts when storage is shared
-
-### Common coordination layer (`palm.common`)
-
-- `DefinitionExecutor` — submit flows/processes, resume instances, persist jobs
-- `common/plans/` — `ExecutionPlan`, `ProcessPlan`, `PlanRegistry` (prepare → stage → submit)
-- `common/patterns/` — materialize definitions into concrete patterns via registry
-- `common/hooks/` + `common/persistence/` — `InstancePersistenceHook` (resume) and optional `StateSnapshotHook` (audit history)
-
-### Interactive wizards (flagship pattern)
-
-- Declarative validation, choice/confirm fields, backtracking
-- Summary and commit steps with named commit handlers
-- Resource action steps (e.g. REST provider fetch before commit)
-- Transactional finalize: commit failure fails the job visibly
-
-### Runtimes & developer experience
-
-- **EmbeddedRuntime** — in-process API for libraries and tests
-- **DaemonRuntime** — long-lived background process with queued scheduler
-- **ServerRuntime** — HTTP API (`/v1/jobs`, `/v1/plans/*`) with optional auth
-- **CLI + REPL** — `palm doctor`, process/instance commands, definition-driven flows
-- **RuntimeHost** / **BaseRuntime** — shared wiring, hooks, and lifecycle across runtimes
-- Example definitions and `examples/full_demo.py` end-to-end script
-- Documentation, changelog, migration guide, and `just` recipes for quality gates
-
-### Extension surfaces
-
-- `pattern_registry`, `provider_registry`, `storage_registry`
-- Commit handler registry, validation rules, storage backends (memory, filesystem, Postgres, MongoDB)
+Palm optimizes for **long clarity** and **honest scale**, not for short cleverness or fake stability.
 
 ---
 
-## Out of scope (for now)
+## Experimental honesty
 
-- **WebSocket** runtime and live job/wizard streaming (planned)
-- Full **GPU / KernelLeaf** execution in the main tree (experimental prototypes only)
-- A complete **auth product** — core exposes primitives; enforcement is runtime/BT concern
-- Legacy code under `archive/` — reference and experiments, not imported by new work
+Palm is **pre-1.0** and **experimental**. There is **no LTS** and no backward-compatibility promise until a future 1.0 decision by **José Gabriel Gruber**. See [README.md](README.md).
 
----
-
-## Middleware model (hybrid)
-
-Palm deliberately separates **what a step does** from **who may run it** and **how the runtime wraps execution**.
-
-```mermaid
-flowchart TB
-    subgraph Runtime["Runtime layer (primary middleware)"]
-        auth_wrap[Auth / session context]
-        obs[Observability hooks]
-        lifecycle[Job & instance lifecycle]
-    end
-
-    subgraph BT["Behavior Tree (step-level guards)"]
-        guard[Guard / decorator nodes]
-        step[Step leaves — wizard, action, commit]
-    end
-
-    Runtime --> BT
-    guard --> step
-```
-
-| Layer | Responsibility |
-|-------|----------------|
-| **Runtime** | Authentication context, logging, tracing, storage selection, instance persistence, optional state snapshot history, CLI/session policy |
-| **BT nodes** | Optional per-step guards (authorization checks, rate limits, preconditions) expressed as dedicated nodes or decorators—not inline middleware in step JSON |
-
-Step definitions stay focused on **user-facing intent** (prompt, validation, resource id). Policy and infrastructure wrap execution at the edges.
+That is not doom. That is **freedom to grow proper**.  
+Debt is named in [TECH-DEBT.md](TECH-DEBT.md). Themes close when homes are proper — [VERSIONING.md](docs/VERSIONING.md).
 
 ---
 
-## Roadmap
+## In scope (today — maturity at 0.62)
 
-### Current release — 0.12 “Compositional Power”
+Detail and proof live in [STATUS.md](STATUS.md) and [PALM.md](docs/PALM.md). Short form:
 
-**Theme:** Resources as first-class, declarative citizens — compositional orchestration at scale.
+| Area | State |
+|------|--------|
+| Job path, BT, orchestration | **Real** |
+| Definitions, instances, resume | **Real** |
+| Patterns / providers / storages / runners registries | **Real** (intentions gated) |
+| Wizard, Assist, Design, Execution product | **Real** (surface maturity varies) |
+| Reactive interests (start / continue) | **Law landed** |
+| System layer, boot, session, supervisor, work plane | **Themes closed** |
+| Vitality + Inspect | **Closed** |
+| Multi-claimer work drain (in-process) | **Closed** · residual multi-process CAS named |
+| Workload plane | **Scout** — engine, runners, CQRS, dogfood; remainder queued |
+| Assembly / definition-ready steward | **Seed named** — not open yet |
+| MCP assist-first, CLI, server surfaces | **Real** · surface deflation queued |
 
-Full vision: [docs/VISION-0.12.md](docs/VISION-0.12.md) · Migration: [MIGRATION-0.12.md](docs/migrations/MIGRATION-0.12.md) · ADR: [docs/adr/001-compositional-power-resources.md](docs/adr/001-compositional-power-resources.md)
-
-| Pillar | Shipped |
-|--------|---------|
-| **`ResourceDefinition`** | Declarative, repository-backed resource contracts |
-| **`ResourceEngine` + `BaseProvider`** | Invoke lifecycle — actions, schemas, structured results, events |
-| **`palm` provider** | Palm calling Palm — local or remote HTTP with recursion guardrails |
-| **`ResourceLeaf`** | Core BT node; wizard `step_kind: resource` |
-| **Cross-cutting** | `enrich_resource`, compensation, CQRS projection, Explorer hub |
-
-Also includes **ApplicationHost**, CQRS, reliability primitives, **Palm Explorer** (flows, jobs, instances, resources), rich wizards, and multiple runtimes.
-
-### Near term (post-0.12)
-
-- WebSocket runtime for live wizard and job streaming
-- Expand runtime middleware (auth policies, observability exporters) without core pollution
-- Pipeline/DAG resource stage builders (deferred from 0.12 Phase 3)
-- Harden transactional wizard and instance resume across storage backends
-
-### Medium term (post-0.12)
-
-- **Improved observability** — structured events, richer audit dashboards, long-running job management UI
-- **Long-running process management** — cancel, pause, progress reporting across runtimes
-- Richer **DAG** and **ETL** patterns with native resource stages
-- Optional **BT guard nodes** catalog (auth guard, validation decorator, retry)
-
-### Long term — compute & data
-
-Palm is intended to support serious data and ML workloads without abandoning the BT model:
-
-```mermaid
-flowchart LR
-    parquet[Parquet / Resource] --> ctx[Context / blackboard]
-    ctx --> kernel[KernelLeaf — GPU]
-    kernel --> out[Output Resource]
-```
-
-Planned direction (not yet in main scope):
-
-- **`KernelLeaf` nodes** — resident GPU kernels, fixed VRAM buffers, batch execution
-- **Resource nodes** — large dataset staging (e.g. Parquet → context → kernel → output artifact); builds on 0.12 `ResourceDefinition` + `ResourceLeaf`
-- **KernelLeaf** integration with compositional sub-flows via `palm` provider
-
-Early experiments live in `archive/experimental/gpubatches/`. They inform the roadmap but are **not** part of the supported API until promoted into `patterns/` or `providers/` with tests and docs.
-
-### Runtimes
-
-| Runtime | Status | Direction |
-|---------|--------|-----------|
-| Embedded | **Shipped** | Library and test hub |
-| CLI / REPL | **Shipped** | Human-first operator surface |
-| Server (HTTP) | **Shipped** | Remote submit, status, deferred plans |
-| Daemon | **Shipped** | Background instance workers |
-| WebSocket | Planned | Live wizard and job streaming |
+**Recommended entry:** `ApplicationHost` + deployment/composition profiles. Prefer system seats and product doors over digging engines from surfaces.
 
 ---
 
-## Experimental areas
+## Out of scope (honest limits — not forever bans)
 
-| Location | Contents | Status |
-|----------|----------|--------|
-| `archive/experimental/gpubatches/` | GPU batch processing prototypes (v1–v11, benchmarks) | Early R&D — do not depend on |
-| `archive/` (legacy) | Pre-0.4.0 CLI, wizards, engines | Historical reference only |
+| Not this season’s promise | Where it lives instead |
+|---------------------------|-------------------------|
+| Full multi-process shared claim pool | Residual [SD-019](TECH-DEBT.md#sd-019) · assembly + place book path |
+| Opened assembly engine in code | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) seed |
+| Full Grove org crown / mesh | [VISION-GROVE](docs/VISION-GROVE.md) |
+| Surface compost complete | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
+| Every GPU/TinyML body as polished product | Workload place + runners; archive prototypes are history only |
+| Enterprise LTS / frozen APIs | Pre-1.0 experimental policy |
+| Import from `archive/` | Forbidden — [AGENTS.md](AGENTS.md) |
 
-Experimental code may be read for ideas; it must not be imported from `src/palm/` production paths.
+**Non-goals ≠ forever bans.** Layer law still forbids dual start/continue paths and fake-green seats. Ambition is not banned because a seed is not open.
 
 ---
 
-## Success criteria
+## Roadmap (courage, not a death clock)
+
+Ordered by **organism need**, not marketing.
+
+| Horizon | Intent | Doc |
+|---------|--------|-----|
+| **Now** | Hold closed seasons honest; residual debt named; dogfood spine | [STATUS.md](STATUS.md) |
+| **Near structure** | Assembly: authoritative DNA, definition-ready, tree places | [VISION-ASSEMBLY](docs/VISION-ASSEMBLY.md) |
+| **Workload growth** | Placement, cancel/ownership, more runners, peer place | [VISION-0.56](docs/VISION-0.56.md) |
+| **Surface honesty** | Thin faces; assist-first; drop pre-plane furniture | [VISION-SURFACE-DEFLATION](docs/VISION-SURFACE-DEFLATION.md) |
+| **Capacity beyond one process** | CAS or single-owner law; workers as placed Palms | SD-019 · assembly |
+| **Grove** | Many palms, trust, continuous interface | [VISION-GROVE](docs/VISION-GROVE.md) |
+| **Living work** | Datasets, train flows, TinyML/model places under Palm | Assembly + workload |
+
+Theme open/close is **José’s** judgment. Slice tables are guides. Prefer proper homes over thin ships.
+
+**How we grow (0.57+ posture):** engine → alternate path → validate → migrate → clean. 80/20. Complete open intent. Plan debt into theme homes. Structure first costs time; it pays when speed of development matters most.
+
+---
+
+## Success (organism, not vanity metrics)
 
 Palm is succeeding when:
 
-1. A new developer can run `palm doctor`, start a wizard, and resume after restart without reading core source.
-2. Core purity checks pass and new features extend via registries, not core edits.
-3. Definitions remain the contract between authors, storage, and execution.
-4. Human steps and automated steps share one BT execution model.
-5. The path from wizard → resource invoke → sub-flow → DAG → GPU kernel feels like one engine, not three products.
+1. A human or agent can operate Palm (`palm doctor`, assist, resume) without inventing a private protocol.  
+2. Core purity and registry extension hold; new power registers downward.  
+3. Start and continue stay one path each.  
+4. Incomplete structure is **named**, not hidden.  
+5. Scale is **place + readiness + assembly**, not silent multi-writer chaos.  
+6. People who enter the codebase find **purpose and map**, not dead roadmaps that kill courage.  
+7. Small model and data bodies can live under Palm as honest places when the book is ready.
 
 ---
 
-## Related documents
+## Related
 
-- [README.md](README.md) — quick start, CLI, examples
-- [ARCHITECTURE.md](ARCHITECTURE.md) — layers, engines, data flow
-- [DEVELOPMENT.md](DEVELOPMENT.md) — contributor workflow
-- [CHANGELOG.md](CHANGELOG.md) — release history
-- [docs/VISION-0.12.md](docs/VISION-0.12.md) — 0.12 Compositional Power vision
-- [AGENTS.md](AGENTS.md) — rules for AI and human contributors
+| Doc | Role |
+|-----|------|
+| [docs/PALM.md](docs/PALM.md) | Canonical system map |
+| [STATUS.md](STATUS.md) | Version, themes, seeds |
+| [PHILOSOPHY.md](PHILOSOPHY.md) | Spirit |
+| [AGENTS.md](AGENTS.md) | Rules for contributors and agents |
+| [TECH-DEBT.md](TECH-DEBT.md) | Live debt |
+| [docs/VISION-ASSEMBLY.md](docs/VISION-ASSEMBLY.md) | Organism truth · tree scale |
+| [docs/VISION-GROVE.md](docs/VISION-GROVE.md) | Multi-Palm north star |
+| [README.md](README.md) | Install, quick start, experimental notice |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Dense layer detail |
+| [CHANGELOG.md](CHANGELOG.md) | History |
+
+---
+
+*Name the whole tree. Then grow the branch.*  
+*Dead letters that point to old minors as “current” are poison — prune them.*
