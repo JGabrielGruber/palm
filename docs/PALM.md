@@ -93,7 +93,8 @@ These words are **stable**. Use them with one meaning only.
 | **State** | Blackboard data for the run (`BaseState` and schemas). |
 | **Resource** | Named way to **speak** to an external or internal system (provider + action). |
 | **Provider** | Plugin that implements resource speak. (Not a DI “provider.”) |
-| **Workload** | Isolated place for foreign work (run or long service). Not “just another resource.” |
+| **Workload** | Isolated **place** for foreign work (run or long service). Entry in the **place book**. Not “just another resource.” |
+| **Place book** | Named places Palm may mean (spawn or adopt); lifecycle + readiness. Workload plane is the home of this book. |
 | **Runner** | Plugin that implements a workload runtime (host, neonroot, …). |
 | **Event** | Signal on a bus. Completers describe themselves. |
 | **Interest** | Explicit want: **start** (trigger) or **continue** (wait). |
@@ -107,6 +108,16 @@ These words are **stable**. Use them with one meaning only.
 | **Product** | Operator/agent domain API (policy + envelope). |
 | **System** | Running Palm that holds engines and exposes ports. |
 | **Shared** | Code reused by many layers that is not system and not product. |
+| **Truth home** | Place that is **authoritative** for durable meaning this process projects. |
+| **Projection** | Local view of authoritative state. Not a second source of truth. |
+| **Control home** | Who assigns work and whose doors this process uses for control. |
+| **Light center** | Role rule: refuse heavy body and/or ground on purpose; place weight; stay efficient. |
+| **Support place** | Place that holds ground (or weight) another node projects from. **Org / realm** are recursive supports when they have children of the same kind. |
+| **Work place** | Place that executes work a light center will not carry. |
+| **Assembly** | Steward of **organism ready** (after boot, before business pretends). Seed: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). |
+| **Tunnel** | Trusted path between places after home is known. Seed: [VISION-TUNNELS](vision/VISION-TUNNELS.md). |
+| **Vertical axis** | Authority and meaning climb the tree (home up, hop home, projection). |
+| **Horizontal axis** | Bodies spread in the place book (many hosts, workers, resources). |
 
 ---
 
@@ -449,24 +460,58 @@ Do not invent a second integration grammar.
 
 ---
 
-## 8. Grove and tree scale (horizon)
+## 8. Scale: two axes · recursion · horizon path
 
-[VISION-GROVE](vision/VISION-GROVE.md) is the **multi-Palm organization** north star:
+This section **updates older scale talk**. It does not replace the job path (§4) or planes (§5).  
+It names how Palm grows past one process **without** a second soul.
 
-- many Palms (user, service, capacity),
-- talk by flows, events, and interests,
-- same genome, different placement and trust.
+### 8.1 Two axes (always together)
 
-**Near path to many processes** is not mesh-first. It is **tree-shaped scale**:
+| Axis | What it is | Home of the law |
+|------|------------|-----------------|
+| **Vertical** | Authority and meaning. Home points **up**. Truth home, projection, hop home, light center, recursive support. | [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) · this map |
+| **Horizontal** | Bodies and capacity. Place book: spawn or adopt; readiness; many hosts. | Workload ([VISION-0.56](vision/VISION-0.56.md)) |
 
-- [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — organism truth between boot and business; authoritative DNA; definition-ready  
-- Workload as **place book** (spawn or adopt; readiness gates work)  
-- Light center as a **chosen rule** (refuse heavy body / ground on purpose)  
-- Home points up; projection from truth home; invalidate when authority is down  
+**Horizontal placement. Vertical ownership.**  
+Physically, workers and resources may sit side by side. Logically, meaning still climbs home.  
+Children may have children; ownership of meaning still belongs under the **root** palm of that tree.
 
-**This file** defines **one Palm** as a living system.  
-Grove does not replace local structure.  
-Local structure + assembly + place book make Grove possible later.
+### 8.2 Recursion (org and realm are not a second product)
+
+**Support place** holds ground another node projects from.  
+When a support may have **children of the same kind**, that is organization shape:
+
+| Name (product speech) | Scale meaning |
+|-----------------------|---------------|
+| **Organization** | Support (or light center over support) with an assembly definition; may project realms |
+| **Realm** | Sub-support (or mid that propagates home); local ground; home still up |
+| **Multi-org** | Several such supports under one root, or several independent trees |
+
+Same genome. Recursive support. Not mesh self-discovery as first law.
+
+### 8.3 Horizon path (tool before dream)
+
+```text
+boot (system)
+  → assembly (organism ready · DNA · optional structure seed)
+       → business (flows)           ← living today
+       → tunnels (trusted reach)    ← after assembly
+            → Grove (many palms · continuous interface)
+```
+
+| Seed | Role |
+|------|------|
+| [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) | Organism truth; definition-ready; vertical law |
+| [VISION-TUNNELS](vision/VISION-TUNNELS.md) | Reach and neighborhood after home is known; mesh *feel*, tree *law* |
+| [VISION-GROVE](vision/VISION-GROVE.md) | Multi-Palm organization crown; continuous interface |
+
+**Tunnels do not own vertical/horizontal law.** They own **reach** on top of it.  
+**Grove does not invent recursion.** It grows org conversation once assembly and tunnels are boring.
+
+**This file** still defines **one Palm** as a living system.  
+Grove does not replace local structure. Local structure + two axes + path above make Grove possible.
+
+*There is no place like home.*
 
 ---
 
@@ -489,7 +534,9 @@ Local structure + assembly + place book make Grove possible later.
 15. **Break for truth before 1.0.** Record residual debt. Do not keep a structural lie for comfort.  
 16. **Incomplete maps are false maps.** When structure changes, update this file in the same theme of work.  
 17. **Boy-scout extension shape.** When you touch open-coded peer menus, move them toward registry extension if suitable; do not only relocate the menu.  
-18. **Seat DI.** Inject interfaces and subsystems. Do not pass the system instance as ambient DI when a seat suffices.
+18. **Seat DI.** Inject interfaces and subsystems. Do not pass the system instance as ambient DI when a seat suffices.  
+19. **Two axes of scale.** Vertical = home and meaning. Horizontal = place book. Do not collapse them. Do not market multi-process without readiness and home.  
+20. **Business BT ≠ organism topology.** Flows are business rules. Assembly (and later tunnels) are organism cares.
 
 ---
 

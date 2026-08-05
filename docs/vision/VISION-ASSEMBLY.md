@@ -81,10 +81,12 @@ Define once. Reuse.
 4. **Workload** cares for **places** (inventory of bodies). Assembly **requests** places; it does not reimplement runners.  
 5. **Authoritative first, then the rest.** Truth-home place ready → load or refresh assembly definition and projections → finish seating/binding → then drain and flows that need that truth.  
 6. **Truth home is a place in the book.** Without readiness, projection is faith. With it: not ready → invalidate → do not pretend.  
-7. **Tree first.** Home points up. Relays may exist later with hop limits. Full mesh and rich middleman proxy are **Grove growth**, not the entry ticket.  
-8. **Do not kill what works.** All-in-one Palm remains valid. Light center is a **chosen rule**, not the only shape.  
-9. **Business BT ≠ assembly tree.** Same grammar may tick assembly (ensure / gate / leaf). Different subject. Different home.  
-10. **Pre-1.0:** break glue; name residual; no LTS theater.
+7. **Tree first.** Home points up. Relays may exist later with hop limits.  
+8. **Two axes.** Vertical = meaning and home. Horizontal = place book. Tunnels ([VISION-TUNNELS](VISION-TUNNELS.md)) add **reach** later; they do not redefine the axes.  
+9. **Recursive support.** Org/realm speech maps to support with children — assembly-native, not Grove-only.  
+10. **Do not kill what works.** All-in-one remains valid. Light center is a **chosen rule**, not the only shape.  
+11. **Business BT ≠ assembly tree.** Same grammar may tick assembly. Different subject. Different home.  
+12. **Pre-1.0:** break glue; name residual; no LTS theater.
 
 ---
 
@@ -124,7 +126,22 @@ Structure becomes **data-driven from one truth**. Glue of “if profile then ins
 
 ---
 
-## 7. Tree of processes (near scale)
+## 7. Two axes and recursive support (scale meaning)
+
+This is **assembly-native** meaning — not only a tunnels or Grove note.
+
+### 7.1 Vertical and horizontal
+
+| Axis | Assembly’s care | Workload’s care |
+|------|-----------------|-----------------|
+| **Vertical** | Who is truth home / control home; what to project; when to invalidate; hop home | Places that *are* truth home must be in the book |
+| **Horizontal** | Which places the DNA requires | Spawn/adopt, health, readiness of bodies across hosts |
+
+**Physical** workers and resources may stay horizontal.  
+**Logical** supports and sub-supports grow vertical.  
+Both axes must agree before business pretends the world is whole.
+
+### 7.2 Tree of processes (near scale)
 
 ```text
         Light center (optional rule)
@@ -140,12 +157,26 @@ Structure becomes **data-driven from one truth**. Glue of “if profile then ins
 ```
 
 - Worker may use center as **control home**.  
-- Truth home may be support place, or center after it projects. Choose explicitly in definition; do not blur.  
-- Mid nodes that only **propagate** authority are not required to be thin “worker profile.” Any Palm may depend on another Palm.  
-- Organization and realms stay [Grove](VISION-GROVE.md) vision. They do not block assembly floor.
+- Truth home may be support place, or center after it projects. Choose explicitly; do not blur.  
+- Mid nodes that **propagate** authority need not be thin “worker profile.” Any Palm may depend on another Palm.
+
+### 7.3 Recursive support (org / realm as updated meaning)
+
+Older speech said “organization” only as Grove multi-Palm catalog.  
+**Updated meaning:** organization shape is **support that may have children of the same kind**.
+
+| Speech | Assembly meaning |
+|--------|------------------|
+| **Organization** | Support (or light center over support) with DNA; may **project** child realms |
+| **Realm** | Sub-support / mid; local ground; home still up |
+| **Multi-org** | Several supports under one root, or several trees — same law |
+
+Grove ([VISION-GROVE](VISION-GROVE.md)) still owns **org crown conversation** (trust catalogs, continuous interface at federation scale).  
+Assembly owns **whether a node can be that support and become definition-ready**.  
+Do not wait for Grove to name recursive support.
 
 **Cluster slogan elsewhere:** master/workers.  
-**Palm slogan:** genome + roles + place book + assembly. Workers are full genome under a rule, not dumb slaves.
+**Palm slogan:** genome + roles + place book + assembly + home up. Workers are full genome under a rule, not dumb slaves.
 
 ---
 

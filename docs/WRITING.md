@@ -49,6 +49,12 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 | **Instance** | Durable record of a run |
 | **Definition** | Declared contract of work (also: participation law at the edge for registry extension) |
 | **Interest** | Start (trigger) or continue (wait) |
+| **Place book** | Named places (workload); horizontal scale axis |
+| **Truth home** | Authoritative place for projected meaning |
+| **Projection** | Local view of authority — not a second truth |
+| **Light center** | Role: refuse heavy body/ground on purpose |
+| **Support / realm** | Ground place; realm = recursive sub-support |
+| **Vertical / horizontal** | Meaning climbs home · bodies spread in the book — [PALM §8](PALM.md) |
 | **Registry extension** | OCP/DIP: definition at edge; consumer walks registry — [AGENTS §1.1](../AGENTS.md) · [PALM §7](PALM.md) |
 | **Seat DI** | Inject interfaces/subsystems, not ambient system instance — [AGENTS §1.2](../AGENTS.md) |
 

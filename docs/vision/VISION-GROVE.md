@@ -23,43 +23,65 @@ Assembly + tunnels make a grove of processes honest without mesh self-discovery 
 
 Palm today is a coherent **single organism**: pure core, definitions and instances, work plane (start), nested waits (continue), Assist, composition phenotypes.
 
-The Grove is Palm at **organization scale**:
+The Grove is Palm at **many-organism scale** — still **one genome**.
+
+**Updated meaning (after assembly / tunnels seeds):**
+
+| Older Grove speech | Refined meaning |
+|--------------------|-----------------|
+| Organization as only a flat multi-Palm catalog | **Organization** = recursive **support** (or light center over support) that may have **realm** children; DNA + projection; home up — [VISION-ASSEMBLY](VISION-ASSEMBLY.md) §7 |
+| Mesh of peers as first integration | **Hop home** for meaning; **tunnels** for trusted reach — [VISION-TUNNELS](VISION-TUNNELS.md) |
+| Scale = more Palms talking | Scale = **vertical** authority + **horizontal** place book, then conversation |
 
 | Scale | What it is |
 |-------|------------|
-| **One Palm** | Local orchestration — flows, jobs, instances, providers, workloads |
-| **Many Palms** | User palms, service palms, capacity palms (GPU, CI, vault) |
-| **Organization** | Trust, catalog, placement, shared flows — the paths between trees |
-| **Conversation** | How they integrate: **org flows + events + reactive interests**, not N×N glue APIs |
+| **One Palm** | Local orchestration — flows, jobs, instances, providers, place book |
+| **Tree of places** | Light center, supports, work/resource places; multi-process controlled |
+| **Many Palms / orgs** | Several supports or trees; user, service, capacity phenotypes |
+| **Grove conversation** | Trust, shared definitions, **org flows + events + interests** — continuous interface |
+| **Reach** | Trusted paths so neighborhoods talk without dual ownership |
 
-**Aim:** software participates in a living conversation. Surfaces shrink because **participation recycles** the same genome (flows, waits, triggers, providers, Assist). Integration becomes **continuous interface**, not a frozen pairwise adapter.
+**Aim:** software participates in a living conversation. Surfaces shrink because **participation recycles** the same genome. Integration becomes **continuous interface**, not frozen pairwise adapters — **after** home and places are honest.
 
 ---
 
 ## 2. Picture
 
+**Logical (vertical) — recursive support**
+
 ```text
-                    Palm Organization
-           catalog · trust · placement · shared flows
-                              │
-     ┌────────────┬───────────┼───────────┬────────────┐
-     ▼            ▼           ▼           ▼            ▼
-  User A       User B     Service Σ    Service Π     Capacity
-  Palm         Palm       Palm         Palm          Palm
-  flows        flows      interface    interface     workloads
-  datasets     …          as flows     as flows      GPU / CI
-  dashboards
-     │            │           │           │            │
-     └────────────┴───────────┴───────────┴────────────┘
-              talk via org flows · events · interests
-              speak via providers · place via workloads
-              walk via session / handoff / peer runtime
+              Root light center
+                     │
+              Org support (DNA · project realms)
+              ┌──────┴──────┐
+              ▼             ▼
+           Realm A       Realm B · …
+           (sub-support) (sub-support)
+              │
+         truth home · local ground
+              │
+         hop home for meaning
 ```
 
-- **Each user Palm** holds personal journeys, datasets, dashboards, local Assist memory.  
-- **Each service Palm** is a living partner: flows *are* the interface; events *are* progress; waits *are* readiness.  
-- **Organization** holds allowlists, shared definition revisions, placement policy, identity of peers.  
-- **Walking between palms** means following **interest and session** across nodes — start work there, continue when a remote target speaks — not bespoke RPC for every pair.
+**Physical (horizontal) — place book under any node**
+
+```text
+   work places · resource places · peer processes
+   (same host or many hosts — readiness in the book)
+```
+
+**Conversation (Grove crown — when verbs are boring)**
+
+```text
+   org flows · events · interests · Assist
+   speak via providers · place via workloads
+   walk via session / handoff · optional tunnels for path
+```
+
+- **User / service / capacity palms** remain phenotypes of the same genome.  
+- **Organization** holds allowlists and shared revisions **and** is assemblable as support DNA.  
+- **Walking between palms** follows interest and session — and **home** when truth is contested.  
+- **Multi-org** is natural: more recursive supports, not a second product.
 
 ---
 

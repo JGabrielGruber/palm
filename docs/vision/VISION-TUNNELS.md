@@ -11,14 +11,17 @@
 
 ## 1. Why this note exists
 
-Assembly names **vertical law**: truth home, projection, definition-ready, hop up for meaning.  
-The place book names **horizontal bodies**: workers, support places, resources.
+**Vertical and horizontal scale are not owned by this file.**  
+They live on the system map and in [VISION-ASSEMBLY](VISION-ASSEMBLY.md):
 
-**Tunnels** name the missing middle for the dream: **trusted reachability** so nodes may talk across the tree without turning Palm into a mesh of equal owners.
+- **Vertical** — truth home, projection, hop home, recursive support (org/realm).  
+- **Horizontal** — place book (workload): bodies across hosts.
 
-This is a **long horizon**. It is also the practical answer that makes Grove feel like one fabric while the soul stays a tree.
+**Tunnels** name only the missing middle for the dream: **trusted reachability** so nodes may talk across the tree without turning Palm into a mesh of equal owners.
 
-**Not this seed’s job:** open a theme, ship a commercial overlay network, or replace assembly.
+This is a **long horizon**. It is the practical answer that makes Grove *feel* like one fabric while the soul stays a tree.
+
+**Not this seed’s job:** open a theme, ship a commercial overlay network, redefine assembly, or be the sole home of scale vocabulary.
 
 ---
 

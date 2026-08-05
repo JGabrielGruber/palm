@@ -21,15 +21,18 @@ It is built so a person, an agent, or another Palm can participate mid-flight wi
 - Interactive wizards, assist, MCP, durable instances  
 - Reactive **start** and **continue** (one law each)  
 - Named **system** (boot, planes, supervisor, vitality, capacity)  
-- **Workload** as the place book (isolate, spawn, adopt, readiness)  
-- **Assembly** (seed) — organism truth between boot and business; tree-shaped scale  
+- **Workload** as the **horizontal** place book (isolate, spawn, adopt, readiness)  
 
-**Horizon purpose:**
+**Horizon purpose (one path — not distant islands):**
 
-- Dataset capture, training flows, TinyML and model bodies as **places**  
-- Light centers and work/support places under one genome  
-- Grove: many Palms, continuous interface — [VISION-GROVE](docs/vision/VISION-GROVE.md)  
-- Tree first, mesh later — [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
+| Step | Seed | Meaning |
+|------|------|---------|
+| **Vertical ready** | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) | Organism truth; home up; recursive support (org/realm); optional structure seed |
+| **Reach** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) | Trusted paths; neighborhood; edge/cloud phenotypes |
+| **Many palms** | [VISION-GROVE](docs/vision/VISION-GROVE.md) | Org crown; continuous interface when local verbs are boring |
+
+Also: datasets, training flows, TinyML/model bodies as **places** under one genome.  
+**Two axes:** vertical ownership · horizontal placement — [PALM.md §8](docs/PALM.md).
 
 Palm optimizes for **long clarity** and **honest scale**, not for short cleverness or fake stability.
 
@@ -89,12 +92,13 @@ Ordered by **organism need**, not marketing.
 | Horizon | Intent | Doc |
 |---------|--------|-----|
 | **Now** | Hold closed seasons honest; residual debt named; dogfood spine | [STATUS.md](STATUS.md) |
-| **Near structure** | Assembly: authoritative DNA, definition-ready, tree places | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
-| **Workload growth** | Placement, cancel/ownership, more runners, peer place | [VISION-0.56](docs/vision/VISION-0.56.md) |
+| **Near structure** | Assembly: DNA, definition-ready, recursive support, two axes | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · [PALM §8](docs/PALM.md) |
+| **Workload growth** | Place book depth; cancel/ownership; more runners | [VISION-0.56](docs/vision/VISION-0.56.md) |
+| **Reach** | Tunnels after assembly | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) |
 | **Surface honesty** | Thin faces; assist-first; drop pre-plane furniture | [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
-| **Capacity beyond one process** | CAS or single-owner law; workers as placed Palms | SD-019 · assembly |
-| **Grove** | Many palms, trust, continuous interface | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
-| **Living work** | Datasets, train flows, TinyML/model places under Palm | Assembly + workload |
+| **Capacity beyond one process** | CAS or single-owner law; workers as places | SD-019 · place book |
+| **Grove** | Many palms, continuous interface | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
+| **Living work** | Datasets, train flows, TinyML/model places | Place book + assembly |
 
 Theme open/close is **José’s** judgment. Slice tables are guides. Prefer proper homes over thin ships.
 

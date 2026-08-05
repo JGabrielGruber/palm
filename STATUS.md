@@ -10,7 +10,7 @@
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** → residual [TECH-DEBT.md](TECH-DEBT.md) (**SD-019** · **SD-016** · SU/BI).
+Read in order: **this STATUS** → [PALM.md](docs/PALM.md) (**§8 scale**: two axes · recursion · assembly → tunnels → Grove) → residual [TECH-DEBT.md](TECH-DEBT.md) (**SD-019** · **SD-016** · SU/BI) → closed capacity [VISION-0.62](docs/vision/closed/VISION-0.62.md) if needed.
 
 | Spirit | Decision |
 |--------|----------|

@@ -81,11 +81,11 @@ Layers: **core → system / shared / kits → plugins → product → surfaces**
 - **Job path** is the business spine: definition → pattern → job → effects → events.  
 - **System** owns shell, interfaces, subsystems (planes, supervisor), boot, vitality.  
 - **Surfaces** depend on system — never reverse.  
-- **Workload** = place book (runners under `palm/runners/`, not surfaces).  
-- **Assembly** (seed) = organism truth between boot and business — [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md).  
+- **Two axes of scale:** **vertical** = home / meaning ([VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)); **horizontal** = place book (workload).  
+- **Horizon path:** assembly → tunnels → Grove — not three disconnected dreams.  
 - **Flows** = business rules. Do not encode cluster topology as a customer flow.
 
-Full map: **[docs/PALM.md](docs/PALM.md)** only.
+Full map (including §8 scale): **[docs/PALM.md](docs/PALM.md)** only.
 
 **Hard invariants:**
 

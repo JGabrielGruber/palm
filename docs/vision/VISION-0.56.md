@@ -6,7 +6,21 @@
 > *Palm orchestrates life. Workloads are where foreign work lives. Providers are how we speak to systems. CQRS is how edges ask. Events are how the graph continues. Never collapse those layers.*
 
 **ADR:** [024-workload-engine.md](../adr/024-workload-engine.md) (accept with **0.56.0**).  
-**Builds on:** [ADR-003](../adr/003-provider-apps.md) · [ADR-009](../adr/009-service-cqrs-contributors.md) · [ADR-022](../adr/022-neonroot-provider.md) · [ADR-023](../adr/023-hermetic-jobs.md) · [ADR-025](../adr/025-reactive-interests.md) · [EVENT-PLANE](../EVENT-PLANE.md) · [VISION-0.54](closed/VISION-0.54.md) · [VISION-0.55](closed/VISION-0.55.md) · [VISION-GROVE](VISION-GROVE.md).
+**Builds on:** [ADR-003](../adr/003-provider-apps.md) · [ADR-009](../adr/009-service-cqrs-contributors.md) · [ADR-022](../adr/022-neonroot-provider.md) · [ADR-023](../adr/023-hermetic-jobs.md) · [ADR-025](../adr/025-reactive-interests.md) · [EVENT-PLANE](../EVENT-PLANE.md) · [VISION-0.54](closed/VISION-0.54.md) · [VISION-0.55](closed/VISION-0.55.md) · [VISION-GROVE](VISION-GROVE.md).  
+**Scale meaning (updated):** Workload is the **horizontal** axis — the **place book**. Vertical home/authority is [VISION-ASSEMBLY](VISION-ASSEMBLY.md). Reach later is [VISION-TUNNELS](VISION-TUNNELS.md). See [PALM.md §8](../PALM.md).
+
+---
+
+## 0. Place book (how to read this theme now)
+
+This theme still delivers isolation engines and runners.  
+**Updated reading:** every durable foreign body Palm may **mean** should become a **named place** (spawn or adopt). Readiness in the book gates honesty. That is how multi-process (local and remote) stays controlled without inventing a second lock religion inside orchestration.
+
+| Workload (this theme) | Not workload |
+|-----------------------|--------------|
+| Horizontal bodies and availability | WorkIntent claim law (work plane · 0.62) |
+| Runner adapters | Assembly DNA / definition-ready |
+| Place lifecycle events | Business flow rules |
 
 ---
 
@@ -29,9 +43,10 @@
 | **Workload plane** | Product capability | “Container feature” |
 | **WorkloadEngine** | Pure core lifecycle engine | RuntimeEngine (collides with surfaces) |
 | **WorkloadSpec** | Portable intent (JSON-serializable) | Runtime-native YAML as core type |
-| **Workload** | Live allocation + status + handle | Confusing with Job or Session |
+| **Workload** | Live allocation + status + handle; a **place** in the book | Confusing with Job or Session |
+| **Place book** | Registry of named places Palm may use | Ad-hoc URLs outside the book |
 | **WorkloadRuntime** | Adapter implementation | “Provider” for isolation |
-| **Host** | Place capacity lives | Full CMDB |
+| **Host** | Where capacity lives (one kind of place constraint) | Full CMDB |
 | **Provider** | ResourceEngine backend (interfaces) | Using provider for raw `exec` forever |
 | **Hermetic** | *Policy*: not in Palm process | Synonym for NeonRoot |
 | **`palm.runtimes`** | Surfaces (CLI, server, MCP) | Workload backends |

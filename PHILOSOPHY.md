@@ -262,11 +262,16 @@ door home.
 
 ## On home
 
-*There is no place like home.* Authority climbs the tree; bodies may spread sideways; tunnels
-may make traffic feel flat — but meaning still knows the way up. Edge and cloud are phenotypes
-of one genome. Small companies may own their data on devices that stay online enough to be
-home; sectors may work offline until home returns. Assembly makes the organism true. Tunnels
-come after. Grove is the far light.
+*There is no place like home.* Authority climbs the tree (**vertical**); bodies may spread
+sideways in the place book (**horizontal**). Organizations and realms are recursive support —
+not a second species of software. Tunnels may make traffic feel flat after home is known —
+but meaning still knows the way up. Edge and cloud are phenotypes of one genome. Small
+companies may own their data on devices that stay online enough to be home; sectors may work
+offline until home returns.
+
+Assembly makes the organism true. Tunnels come after. Grove is the far light.  
+The map that holds this for the whole project is [docs/PALM.md](docs/PALM.md) §8 — not only a
+tunnels essay.
 
 ## The soul of Palm, in a few lines
 

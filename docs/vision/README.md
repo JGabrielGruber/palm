@@ -13,13 +13,16 @@ Not git `archive/` (never import). These files remain **docs history** and links
 
 ## Current (start here)
 
+**System map first for scale vocabulary:** [PALM.md §8](../PALM.md) — vertical / horizontal, recursive support, horizon path.  
+Seeds deepen; they do not hide that law only inside one file.
+
 | Doc | Role |
-|-----|------|
-| [VISION-ASSEMBLY.md](VISION-ASSEMBLY.md) | Queue seed — organism truth · tree scale · assembly seed for structure |
-| [VISION-TUNNELS.md](VISION-TUNNELS.md) | Queue seed — reach · neighborhood · **after assembly, before Grove** |
-| [VISION-0.56.md](VISION-0.56.md) | Workload plane — scout (place book) |
-| [VISION-SURFACE-DEFLATION.md](VISION-SURFACE-DEFLATION.md) | Queue seed — surface compost |
-| [VISION-GROVE.md](VISION-GROVE.md) | North star — multi-Palm organization |
+|------|------|
+| [VISION-ASSEMBLY.md](VISION-ASSEMBLY.md) | Organism truth · **two axes** · recursive org/realm · structure seed |
+| [VISION-0.56.md](VISION-0.56.md) | Workload — **horizontal** place book (scout) |
+| [VISION-TUNNELS.md](VISION-TUNNELS.md) | **Reach** only · after assembly, before Grove |
+| [VISION-SURFACE-DEFLATION.md](VISION-SURFACE-DEFLATION.md) | Surface compost |
+| [VISION-GROVE.md](VISION-GROVE.md) | Multi-Palm crown · continuous interface · updated org meaning |
 
 **Map / status:** [PALM.md](../PALM.md) · [STATUS.md](../../STATUS.md) · [VERSIONING.md](../VERSIONING.md)
 

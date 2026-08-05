@@ -53,12 +53,13 @@ Palm aims to be **simple at the core and powerful at the edges**:
 - **Truth-seeking** — durable instances, one start path, one continue path, named debt
 - **Extensible** — patterns, providers, storages, runners register at the edge; core stays pure
 - **Alive as a system** — boot, planes, supervisor, vitality, capacity (in-process multi-claimer)
-- **Ambitious with a map** — workload **place book** (local and remote process); **assembly** seed (organism truth between boot and business); **tree-shaped** scale before mesh; Grove as multi-Palm horizon
+- **Two axes of scale** — **vertical** home and meaning; **horizontal** place book (bodies across hosts)
+- **Horizon path** — [assembly](docs/vision/VISION-ASSEMBLY.md) → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) (seeds; tool before dream)
 - **Fit for living work** — datasets, training flows, TinyML and model bodies as places under one genome
 
-Behavior Trees are the control-flow foundation for **business**. Organism topology is a different care (assembly seed) — do not confuse the two. Cross-cutting concerns belong in system seats and thin surfaces — not buried in step JSON.
+Behavior Trees are the control-flow foundation for **business**. Organism topology (assembly, home, places) is a different care — do not confuse the two. Org/realm speech means **recursive support**, not a second product. Cross-cutting concerns belong in system seats and thin surfaces — not buried in step JSON.
 
-**Read next:** [docs/PALM.md](docs/PALM.md) · [STATUS.md](STATUS.md) · [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md) · [PHILOSOPHY.md](PHILOSOPHY.md)
+**Read next:** [docs/PALM.md](docs/PALM.md) (§8 scale) · [STATUS.md](STATUS.md) · [docs/vision/](docs/vision/README.md) · [PHILOSOPHY.md](PHILOSOPHY.md)
 
 ---
 

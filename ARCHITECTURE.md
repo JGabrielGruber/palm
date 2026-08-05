@@ -939,15 +939,16 @@ Recursion guardrails (depth limits, cycle detection, child job linkage on parent
 
 ## Growth: places, assembly, living work (beyond closed seasons)
 
-Do **not** read this as doom or “Palm cannot.” Read it as **named next wood**.
+Do **not** read this as doom or “Palm cannot.” Read it as **named next wood**.  
+**Canonical scale vocabulary:** [PALM.md §8](docs/PALM.md) — vertical home · horizontal place book · recursive support · assembly → tunnels → Grove.
 
 | Care | Intent | Doc |
 |------|--------|-----|
-| **Workload / place book** | Named places (spawn or adopt); readiness; local and remote process | [VISION-0.56](docs/vision/VISION-0.56.md) · scout live |
-| **Assembly** | Organism truth between boot and business; authoritative DNA; tree topology | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · seed |
-| **Tree scale** | Light center, work/support places, projection from truth home | VISION-ASSEMBLY |
-| **Datasets / train / TinyML** | Business flows + bodies as places under one genome | SCOPE · assembly + workload |
-| **Grove** | Many palms, continuous interface (org crown later) | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
+| **Horizontal / place book** | Named places (spawn or adopt); readiness; multi-host bodies | [VISION-0.56](docs/vision/VISION-0.56.md) · scout |
+| **Vertical / assembly** | Organism truth; DNA; home up; org/realm as recursive support | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · seed |
+| **Tunnels** | Trusted reach after home known | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) · seed |
+| **Datasets / train / TinyML** | Business flows + bodies as places | SCOPE · place book |
+| **Grove** | Multi-Palm continuous interface (crown) | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
 
 Archive GPU batch prototypes under `archive/experimental/gpubatches/` are **history and R&D**, not the architecture of record. New work places compute through **workload runners** and product paths — not archive imports.
 
