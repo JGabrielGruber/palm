@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "palm",
+  "compatibility_date": "2026-07-08",
+  "observability": {
+    "enabled": true
+  },
+  // palmengine.org static canopy
+  //
+  // Cloudflare Pages / Workers:
+  //   Project root:          repository root (or path that contains website/)
+  //   Build command:         just website-build
+  //                          (or: uv run python scripts/website_build.py)
+  //   Optional CSS first:    just website-css   then website-build
+  //   Assets / output dir:   website/dist
+  //
+  // Or commit website/dist and set build command empty / "true",
+  // assets still: website/dist
+  "assets": {
+    "directory": "dist"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}

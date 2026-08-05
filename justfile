@@ -235,19 +235,32 @@ publish: build
     uv publish --token "${PYPI_TOKEN}"
     @echo '✅ Published to PyPI. Users can: pip install palmengine[cli]'
 
-# Tailwind for the handcrafted landing page (SOURCE styles, not library BUILD).
-# Host path: needs Node (docs/node_modules or npx). Prefer `just docs-css-sandbox` for thin desks.
-docs-css:
+# ---- Website (palmengine.org) — SOURCE website/ · BUILD website/dist ----
+
+# Tailwind for website/styles (host Node or npx). Prefer website-css-sandbox on thin desks.
+website-css:
     bash scripts/docs_css.sh
 
-# Living Library builder v0 (0.52.6) — stdlib only → docs/_build/ (+ deploy canopy).
+# Assemble static canopy → website/dist (Cloudflare assets.directory).
+website-build:
+    @echo "🌴 Building website → website/dist/…"
+    uv run python scripts/website_build.py
+    @echo "✅ Cloudflare: assets directory = website/dist  (project root = repo)"
+
+# CSS then dist (what you usually run before commit/deploy).
+website-build-all: website-css website-build
+
+# Aliases (old names) — prefer website-*
+docs-css: website-css
+docs-build-site: website-build
+
+# ---- Living Library (docs only; not palmengine.org) ----
+
+# Living Library → docs/_build/ (wiki + reference inventory). No website.
 docs-build:
     @echo "📚 Building Living Library → docs/_build/…"
     uv run python scripts/docs_build.py
-    @echo "✅ docs/_build/deploy is the edge-ready canopy (point Cloudflare assets there)"
-
-# Optional: rebuild landing CSS then the library (local polish before publish).
-docs-build-all: docs-css docs-build
+    @echo "✅ docs/_build ready (library only; site is just website-build)"
 
 # Build/refresh NeonRoot palm-docs image (Tailwind + uv; host Node optional).
 docs-image:
@@ -258,37 +271,39 @@ docs-image:
     neonroot image create palm-docs --template minimal --vault palm-docs 2>/dev/null || true
     cp ci/Containerfile.docs .neonroot/images/palm-docs/Containerfile
     neonroot image build palm-docs --vault palm-docs
-    echo "✅ palm-docs image built — now: just docs-css-sandbox | docs-build-sandbox"
+    echo "✅ palm-docs image built — now: just website-css-sandbox | docs-build-sandbox"
 
-# Tailwind via palm-docs image (no host node_modules required).
-# Default: hermetic copy seed + --output write-back (safe).
-docs-css-sandbox:
+# Tailwind via palm-docs image → website/styles/output.css
+website-css-sandbox:
     #!/usr/bin/env bash
     set -euo pipefail
-    docs_dir="$PWD/docs"
-    test -f "$docs_dir/styles/input.css" || { echo "error: missing docs/styles/input.css" >&2; exit 1; }
-    neonroot spawn palm-docs-css \
+    site="$PWD/website"
+    test -f "$site/styles/input.css" || { echo "error: missing website/styles/input.css" >&2; exit 1; }
+    neonroot spawn palm-website-css \
         --image palm-docs --vault palm-docs --sandbox \
-        --seed "$docs_dir" --seed-mode copy \
-        --output "$docs_dir/styles/output.css:styles/output.css" \
+        --seed "$site" --seed-mode copy \
+        --output "$site/styles/output.css:styles/output.css" \
         -- \
         sh -c 'export NODE_PATH="$(npm root -g)${NODE_PATH:+:$NODE_PATH}"; tailwindcss -i styles/input.css -o styles/output.css'
-    echo "✅ docs/styles/output.css rebuilt via palm-docs (copy + --output)"
+    echo "✅ website/styles/output.css rebuilt via palm-docs"
 
-# Same CSS job with NeonRoot 0.2 bind (writes hit host docs/ live; not hermetic).
-docs-css-bind:
+docs-css-sandbox: website-css-sandbox
+
+website-css-bind:
     #!/usr/bin/env bash
     set -euo pipefail
-    docs_dir="$PWD/docs"
-    test -f "$docs_dir/styles/input.css" || { echo "error: missing docs/styles/input.css" >&2; exit 1; }
-    neonroot spawn palm-docs-css-bind \
+    site="$PWD/website"
+    test -f "$site/styles/input.css" || { echo "error: missing website/styles/input.css" >&2; exit 1; }
+    neonroot spawn palm-website-css-bind \
         --image palm-docs --vault palm-docs --sandbox \
-        --seed "$docs_dir" --seed-mode bind \
+        --seed "$site" --seed-mode bind \
         -- \
         sh -c 'export NODE_PATH="$(npm root -g)${NODE_PATH:+:$NODE_PATH}"; tailwindcss -i styles/input.css -o styles/output.css'
-    echo "✅ docs/styles/output.css via palm-docs bind (host tree live)"
+    echo "✅ website/styles/output.css via palm-docs bind"
 
-# Library build in NeonRoot palm-docs — git-archive seed + export deploy canopy.
+docs-css-bind: website-css-bind
+
+# Library build in NeonRoot — git-archive seed + export docs/_build only.
 docs-build-sandbox:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -302,7 +317,7 @@ docs-build-sandbox:
         --output "$PWD/docs/_build:docs/_build" \
         -- \
         uv run python scripts/docs_build.py
-    echo "✅ docs/_build exported from palm-docs (git-archive seed + --output)"
+    echo "✅ docs/_build exported from palm-docs (library only)"
 
 release-prep:
     @echo "📋 Release prep for {{package}}"
@@ -377,11 +392,12 @@ help:
     @echo "   just guard-common     → palm.common pattern boundary tests"
     @echo "   just guard-system     → palm.system import purity + boundary tests"
     @echo "   just docs-check       → Version + documentation surface consistency"
-    @echo "   just docs-css         → Rebuild docs site Tailwind CSS (host Node)"
-    @echo "   just docs-image       → Build NeonRoot palm-docs image (Tailwind + uv)"
-    @echo "   just docs-css-sandbox → Tailwind via palm-docs (copy + --output)"
-    @echo "   just docs-css-bind    → Tailwind via palm-docs (seed-mode bind)"
-    @echo "   just docs-build       → Living Library → docs/_build (+ deploy canopy)"
+    @echo "   just website-css      → Tailwind for website/styles (host Node)"
+    @echo "   just website-build    → Assemble website/dist (Cloudflare assets)"
+    @echo "   just website-build-all→ website-css + website-build"
+    @echo "   just website-css-sandbox → Tailwind via palm-docs image"
+    @echo "   just docs-image       → Build NeonRoot palm-docs image"
+    @echo "   just docs-build       → Living Library → docs/_build (no website)"
     @echo "   just docs-build-all   → docs-css + docs-build"
     @echo "   just docs-build-sandbox → hermetic docs-build via palm-docs image"
     @echo "   just release-prep     → docs-check + full-check + build"

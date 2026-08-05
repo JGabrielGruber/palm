@@ -5,11 +5,11 @@ set -euo pipefail
 # Prefer docs/ as cwd when seeded as docs-only (sandbox) or repo/docs (host script).
 if [[ -f styles/input.css ]]; then
   :
-elif [[ -f docs/styles/input.css ]]; then
-  cd docs
+elif [[ -f website/styles/input.css ]]; then
+  cd website
 elif [[ -n "${BASH_SOURCE[0]:-}" ]]; then
   ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-  cd "$ROOT/docs"
+  cd "$ROOT/website"
 else
   echo "error: cannot find styles/input.css" >&2
   exit 1

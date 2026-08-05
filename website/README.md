@@ -1,47 +1,46 @@
 # Palm website (palmengine.org)
 
-**SOURCE** for the public landing page. Not the Living Library wiki — the **brand canopy**.
+**SOURCE** for the public landing. Not the Living Library wiki.
 
 | Path | Role |
 |------|------|
-| `index.html` | Showcase landing |
-| `styles/` | Tailwind input + built `output.css` |
-| `images/` | Logo, OG, screenshots, placeholders |
-| `robots.txt` · `sitemap.xml` | Crawlers |
+| `index.html` | Showcase landing (edit here) |
+| `styles/` | Tailwind `input.css` + built `output.css` |
+| `images/` | Logo, OG, screenshots |
+| `themes/alacritty-palm.toml` | Terminal theme (zinc night + teal) |
+| `wrangler.jsonc` | Cloudflare static assets config |
+| **`dist/`** | **BUILD output** — what Cloudflare serves |
 
-## Build into deploy canopy
+## Cloudflare
 
-From repo root:
+Point the project at the **repository root**.
 
-```bash
-just docs-build
-# → docs/_build/deploy/  (website + wiki + reference)
-```
+| Setting | Value |
+|---------|--------|
+| **Assets / output directory** | **`website/dist`** |
+| **Wrangler config** | `website/wrangler.jsonc` (if using Workers static assets; `assets.directory` is `dist` relative to `website/`) |
+| **Build command** (optional) | `just website-build` or `uv run python scripts/website_build.py` |
+| **CSS before build** | `just website-css` then `just website-build` · or `just website-build-all` |
 
-Cloudflare (wrangler under `docs/`) expects:
+If you **commit `website/dist`**, you may leave the build command empty and still set assets to `website/dist`.
 
-- **Build command:** from repo root, `uv run python scripts/docs_build.py` (or `just docs-build`)
-- **Root directory:** `docs` (where `wrangler.jsonc` lives)
-- **Assets directory:** `_build/deploy` (created by the build)
-
-If the build step is skipped, deploy fails with “directory does not exist” — that is expected.
-
-## Local preview
+## Local recipes
 
 ```bash
-# After docs-build:
-python -m http.server 8765 --directory docs/_build/deploy
-# open http://127.0.0.1:8765/
+just website-css          # rebuild styles/output.css
+just website-build        # → website/dist/
+just website-build-all    # css + dist
 
-# Or website only (no wiki):
-python -m http.server 8765 --directory website
+# preview
+python -m http.server 8765 --directory website/dist
 ```
 
-## CSS
+Living Library (wiki/reference only, no site):
 
-Prefer hermetic: `just docs-css-sandbox` (updates `docs/styles` historically).  
-For website-first: copy or rebuild Tailwind with `website/styles/input.css` → `output.css` (same pins as `docs/package.json` / palm-docs image).
+```bash
+just docs-build           # → docs/_build/  (gitignored)
+```
 
-## Placeholders (José)
+## Placeholders
 
-See `images/placeholders/README.md` — screenshots to drop in when ready.
+See `images/placeholders/README.md` for screenshot requests.

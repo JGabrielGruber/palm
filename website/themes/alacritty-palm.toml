@@ -1,0 +1,63 @@
+# Palm Engine — Alacritty colors
+# Inspired by the palmengine.org canopy: zinc night, teal life, sunset accents.
+# Usage: import into alacritty.toml, e.g.
+#   import = ["~/Projects/palm/website/themes/alacritty-palm.toml"]
+# or paste the [colors] tables into your config.
+
+[colors.primary]
+background = '#09090b'
+foreground = '#e4e4e7'
+
+[colors.cursor]
+text = '#09090b'
+cursor = '#2dd4bf'
+
+[colors.vi_mode_cursor]
+text = '#09090b'
+cursor = '#e879f9'
+
+[colors.search.matches]
+foreground = '#09090b'
+background = '#fdba74'
+
+[colors.search.focused_match]
+foreground = '#09090b'
+background = '#2dd4bf'
+
+[colors.footer_bar]
+foreground = '#a1a1aa'
+background = '#18181b'
+
+[colors.selection]
+text = '#fafafa'
+background = '#3f3f46'
+
+[colors.normal]
+black   = '#18181b'
+red     = '#fb7185'
+green   = '#2dd4bf'
+yellow  = '#fdba74'
+blue    = '#22d3ee'
+magenta = '#e879f9'
+cyan    = '#5eead4'
+white   = '#e4e4e7'
+
+[colors.bright]
+black   = '#52525b'
+red     = '#fda4af'
+green   = '#5eead4'
+yellow  = '#fed7aa'
+blue    = '#67e8f9'
+magenta = '#f0abfc'
+cyan    = '#99f6e4'
+white   = '#fafafa'
+
+[colors.dim]
+black   = '#09090b'
+red     = '#be123c'
+green   = '#0f766e'
+yellow  = '#c2410c'
+blue    = '#0e7490'
+magenta = '#a21caf'
+cyan    = '#0f766e'
+white   = '#71717a'

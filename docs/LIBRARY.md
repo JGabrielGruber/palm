@@ -17,14 +17,14 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 | **`docs/vision/`** | Theme plans — [index](vision/README.md) · **current:** [ASSEMBLY](vision/VISION-ASSEMBLY.md) · [0.56 workload](vision/VISION-0.56.md) · [SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) · [GROVE](vision/VISION-GROVE.md) · **closed:** [vision/closed/](vision/closed/) |
 | **`TECH-DEBT.md` (root)** | Live open residual + master index · paid detail [audit/TECH-DEBT-PAID.md](audit/TECH-DEBT-PAID.md) · PD era [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md) |
 | `docs/llms.txt`, `docs/mcp.txt`, `docs/MCP.md`, `docs/skills/` | Agent progressive disclosure |
-| **Landing (website)** | Repo root [`website/`](../website/) — palmengine.org showcase · assembled into `_build/deploy` by `just docs-build` · [website/README.md](../website/README.md) · [site/README.md](site/README.md) |
+| **Landing (website)** | [`website/`](../website/) SOURCE · **`website/dist/`** BUILD (`just website-build`) · CF assets = `website/dist` · [website/README.md](../website/README.md) |
 
 ## BUILD (only the builder writes)
 
 | Path | Role |
 |------|------|
-| `docs/_build/` | Artifact tree — **gitignored**. Produced by `just docs-build` / `scripts/docs_build.py` (0.52.6+). |
-| `docs/_build/deploy/` | **Assembled canopy** for static hosts (landing + wiki + reference + inventory). Point Cloudflare assets here after build. |
+| `docs/_build/` | Living Library only (wiki/reference/inventory) — **gitignored**. `just docs-build`. Not palmengine.org. |
+| `website/dist/` | Public site BUILD — `just website-build`. Cloudflare **assets = `website/dist`**. |
 
 Do not hand-edit under `_build/`. Do not commit generated inventories (gitignore). Edge deploy is not coupled to “copy raw `docs/`” — adjust the host; the genome stays SOURCE.
 
@@ -38,7 +38,7 @@ Sync: `just docs-sync-mirrors` or `just bump-version` ([PD-031](../TECH-DEBT.md)
 
 ## SURFACES (consume artifacts / SOURCE, do not invent a second truth)
 
-- **Cloudflare** — assembled canopy `docs/_build/deploy` after `just docs-build` (wrangler assets; adjust host build command as needed).
+- **Cloudflare (palmengine.org)** — assets directory **`website/dist`** after `just website-build` (see `website/wrangler.jsonc`).
 - **MCP / agents** — `palm://…` and skill mirrors over the same genome.
 - **Hermetic rebuild (0.53+)** — NeonRoot + palm-docs / palm-ci ([VISION-0.53](vision/closed/VISION-0.53.md), [ci/README.md](../ci/README.md)).
 - **Hermetic jobs / DAG (0.54)** — definition-driven work; tools only via neonroot ([VISION-0.54](vision/closed/VISION-0.54.md)).

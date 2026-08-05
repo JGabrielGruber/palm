@@ -10,12 +10,8 @@ Layout written under ``docs/_build/`` (gitignored)::
     wiki/                     # copy of docs/wiki
     library/                  # LIBRARY.md + adr index
     reference/index.html      # minimal generated reference
-    deploy/                   # edge-ready assemble (website + wiki + reference)
-        index.html, styles/, images/, …   # from repo website/
-        wiki/, library/, reference/, robots.txt, sitemap.xml
-
-Cloudflare (or any static host) may point assets at ``docs/_build/deploy`` after
-this script runs. Landing SOURCE is ``website/`` (not ``docs/index.html``).
+No website canopy here — palmengine.org is ``website/`` + ``scripts/website_build.py``
+→ ``website/dist/``.
 """
 
 from __future__ import annotations
@@ -34,7 +30,6 @@ from version_utils import ROOT, read_version  # noqa: E402
 
 DOCS = ROOT / "docs"
 BUILD = DOCS / "_build"
-WEBSITE = ROOT / "website"
 WIKI_SRC = DOCS / "wiki"
 ADR_SRC = DOCS / "adr"
 SERVICES_SRC = ROOT / "src" / "palm" / "services"
@@ -208,45 +203,10 @@ def write_build_readme() -> None:
 
 Produced by `just docs-build` / `uv run python scripts/docs_build.py`.
 
-- Hand genome lives in `docs/wiki`, `docs/adr`, landing assets, constitution at repo root.
-- Point static hosts at **`deploy/`** (assembled canopy), not this README's parent alone.
-- Palm-native pipeline build → theme 0.53.
+- Hand genome: `docs/wiki`, `docs/adr`, constitution at repo root.
+- Public site: `website/` → `just website-build` → `website/dist` (not this tree).
 """
     (BUILD / "README.md").write_text(text, encoding="utf-8")
-
-
-def assemble_deploy() -> None:
-    """Edge-ready tree: landing soul + library artifacts."""
-    deploy = BUILD / "deploy"
-    _rm_tree(deploy)
-    deploy.mkdir(parents=True)
-
-    # Landing (website/ canopy — brand showcase)
-    site = WEBSITE if (WEBSITE / "index.html").is_file() else DOCS
-    for name in ("index.html", "robots.txt", "sitemap.xml"):
-        _copy_file(site / name, deploy / name)
-    _copytree(site / "styles", deploy / "styles")
-    _copytree(site / "images", deploy / "images")
-
-    # Built library slices
-    _copytree(BUILD / "wiki", deploy / "wiki")
-    _copytree(BUILD / "library", deploy / "library")
-    _copytree(BUILD / "reference", deploy / "reference")
-    _copytree(BUILD / "inventory", deploy / "inventory")
-
-    # Lightweight nav stub so /library/ is discoverable from deploy root without rewriting index.html
-    (deploy / "library.html").write_text(
-        """<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"/><meta http-equiv="refresh" content="0;url=reference/index.html"/>
-<title>Palm Library</title>
-</head><body>
-<p>Living Library reference → <a href="reference/index.html">reference/index.html</a>
- · <a href="wiki/index.md">wiki</a> · <a href="index.html">home</a></p>
-</body></html>
-""",
-        encoding="utf-8",
-    )
 
 
 def build(*, clean: bool = True) -> Path:
@@ -272,7 +232,6 @@ def build(*, clean: bool = True) -> Path:
 
     inv = write_library_json(version, built_at)
     write_reference_html(inv)
-    assemble_deploy()
 
     return BUILD
 
@@ -296,8 +255,6 @@ def main() -> int:
         build_root / "inventory" / "library.json",
         build_root / "wiki" / "index.md",
         build_root / "reference" / "index.html",
-        build_root / "deploy" / "index.html",
-        build_root / "deploy" / "reference" / "index.html",
     ]
     missing = [str(p.relative_to(ROOT)) for p in expected if not p.is_file()]
     if missing:
@@ -306,8 +263,8 @@ def main() -> int:
             print(f"  - {m}")
         return 1
     print(f"[OK] Living Library build → {build_root.relative_to(ROOT)}/")
-    print(f"     deploy canopy: { (build_root / 'deploy').relative_to(ROOT) }/")
-    print(f"     inventory:     adrs={len(json.loads((build_root / 'inventory' / 'library.json').read_text())['adrs'])}")
+    print(f"     inventory: adrs={len(json.loads((build_root / 'inventory' / 'library.json').read_text())['adrs'])}")
+    print("     (website canopy: just website-build → website/dist)")
     if args.check:
         print("[OK] --check artifacts present")
     return 0
