@@ -10,7 +10,12 @@
 
 **Related near themes:** [VISION-0.55](closed/VISION-0.55.md) **Reactive Interests** · [VISION-0.56](VISION-0.56.md) workload · [VISION-SESSION-PLANE](closed/VISION-SESSION-PLANE.md) · [EVENT-PLANE](../EVENT-PLANE.md) · [WORK-DRAIN](../WORK-DRAIN.md) · [ADR-025](../adr/025-reactive-interests.md) · [ADR-024](../adr/024-workload-engine.md) · [PHILOSOPHY](../../PHILOSOPHY.md)
 
-**Near structure (before full org crown):** [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — organism truth between boot and business; **tree first** (home up, place book, projection). Grove remains multi-Palm organization and continuous interface. Assembly is the tangible path that makes a grove of processes honest without requiring mesh or org catalog on day one.
+**Near structure (before full org crown):**  
+1. [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — organism truth; tree; home up; optional **assembly seed** for base business structure  
+2. [VISION-TUNNELS](VISION-TUNNELS.md) — trusted reach; neighborhood; mesh *feel*, tree *law*  
+3. **This file** — multi-Palm organization and continuous interface  
+
+Assembly + tunnels make a grove of processes honest without mesh self-discovery as the first law.
 
 ---
 

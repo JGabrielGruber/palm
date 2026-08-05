@@ -6,7 +6,7 @@
 **Migration / release:** [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md) · prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** ✅ · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · paid residual **SU-004** · **BI-014** · **CS-005** (hot-path partial) · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · assembly seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-book scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (closed)** · [assembly seed](docs/vision/VISION-ASSEMBLY.md) · tree-before-mesh · [Grove](docs/vision/VISION-GROVE.md) horizon.
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-book scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (closed)** · [assembly](docs/vision/VISION-ASSEMBLY.md) → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
@@ -23,8 +23,8 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) → closed [VISION-0.
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next seeds** | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (organism truth · tree scale) · [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · **SD-019** · **SD-016** · residual BI · workload remainder · Grove |
-| **Later** | `monitor_agent` · user-plane · Grove org crown |
+| **Next seeds** | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) → [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder · **SD-019** · **SD-016** |
+| **Later** | `monitor_agent` · user-plane · Grove org crown · edge/cloud phenotypes |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 
 ## 0.62 — Multi-claimer work drain (**closed** · theme exit `0.62.8`)
@@ -312,14 +312,15 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 ## Horizon
 
 **North star:** [**The Grove**](docs/vision/VISION-GROVE.md) — multi-Palm organization (later).  
-**Near structure seed:** [**Assembly**](docs/vision/VISION-ASSEMBLY.md) — organism truth between boot and business; tree scale; place book; projection.
+**Near structure:** [**Assembly**](docs/vision/VISION-ASSEMBLY.md) → [**Tunnels**](docs/vision/VISION-TUNNELS.md) → [**Grove**](docs/vision/VISION-GROVE.md).
 
 - **0.59** System boot + composition truth — **closed** at `0.59.8` ([VISION-0.59](docs/vision/closed/VISION-0.59.md) · [ADR-028](docs/adr/028-system-boot.md) Accepted · [SD-014](TECH-DEBT.md#sd-014) closed)  
 - **0.58** Session plane — **closed**  
 - **0.55** Reactive Interests — law closed  
 - **0.56** Workload plane — scout; cancel/ownership consume session; **place book** for multi-process (see assembly seed)  
 - **0.57** System layer — closed  
-- **Assembly** seed ([VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)) — not open; authoritative DNA + definition-ready  
+- **Assembly** seed ([VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)) — not open; DNA + definition-ready + optional structure seed  
+- **Tunnels** seed ([VISION-TUNNELS](docs/vision/VISION-TUNNELS.md)) — not open; after assembly, before Grove  
 - Surface deflation seed ([VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md))  
 - Docs dogfood domain (post boot + workload)  
 - Adapter runners via workloads (PD-022)  

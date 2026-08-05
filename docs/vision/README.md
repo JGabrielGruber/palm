@@ -15,7 +15,8 @@ Not git `archive/` (never import). These files remain **docs history** and links
 
 | Doc | Role |
 |-----|------|
-| [VISION-ASSEMBLY.md](VISION-ASSEMBLY.md) | Queue seed — organism truth · tree scale |
+| [VISION-ASSEMBLY.md](VISION-ASSEMBLY.md) | Queue seed — organism truth · tree scale · assembly seed for structure |
+| [VISION-TUNNELS.md](VISION-TUNNELS.md) | Queue seed — reach · neighborhood · **after assembly, before Grove** |
 | [VISION-0.56.md](VISION-0.56.md) | Workload plane — scout (place book) |
 | [VISION-SURFACE-DEFLATION.md](VISION-SURFACE-DEFLATION.md) | Queue seed — surface compost |
 | [VISION-GROVE.md](VISION-GROVE.md) | North star — multi-Palm organization |

@@ -4,7 +4,7 @@
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
-**Horizon:** [VISION-GROVE](VISION-GROVE.md) (multi-Palm org — later) · surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md)  
+**Horizon order:** this seed → [VISION-TUNNELS](VISION-TUNNELS.md) (reach · neighborhood) → [VISION-GROVE](VISION-GROVE.md) (multi-Palm org). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
 **Debt touchpoints:** workload remainder · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016) · host/profile glue · catalog wire residual  
 
 ---
@@ -197,15 +197,39 @@ Assembly **removes future glue** and **absorbs scattered become-Palm glue**. It 
 
 ---
 
-## 11. Horizon (dream, not floor)
+## 11. Assembly seed (business structure, not business rules)
 
-Palm is a strong home for **datasets**, **training automation**, and **workloads** that run TinyML or larger models. Those bodies are places in the book. Assembly and light-center rules keep the center efficient so small runtimes can live well under Palm.
+Assembly does **not** run sector workflows. It may still **carry a seed**: a declared bootstrap (often a **flow** or definition pack) that **installs base business structure** after the organism is ready.
 
-Dream after tool: organism DNA from authority, workers and support places as honest branches, business flows that train and serve without lying when ground is down.
+Examples of seed content (not a closed catalog):
+
+- Base definition set for an **organization** or **realm** (empty rooms, not full process law)  
+- Starter catalog shapes, roles as data, empty support faces  
+- “Assemble the shelves so humans and agents can stock them”
+
+| Assembly DNA | Assembly seed (optional) |
+|--------------|---------------------------|
+| Role, truth home, places, refuse, projection | Flow or pack that **authors** initial **business definitions** |
+| Organism ready | Structure ready for authors to grow rules |
+
+Seed runs **after** definition-ready (or as the last step of assembly). It is still not “the company process.” It is **scaffolding** so realms and orgs do not start as empty lies.
 
 ---
 
-## 12. Honesty and honor
+## 12. Horizon (dream, not floor)
+
+Palm is a strong home for **datasets**, **training automation**, and **workloads** that run TinyML or larger models. Those bodies are places in the book. Assembly and light-center rules keep the center efficient so small runtimes can live well under Palm.
+
+**After assembly tool:** [VISION-TUNNELS](VISION-TUNNELS.md) — trusted reach, neighborhood maps, cloud↔device, offline sector honesty.  
+**After tunnels:** [VISION-GROVE](VISION-GROVE.md) — many palms, org crown, continuous interface.
+
+Dream: organism DNA from authority; workers and support places as honest branches; optional seed stocks base definitions; tunnels let phone ask cloud for path to device; business flows train and serve without lying when ground is down.
+
+*There is no place like home.*
+
+---
+
+## 13. Honesty and honor
 
 | Do | Do not |
 |----|--------|
@@ -220,7 +244,7 @@ Palm did not always know what it wanted. Past code is history and teacher — no
 
 ---
 
-## 13. Success picture (for a future theme exit — not a checklist today)
+## 14. Success picture (for a future theme exit — not a checklist today)
 
 1. A reader can point to **assembly** as the steward between boot and business.  
 2. An assembly definition can shape what a process has without open-coded profile soup for that path.  
@@ -231,7 +255,7 @@ Palm did not always know what it wanted. Past code is history and teacher — no
 
 ---
 
-## 14. Open decisions (close when theme opens)
+## 15. Open decisions (close when theme opens)
 
 1. Package home: `palm.core.assembly` vs system-first steward then core extract.  
 2. Assembly definition storage and how authority serves it.  
@@ -242,7 +266,7 @@ Palm did not always know what it wanted. Past code is history and teacher — no
 
 ---
 
-## 15. One sentence
+## 16. One sentence
 
 **After the system is up, assembly makes the organism true from authoritative DNA and tracked places; only then business runs — so Palm scales as a tree of named places without mesh theater or glue as architecture.**
 

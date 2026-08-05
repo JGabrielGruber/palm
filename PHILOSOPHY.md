@@ -260,6 +260,14 @@ whether their place is up; business flows may train and serve without lying when
 down. We grow Palm so they have a great time — and so the human and the agent still find a
 door home.
 
+## On home
+
+*There is no place like home.* Authority climbs the tree; bodies may spread sideways; tunnels
+may make traffic feel flat — but meaning still knows the way up. Edge and cloud are phenotypes
+of one genome. Small companies may own their data on devices that stay online enough to be
+home; sectors may work offline until home returns. Assembly makes the organism true. Tunnels
+come after. Grove is the far light.
+
 ## The soul of Palm, in a few lines
 
 - It is **grown, not built** — organic, pruned, resilient; a few dead leaves never kill it.
