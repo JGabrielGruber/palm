@@ -51,14 +51,7 @@ class StateSchemaDefinition:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> StateSchemaDefinition:
-        """Restore a schema definition from ``to_dict`` output or legacy shape."""
-        if data.get("kind") == "state_schema" and "version" in data:
-            return cls(
-                name=str(data["name"]),
-                schema=dict(data.get("schema") or {}),
-                id=data.get("id"),
-                metadata=dict(data.get("metadata") or {}),
-            )
+        """Restore a schema definition from ``to_dict`` output."""
         return cls(
             name=str(data["name"]),
             schema=dict(data.get("schema") or {}),

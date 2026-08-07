@@ -49,7 +49,7 @@ class ProcessDefinition:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ProcessDefinition:
-        """Restore a process definition from ``to_dict`` output or legacy shape."""
+        """Restore a process definition from ``to_dict`` output."""
         raw_flows = data.get("flows") or []
         flows = [
             FlowDefinition.from_dict(item) if isinstance(item, dict) else item for item in raw_flows

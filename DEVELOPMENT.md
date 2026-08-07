@@ -126,7 +126,7 @@ See [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) and example `migrate-
 | HTTP transport | `src/palm/runtimes/mcp/http_bridge.py`, `surfaces/mcp/surface.py` |
 | Tests | `tests/test_mcp_*.py`, `tests/test_operator_*.py` |
 
-Run MCP tests: `uv run pytest -q tests/test_mcp_tools.py tests/test_mcp_phase3.py tests/test_mcp_phase4.py tests/test_mcp_phase5.py tests/test_mcp_http_surface.py`
+Run MCP tests: `uv run pytest -q tests/test_mcp_tools.py tests/test_mcp_pattern_tools.py tests/test_mcp_lifecycle_tools.py tests/test_mcp_resource_compose_tools.py tests/test_mcp_http_surface.py`
 
 ## Type checking
 
@@ -355,7 +355,7 @@ Scope and schema events emit by default. Value events are off to avoid noise dur
 | File | Coverage |
 |------|----------|
 | `tests/core/test_state_scoping.py` | Scope stack, scoped values, schema binding |
-| `tests/test_state_phase3.py` | Snapshot resume, context engine, wizard integration |
+| `tests/test_state_scope_snapshot.py` | Snapshot resume, context engine, wizard integration |
 | `tests/test_state_snapshots.py` | `__palm:meta` round-trip |
 | `tests/test_state_observability.py` | EventEngine observer |
 | `tests/test_wizard_schema.py` | Flow schema on wizard steps |
@@ -555,7 +555,7 @@ All code under `archive/` is historical. Never add new features there.
 | Collection steps | `tests/test_wizard_collection.py`, `tests/test_collection_selection.py` |
 | Choice resolution | `tests/test_wizard_choice_resolution.py` |
 | Parallel pattern | `tests/test_parallel_pattern.py`, `tests/core/test_parallel_node.py` |
-| State schemas / scoping | `tests/core/test_state_scoping.py`, `tests/test_state_phase3.py` |
+| State schemas / scoping | `tests/core/test_state_scoping.py`, `tests/test_state_scope_snapshot.py` |
 | Executions / builder | `tests/test_executions.py` |
 | Instances / resume | `tests/test_instances.py` |
 | State snapshot hook | `tests/test_state_snapshot_hook.py` |
@@ -593,7 +593,7 @@ pip install -i https://test.pypi.org/simple/ palmengine[cli]
 2. Handle in `PalmCommandHandlers` / `HostQueryHandlers` (`palm/app/host/cqrs_wiring.py`).
 3. For new read models: subclass `Projection` in `palm/common/cqrs/projections/`, register in `ApplicationHost._wire_cqrs()`.
 
-Host tests: `tests/test_application_host_cqrs.py`, `tests/test_cqrs_phase4.py`, `tests/test_cqrs_phase5.py`.
+Host tests: `tests/test_application_host_cqrs.py`, `tests/test_cqrs_wizard_progression.py`, `tests/test_cqrs_compensation_projections.py`.
 
 ## Hermetic jobs & purpose test (0.54)
 

@@ -1,4 +1,4 @@
-"""Phase 3 MCP tests — pattern tools and prompts."""
+"""MCP pattern tools — wizard collection and pattern prompts."""
 
 from __future__ import annotations
 

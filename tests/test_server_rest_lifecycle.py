@@ -1,4 +1,4 @@
-"""Phase 4 REST tests — cancel job, doctor, validate flow."""
+"""Server REST lifecycle — cancel job, doctor, validate flow."""
 
 from __future__ import annotations
 

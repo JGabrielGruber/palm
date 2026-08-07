@@ -1,4 +1,4 @@
-"""Phase 4 CQRS tests — projections, backtracking, CLI queries."""
+"""CQRS wizard progression — projections, backtracking, CLI queries."""
 
 from __future__ import annotations
 

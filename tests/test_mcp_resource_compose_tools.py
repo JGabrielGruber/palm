@@ -1,4 +1,4 @@
-"""Phase 5 MCP tests — invoke resource, compose status, app contributors."""
+"""MCP resource and compose tools — invoke resource, instance tree, app contributors."""
 
 from __future__ import annotations
 

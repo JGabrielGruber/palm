@@ -83,23 +83,13 @@ class FlowDefinition:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> FlowDefinition:
-        """Restore a flow definition from ``to_dict`` output or legacy shape."""
+        """Restore a flow definition from ``to_dict`` output."""
         ref = data.get("state_schema_ref")
         state_schema_ref = str(ref) if ref else None
         inline = data.get("state_schema")
         state_schema = dict(inline) if isinstance(inline, dict) else None
         revision_raw = data.get("revision")
         revision = int(revision_raw) if revision_raw is not None else None
-        if data.get("kind") == "flow" and "version" in data:
-            return cls(
-                name=str(data["name"]),
-                pattern=str(data["pattern"]),
-                options=dict(data.get("options") or {}),
-                id=data.get("id"),
-                revision=revision,
-                state_schema_ref=state_schema_ref,
-                state_schema=state_schema,
-            )
         return cls(
             name=str(data["name"]),
             pattern=str(data["pattern"]),

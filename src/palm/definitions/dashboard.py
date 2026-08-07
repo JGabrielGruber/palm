@@ -54,7 +54,7 @@ class DashboardTile:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> DashboardTile:
         return cls(
-            id=str(data.get("id") or data.get("tile_id") or ""),
+            id=str(data.get("id") or ""),
             dataset=str(data.get("dataset") or ""),
             profile=str(data.get("profile") or "table"),
             title=str(data.get("title") or ""),

@@ -59,11 +59,6 @@ def cmd_help(ctx: CliContext, _args: list[str]) -> int:
   host all-in-one           Collapsed master+worker (default profile)
   host master / worker / server
 
-[bold]Legacy aliases[/] [dim](backward compatible)[/]
-  definitions → process list · sessions → instance list
-  instance status → status · process resume → instance resume
-  wizard list/start/status/input → shortcuts (prefer flow/status/input)
-
 [bold]System[/]
   version [--full]          Build info and registered plugins
   clear · help · exit

@@ -124,9 +124,14 @@ class _EchoHandler(BaseHTTPRequestHandler):
         return
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def http_echo_server() -> Iterator[str]:
-    """Local HTTP server that echoes GET path as JSON — for REST provider tests."""
+    """Local HTTP server that echoes GET path as JSON — for REST provider tests.
+
+    Session-scoped so the OS picks one ephemeral port per `pytest` invocation.
+    Prevents per-test firewall authorization spam for `127.0.0.1:{random}`.
+    Stateless echo handler is safe to share.
+    """
     server = HTTPServer(("127.0.0.1", 0), _EchoHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -134,6 +139,7 @@ def http_echo_server() -> Iterator[str]:
         yield f"http://127.0.0.1:{server.server_address[1]}"
     finally:
         server.shutdown()
+        thread.join(timeout=1)
 
 
 @pytest.fixture

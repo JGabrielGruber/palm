@@ -82,7 +82,7 @@ class ResourceDefinition:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ResourceDefinition:
-        """Restore a resource definition from ``to_dict`` output or legacy shape."""
+        """Restore a resource definition from ``to_dict`` output."""
         inline_input = data.get("input_schema")
         input_schema = dict(inline_input) if isinstance(inline_input, dict) else None
         inline_output = data.get("output_schema")

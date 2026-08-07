@@ -1,4 +1,4 @@
-"""Phase 4 MCP tests — debug and lifecycle tools."""
+"""MCP lifecycle tools — doctor, cancel, trace, process submit."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Tests for Phase 3 state schema, snapshot resume, and observability."""
+"""State scope and snapshot — schema, resume, and observability."""
 
 from __future__ import annotations
 

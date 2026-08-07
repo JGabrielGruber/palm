@@ -1,8 +1,7 @@
 """
 Command registry — maps CLI/REPL phrases to command-mode handlers.
 
-Primary commands use ApplicationHost + CQRS. Legacy aliases remain registered
-for backward compatibility (see :mod:`palm.runtimes.cli.commands.catalog`).
+Primary commands use ApplicationHost + CQRS. One phrase per intent.
 """
 
 from __future__ import annotations
@@ -19,7 +18,6 @@ from palm.runtimes.cli.commands import (
     process,
     resource,
     system,
-    wizard,
 )
 from palm.runtimes.cli.commands import (
     help as help_cmd,
@@ -117,15 +115,5 @@ def build_registry() -> CommandRegistry:
     # Interactive writes (host.provide_input / resume)
     reg.register("input", input_cmd.cmd_input)
     reg.register("back", input_cmd.cmd_back)
-
-    # Legacy aliases — same handlers, shorter phrases
-    reg.register("definitions", process.cmd_process_list)
-    reg.register("sessions", instance.cmd_instance_list)
-    reg.register("instance status", diagnostics.cmd_status)
-    reg.register("process resume", instance.cmd_instance_resume)
-    reg.register("wizard list", wizard.cmd_wizard_list)
-    reg.register("wizard start", wizard.cmd_wizard_start)
-    reg.register("wizard status", diagnostics.cmd_status)
-    reg.register("wizard input", input_cmd.cmd_input)
 
     return reg

@@ -1,4 +1,4 @@
-"""Phase 5 integration — compensation, projections, correlation, enrich_resource."""
+"""Resource compensation — projections, correlation, enrich_resource."""
 
 from __future__ import annotations
 

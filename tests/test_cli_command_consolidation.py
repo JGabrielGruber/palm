@@ -37,9 +37,19 @@ def test_instance_status_without_id_routes_to_dashboard(cli_ctx) -> None:
     assert "Status Dashboard" in buf.getvalue()
 
 
-def test_process_resume_alias_uses_instance_resume() -> None:
+def test_legacy_aliases_removed() -> None:
     reg = build_registry()
-    assert reg.handlers["process resume"] is reg.handlers["instance resume"]
+    for legacy in (
+        "definitions",
+        "sessions",
+        "instance status",
+        "process resume",
+        "wizard list",
+        "wizard start",
+        "wizard status",
+        "wizard input",
+    ):
+        assert legacy not in reg.handlers, legacy
 
 
 def test_registry_aliases_match_catalog() -> None:
@@ -49,11 +59,7 @@ def test_registry_aliases_match_catalog() -> None:
     for alias, canonical in COMMAND_ALIASES.items():
         assert alias in reg.handlers, alias
         assert canonical in reg.handlers, canonical
-        assert reg.handlers[alias] is reg.handlers[canonical] or alias in {
-            "start",
-            "wizard list",
-            "wizard start",
-        }
+        assert reg.handlers[alias] is reg.handlers[canonical] or alias == "start"
 
 
 @pytest.mark.parametrize(

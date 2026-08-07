@@ -1,4 +1,4 @@
-"""Tests for Phase 5 — compensation, webhooks, projection rebuild safeguards."""
+"""CQRS compensation and projections — webhooks, rebuild safeguards."""
 
 from __future__ import annotations
 
