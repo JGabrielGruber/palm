@@ -98,23 +98,29 @@ These words are **stable**. Use them with one meaning only.
 | **Runner** | Plugin that implements a workload runtime (host, neonroot, …). |
 | **Event** | Signal on a bus. Completers describe themselves. |
 | **Interest** | Explicit want: **start** (trigger) or **continue** (wait). |
-| **Interface** | Named contract on the system shell that others call (`execution`, `install`). Code may still say **port**. |
-| **Subsystem** | Membership + lifecycle region on the shell (planes, supervisor). |
+| **Interface** | Named contract on the system shell that others call (`execution`, `install`, and later assembly admission / structure effects). Code may still say **port**. |
+| **Subsystem** | Membership + lifecycle region on the shell (planes, supervisor). Under assembly: organ with a **subsystem contract**. |
 | **Shell** | System instance that owns interfaces and subsystems. Not the default call argument. |
 | **InstallInterface** | Living collaborator board for subsystem install (peer of execution). |
-| **Port** | Named interface for **effects** the system may perform. |
+| **Port** | Named interface for **effects** or **admission** the system may perform or expose. |
 | **Plane** | System path for one kind of traffic (event, start, continue, session, …). |
 | **Surface** | Transport only. |
-| **Product** | Operator/agent domain API (policy + envelope). |
+| **Product** | Operator/agent domain API (policy + envelope). **Client** of the system: depends on published ports, not the composition root. |
 | **System** | Running Palm that holds engines and exposes ports. |
 | **Shared** | Code reused by many layers that is not system and not product. |
+| **Composition root** | Host wiring. Not product’s path to structure or readiness. |
 | **Truth home** | Place that is **authoritative** for durable meaning this process projects. |
-| **Projection** | Local view of authoritative state. Not a second source of truth. |
+| **Projection** | Local view of authoritative state. Not a second source of truth. (Not a CQRS product board.) |
 | **Control home** | Who assigns work and whose doors this process uses for control. |
 | **Light center** | Role rule: refuse heavy body and/or ground on purpose; place weight; stay efficient. |
 | **Support place** | Place that holds ground (or weight) another node projects from. **Org / realm** are recursive supports when they have children of the same kind. |
 | **Work place** | Place that executes work a light center will not carry. |
-| **Assembly** | Steward of **organism ready** (after boot, before business pretends). Seed: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). |
+| **Authority** | Author of desired structure (publishes assembly definition). |
+| **Assembly definition** | Declarative desired structure (DNA) for this process. |
+| **Assembly** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Pure engine + system apply loop + admission. Seed: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). |
+| **Assembly status** | Local readiness under the current definition. Single readiness truth when assembly lands. |
+| **Admission** | Read gate for work that needs a true organism (definition-ready). |
+| **Effect intent** | Structure action the assembly engine requests; system applies via assembly effect port. |
 | **Tunnel** | Trusted path between places after home is known. Seed: [VISION-TUNNELS](vision/VISION-TUNNELS.md). |
 | **Vertical axis** | Authority and meaning climb the tree (home up, hop home, projection). |
 | **Horizontal axis** | Bodies spread in the place book (many hosts, workers, resources). |
@@ -493,7 +499,7 @@ Same genome. Recursive support. Not mesh self-discovery as first law.
 
 ```text
 boot (system)
-  → assembly (organism ready · DNA · optional structure seed)
+  → assembly (reconcile desired structure · admission · optional structure seed)
        → business (flows)           ← living today
        → tunnels (trusted reach)    ← after assembly
             → Grove (many palms · continuous interface)
@@ -501,9 +507,11 @@ boot (system)
 
 | Seed | Role |
 |------|------|
-| [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) | Organism truth; definition-ready; vertical law |
+| [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) | Organism truth; roles; ports; definition-ready admission; vertical law |
 | [VISION-TUNNELS](vision/VISION-TUNNELS.md) | Reach and neighborhood after home is known; mesh *feel*, tree *law* |
 | [VISION-GROVE](vision/VISION-GROVE.md) | Multi-Palm organization crown; continuous interface |
+
+**Assembly (when it lands):** authority issues definition; pure engine reconciles; system applies effect intents; **admission** gates business that needs ground; clients use ports; composition root only wires. New definition → reassemble. Detail: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md).
 
 **Tunnels do not own vertical/horizontal law.** They own **reach** on top of it.  
 **Grove does not invent recursion.** It grows org conversation once assembly and tunnels are boring.
@@ -536,7 +544,10 @@ Grove does not replace local structure. Local structure + two axes + path above 
 17. **Boy-scout extension shape.** When you touch open-coded peer menus, move them toward registry extension if suitable; do not only relocate the menu.  
 18. **Seat DI.** Inject interfaces and subsystems. Do not pass the system instance as ambient DI when a seat suffices.  
 19. **Two axes of scale.** Vertical = home and meaning. Horizontal = place book. Do not collapse them. Do not market multi-process without readiness and home.  
-20. **Business BT ≠ organism topology.** Flows are business rules. Assembly (and later tunnels) are organism cares.
+20. **Business BT ≠ organism topology.** Flows are business rules. Assembly (and later tunnels) are organism cares.  
+21. **Assembly is structure reconciliation.** Desired definition + status + effect intents + admission. Not a second job orchestrator. Not host glue as architecture.  
+22. **Clients use published ports.** Product and surfaces do not dig the composition root for structure or readiness. Structure effect ports stay separate from business execution.  
+23. **Admission is one gate for business that needs ground.** Fail closed. Citizens through the gate; assemble household is not a market-day citizen; pretenders are purged — not permanent checkpoints. Detail: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) §6.4.
 
 ---
 
@@ -573,7 +584,7 @@ From theme **0.57** onward:
 | Supervisor + work plane (closed) | [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted · residual host product wire |
 | System vitality (**0.61 closed**) | [VISION-0.61](vision/closed/VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted · package `palm.system.vitality` · schema `palm.seat_report/1` · inspect present · stamp `0.61.13` · seed [VISION-VITALITY](vision/closed/VISION-VITALITY.md) |
 | Multi-claimer capacity (**0.62 closed**) | [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · exclusive claim + multi-claimer + Queued pool · stamp `0.62.8` · residual multi-process CAS [SD-019](../TECH-DEBT.md#sd-019) |
-| Assembly (queue seed) | [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — organism truth; tree; optional structure seed; not open |
+| Assembly (queue seed) | [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — organism truth; roles; ports; admission; tree; optional structure seed; not open |
 | Tunnels (queue seed) | [VISION-TUNNELS](vision/VISION-TUNNELS.md) — reach after assembly, before Grove; not open |
 | Multi-Palm horizon | [VISION-GROVE](vision/VISION-GROVE.md) — org crown; path: assembly → tunnels → Grove |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
@@ -609,7 +620,7 @@ A map that only names **ideals** without today is also incomplete.
 | Supervisor + work plane (start) on system | **Theme closed** at `0.60.9` — [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted |
 | Living-kernel vitality | **Theme closed** at `0.61.13` — `palm.system.vitality` + Inspect present — [VISION-0.61](vision/closed/VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted |
 | Multi-claimer work drain | **Theme closed** at `0.62.8` — exclusive claim + drain N + exclusive drive + Queued pool — [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · residual [SD-019](../TECH-DEBT.md#sd-019) |
-| Assembly (organism truth) | **Queue seed** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — not open; steward between boot and business |
+| Assembly (organism truth) | **Queue seed** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) — not open; reconciler between boot and business; refined roles/ports 2026-08-07 |
 | Grove multi-Palm | **Horizon** — tree path first; org crown later |
 
 **Incomplete structure is stated here on purpose.**  

@@ -10,7 +10,7 @@ Palm is **pre-1.0** and **experimental**. APIs, packages, and behaviors may brea
 
 Use Palm to explore, dogfood, and build. Pin versions deliberately. Read [STATUS.md](STATUS.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [MIGRATION](docs/migrations/) notes when you upgrade. Structure and honesty matter more than comfort paths while the organism is still growing.
 
-**Growth seed (not an open theme):** organism assembly + tree scale — [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md).  
+**Growth seed (not an open theme):** organism assembly (desired-state reconcile · admission · port-only clients) + tree scale — [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md).  
 **Website:** [palmengine.org](https://palmengine.org) — [`website/`](website/) · build `just website-build` → **`website/dist`** (Cloudflare assets dir).
 
 ---

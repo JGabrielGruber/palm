@@ -269,9 +269,35 @@ but meaning still knows the way up. Edge and cloud are phenotypes of one genome.
 companies may own their data on devices that stay online enough to be home; sectors may work
 offline until home returns.
 
-Assembly makes the organism true. Tunnels come after. Grove is the far light.  
-The map that holds this for the whole project is [docs/PALM.md](docs/PALM.md) §8 — not only a
-tunnels essay.
+Assembly makes the organism true: desired structure, one readiness truth, port-only
+clients, composition root as wire — not host as king. Tunnels come after. Grove is the
+far light. The map that holds this for the whole project is [docs/PALM.md](docs/PALM.md) §8 —
+seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) — not only a tunnels essay.
+
+## On the kingdom (assembly teaching picture)
+
+Some truths land easier as a small story. Palm is not a feudal product. The picture is a
+**teaching aid** for assembly — the same law as the seed, spoken so the heart keeps the
+split.
+
+There is a **king** who authors the law of structure (authority). There is a **decree**
+(the assembly definition). There is a **steward** who receives the decree, assembles the
+kingdom, keeps a **local ledger** of whether the realm is whole, and shows **thumbs** to
+petitioners so business does not pretend when ground is down. The king does not stand at
+every gate. That is the steward’s duty.
+
+**Manors** (subsystems) hold **duties** under the decree: place book, ground, planes,
+supervisor, eyes. They provide, report, and refuse — they do not freestyle “become Palm”
+in the corridor. **Peasants** (product, surfaces, edges) swear **fealty**: they approach
+only through published doors (ports and admission). They do not dig the host as if wiring
+were the crown. A **new decree** means **reassemble**; the ledger must not lie under a
+dead law.
+
+When the story has done its work, engineers return to hard names: reconciler, definition,
+status, effect intent, admission, composition root. The story and the terms are one vision.
+**Citizens** pass only through the steward’s gate. **Household** assembles the kingdom.
+**Pretenders** are purged — not policed forever by corridor guards. One gate; fail closed.
+Detail: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §3, §3.1, and **§6.4**.
 
 ## The soul of Palm, in a few lines
 

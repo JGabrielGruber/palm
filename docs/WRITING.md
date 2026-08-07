@@ -54,6 +54,16 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 | **Projection** | Local view of authority — not a second truth |
 | **Light center** | Role: refuse heavy body/ground on purpose |
 | **Support / realm** | Ground place; realm = recursive sub-support |
+| **Authority** | Author of assembly definition (desired structure) |
+| **Assembly definition** | Declarative desired structure (DNA) |
+| **Assembly** | Structure reconciler; organism ready — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) |
+| **Assembly status** | Local readiness under current definition |
+| **Admission** | Read gate for business that needs ground |
+| **Citizen** | Act that needs organism whole; only via admission |
+| **Household** | Boot/assemble path — not forced through business admission |
+| **Pretender** | Readiness without admission — purge when gate is law |
+| **Effect intent** | Structure action assembly requests; system applies |
+| **Composition root** | Host wiring — not product’s structure API |
 | **Vertical / horizontal** | Meaning climbs home · bodies spread in the book — [PALM §8](PALM.md) |
 | **Registry extension** | OCP/DIP: definition at edge; consumer walks registry — [AGENTS §1.1](../AGENTS.md) · [PALM §7](PALM.md) |
 | **Seat DI** | Inject interfaces/subsystems, not ambient system instance — [AGENTS §1.2](../AGENTS.md) |

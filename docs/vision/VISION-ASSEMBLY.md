@@ -1,11 +1,11 @@
 # VISION — Assembly (organism truth · tree scale)
 
-**Status:** 📋 **Queue seed** — named **2026-08-05**. Not an open minor. José may open a theme when the floor is ready.  
+**Status:** 📋 **Queue seed** — named **2026-08-05** · **refined 2026-08-07** (roles · ports · transformation). Not an open minor. José may open a theme when the floor is ready.  
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
 **Horizon order:** this seed → [VISION-TUNNELS](VISION-TUNNELS.md) (reach · neighborhood) → [VISION-GROVE](VISION-GROVE.md) (multi-Palm org). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
-**Debt touchpoints:** workload remainder · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016) · host/profile glue · catalog wire residual  
+**Debt touchpoints:** workload remainder · host/profile glue · catalog wire residual · product dig into composition root · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
 
 ---
 
@@ -16,11 +16,14 @@ Between those two cares, structure is still **glue**: profiles, host enrich, cat
 
 That glue multiplies when Palm scales past one process.
 
-This file names the **missing steward** and the **tree-shaped scale** that workloads and multi-process must serve.  
+This file names the **missing home** and the **reassembly of the organism** around it.  
+It names **roles**, **ports**, and **what every layer must change**.  
 It does **not** open a theme. It does **not** replace boot, orchestration, or the workload plane.
 
 **Duty:** write the structure Palm will grow into — realistic, named, honest about what we cannot do yet.  
 **Posture (from 0.57+):** plan the home; engine then alternate path; validate; migrate; clean. Prefer 80/20. Complete what is open. Put debt where a theme can own it. Prefer proper over hot glue.
+
+**Refinement (2026-08-07):** assembly is not only a pure package bolted on. It is the season to **assemble Palm**: single desired structure, single readiness truth, port-only clients, composition root as wire only. Prior seasons built the body. This seed is when the body gets one reconciler and wrong hops die.
 
 Palm is **experimental** and **pre-1.0**. There is **no long-term support** promise. See [README](../../README.md). Break for truth.
 
@@ -31,66 +34,297 @@ Palm is **experimental** and **pre-1.0**. There is **no long-term support** prom
 | Care | Owner today | Job |
 |------|-------------|-----|
 | **System up** | Boot + seats + supervisor | Machine lives: planes, ports, continuous loops |
-| **Organism ready** | **Missing home** (scattered glue) | Definitions and ground are real; topology intent holds; business may start honestly |
+| **Organism ready** | **Missing home** (scattered glue) | Desired structure holds; ground and places honest; business may start only when admission allows |
 | **Business runs** | Orchestration + work/wait planes | Flows, jobs, start, continue |
 | **Places exist** | Workload plane (scout) | Named bodies: spawn or adopt; health; stop |
 
-**Assembly** is the name for **organism ready**.
+**Assembly** is the name for **organism ready**: a **desired-state reconciler** for structure, not a second job orchestrator.
 
 | Prefer | Avoid |
 |--------|--------|
-| One steward after system, before business | Stuff assembly into boot forever |
-| One steward that loads **authoritative** plan | Encode every role only as profile flags |
-| Workload as **place book** | Workload as second orchestrator |
+| One reconciler after system, before business pretends | Stuff assembly into boot forever |
+| One **assembly definition** from **authority** (or local seed) | Encode every role only as profile flags |
+| Workload as **place book** | Workload as second business orchestrator |
 | Flows as **business rules** only | Encode cluster topology as a customer flow |
+| Product depends on **admission** and **ports** | Product digs the **composition root** (host) for structure |
+| Structure effects on **assembly effect** ports | Grow every structure verb onto `ExecutionPort` |
 
-**Coordinator (lifecycle sense):** assembly coordinates *becoming* Palm.  
-**Orchestration (engine sense):** runs business once assembly truth holds.  
-Do not fight the word “orchestrator” as a **profile role** (light center). That role is topology. Assembly is the **lifecycle phase**.
+**Lifecycle sense:** assembly coordinates *becoming* Palm.  
+**Orchestration (engine sense):** runs business once admission allows.  
+Do not fight the word “orchestrator” as a **profile role** (light center). That role is topology. Assembly is the **lifecycle phase** and the **reconciler**.
 
 ---
 
-## 3. Normative terms
+## 3. Roles (normative)
 
-Define once. Reuse.
+Name the split. Do not collapse it.
+
+| Role | Computer-science term | Duty |
+|------|----------------------|------|
+| **Authority** | Author of desired structure | Publishes the **assembly definition**. Does not stand at every gate for clients. |
+| **Assembly definition** | Desired state (declarative) | Versioned DNA: role, truth home, places, refuse, projection, seat intent. |
+| **Assembly engine** | Pure reconciler | Holds definition + **assembly status**; emits **effect intents**; folds **observations**. No sockets. No OS spawn. No business jobs. |
+| **Assembly status** | Local readiness / status model | This process’s reflection under the current definition. Not a second definition. |
+| **System loop** | Apply + observe cycle | Loads definition; ticks engine; applies intents via ports; feeds observations; publishes admission. |
+| **Subsystem** | Organ with a **contract** | Must provide, report, and refuse under the definition (place book, ground faces, planes, supervisor, vitality, …). |
+| **Client** | Product, surface, edge | Uses the organism. Depends only on **published interfaces**. Never on the composition root for structure or readiness. |
+| **Composition root** | Host | Wires once. Not a runtime API for product. |
+
+**Admission** is how the reconciler **gates** work that needs a true organism (for example business start). Authority does not wave that flag for every client. The assembly path does.
+
+**New definition → reassemble.**  
+Load the new desired state. Reset readiness under the old law. Emit intents to converge. Invalidate stale projections. Status must not claim ready under a definition that is no longer in force.
+
+### 3.1 Teaching picture (metaphor — not law)
+
+The table above is **normative**. This subsection is **teaching only**. It helps humans and agents *feel* the split before they implement ports and packages. Spirit also: [PHILOSOPHY.md](../../PHILOSOPHY.md).
+
+Think of one Palm process as a **kingdom** that must be true before market day.
+
+| Metaphor | Role in Palm | What it protects |
+|----------|--------------|------------------|
+| **King** | **Authority** | Issues the law of structure. Does not waste the day showing thumbs to every petitioner. |
+| **Royal decree** | **Assembly definition** | The written law of what this kingdom **shall** be (DNA). Versioned. Replaceable. |
+| **Steward** | **Assembly engine + system loop** | Receives the decree. Assembles the kingdom. Keeps the **ledger**. Shows **thumbs** (admission) so peasants do not pretend the realm is whole when it is not. |
+| **Local ledger** | **Assembly status** | Faithful reflection of *this* kingdom under *this* decree. Not a second king. Not a second decree. |
+| **Manors** | **Subsystems** with contracts | Great houses (place book, ground faces, planes, supervisor, vitality, …). Each has **manorial duties**: provide, report, refuse under the decree. |
+| **Peasants** | **Clients** (product, surfaces, edges) | Use the kingdom. They swear an **oath of fealty**: approach only through published ports and admission — never dig the host as if packaging were the crown. |
+| **Hands of the steward** | **Assembly effect port + handlers** | Do the work the steward requests. The pure steward does not open sockets or spawn bodies himself. |
+| **New decree** | **New definition** | The steward must **reassemble**. The ledger must not claim ready under a dead law. |
+
+Why this picture matters:
+
+- **Authority** and **admission** are different duties. Confusing them is how host glue becomes a false king.  
+- **Subsystems** without named duties are manors that freestyle — the source of spaghetti.  
+- **Clients** without fealty reopen private tunnels into the composition root.  
+- A living kingdom can **know when it is not whole** (ledger, thumbs, eyes of vitality) even before an outside tester arrives.
+
+When you write code or ADRs, use the **computer-science terms** in §3 and §4. Keep the metaphor when you teach, negotiate scope, or explain why a hop is illegal.  
+Implementation posture (citizen · household · pretender · purge · one gate): **§6.4**.
+
+---
+
+## 4. Normative terms
+
+Define once. Reuse. Map: [PALM.md §3](../PALM.md).
 
 | Term | Meaning |
 |------|---------|
-| **Assembly definition** | Declarative DNA: role, truth home, required places, refuse rules, projection rules, seat intent. Single truth when loaded from authority. |
-| **Assembly engine** | Pure interpreter of assembly definition → assembly status + requested effects (via ports). Not sockets. Not OS spawn. Not business jobs. |
-| **Truth home** | Place that is **authoritative** for durable meaning this process projects (definitions, store faces, ground). |
-| **Projection** | Local view of authoritative state. Cache or index allowed. Source of truth stays at truth home. |
-| **Invalidate** | Drop or seal projection when truth home is not ready. Refuse work that needs that truth. |
+| **Assembly definition** | Declarative desired structure (DNA). Single truth when loaded from authority or accepted local seed. |
+| **Assembly engine** | Pure reconciler: definition + observations → status + effect intents. Lives under core purity law. |
+| **Assembly status** | Local phase and readiness under the current definition (including definition-ready / blocked / invalidated). |
+| **Effect intent** | Closed set of structure actions the engine requests (ensure place, release place, invalidate projection, …). System applies. |
+| **Observation** | Fact folded into the engine (place ready, truth home down, projection loaded, …). |
+| **Admission** | Read surface: may business that needs ground run? Snapshot of assembly status for clients and planes. |
+| **Assembly control** | Lifecycle surface: load definition, tick / run until steady. **Not** injected into product. |
+| **Assembly effect port** | System protocol that **applies** effect intents (handlers / adapters). Peer of execution — different subject. |
+| **Execution port** | Business **run** effects (resource, workload for jobs, job drive). Not the structure reconcile door. |
+| **Truth home** | Place that is **authoritative** for durable meaning this process projects. |
+| **Projection** | Local view of authoritative state. Cache allowed. Source of truth stays at truth home. |
+| **Invalidate** | Drop or seal projection when truth home is not ready or definition changes. Refuse work that needs that truth. |
 | **Place book** | Workload registry of named places (spawn or adopt). Lifecycle + readiness. |
 | **Control home** | Who assigns work and whose surfaces this process uses for control (may equal truth home or sit above it). |
 | **Light center** | Composition **rule**: refuse heavy job body and/or durable ground on purpose; place weight; stay efficient. Not “unable.” |
 | **Work place** | Place whose role is to execute work the light center will not carry. |
 | **Support place** | Place whose role is to hold durable ground or other weight the center will not hold. |
 | **Tree topology** | Each node depends **up** for authority/control. Not full mesh first. |
-| **Profile** | Local bootstrap seed and defaults. Authority may override structure via assembly definition. |
+| **Profile** | Local bootstrap **seed** and defaults. Maps into or is overridden by assembly definition. Not a parallel structure king. |
+| **Subsystem contract** | What a major organ must provide, report, and refuse under the current definition. |
+| **Composition root** | Host wiring. Not product’s path to structure. |
+| **Citizen** | Act that needs the organism whole; may pass only through **admission**. |
+| **Household** | Boot / assemble / apply path; not a market-day citizen; not forced through business admission. |
+| **Pretender** | Path that pretends readiness without admission; purge when the gate is law. |
 
-**Invocation** (call another Palm’s door) ≠ **projection** (represent their truth as part of *our* readiness).
+**Invocation** (call another Palm’s door) ≠ **projection** (represent their truth as part of *our* readiness).  
+**CQRS projection** (product read model) ≠ **assembly projection** (organism view of truth home).
 
 ---
 
-## 4. Law (intent)
+## 5. Law (intent)
 
-1. **Boot** cares for the **system**.  
+1. **Boot** cares for the **system** (machine able to assemble).  
 2. **Assembly** cares for **organism truth** so business can be honest.  
-3. **Orchestration** cares for **business rules** after organism truth holds.  
-4. **Workload** cares for **places** (inventory of bodies). Assembly **requests** places; it does not reimplement runners.  
-5. **Authoritative first, then the rest.** Truth-home place ready → load or refresh assembly definition and projections → finish seating/binding → then drain and flows that need that truth.  
-6. **Truth home is a place in the book.** Without readiness, projection is faith. With it: not ready → invalidate → do not pretend.  
-7. **Tree first.** Home points up. Relays may exist later with hop limits.  
-8. **Two axes.** Vertical = meaning and home. Horizontal = place book. Tunnels ([VISION-TUNNELS](VISION-TUNNELS.md)) add **reach** later; they do not redefine the axes.  
-9. **Recursive support.** Org/realm speech maps to support with children — assembly-native, not Grove-only.  
-10. **Do not kill what works.** All-in-one remains valid. Light center is a **chosen rule**, not the only shape.  
-11. **Business BT ≠ assembly tree.** Same grammar may tick assembly. Different subject. Different home.  
-12. **Pre-1.0:** break glue; name residual; no LTS theater.
+3. **Orchestration** cares for **business rules** after admission allows.  
+4. **Workload** cares for **places**. Assembly **requests** places via intents; it does not reimplement runners.  
+5. **Authoritative first.** Accept definition from authority or local seed → reconcile (intents + observations) → admission → then drain and flows that need that truth.  
+6. **Truth home is a place in the book.** Not ready → invalidate → do not pretend.  
+7. **Single readiness truth.** Only assembly status (via admission) answers definition-ready. No hand-set host flags as a second king.  
+8. **Tree first.** Home points up. Relays may exist later with hop limits.  
+9. **Two axes.** Vertical = meaning and home. Horizontal = place book. Tunnels ([VISION-TUNNELS](VISION-TUNNELS.md)) add **reach** later; they do not redefine the axes.  
+10. **Recursive support.** Org/realm speech maps to support with children — assembly-native, not Grove-only.  
+11. **Do not kill what works.** All-in-one remains valid. Light center is a **chosen rule**, not the only shape.  
+12. **Business BT ≠ assembly tree.** Same grammar may tick assembly later. Different subject. Different home.  
+13. **Clients use ports.** Product and surfaces depend on admission and published effect ports. They do not dig the composition root for structure.  
+14. **Structure ports ≠ execution port.** Do not grow every organism verb onto business execution.  
+15. **New definition → reassemble.** Status must not lie under a stale definition.  
+16. **Pre-1.0:** break glue; name residual; no LTS theater. Prefer reassembly over dual-path forever.  
+17. **One admission gate for business that needs ground.** Fail closed. No corridor police as architecture.  
+18. **Purge pretenders** when the gate is law. Do not staff permanent checkpoints around illegal hops.
 
 ---
 
-## 5. Workload refined (scale without a second panic)
+## 6. Ports and access (transformation law)
+
+### 6.1 Split subjects
+
+| Port / surface | Subject | Who holds it |
+|----------------|---------|--------------|
+| **ExecutionPort** | Business run effects (resource, job workload, job drive/list) | Graphs + product for **jobs** |
+| **Assembly effect port** | Apply **effect intents** from the reconciler | System loop + handlers only |
+| **Admission** | Read assembly status / may-run-business | Product, work plane, inspect, vitality present |
+| **Assembly control** | Load definition; tick / run until steady | Boot/assemble phase and authority refresh — **not product** |
+| **InstallInterface** | Collaborator board for subsystem install | Boot / seat bind |
+
+### 6.2 Dependency law
+
+```text
+Authority / seed  →  assembly definition
+                         │
+                         ▼
+              assembly engine (core, pure)
+                         │ intents + status
+                         ▼
+         system loop + assembly effect port
+                         │ hands (place book, projection, policy, …)
+                         ▼
+              admission snapshot on shell
+                         │
+            ┌────────────┴────────────┐
+            ▼                         ▼
+     work plane / start         product / surfaces
+     (respect admission)        (admission + execution only)
+```
+
+**Composition root** injects ports and starts the loop. Then it gets out of the way.
+
+### 6.3 Guarantees against pain
+
+| Do | Do not |
+|----|--------|
+| Closed **effect intent** ADT; grow by theme | Stringly ops and silent host paths |
+| Registry of **handlers** (one duty each) | One god method with every structure chore |
+| Pure engine unit tests with fake observations | Engine imports host or product |
+| Budgeted reconcile loop (max ticks / time) | Infinite assemble hang |
+| Idempotent ensure/release where possible | Double-spawn chaos on re-tick |
+| Product constructors take **admission**, not control | Product marks ready by hand |
+| One readiness truth | Soft ready on host + assembly status |
+| Stage migrate and **kill** dual glue | Permanent dual hop “for compatibility” pre-1.0 without named residual |
+
+### 6.4 Citizenship and purge (implementation posture)
+
+This section is **normative** for how the theme lands. It is not optional soft migration culture.
+
+#### Who is a citizen?
+
+**Citizen** = any act whose truth **requires the organism to be whole** (ground, projection, definition truth). Examples: work-plane starts that need the catalog; product doors that claim definitions are ready or run flows against ground; surfaces and tests that assert the same.
+
+Citizens **may pass only through admission** (and the ports that mean).  
+They do **not** earn a tunnel because they are old, useful, or green in CI.
+
+#### Who is household (not a market-day citizen)?
+
+**Household** = work that **is** the assemble path or makes assemble possible. Examples: boot until the machine can apply intents; assembly control, tick, apply, observe; place-book hands **as effect of assemble**; vitality *seeing* status.
+
+Household is not “skipping the gate.” It is not a peasant.  
+Do **not** force household through business admission — that deadlocks the kingdom.  
+Do **not** let household smuggle business starts without admission.
+
+#### Who is a pretender (purge)?
+
+**Pretender** = any path that pretends business readiness without admission. Examples: host soft-ready flags; product digging the composition root for structure; dual “catalog loaded enough”; tests that start business with admission down.
+
+When the gate is law, pretenders **break** until they obey or die.  
+That is the opportunistic purge. Half-assembly with host still king wastes this season.
+
+#### One gate — not guards and checkpoints
+
+| Gate (law) | Guards / checkpoints (rot) |
+|------------|----------------------------|
+| One admission: may business that needs ground run? | Many special cases and “this path is ok for now” |
+| Fail **closed** when admission is down | Fail open with a warning |
+| Citizens only through that door | Patrol residual hops; document them as lifestyle |
+| Household has its own phase (assemble) | Force assemble through business admission |
+| Residual = kill-dated debt in the theme | Career for corridor police |
+
+**Staging** (floor path, then widen) means: build steward and gate, then force **the same law** across remaining pretenders.  
+Staging does **not** mean: leave side doors so CI stays green.  
+Staging does **not** mean: a permanent watch of illegal corridors.
+
+#### Testing law
+
+- Engine: fake observations; no host.  
+- Loop / handlers: fake effect port or thin doubles.  
+- Product and planes: inject admission (`ready` true/false). Never mark ready by reaching into the composition root.  
+- Integration: only the assemble path makes admission true.  
+- A test that starts **citizen** work with admission down is a **wrong test** — fix it or delete it.  
+- Assert bypasses **do not** work.
+
+#### Residual honesty
+
+If a pretender cannot move in the same slice, **name it** with a residual row and a theme-owned kill intent.  
+Do not promote it to architecture. Do not staff guards around it.
+
+---
+
+## 7. Engine and system modules (implementation shape)
+
+Not open code yet. This is the intended shape when the theme lands.
+
+### 7.1 Core (pure)
+
+```text
+palm/core/assembly/
+  definition.py      # assembly definition (desired state)
+  status.py          # phase, definition-ready, reasons
+  intent.py          # EffectIntent closed set
+  observation.py     # Observation closed set
+  ledger.py          # in-engine status under current definition
+  result.py          # AssembleResult (status + intents + flags)
+  engine.py          # AssemblyEngine
+  exceptions.py
+```
+
+**Engine verbs (illustrative):** `receive_definition` · `observe` · `tick` · `status`.  
+**Floor intent set (illustrative):** ensure place · release place · invalidate projection · refresh projection · apply structure policy · request structure seed (after ready).  
+**Floor observation set (illustrative):** place observed · truth home up/down · projection loaded/failed · structure seed finished · seat bound (optional).
+
+Invariant: **nothing in `palm.core` imports outside `palm.core`.**
+
+### 7.2 System (hands + gate + phase)
+
+```text
+palm/system/assembly/   # name may adjust at theme open
+  loop.py               # load → tick → apply → observe until steady | blocked
+  effects.py            # AssemblyEffectPort implementation
+  admission.py          # snapshot for clients and planes
+  handlers/             # ensure_place, projection, policy, …
+```
+
+**Lifecycle:** after boot makes the machine able to apply, **assemble** until steady or honest blocked; then continuous serve. Supervisor may later re-observe truth home or accept a new definition.
+
+### 7.3 What other modules must do
+
+| Module | Duty under assembly |
+|--------|---------------------|
+| **Place book (workload)** | Target of ensure/release/status; report readiness as observation |
+| **Catalog / ground faces** | Projection load and invalidate; truth-home signal |
+| **Work plane / drain** | Respect **admission** before starts that need ground |
+| **ExecutionPort** | Unchanged subject (jobs). Does not apply structure intents |
+| **InstallInterface** | Bind engine, effect port, admission onto the shell |
+| **Vitality** | Report assembly phase and ready (eyes only) |
+| **Inspect (product)** | Present admission snapshot; not control |
+| **Host (composition root)** | Supply seed definition or authority pointer; start loop; inject ports |
+| **DeploymentProfile / composition** | Become **seed** of definition for a path — not parallel structure king |
+| **Product services** | Depend on admission + domain ports; remove host digs for readiness |
+| **CQRS** | Optional status queries. No command that sets ready outside the loop |
+
+**Org (product speech) vs support (organism law):**  
+Support and sub-support are place/projection structure.  
+Organization and realm as **business** meaning (catalog, trust, journeys) run on the job path **inside** that structure. Assembly DNA may shape seats and places so an org can take place. It does not encode sector process law.
+
+---
+
+## 8. Workload refined (scale without a second panic)
 
 Workload is not only “run a container.”
 
@@ -99,38 +333,38 @@ Workload is not only “run a container.”
 | Named places and availability | Claim law for WorkIntents (that is work plane + store) |
 | Spawn **or adopt** | The assembly definition itself |
 | Gate: dependency down → do not start that work yet | A second business orchestrator |
-| How multi-process (local and remote) becomes **controlled** | Magic concurrency without readiness |
+| How multi-process becomes **controlled** | Magic concurrency without readiness |
 
-**Multi-process and network process** become real when places are in the book and assembly (or business) **uses only what is tracked**.  
-Palm does not need a new lock religion first. It needs **place readiness** and **projection honesty**.
+**Job path vs assembly path to places:**  
+- Job: “run this isolation for this job” → **ExecutionPort**.  
+- Assembly: “this place must exist for the organism” → **effect intent** → place book.  
+Same book underneath. Two doors. Two duties.
 
 In-process multi-claimer capacity remains [0.62](closed/VISION-0.62.md). Multi-writer shared store remains [SD-019](../../TECH-DEBT.md#sd-019). Assembly does not erase that residual.
 
-**Light center dogfood (profile rule, not universal law):** ensure support place + work place; project from support; then Palm-as-known. The center may still place ordinary workloads (e.g. postgres) without every dependency becoming its own Palm — avoid abstraction hell.
+**Light center dogfood (rule, not universal law):** ensure support place + work place; project from support; then Palm-as-known. The center may still place ordinary workloads (e.g. postgres) without every dependency becoming its own Palm.
 
 ---
 
-## 6. Profiles and dynamic structure
+## 9. Profiles and dynamic structure
 
 Profiles today capture part of assembly (roles, flags, deployment shape). Keep them as **seeds**.
 
 With assembly:
 
 1. Process boots far enough to find authority (or run all-in-one local DNA).  
-2. Authority ready → load **assembly definition**.  
-3. Assembly engine (or steward) defines what this Palm **will have**.  
-4. System finishes assemble to that plan.  
-5. Business works.
+2. Load **assembly definition** (authority or seed map from profile).  
+3. Engine + loop reconcile until steady or blocked.  
+4. Admission published.  
+5. Business works when admission allows.
 
-Structure becomes **data-driven from one truth**. Glue of “if profile then install…” moves into definition + engine, then migrates off host spaghetti.
+Structure becomes **data-driven from one truth**. Glue of “if profile then install…” moves into definition + handlers, then migrates off host spaghetti.
 
 ---
 
-## 7. Two axes and recursive support (scale meaning)
+## 10. Two axes and recursive support (scale meaning)
 
-This is **assembly-native** meaning — not only a tunnels or Grove note.
-
-### 7.1 Vertical and horizontal
+### 10.1 Vertical and horizontal
 
 | Axis | Assembly’s care | Workload’s care |
 |------|-----------------|-----------------|
@@ -141,7 +375,7 @@ This is **assembly-native** meaning — not only a tunnels or Grove note.
 **Logical** supports and sub-supports grow vertical.  
 Both axes must agree before business pretends the world is whole.
 
-### 7.2 Tree of processes (near scale)
+### 10.2 Tree of processes (near scale)
 
 ```text
         Light center (optional rule)
@@ -160,10 +394,7 @@ Both axes must agree before business pretends the world is whole.
 - Truth home may be support place, or center after it projects. Choose explicitly; do not blur.  
 - Mid nodes that **propagate** authority need not be thin “worker profile.” Any Palm may depend on another Palm.
 
-### 7.3 Recursive support (org / realm as updated meaning)
-
-Older speech said “organization” only as Grove multi-Palm catalog.  
-**Updated meaning:** organization shape is **support that may have children of the same kind**.
+### 10.3 Recursive support (org / realm)
 
 | Speech | Assembly meaning |
 |--------|------------------|
@@ -171,47 +402,60 @@ Older speech said “organization” only as Grove multi-Palm catalog.
 | **Realm** | Sub-support / mid; local ground; home still up |
 | **Multi-org** | Several supports under one root, or several trees — same law |
 
-Grove ([VISION-GROVE](VISION-GROVE.md)) still owns **org crown conversation** (trust catalogs, continuous interface at federation scale).  
-Assembly owns **whether a node can be that support and become definition-ready**.  
-Do not wait for Grove to name recursive support.
+Grove ([VISION-GROVE](VISION-GROVE.md)) still owns **org crown conversation** at federation scale.  
+Assembly owns **whether a node can be that support and become definition-ready**.
 
-**Cluster slogan elsewhere:** master/workers.  
 **Palm slogan:** genome + roles + place book + assembly + home up. Workers are full genome under a rule, not dumb slaves.
 
 ---
 
-## 8. What other systems do (lineage, not copy)
+## 11. What other systems do (lineage, not copy)
 
 | Elsewhere | Palm mapping |
 |-----------|--------------|
-| K8s desired state + readiness | Assembly definition + place readiness |
-| OTP supervision / start phases | Tree topology + assemble then serve |
-| Config/service discovery join | Projection from truth home |
-| OSGi resolve/start levels | Definition-driven seats |
+| K8s desired state + controllers + status | Definition + reconcile loop + assembly status |
+| Control plane vs data plane | Authority/definition vs running jobs and traffic |
+| Hexagonal ports and adapters | Core intents + system effect port; clients on admission |
+| OTP supervision / start phases | Boot then assemble then serve |
+| Composition root (DI) | Host wires; clients never take root as API |
 | Workflow products’ worker fleets | Often **ops outside** the product soul |
 
 Palm’s rare packaging: **assembly** next to **orchestration** and **workload**, in a BT-native organism. The *need* is common. The *named organ* is the ambition.
 
 ---
 
-## 9. Growth path (when José opens a theme)
+## 12. Growth path (when José opens a theme)
 
-Same rhythm as system seasons: **engine → alternate path → validate → migrate → clean**.
+Same rhythm: **engine → alternate path → validate → migrate → clean**.
 
 | Stage | Spirit |
 |-------|--------|
-| **Floor** | Assembly definition artifact + pure interpret/status; one alternate path (e.g. light center or all-in-one DNA); truth-home place in book; invalidate when down; business gated on definition-ready |
-| **Growth** | Profiles as seeds only; more place kinds; worker projection; adopt external places; tickable assembly plan (BT grammar, **not** business flow domain); vitality/inspect shows assembly status |
+| **Floor** | Core types + engine + pure tests; system loop + effect port + small handler set; one alternate DNA (all-in-one or light center); admission on at least one business start path; single readiness truth on that path |
+| **Growth** | Profiles as seeds only; more place kinds; worker projection; adopt external places; vitality/inspect show assembly status; optional plan/BT-shaped ensure walk (**not** business flow domain); authority push → reassemble |
 | **Later / Grove** | Multi-host tree, hop limits, proxy-through-center, org crown |
-| **Non-goals for first theme** | Full mesh; replace orchestration; force every boot to fork support+worker; CAS multi-process claim (SD-019 unless natural); surface purge |
+| **Non-goals for first theme** | Full mesh; replace orchestration; force every boot to fork support+worker; CAS multi-process claim (SD-019 unless natural); full surface purge; product-owned reassemble |
+
+**Staged delivery (guide, not sealed kill list):**
+
+| Order | Deliverable |
+|-------|-------------|
+| 0 | Core definition/status/intent/observation/engine + pure tests |
+| 1 | System loop + effect port + one or two live handlers + one DNA path |
+| 2 | Admission **law** on citizen starts (work drain minimum); pretenders on that path **break** |
+| 3 | Profile → definition seed map for that path; kill dual structure on that path |
+| 4 | Projection invalidate + truth-home observation |
+| 5 | Vitality / inspect present |
+| … | Widen the **same** gate to remaining pretenders; reassemble channel; structure seed |
+
+Order is **how the wall is built**, not permission for side doors. See §6.4.
 
 **80/20:** one real definition-ready path beats a perfect cluster brochure.
 
-**Boy scout:** when assembly touches host glue or catalog wire, move truth toward assembly definition — do not only relocate menus ([AGENTS §1.1](../../AGENTS.md)).
+**Boy scout:** when assembly touches host glue or catalog wire, move truth toward definition + handler — do not only relocate menus ([AGENTS §1.1](../../AGENTS.md)).
 
 ---
 
-## 10. What we keep (spine)
+## 13. What we keep (spine)
 
 Do not redesign these to invent assembly:
 
@@ -223,50 +467,48 @@ Do not redesign these to invent assembly:
 - Vitality + Inspect  
 - In-process exclusive claim (0.62)  
 - Registry extension and seat DI direction  
+- ExecutionPort for **business** effects  
 
 Assembly **removes future glue** and **absorbs scattered become-Palm glue**. It does not erase the seasons that made the tree possible.
 
 ---
 
-## 11. Assembly seed (business structure, not business rules)
+## 14. Structure seed (business structure, not business rules)
 
-Assembly does **not** run sector workflows. It may still **carry a seed**: a declared bootstrap (often a **flow** or definition pack) that **installs base business structure** after the organism is ready.
+Assembly does **not** run sector workflows. It may still **carry a seed**: a declared bootstrap (often a flow or definition pack) that **installs base business structure** after the organism is ready.
 
-Examples of seed content (not a closed catalog):
-
-- Base definition set for an **organization** or **realm** (empty rooms, not full process law)  
-- Starter catalog shapes, roles as data, empty support faces  
-- “Assemble the shelves so humans and agents can stock them”
-
-| Assembly DNA | Assembly seed (optional) |
-|--------------|---------------------------|
+| Assembly definition | Structure seed (optional) |
+|---------------------|---------------------------|
 | Role, truth home, places, refuse, projection | Flow or pack that **authors** initial **business definitions** |
-| Organism ready | Structure ready for authors to grow rules |
+| Organism ready | Shelves ready for authors to grow rules |
 
-Seed runs **after** definition-ready (or as the last step of assembly). It is still not “the company process.” It is **scaffolding** so realms and orgs do not start as empty lies.
+Seed runs **after** definition-ready (or as the last step of assemble). It is scaffolding — not the company process.
 
 ---
 
-## 12. Horizon (dream, not floor)
+## 15. Horizon (dream, not floor)
 
 Palm is a strong home for **datasets**, **training automation**, and **workloads** that run TinyML or larger models. Those bodies are places in the book. Assembly and light-center rules keep the center efficient so small runtimes can live well under Palm.
 
+A living organism can **know when it is not whole** (status, admission, vitality) even before an external suite says so.
+
 **After assembly tool:** [VISION-TUNNELS](VISION-TUNNELS.md) — trusted reach, neighborhood maps, cloud↔device, offline sector honesty.  
 **After tunnels:** [VISION-GROVE](VISION-GROVE.md) — many palms, org crown, continuous interface.
-
-Dream: organism DNA from authority; workers and support places as honest branches; optional seed stocks base definitions; tunnels let phone ask cloud for path to device; business flows train and serve without lying when ground is down.
 
 *There is no place like home.*
 
 ---
 
-## 13. Honesty and honor
+## 16. Honesty and honor
 
 | Do | Do not |
 |----|--------|
 | Name what we cannot ship yet | Fake green for absent assembly |
 | Plan debt into a theme home | Hot-glue mid-slice with no residual row |
 | Prefer completing open intent | Leave half-homes because speed felt good |
+| Prefer **reassembly** of access and readiness | Bolt-on engine with host still structure king |
+| **Purge pretenders**; one admission gate; fail closed | Guards, checkpoints, fail-open dual hops |
+| Wrong tests that bypass the gate: fix or delete | Green bar that encodes the old lie |
 | Say experimental / no LTS out loud | Imply enterprise support pre-1.0 |
 | Increase start cost for structure | Pay forever in glue when speed matters most |
 
@@ -275,33 +517,40 @@ Palm did not always know what it wanted. Past code is history and teacher — no
 
 ---
 
-## 14. Success picture (for a future theme exit — not a checklist today)
+## 17. Success picture (for a future theme exit — not a checklist today)
 
-1. A reader can point to **assembly** as the steward between boot and business.  
-2. An assembly definition can shape what a process has without open-coded profile soup for that path.  
+1. A reader can point to **assembly** as the reconciler between boot and business.  
+2. An assembly definition shapes what a process has without open-coded profile soup for that path.  
 3. Truth home is tracked; down means invalidate; dependent work does not pretend.  
-4. Workload remains the place book; business flows remain business.  
-5. All-in-one still works; light center is optional rule.  
-6. Docs and ADR match code; residual named; José judges exit.
+4. **Single readiness truth** via admission; composition root is not a second king.  
+5. Product and surfaces use **ports**; they do not dig host for structure.  
+6. Structure effect port and execution port stay separate subjects.  
+7. **Citizens** only through admission; **household** assembles without deadlock; **pretenders** purged.  
+8. One gate — not guards/checkpoints; fail closed; wrong bypass tests gone.  
+9. Workload remains the place book; business flows remain business.  
+10. All-in-one still works; light center is optional rule.  
+11. New definition reassembles; status does not lie under a stale definition.  
+12. Docs and ADR match code; residual kill-dated if any; José judges exit.
 
 ---
 
-## 15. Open decisions (close when theme opens)
+## 18. Open decisions (close when theme opens)
 
-1. Package home: `palm.core.assembly` vs system-first steward then core extract.  
+1. Exact package paths (`palm.core.assembly` + `palm.system.assembly` preferred; confirm at open).  
 2. Assembly definition storage and how authority serves it.  
 3. Worker truth home: center only vs support place direct.  
-4. How much BT grammar on day one vs linear ensure plan.  
-5. Relation to existing DeploymentProfile / composition flags (seed map).  
-6. ADR number when theme opens (append-only).
+4. How much ensure-plan / BT grammar on day one vs linear tick.  
+5. Seed map: DeploymentProfile / composition → definition fields.  
+6. Which start paths check admission on floor (work drain minimum).  
+7. ADR number when theme opens (append-only).
 
 ---
 
-## 16. One sentence
+## 19. One sentence
 
-**After the system is up, assembly makes the organism true from authoritative DNA and tracked places; only then business runs — so Palm scales as a tree of named places without mesh theater or glue as architecture.**
+**After the system is up, assembly reconciles authoritative desired structure into a tracked organism with one readiness truth and port-only access; only then business runs — so Palm lives as a tree of named places without mesh theater, host as king, or glue as architecture.**
 
 ---
 
-*Seed essay. Not a theme open. Prefer tool before dream. Prefer place readiness before multi-writer myth. Prefer honor over sparks.*  
+*Seed essay. Not a theme open. Prefer tool before dream. Prefer place readiness before multi-writer myth. Prefer reassembly over dual-truth theater. Prefer one gate over guards. Prefer purge of pretenders over soft green. Prefer honor over sparks.*  
 *José decides when this becomes a minor.*

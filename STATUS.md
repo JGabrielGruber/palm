@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.62.8` · **Active theme:** *(none — capacity closed)* · **Prior closed:** **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 5, 2026 · **Theme closed:** **0.62.8** — ADR-031 Accepted · José exit  
+**Last Updated:** August 7, 2026 · **Theme closed:** **0.62.8** — ADR-031 Accepted · José exit · **Assembly seed refined** (roles · ports · transformation)  
 **System map:** [docs/PALM.md](docs/PALM.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · closed [VISION-0.61](docs/vision/closed/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**  
 **Migration / release:** [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md) · prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** ✅ · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · paid residual **SU-004** · **BI-014** · **CS-005** (hot-path partial) · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · assembly seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -23,7 +23,7 @@ Read in order: **this STATUS** → [PALM.md](docs/PALM.md) (**§8 scale**: two a
 | **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
 | **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
 | **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next seeds** | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) → [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder · **SD-019** · **SD-016** |
+| **Next seeds** | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (**refined 2026-08-07**: authority · reconciler · admission · port-only clients · reassemble) → [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder · **SD-019** · **SD-016** |
 | **Later** | `monitor_agent` · user-plane · Grove org crown · edge/cloud phenotypes |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 
@@ -319,7 +319,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 - **0.55** Reactive Interests — law closed  
 - **0.56** Workload plane — scout; cancel/ownership consume session; **place book** for multi-process (see assembly seed)  
 - **0.57** System layer — closed  
-- **Assembly** seed ([VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)) — not open; DNA + definition-ready + optional structure seed  
+- **Assembly** seed ([VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)) — not open; refined: desired-state reconcile · assembly status · effect intents · admission · subsystem contracts · composition root wire-only · optional structure seed  
 - **Tunnels** seed ([VISION-TUNNELS](docs/vision/VISION-TUNNELS.md)) — not open; after assembly, before Grove  
 - Surface deflation seed ([VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md))  
 - Docs dogfood domain (post boot + workload)  
