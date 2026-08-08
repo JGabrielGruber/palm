@@ -196,7 +196,23 @@ class ExplorerFetcher:
         state: Any = None,
         resource_id: str | None = None,
     ) -> Any:
-        """Invoke a resource definition via the system ExecutionPort."""
+        """Invoke a resource (0.63.34 surface fealty).
+
+        Prefer host packaging when attached; host-less path admits then uses
+        ExecutionPort (keeps ProviderResult shape for explorer pages).
+        """
+        host = self._ctx.host
+        if host is not None:
+            return host.invoke_resource(
+                resource_ref,
+                action=action,
+                params=params,
+                state=state,
+                resource_id=resource_id,
+            )
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._ctx.runtime)
         return self._ctx.runtime.execution.invoke_resource(
             resource_ref,
             action=action,

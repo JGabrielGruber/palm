@@ -262,6 +262,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "kernel dig second wall via ports"
         ),
     },
+    {
+        "id": "surface.fealty",
+        "slice": "0.63.34",
+        "law": (
+            "CLI resume_job / invoke → host packaging; SSR explorer invoke / "
+            "resume_wizard → host or admit+port; wizard CQRS Provide/Backtrack "
+            "edge admission; host.resume_job packaging door"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -489,10 +498,22 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "note": (
             "PalmKernel / BaseRuntime public submit/provide/invoke remain "
             "port-gated only. Digging host.app or bare runtime bypasses "
-            "host packaging edge — pretender if product uses it for business."
+            "host packaging edge — pretender if product uses it for business. "
+            "0.63.34: CLI + SSR explorer market-day digs boy-scouted to host."
         ),
         "intent": "name residual — port is law; packaging crown is host (SD-020)",
         "status": "named_0_63_33",
+    },
+    {
+        "id": "surface.fealty_edge",
+        "note": (
+            "0.63.34: CLI resume_job/invoke and SSR explorer invoke/resume "
+            "route through host packaging (or admit+port when host-less); "
+            "wizard CQRS ProvideWizardInput / RequestWizardBacktrack gate "
+            "admission at pattern handler; host.resume_job packaging door."
+        ),
+        "intent": "paid surface fealty boy-scout",
+        "status": "paid_0_63_34",
     },
 )
 

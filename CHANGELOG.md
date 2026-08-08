@@ -221,6 +221,14 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `host.packaging_market_day` gated · packaging edge paid · kernel dig named  
 - Coherence: `tests/assembly/test_host_packaging_gate_0_63_33.py`  
 
+#### Surface fealty (0.63.34)
+- **CLI** `resume_job` / resource invoke → host packaging (not kernel dig)  
+- **SSR explorer** invoke / resume_wizard → host or admit+port  
+- **Wizard CQRS** Provide / Backtrack edge admission  
+- **`host.resume_job`** packaging continue door  
+- Kingdom: `surface.fealty` gated · surface edge paid  
+- Coherence: `tests/assembly/test_surface_fealty_0_63_34.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

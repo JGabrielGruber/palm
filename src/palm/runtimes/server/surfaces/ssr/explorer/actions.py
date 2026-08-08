@@ -127,7 +127,15 @@ class ExplorerActions:
                     f"Instance {instance_id!r} is not waiting for input "
                     f"(status={job.status.value})"
                 )
-            self._ctx.runtime.execution.resume_job(job.id)
+            # 0.63.34 surface fealty — host packaging or admission + port
+            host = self._ctx.host
+            if host is not None:
+                host.resume_job(job.id)
+            else:
+                from palm.system.assembly.errors import require_business_admission
+
+                require_business_admission(self._ctx.runtime)
+                self._ctx.runtime.execution.resume_job(job.id)
         except (InstanceNotFoundError, RuntimeError) as exc:
             return self._wizard_action_response(
                 request,

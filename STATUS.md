@@ -71,7 +71,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.31** | ✅ execution façade oath — workloads/providers/processes edge gates + inject · stop named |
 | **0.63.32** | ✅ flow product start — submit_flow_body / run_wizard / run_flow oath · soft catalog named |
 | **0.63.33** | ✅ host packaging market-day — submit/provide/resume/invoke + CQRS · kernel dig named |
-| **0.63.34+** | ⬜ more citizens / pretender purge · residual packaging duals named |
+| **0.63.34** | ✅ surface fealty — CLI/SSR dig host; wizard CQRS continue gate; host.resume_job |
+| **0.63.35+** | ⬜ more citizens / pretender purge · residual packaging duals named |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

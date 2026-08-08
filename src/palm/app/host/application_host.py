@@ -797,6 +797,15 @@ class ApplicationHost:
             )
         )
 
+    def resume_job(self, job_id: str, *, runtime_name: str | None = None) -> None:
+        """Resume orchestration for a job (packaging continue door).
+
+        **0.63.34:** packaging market-day door — admission fail closed; port
+        remains second wall. Surfaces must use this instead of dig kernel.
+        """
+        self._require_business_admission()
+        self._app.resume_job(job_id, runtime_name=runtime_name)
+
     def running_runtimes(self) -> list[str]:
         return self._app.running()
 

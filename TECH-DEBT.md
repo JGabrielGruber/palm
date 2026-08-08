@@ -170,7 +170,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.32** product start/continue + planes + assist/flow/execution façades. **0.63.33** — host packaging market-day + CQRS write citizens; kernel dig residual named.
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.33** product + host packaging + CQRS. **0.63.34** — surface fealty (CLI/SSR → host; wizard CQRS continue edge).
 
 **Named residual (not this door — not architecture):**
 
@@ -190,6 +190,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 | Execution façade edge + inject | **Paid 0.63.31** | workloads/providers/processes |
 | Flow product start edge | **Paid 0.63.32** | submit_flow_body / run_wizard / run_flow |
 | Host packaging market-day + CQRS | **Paid 0.63.33** | submit/provide/resume/invoke + write commands |
+| Surface fealty (CLI / SSR / wizard CQRS) | **Paid 0.63.34** | dig host packaging; pattern continue edge |
 | Outbox bare runtime `enable_event_outbox` | Packaging for non-host shells | **named_0_63_28** (host path **paid**) |
 | Host packaging eyes (CS-002) | Eyes residual | **named_0_63_23** |
 | More product doors as map shows them | Open growth | Inventory tower + migration |

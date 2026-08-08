@@ -308,6 +308,17 @@ Product façades (assist · flows · execution services) remain the preferred pe
 
 **Not a break** for happy path when admitted.
 
+## Behavior changes (0.63.34) — surface fealty boy-scout
+
+| Was | Now |
+|-----|-----|
+| CLI **resume_job** dug `host.app` (kernel) | **`host.resume_job`** packaging door (admission) |
+| CLI resource **invoke** dug kernel | **`host.invoke_resource`** packaging door |
+| SSR explorer **invoke / resume_wizard** dug `runtime.execution` | Host when attached; host-less **admit + port** |
+| Wizard CQRS **Provide / Backtrack** only deep at port | Pattern handler **`require_business_admission(runtime)`** first |
+
+**Not a break** for happy path when admitted. Surfaces that still dig kernel/runtime for business are pretenders under **kernel.direct_dig** residual.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

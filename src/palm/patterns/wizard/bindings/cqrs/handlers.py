@@ -56,7 +56,11 @@ def handle_wizard_command(command: Command, ctx: Any) -> Any | None:
             return ctx._submit_flow(submit)
         raise RuntimeError("CQRS context cannot submit wizard flows")
     if isinstance(command, ProvideWizardInputCommand):
+        # 0.63.34 — pattern CQRS continue citizen (port was already second wall)
         runtime = _resolve_runtime(ctx, command.runtime_name)
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(runtime)
         job, slug = provide_interactive_input_for_instance(
             runtime,
             command.instance_id,
@@ -69,6 +73,9 @@ def handle_wizard_command(command: Command, ctx: Any) -> Any | None:
         }
     if isinstance(command, RequestWizardBacktrackCommand):
         runtime = _resolve_runtime(ctx, command.runtime_name)
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(runtime)
         job, to_step = request_interactive_backtrack_for_instance(
             runtime,
             command.instance_id,

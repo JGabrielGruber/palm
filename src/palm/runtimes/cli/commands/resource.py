@@ -97,7 +97,8 @@ def cmd_resource_invoke(ctx: CliContext, args: list[str]) -> int:
         return 1
 
     try:
-        result = ctx.app.invoke_resource(
+        # 0.63.34 surface fealty — host packaging door, not kernel dig
+        result = ctx.host.invoke_resource(
             resource_ref,
             provider=provider,
             action=action,
