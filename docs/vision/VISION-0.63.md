@@ -252,7 +252,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.22** | ✅ Assist admission oath — `admission_source` inject · `admission_gate()` · coerce snapshot (no resolve_runtime dig) |
 | **0.63.23** | ✅ Work-plane able fail-closed (no soft-open default) · packaging admission helper · host soft dual residual named |
 | **0.63.24** | ✅ Product resource invoke citizen — `ExecutionPort.invoke_resource` admission; engine path free |
-| **0.63.25+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
+| **0.63.25** | ✅ Product continue citizens — `resume_job` · `provide_input`; engine digs + wait-plane spine **named** residual |
+| **0.63.26+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

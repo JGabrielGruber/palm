@@ -1,0 +1,91 @@
+"""0.63.25 — product continue doors are citizens; not-this-door residuals named."""
+
+from __future__ import annotations
+
+import pytest
+
+from palm.system.assembly.errors import AdmissionRefusedError
+from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+
+
+def test_resume_job_refused_when_assembly_skipped() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_skip=True,
+    )
+    try:
+        assert rt.admission.may_run_business is False
+        with pytest.raises(AdmissionRefusedError):
+            rt.resume_job("job-missing")
+    finally:
+        rt.stop()
+
+
+def test_provide_input_refused_when_assembly_skipped() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_skip=True,
+    )
+    try:
+        assert rt.admission.may_run_business is False
+        with pytest.raises(AdmissionRefusedError):
+            rt.provide_input("job-missing", "x")
+    finally:
+        rt.stop()
+
+
+def test_resume_job_allowed_when_admitted_reaches_orchestrator() -> None:
+    """Admission open → gate does not refuse; missing job is orchestration error."""
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+    )
+    try:
+        assert rt.admission.may_run_business is True
+        try:
+            rt.resume_job("job-does-not-exist")
+        except Exception as exc:
+            assert not isinstance(exc, AdmissionRefusedError)
+            assert "Admission" not in type(exc).__name__
+    finally:
+        rt.stop()
+
+
+def test_orch_resume_not_gated_as_product_door() -> None:
+    """Wait-plane spine dig — named residual, not ExecutionPort citizen."""
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_skip=True,
+    )
+    try:
+        assert rt.admission.may_run_business is False
+        try:
+            rt.orchestration.resume_job("job-missing")
+        except Exception as exc:
+            assert not isinstance(exc, AdmissionRefusedError)
+    finally:
+        rt.stop()
+
+
+def test_inventory_continue_citizens_and_named_digs() -> None:
+    gated = {row["id"] for row in GATED_CITIZENS}
+    assert "execution.resume_job" in gated
+    assert "runtime.provide_input" in gated
+    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    assert pretenders["execution.workload_engine_dig"] == "named_0_63_25"
+    assert pretenders["execution.resource_engine_dig"] == "named_0_63_25"
+    assert pretenders["wait_plane.orch_resume_dig"] == "named_0_63_25"
+    assert kingdom_map()["pretender_count"] >= 3

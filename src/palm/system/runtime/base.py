@@ -444,8 +444,16 @@ class BaseRuntime:
         return self.submit_flow(flow, job_id=job_id, state=state, metadata=meta)
 
     def provide_input(self, job_id: str, value: Any) -> str | None:
-        """Provide input for a waiting interactive job and resume execution."""
+        """Provide input for a waiting interactive job and resume execution.
+
+        **0.63.25 citizen:** product continue through the shell requires
+        admission (same law as submit / resume_job). Wait-plane deliver that
+        drives orchestration directly is a named residual (not this door).
+        """
+        from palm.system.assembly.errors import require_business_admission
+
         self._require_started()
+        require_business_admission(self)
         return self.orchestration.deliver_input(job_id, value)
 
     def resume_process(self, instance_id: str) -> Job:
@@ -590,8 +598,16 @@ class BaseRuntime:
         return engine.get(str(workload_id))
 
     def resume_job(self, job_id: str) -> Any:
-        """Re-drive a registered orchestration job (ExecutionPort)."""
+        """Re-drive a registered orchestration job (ExecutionPort).
+
+        **0.63.25 citizen:** product / surface re-drive through this port
+        requires admission. Wait plane may still call ``orchestration.resume_job``
+        directly — named residual under SD-020 (system continue spine).
+        """
+        from palm.system.assembly.errors import require_business_admission
+
         self._require_started()
+        require_business_admission(self)
         return self.orchestration.resume_job(str(job_id))
 
     def list_jobs(self, status: Any = None) -> list[Any]:

@@ -161,6 +161,22 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "ResourceEngine.invoke remains ungated (unit / non-port path)"
         ),
     },
+    {
+        "id": "execution.resume_job",
+        "slice": "0.63.25",
+        "law": (
+            "ExecutionPort.resume_job requires admission · product re-drive "
+            "fail closed"
+        ),
+    },
+    {
+        "id": "runtime.provide_input",
+        "slice": "0.63.25",
+        "law": (
+            "BaseRuntime.provide_input requires admission · product interactive "
+            "continue fail closed"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -233,6 +249,33 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "named residual — packaging eyes only, not dual ready flag",
         "status": "named_0_63_23",
+    },
+    {
+        "id": "execution.workload_engine_dig",
+        "note": (
+            "0.63.20 gates ExecutionPort.start_workload. Direct WorkloadEngine.start "
+            "is household for place-book hands; product dig for business start is pretender."
+        ),
+        "intent": "name residual — port is law; dig ≠ free pass (SD-020)",
+        "status": "named_0_63_25",
+    },
+    {
+        "id": "execution.resource_engine_dig",
+        "note": (
+            "0.63.24 gates ExecutionPort.invoke_resource. Direct ResourceEngine.invoke "
+            "is unit/non-port free; product/surface dig for business effects is pretender."
+        ),
+        "intent": "name residual — port is law; dig ≠ free pass (SD-020)",
+        "status": "named_0_63_25",
+    },
+    {
+        "id": "wait_plane.orch_resume_dig",
+        "note": (
+            "0.63.25 gates product resume_job / provide_input. Wait plane still drives "
+            "orchestration.resume_job directly (system continue spine)."
+        ),
+        "intent": "name residual — not soft dual; kill-date if admission owns plane continue",
+        "status": "named_0_63_25",
     },
 )
 

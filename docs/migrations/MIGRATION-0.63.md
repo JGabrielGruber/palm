@@ -195,12 +195,28 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 | `ExecutionPort.invoke_resource` only needed a started machine / engine | Also **`admission.may_run_business`** or **`AdmissionRefusedError`** |
 | Product / MCP / host resource invoke could run under dual soft-ready | Same gate as submit_flow / start_workload / work plane |
 
-**Not this door:** direct **`ResourceEngine.invoke`** (unit tests, engine packaging) — not the ExecutionPort citizen path. Graph effects and product services go through the port.
+**Not this door (must be named residual, not silent dual):** direct **`ResourceEngine.invoke`** (unit tests, engine packaging) — not the ExecutionPort citizen path. Graph effects and product services go through the port. Residual row: **SD-020** · inventory `execution.resource_engine_dig`.
+
+## Behavior changes (0.63.25) — product continue + residual honesty
+
+| Was | Now |
+|-----|-----|
+| `ExecutionPort.resume_job` / `provide_input` only needed started | Also **`admission.may_run_business`** or **`AdmissionRefusedError`** |
+| “Not this door” engine digs only in migration prose | **Named** on [SD-020](../../TECH-DEBT.md#sd-020) + kingdom pretender inventory |
+
+**Not this door (named):**
+
+| Path | Stance |
+|------|--------|
+| Direct **`WorkloadEngine.start`** | Household for place book; pretender if product digs for business start |
+| Direct **`ResourceEngine.invoke`** | Unit/non-port free; pretender if product digs for business effects |
+| Wait plane → **`orchestration.resume_job`** | System continue spine — residual kill-date if admission should own plane continue |
 
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  
-Pretenders not yet swallowed: kill-date under [SD-020](../../TECH-DEBT.md#sd-020) / theme residual.
+Pretenders not yet swallowed: kill-date under [SD-020](../../TECH-DEBT.md#sd-020) / theme residual.  
+**Discipline:** every “not this door” left open is **named** residual — digs do not become lifestyle.
 
 ## Product law (while theme open)
 

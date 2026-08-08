@@ -158,6 +158,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `execution.invoke_resource` gated  
 - Coherence: `tests/assembly/test_invoke_resource_gate_0_63_24.py`  
 
+#### Product continue + name not-this-door residuals (0.63.25)
+- **`resume_job`** / **`provide_input`** — admission fail closed (product continue citizens)  
+- **Named residual on SD-020 / inventory:** WorkloadEngine dig · ResourceEngine dig · wait-plane → `orchestration.resume_job` spine  
+- Law: “not this door” must be **named debt**, not silent dual  
+- Kingdom: `execution.resume_job` · `runtime.provide_input` gated; dig pretenders `named_0_63_25`  
+- Coherence: `tests/assembly/test_continue_gates_0_63_25.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
