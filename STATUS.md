@@ -44,7 +44,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.4** | ✅ coherence suite · `guard-assembly` · submit_flow/process gated (`AdmissionRefusedError`) |
 | **0.63.5** | ✅ DNA seed map — builtins cli/server/… · host mode/composition → decree |
 | **0.63.6** | ✅ refuse policy — dual membership fails closed (`refuse:*`) |
-| **0.63.7+** | ⬜ eyes (vitality present) · remaining pretenders · intents |
+| **0.63.7** | ✅ vitality assembly seat — eyes on admission + DNA id |
+| **0.63.8+** | ⬜ remaining pretenders · intents · host soft-flag purge |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

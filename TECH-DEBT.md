@@ -169,7 +169,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.5** seats · gates · coherence · DNA seed map. Residual: refuse/membership enforce, assist soft-ready, host dual flags — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. Residual: assist soft-ready, host dual flags, effect-intent growth — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode.
 

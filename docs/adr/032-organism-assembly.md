@@ -159,5 +159,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.4** — coherence suite + `guard-assembly`; `DefinitionExecutor` submit paths fail closed (`AdmissionRefusedError`).  
 - **0.63.5** — builtin DNA catalog + seed map (mode/composition → decree); host spawn injects seed.  
 - **0.63.6** — refuse vs membership; dual shape blocks admission.  
-- Next: vitality/inspect eyes · residual pretenders (**0.63.7+**).  
+- **0.63.7** — vitality `assembly` seat presents admission + DNA.  
+- Next: residual pretenders · effect intents growth (**0.63.8+**).  
 - Accept + theme close when José judges readiness proper.

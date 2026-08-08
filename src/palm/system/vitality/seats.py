@@ -27,16 +27,20 @@ from palm.system.vitality.raw import (
 from palm.system.vitality.report import SeatReport
 from palm.system.vitality.schema import (
     KIND_BOOT,
+    KIND_ENGINE,
     KIND_LOG,
     KIND_OTHER,
     KIND_PORT,
     KIND_SUPERVISOR,
+    SEAT_ASSEMBLY,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
     SEAT_INSTALL,
     SEAT_PLANES,
     SEAT_SUPERVISOR,
     SEAT_SYSTEM_LOG,
+    STATE_DEGRADED,
+    STATE_OK,
 )
 
 
@@ -119,6 +123,62 @@ def _report_install(instance: Any, board: Any) -> SeatReport:
     )
 
 
+def _resolve_assembly(instance: Any) -> Any | None:
+    """Assembly seat on the shell (0.63) — DNA + admission."""
+    return getattr(instance, "assembly", None)
+
+
+def _report_assembly(instance: Any, seat: Any) -> SeatReport:
+    """Raw admission + definition — eyes only, not control."""
+    admission = None
+    definition = None
+    try:
+        if callable(getattr(seat, "admission", None)):
+            snap = seat.admission()
+            admission = snap.to_dict() if hasattr(snap, "to_dict") else None
+        definition = getattr(seat, "definition", None)
+        def_id = getattr(definition, "id", None) if definition is not None else None
+        def_ver = (
+            getattr(definition, "version", None) if definition is not None else None
+        )
+    except Exception as exc:
+        return SeatReport(
+            seat_id=SEAT_ASSEMBLY,
+            kind=KIND_ENGINE,
+            present=True,
+            state=STATE_DEGRADED,
+            notes=[f"assembly_sample_error:{type(exc).__name__}"],
+            meta={"source": "assembly_seat", "error": str(exc)},
+        )
+
+    may = bool(admission and admission.get("may_run_business"))
+    state = STATE_OK if may else STATE_DEGRADED
+    notes: list[str] = []
+    if admission and not may:
+        notes.extend(str(r) for r in (admission.get("reasons") or [])[:8])
+
+    return SeatReport(
+        seat_id=SEAT_ASSEMBLY,
+        kind=KIND_ENGINE,
+        present=True,
+        state=state,
+        load={
+            "may_run_business": may,
+            "definition_id": def_id,
+            "definition_version": def_ver,
+        },
+        notes=notes,
+        meta={
+            "source": "assembly_seat",
+            "raw": {
+                "admission": admission,
+                "definition_id": def_id,
+                "definition_version": def_ver,
+            },
+        },
+    )
+
+
 def _report_system_log(instance: Any, log: Any) -> SeatReport:
     return sample_attrs(
         log,
@@ -178,6 +238,16 @@ def build_default_probes() -> list[SeatProbe]:
             order=55,
             tags=("core", "port", "install"),
             description="InstallInterface — raw status() of collaborator ports",
+        ),
+        SeatProbe(
+            seat_id=SEAT_ASSEMBLY,
+            kind=KIND_ENGINE,
+            resolve=_resolve_assembly,
+            report=_report_assembly,
+            when_absent="report",
+            order=57,
+            tags=("core", "assembly", "admission"),
+            description="Assembly — admission + DNA id (0.63 eyes)",
         ),
         SeatProbe(
             seat_id=SEAT_SYSTEM_LOG,

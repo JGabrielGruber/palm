@@ -54,6 +54,10 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Structure policy observations block admission when membership lies  
 - Host seed passes membership facts into assemble  
 
+#### Eyes (0.63.7)
+- Vitality seat **`assembly`** — samples admission + definition id  
+- `may_run_business` false → degraded state (honest eyes)  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
