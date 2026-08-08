@@ -295,6 +295,19 @@ Continue was already paid (**0.63.30**). Assist open→create remains its own ci
 
 **Not a break** for happy path when admitted.
 
+## Behavior changes (0.63.33) — host packaging market-day + kernel dig residual
+
+| Was | Now |
+|-----|-----|
+| Host public **submit / provide / resume / invoke** only failed deep at port | Packaging edge **`require_business_admission(host.admission)`** first |
+| CQRS **SubmitFlow/Process · ProvideInput · ResumeProcess · Prepare/SubmitPlans** only deep | **PalmCommandHandlers** gate admission before kernel/executor dig |
+| CancelJob / cancel when admission closed | Still works — **named residual** (control path) |
+| `PalmKernel` / bare `BaseRuntime` public doors | Still port-gated only — **named residual** if product digs past host packaging |
+
+Product façades (assist · flows · execution services) remain the preferred peasant path. Host is packaging crown, not a substitute for product inject.
+
+**Not a break** for happy path when admitted.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

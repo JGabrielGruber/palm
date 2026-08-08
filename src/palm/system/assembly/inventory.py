@@ -252,6 +252,16 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "(port remains second wall) · list/describe stay soft catalog"
         ),
     },
+    {
+        "id": "host.packaging_market_day",
+        "slice": "0.63.33",
+        "law": (
+            "ApplicationHost submit_flow / submit_process / provide_input / "
+            "resume_process / invoke_resource + CQRS Submit*/Provide*/Resume* / "
+            "PreparePlans / SubmitPlans require admission · cancel residual · "
+            "kernel dig second wall via ports"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -462,6 +472,27 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "named residual — soft catalog eyes (same spirit as assist.soft_catalog)",
         "status": "named_0_63_32",
+    },
+    {
+        "id": "host.packaging_market_day_edge",
+        "note": (
+            "0.63.33: ApplicationHost market-day doors + PalmCommandHandlers "
+            "SubmitFlow/Process, ProvideInput, ResumeProcess, PreparePlans, "
+            "SubmitPlans gate on admission; product façades remain preferred "
+            "peasant path; ports remain second wall."
+        ),
+        "intent": "paid packaging crown market-day edge",
+        "status": "paid_0_63_33",
+    },
+    {
+        "id": "kernel.direct_dig",
+        "note": (
+            "PalmKernel / BaseRuntime public submit/provide/invoke remain "
+            "port-gated only. Digging host.app or bare runtime bypasses "
+            "host packaging edge — pretender if product uses it for business."
+        ),
+        "intent": "name residual — port is law; packaging crown is host (SD-020)",
+        "status": "named_0_63_33",
     },
 )
 

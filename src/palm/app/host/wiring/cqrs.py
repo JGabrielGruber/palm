@@ -80,7 +80,9 @@ class PalmCommandHandlers:
                 return contributor.handle_command(command, self)
 
         if isinstance(command, SubmitFlowCommand):
+            # 0.63.33 — packaging CQRS market-day citizen (port remains second wall)
             runtime_name = self._router.route_job_runtime(command.runtime_name)
+            self._require_business_admission(runtime_name)
             if isinstance(command.flow, dict):
                 runtime = self._app.runtime(runtime_name)
                 plan = prepare_flow_from_body(runtime, command.flow)
@@ -95,6 +97,7 @@ class PalmCommandHandlers:
             )
         if isinstance(command, SubmitProcessCommand):
             runtime_name = self._router.route_job_runtime(command.runtime_name)
+            self._require_business_admission(runtime_name)
             if isinstance(command.process, dict):
                 runtime = self._app.runtime(runtime_name)
                 bundle = prepare_process_from_body(runtime, command.process)
@@ -114,6 +117,7 @@ class PalmCommandHandlers:
             return self._submit_plans(command)
         if isinstance(command, ProvideInputCommand):
             runtime_name = self._router.route_job_runtime(command.runtime_name)
+            self._require_business_admission(runtime_name)
             return self._app.provide_input(
                 command.job_id,
                 command.value,
@@ -121,11 +125,13 @@ class PalmCommandHandlers:
             )
         if isinstance(command, ResumeProcessCommand):
             runtime_name = self._router.route_job_runtime(command.runtime_name)
+            self._require_business_admission(runtime_name)
             return self._app.resume_process(
                 command.instance_id,
                 runtime_name=runtime_name,
             )
         if isinstance(command, CancelJobCommand):
+            # Control path residual (named_0_63_30) — no business admission
             runtime_name = self._router.route_job_runtime(command.runtime_name)
             runtime = self._app.runtime(runtime_name)
             try:
@@ -141,8 +147,20 @@ class PalmCommandHandlers:
             }
         raise TypeError(f"Unsupported command: {type(command).__name__}")
 
+    def _require_business_admission(self, runtime_name: str | None = None) -> None:
+        """Packaging CQRS market-day gate (0.63.33)."""
+        from palm.system.assembly.errors import require_business_admission
+
+        name = self._router.route_job_runtime(runtime_name)
+        try:
+            runtime = self._app.runtime(name)
+        except KeyError:
+            runtime = self._app.runtime()
+        require_business_admission(runtime)
+
     def _prepare_plans(self, command: PreparePlansCommand) -> dict[str, Any]:
         runtime = self._resolve_plan_runtime(command.runtime_name)
+        self._require_business_admission(command.runtime_name)
         body = command.body
         if "process" in body or "process_name" in body:
             bundle = prepare_process_from_body(runtime, body)
@@ -155,6 +173,7 @@ class PalmCommandHandlers:
 
     def _submit_plans(self, command: SubmitPlansCommand) -> dict[str, Any]:
         runtime = self._resolve_plan_runtime(command.runtime_name)
+        self._require_business_admission(command.runtime_name)
         jobs = []
         for plan_id in command.plan_ids:
             try:

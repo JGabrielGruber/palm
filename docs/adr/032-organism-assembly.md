@@ -185,5 +185,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.30** — Flow product continue: FlowSession `input` / `resume` / `backtrack` fail-closed on `flows.admission_gate()`; host injects `admission_source` (same helper as assist; no product base); flow cancel + `runtime.cancel_job` **named** residual.  
 - **0.63.31** — Execution product façades: Workload start/exec, Provider invoke, Process prepare/submit/run fail-closed on `admission_gate()`; host shares one inject across flows/providers/processes/workloads; product stop **named** residual.  
 - **0.63.32** — Flow product start: `submit_flow_body` / `run_wizard` / `run_flow` fail-closed on `admission_gate()` (oath; port second wall); LIST/DESCRIBE soft catalog **named** residual.  
-- Next: more citizens / pretender purge (**0.63.33+**).  
+- **0.63.33** — Host packaging market-day: `submit_flow` / `submit_process` / `provide_input` / `resume_process` / `invoke_resource` + CQRS Submit*/Provide*/Resume*/PreparePlans/SubmitPlans fail-closed on admission; cancel residual; kernel/runtime dig **named** residual (port still law).  
+- Next: more citizens / pretender purge (**0.63.34+**).  
 - Accept + theme close when José judges readiness proper.

@@ -214,6 +214,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `flows.start_session` gated · start edge paid · soft catalog named  
 - Coherence: `tests/assembly/test_flows_start_gate_0_63_32.py`  
 
+#### Host packaging market-day (0.63.33)
+- **ApplicationHost** `submit_flow` / `submit_process` / `provide_input` / `resume_process` / `invoke_resource` — admission edge  
+- **CQRS** SubmitFlow/Process · ProvideInput · ResumeProcess · PreparePlans · SubmitPlans — same law  
+- CancelJob stays control residual; kernel/runtime dig **named** residual (port still gates)  
+- Kingdom: `host.packaging_market_day` gated · packaging edge paid · kernel dig named  
+- Coherence: `tests/assembly/test_host_packaging_gate_0_63_33.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

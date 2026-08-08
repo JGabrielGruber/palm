@@ -691,7 +691,12 @@ class ApplicationHost:
         runtime_name: str | None = None,
         **kwargs: Any,
     ) -> ProviderResult:
-        """Invoke a resource definition or direct provider on the host runtime."""
+        """Invoke a resource definition or direct provider on the host runtime.
+
+        **0.63.33:** packaging market-day door — admission fail closed (ports
+        remain a second wall; product façades are preferred for peasants).
+        """
+        self._require_business_admission()
         return self.app.invoke_resource(
             resource_ref,
             provider=provider,
@@ -717,7 +722,10 @@ class ApplicationHost:
         """Submit a flow. Optional ``session_id`` is the system session owner (0.58.4).
 
         Job metadata and edge use one name: ``session_id`` (system subject only).
+
+        **0.63.33:** packaging market-day door — admission fail closed.
         """
+        self._require_business_admission()
         meta = dict(metadata or {})
         sid = (session_id or meta.get("session_id") or "")
         sid = str(sid).strip() if sid else ""
@@ -744,6 +752,11 @@ class ApplicationHost:
         state: Any = None,
         metadata: dict[str, Any] | None = None,
     ) -> Job | list[Job]:
+        """Submit a process.
+
+        **0.63.33:** packaging market-day door — admission fail closed.
+        """
+        self._require_business_admission()
         return self.execute(
             SubmitProcessCommand(
                 process=ref,
@@ -758,6 +771,11 @@ class ApplicationHost:
     def provide_input(
         self, job_id: str, value: Any, *, runtime_name: str | None = None
     ) -> str | None:
+        """Provide interactive input for a waiting job.
+
+        **0.63.33:** packaging market-day door — admission fail closed.
+        """
+        self._require_business_admission()
         return self.execute(
             ProvideInputCommand(
                 job_id=job_id,
@@ -767,6 +785,11 @@ class ApplicationHost:
         )
 
     def resume_process(self, instance_id: str, *, runtime_name: str | None = None) -> Job:
+        """Resume a process/instance (product continue packaging door).
+
+        **0.63.33:** packaging market-day door — admission fail closed.
+        """
+        self._require_business_admission()
         return self.execute(
             ResumeProcessCommand(
                 instance_id=instance_id,
@@ -941,6 +964,12 @@ class ApplicationHost:
     def _require_started(self) -> None:
         if not self._started:
             raise RuntimeError("ApplicationHost is not started; call start() first")
+
+    def _require_business_admission(self) -> None:
+        """Packaging crown market-day gate (0.63.33) — fail closed on admission."""
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission)
 
 
 def run_host(
