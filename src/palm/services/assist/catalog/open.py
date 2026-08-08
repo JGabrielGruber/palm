@@ -71,10 +71,10 @@ def open_target(
         )
 
     if kind_s in {"flow", "flows"}:
-        # 0.63.21 — menu open→create is a citizen start (same gate as submit).
+        # 0.63.21 gate · 0.63.22 oath — published admission, not runtime dig.
         from palm.system.assembly.errors import require_business_admission
 
-        require_business_admission(assist.resolve_runtime())
+        require_business_admission(assist.admission_gate())
         body: dict[str, Any] = {"format": view_format}
         if include_input:
             body["include_input_schema"] = True

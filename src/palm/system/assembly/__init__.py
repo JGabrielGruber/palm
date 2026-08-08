@@ -26,6 +26,7 @@ from palm.system.assembly.host_bind import (
 )
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
+    coerce_admission_snapshot,
     require_business_admission,
 )
 from palm.system.assembly.loop import (
@@ -97,6 +98,7 @@ __all__ = [
     "kingdom_snapshot",
     "load_and_assemble",
     "membership_capabilities_from_settings",
+    "coerce_admission_snapshot",
     "require_business_admission",
     "resolve_seed_dna",
     "seed_assembly_options_from_host",

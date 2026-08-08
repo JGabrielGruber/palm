@@ -84,6 +84,10 @@ def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 
 def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
+    # 0.63.22 — inject admission snapshot factory (oath); packaging digs once.
+    def _admission_source() -> Any:
+        return getattr(ctx.resolve_execution_runtime(None), "admission", None)
+
     return AssistService(
         **ctx.bus_kwargs,
         definitions=built["definitions"],
@@ -91,6 +95,7 @@ def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
         inspect=built["inspect"],
         session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
+        admission_source=_admission_source,
     )
 
 

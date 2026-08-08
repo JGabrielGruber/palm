@@ -136,6 +136,14 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom pretender `assist.soft_catalog` → paid_start_0_63_21  
 - Coherence: `tests/assembly/test_assist_start_gate_0_63_21.py`  
 
+#### Assist admission oath (0.63.22) — peasants' fealty / SD-016 boy-scout
+- **`AssistService.admission_source`** inject + **`admission_gate()`** published gate  
+- Host packaging wires snapshot factory once; citizen doors use gate (not `resolve_runtime` dig)  
+- **`coerce_admission_snapshot`** — snapshot · zero-arg factory · object with `.admission`  
+- Scenario start / open→create / menu eyes share the oath path  
+- Kingdom: `assist.admission_oath` gated · pretender soft_catalog → paid_oath_0_63_22  
+- Coherence: `tests/assembly/test_admission_oath_0_63_22.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

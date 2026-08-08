@@ -148,19 +148,20 @@ def _filter_query(items: list[dict[str, Any]], query: str) -> list[dict[str, Any
 
 
 def _admission_present(assist: AssistService | None) -> dict[str, Any] | None:
-    """0.63.21 — nest living admission on menu (eyes, not soft ready)."""
+    """0.63.21 eyes · 0.63.22 via published admission_gate (not runtime dig)."""
     if assist is None:
         return None
     try:
-        runtime = assist.resolve_runtime()
+        from palm.system.assembly.errors import coerce_admission_snapshot
+
+        snap = coerce_admission_snapshot(assist.admission_gate())
     except Exception:
         return None
-    snap = getattr(runtime, "admission", None)
     if snap is None:
         return {
             "may_run_business": False,
             "phase": "missing",
-            "note": "no admission snapshot on runtime",
+            "note": "no admission snapshot on gate",
         }
     if hasattr(snap, "to_dict"):
         try:

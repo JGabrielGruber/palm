@@ -53,6 +53,15 @@ def test_require_admission_ready_ok() -> None:
     assert snap.may_run_business is True
 
 
+def test_require_admission_accepts_snapshot_and_factory() -> None:
+    """0.63.22 — published gate shapes (oath), not only runtime shells."""
+    seat = AssemblySeat()
+    seat.assemble(local_embedded())
+    ready = seat.admission()
+    assert require_business_admission(ready).may_run_business is True
+    assert require_business_admission(lambda: ready).may_run_business is True
+
+
 def test_submit_flow_fail_closed_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()

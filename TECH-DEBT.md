@@ -125,12 +125,13 @@ the loud instance; the bug is system-wide (boot, host, surfaces).
 | `SystemPlanes.ensure_on` / `SystemSupervisor.ensure_on` | Host recovery / ApplicationHost bag digs |
 | Phase **how** co-located on subject (`phase_*.py`); boot = order + catalog + walk | Host phase definitions (same pattern) |
 | System phase catalog imports subject modules only | Drop remaining wire / `*_to_runtime` shims when quiet |
+| **0.63.22** assist `admission_source` / `admission_gate()` (oath) | Other product doors still dig runtime bag for readiness |
 
 **Avoid:** rename theater only (`runtime` → `source`); `system.common` dump.
 
-**Related:** [SD-015](#sd-015) · [CS-008](#cs-008) · [SU-*](#surface-debt-su).
+**Related:** [SD-015](#sd-015) · [CS-008](#cs-008) · [SU-*](#surface-debt-su) · [SD-020](#sd-020).
 
-**Status:** open (boot seat DI improved; host/surfaces residual).
+**Status:** open (boot seat DI improved; assist admission boy-scout; host/surfaces residual).
 
 ---
 
@@ -169,11 +170,11 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20** — product `start_workload` citizen. **0.63.21** — assist scenario start + menu open create gated; menu admission honesty. Residual: more product doors, host dual flags packaging — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20** — product `start_workload` citizen. **0.63.21** — assist scenario start + menu open create gated; menu admission honesty. **0.63.22** — assist `admission_source` inject / `admission_gate()` oath (no resolve_runtime dig for readiness). Residual: more product doors, host dual flags packaging — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode.
 
-**Status:** open (floor + submit + workload + assist start; more citizens remain).
+**Status:** open (floor + submit + workload + assist start + assist oath; more citizens remain).
 
 ---
 

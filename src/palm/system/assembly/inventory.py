@@ -135,6 +135,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "menu nests admission / start_allowed"
         ),
     },
+    {
+        "id": "assist.admission_oath",
+        "slice": "0.63.22",
+        "law": (
+            "AssistService.admission_source inject · citizen gates use "
+            "admission_gate() · coerce_admission_snapshot · no resolve_runtime dig "
+            "for readiness (peasants' oath / SD-016 boy-scout)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -143,10 +152,11 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "id": "assist.soft_catalog",
         "note": (
             "0.63.10 operate eyes; 0.63.21 scenario start + open flow create gated; "
-            "menu nests admission / start_allowed (no start CTA when closed)"
+            "0.63.22 admission_source inject (oath); menu nests admission / "
+            "start_allowed (no start CTA when closed)"
         ),
-        "intent": "paid start doors; residual only soft catalog browse packaging",
-        "status": "paid_start_0_63_21",
+        "intent": "paid start + oath inject; residual only soft catalog browse packaging",
+        "status": "paid_oath_0_63_22",
     },
     {
         "id": "host.packaging_without_admission",

@@ -57,7 +57,7 @@ Runtime doubles used with `DefinitionExecutor` must publish an `admission` snaps
 | Work-plane tick / drain | **Gated** (0.63.3) |
 | `submit_flow` / `submit_process` (executor) | **Gated** (0.63.4) |
 | DNA id from real dogfood shapes | **Seeded** (0.63.5) — refuse not yet hard-enforced on membership |
-| Assist / MCP packaging soft-ready | Start doors gated (0.63.21); browse residual |
+| Assist / MCP packaging soft-ready | Start doors gated (0.63.21); admission inject oath (0.63.22); browse residual |
 | Host soft “definitions ready” dual flags | Open pretender (SD-020 remainder) |
 | Composition dual structure after DNA load | Catalog paid (0.63.19) — seed map + env DNA + membership seeds; residual SD-020 soft-ready |
 
@@ -168,6 +168,15 @@ Citizens stay fail-closed while phase is `invalidated` / `blocked`.
 | Menu offered Operator entry CTA always | When admission closed: **`start_allowed=false`**, CTA → eyes (`assist/top`), admission nested |
 
 Browse (list flows, menu sections, doctor) stays read-only. Session continue/resume is not this door.
+
+## Behavior changes (0.63.22) — assist admission oath
+
+| Was | Now |
+|-----|-----|
+| Assist digs **`resolve_runtime()`** only to read admission | Packaging injects **`admission_source`** (snapshot factory); product uses **`admission_gate()`** |
+| Gate helper only understood runtime shells | **`coerce_admission_snapshot`** — snapshot · factory · object with `.admission` |
+
+**Not a break:** fail-closed law unchanged. Fealty shape: published admission + ports — not host/runtime bag for readiness (VISION-ASSEMBLY §3).
 
 ## Residual
 

@@ -50,10 +50,10 @@ class AssistScenarioService:
         contributor = scenario_by_id(scenario_id)
         if contributor is None:
             raise DefinitionNotFoundServiceError("scenario", scenario_id)
-        # 0.63.21 — assist product start is a citizen (same gate as submit_flow).
+        # 0.63.21 gate · 0.63.22 oath — published admission, not runtime dig.
         from palm.system.assembly.errors import require_business_admission
 
-        require_business_admission(self._assist.resolve_runtime())
+        require_business_admission(self._assist.admission_gate())
         run_body = {**body, "flow_name": contributor.flow_id, "by_id": True}
         session = self._assist.execution.flows.run_wizard(run_body)
         handle = AssistSession(
