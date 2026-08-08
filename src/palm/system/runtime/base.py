@@ -457,7 +457,12 @@ class BaseRuntime:
         return self.orchestration.deliver_input(job_id, value)
 
     def resume_process(self, instance_id: str) -> Job:
-        """Resume a persisted process instance."""
+        """Resume a persisted process instance (product continue citizen).
+
+        **0.63.29 cartography:** fail closed under admission. Enforcement is
+        on ``DefinitionExecutor.resume_process`` via ``_require_runtime``
+        (same gate as submit since 0.63.4); shell documents the citizen door.
+        """
         self._require_started()
         return self.executor.resume_process(instance_id)
 

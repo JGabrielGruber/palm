@@ -72,9 +72,16 @@ class AssistSession:
         params: dict[str, Any] | None = None,
         view_format: str = "assistant",
     ) -> AssistSessionContext:
+        """Deliver interactive input (product continue citizen).
+
+        **0.63.29:** requires admission via published ``admission_gate()``
+        (peasants' oath — same law as start / provide_input).
+        """
         from palm.common.operator.flows_session_input import flatten_session_read_model
         from palm.common.operator.input_coercion import resolve_mcp_wizard_input
+        from palm.system.assembly.errors import require_business_admission
 
+        require_business_admission(self._assist.admission_gate())
         merged = dict(params or {})
         if "value" not in merged and "input" not in merged:
             merged["value"] = value
@@ -88,14 +95,33 @@ class AssistSession:
         return self.context(view_format=view_format, sync_gate=True)
 
     def backtrack(self, to_step: str | None = None, *, view_format: str = "assistant") -> AssistSessionContext:
+        """Backtrack an interactive flow (product continue citizen).
+
+        **0.63.29:** requires admission via published ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._assist.admission_gate())
         self._flow_session().backtrack(to_step)
         return self.context(view_format=view_format)
 
     def resume(self) -> AssistSession:
+        """Re-drive a waiting interactive session (product continue citizen).
+
+        **0.63.29:** requires admission via published ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._assist.admission_gate())
         self._flow_session().resume()
         return self
 
     def cancel(self) -> dict[str, Any]:
+        """Cancel the backing job — control path (not admission citizen).
+
+        Stays available when admission is closed so operators can stop work
+        (named residual under SD-020, same spirit as stop_workload).
+        """
         return self._flow_session().cancel()
 
     def _flow_session(self) -> Any:

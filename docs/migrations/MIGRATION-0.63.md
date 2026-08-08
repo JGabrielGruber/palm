@@ -247,6 +247,16 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 **Explicit override:** `host.start(enable_event_outbox=True/False)` still wins (named dual if it disagrees with composition).  
 **Bare runtime:** `BaseRuntime.start(enable_event_outbox=…)` unchanged packaging for tests/non-host.
 
+## Behavior changes (0.63.29) — assist continue citizens
+
+| Was | Now |
+|-----|-----|
+| Assist session **input / resume / backtrack** only failed deep at port (`provide_input` / `resume_job`) | Product edge **`require_business_admission(admission_gate())`** first → **`AdmissionRefusedError`** |
+| `resume_process` gated but unlisted | **Cartography honesty** — inventory citizen (enforcement via executor `_require_runtime` since 0.63.4) |
+| Assist session cancel when admission closed | Still works — **named residual** (control path, same spirit as `stop_workload`) |
+
+Browse / inspect / handoff stay eyes. Cancel is not a market-day continue door.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

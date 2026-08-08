@@ -186,6 +186,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `host.outbox_composition_king` gated · `outbox.start_option_seed` paid_host · bare residual named  
 - Coherence: `tests/assembly/test_outbox_composition_king_0_63_28.py`  
 
+#### Assist continue citizens (0.63.29)
+- **`AssistSession.input` / `resume` / `backtrack`** — `require_business_admission(admission_gate())` (oath; product continue)  
+- **`resume_process`** cartography as citizen (already gated via executor `_require_runtime` since 0.63.4)  
+- **`AssistSession.cancel`** stays ungated for operator stop — **named** residual  
+- Kingdom: `assist.continue_session` · `executor.resume_process` gated; `assist.session_cancel_ungated` named  
+- Coherence: `tests/assembly/test_assist_continue_gate_0_63_29.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

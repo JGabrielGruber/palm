@@ -176,6 +176,9 @@ class DefinitionExecutor:
 
         Rebuilds the flow executable, restores state (and wizard position), and
         re-submits to orchestration using the stored ``job_id`` when free.
+
+        **0.63.29 citizen (cartography):** ``_require_runtime`` includes
+        ``require_business_admission`` (same law as submit since 0.63.4).
         """
         self._require_runtime()
         repo = self._instances

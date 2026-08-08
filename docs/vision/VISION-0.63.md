@@ -256,7 +256,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.26** | ✅ Wait-plane continue able — match→resume fail closed; residual `wait_plane.orch_resume_dig` **paid** |
 | **0.63.27** | ✅ Product workload exec citizen — `exec_workload` admission; stop/cleanup named residual |
 | **0.63.28** | ✅ Host outbox composition king — store wire from `composition.has`; bare runtime seed **named** |
-| **0.63.29+** | More citizens / pretender purge · residual packaging duals named |
+| **0.63.29** | ✅ Assist continue citizens — session input/resume/backtrack via `admission_gate()`; `resume_process` cartography; cancel **named** residual |
+| **0.63.30+** | More citizens / pretender purge · residual packaging duals named |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

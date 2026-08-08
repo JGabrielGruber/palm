@@ -201,6 +201,22 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "composition.has('outbox') unless explicit start override"
         ),
     },
+    {
+        "id": "assist.continue_session",
+        "slice": "0.63.29",
+        "law": (
+            "AssistSession input / resume / backtrack require admission via "
+            "admission_gate() (oath) · cancel stays control residual"
+        ),
+    },
+    {
+        "id": "executor.resume_process",
+        "slice": "0.63.29",
+        "law": (
+            "resume_process is product continue citizen · gated via "
+            "_require_runtime admission since 0.63.4 (cartography honesty)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -324,6 +340,25 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid — continue spine under same able as work plane",
         "status": "paid_0_63_26",
+    },
+    {
+        "id": "assist.session_cancel_ungated",
+        "note": (
+            "AssistSession.cancel / session verb cancel remain without business "
+            "admission so operators can stop work when the organism is closed."
+        ),
+        "intent": "name residual — control path, not market-day continue (SD-020)",
+        "status": "named_0_63_29",
+    },
+    {
+        "id": "assist.continue_edge",
+        "note": (
+            "0.63.29: AssistSession input / resume / backtrack gate on "
+            "admission_gate() at product edge (oath); deep provide_input / "
+            "resume_job remain second wall."
+        ),
+        "intent": "paid product continue edge",
+        "status": "paid_0_63_29",
     },
 )
 
