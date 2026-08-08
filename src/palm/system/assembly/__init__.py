@@ -24,6 +24,7 @@ from palm.system.assembly.host_bind import (
     resolve_workload_engine,
     workload_spawn_hands,
 )
+from palm.system.assembly.access import admission_source_from_runtime_resolver
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
     coerce_admission_snapshot,
@@ -98,6 +99,7 @@ __all__ = [
     "kingdom_snapshot",
     "load_and_assemble",
     "membership_capabilities_from_settings",
+    "admission_source_from_runtime_resolver",
     "coerce_admission_snapshot",
     "require_business_admission",
     "resolve_seed_dna",

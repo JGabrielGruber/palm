@@ -76,6 +76,7 @@ def test_work_drain_enqueues_on_workload_stopped() -> None:
     drain.attach(
         storage=storage,
         submit_flow=lambda f, _p: submitted.append(f),
+        able=lambda: True,  # unit drain; host path wires admission (0.63.23)
         event=engine,
         attach_events=True,
     )

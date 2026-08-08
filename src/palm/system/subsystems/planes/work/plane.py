@@ -44,7 +44,8 @@ class WorkPlaneService:
         self._schedules: ScheduleRegistry | None = None
         self._triggers = TriggerRegistry()
         self._submit_flow: Callable[[str, dict[str, Any]], Any] | None = None
-        self._able: Callable[[], bool] = lambda: True
+        # 0.63.23 — fail closed until install wires admission/started able.
+        self._able: Callable[[], bool] = lambda: False
         self._max_depth = 8
         self._batch_size = 10
         self._poll_interval = 1.0
@@ -117,7 +118,8 @@ class WorkPlaneService:
         self._lease_seconds = max(0.1, float(lease_seconds))
         self._claimer_id = str(claimer_id or DEFAULT_CLAIMER_ID)
         self._workers = max(1, int(workers))
-        self._able = able if able is not None else (lambda: True)
+        # 0.63.23 — omit able → refuse (was fail-open True).
+        self._able = able if able is not None else (lambda: False)
         self._submit_flow = submit_flow
         self._dropped_depth = 0
         self._reclaimed = 0
@@ -133,8 +135,11 @@ class WorkPlaneService:
         self._submit_flow = submit_flow
 
     def set_able(self, able: Callable[[], bool] | None) -> None:
-        """Replace able gate (started + admission on the shell after 0.63.3)."""
-        self._able = able if able is not None else (lambda: True)
+        """Replace able gate (started + admission on the shell after 0.63.3).
+
+        ``None`` clears to fail-closed (0.63.23) — not soft-open True.
+        """
+        self._able = able if able is not None else (lambda: False)
 
     def is_able(self) -> bool:
         """Whether tick may start business work (fail closed when false)."""

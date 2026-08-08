@@ -144,6 +144,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "for readiness (peasants' oath / SD-016 boy-scout)"
         ),
     },
+    {
+        "id": "work_plane.able_fail_closed",
+        "slice": "0.63.23",
+        "law": (
+            "WorkPlane able default / set_able(None) / install missing able "
+            "→ False (was soft-open True) · admission_source_from_runtime_resolver "
+            "helper (shape without product base)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -197,6 +206,25 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid for host path; residual only if custom seats bypass bind",
         "status": "paid_0_63_17",
+    },
+    {
+        "id": "work_plane.able_default_open",
+        "note": (
+            "0.63.23: able default / attach omit / set_able(None) / install missing "
+            "able all fail closed (False). Runtime still binds started∧admission."
+        ),
+        "intent": "paid",
+        "status": "paid_0_63_23",
+    },
+    {
+        "id": "host.soft_definitions_ready",
+        "note": (
+            "Audit 0.63.23: no host flag invents business readiness beside admission "
+            "pointer (packaging_status.assembly). Residual: packaging bags remain "
+            "eyes residual (CS-002), not structure law."
+        ),
+        "intent": "named residual — packaging eyes only, not dual ready flag",
+        "status": "named_0_63_23",
     },
 )
 

@@ -84,9 +84,8 @@ def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 
 def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
-    # 0.63.22 — inject admission snapshot factory (oath); packaging digs once.
-    def _admission_source() -> Any:
-        return getattr(ctx.resolve_execution_runtime(None), "admission", None)
+    # 0.63.22/23 — inject published admission (oath); packaging digs once.
+    from palm.system.assembly.access import admission_source_from_runtime_resolver
 
     return AssistService(
         **ctx.bus_kwargs,
@@ -95,7 +94,9 @@ def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
         inspect=built["inspect"],
         session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
-        admission_source=_admission_source,
+        admission_source=admission_source_from_runtime_resolver(
+            ctx.resolve_execution_runtime
+        ),
     )
 
 

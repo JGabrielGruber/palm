@@ -58,7 +58,8 @@ Runtime doubles used with `DefinitionExecutor` must publish an `admission` snaps
 | `submit_flow` / `submit_process` (executor) | **Gated** (0.63.4) |
 | DNA id from real dogfood shapes | **Seeded** (0.63.5) — refuse not yet hard-enforced on membership |
 | Assist / MCP packaging soft-ready | Start doors gated (0.63.21); admission inject oath (0.63.22); browse residual |
-| Host soft “definitions ready” dual flags | Open pretender (SD-020 remainder) |
+| Host soft “definitions ready” dual flags | **Named** (0.63.23) — packaging eyes only; no second ready flag |
+| Work-plane able default open | **Paid** (0.63.23) — omit able / `set_able(None)` fail closed |
 | Composition dual structure after DNA load | Catalog paid (0.63.19) — seed map + env DNA + membership seeds; residual SD-020 soft-ready |
 
 ## Expected direction of break (honest early)
@@ -177,6 +178,15 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 | Gate helper only understood runtime shells | **`coerce_admission_snapshot`** — snapshot · factory · object with `.admission` |
 
 **Not a break:** fail-closed law unchanged. Fealty shape: published admission + ports — not host/runtime bag for readiness (VISION-ASSEMBLY §3).
+
+## Behavior changes (0.63.23) — work-plane able fail-closed + access helper
+
+| Was | Now |
+|-----|-----|
+| Work plane **`able` default True** when omitted | **Default False** — attach omit, `set_able(None)`, install missing able all refuse |
+| Admission inject open-coded in host provider | **`admission_source_from_runtime_resolver`** shared helper (no product base class) |
+
+**Break only for custom attach** that assumed soft-open drain without wiring `able`. Host/runtime path already binds `started ∧ admission`. Unit drain tests must pass `able=lambda: True` when testing mechanics without assembly.
 
 ## Residual
 

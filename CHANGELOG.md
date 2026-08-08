@@ -144,6 +144,14 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `assist.admission_oath` gated · pretender soft_catalog → paid_oath_0_63_22  
 - Coherence: `tests/assembly/test_admission_oath_0_63_22.py`  
 
+#### Work-plane able fail-closed + access helper (0.63.23)
+- **Able default False** — construct / attach omit / `set_able(None)` / install missing able refuse (was soft-open True)  
+- Runtime still binds `started ∧ admission` on real install  
+- **`admission_source_from_runtime_resolver`** — packaging helper; shape without product service base  
+- Host soft “definitions ready” dual **named** residual (packaging eyes only)  
+- Kingdom: `work_plane.able_fail_closed` gated · pretenders paid/named  
+- Coherence: `tests/assembly/test_able_fail_closed_0_63_23.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

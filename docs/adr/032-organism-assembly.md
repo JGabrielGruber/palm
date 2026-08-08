@@ -175,5 +175,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.20** — Product `ExecutionPort.start_workload` fail-closed on admission; household `WorkloadEngine` place path stays ungated.  
 - **0.63.21** — Assist scenario start + menu open→flow create require admission; menu nests admission / `start_allowed` (no start CTA when closed).  
 - **0.63.22** — Assist peasants' oath: inject `admission_source`; citizen gates + menu eyes use `admission_gate()` / `coerce_admission_snapshot` (not `resolve_runtime` dig for readiness).  
-- Next: more citizens / pretender purge (**0.63.23+**).  
+- **0.63.23** — Work-plane `able` default / attach omit / `set_able(None)` fail closed (was soft-open True); `admission_source_from_runtime_resolver` helper (shape without product base); host soft “definitions ready” residual named (packaging eyes only).  
+- Next: more citizens / pretender purge (**0.63.24+**).  
 - Accept + theme close when José judges readiness proper.
