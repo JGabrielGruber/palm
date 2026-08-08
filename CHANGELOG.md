@@ -172,6 +172,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Residual **`wait_plane.orch_resume_dig`** → paid  
 - Coherence: `tests/assembly/test_wait_plane_able_0_63_26.py`  
 
+#### Workload exec citizen (0.63.27)
+- **`BaseRuntime.exec_workload`** — `require_business_admission` before engine exec (product / graph citizen)  
+- Direct **`WorkloadEngine.exec`** stays ungated (unit / non-port)  
+- **`stop_workload`** stays ungated for shutdown/cleanup — **named** residual (`execution.stop_workload_ungated`)  
+- Coherence: `tests/assembly/test_exec_workload_gate_0_63_27.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

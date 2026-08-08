@@ -222,6 +222,20 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 
 **Break only for custom wait attach** that assumed soft-open resume without wiring `able`. Unit wait tests must pass `able=lambda: True` when testing mechanics without assembly. Target-fail path is unchanged.
 
+## Behavior changes (0.63.27) — workload exec citizen
+
+| Was | Now |
+|-----|-----|
+| `ExecutionPort.exec_workload` only needed a started engine | Also **`admission.may_run_business`** or **`AdmissionRefusedError`** |
+| Product/graph exec could run under dual soft-ready | Same gate as start_workload / submit / invoke_resource |
+
+**Not this door (named):**
+
+| Path | Stance |
+|------|--------|
+| Direct **`WorkloadEngine.exec`** | Unit/non-port free; pretender if product digs |
+| **`stop_workload` / stop_owned** | Ungated for shutdown/cleanup when admission closed |
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

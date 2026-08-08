@@ -254,7 +254,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.24** | ✅ Product resource invoke citizen — `ExecutionPort.invoke_resource` admission; engine path free |
 | **0.63.25** | ✅ Product continue citizens — `resume_job` · `provide_input`; engine digs + wait-plane spine **named** residual |
 | **0.63.26** | ✅ Wait-plane continue able — match→resume fail closed; residual `wait_plane.orch_resume_dig` **paid** |
-| **0.63.27+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
+| **0.63.27** | ✅ Product workload exec citizen — `exec_workload` admission; stop/cleanup named residual |
+| **0.63.28+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

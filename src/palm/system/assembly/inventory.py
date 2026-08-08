@@ -185,6 +185,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "binds started∧admission · target fail still applies"
         ),
     },
+    {
+        "id": "execution.exec_workload",
+        "slice": "0.63.27",
+        "law": (
+            "ExecutionPort.exec_workload requires admission · direct "
+            "WorkloadEngine.exec remains ungated (unit / non-port)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -261,12 +269,23 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "execution.workload_engine_dig",
         "note": (
-            "0.63.20 gates ExecutionPort.start_workload. Direct WorkloadEngine.start "
-            "is household for place-book hands; product dig for business start is pretender."
+            "0.63.20 start_workload · 0.63.27 exec_workload gated on port. Direct "
+            "WorkloadEngine.start/exec: household place book + unit free; product dig "
+            "for business is pretender."
         ),
         "intent": "name residual — port is law; dig ≠ free pass (SD-020)",
-        "status": "named_0_63_25",
+        "status": "named_0_63_27",
     },
+    {
+        "id": "execution.stop_workload_ungated",
+        "note": (
+            "stop_workload / stop_owned remain without business admission so "
+            "shutdown and cleanup work when admission is closed."
+        ),
+        "intent": "name residual — control path, not market-day start; revisit if product misuses",
+        "status": "named_0_63_27",
+    },
+
     {
         "id": "execution.resource_engine_dig",
         "note": (

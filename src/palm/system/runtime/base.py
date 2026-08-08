@@ -577,7 +577,15 @@ class BaseRuntime:
         timeout_s: float | None = None,
         env: dict[str, str] | None = None,
     ) -> Any:
-        """Exec argv on a READY workload (ExecutionPort)."""
+        """Exec argv on a READY workload (ExecutionPort).
+
+        **0.63.27 citizen:** product / graph exec through this port requires
+        admission (same law as start_workload). Direct ``WorkloadEngine.exec``
+        remains ungated for unit / non-port paths (named residual).
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self)
         return self._require_workload_engine().exec(
             str(workload_id),
             command,
@@ -586,7 +594,12 @@ class BaseRuntime:
         )
 
     def stop_workload(self, workload_id: str, **kwargs: Any) -> Any:
-        """Idempotent stop of a workload (ExecutionPort)."""
+        """Idempotent stop of a workload (ExecutionPort).
+
+        Not an admission citizen: stop/cancel must remain available for
+        shutdown and cleanup when business is closed (named residual under
+        SD-020 if product misuse appears).
+        """
         del kwargs  # reserved for future flags
         return self._require_workload_engine().stop(str(workload_id))
 
