@@ -20,8 +20,10 @@ def install_wait_plane(
     orch = ctx.orchestration
     if orch is None:
         raise RuntimeError("runtime has no orchestration for wait plane")
+    # 0.63.26 — same able as work plane (started ∧ admission); omit → fail closed.
+    able = ctx.able if ctx.able is not None else (lambda: False)
     plane = WaitPlaneService()
-    plane.attach(orchestration=orch, event=ctx.event)
+    plane.attach(orchestration=orch, event=ctx.event, able=able)
     hub.put(WAIT_PLANE.name, plane, aliases=WAIT_PLANE.aliases)
     return plane
 

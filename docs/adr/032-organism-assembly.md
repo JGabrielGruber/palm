@@ -178,5 +178,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.23** — Work-plane `able` default / attach omit / `set_able(None)` fail closed (was soft-open True); `admission_source_from_runtime_resolver` helper (shape without product base); host soft “definitions ready” residual named (packaging eyes only).  
 - **0.63.24** — Product `ExecutionPort.invoke_resource` fail-closed on admission; direct `ResourceEngine.invoke` stays ungated (non-port path).  
 - **0.63.25** — Product continue: `resume_job` · `provide_input` fail-closed; **not-this-door** residuals named on SD-020 (engine digs, wait-plane orch resume spine).  
-- Next: more citizens / pretender purge (**0.63.26+**).  
+- **0.63.26** — Wait plane *able* gates match→resume (fail closed / AdmissionRefusedError); install binds same started∧admission as work plane; residual `wait_plane.orch_resume_dig` paid.  
+- Next: more citizens / pretender purge (**0.63.27+**).  
 - Accept + theme close when José judges readiness proper.

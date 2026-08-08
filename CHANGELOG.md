@@ -165,6 +165,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `execution.resume_job` · `runtime.provide_input` gated; dig pretenders `named_0_63_25`  
 - Coherence: `tests/assembly/test_continue_gates_0_63_25.py`  
 
+#### Wait-plane continue able (0.63.26)
+- **WaitPlaneService.able** — match→resume fails closed when not able (owner → `AdmissionRefusedError`)  
+- Install binds same **`started ∧ admission`** able as work plane; omit / `set_able(None)` refuse  
+- Target **fail** still applies (completer failure is not a soft resume dig)  
+- Residual **`wait_plane.orch_resume_dig`** → paid  
+- Coherence: `tests/assembly/test_wait_plane_able_0_63_26.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

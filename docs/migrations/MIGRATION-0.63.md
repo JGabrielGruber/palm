@@ -210,7 +210,17 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 |------|--------|
 | Direct **`WorkloadEngine.start`** | Household for place book; pretender if product digs for business start |
 | Direct **`ResourceEngine.invoke`** | Unit/non-port free; pretender if product digs for business effects |
-| Wait plane → **`orchestration.resume_job`** | System continue spine — residual kill-date if admission should own plane continue |
+| Wait plane → **`orchestration.resume_job`** | **Paid 0.63.26** — able gates resume before orch dig |
+
+## Behavior changes (0.63.26) — wait-plane continue able
+
+| Was | Now |
+|-----|-----|
+| Wait plane match→resume always re-drove jobs | **`able`** must be true; else owner **fails** with **`AdmissionRefusedError`** |
+| Install had no able on wait | Same **`started ∧ admission`** able as work plane |
+| Residual wait-plane orch dig open | **Paid** — continue spine under one admission law |
+
+**Break only for custom wait attach** that assumed soft-open resume without wiring `able`. Unit wait tests must pass `able=lambda: True` when testing mechanics without assembly. Target-fail path is unchanged.
 
 ## Residual
 

@@ -63,7 +63,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.23** | ✅ work-plane able fail-closed default · `admission_source_from_runtime_resolver` helper · host soft dual named |
 | **0.63.24** | ✅ product resource invoke citizen — `ExecutionPort.invoke_resource` admission gate |
 | **0.63.25** | ✅ product continue citizens — `resume_job` · `provide_input` · not-this-door engine digs named |
-| **0.63.26+** | ⬜ more citizens / pretender purge · residual packaging duals named |
+| **0.63.26** | ✅ wait-plane continue able — match→resume fail closed · install binds started∧admission |
+| **0.63.27+** | ⬜ more citizens / pretender purge · residual packaging duals named |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

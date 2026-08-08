@@ -87,5 +87,9 @@ def test_inventory_continue_citizens_and_named_digs() -> None:
     pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
     assert pretenders["execution.workload_engine_dig"] == "named_0_63_25"
     assert pretenders["execution.resource_engine_dig"] == "named_0_63_25"
-    assert pretenders["wait_plane.orch_resume_dig"] == "named_0_63_25"
+    # 0.63.26 paid wait-plane able; row remains for cartography history.
+    assert pretenders["wait_plane.orch_resume_dig"] in (
+        "named_0_63_25",
+        "paid_0_63_26",
+    )
     assert kingdom_map()["pretender_count"] >= 3

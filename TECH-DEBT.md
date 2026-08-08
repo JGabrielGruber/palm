@@ -170,7 +170,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20** — product `start_workload` citizen. **0.63.21** — assist scenario start + menu open create gated; menu admission honesty. **0.63.22** — assist `admission_source` inject / `admission_gate()` oath. **0.63.23** — work-plane able fail-closed default; packaging admission helper; host soft dual residual named (eyes only). **0.63.24** — product `invoke_resource` citizen. **0.63.25** — product continue doors (`resume_job` · `provide_input`) gated; **not-this-door** residuals named below.
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.25** product start/continue citizens + not-this-door naming. **0.63.26** — wait-plane continue *able* (match→resume fail closed; residual wait orch dig paid).
 
 **Named residual (not this door — not architecture):**
 
@@ -178,13 +178,13 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 |----------|------|-----------|
 | Direct **`WorkloadEngine.start`** | **Household by design** when place-book / structure hands; **pretender** if product digs engine for business start | Port is citizen law (**0.63.20**); dig ≠ free pass |
 | Direct **`ResourceEngine.invoke`** | **Unit / non-port** path free; **pretender** if product/surface digs engine for business effects | Port is citizen law (**0.63.24**); dig ≠ free pass |
-| Wait plane → **`orchestration.resume_job`** | System continue spine (not ExecutionPort product door) | Named (**0.63.25**) — not soft dual; kill-date if admission should own plane continue |
+| Wait plane → **`orchestration.resume_job`** | **Paid 0.63.26** — able before resume | Was named residual; continue under admission |
 | Outbox start-option seed · host packaging eyes | Packaging duals | **named_0_63_19** / **named_0_63_23** |
 | More product doors as map shows them | Open growth | Inventory tower + migration |
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (floor + submit + workload + resource invoke + assist + able fail-closed + product continue; engine digs + wait-plane spine named residual).
+**Status:** open (start + continue planes under able/admission; engine digs still named residual; packaging duals remain).
 
 ---
 

@@ -177,6 +177,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "continue fail closed"
         ),
     },
+    {
+        "id": "wait_plane.able_resume",
+        "slice": "0.63.26",
+        "law": (
+            "WaitPlane able gates match→resume · omit/None fail closed · install "
+            "binds started∧admission · target fail still applies"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -271,11 +279,12 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "wait_plane.orch_resume_dig",
         "note": (
-            "0.63.25 gates product resume_job / provide_input. Wait plane still drives "
-            "orchestration.resume_job directly (system continue spine)."
+            "0.63.25 product resume_job / provide_input gated; 0.63.26 wait plane "
+            "able gates match→resume (fail closed when admission down). "
+            "resume_owner still calls orch.resume_job after able — dig paid as able."
         ),
-        "intent": "name residual — not soft dual; kill-date if admission owns plane continue",
-        "status": "named_0_63_25",
+        "intent": "paid — continue spine under same able as work plane",
+        "status": "paid_0_63_26",
     },
 )
 

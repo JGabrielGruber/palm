@@ -8,6 +8,7 @@ Completers never import this plane (register-downward).
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from palm.system.subsystems.planes.wait.deliver import deliver_wait_completion
@@ -33,14 +34,21 @@ class WaitPlaneService:
     """Continue plane: interest open/close + event match → resume/fail.
 
     Lifecycle:
-    * :meth:`attach` — wire orchestration + optional event engine
+    * :meth:`attach` — wire orchestration + optional event engine + *able*
     * :meth:`detach` — unsubscribe
+
+    **0.63.26:** *able* gates **resume** (continue citizen). Default fail closed.
+    Target **fail** still applies (honest completer failure). Install wires the
+    same ``started ∧ admission`` able as the work plane.
     """
 
     def __init__(self) -> None:
         self._index = WaitOwnerIndex()
         self._matcher: WaitMatcher | None = None
         self._orchestration: Any | None = None
+        # 0.63.26 — fail closed until install wires admission/started able.
+        self._able: Callable[[], bool] = lambda: False
+        self._refused_resumes = 0
 
     @property
     def matcher(self) -> WaitMatcher | None:
@@ -54,21 +62,37 @@ class WaitPlaneService:
     def is_attached(self) -> bool:
         return self._matcher is not None and bool(getattr(self._matcher, "_subs", None))
 
+    def set_able(self, able: Callable[[], bool] | None) -> None:
+        """Replace able probe; *None* restores fail-closed default."""
+        self._able = able if able is not None else (lambda: False)
+
+    def is_able(self) -> bool:
+        try:
+            return bool(self._able())
+        except Exception:
+            return False
+
     def attach(
         self,
         *,
         orchestration: Any,
         event: EventEngine | None = None,
+        able: Callable[[], bool] | None = None,
     ) -> WaitMatcher:
         """Wire matcher to orchestration job store and optional event bus.
 
         Callers (boot schedule, bind helpers) extract collaborators — the plane
         does not take or store a full runtime.
+
+        *able* — when false, match→resume fails the owner closed (admission law);
+        omit / *None* fails closed (0.63.26).
         """
         if self._matcher is not None:
             self.detach()
         orch = orchestration
         self._orchestration = orch
+        self._able = able if able is not None else (lambda: False)
+        self._refused_resumes = 0
 
         def get_job(job_id: str) -> Any:
             try:
@@ -86,6 +110,25 @@ class WaitPlaneService:
         ) -> None:
             job = get_job(owner_id)
             if job is None:
+                return
+            if not self.is_able():
+                # 0.63.26 — continue citizen: do not re-drive business when
+                # admission/started is down. Fail closed (not soft resume dig).
+                self._refused_resumes += 1
+                from palm.system.assembly.errors import AdmissionRefusedError
+
+                if not job.is_terminal:
+                    orch.apply_result(
+                        job,
+                        RunResult(
+                            status=JobStatus.FAILED,
+                            error=AdmissionRefusedError(None),
+                        ),
+                    )
+                close_wait_on_job(job, kind=interest.kind, target_id=interest.target_id)
+                self._index.unregister(
+                    owner_id, kind=interest.kind, target_id=interest.target_id
+                )
                 return
             # Kind/source-pluggable delivery (0.55.16); nested is default register.
             deliver_wait_completion(job, interest, get_job)
@@ -134,6 +177,7 @@ class WaitPlaneService:
             self._matcher = None
         self._index.clear()
         self._orchestration = None
+        self._able = lambda: False
 
     def rebuild_index(self) -> int:
         """Rebuild target→owners index from live jobs' open interests. Returns count."""
@@ -223,11 +267,14 @@ class WaitPlaneService:
             "open_wait_owners": open_owners,
             "open_wait_interests": open_interests,
             "wait_kinds": wait_kinds,
+            "able": self.is_able(),
+            "refused_resumes": self._refused_resumes,
             "verbs": ["start", "continue"],
             "index_size": len(self._index),
             "note": (
                 "start = trigger → WorkIntent; continue = WaitPlaneService "
-                "(VISION-0.55.10 / 0.55.16 deliver registry)"
+                "(VISION-0.55.10 / 0.55.16 deliver registry); "
+                "resume gated by able / admission (0.63.26)"
             ),
         }
 
