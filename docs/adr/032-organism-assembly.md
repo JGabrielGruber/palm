@@ -183,5 +183,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.28** — Host spawn: `enable_event_outbox` from `composition.has("outbox")` (settings seed composition only); bare runtime start option **named** residual.  
 - **0.63.29** — Assist product continue: session `input` / `resume` / `backtrack` fail-closed on `admission_gate()` (oath); `resume_process` cartography as citizen (gated since 0.63.4 via `_require_runtime`); session `cancel` **named** residual (control path).  
 - **0.63.30** — Flow product continue: FlowSession `input` / `resume` / `backtrack` fail-closed on `flows.admission_gate()`; host injects `admission_source` (same helper as assist; no product base); flow cancel + `runtime.cancel_job` **named** residual.  
-- Next: more citizens / pretender purge (**0.63.31+**).  
+- **0.63.31** — Execution product façades: Workload start/exec, Provider invoke, Process prepare/submit/run fail-closed on `admission_gate()`; host shares one inject across flows/providers/processes/workloads; product stop **named** residual.  
+- Next: more citizens / pretender purge (**0.63.32+**).  
 - Accept + theme close when José judges readiness proper.

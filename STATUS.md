@@ -68,7 +68,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.28** | ✅ host outbox composition king — spawn aligns store wire; bare runtime seed named |
 | **0.63.29** | ✅ assist continue citizens — input/resume/backtrack oath gate · resume_process cartography · cancel named |
 | **0.63.30** | ✅ flow continue citizens — FlowSession oath inject · cancel_job named residual |
-| **0.63.31+** | ⬜ more citizens / pretender purge · residual packaging duals named |
+| **0.63.31** | ✅ execution façade oath — workloads/providers/processes edge gates + inject · stop named |
+| **0.63.32+** | ⬜ more citizens / pretender purge · residual packaging duals named |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

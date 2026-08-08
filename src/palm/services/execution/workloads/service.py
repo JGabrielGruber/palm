@@ -30,10 +30,13 @@ class WorkloadExecutionService(BaseService):
         schemas: Any,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
+        admission_source: Callable[[], Any] | Any | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
+        # 0.63.31 — peasants' oath (product façade; no base class).
+        self._admission_source = admission_source
 
     def resolve_runtime(self, runtime_name: str | None = None) -> BaseRuntime:
         if self._runtime_resolver is not None:
@@ -41,6 +44,12 @@ class WorkloadExecutionService(BaseService):
         if self._runtime is None:
             raise RuntimeError("WorkloadExecutionService has no bound runtime")
         return self._runtime
+
+    def admission_gate(self) -> object:
+        """Published admission source for product workload citizens (0.63.31)."""
+        if self._admission_source is not None:
+            return self._admission_source
+        return self.resolve_runtime()
 
     def _port(self, runtime_name: str | None = None) -> Any:
         return self.resolve_runtime(runtime_name).execution
@@ -55,7 +64,14 @@ class WorkloadExecutionService(BaseService):
         host_id: str | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Start a workload from Spec; return serializable Workload snapshot."""
+        """Start a workload (product citizen — admission + ExecutionPort).
+
+        **0.63.31:** product edge fails closed via ``admission_gate()``; port is
+        the second wall.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission_gate())
         parsed = (
             spec if isinstance(spec, WorkloadSpec) else WorkloadSpec.from_dict(dict(spec))
         )
@@ -81,7 +97,13 @@ class WorkloadExecutionService(BaseService):
         env: dict[str, str] | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Exec argv on a READY workspace/service."""
+        """Exec argv on a READY workspace/service (product citizen).
+
+        **0.63.31:** product edge fails closed via ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission_gate())
         result = self._port(runtime_name).exec_workload(
             str(workload_id),
             command,
@@ -96,7 +118,10 @@ class WorkloadExecutionService(BaseService):
         *,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Idempotent stop."""
+        """Idempotent stop — control path (not admission citizen).
+
+        Named residual: shutdown/cleanup when admission is closed.
+        """
         wl = self._port(runtime_name).stop_workload(str(workload_id))
         return wl.to_dict()
 

@@ -28,12 +28,15 @@ class ProviderExecutionService(BaseService):
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
         definitions: Any | None = None,
         event_engine: Any | None = None,
+        admission_source: Callable[[], Any] | Any | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
         self._definitions = definitions
         self._event_engine = event_engine
+        # 0.63.31 — peasants' oath (product façade; no base class).
+        self._admission_source = admission_source
 
     def resolve_runtime(self, runtime_name: str | None = None) -> BaseRuntime:
         if self._runtime_resolver is not None:
@@ -41,6 +44,12 @@ class ProviderExecutionService(BaseService):
         if self._runtime is None:
             raise RuntimeError("ProviderExecutionService has no bound runtime")
         return self._runtime
+
+    def admission_gate(self) -> object:
+        """Published admission source for product provider invoke (0.63.31)."""
+        if self._admission_source is not None:
+            return self._admission_source
+        return self.resolve_runtime()
 
     def invoke(
         self,
@@ -53,7 +62,13 @@ class ProviderExecutionService(BaseService):
         resource_id: str | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Invoke a resource definition and return a provider result envelope."""
+        """Invoke a resource (product citizen — admission + ExecutionPort).
+
+        **0.63.31:** product edge fails closed via ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission_gate())
         resource_ref = str(resource_ref or "").strip()
         if not resource_ref:
             raise ValueError("resource_ref is required")

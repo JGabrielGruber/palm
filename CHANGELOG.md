@@ -201,6 +201,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `flows.continue_session` · `flows.admission_oath` gated  
 - Coherence: `tests/assembly/test_flows_continue_gate_0_63_30.py`  
 
+#### Execution product façade oath (0.63.31)
+- **Workload** `start` / `exec` · **Provider** `invoke` · **Process** `prepare` / `submit` / `run` — edge `admission_gate()`  
+- Host shares one **`admission_source`** inject across execution façades  
+- Workload product **stop/cancel** stays ungated — **named** residual  
+- Kingdom: `execution.product_facade_oath` gated · façade edge paid · stop residual named  
+- Coherence: `tests/assembly/test_execution_facade_oath_0_63_31.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

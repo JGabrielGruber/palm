@@ -267,6 +267,23 @@ Browse / inspect / handoff stay eyes. Cancel is not a market-day continue door.
 
 **Not a break** for happy path when admitted. Custom `FlowExecutionService` without inject falls back to `resolve_runtime()` (same as assist).
 
+## Behavior changes (0.63.31) — execution product façade oath
+
+| Was | Now |
+|-----|-----|
+| Workload/Provider/Process product doors only failed deep at ExecutionPort / executor | Product edge **`require_business_admission(admission_gate())`** first |
+| Only flows (+ assist) had `admission_source` inject | Host injects **shared** source on flows · providers · processes · workloads |
+| Workload product stop when admission closed | Still works — **named residual** |
+
+| Product door | Gate |
+|--------------|------|
+| `workloads.start` / `.exec` | citizen |
+| `providers.invoke` | citizen |
+| `processes.prepare` / `.submit` / `.run` | citizen |
+| `workloads.stop` / `.cancel` | control residual |
+
+Deep ports remain a second wall. Custom services without inject fall back to `resolve_runtime()`.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

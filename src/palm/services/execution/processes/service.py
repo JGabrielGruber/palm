@@ -29,10 +29,13 @@ class ProcessExecutionService(BaseService):
         schemas: Any,
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
+        admission_source: Callable[[], Any] | Any | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
+        # 0.63.31 — peasants' oath (product façade; no base class).
+        self._admission_source = admission_source
 
     def dispatch(
         self,
@@ -88,7 +91,13 @@ class ProcessExecutionService(BaseService):
         body: dict[str, Any] | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Stage execution plans for deferred submission."""
+        """Stage execution plans (product citizen — needs definition ground).
+
+        **0.63.31:** product edge fails closed via ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission_gate())
         request_body = _prepare_body(
             process_id,
             by_id=by_id,
@@ -108,7 +117,13 @@ class ProcessExecutionService(BaseService):
         *,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Consume staged plan ids and submit orchestration jobs."""
+        """Consume staged plan ids and submit jobs (product citizen).
+
+        **0.63.31:** product edge fails closed via ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission_gate())
         result = self.dispatch_command(
             SubmitPlansCommand(plan_ids=plan_ids, runtime_name=runtime_name)
         )
@@ -132,7 +147,13 @@ class ProcessExecutionService(BaseService):
         body: dict[str, Any] | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Submit a process in one call (convenience — no plan staging)."""
+        """Submit a process in one call (product citizen).
+
+        **0.63.31:** product edge fails closed via ``admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self.admission_gate())
         request_body = _prepare_body(
             process_id,
             by_id=by_id,
@@ -156,6 +177,12 @@ class ProcessExecutionService(BaseService):
         if self._runtime is not None:
             return self._runtime
         raise RuntimeError("ProcessExecutionService requires a runtime or runtime_resolver")
+
+    def admission_gate(self) -> object:
+        """Published admission source for process product citizens (0.63.31)."""
+        if self._admission_source is not None:
+            return self._admission_source
+        return self.resolve_runtime()
 
     def wait_until_idle(self, *, timeout: float = 5.0) -> bool:
         return self.resolve_runtime().wait_until_idle(timeout=timeout)

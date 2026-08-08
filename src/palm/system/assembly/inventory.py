@@ -234,6 +234,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "same helper as assist (no product base)"
         ),
     },
+    {
+        "id": "execution.product_facade_oath",
+        "slice": "0.63.31",
+        "law": (
+            "Workload / Provider / Process execution services inject "
+            "admission_source · edge gates on start/exec/invoke/prepare/"
+            "submit/run · stop/cancel control residual"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -404,6 +413,26 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "name residual — control path, not market-day start (SD-020)",
         "status": "named_0_63_30",
+    },
+    {
+        "id": "execution.product_facade_edge",
+        "note": (
+            "0.63.31: WorkloadExecutionService start/exec, "
+            "ProviderExecutionService.invoke, ProcessExecutionService "
+            "prepare/submit/run gate on admission_gate(); host injects "
+            "shared admission_source for all execution façades."
+        ),
+        "intent": "paid product façade edge + inject",
+        "status": "paid_0_63_31",
+    },
+    {
+        "id": "workloads.product_stop_ungated",
+        "note": (
+            "WorkloadExecutionService.stop / cancel remain without business "
+            "admission (control path when organism closed)."
+        ),
+        "intent": "name residual — control path (SD-020)",
+        "status": "named_0_63_31",
     },
 )
 
