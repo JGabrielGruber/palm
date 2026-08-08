@@ -155,5 +155,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.0** — plan + this ADR **Proposed** · debt **SD-020** / **SD-021** named.  
 - **0.63.1** — `palm.core.assembly` pure engine + types + tests (embedded DNA factory).  
 - **0.63.2** — `palm.system.assembly` seat + loop + phase; shell `admission`; embedded assemble on start.  
-- Next: raise gate on one citizen path fail-closed (**0.63.3**).  
+- **0.63.3** — work-plane citizen gate: `able` = started ∧ admission; fail closed; pretender inventory named.  
+- Next: coherence suite home + swallow more citizens (**0.63.4+**).  
 - Accept + theme close when José judges readiness proper.

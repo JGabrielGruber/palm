@@ -232,7 +232,14 @@ class BaseRuntime:
             return self.submit_flow(flow_id, metadata=metadata, state=state)
 
         def _able() -> bool:
-            return bool(self._started)
+            """Machine ready **and** admission allows business that needs ground.
+
+            0.63.3 — work-plane / drain citizen path is fail-closed on admission.
+            Live check: assembly may complete after planes attach.
+            """
+            if not self._started:
+                return False
+            return bool(self.admission.may_run_business)
 
         self._install.bind(
             orchestration=self.orchestration,

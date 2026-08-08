@@ -132,6 +132,17 @@ class WorkPlaneService:
         """Replace submit callback (host session enrich may rebind)."""
         self._submit_flow = submit_flow
 
+    def set_able(self, able: Callable[[], bool] | None) -> None:
+        """Replace able gate (started + admission on the shell after 0.63.3)."""
+        self._able = able if able is not None else (lambda: True)
+
+    def is_able(self) -> bool:
+        """Whether tick may start business work (fail closed when false)."""
+        try:
+            return bool(self._able())
+        except Exception:
+            return False
+
     def detach(self) -> None:
         """Stop background, unsubscribe handlers, clear store handle."""
         self.stop_background()
@@ -238,7 +249,8 @@ class WorkPlaneService:
         """
         if self._store is None or self._submit_flow is None:
             return 0
-        if not self._able():
+        # Citizen gate: able includes admission after 0.63.3 (fail closed).
+        if not self.is_able():
             return 0
         cid = str(claimer_id or self._claimer_id or DEFAULT_CLAIMER_ID)
         if reclaim:
@@ -311,7 +323,7 @@ class WorkPlaneService:
         # Stable claimer id for this continuous thread (0.62 exclusive claim).
         while not self._stop.wait(self._poll_interval):
             try:
-                if not self._able():
+                if not self.is_able():
                     continue
                 if tick_schedules:
                     self.tick_schedules()
@@ -334,6 +346,7 @@ class WorkPlaneService:
             "max_depth": self._max_depth,
             "batch_size": self._batch_size,
             "background": self.is_running,
+            "able": self.is_able(),
             "trigger_count": len(getattr(self._triggers, "_specs", []) or []),
             "claimer_id": self._claimer_id,
             "lease_seconds": self._lease_seconds,

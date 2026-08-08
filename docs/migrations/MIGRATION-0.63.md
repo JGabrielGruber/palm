@@ -25,6 +25,24 @@ Impact is discovered as the gate rises. This file **grows** when paths break —
 | — | Default DNA `local.embedded` → usually `may_run_business=True` after start |
 | — | `assembly_skip=True` leaves admission fail-closed (empty) |
 
+## Behavior changes (0.63.3) — gate raised
+
+| Was | Now |
+|-----|-----|
+| Work-plane `able` = system started only | `able` = started **and** `admission.may_run_business` |
+| Drain/tick could run with no organism readiness | Fail closed: `tick` returns 0 until admission allows |
+| — | Enqueue still accepted (work waits); continuous drain idles when not able |
+
+### Break inventory (pretenders not yet gated)
+
+| Path | Status |
+|------|--------|
+| Work-plane tick / drain | **Gated** (0.63.3) |
+| Direct `runtime.submit_flow` / product execution start | Open pretender — swallow later |
+| Assist / MCP / CLI start doors | Open pretender |
+| Host soft “definitions ready” | Open pretender (SD-020 remainder) |
+| Unit tests that inject `able=lambda: True` | Local test double — ok; not production law |
+
 ## Expected direction of break (honest early)
 
 | Was (glue) | Toward (law) |

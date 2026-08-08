@@ -40,7 +40,7 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.0** | ✅ plan + ADR-032 Proposed + SD-020/021 + STATUS |
 | **0.63.1** | ✅ `palm.core.assembly` — definition · status · intents · observations · thin engine · pure tests |
 | **0.63.2** | ✅ system assembly seat · `system.assembly.assemble` · shell `admission` · embedded DNA default |
-| **0.63.3** | ⬜ raise gate — one citizen fail-closed + break inventory |
+| **0.63.3** | ✅ raise gate — work-plane `able` = started ∧ admission · fail closed · break inventory |
 | **0.63.4** | ⬜ coherence suite home + negative citizenship |
 | **0.63.5+** | ⬜ seed map · swallow citizens · more DNA · intents · eyes |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |

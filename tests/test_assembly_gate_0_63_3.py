@@ -1,0 +1,103 @@
+"""0.63.3 — admission gate on work-plane citizen path (fail closed)."""
+
+from __future__ import annotations
+
+from palm.core.assembly import AssemblyPhase, Observation, ObservationKind
+from palm.core.work import WorkIntent
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+from palm.system.subsystems.planes.work.plane import WorkPlaneService
+
+
+def test_work_plane_tick_when_admission_ready() -> None:
+    reset_system_log_for_tests()
+    submitted: list[str] = []
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        assert rt.admission.may_run_business is True
+        plane = rt.work_plane
+        assert isinstance(plane, WorkPlaneService)
+        assert plane.is_able() is True
+        plane._submit_flow = lambda fid, _p: submitted.append(fid)
+        plane.enqueue(WorkIntent(kind="run_flow", target="ok-flow"))
+        assert plane.tick(limit=5) == 1
+        assert submitted == ["ok-flow"]
+    finally:
+        rt.stop()
+
+
+def test_work_plane_fail_closed_when_assembly_skipped() -> None:
+    """assembly_skip → no admission → tick must not start business."""
+    reset_system_log_for_tests()
+    submitted: list[str] = []
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_skip=True,
+    )
+    try:
+        assert rt.admission.may_run_business is False
+        assert rt.admission.phase is AssemblyPhase.EMPTY
+        plane = rt.work_plane
+        assert plane is not None
+        assert plane.is_able() is False
+        plane._submit_flow = lambda fid, _p: submitted.append(fid)
+        intent_id = plane.enqueue(
+            WorkIntent(kind="run_flow", target="should-wait")
+        )
+        assert intent_id  # enqueue still allowed (deferred)
+        assert plane.tick(limit=10) == 0
+        assert submitted == []
+        assert plane.store.pending_count() >= 1
+        st = plane.status()
+        assert st["able"] is False
+    finally:
+        rt.stop()
+
+
+def test_work_plane_fail_closed_when_truth_home_down() -> None:
+    reset_system_log_for_tests()
+    submitted: list[str] = []
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        plane = rt.work_plane
+        assert plane is not None
+        plane._submit_flow = lambda fid, _p: submitted.append(fid)
+        plane.enqueue(WorkIntent(kind="run_flow", target="blocked-flow"))
+
+        assert rt.assembly is not None
+        rt.assembly.engine.observe(
+            Observation(kind=ObservationKind.TRUTH_HOME_DOWN)
+        )
+        assert rt.admission.may_run_business is False
+        assert plane.is_able() is False
+        assert plane.tick(limit=10) == 0
+        assert submitted == []
+
+        rt.assembly.engine.observe(
+            Observation(kind=ObservationKind.TRUTH_HOME_UP)
+        )
+        # Need a tick of the engine to leave BLOCKED → READY
+        rt.assembly.engine.tick()
+        assert rt.admission.may_run_business is True
+        assert plane.is_able() is True
+        assert plane.tick(limit=10) == 1
+        assert submitted == ["blocked-flow"]
+    finally:
+        rt.stop()
+
+
+def test_install_able_matches_admission() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        able = rt.install.able
+        assert able is not None
+        assert able() is True
+        assert able() is rt.admission.may_run_business
+    finally:
+        rt.stop()
