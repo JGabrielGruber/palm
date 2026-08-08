@@ -50,6 +50,23 @@ DOCTOR_DEMOTE_NOTE = (
 )
 
 
+def _admission_present(instance: Any) -> dict[str, Any] | None:
+    """0.63.10 — nest living admission on operate envelopes (not a soft dual)."""
+    snap = getattr(instance, "admission", None)
+    if snap is None:
+        return None
+    if hasattr(snap, "to_dict"):
+        try:
+            return snap.to_dict()
+        except Exception:
+            return None
+    return {
+        "may_run_business": bool(getattr(snap, "may_run_business", False)),
+        "phase": str(getattr(snap, "phase", "")),
+        "definition_id": getattr(snap, "definition_id", None),
+    }
+
+
 def present_top(
     instance: Any,
     options: ProjectionOptions | None = None,
@@ -60,6 +77,10 @@ def present_top(
     # Product envelope: mark source without rewriting system fields.
     if isinstance(top, dict) and "source" not in top:
         top = {**top, "source": SOURCE_VITALITY}
+    if isinstance(top, dict):
+        adm = _admission_present(instance)
+        if adm is not None and "admission" not in top:
+            top = {**top, "admission": adm}
     return top
 
 
@@ -72,6 +93,9 @@ def present_vitality(
     snap = project(instance, options, **kwargs)
     body = snap.to_dict()
     body["source"] = SOURCE_VITALITY
+    adm = _admission_present(instance)
+    if adm is not None and "admission" not in body:
+        body["admission"] = adm
     return body
 
 

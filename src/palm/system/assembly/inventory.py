@@ -60,19 +60,26 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.9",
         "law": "create_cli_host → BootMode.cli → local.cli DNA",
     },
+    {
+        "id": "inspect.present_admission",
+        "slice": "0.63.10",
+        "law": "present_top / present_vitality nest admission snapshot",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
 PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "assist.soft_catalog",
-        "note": "Assist packaging may imply ready without reading admission",
-        "intent": "present admission or refuse start when down",
+        "note": "assist top/vitality nest admission via inspect present (0.63.10)",
+        "intent": "paid for operate eyes; catalog scenarios still product-owned",
+        "status": "partial_0_63_10",
     },
     {
         "id": "host.packaging_without_admission",
-        "note": "packaging_status was membership-only before inventory tower",
-        "intent": "nest admission snapshot (0.63.8 packaging)",
+        "note": "packaging_status nests admission pointer (0.63.8)",
+        "intent": "paid",
+        "status": "paid_0_63_8",
     },
     {
         "id": "cli.default_composition",

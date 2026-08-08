@@ -67,6 +67,10 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - `create_cli_host` seeds **BootMode.cli** → DNA **local.cli** (refuse server_surfaces)  
 - Matches `palm` terminal entry to assembly law  
 
+#### Operate eyes admission (0.63.10)
+- `present_top` / `present_vitality` nest living **admission** snapshot  
+- Assist/inspect operate paths show the gate without inventing soft ready  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
