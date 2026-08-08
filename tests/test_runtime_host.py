@@ -33,6 +33,20 @@ class _MinimalHost:
     def execution(self) -> object:
         return self._execution
 
+    @property
+    def admission(self) -> object:
+        """0.63.4 — doubles publish admission; no silent bypass of the gate."""
+        from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+
+        if self._started:
+            return AdmissionSnapshot(
+                may_run_business=True,
+                phase=AssemblyPhase.READY,
+                definition_id="test.minimal",
+                definition_version="1",
+            )
+        return AdmissionSnapshot.empty()
+
     def resume_job(self, job_id: str) -> object:
         return self.orchestration.resume_job(job_id)
 

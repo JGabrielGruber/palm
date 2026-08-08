@@ -35,9 +35,9 @@ hygiene:
 # -----------------------------------------------------------------------------
 # 2. Quality & Checking (the most used group)
 # -----------------------------------------------------------------------------
-check: lint typecheck test-quick guard-core guard-common guard-system guard-deferred
+check: lint typecheck test-quick guard-core guard-common guard-system guard-assembly guard-deferred
 
-full-check: format lint typecheck test-full audit guard-core demo-full
+full-check: format lint typecheck test-full audit guard-core guard-assembly demo-full
 
 lint:
     uv run ruff check src/palm/ tests/ examples/
@@ -91,6 +91,10 @@ guard-system:
     @echo "🔒 Checking palm.system import rules (0.57+)..."
     uv run python scripts/guard_system.py
     uv run pytest -q tests/test_system_boundary.py --tb=short
+
+# Assembly coherence (0.63.4) — fail-closed admission; red maps dual mode.
+guard-assembly:
+    uv run python scripts/guard_assembly.py
 
 # Deferred-import ratchet (T3 / PD-012) — function-local palm imports may only decrease.
 guard-deferred:

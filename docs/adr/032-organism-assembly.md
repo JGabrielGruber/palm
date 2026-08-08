@@ -156,5 +156,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.1** — `palm.core.assembly` pure engine + types + tests (embedded DNA factory).  
 - **0.63.2** — `palm.system.assembly` seat + loop + phase; shell `admission`; embedded assemble on start.  
 - **0.63.3** — work-plane citizen gate: `able` = started ∧ admission; fail closed; pretender inventory named.  
-- Next: coherence suite home + swallow more citizens (**0.63.4+**).  
+- **0.63.4** — coherence suite + `guard-assembly`; `DefinitionExecutor` submit paths fail closed (`AdmissionRefusedError`).  
+- Next: seed map (cli/server DNA) · remaining pretenders (**0.63.5+**).  
 - Accept + theme close when José judges readiness proper.

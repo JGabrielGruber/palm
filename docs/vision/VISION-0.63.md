@@ -231,9 +231,9 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.1** | ✅ Core `palm.core.assembly` — definition, status, admission, intents, observations, thin engine, pure tests |
 | **0.63.2** | ✅ System assembly seat + `system.assembly.assemble` + shell admission (embedded DNA default) |
 | **0.63.3** | ✅ Raise the gate — work-plane `able` ∧ admission fail-closed; break inventory named |
-| **0.63.4** | Coherence suite home + guards scaffolding; negative citizenship tests as law |
+| **0.63.4** | ✅ Coherence suite + `guard-assembly` + submit_flow/process citizen gate |
 | **0.63.5** | Seed map: entry / mode → embedded (and path toward cli); kill dual structure on owned path |
-| **0.63.6+** | Swallow citizens (product, assist, host soft flags, tests) — same gate |
+| **0.63.6+** | Swallow remaining citizens (assist packaging, host soft flags) — same gate |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

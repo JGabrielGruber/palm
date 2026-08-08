@@ -37,6 +37,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - `WorkPlaneService.is_able` / status `able`; tests `tests/test_assembly_gate_0_63_3.py`  
 - **Break inventory (pretenders still open):** direct `submit_flow` / product start doors / assist without admission check; host soft-ready flags; tests that force `able=True`  
 
+#### Coherence + submit citizens (0.63.4)
+- **`AdmissionRefusedError`** + `require_business_admission` — `DefinitionExecutor` submit_flow/process fail closed  
+- Coherence suite: `tests/assembly/` · `just guard-assembly` · wired into `just check`  
+- Work plane + submit share one admission law  
+- Residual pretenders: assist/MCP packaging soft-ready; host dual flags; SD-021 seed map  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

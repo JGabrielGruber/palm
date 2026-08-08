@@ -439,3 +439,7 @@ class DefinitionExecutor:
             raise RuntimeError(
                 "Runtime host is not started; call start() before submitting definitions"
             )
+        # 0.63.4 — citizen submit path: admission fail closed (same law as work plane).
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._runtime)

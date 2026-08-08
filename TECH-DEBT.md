@@ -169,7 +169,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.2** seats · **0.63.3** work-plane tick/drain gated (`able` ∧ admission). Residual pretenders: direct `submit_flow`, product/assist start doors, host soft-ready — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) break inventory.
+**Progress:** **0.63.1–0.63.2** seats · **0.63.3** work-plane gated · **0.63.4** submit_flow/process gated + coherence suite. Residual: assist/MCP soft-ready, host dual flags, SD-021 seed map — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode.
 

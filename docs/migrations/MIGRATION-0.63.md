@@ -33,14 +33,23 @@ Impact is discovered as the gate rises. This file **grows** when paths break —
 | Drain/tick could run with no organism readiness | Fail closed: `tick` returns 0 until admission allows |
 | — | Enqueue still accepted (work waits); continuous drain idles when not able |
 
-### Break inventory (pretenders not yet gated)
+## Behavior changes (0.63.4)
+
+| Was | Now |
+|-----|-----|
+| `submit_flow` / `submit_process` only needed `is_started` | Also require `admission.may_run_business` or **`AdmissionRefusedError`** |
+| No coherence guard | `just guard-assembly` · `tests/assembly/` |
+
+Runtime doubles used with `DefinitionExecutor` must publish an `admission` snapshot (no silent bypass).
+
+### Break inventory (pretenders)
 
 | Path | Status |
 |------|--------|
 | Work-plane tick / drain | **Gated** (0.63.3) |
-| Direct `runtime.submit_flow` / product execution start | Open pretender — swallow later |
-| Assist / MCP / CLI start doors | Open pretender |
-| Host soft “definitions ready” | Open pretender (SD-020 remainder) |
+| `submit_flow` / `submit_process` (executor) | **Gated** (0.63.4) |
+| Assist / MCP packaging soft-ready | Open pretender |
+| Host soft “definitions ready” dual flags | Open pretender (SD-020 / SD-021) |
 | Unit tests that inject `able=lambda: True` | Local test double — ok; not production law |
 
 ## Expected direction of break (honest early)
