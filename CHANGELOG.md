@@ -63,6 +63,10 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Host packaging nests admission pointer (not a second ready flag)  
 - `ApplicationHost.admission` → primary runtime snapshot  
 
+#### CLI dogfood wall (0.63.9)
+- `create_cli_host` seeds **BootMode.cli** → DNA **local.cli** (refuse server_surfaces)  
+- Matches `palm` terminal entry to assembly law  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

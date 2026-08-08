@@ -161,5 +161,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.6** — refuse vs membership; dual shape blocks admission.  
 - **0.63.7** — vitality `assembly` seat presents admission + DNA.  
 - **0.63.8** — kingdom inventory (gated vs pretender) · packaging nests admission.  
-- Next: CLI dogfood DNA seed · residual pretenders (**0.63.9+**).  
+- **0.63.9** — create_cli_host seeds BootMode.cli / local.cli DNA.  
+- Next: assist present · env pretenders · place handlers (**0.63.10+**).  
 - Accept + theme close when José judges readiness proper.

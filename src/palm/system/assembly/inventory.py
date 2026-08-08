@@ -50,6 +50,16 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.7",
         "law": "eyes sample admission + definition id",
     },
+    {
+        "id": "inventory.tower",
+        "slice": "0.63.8",
+        "law": "kingdom_map / packaging admission pointer",
+    },
+    {
+        "id": "cli.seed_local_cli",
+        "slice": "0.63.9",
+        "law": "create_cli_host → BootMode.cli → local.cli DNA",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -66,8 +76,9 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     },
     {
         "id": "cli.default_composition",
-        "note": "create_cli_host used settings all_in_one composition (server DNA risk)",
-        "intent": "seed BootMode.cli / local.cli (0.63.9)",
+        "note": "create_cli_host now seeds BootMode.cli → local.cli (0.63.9)",
+        "intent": "paid — residual only if callers bypass create_cli_host",
+        "status": "paid_0_63_9",
     },
     {
         "id": "env.structure_toggles",

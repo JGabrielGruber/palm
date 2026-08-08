@@ -35,11 +35,12 @@ def create_cli_host(
     """
     Construct a started :class:`~palm.app.host.ApplicationHost` for the CLI.
 
-    Uses the collapsed ``all_in_one`` profile so command/query buses and
-    projections are available to terminal commands.
+    **0.63.9:** seeds **BootMode.cli** → DNA ``local.cli`` (operator body, no
+    HTTP surfaces). Deployment stays collapsed all-in-one under that mode so
+    command/query buses and projections stay available to terminal commands.
     """
-    from palm.app.bootstrap import deployment_profile_from_settings
     from palm.app.host.application_host import ApplicationHost
+    from palm.app.host.boot.modes import BootMode
 
     if settings is not None:
         cfg = settings
@@ -59,6 +60,6 @@ def create_cli_host(
             align_shared_storage=shared_backend if storage_backend is None else None,
         )
 
-    host = ApplicationHost(cfg, profile=deployment_profile_from_settings(cfg), storage=storage)
+    host = ApplicationHost(cfg, boot_mode=BootMode.cli(), storage=storage)
     host.start(**runtime_start_options(cfg))
     return host

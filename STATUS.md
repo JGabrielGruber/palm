@@ -46,7 +46,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.6** | ✅ refuse policy — dual membership fails closed (`refuse:*`) |
 | **0.63.7** | ✅ vitality assembly seat — eyes on admission + DNA id |
 | **0.63.8** | ✅ kingdom inventory tower · packaging admission pointer · host.admission |
-| **0.63.9+** | ⬜ CLI dogfood seed · pretender purge · intents |
+| **0.63.9** | ✅ create_cli_host seeds BootMode.cli → local.cli DNA |
+| **0.63.10+** | ⬜ assist present · env structure pretenders · place handlers · intents |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 
