@@ -259,7 +259,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.29** | ✅ Assist continue citizens — session input/resume/backtrack via `admission_gate()`; `resume_process` cartography; cancel **named** residual |
 | **0.63.30** | ✅ Flow continue citizens — FlowSession input/resume/backtrack + `admission_source` inject; `cancel_job` / flow cancel **named** residual |
 | **0.63.31** | ✅ Execution façade oath — Workload/Provider/Process product edge gates + shared inject; workload stop **named** residual |
-| **0.63.32+** | More citizens / pretender purge · residual packaging duals named |
+| **0.63.32** | ✅ Flow product start — `submit_flow_body` / `run_wizard` / `run_flow` via `admission_gate()`; LIST/DESCRIBE soft catalog **named** residual |
+| **0.63.33+** | More citizens / pretender purge · residual packaging duals named |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

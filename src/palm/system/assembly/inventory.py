@@ -243,6 +243,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "submit/run · stop/cancel control residual"
         ),
     },
+    {
+        "id": "flows.start_session",
+        "slice": "0.63.32",
+        "law": (
+            "FlowExecutionService submit_flow_body / run_wizard / run_flow "
+            "require admission via admission_gate() · product start edge "
+            "(port remains second wall) · list/describe stay soft catalog"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -433,6 +442,26 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "name residual — control path (SD-020)",
         "status": "named_0_63_31",
+    },
+    {
+        "id": "flows.start_edge",
+        "note": (
+            "0.63.32: FlowExecutionService submit_flow_body / run_wizard / "
+            "run_flow gate on admission_gate() at product edge (oath); deep "
+            "submit_flow / executor remain second wall. LIST/DESCRIBE catalog "
+            "browse stays soft packaging eyes."
+        ),
+        "intent": "paid product start edge",
+        "status": "paid_0_63_32",
+    },
+    {
+        "id": "flows.soft_catalog",
+        "note": (
+            "FlowExecutionService LIST / DESCRIBE remain without business "
+            "admission — packaging catalog browse, not market-day start."
+        ),
+        "intent": "named residual — soft catalog eyes (same spirit as assist.soft_catalog)",
+        "status": "named_0_63_32",
     },
 )
 

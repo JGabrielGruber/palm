@@ -1,0 +1,97 @@
+"""0.63.32 — flow product start doors are citizens; list/describe soft residual."""
+
+from __future__ import annotations
+
+from unittest.mock import MagicMock
+
+import pytest
+
+from palm.app.host.application_host import ApplicationHost
+from palm.app.settings import PalmSettings
+from palm.common.cqrs.bus import CommandBus, QueryBus
+from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.services.execution.flows.service import FlowExecutionService
+from palm.system.assembly.errors import AdmissionRefusedError
+from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.log import reset_system_log_for_tests
+
+
+def _settings() -> PalmSettings:
+    return PalmSettings(
+        load_example_definitions=True,
+        storage_backend="memory",
+        rebuild_projections_on_startup=False,
+        reconcile_instances_on_startup=False,
+        enable_compensation=False,
+        enable_outbox_service=False,
+        enable_event_outbox=False,
+        enable_work_drain_service=False,
+    )
+
+
+def _flows_with_closed_inject() -> FlowExecutionService:
+    closed = AdmissionSnapshot(
+        may_run_business=False,
+        phase=AssemblyPhase.BLOCKED,
+        reasons=("test_closed",),
+    )
+    inspect = MagicMock()
+    flows = FlowExecutionService(
+        commands=CommandBus(),
+        queries=QueryBus(),
+        schemas=MagicMock(),
+        inspect=inspect,
+        admission_source=lambda: closed,
+    )
+    flows.resolve_runtime = MagicMock(  # type: ignore[method-assign]
+        side_effect=AssertionError("oath broken: resolve_runtime used for admission")
+    )
+    flows.dispatch_command = MagicMock(  # type: ignore[method-assign]
+        side_effect=AssertionError("must not dispatch when admission closed")
+    )
+    return flows
+
+
+def test_submit_flow_body_refused_on_oath_without_runtime_dig() -> None:
+    flows = _flows_with_closed_inject()
+    with pytest.raises(AdmissionRefusedError, match="test_closed"):
+        flows.submit_flow_body({"flow_name": "todo-builder"})
+    flows.resolve_runtime.assert_not_called()
+    flows.dispatch_command.assert_not_called()
+
+
+def test_run_wizard_refused_on_oath() -> None:
+    flows = _flows_with_closed_inject()
+    with pytest.raises(AdmissionRefusedError, match="test_closed"):
+        flows.run_wizard({"flow_name": "todo-builder"})
+    flows.dispatch_command.assert_not_called()
+
+
+def test_run_flow_refused_on_oath() -> None:
+    flows = _flows_with_closed_inject()
+    with pytest.raises(AdmissionRefusedError, match="test_closed"):
+        flows.run_flow("todo-builder")
+    flows.dispatch_command.assert_not_called()
+
+
+def test_host_flows_start_refused_when_assembly_skipped() -> None:
+    reset_system_log_for_tests()
+    host = ApplicationHost.for_mode("all_in_one", settings=_settings())
+    host.start(assembly_skip=True)
+    try:
+        assert host.admission.may_run_business is False
+        with pytest.raises(AdmissionRefusedError):
+            host.execution.flows.submit_flow_body({"flow_name": "todo-builder"})
+        with pytest.raises(AdmissionRefusedError):
+            host.execution.flows.run_flow("todo-builder")
+    finally:
+        host.shutdown()
+
+
+def test_inventory_flows_start_and_soft_catalog() -> None:
+    gated = {row["id"] for row in GATED_CITIZENS}
+    assert "flows.start_session" in gated
+    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    assert pretenders["flows.start_edge"] == "paid_0_63_32"
+    assert pretenders["flows.soft_catalog"] == "named_0_63_32"
+    assert kingdom_map()["gated_count"] >= 1

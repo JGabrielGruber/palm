@@ -284,6 +284,17 @@ Browse / inspect / handoff stay eyes. Cancel is not a market-day continue door.
 
 Deep ports remain a second wall. Custom services without inject fall back to `resolve_runtime()`.
 
+## Behavior changes (0.63.32) — flow product start citizens + soft catalog residual
+
+| Was | Now |
+|-----|-----|
+| Flow product **start** (`submit_flow_body` / `run_wizard` / `run_flow`) only failed deep at port/executor | Product edge **`require_business_admission(flows.admission_gate())`** first |
+| LIST / DESCRIBE when admission closed | Still works — **named residual** (soft catalog browse, same spirit as assist menu eyes) |
+
+Continue was already paid (**0.63.30**). Assist open→create remains its own citizen (**0.63.21**). Host inject for flows was already wired (**0.63.30**).
+
+**Not a break** for happy path when admitted.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

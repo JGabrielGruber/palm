@@ -208,6 +208,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `execution.product_facade_oath` gated · façade edge paid · stop residual named  
 - Coherence: `tests/assembly/test_execution_facade_oath_0_63_31.py`  
 
+#### Flow product start oath (0.63.32)
+- **`submit_flow_body` / `run_wizard` / `run_flow`** — edge `admission_gate()` (continue already **0.63.30**)  
+- LIST / DESCRIBE soft catalog stays ungated — **named** residual  
+- Kingdom: `flows.start_session` gated · start edge paid · soft catalog named  
+- Coherence: `tests/assembly/test_flows_start_gate_0_63_32.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
