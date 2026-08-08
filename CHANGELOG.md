@@ -110,6 +110,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Does not clobber recording / custom effect ports without a place book  
 - Coherence: `tests/assembly/test_host_bind_0_63_17.py` · residual place_book.os_spawn paid  
 
+#### Reassemble edges (0.63.18)
+- **`AssemblySeat.reassemble`** — named re-converge (DNA and/or membership)  
+- **`receive_definition(force=)`** · **`AssemblyEngine.invalidate()`**  
+- Assemble always clears refuse then re-checks membership (heal + worsen)  
+- Fail closed while invalidated; place-gone recovers via reassemble  
+- Coherence: `tests/assembly/test_reassemble_0_63_18.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

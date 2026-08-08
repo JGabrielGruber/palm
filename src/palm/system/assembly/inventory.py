@@ -103,6 +103,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "(assembly_bind_workload opt-out)"
         ),
     },
+    {
+        "id": "assembly.reassemble",
+        "slice": "0.63.18",
+        "law": (
+            "reassemble / force invalidate · membership refuse re-check · "
+            "fail closed while invalidated"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.

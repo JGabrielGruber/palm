@@ -170,5 +170,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.15** — HouseholdEffectPort (structure intents) · OsProcessRegistry real process spawn/release.  
 - **0.63.16** — WorkloadPlaceSpawn / `workload:` places · combined structure spawn port.  
 - **0.63.17** — Host auto-bind shell WorkloadEngine into default assembly place hands; `assembly_bind_workload` opt-out.  
-- Next: residual enable_* membership packaging · reassemble edges (**0.63.18+**).  
+- **0.63.18** — Reassemble edges: `AssemblySeat.reassemble`, `receive_definition(force=)`, `invalidate()`, membership refuse re-check.  
+- Next: residual enable_* membership packaging (SD-021) · more citizens (**0.63.19+**).  
 - Accept + theme close when José judges readiness proper.

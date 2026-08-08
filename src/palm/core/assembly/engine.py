@@ -50,13 +50,23 @@ class AssemblyEngine(BasePalmEngine):
 
     # --- public API ---------------------------------------------------------
 
-    def receive_definition(self, definition: AssemblyDefinition) -> AdmissionSnapshot:
-        """Load (or replace) desired structure. Resets readiness under new law."""
+    def receive_definition(
+        self,
+        definition: AssemblyDefinition,
+        *,
+        force: bool = False,
+    ) -> AdmissionSnapshot:
+        """Load (or replace) desired structure. Resets readiness under new law.
+
+        When the same id/version is already READY, returns without reset unless
+        *force* is True (0.63.18 reassemble edge — external structure change).
+        """
         if not definition.id:
             raise AssemblyEngineError("assembly definition id must be non-empty")
         with self._lock:
             same = (
-                self._definition is not None
+                not force
+                and self._definition is not None
                 and self._definition.id == definition.id
                 and self._definition.version == definition.version
                 and self._phase is AssemblyPhase.READY
@@ -73,6 +83,18 @@ class AssemblyEngine(BasePalmEngine):
             self._phase = (
                 AssemblyPhase.INVALIDATED if had_ready else AssemblyPhase.RECEIVED
             )
+            return self._status_unlocked().admission()
+
+    def invalidate(self, *, reason: str = "invalidated") -> AdmissionSnapshot:
+        """Void current readiness; keep definition. Requires reassemble to recover."""
+        with self._lock:
+            if self._definition is None:
+                self._phase = AssemblyPhase.EMPTY
+                return self._status_unlocked().admission()
+            if self._phase is not AssemblyPhase.EMPTY:
+                self._phase = AssemblyPhase.INVALIDATED
+                # reason is visible via phase; optional note for callers
+                _ = reason
             return self._status_unlocked().admission()
 
     def observe(self, observation: Observation) -> AdmissionSnapshot:

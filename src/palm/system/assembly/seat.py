@@ -50,18 +50,26 @@ class AssemblySeat:
         max_ticks: int = DEFAULT_MAX_TICKS,
         surfaces: Iterable[str] = (),
         capabilities: Iterable[str] = (),
+        force: bool = False,
     ) -> AssembleLoopResult:
         """Household: load DNA (default embedded) and reconcile until steady.
 
         When *surfaces* / *capabilities* are provided, DNA refuse is checked
         (0.63.6). Violations block admission — fail closed, no soft dual.
+
+        *force* voids same-id READY and re-converges (0.63.18 reassemble edge).
+        Membership is always re-evaluated: prior refuse reasons clear first.
         """
         dna = definition if definition is not None else local_embedded()
         self.definition = dna
         bind = getattr(self.effects, "bind_structure", None)
         if callable(bind):
             bind(dna, surfaces=surfaces, capabilities=capabilities)
-        self.engine.receive_definition(dna)
+        # Honest membership re-check before / after definition load.
+        self.engine.observe(
+            Observation(kind=ObservationKind.STRUCTURE_POLICY_CLEARED)
+        )
+        self.engine.receive_definition(dna, force=force)
         for reason in refuse_violations(
             dna, surfaces=surfaces, capabilities=capabilities
         ):
@@ -78,6 +86,33 @@ class AssemblySeat:
         )
         self.last_loop = result
         return result
+
+    def reassemble(
+        self,
+        definition: AssemblyDefinition | None = None,
+        *,
+        max_ticks: int = DEFAULT_MAX_TICKS,
+        surfaces: Iterable[str] = (),
+        capabilities: Iterable[str] = (),
+        force: bool = False,
+    ) -> AssembleLoopResult:
+        """Re-converge after DNA or membership change (0.63.18).
+
+        Uses the current seat definition when *definition* is omitted.
+        Fails closed while invalidated/blocked; citizens must not soft-skip.
+        """
+        dna = (
+            definition
+            if definition is not None
+            else (self.definition if self.definition is not None else local_embedded())
+        )
+        return self.assemble(
+            dna,
+            max_ticks=max_ticks,
+            surfaces=surfaces,
+            capabilities=capabilities,
+            force=force,
+        )
 
     def reset(self) -> None:
         self.engine.shutdown()

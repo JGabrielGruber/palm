@@ -128,6 +128,17 @@ Default remains in-process success (behavior-preserving for floor DNA with no `o
 
 Bare place ids still succeed in-process (fallback). DNA that requires `workload:` places can converge on the real host path after engines init.
 
+## Behavior changes (0.63.18) — reassemble edges
+
+| Was | Now |
+|-----|-----|
+| Same DNA READY short-circuit could leave stale refuse | Assemble clears refuse then re-checks membership |
+| No named re-converge path | **`AssemblySeat.reassemble`** (omitted DNA → seat definition) |
+| No force void of same-id READY | **`receive_definition(..., force=True)`** / **`engine.invalidate()`** |
+| Place gone → invalidated | **`reassemble`** re-ensures places until ready or blocked |
+
+Citizens stay fail-closed while phase is `invalidated` / `blocked`.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  
