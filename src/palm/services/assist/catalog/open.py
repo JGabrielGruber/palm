@@ -71,6 +71,10 @@ def open_target(
         )
 
     if kind_s in {"flow", "flows"}:
+        # 0.63.21 — menu open→create is a citizen start (same gate as submit).
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(assist.resolve_runtime())
         body: dict[str, Any] = {"format": view_format}
         if include_input:
             body["include_input_schema"] = True

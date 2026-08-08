@@ -147,6 +147,35 @@ def _filter_query(items: list[dict[str, Any]], query: str) -> list[dict[str, Any
     return out
 
 
+def _admission_present(assist: AssistService | None) -> dict[str, Any] | None:
+    """0.63.21 — nest living admission on menu (eyes, not soft ready)."""
+    if assist is None:
+        return None
+    try:
+        runtime = assist.resolve_runtime()
+    except Exception:
+        return None
+    snap = getattr(runtime, "admission", None)
+    if snap is None:
+        return {
+            "may_run_business": False,
+            "phase": "missing",
+            "note": "no admission snapshot on runtime",
+        }
+    if hasattr(snap, "to_dict"):
+        try:
+            bag = snap.to_dict()
+            if isinstance(bag, dict):
+                return bag
+        except Exception:
+            pass
+    return {
+        "may_run_business": bool(getattr(snap, "may_run_business", False)),
+        "phase": str(getattr(snap, "phase", "")),
+        "definition_id": getattr(snap, "definition_id", None),
+    }
+
+
 def build_menu_page(
     *,
     section: str,
@@ -155,6 +184,7 @@ def build_menu_page(
     limit: object | None = None,
     items: list[dict[str, Any]],
     title: str | None = None,
+    admission: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     filtered = _filter_query(items, query)
     page, next_cursor, has_more, offset = _slice_page(
@@ -167,6 +197,11 @@ def build_menu_page(
         question = f"{question} (search: {query!r})"
     if filtered:
         question = f"{question} · {len(filtered)} match(es)"
+    may_start = True
+    if admission is not None:
+        may_start = bool(admission.get("may_run_business"))
+    if not may_start:
+        question = f"{question} · admission closed (starts refuse)"
     actions: list[dict[str, Any]] = []
     if has_more and next_cursor is not None:
         actions.append(
@@ -183,11 +218,32 @@ def build_menu_page(
         )
     if section_s != "root":
         actions.append({"label": "Menu home", "alias": "assist/menu", "params": {}})
-    else:
+    elif may_start:
         actions.append({"label": "Operator entry", "alias": "operator-entry/start"})
+    else:
+        # Honest eyes — do not CTA a citizen start when the gate is closed.
+        actions.append(
+            {
+                "label": "Admission (starts closed)",
+                "alias": "assist/top",
+                "params": {},
+                "note": "may_run_business is false — start scenarios refuse until assemble",
+            }
+        )
     actions.append({"label": "Doctor", "alias": "assist/doctor"})
 
-    return {
+    hint = (
+        "Pick a row (chip or open:kind:id). "
+        "Search with params.query. Show more for the next page."
+    )
+    if not may_start:
+        hint = (
+            "Organism admission is closed — starting flows/scenarios will refuse. "
+            "Browse catalog eyes only, or fix structure (assemble / DNA refuse). "
+            + hint
+        )
+
+    body: dict[str, Any] = {
         "status": "ok",
         "kind": "menu",
         "section": section_s,
@@ -200,10 +256,8 @@ def build_menu_page(
         "items": page,
         "choices": choices,
         "question": question,
-        "hint": (
-            "Pick a row (chip or open:kind:id). "
-            "Search with params.query. Show more for the next page."
-        ),
+        "hint": hint,
+        "start_allowed": may_start,
         "input": {
             "kind": "menu",
             "widget": "menu",
@@ -221,6 +275,9 @@ def build_menu_page(
         },
         "actions": actions,
     }
+    if admission is not None:
+        body["admission"] = admission
+    return body
 
 
 def menu_for_assist(
@@ -233,6 +290,7 @@ def menu_for_assist(
 ) -> dict[str, Any]:
     """Build a menu page for the given section."""
     sec = (section or "root").strip().lower() or "root"
+    admission = _admission_present(assist)
     if sec in {"", "root", "home", "main"}:
         return build_menu_page(
             section="root",
@@ -241,6 +299,7 @@ def menu_for_assist(
             limit=limit,
             items=list(_ROOT_ITEMS),
             title="Palm menu",
+            admission=admission,
         )
 
     if sec in {"flows", "flow", "catalog"}:
@@ -273,6 +332,7 @@ def menu_for_assist(
             limit=limit,
             items=items,
             title="Flows",
+            admission=admission,
         )
 
     if sec in {"waiting", "wait"}:
@@ -324,6 +384,7 @@ def menu_for_assist(
             limit=limit,
             items=items,
             title="Waiting sessions",
+            admission=admission,
         )
         page["hint"] = (
             "Tap Resume to open a waiting session and continue answering. "
@@ -358,6 +419,7 @@ def menu_for_assist(
             limit=limit,
             items=items,
             title="Scenarios",
+            admission=admission,
         )
 
     if sec in {"datasets", "dataset", "analytics"}:
@@ -369,6 +431,7 @@ def menu_for_assist(
             limit=limit,
             items=items,
             title="Analytics datasets",
+            admission=admission,
         )
         page["hint"] = (
             "Pick a dataset chip (open:dataset:…) for describe + preview, "
@@ -384,6 +447,7 @@ def menu_for_assist(
         limit=limit,
         items=list(_ROOT_ITEMS),
         title="Palm menu",
+        admission=admission,
     )
     page["hint"] = (
         f"Unknown section {sec!r}. Showing home. "

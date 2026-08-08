@@ -127,15 +127,26 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "WorkloadEngine path remains ungated"
         ),
     },
+    {
+        "id": "assist.start_scenario",
+        "slice": "0.63.21",
+        "law": (
+            "assist scenario start + menu open→flow create require admission · "
+            "menu nests admission / start_allowed"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
 PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "assist.soft_catalog",
-        "note": "assist top/vitality nest admission via inspect present (0.63.10)",
-        "intent": "paid for operate eyes; catalog scenarios still product-owned",
-        "status": "partial_0_63_10",
+        "note": (
+            "0.63.10 operate eyes; 0.63.21 scenario start + open flow create gated; "
+            "menu nests admission / start_allowed (no start CTA when closed)"
+        ),
+        "intent": "paid start doors; residual only soft catalog browse packaging",
+        "status": "paid_start_0_63_21",
     },
     {
         "id": "host.packaging_without_admission",

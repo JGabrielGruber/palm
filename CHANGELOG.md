@@ -129,6 +129,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Household place-book still uses **`WorkloadEngine` directly** (not forced through ExecutionPort gate)  
 - Coherence: `tests/assembly/test_workload_start_gate_0_63_20.py`  
 
+#### Assist start citizen (0.63.21)
+- **`AssistScenarioService.start`** — product scenario start fails closed on admission  
+- **Menu open→flow create** — same gate before create dispatch  
+- **Menu honesty** — nests `admission`, `start_allowed`; no Operator-entry start CTA when closed  
+- Kingdom pretender `assist.soft_catalog` → paid_start_0_63_21  
+- Coherence: `tests/assembly/test_assist_start_gate_0_63_21.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

@@ -57,7 +57,7 @@ Runtime doubles used with `DefinitionExecutor` must publish an `admission` snaps
 | Work-plane tick / drain | **Gated** (0.63.3) |
 | `submit_flow` / `submit_process` (executor) | **Gated** (0.63.4) |
 | DNA id from real dogfood shapes | **Seeded** (0.63.5) — refuse not yet hard-enforced on membership |
-| Assist / MCP packaging soft-ready | Open pretender |
+| Assist / MCP packaging soft-ready | Start doors gated (0.63.21); browse residual |
 | Host soft “definitions ready” dual flags | Open pretender (SD-020 remainder) |
 | Composition dual structure after DNA load | Catalog paid (0.63.19) — seed map + env DNA + membership seeds; residual SD-020 soft-ready |
 
@@ -158,6 +158,16 @@ Citizens stay fail-closed while phase is `invalidated` / `blocked`.
 | Product workload start could run under dual soft-ready | Same gate as submit_flow / work plane |
 
 **Household:** assembly place-book `WorkloadPlaceSpawn` / direct `WorkloadEngine` is **not** this door — structure hands stay ungated by business admission.
+
+## Behavior changes (0.63.21) — assist start citizen
+
+| Was | Now |
+|-----|-----|
+| Assist scenario start only failed deep in executor | Product door **`require_business_admission`** first → **`AdmissionRefusedError`** |
+| Menu open→flow create unguarded at assist edge | Same admission gate before create |
+| Menu offered Operator entry CTA always | When admission closed: **`start_allowed=false`**, CTA → eyes (`assist/top`), admission nested |
+
+Browse (list flows, menu sections, doctor) stays read-only. Session continue/resume is not this door.
 
 ## Residual
 

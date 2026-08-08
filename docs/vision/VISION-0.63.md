@@ -248,7 +248,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.18** | ✅ Reassemble edges — `seat.reassemble` · force invalidate · honest refuse re-check |
 | **0.63.19** | ✅ Membership seed catalog — all enable_* → capability map · bootstrap single source (SD-021) |
 | **0.63.20** | ✅ Product workload start citizen — `start_workload` admission; household engine path free |
-| **0.63.21+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
+| **0.63.21** | ✅ Assist start citizen — scenario start + open→flow create · menu nests admission / `start_allowed` |
+| **0.63.22+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |
