@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from palm.core.assembly import (
@@ -9,13 +10,16 @@ from palm.core.assembly import (
     AssemblyDefinition,
     AssemblyEngine,
     AssemblyStatus,
+    Observation,
+    ObservationKind,
     local_embedded,
+    refuse_violations,
 )
 from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
 from palm.system.assembly.loop import (
     AssembleLoopResult,
     DEFAULT_MAX_TICKS,
-    load_and_assemble,
+    assemble_until_steady,
 )
 
 
@@ -43,14 +47,29 @@ class AssemblySeat:
         definition: AssemblyDefinition | None = None,
         *,
         max_ticks: int = DEFAULT_MAX_TICKS,
+        surfaces: Iterable[str] = (),
+        capabilities: Iterable[str] = (),
     ) -> AssembleLoopResult:
-        """Household: load DNA (default embedded) and reconcile until steady."""
+        """Household: load DNA (default embedded) and reconcile until steady.
+
+        When *surfaces* / *capabilities* are provided, DNA refuse is checked
+        (0.63.6). Violations block admission — fail closed, no soft dual.
+        """
         dna = definition if definition is not None else local_embedded()
         self.definition = dna
-        result = load_and_assemble(
+        self.engine.receive_definition(dna)
+        for reason in refuse_violations(
+            dna, surfaces=surfaces, capabilities=capabilities
+        ):
+            self.engine.observe(
+                Observation(
+                    kind=ObservationKind.STRUCTURE_POLICY_VIOLATION,
+                    target=reason,
+                )
+            )
+        result = assemble_until_steady(
             self.engine,
             self.effects,
-            dna,
             max_ticks=max_ticks,
         )
         self.last_loop = result

@@ -117,6 +117,9 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     return {
         "assembly_dna_id": dna.id,
         "assembly_definition": dna,
+        # Membership facts for refuse check (0.63.6) — not a second structure king.
+        "assembly_surfaces": list(surfaces),
+        "assembly_capabilities": sorted(capabilities),
     }
 
 

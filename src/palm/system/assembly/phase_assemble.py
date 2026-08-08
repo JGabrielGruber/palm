@@ -43,7 +43,18 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
 
     dna = _resolve_definition(options)
     max_ticks = int(options.get("assembly_max_ticks") or 32)
-    loop = seat.assemble(dna, max_ticks=max_ticks)
+    surfaces = options.get("assembly_surfaces") or ()
+    capabilities = options.get("assembly_capabilities") or ()
+    if isinstance(surfaces, str):
+        surfaces = (surfaces,)
+    if isinstance(capabilities, str):
+        capabilities = (capabilities,)
+    loop = seat.assemble(
+        dna,
+        max_ticks=max_ticks,
+        surfaces=surfaces,
+        capabilities=capabilities,
+    )
     admission = seat.admission()
 
     ctx.publish(

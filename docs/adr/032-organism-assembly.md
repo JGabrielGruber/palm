@@ -158,5 +158,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.3** — work-plane citizen gate: `able` = started ∧ admission; fail closed; pretender inventory named.  
 - **0.63.4** — coherence suite + `guard-assembly`; `DefinitionExecutor` submit paths fail closed (`AdmissionRefusedError`).  
 - **0.63.5** — builtin DNA catalog + seed map (mode/composition → decree); host spawn injects seed.  
-- Next: refuse/membership enforce · residual pretenders · eyes (**0.63.6+**).  
+- **0.63.6** — refuse vs membership; dual shape blocks admission.  
+- Next: vitality/inspect eyes · residual pretenders (**0.63.7+**).  
 - Accept + theme close when José judges readiness proper.

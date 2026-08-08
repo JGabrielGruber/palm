@@ -4,6 +4,13 @@ Core purity: no imports outside ``palm.core``.
 System applies effect intents; clients use :class:`AdmissionSnapshot`.
 """
 
+from palm.core.assembly.policy import (
+    REFUSE_BACKGROUND_DRAIN,
+    REFUSE_HTTP_SERVER_SURFACES,
+    REFUSE_PRODUCT_CATALOG_HOME,
+    REFUSE_SERVER_SURFACES,
+    refuse_violations,
+)
 from palm.core.assembly.definition import (
     LOCAL_ALL_IN_ONE_ID,
     LOCAL_CLI_ID,
@@ -55,11 +62,16 @@ __all__ = [
     "NoDefinitionError",
     "Observation",
     "ObservationKind",
+    "REFUSE_BACKGROUND_DRAIN",
+    "REFUSE_HTTP_SERVER_SURFACES",
+    "REFUSE_PRODUCT_CATALOG_HOME",
+    "REFUSE_SERVER_SURFACES",
     "local_all_in_one",
     "local_cli",
     "local_embedded",
     "local_mcp",
     "local_server",
     "local_worker",
+    "refuse_violations",
     "resolve_builtin_dna",
 ]

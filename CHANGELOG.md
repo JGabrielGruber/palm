@@ -49,6 +49,11 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Host `system.spawn` seeds DNA unless caller set `assembly_dna_id` / definition  
 - Profiles remain seed choosers, not parallel structure kings after load  
 
+#### Refuse policy (0.63.6)
+- Pure `refuse_violations` — DNA refuse vs surfaces/capabilities  
+- Structure policy observations block admission when membership lies  
+- Host seed passes membership facts into assemble  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

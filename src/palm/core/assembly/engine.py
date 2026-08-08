@@ -261,6 +261,20 @@ class AssemblyEngine(BasePalmEngine):
             self._block_reasons = [
                 r for r in self._block_reasons if r != "structure_seed_failed"
             ]
+        elif kind is ObservationKind.STRUCTURE_POLICY_VIOLATION:
+            reason = target or "refuse:policy"
+            if reason not in self._block_reasons:
+                self._block_reasons.append(reason)
+            self._phase = AssemblyPhase.BLOCKED
+        elif kind is ObservationKind.STRUCTURE_POLICY_CLEARED:
+            if target:
+                self._block_reasons = [
+                    r for r in self._block_reasons if r != target
+                ]
+            else:
+                self._block_reasons = [
+                    r for r in self._block_reasons if not r.startswith("refuse:")
+                ]
         elif kind is ObservationKind.SEAT_BOUND:
             pass  # optional floor; no phase change yet
         else:

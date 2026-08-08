@@ -233,7 +233,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.3** | ✅ Raise the gate — work-plane `able` ∧ admission fail-closed; break inventory named |
 | **0.63.4** | ✅ Coherence suite + `guard-assembly` + submit_flow/process citizen gate |
 | **0.63.5** | ✅ DNA seed map — builtins + host mode/composition → decree |
-| **0.63.6+** | Swallow remaining pretenders · enforce refuse/membership · eyes · intents |
+| **0.63.6** | ✅ Refuse policy — dual membership fail closed |
+| **0.63.7+** | Eyes (vitality) · remaining pretenders · intents |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |
