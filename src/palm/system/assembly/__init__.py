@@ -12,6 +12,11 @@ from palm.system.assembly.place_spawn import (
     fail_closed_os_ensure,
     os_prefix_spawn_port,
 )
+from palm.system.assembly.workload_place import (
+    WorkloadPlaceSpawn,
+    combined_structure_spawn_port,
+    workload_prefix_spawn_port,
+)
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
     require_business_admission,
@@ -60,8 +65,11 @@ __all__ = [
     "PlaceSpawnResult",
     "RecordingEffectPort",
     "RegisteredPlaceSpawn",
+    "WorkloadPlaceSpawn",
+    "combined_structure_spawn_port",
     "fail_closed_os_ensure",
     "os_prefix_spawn_port",
+    "workload_prefix_spawn_port",
     "assemble_until_steady",
     "boot_mode_name_for_deployment",
     "dna_id_for_boot_mode",

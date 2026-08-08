@@ -109,6 +109,16 @@ Default remains in-process success (behavior-preserving for floor DNA with no `o
 | `os:` only accept pre-supplied handle | **`OsProcessRegistry`** spawns `argv`/`command`; release terminates |
 | Structure intents recorded no-op | Invalidate → `PROJECTION_FAILED`; refresh → `PROJECTION_LOADED`; policy re-checks refuse; seed finishes |
 
+## Behavior changes (0.63.16) — workload place book
+
+| Was | Now |
+|-----|-----|
+| No workload place strategy | **`workload:`** prefix via `WorkloadPlaceSpawn` / WorkloadEngine |
+| Unbound place soft? | Fail closed: `workload_engine_not_bound` |
+| — | `combined_structure_spawn_port` routes `os:` + `workload:` |
+
+Default assembly seat still uses in-process places (no auto engine bind yet).
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

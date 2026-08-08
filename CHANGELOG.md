@@ -94,7 +94,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 #### Household hands + OS process (0.63.15)
 - **`HouseholdEffectPort`** — default seat hands: places + invalidate/refresh projection, apply policy, request seed  
 - **`OsProcessRegistry`** — real `subprocess` for `os:` when `argv`/`command` given; release terminates process group  
-- Seat/phase default household; residual: workload place-book wire 
+- Seat/phase default household; residual: workload place-book wire  
+
+#### Workload place book (0.63.16)
+- **`WorkloadPlaceSpawn`** — `workload:` places via WorkloadEngine (fail closed unbound)  
+- Default kind **workspace** (warm body); `kind=run` needs argv  
+- `combined_structure_spawn_port` — `os:` + `workload:` on one port  
+- Residual: host auto-bind engine into default assembly seat 
 - `run_host` accepts optional boot_mode; deployment still seeds when omitted  
 
 ## [0.62.8] — 2026-08-04
