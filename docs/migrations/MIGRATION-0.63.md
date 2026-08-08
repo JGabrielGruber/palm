@@ -16,17 +16,25 @@ Impact is discovered as the gate rises. This file **grows** when paths break —
 | Packaging | `PALM_*` storage, paths, ports, logs, pool widths (unchanged spirit) |
 | Household assemble | Assembly control / loop — **not** product |
 
+## Behavior changes (0.63.2)
+
+| Was | Now |
+|-----|-----|
+| No assembly seat | System phase `system.assembly.assemble` after `system.ready` |
+| No admission surface | `BaseRuntime.admission` / `runtime.assembly` after start |
+| — | Default DNA `local.embedded` → usually `may_run_business=True` after start |
+| — | `assembly_skip=True` leaves admission fail-closed (empty) |
+
 ## Expected direction of break (honest early)
 
 | Was (glue) | Toward (law) |
 |------------|--------------|
 | Soft “definitions ready” / host flags | Admission from assembly status |
 | Profile + BootMode as structure king | Seed → DNA; status after load |
-| Citizen starts with half-host | Fail closed until assemble |
+| Citizen starts with half-host | Fail closed until assemble (**0.63.3+** gate) |
 | Tests that bypass readiness | Coherence suite: fix or delete |
 
-Exact call sites and version stamps fill in as **0.63.3+** lands.  
-Until the gate is raised, behavior may still match pre-0.63 for many paths.
+Citizen fail-closed lands in **0.63.3+**. Until then admission is published but not all paths enforce it.
 
 ## Settings / env
 

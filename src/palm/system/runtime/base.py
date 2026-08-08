@@ -47,6 +47,8 @@ from palm.system.log import get_system_log
 from palm.system.subsystems.planes.hub import SystemPlanes
 from palm.system.subsystems.planes.session.plane import SessionPlaneService
 from palm.system.subsystems.planes.wait.plane import WaitPlaneService
+from palm.core.assembly import AdmissionSnapshot
+from palm.system.assembly.seat import AssemblySeat
 from palm.system.interfaces.install import SystemInstall
 from palm.system.runtime.schedulers import QueuedScheduler
 from palm.system.runtime.wiring import SchedulerPolicy
@@ -106,6 +108,7 @@ class BaseRuntime:
         self._planes: SystemPlanes | None = None
         self._supervisor: Any | None = None
         self._install = SystemInstall()
+        self._assembly: AssemblySeat | None = None
         self._last_boot_walk: list[Any] | None = None
 
     @property
@@ -126,6 +129,25 @@ class BaseRuntime:
         supervisor install read this seat — they do not dig the bag.
         """
         return self._install
+
+    @property
+    def assembly(self) -> AssemblySeat | None:
+        """Assembly seat (DNA + engine + admission) after household assemble."""
+        return self._assembly
+
+    @assembly.setter
+    def assembly(self, seat: AssemblySeat | None) -> None:
+        self._assembly = seat
+
+    @property
+    def admission(self) -> AdmissionSnapshot:
+        """Published gate: may business that needs ground run?
+
+        Fail closed when assembly has not run or is not ready.
+        """
+        if self._assembly is None:
+            return AdmissionSnapshot.empty()
+        return self._assembly.admission()
 
     @property
     def wire(self) -> SystemInstall:
@@ -305,6 +327,13 @@ class BaseRuntime:
             except Exception:
                 pass
             self._supervisor = None
+
+        if self._assembly is not None:
+            try:
+                self._assembly.reset()
+            except Exception:
+                pass
+            self._assembly = None
 
         if self._planes is not None:
             try:

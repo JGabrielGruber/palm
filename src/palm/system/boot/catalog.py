@@ -18,6 +18,7 @@ System phase definition catalog — membership of system start (0.61).
 | system.supervisor.wire | ``palm.system.subsystems.supervisor.phase_wire`` |
 | system.bind | ``palm.system.runtime.phase_provider_bind`` |
 | system.ready | ``palm.system.runtime.phase_ready`` |
+| system.assembly.assemble | ``palm.system.assembly.phase_assemble`` |
 | system.background.start | ``palm.system.subsystems.supervisor.phase_background`` |
 
 Boot only **imports** definitions and walks them. New step = subject module
@@ -26,6 +27,7 @@ Boot only **imports** definitions and walks them. New step = subject module
 
 from __future__ import annotations
 
+from palm.system.assembly.phase_assemble import DEFINITION as _assembly_assemble
 from palm.system.boot.definition import PhaseDefinition
 from palm.system.interfaces.phase_install_bind import DEFINITION as _install_bind
 from palm.system.log.phase_ready import DEFINITION as _log_ready
@@ -59,6 +61,7 @@ DEFAULT_SYSTEM_PHASE_DEFINITIONS: tuple[PhaseDefinition, ...] = (
     _supervisor_wire,
     _bind,
     _ready,
+    _assembly_assemble,
     _background,
 )
 

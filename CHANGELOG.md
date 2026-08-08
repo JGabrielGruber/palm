@@ -24,6 +24,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Pure reconciler: receive definition → tick → ready (empty places) · ensure_place intents · truth-home / place block · new definition invalidates  
 - Fail closed when empty or not ready; pure tests in `tests/core/test_assembly_engine.py`  
 
+#### System household (0.63.2)
+- **`palm.system.assembly`** — `AssemblySeat`, effect port, assemble loop  
+- Boot phase **`system.assembly.assemble`** after `system.ready` (before background)  
+- Default DNA **`local.embedded`** → shell `runtime.admission.may_run_business`  
+- Options: `assembly_skip`, `assembly_dna_id` / `assembly_definition`, `assembly_max_ticks`  
+- Fail closed when skip or no seat; tests `tests/test_assembly_system_0_63_2.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

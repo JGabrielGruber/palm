@@ -24,6 +24,7 @@ class BootContext:
     | ``install`` | ``system.install.bind`` |
     | ``planes`` | ``system.planes.attach`` |
     | ``supervisor`` | ``system.supervisor.wire`` |
+    | ``assembly`` / ``assembly_admission`` / ``assembly_definition`` | ``system.assembly.assemble`` |
 
     Keep free of product types so ``palm.system.boot`` stays pure.
     Host-side handlers may hang collaborators on ``extras``.
@@ -55,6 +56,12 @@ class BootContext:
     """Planes subsystem after attach phase."""
     supervisor: Any = None
     """Supervisor subsystem after wire phase."""
+    assembly: Any = None
+    """Assembly seat after household assemble (0.63)."""
+    assembly_admission: Any = None
+    """Admission snapshot after assemble."""
+    assembly_definition: Any = None
+    """DNA loaded for this walk."""
 
     extras: dict[str, Any] = field(default_factory=dict)
 
