@@ -111,6 +111,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "fail closed while invalidated"
         ),
     },
+    {
+        "id": "env.membership_seed_catalog",
+        "slice": "0.63.19",
+        "law": (
+            "MEMBERSHIP_CAPABILITY_SEEDS single map · bootstrap derives caps · "
+            "STRUCTURE_SEED_ENV full enable_* cartography (SD-021)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -136,12 +144,21 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "env.structure_toggles",
         "note": (
-            "0.63.13: PALM_ASSEMBLY_DNA_ID seed; work_drain env is membership seed only; "
-            "DNA refuse blocks continuous drain. Residual: other enable_* membership "
-            "flags still feed composition at resolve (honest seed, not dual king after load)."
+            "0.63.13 DNA seed + drain king; 0.63.19 full MEMBERSHIP_CAPABILITY_SEEDS "
+            "catalog + bootstrap single source. Flags remain honest resolve seeds; "
+            "gates after load use composition.has + DNA refuse."
         ),
-        "intent": "partial pay SD-021 — catalog STRUCTURE_SEED_ENV; residual packaging flags",
-        "status": "partial_0_63_13",
+        "intent": "paid catalog SD-021 — residual only named packaging duals (outbox start option)",
+        "status": "paid_catalog_0_63_19",
+    },
+    {
+        "id": "outbox.start_option_seed",
+        "note": (
+            "runtime_start_options still passes enable_event_outbox for outbox store "
+            "install (phase_outbox); composition.has('outbox') gates host recovery wire"
+        ),
+        "intent": "name residual — start packaging seed, not peer structure king after load",
+        "status": "named_0_63_19",
     },
     {
         "id": "place_book.os_spawn",

@@ -7,6 +7,11 @@ parallel structure kings. After load, assembly status under the DNA is truth.
 - ``PALM_ASSEMBLY_DNA_ID`` / ``settings.assembly_dna_id`` is the explicit DNA seed.
 - Membership-shaped flags (e.g. ``PALM_ENABLE_WORK_DRAIN_SERVICE``) feed composition
   only at resolve time; DNA refuse + drain gate remain structure king after load.
+
+**0.63.19 — full membership seed cartography (SD-021 residual):**
+- Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
+- Bootstrap derives capabilities from this map — one truth for seed resolve.
+- After load, gates read ``composition.has`` + DNA refuse, not peer-OR settings.
 """
 
 from __future__ import annotations
@@ -37,7 +42,66 @@ _MODE_TO_DNA: dict[str, str] = {
     "dev": LOCAL_ALL_IN_ONE_ID,
 }
 
-# 0.63.13 — cartography: env / settings that *seed* structure (not packaging).
+# 0.63.19 — settings field → composition capability at resolve only.
+# Single source for bootstrap ``_capabilities_from_settings`` and cartography.
+# Always-on membership (journal / projections / workloads) has no flag — not listed.
+MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
+    {
+        "env": "PALM_ENABLE_COMPENSATION",
+        "settings": "enable_compensation",
+        "capability": "compensation",
+        "role": "membership_seed",
+        "note": "Feeds composition.compensation at resolve; host wires via composition.has",
+    },
+    {
+        "env": "PALM_ENABLE_EVENT_OUTBOX",
+        "settings": "enable_event_outbox",
+        "capability": "outbox",
+        "role": "membership_seed",
+        "note": (
+            "Feeds composition.outbox at resolve; start option may still seed outbox "
+            "store install (runtime packaging residual)"
+        ),
+    },
+    {
+        "env": "PALM_ENABLE_WEBHOOK_DISPATCHER",
+        "settings": "enable_webhook_dispatcher",
+        "capability": "webhook",
+        "role": "membership_seed",
+        "note": "Feeds composition.webhook at resolve; URLs refine targets within capability",
+    },
+    {
+        "env": "PALM_ENABLE_WORK_DRAIN_SERVICE",
+        "settings": "enable_work_drain_service",
+        "capability": "work_drain",
+        "role": "membership_seed",
+        "note": (
+            "Feeds composition.work_drain at resolve; DNA refuse background_drain is "
+            "king after load (0.63.13)"
+        ),
+    },
+    {
+        "env": "PALM_ANALYTICS_ENABLED",
+        "settings": "analytics_enabled",
+        "capability": "analytics",
+        "role": "membership_seed",
+        "note": "Feeds composition.analytics at resolve",
+    },
+    {
+        "env": "PALM_ENABLE_NEONROOT_RUNNERS",
+        "settings": "enable_neonroot_runners",
+        "capability": "neonroot",
+        "role": "membership_seed",
+        "note": "Feeds composition.neonroot availability; does not install CLI binary",
+    },
+)
+
+# Capabilities always present on settings-composed hosts (no enable_* seed).
+ALWAYS_ON_MEMBERSHIP_CAPABILITIES: frozenset[str] = frozenset(
+    {"journal", "projections", "workloads"}
+)
+
+# 0.63.13 / 0.63.19 — cartography: env / settings that *seed* structure (not packaging).
 # Packaging stays free (storage, ports, log, pool widths, secrets).
 STRUCTURE_SEED_ENV: tuple[dict[str, str], ...] = (
     {
@@ -46,12 +110,7 @@ STRUCTURE_SEED_ENV: tuple[dict[str, str], ...] = (
         "role": "explicit_dna_seed",
         "note": "Chooses which DNA loads; wins over mode/composition inference",
     },
-    {
-        "env": "PALM_ENABLE_WORK_DRAIN_SERVICE",
-        "settings": "enable_work_drain_service",
-        "role": "membership_seed",
-        "note": "Feeds composition.work_drain at resolve only; DNA refuse is king after load",
-    },
+    *MEMBERSHIP_CAPABILITY_SEEDS,
     {
         "env": "PALM_HOST_PROFILE",
         "settings": "host_profile",
@@ -75,6 +134,8 @@ PACKAGING_ENV_SPIRIT: tuple[str, ...] = (
     "PALM_WORK_DRAIN_WORKERS",
     "PALM_WORK_DRAIN_LEASE_SECONDS",
     "PALM_QUEUED_WORKERS",
+    "PALM_ENABLE_OUTBOX_SERVICE",  # deployment/node role refine, not capability seed
+    "PALM_ENABLE_STATE_SNAPSHOT",  # product packaging, not composition membership
 )
 
 
@@ -122,6 +183,31 @@ def dna_id_from_settings(settings: Any | None) -> str | None:
         return None
     text = str(raw).strip()
     return text or None
+
+
+def membership_capabilities_from_settings(
+    settings: Any | None,
+    *,
+    deployment: Any | None = None,
+) -> frozenset[str]:
+    """Derive composition capabilities from membership *seeds* (0.63.19).
+
+    Settings ``enable_*`` / analytics flags seed membership **at resolve only**.
+    Deployment may feed ``work_drain`` when resolving without an explicit
+    composition (0.59.5). After DNA load, refuse + gates use composition + DNA —
+    not a peer re-OR of these flags.
+    """
+    capabilities: set[str] = set(ALWAYS_ON_MEMBERSHIP_CAPABILITIES)
+    if settings is not None:
+        for row in MEMBERSHIP_CAPABILITY_SEEDS:
+            field = row["settings"]
+            if bool(getattr(settings, field, False)):
+                capabilities.add(row["capability"])
+    if deployment is not None and bool(
+        getattr(deployment, "enable_work_drain_service", False)
+    ):
+        capabilities.add("work_drain")
+    return frozenset(capabilities)
 
 
 def resolve_seed_dna(
@@ -212,6 +298,8 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
 
 
 __all__ = [
+    "ALWAYS_ON_MEMBERSHIP_CAPABILITIES",
+    "MEMBERSHIP_CAPABILITY_SEEDS",
     "PACKAGING_ENV_SPIRIT",
     "STRUCTURE_SEED_ENV",
     "boot_mode_name_for_deployment",
@@ -219,6 +307,7 @@ __all__ = [
     "dna_id_for_composition",
     "dna_id_from_settings",
     "dna_refuses_background_drain",
+    "membership_capabilities_from_settings",
     "resolve_seed_dna",
     "seed_assembly_options_from_host",
 ]

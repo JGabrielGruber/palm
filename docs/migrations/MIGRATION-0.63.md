@@ -59,7 +59,7 @@ Runtime doubles used with `DefinitionExecutor` must publish an `admission` snaps
 | DNA id from real dogfood shapes | **Seeded** (0.63.5) — refuse not yet hard-enforced on membership |
 | Assist / MCP packaging soft-ready | Open pretender |
 | Host soft “definitions ready” dual flags | Open pretender (SD-020 remainder) |
-| Composition dual structure after DNA load | Partial — seed map + env DNA seed (0.63.13); residual enable_* membership seeds (SD-021) |
+| Composition dual structure after DNA load | Catalog paid (0.63.19) — seed map + env DNA + membership seeds; residual SD-020 soft-ready |
 
 ## Expected direction of break (honest early)
 
@@ -138,6 +138,17 @@ Bare place ids still succeed in-process (fallback). DNA that requires `workload:
 | Place gone → invalidated | **`reassemble`** re-ensures places until ready or blocked |
 
 Citizens stay fail-closed while phase is `invalidated` / `blocked`.
+
+## Behavior changes (0.63.19) — membership seed catalog (SD-021)
+
+| Was | Now |
+|-----|-----|
+| Only work_drain + DNA id in structure seed cartography | Full **`MEMBERSHIP_CAPABILITY_SEEDS`** for all composition-feeding flags |
+| Bootstrap capability list hand-maintained | **`membership_capabilities_from_settings`** single source |
+| Unclear which `enable_*` are structure seeds | Catalog + settings comments: seed at resolve; gates after load use composition + DNA |
+
+**Not a break:** flags still feed composition at resolve (honest seed). They do not peer-OR after DNA load.  
+**Named residual:** `enable_event_outbox` still seeds outbox *store* install via runtime start options (packaging); host recovery continues to gate on `composition.has("outbox")`.
 
 ## Residual
 

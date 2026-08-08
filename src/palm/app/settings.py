@@ -53,8 +53,10 @@ class PalmSettings(BaseSettings):
     worker_count: int = 1
     server_host: str = "127.0.0.1"
     server_port: int = 8080
+    # Deployment/node refine — not composition capability seed (0.63.19 packaging spirit).
     enable_outbox_service: bool = True
     outbox_poll_interval: float = 0.5
+    # Membership *seed* (0.63.19 / SD-021) — feeds composition.outbox at resolve only.
     enable_event_outbox: bool = True
     # 0.40.2 — continuous WorkIntent drain; ``host server`` profile enables by default (0.44.1)
     # Structure membership *seed* only (0.63.13 / SD-021) — feeds composition at resolve;
@@ -73,12 +75,15 @@ class PalmSettings(BaseSettings):
     projection_rebuild_batch_size: int = 100
     projection_rebuild_max_instances: int = 5000
     projection_rebuild_skip_if_fresh: bool = True
+    # Membership *seed* (0.63.19) — feeds composition.compensation at resolve only.
     enable_compensation: bool = True
+    # Membership *seed* (0.63.19) — feeds composition.webhook at resolve only.
     enable_webhook_dispatcher: bool = False
-    # 0.53.8 — declare composition capability "neonroot" (hermetic runners). Does not
-    # install the CLI; doctor soft-flags when declared but neonroot is missing on PATH.
+    # 0.53.8 — membership *seed* for composition capability "neonroot" (0.63.19).
+    # Does not install the CLI; doctor soft-flags when declared but missing on PATH.
     enable_neonroot_runners: bool = True
     # 0.56 — Workload plane: host subprocess runtime (default OFF; not multi-tenant safe)
+    # Packaging / plane install, not composition membership seed.
     workload_host_enabled: bool = False
     # Optional default WorkloadRuntime name when Spec.placement.runtime is unset
     workload_default_runtime: str | None = None
@@ -92,7 +97,7 @@ class PalmSettings(BaseSettings):
     resource_cache_results: bool = False
     resource_cache_ttl_seconds: float = 60.0
     resource_cache_max_entries: int = 256
-    # 0.35 analytics (BI exposure) — host wires AnalyticsService from these knobs
+    # Membership *seed* (0.63.19) — feeds composition.analytics at resolve only.
     analytics_enabled: bool = True
     analytics_allow_unpublished: bool = False
     analytics_allow_unpublished_with_server: bool = False

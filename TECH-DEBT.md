@@ -188,11 +188,11 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63 growth:** Map entry/mode/env into **DNA seed**; after load, assembly status is structure truth; packaging env stays; structure pretender toggles purge or residual kill-date. First DNA: **embedded**; dogfood: cli / server.
 
-**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. Residual: other `enable_*` membership seeds still feed composition at resolve (honest seed); soft-ready dual flags (SD-020 neighbor).
+**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap `_capabilities_from_settings` derives from that map only; pretender `env.structure_toggles` paid as catalog. Residual: flags still seed at resolve **by design** (honest seed); `enable_event_outbox` start option for outbox store install named; soft-ready dual flags (SD-020 neighbor).
 
 **Do not:** Leave profiles as public dual structure forever “for compatibility.” Remove packaging env wholesale.
 
-**Status:** open (seed map + env DNA seed partial — residual membership packaging).
+**Status:** open (seed map + membership catalog paid — residual SD-020 soft-ready / packaging duals).
 
 ---
 

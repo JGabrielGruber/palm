@@ -161,29 +161,17 @@ def _capabilities_from_settings(
     ``enable_work_drain_service`` on a server role adds ``work_drain``). That
     fold happens here once — not as a second switch at phase time.
 
+    **0.63.19 / SD-021:** flag → capability map lives in
+    ``palm.system.assembly.seed.MEMBERSHIP_CAPABILITY_SEEDS`` —
+    packaging seeds only; after DNA load, refuse + composition are structure truth.
+
     ``journal``, ``projections``, and ``workloads`` have no settings flag: they
     are always available on a settings-composed host (a lean *explicit*
     composition can still omit them). See VISION-0.51 / ADR-020 / ADR-028 D4.
     """
-    # journal, projections, workloads: always wired on settings-composed hosts
-    capabilities: set[str] = {"journal", "projections", "workloads"}
-    if settings.enable_compensation:
-        capabilities.add("compensation")
-    if settings.enable_event_outbox:
-        capabilities.add("outbox")
-    if settings.enable_webhook_dispatcher:
-        capabilities.add("webhook")
-    if settings.enable_work_drain_service:
-        capabilities.add("work_drain")
-    # Deployment feeds membership only on the settings-resolve path (0.59.5).
-    if deployment is not None and deployment.enable_work_drain_service:
-        capabilities.add("work_drain")
-    if settings.analytics_enabled:
-        capabilities.add("analytics")
-    # NeonRoot WorkloadRuntime availability (CLI optional; does not install binary).
-    if getattr(settings, "enable_neonroot_runners", True):
-        capabilities.add("neonroot")
-    return frozenset(capabilities)
+    from palm.system.assembly.seed import membership_capabilities_from_settings
+
+    return membership_capabilities_from_settings(settings, deployment=deployment)
 
 
 def composition_profile_from_settings(

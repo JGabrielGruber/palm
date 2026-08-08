@@ -42,6 +42,8 @@ from palm.system.assembly.inventory import (
     kingdom_snapshot,
 )
 from palm.system.assembly.seed import (
+    ALWAYS_ON_MEMBERSHIP_CAPABILITIES,
+    MEMBERSHIP_CAPABILITY_SEEDS,
     PACKAGING_ENV_SPIRIT,
     STRUCTURE_SEED_ENV,
     boot_mode_name_for_deployment,
@@ -49,13 +51,16 @@ from palm.system.assembly.seed import (
     dna_id_for_composition,
     dna_id_from_settings,
     dna_refuses_background_drain,
+    membership_capabilities_from_settings,
     resolve_seed_dna,
     seed_assembly_options_from_host,
 )
 
 __all__ = [
+    "ALWAYS_ON_MEMBERSHIP_CAPABILITIES",
     "DEFAULT_MAX_TICKS",
     "GATED_CITIZENS",
+    "MEMBERSHIP_CAPABILITY_SEEDS",
     "PACKAGING_ENV_SPIRIT",
     "PRETENDER_EDGES",
     "STRUCTURE_SEED_ENV",
@@ -91,6 +96,7 @@ __all__ = [
     "kingdom_map",
     "kingdom_snapshot",
     "load_and_assemble",
+    "membership_capabilities_from_settings",
     "require_business_admission",
     "resolve_seed_dna",
     "seed_assembly_options_from_host",

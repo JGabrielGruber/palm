@@ -117,6 +117,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Fail closed while invalidated; place-gone recovers via reassemble  
 - Coherence: `tests/assembly/test_reassemble_0_63_18.py`  
 
+#### Membership seed catalog (0.63.19) — SD-021 residual
+- **`MEMBERSHIP_CAPABILITY_SEEDS`** — full enable_* / analytics → capability map (compensation, outbox, webhook, work_drain, analytics, neonroot)  
+- **`membership_capabilities_from_settings`** — bootstrap single source for composition resolve  
+- **`STRUCTURE_SEED_ENV`** expands with all membership seeds + packaging spirit notes  
+- Kingdom: `env.membership_seed_catalog` gated · `env.structure_toggles` paid_catalog · outbox start-option residual named  
+- Coherence: `tests/assembly/test_membership_seed_0_63_19.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

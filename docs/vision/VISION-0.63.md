@@ -246,7 +246,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.16** | ✅ Workload place-book — `workload:` via WorkloadPlaceSpawn (fail closed unbound) |
 | **0.63.17** | ✅ Host auto-bind WorkloadEngine into default assembly seat (opt-out `assembly_bind_workload=False`) |
 | **0.63.18** | ✅ Reassemble edges — `seat.reassemble` · force invalidate · honest refuse re-check |
-| **0.63.19+** | Residual enable_* membership packaging (SD-021) · more citizens / purge |
+| **0.63.19** | ✅ Membership seed catalog — all enable_* → capability map · bootstrap single source (SD-021) |
+| **0.63.20+** | More citizens / pretender purge · residual packaging duals (outbox start option named) |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |
