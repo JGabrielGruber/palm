@@ -257,6 +257,16 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 
 Browse / inspect / handoff stay eyes. Cancel is not a market-day continue door.
 
+## Behavior changes (0.63.30) — flow continue citizens + cancel residual
+
+| Was | Now |
+|-----|-----|
+| FlowSession **input / resume / backtrack** only failed deep at port | Product edge **`require_business_admission(flows.admission_gate())`** first |
+| Flow packaging dug runtime for readiness only via deep ports | Host injects **`admission_source`** on `FlowExecutionService` (oath boy-scout) |
+| `cancel_job` / FlowSession.cancel when admission closed | Still works — **named residual** (control path) |
+
+**Not a break** for happy path when admitted. Custom `FlowExecutionService` without inject falls back to `resolve_runtime()` (same as assist).
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

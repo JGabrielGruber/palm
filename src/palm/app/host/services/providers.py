@@ -55,11 +55,17 @@ def _build_definitions(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 
 def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
+    # 0.63.30 — inject published admission for flow product continue (oath).
+    from palm.system.assembly.access import admission_source_from_runtime_resolver
+
     flows = FlowExecutionService(
         **ctx.bus_kwargs,
         inspect=built["inspect"],
         session=built.get("session"),
         runtime_resolver=ctx.resolve_execution_runtime,
+        admission_source=admission_source_from_runtime_resolver(
+            ctx.resolve_execution_runtime
+        ),
     )
     providers = ProviderExecutionService(
         **ctx.bus_kwargs,

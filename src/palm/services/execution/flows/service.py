@@ -38,6 +38,7 @@ class FlowExecutionService(BaseService):
         runtime: BaseRuntime | None = None,
         runtime_resolver: Callable[[str | None], BaseRuntime] | None = None,
         system: InspectService | None = None,
+        admission_source: Callable[[], Any] | Any | None = None,
     ) -> None:
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         door = inspect if inspect is not None else system
@@ -47,6 +48,9 @@ class FlowExecutionService(BaseService):
         self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
+        # 0.63.30 — peasants' oath: published admission for product continue
+        # (same shape as AssistService; no product base class).
+        self._admission_source = admission_source
 
     @property
     def sessions(self) -> SessionService | None:
@@ -350,6 +354,16 @@ class FlowExecutionService(BaseService):
         if self._runtime is not None:
             return self._runtime
         raise RuntimeError("FlowExecutionService requires a runtime or runtime_resolver")
+
+    def admission_gate(self) -> object:
+        """Published admission source for product continue citizens (0.63.30 oath).
+
+        Prefer injected *admission_source*. Fallback digs the runtime shell only
+        when packaging omitted the inject — same shape as AssistService.
+        """
+        if self._admission_source is not None:
+            return self._admission_source
+        return self.resolve_runtime()
 
     def wait_until_idle(self, *, timeout: float = 5.0) -> bool:
         return self.resolve_runtime().wait_until_idle(timeout=timeout)

@@ -193,6 +193,14 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `assist.continue_session` · `executor.resume_process` gated; `assist.session_cancel_ungated` named  
 - Coherence: `tests/assembly/test_assist_continue_gate_0_63_29.py`  
 
+#### Flow continue citizens + cancel residual (0.63.30)
+- **`FlowSession.input` / `resume` / `backtrack`** — `require_business_admission(flows.admission_gate())`  
+- **`FlowExecutionService.admission_source` inject** + `admission_gate()` (same helper as assist; no product base)  
+- Host providers wire inject for flows  
+- **`cancel_job` / FlowSession.cancel** stay ungated — **named** residual (`runtime.cancel_job_ungated` · `flows.session_cancel_ungated`)  
+- Kingdom: `flows.continue_session` · `flows.admission_oath` gated  
+- Coherence: `tests/assembly/test_flows_continue_gate_0_63_30.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

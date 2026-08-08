@@ -217,6 +217,23 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "_require_runtime admission since 0.63.4 (cartography honesty)"
         ),
     },
+    {
+        "id": "flows.continue_session",
+        "slice": "0.63.30",
+        "law": (
+            "FlowSession input / resume / backtrack require admission via "
+            "flows.admission_gate() · host injects admission_source · "
+            "cancel stays control residual"
+        ),
+    },
+    {
+        "id": "flows.admission_oath",
+        "slice": "0.63.30",
+        "law": (
+            "FlowExecutionService.admission_source inject · admission_gate() · "
+            "same helper as assist (no product base)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -359,6 +376,34 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid product continue edge",
         "status": "paid_0_63_29",
+    },
+    {
+        "id": "flows.continue_edge",
+        "note": (
+            "0.63.30: FlowSession input / resume / backtrack gate on "
+            "flows.admission_gate(); host injects admission_source via "
+            "admission_source_from_runtime_resolver (oath boy-scout)."
+        ),
+        "intent": "paid product continue edge + inject",
+        "status": "paid_0_63_30",
+    },
+    {
+        "id": "flows.session_cancel_ungated",
+        "note": (
+            "FlowSession.cancel remains without business admission so product "
+            "can stop work when the organism is closed."
+        ),
+        "intent": "name residual — control path (SD-020)",
+        "status": "named_0_63_30",
+    },
+    {
+        "id": "runtime.cancel_job_ungated",
+        "note": (
+            "BaseRuntime.cancel_job / CQRS CancelJobCommand remain without "
+            "business admission for operator stop and shutdown."
+        ),
+        "intent": "name residual — control path, not market-day start (SD-020)",
+        "status": "named_0_63_30",
     },
 )
 

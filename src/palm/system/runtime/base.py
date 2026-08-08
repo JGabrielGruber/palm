@@ -477,7 +477,11 @@ class BaseRuntime:
         return self.orchestration.get_job(job_id)
 
     def cancel_job(self, job_id: str) -> bool:
-        """Cancel a non-terminal job."""
+        """Cancel a non-terminal job — control path (not admission citizen).
+
+        **0.63.30 named residual:** remains available when admission is closed
+        so operators and shutdown can stop work (same spirit as stop_workload).
+        """
         self._require_started()
         return self.orchestration.cancel_job(job_id)
 

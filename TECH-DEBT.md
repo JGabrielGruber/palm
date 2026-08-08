@@ -170,7 +170,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.27** product start/continue + planes. **0.63.28** host outbox composition king. **0.63.29** — assist continue edge (input/resume/backtrack) + `resume_process` cartography; assist cancel named residual.
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.29** product start/continue + planes + assist edge. **0.63.30** — flow continue edge + admission inject; cancel_job / flow cancel named residual.
 
 **Named residual (not this door — not architecture):**
 
@@ -180,8 +180,10 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 | Direct **`ResourceEngine.invoke`** | **Unit / non-port** free; **pretender** if product digs | Port law **0.63.24** |
 | **`stop_workload` / stop_owned** | Control path when admission closed | **named_0_63_27** — shutdown must work |
 | **Assist session cancel** | Control path when admission closed | **named_0_63_29** — operator stop must work |
+| **Flow cancel · `cancel_job`** | Control path when admission closed | **named_0_63_30** — operator stop must work |
 | Wait plane orch resume | **Paid 0.63.26** | able before resume |
 | Assist continue edge | **Paid 0.63.29** | oath gate on input/resume/backtrack |
+| Flow continue edge + inject | **Paid 0.63.30** | oath gate + host `admission_source` |
 | Outbox bare runtime `enable_event_outbox` | Packaging for non-host shells | **named_0_63_28** (host path **paid**) |
 | Host packaging eyes (CS-002) | Eyes residual | **named_0_63_23** |
 | More product doors as map shows them | Open growth | Inventory tower + migration |

@@ -65,9 +65,16 @@ class FlowSession:
         return self.context().to_dict()
 
     def input(self, value: Any, *, params: dict[str, Any] | None = None) -> SessionContext:
-        """Deliver interactive input; returns updated session context."""
-        params = params or {}
+        """Deliver interactive input (product continue citizen).
+
+        **0.63.30:** requires admission via published ``flows.admission_gate()``
+        (oath — same law as assist continue / provide_input).
+        """
         from palm.common.operator.mutation_gate import assert_on_write, should_validate_mutation
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._flows.admission_gate())
+        params = params or {}
 
         if should_validate_mutation(params):
             view = self._flows.inspect_session(self.session_id)
@@ -106,7 +113,13 @@ class FlowSession:
         return ctx
 
     def backtrack(self, to_step: str | None = None) -> SessionContext:
-        """Backtrack an interactive flow to a prior step."""
+        """Backtrack an interactive flow (product continue citizen).
+
+        **0.63.30:** requires admission via published ``flows.admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._flows.admission_gate())
         runtime = self._flows.resolve_runtime()
         try:
             _job, target = request_interactive_backtrack_for_instance(
@@ -125,7 +138,13 @@ class FlowSession:
         return ctx
 
     def resume(self) -> FlowSession:
-        """Re-drive a waiting interactive flow (for example auto-run a resource step)."""
+        """Re-drive a waiting interactive flow (product continue citizen).
+
+        **0.63.30:** requires admission via published ``flows.admission_gate()``.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self._flows.admission_gate())
         runtime = self._flows.resolve_runtime()
         try:
             job = resolve_interactive_job(runtime, self.session_id)
@@ -144,7 +163,11 @@ class FlowSession:
         return self
 
     def cancel(self) -> dict[str, Any]:
-        """Cancel the orchestration job backing this session."""
+        """Cancel the orchestration job — control path (not admission citizen).
+
+        Stays available when admission is closed (named residual under SD-020,
+        same spirit as stop_workload / assist cancel).
+        """
         view = self._flows.inspect_session(self.session_id)
         job_id = str(view.get("job_id") or self.session_id)
         result = self._flows.dispatch_command(CancelJobCommand(job_id=job_id))
