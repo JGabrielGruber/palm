@@ -46,11 +46,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [029](029-system-supervisor.md) | System supervisor + work plane on SystemInstance (0.60) | Accepted |
 | [030](030-system-vitality.md) | System vitality — living-kernel observation (0.61) | Accepted |
 | [031](031-multi-claimer-work-drain.md) | Multi-claimer work drain — exclusive claim first (0.62) | Accepted |
+| [032](032-organism-assembly.md) | Organism assembly — DNA · admission · single readiness (0.63) | Proposed |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
 **Next free number:** 032.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** all **closed** (ADR-026…031 Accepted). Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md) · [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md).
+**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** all **closed** (ADR-026…031 Accepted). **Active:** assembly **0.63** ([VISION-0.63](../vision/VISION-0.63.md) · [ADR-032](032-organism-assembly.md) Proposed · debt [SD-020](../../TECH-DEBT.md#sd-020) / [SD-021](../../TECH-DEBT.md#sd-021)). Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-TUNNELS](../vision/VISION-TUNNELS.md) · [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md).
 
 ## How to add an ADR
 

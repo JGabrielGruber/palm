@@ -1,11 +1,12 @@
 # VISION — Assembly (organism truth · tree scale)
 
-**Status:** 📋 **Queue seed** — named **2026-08-05** · **refined 2026-08-07** (roles · ports · transformation). Not an open minor. José may open a theme when the floor is ready.  
+**Status:** 📗 **Seed essay (normative law)** — theme **open** as **[VISION-0.63](VISION-0.63.md)** at `0.63.0` · [ADR-032](../adr/032-organism-assembly.md) **Proposed**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08**.  
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
+**Active plan:** [VISION-0.63](VISION-0.63.md) — gate · DNA · coherence · slices. This file keeps **roles · ports · citizenship · modules**.  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
-**Horizon order:** this seed → [VISION-TUNNELS](VISION-TUNNELS.md) (reach · neighborhood) → [VISION-GROVE](VISION-GROVE.md) (multi-Palm org). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
-**Debt touchpoints:** workload remainder · host/profile glue · catalog wire residual · product dig into composition root · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
+**Horizon order:** **0.63 assembly** → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
+**Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
 
 ---
 
@@ -18,7 +19,8 @@ That glue multiplies when Palm scales past one process.
 
 This file names the **missing home** and the **reassembly of the organism** around it.  
 It names **roles**, **ports**, and **what every layer must change**.  
-It does **not** open a theme. It does **not** replace boot, orchestration, or the workload plane.
+**Theme open:** [VISION-0.63](VISION-0.63.md). This essay remains the deep law; the minor owns slices and exit.  
+It does **not** replace boot, orchestration, or the workload plane.
 
 **Duty:** write the structure Palm will grow into — realistic, named, honest about what we cannot do yet.  
 **Posture (from 0.57+):** plan the home; engine then alternate path; validate; migrate; clean. Prefer 80/20. Complete what is open. Put debt where a theme can own it. Prefer proper over hot glue.
@@ -424,32 +426,22 @@ Palm’s rare packaging: **assembly** next to **orchestration** and **workload**
 
 ---
 
-## 12. Growth path (when José opens a theme)
+## 12. Growth path (theme **0.63** open)
 
-Same rhythm: **engine → alternate path → validate → migrate → clean**.
+Same rhythm: **engine → alternate path → validate → migrate · clean**.  
+**Authoritative slice table:** [VISION-0.63](VISION-0.63.md) §9. Summary:
 
 | Stage | Spirit |
 |-------|--------|
-| **Floor** | Core types + engine + pure tests; system loop + effect port + small handler set; one alternate DNA (all-in-one or light center); admission on at least one business start path; single readiness truth on that path |
-| **Growth** | Profiles as seeds only; more place kinds; worker projection; adopt external places; vitality/inspect show assembly status; optional plan/BT-shaped ensure walk (**not** business flow domain); authority push → reassemble |
-| **Later / Grove** | Multi-host tree, hop limits, proxy-through-center, org crown |
-| **Non-goals for first theme** | Full mesh; replace orchestration; force every boot to fork support+worker; CAS multi-process claim (SD-019 unless natural); full surface purge; product-owned reassemble |
-
-**Staged delivery (guide, not sealed kill list):**
-
-| Order | Deliverable |
-|-------|-------------|
-| 0 | Core definition/status/intent/observation/engine + pure tests |
-| 1 | System loop + effect port + one or two live handlers + one DNA path |
-| 2 | Admission **law** on citizen starts (work drain minimum); pretenders on that path **break** |
-| 3 | Profile → definition seed map for that path; kill dual structure on that path |
-| 4 | Projection invalidate + truth-home observation |
-| 5 | Vitality / inspect present |
-| … | Widen the **same** gate to remaining pretenders; reassemble channel; structure seed |
+| **Floor** | Core types + thin engine; **embedded** DNA; system admission; one citizen fail-closed; coherence suite (red = map) |
+| **Growth** | cli/server DNA; more citizens; profiles/env as seed only; intents/handlers; projection; vitality/inspect; reassemble |
+| **Unplanned** | Break inventory and unknown impact — reserved slices |
+| **Later / Grove** | Multi-host tree, tunnels, org crown |
+| **Non-goals for 0.63** | Full mesh; replace orchestration; force light-center every boot; CAS (SD-019 unless natural); full surface purge; product-owned reassemble |
 
 Order is **how the wall is built**, not permission for side doors. See §6.4.
 
-**80/20:** one real definition-ready path beats a perfect cluster brochure.
+**80/20:** one real fail-closed path under embedded DNA beats a perfect cluster brochure.
 
 **Boy scout:** when assembly touches host glue or catalog wire, move truth toward definition + handler — do not only relocate menus ([AGENTS §1.1](../../AGENTS.md)).
 
@@ -534,15 +526,18 @@ Palm did not always know what it wanted. Past code is history and teacher — no
 
 ---
 
-## 18. Open decisions (close when theme opens)
+## 18. Open decisions (theme open — close in slices)
 
-1. Exact package paths (`palm.core.assembly` + `palm.system.assembly` preferred; confirm at open).  
-2. Assembly definition storage and how authority serves it.  
-3. Worker truth home: center only vs support place direct.  
-4. How much ensure-plan / BT grammar on day one vs linear tick.  
-5. Seed map: DeploymentProfile / composition → definition fields.  
-6. Which start paths check admission on floor (work drain minimum).  
-7. ADR number when theme opens (append-only).
+**Closed at 0.63.0:** packages prefer `palm.core.assembly` + `palm.system.assembly`; first DNA **embedded**; env = seed + packaging; ADR-**032**; coherence suite as truth instrument; full-in law / staged purge; exit = José’s feel.
+
+**Still open (learn in slices):**
+
+1. Exact admission snapshot and DNA id type names.  
+2. First citizen path lock (work plane preferred if honest).  
+3. How thin floor DNA fields are before place intents.  
+4. Whether cli DNA is required before José’s exit feel.  
+5. Authority pull and definition storage (not floor).  
+6. Worker truth home / ensure-plan grammar (growth).
 
 ---
 

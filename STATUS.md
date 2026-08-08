@@ -1,31 +1,52 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.62.8` · **Active theme:** *(none — capacity closed)* · **Prior closed:** **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 7, 2026 · **Theme closed:** **0.62.8** — ADR-031 Accepted · José exit · **Assembly seed refined** (roles · ports · transformation)  
-**System map:** [docs/PALM.md](docs/PALM.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted** · closed [VISION-0.61](docs/vision/closed/VISION-0.61.md) · [ADR-030](docs/adr/030-system-vitality.md) **Accepted**  
-**Migration / release:** [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md) · prior [MIGRATION-0.61](docs/migrations/MIGRATION-0.61.md) · [RELEASE-0.61.13](docs/releases/RELEASE-0.61.13.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-017** / **SD-018** ✅ · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** / **BI-015** · paid residual **SU-004** · **BI-014** · **CS-005** (hot-path partial) · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · assembly seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Current Version:** `0.63.0` · **Active theme:** **`0.63` Organism assembly** · **Prior closed:** **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
+**Last Updated:** August 8, 2026 · **Theme open:** **0.63.0** — plan + ADR-032 Proposed · gate · DNA · single readiness  
+**System map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.63](docs/vision/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Proposed** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
+**Migration / release:** [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) (grows) · prior [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** (0.63) · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-book scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect door (closed)** · **capacity / multi-claimer (closed)** · [assembly](docs/vision/VISION-ASSEMBLY.md) → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-book scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect** · **capacity / multi-claimer** · **assembly (open 0.63)** → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [PALM.md](docs/PALM.md) (**§8 scale**: two axes · recursion · assembly → tunnels → Grove) → residual [TECH-DEBT.md](TECH-DEBT.md) (**SD-019** · **SD-016** · SU/BI) → closed capacity [VISION-0.62](docs/vision/closed/VISION-0.62.md) if needed.
+Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (law) → [PALM.md](docs/PALM.md) · [TECH-DEBT.md](TECH-DEBT.md) (**SD-020** · **SD-021** · **SD-019** · **SD-016**).
 
 | Spirit | Decision |
 |--------|----------|
+| **0.63 open** | Organism assembly — DNA · admission · gate first · purge pretenders |
+| **Floor** | Core assembly + embedded DNA + one citizen fail-closed + coherence suite |
+| **Growth** | More DNA (cli/server) · more citizens · intents · seed map · eyes present |
+| **Unplanned** | Reserve slices for break inventory — unknown impact allowed |
+| **Exit** | **José** when readiness feels proper — not checklist theater |
+| **ADR** | [032](docs/adr/032-organism-assembly.md) **Proposed** until exit |
 | **0.62 closed** | Multi-claimer capacity proper; stamp `0.62.8` · ADR-031 Accepted |
-| **Floor paid** | Exclusive claim + reclaim (same API at `workers=1`) — **SD-017** ✅ |
-| **Growth paid** | N drain workers · exclusive drive · Queued pool · vitality 1 vs K — **SD-018** ✅ |
-| **Residual** | Multi-process shared claim needs CAS — **SD-019**; one drain owner per store |
-| **0.61 closed** | Living-kernel **vitality** — eyes proper; stamp `0.61.13` · ADR-030 Accepted |
-| **Vitality home** | **`palm.system.vitality`** — seat walk · projection · registry · process/bulk/benchmark |
-| **Inspect door** | **`palm.services.inspect` / `InspectService`** · top/vitality/benchmark · **SD-007** ✅ |
-| **0.60 closed** | Planes = start/continue; supervisor = continuous; inbound on system |
-| **Host** | Packaging residual; plane-only work drain; product packaging shared (BI-003 floor) |
-| **Next seeds** | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (**refined 2026-08-07**: authority · reconciler · admission · port-only clients · reassemble) → [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder · **SD-019** · **SD-016** |
-| **Later** | `monitor_agent` · user-plane · Grove org crown · edge/cloud phenotypes |
+| **Residual capacity** | Multi-process shared claim CAS — **SD-019** |
+| **Later seeds** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
+
+## 0.63 — Organism assembly (**open** · plan `0.63.0`)
+
+**Vision:** [docs/vision/VISION-0.63.md](docs/vision/VISION-0.63.md) · **Seed law:** [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)  
+**ADR:** [docs/adr/032-organism-assembly.md](docs/adr/032-organism-assembly.md) **Proposed**  
+**Migration:** [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md)  
+**Debt:** [TECH-DEBT.md](TECH-DEBT.md) **SD-020** · **SD-021** · boy-scout **SD-016**  
+**Map:** [docs/PALM.md](docs/PALM.md) · prior capacity [VISION-0.62](docs/vision/closed/VISION-0.62.md)
+
+**Theme purpose:** One structure reconciler between boot and business — DNA as structure king, admission as one gate (fail closed), household assemble, purge pretenders, coherence suite as truth instrument. Env seeds and packages; profiles shrink to seed. First DNA: **embedded**. Not Grove. Not replace orchestration. Not surface compost.
+
+| Patch | Status |
+|-------|--------|
+| **0.63.0** | ✅ plan + ADR-032 Proposed + SD-020/021 + STATUS |
+| **0.63.1** | ⬜ core assembly types + thin engine + pure tests |
+| **0.63.2** | ⬜ system admission + household assemble (embedded DNA) |
+| **0.63.3** | ⬜ raise gate — one citizen fail-closed + break inventory |
+| **0.63.4** | ⬜ coherence suite home + negative citizenship |
+| **0.63.5+** | ⬜ seed map · swallow citizens · more DNA · intents · eyes |
+| **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
+| **exit** | ⬜ José judges · ADR Accepted · residual named |
+
+**Floor:** core + embedded DNA + one gate + coherence instrument. **Growth:** dogfood DNA, more citizens, purge. **Exit:** José feels readiness proper.
 
 ## 0.62 — Multi-claimer work drain (**closed** · theme exit `0.62.8`)
 

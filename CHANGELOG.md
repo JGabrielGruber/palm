@@ -4,6 +4,21 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.63.0] — 2026-08-08
+
+### 0.63 — Organism assembly (**theme open**)
+
+Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · ADR: [032](docs/adr/032-organism-assembly.md) **Proposed** · Migration: [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md)
+
+#### Plan (0.63.0)
+- **Theme open** — DNA · admission gate · single readiness · purge pretenders  
+- Floor: core assembly + **embedded** DNA + one citizen fail-closed + coherence suite (truth instrument)  
+- Growth: cli/server DNA · more citizens · seed map · intents · eyes present  
+- Unplanned reserve slices for break inventory (unknown impact allowed)  
+- Env = seed + packaging; not dual structure king  
+- Debt named: **SD-020** (dual readiness) · **SD-021** (profile/env structure dual)  
+- Exit: **José** when readiness feels proper  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
