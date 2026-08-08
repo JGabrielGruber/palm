@@ -5,9 +5,20 @@ System applies effect intents; clients use :class:`AdmissionSnapshot`.
 """
 
 from palm.core.assembly.definition import (
+    LOCAL_ALL_IN_ONE_ID,
+    LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
+    LOCAL_MCP_ID,
+    LOCAL_SERVER_ID,
+    LOCAL_WORKER_ID,
     AssemblyDefinition,
+    local_all_in_one,
+    local_cli,
     local_embedded,
+    local_mcp,
+    local_server,
+    local_worker,
+    resolve_builtin_dna,
 )
 from palm.core.assembly.engine import AssemblyEngine
 from palm.core.assembly.exceptions import (
@@ -25,7 +36,12 @@ from palm.core.assembly.status import (
 )
 
 __all__ = [
+    "LOCAL_ALL_IN_ONE_ID",
+    "LOCAL_CLI_ID",
     "LOCAL_EMBEDDED_ID",
+    "LOCAL_MCP_ID",
+    "LOCAL_SERVER_ID",
+    "LOCAL_WORKER_ID",
     "AdmissionSnapshot",
     "AssembleResult",
     "AssemblyDefinition",
@@ -39,5 +55,11 @@ __all__ = [
     "NoDefinitionError",
     "Observation",
     "ObservationKind",
+    "local_all_in_one",
+    "local_cli",
     "local_embedded",
+    "local_mcp",
+    "local_server",
+    "local_worker",
+    "resolve_builtin_dna",
 ]

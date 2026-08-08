@@ -42,7 +42,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.2** | ✅ system assembly seat · `system.assembly.assemble` · shell `admission` · embedded DNA default |
 | **0.63.3** | ✅ raise gate — work-plane `able` = started ∧ admission · fail closed · break inventory |
 | **0.63.4** | ✅ coherence suite · `guard-assembly` · submit_flow/process gated (`AdmissionRefusedError`) |
-| **0.63.5+** | ⬜ seed map · more citizens · more DNA · intents · eyes |
+| **0.63.5** | ✅ DNA seed map — builtins cli/server/… · host mode/composition → decree |
+| **0.63.6+** | ⬜ remaining pretenders · membership enforce from refuse · eyes · intents |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

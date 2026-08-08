@@ -42,15 +42,24 @@ Impact is discovered as the gate rises. This file **grows** when paths break —
 
 Runtime doubles used with `DefinitionExecutor` must publish an `admission` snapshot (no silent bypass).
 
+## Behavior changes (0.63.5)
+
+| Was | Now |
+|-----|-----|
+| Always `local.embedded` default DNA | Host seeds DNA from **boot mode** or **composition** |
+| — | `ApplicationHost.for_mode("cli")` → `local.cli`; `safe`/`test` → `local.embedded`; server/prod → `local.server` |
+| — | Explicit `assembly_dna_id` / `assembly_definition` still wins |
+
 ### Break inventory (pretenders)
 
 | Path | Status |
 |------|--------|
 | Work-plane tick / drain | **Gated** (0.63.3) |
 | `submit_flow` / `submit_process` (executor) | **Gated** (0.63.4) |
+| DNA id from real dogfood shapes | **Seeded** (0.63.5) — refuse not yet hard-enforced on membership |
 | Assist / MCP packaging soft-ready | Open pretender |
-| Host soft “definitions ready” dual flags | Open pretender (SD-020 / SD-021) |
-| Unit tests that inject `able=lambda: True` | Local test double — ok; not production law |
+| Host soft “definitions ready” dual flags | Open pretender (SD-020 remainder) |
+| Composition dual structure after DNA load | Partial — seed map done; purge host dual flags later (SD-021) |
 
 ## Expected direction of break (honest early)
 

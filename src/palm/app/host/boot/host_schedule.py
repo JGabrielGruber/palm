@@ -56,6 +56,16 @@ def build_host_handlers(
 
     def system_spawn(_ctx: BootContext) -> None:
         merged = runtime_start_options(host.settings, **options)
+        # 0.63.5 — seed DNA from boot mode / composition unless caller set one.
+        if (
+            not merged.get("assembly_skip")
+            and not merged.get("skip_assembly")
+            and "assembly_definition" not in merged
+            and "assembly_dna_id" not in options
+        ):
+            from palm.system.assembly.seed import seed_assembly_options_from_host
+
+            merged.update(seed_assembly_options_from_host(host))
         host._spawner.spawn_runtimes(merged)
 
     def definitions_load(_ctx: BootContext) -> None:

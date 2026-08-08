@@ -9,7 +9,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from palm.core.assembly import AssemblyDefinition, local_embedded
+from palm.core.assembly import AssemblyDefinition, resolve_builtin_dna
 from palm.system.assembly.effects import RecordingEffectPort
 from palm.system.assembly.seat import AssemblySeat
 from palm.system.boot.context import BootContext
@@ -27,14 +27,7 @@ def _resolve_definition(options: Mapping[str, Any]) -> AssemblyDefinition:
         return AssemblyDefinition.from_dict(raw)
     dna_id = str(options.get("assembly_dna_id") or "local.embedded")
     version = str(options.get("assembly_dna_version") or "1")
-    if dna_id in ("local.embedded", "embedded"):
-        return local_embedded(version=version)
-    # Unknown id — still build a thin DNA with that id (growth will expand)
-    return AssemblyDefinition(
-        id=dna_id,
-        version=version,
-        role_intent=str(options.get("assembly_role_intent") or "embedded"),
-    )
+    return resolve_builtin_dna(dna_id, version=version)
 
 
 def run(ctx: BootContext, options: Mapping[str, Any]) -> None:

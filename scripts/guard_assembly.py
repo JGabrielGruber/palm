@@ -23,6 +23,7 @@ def main() -> int:
         "tests/test_assembly_gate_0_63_3.py",
         "--tb=short",
     ]
+    # tests/assembly includes seed map (0.63.5) and coherence gate (0.63.4)
     print("🔒 Assembly coherence suite (fail-closed / single readiness)...")
     return subprocess.call(cmd)
 

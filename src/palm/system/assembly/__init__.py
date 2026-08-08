@@ -12,6 +12,12 @@ from palm.system.assembly.loop import (
     load_and_assemble,
 )
 from palm.system.assembly.seat import AssemblySeat
+from palm.system.assembly.seed import (
+    dna_id_for_boot_mode,
+    dna_id_for_composition,
+    resolve_seed_dna,
+    seed_assembly_options_from_host,
+)
 
 __all__ = [
     "DEFAULT_MAX_TICKS",
@@ -21,6 +27,10 @@ __all__ = [
     "AssemblySeat",
     "RecordingEffectPort",
     "assemble_until_steady",
+    "dna_id_for_boot_mode",
+    "dna_id_for_composition",
     "load_and_assemble",
     "require_business_admission",
+    "resolve_seed_dna",
+    "seed_assembly_options_from_host",
 ]

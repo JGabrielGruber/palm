@@ -169,7 +169,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.2** seats · **0.63.3** work-plane gated · **0.63.4** submit_flow/process gated + coherence suite. Residual: assist/MCP soft-ready, host dual flags, SD-021 seed map — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
+**Progress:** **0.63.1–0.63.5** seats · gates · coherence · DNA seed map. Residual: refuse/membership enforce, assist soft-ready, host dual flags — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode.
 
@@ -188,9 +188,11 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63 growth:** Map entry/mode/env into **DNA seed**; after load, assembly status is structure truth; packaging env stays; structure pretender toggles purge or residual kill-date. First DNA: **embedded**; dogfood: cli / server.
 
+**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. Residual: enforce refuse against composition dual; kill soft-ready dual flags.
+
 **Do not:** Leave profiles as public dual structure forever “for compatibility.” Remove packaging env wholesale.
 
-**Status:** open (named at 0.63.0).
+**Status:** open (seed map partial — enforce remaining).
 
 ---
 

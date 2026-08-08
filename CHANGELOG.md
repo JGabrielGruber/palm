@@ -43,6 +43,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Work plane + submit share one admission law  
 - Residual pretenders: assist/MCP packaging soft-ready; host dual flags; SD-021 seed map  
 
+#### DNA seed map (0.63.5)
+- Builtin DNA: `local.embedded` · `local.cli` · `local.server` · `local.all_in_one` · `local.worker` · `local.mcp`  
+- `resolve_builtin_dna` · `palm.system.assembly.seed` — mode/composition → decree  
+- Host `system.spawn` seeds DNA unless caller set `assembly_dna_id` / definition  
+- Profiles remain seed choosers, not parallel structure kings after load  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
