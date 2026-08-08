@@ -1,0 +1,91 @@
+"""0.63.24 — product resource invoke is a citizen (admission fail closed)."""
+
+from __future__ import annotations
+
+import pytest
+
+from palm.system.assembly.errors import AdmissionRefusedError
+from palm.system.assembly.inventory import GATED_CITIZENS, kingdom_map
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+
+
+def test_invoke_resource_refused_when_assembly_skipped() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_skip=True,
+    )
+    try:
+        assert rt.admission.may_run_business is False
+        with pytest.raises(AdmissionRefusedError):
+            rt.invoke_resource("any-ref", action="get")
+    finally:
+        rt.stop()
+
+
+def test_invoke_resource_refused_when_dna_refuse_blocks() -> None:
+    """Embedded DNA + work_drain membership → admission blocked → no product invoke."""
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_dna_id="local.embedded",
+        assembly_capabilities=["work_drain"],
+    )
+    try:
+        assert rt.admission.may_run_business is False
+        with pytest.raises(AdmissionRefusedError):
+            rt.invoke_resource("any-ref", action="get")
+    finally:
+        rt.stop()
+
+
+def test_invoke_resource_allowed_when_admitted() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+    )
+    try:
+        assert rt.admission.may_run_business is True
+        # Definition/provider may fail for other reasons; admission must not refuse first.
+        try:
+            rt.invoke_resource("nonexistent-resource-ref", action="get")
+        except Exception as exc:
+            assert not isinstance(exc, AdmissionRefusedError)
+            assert "Admission" not in type(exc).__name__
+    finally:
+        rt.stop()
+
+
+def test_household_resource_engine_not_gated_by_port() -> None:
+    """Direct ResourceEngine.invoke is not the ExecutionPort citizen door."""
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        assembly_skip=True,
+    )
+    try:
+        engine = rt.resource
+        assert engine is not None
+        if not engine.is_initialized:
+            engine.initialize()
+        try:
+            engine.invoke("any-ref", action="get")
+        except Exception as exc:
+            assert not isinstance(exc, AdmissionRefusedError)
+    finally:
+        rt.stop()
+
+
+def test_inventory_lists_invoke_resource_citizen() -> None:
+    ids = {row["id"] for row in GATED_CITIZENS}
+    assert "execution.invoke_resource" in ids
+    assert kingdom_map()["gated_count"] >= len(GATED_CITIZENS)

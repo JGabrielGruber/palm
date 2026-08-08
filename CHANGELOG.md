@@ -152,6 +152,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `work_plane.able_fail_closed` gated · pretenders paid/named  
 - Coherence: `tests/assembly/test_able_fail_closed_0_63_23.py`  
 
+#### Resource invoke citizen (0.63.24)
+- **`BaseRuntime.invoke_resource`** — `require_business_admission` before resource engine (product / graph citizen)  
+- Direct **`ResourceEngine.invoke`** stays ungated (unit / non-port path — not ExecutionPort)  
+- Kingdom: `execution.invoke_resource` gated  
+- Coherence: `tests/assembly/test_invoke_resource_gate_0_63_24.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

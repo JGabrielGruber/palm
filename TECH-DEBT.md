@@ -170,11 +170,11 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20** — product `start_workload` citizen. **0.63.21** — assist scenario start + menu open create gated; menu admission honesty. **0.63.22** — assist `admission_source` inject / `admission_gate()` oath. **0.63.23** — work-plane able fail-closed default; packaging admission helper; host soft dual residual named (eyes only). Residual: more product doors, packaging duals — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20** — product `start_workload` citizen. **0.63.21** — assist scenario start + menu open create gated; menu admission honesty. **0.63.22** — assist `admission_source` inject / `admission_gate()` oath. **0.63.23** — work-plane able fail-closed default; packaging admission helper; host soft dual residual named (eyes only). **0.63.24** — product `invoke_resource` citizen. Residual: more product doors, packaging duals — [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md).
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode.
 
-**Status:** open (floor + submit + workload + assist + able fail-closed; more citizens remain).
+**Status:** open (floor + submit + workload + assist + able fail-closed + resource invoke; more citizens remain).
 
 ---
 

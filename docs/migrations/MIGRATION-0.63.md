@@ -188,6 +188,15 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 
 **Break only for custom attach** that assumed soft-open drain without wiring `able`. Host/runtime path already binds `started ∧ admission`. Unit drain tests must pass `able=lambda: True` when testing mechanics without assembly.
 
+## Behavior changes (0.63.24) — resource invoke citizen
+
+| Was | Now |
+|-----|-----|
+| `ExecutionPort.invoke_resource` only needed a started machine / engine | Also **`admission.may_run_business`** or **`AdmissionRefusedError`** |
+| Product / MCP / host resource invoke could run under dual soft-ready | Same gate as submit_flow / start_workload / work plane |
+
+**Not this door:** direct **`ResourceEngine.invoke`** (unit tests, engine packaging) — not the ExecutionPort citizen path. Graph effects and product services go through the port.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

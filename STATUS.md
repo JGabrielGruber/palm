@@ -61,7 +61,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.21** | ✅ assist start citizen — scenario start + open flow create · menu admission / `start_allowed` |
 | **0.63.22** | ✅ assist admission oath — inject `admission_source` · gates via `admission_gate()` (no runtime dig) |
 | **0.63.23** | ✅ work-plane able fail-closed default · `admission_source_from_runtime_resolver` helper · host soft dual named |
-| **0.63.24+** | ⬜ more citizens / pretender purge · residual packaging duals named |
+| **0.63.24** | ✅ product resource invoke citizen — `ExecutionPort.invoke_resource` admission gate |
+| **0.63.25+** | ⬜ more citizens / pretender purge · residual packaging duals named |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

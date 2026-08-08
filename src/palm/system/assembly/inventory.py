@@ -153,6 +153,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "helper (shape without product base)"
         ),
     },
+    {
+        "id": "execution.invoke_resource",
+        "slice": "0.63.24",
+        "law": (
+            "ExecutionPort.invoke_resource requires admission · direct "
+            "ResourceEngine.invoke remains ungated (unit / non-port path)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.

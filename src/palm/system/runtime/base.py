@@ -505,7 +505,16 @@ class BaseRuntime:
         resource_id: str | None = None,
         correlation: dict[str, Any] | None = None,
     ) -> Any:
-        """Invoke a resource via the resource engine (ExecutionPort)."""
+        """Invoke a resource via the resource engine (ExecutionPort).
+
+        **0.63.24 citizen:** product / graph resource effects through this port
+        require admission (same law as submit_flow / start_workload). Direct
+        ``ResourceEngine.invoke`` remains available for unit / household paths
+        that are not product business doors.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self)
         engine = self.resource
         if not engine.is_initialized:
             engine.initialize()
