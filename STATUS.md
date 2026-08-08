@@ -73,7 +73,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.33** | ✅ host packaging market-day — submit/provide/resume/invoke + CQRS · kernel dig named |
 | **0.63.34** | ✅ surface fealty — CLI/SSR dig host; wizard CQRS continue gate; host.resume_job |
 | **0.63.35** | ✅ REST admission voice — `admission_refused` 503 (not submit_failed 500) |
-| **0.63.36+** | ⬜ residual packaging duals named · exit readiness José |
+| **0.63.36** | ✅ MCP + WebSocket admission voice — 503 / code `admission_refused` |
+| **0.63.37+** | ⬜ residual packaging duals named · exit readiness José |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

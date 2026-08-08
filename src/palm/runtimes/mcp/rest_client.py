@@ -21,6 +21,31 @@ class PalmRestError(RuntimeError):
         super().__init__(f"Palm REST {status}: {message}")
 
 
+def admission_refused_error(detail: str) -> PalmRestError:
+    """Organism gate closed — honest MCP/in-process voice (0.63.36).
+
+    Matches REST ``503 admission_refused`` so clients do not treat closed gate
+    as a generic 500 or 400 validation failure.
+    """
+    return PalmRestError(
+        503,
+        {
+            "error": "admission_refused",
+            "message": detail,
+            "detail": detail,
+        },
+    )
+
+
+def maybe_admission_refused_error(exc: BaseException) -> PalmRestError | None:
+    """Map :class:`AdmissionRefusedError` to PalmRestError; else ``None``."""
+    from palm.system.assembly.errors import AdmissionRefusedError
+
+    if isinstance(exc, AdmissionRefusedError):
+        return admission_refused_error(str(exc))
+    return None
+
+
 class PalmRestClient:
     """Synchronous REST proxy used by MCP tools and resources."""
 
@@ -451,4 +476,9 @@ def _flow_id_from_submit_body(body: dict[str, Any]) -> str | None:
     return None
 
 
-__all__ = ["PalmRestClient", "PalmRestError"]
+__all__ = [
+    "PalmRestClient",
+    "PalmRestError",
+    "admission_refused_error",
+    "maybe_admission_refused_error",
+]

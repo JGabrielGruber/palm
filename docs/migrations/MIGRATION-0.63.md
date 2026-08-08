@@ -329,6 +329,16 @@ Product façades (assist · flows · execution services) remain the preferred pe
 
 **Not a break** for happy path when admitted. Clients that only checked for 500 on submit may need to treat **503 + `admission_refused`** as retry-when-ready (organism closed), not as a server bug.
 
+## Behavior changes (0.63.36) — MCP + WebSocket admission voice
+
+| Was | Now |
+|-----|-----|
+| MCP in-process closed-gate often **500** or **400** `PalmRestError` | **503** + `error: admission_refused` |
+| WebSocket assist closed-gate **`internal`** | Error code **`admission_refused`** |
+| HTTP MCP via REST | Already honest after **0.63.35** |
+
+**Not a break** for happy path when admitted. Agents/tools that only matched generic errors should treat **`admission_refused`** as organism closed, not tool bug.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

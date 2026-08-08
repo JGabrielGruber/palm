@@ -280,6 +280,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "and continue handlers"
         ),
     },
+    {
+        "id": "surface.mcp_ws_admission_voice",
+        "slice": "0.63.36",
+        "law": (
+            "MCP in-process PalmRestError 503 admission_refused + "
+            "WebSocket assist error code admission_refused (not internal/"
+            "500/400) on market-day and continue"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -534,6 +543,17 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid REST honest voice for closed gate",
         "status": "paid_0_63_35",
+    },
+    {
+        "id": "surface.mcp_ws_admission_voice_edge",
+        "note": (
+            "0.63.36: MCP maybe_admission_refused_error → PalmRestError 503 "
+            "admission_refused on in-process market-day/continue; WebSocket "
+            "assist maps AdmissionRefusedError to code admission_refused "
+            "(not internal). HTTP MCP inherits REST voice via bridge."
+        ),
+        "intent": "paid MCP + WS honest voice for closed gate",
+        "status": "paid_0_63_36",
     },
 )
 

@@ -188,5 +188,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.33** — Host packaging market-day: `submit_flow` / `submit_process` / `provide_input` / `resume_process` / `invoke_resource` + CQRS Submit*/Provide*/Resume*/PreparePlans/SubmitPlans fail-closed on admission; cancel residual; kernel/runtime dig **named** residual (port still law).  
 - **0.63.34** — Surface fealty: CLI resume/invoke and SSR explorer invoke/resume route through host (or admit+port host-less); wizard CQRS Provide/Backtrack edge admission; `host.resume_job` packaging door.  
 - **0.63.35** — REST honest voice: `AdmissionRefusedError` → **503 `admission_refused`** (not 500 `submit_failed` / not 400 `input_rejected`) on market-day and continue REST handlers.  
-- Next: residual packaging duals named · exit readiness (**0.63.36+**).  
+- **0.63.36** — MCP in-process + WebSocket assist honest voice: **503 / code `admission_refused`** (not fake 500 or WS `internal`).  
+- Next: residual packaging duals named · exit readiness (**0.63.37+**).  
 - Accept + theme close when José judges readiness proper.

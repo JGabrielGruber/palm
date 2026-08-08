@@ -28,7 +28,11 @@ from palm.runtimes.mcp.flows.views import (
     session_context_dict,
     submission_view,
 )
-from palm.runtimes.mcp.rest_client import PalmRestError, _process_id_from_body
+from palm.runtimes.mcp.rest_client import (
+    PalmRestError,
+    _process_id_from_body,
+    maybe_admission_refused_error,
+)
 from palm.runtimes.server.surfaces.rest.openapi import build_openapi_spec
 from palm.services.execution.flows import flow_command_from_body
 from palm.states import BlackboardState
@@ -138,6 +142,8 @@ class PalmInProcessBackend:
         except (TypeError, ValueError, KeyError) as exc:
             raise PalmRestError(400, str(exc)) from exc
         except Exception as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
             raise PalmRestError(500, str(exc)) from exc
         return submission_view(result if isinstance(result, dict) else {"result": result})
 
@@ -184,6 +190,8 @@ class PalmInProcessBackend:
         except TypeError as exc:
             raise PalmRestError(400, str(exc)) from exc
         except (ValueError, RuntimeError) as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
             raise PalmRestError(400, str(exc)) from exc
         return session_context_dict(ctx)
 
@@ -205,6 +213,10 @@ class PalmInProcessBackend:
             raise PalmRestError(400, str(exc)) from exc
         except ValueError as exc:
             raise PalmRestError(400, str(exc)) from exc
+        except RuntimeError as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
+            raise PalmRestError(400, str(exc)) from exc
         return session_context_dict(ctx)
 
     def flows_session_resume(self, flow_id: str, session_id: str) -> dict[str, Any]:
@@ -215,6 +227,8 @@ class PalmInProcessBackend:
         except InstanceNotFoundError as exc:
             raise _wizard_not_found(session_id) from exc
         except RuntimeError as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
             raise PalmRestError(400, str(exc)) from exc
         return session_context_dict(ctx)
 
@@ -261,6 +275,8 @@ class PalmInProcessBackend:
         except JobNotFoundError as exc:
             raise _job_not_found(job_id) from exc
         except (TypeError, RuntimeError) as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
             raise PalmRestError(400, str(exc)) from exc
 
         self._ctx.wait_until_idle()
@@ -321,6 +337,8 @@ class PalmInProcessBackend:
         except (TypeError, ValueError, KeyError) as exc:
             raise PalmRestError(400, str(exc)) from exc
         except Exception as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
             raise PalmRestError(500, str(exc)) from exc
 
         return {
@@ -437,6 +455,10 @@ class PalmInProcessBackend:
             return self._ctx.execution.processes.prepare(process_id, body=body)
         except (TypeError, ValueError, KeyError) as exc:
             raise PalmRestError(400, str(exc)) from exc
+        except Exception as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
+            raise PalmRestError(500, str(exc)) from exc
 
     def submit_plans(self, plan_ids: list[str]) -> dict[str, Any]:
         try:
@@ -451,6 +473,8 @@ class PalmInProcessBackend:
                 },
             ) from exc
         except Exception as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
             raise PalmRestError(500, str(exc)) from exc
 
     def get_doctor(self) -> dict[str, Any]:
@@ -480,6 +504,10 @@ class PalmInProcessBackend:
             raise PalmRestError(400, str(exc)) from exc
         except (TypeError, ValueError) as exc:
             raise PalmRestError(400, str(exc)) from exc
+        except Exception as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
+            raise
 
     def validate_flow(self, body: dict[str, Any]) -> dict[str, Any]:
         try:
@@ -733,14 +761,19 @@ class PalmInProcessBackend:
                 described = {}
             provider = described.get("provider")
 
-        return self._ctx.execution.providers.invoke(
-            resource_ref,
-            provider=str(provider) if provider else None,
-            action=body.get("action"),
-            params=body.get("params"),
-            state=body.get("state"),
-            resource_id=body.get("resource_id"),
-        )
+        try:
+            return self._ctx.execution.providers.invoke(
+                resource_ref,
+                provider=str(provider) if provider else None,
+                action=body.get("action"),
+                params=body.get("params"),
+                state=body.get("state"),
+                resource_id=body.get("resource_id"),
+            )
+        except Exception as exc:
+            if (refused := maybe_admission_refused_error(exc)) is not None:
+                raise refused from exc
+            raise
 
 
 def _resolve_state(raw: Any) -> BlackboardState | None:

@@ -236,6 +236,14 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `surface.rest_admission_voice` gated · edge paid  
 - Coherence: `tests/assembly/test_rest_admission_voice_0_63_35.py`  
 
+#### MCP + WebSocket admission voice (0.63.36)
+- **MCP** `admission_refused_error` / `maybe_admission_refused_error` → **PalmRestError 503** `admission_refused`  
+- In-process market-day + continue: create/submit/input/resume/backtrack/plans/invoke/assist_dispatch  
+- **WebSocket assist** maps `AdmissionRefusedError` → error code **`admission_refused`** (not `internal`)  
+- HTTP MCP inherits REST voice via bridge  
+- Kingdom: `surface.mcp_ws_admission_voice` gated · edge paid  
+- Coherence: `tests/assembly/test_surface_admission_voice_0_63_36.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
