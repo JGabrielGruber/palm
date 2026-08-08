@@ -178,6 +178,14 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - **`stop_workload`** stays ungated for shutdown/cleanup — **named** residual (`execution.stop_workload_ungated`)  
 - Coherence: `tests/assembly/test_exec_workload_gate_0_63_27.py`  
 
+#### Host outbox composition king (0.63.28) — SD-021 packaging dual
+- Host **`system_spawn`** sets `enable_event_outbox` from **`composition.has("outbox")`** when not explicit  
+- Settings flag seeds composition at resolve only — not peer OR for store wire on host path  
+- Explicit `host.start(enable_event_outbox=…)` still overrides (named)  
+- Bare `BaseRuntime.start(enable_event_outbox=…)` remains packaging residual  
+- Kingdom: `host.outbox_composition_king` gated · `outbox.start_option_seed` paid_host · bare residual named  
+- Coherence: `tests/assembly/test_outbox_composition_king_0_63_28.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

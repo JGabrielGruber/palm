@@ -180,5 +180,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.25** — Product continue: `resume_job` · `provide_input` fail-closed; **not-this-door** residuals named on SD-020 (engine digs, wait-plane orch resume spine).  
 - **0.63.26** — Wait plane *able* gates match→resume (fail closed / AdmissionRefusedError); install binds same started∧admission as work plane; residual `wait_plane.orch_resume_dig` paid.  
 - **0.63.27** — Product `ExecutionPort.exec_workload` fail-closed on admission; `stop_workload` left ungated for shutdown/cleanup (**named** residual).  
-- Next: more citizens / pretender purge (**0.63.28+**).  
+- **0.63.28** — Host spawn: `enable_event_outbox` from `composition.has("outbox")` (settings seed composition only); bare runtime start option **named** residual.  
+- Next: more citizens / pretender purge (**0.63.29+**).  
 - Accept + theme close when José judges readiness proper.

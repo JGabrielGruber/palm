@@ -236,6 +236,17 @@ Browse (list flows, menu sections, doctor) stays read-only. Session continue/res
 | Direct **`WorkloadEngine.exec`** | Unit/non-port free; pretender if product digs |
 | **`stop_workload` / stop_owned** | Ungated for shutdown/cleanup when admission closed |
 
+## Behavior changes (0.63.28) — host outbox composition king
+
+| Was | Now |
+|-----|-----|
+| Host spawn always passed `settings.enable_event_outbox` into runtime start | When not explicit: **`composition.has("outbox")`** kings store wire |
+| Settings flag could peer-OR composition after resolve | Settings only seed composition at resolve (host path) |
+| Dual residual `outbox.start_option_seed` open | **Paid host path**; bare runtime seed **named** |
+
+**Explicit override:** `host.start(enable_event_outbox=True/False)` still wins (named dual if it disagrees with composition).  
+**Bare runtime:** `BaseRuntime.start(enable_event_outbox=…)` unchanged packaging for tests/non-host.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

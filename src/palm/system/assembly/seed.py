@@ -59,8 +59,9 @@ MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
         "capability": "outbox",
         "role": "membership_seed",
         "note": (
-            "Feeds composition.outbox at resolve; start option may still seed outbox "
-            "store install (runtime packaging residual)"
+            "Feeds composition.outbox at resolve; host spawn aligns "
+            "enable_event_outbox from composition.has (0.63.28); bare runtime "
+            "start option remains packaging for non-host shells"
         ),
     },
     {

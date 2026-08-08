@@ -65,7 +65,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.25** | ✅ product continue citizens — `resume_job` · `provide_input` · not-this-door engine digs named |
 | **0.63.26** | ✅ wait-plane continue able — match→resume fail closed · install binds started∧admission |
 | **0.63.27** | ✅ product workload exec citizen — `exec_workload` admission · stop named residual |
-| **0.63.28+** | ⬜ more citizens / pretender purge · residual packaging duals named |
+| **0.63.28** | ✅ host outbox composition king — spawn aligns store wire; bare runtime seed named |
+| **0.63.29+** | ⬜ more citizens / pretender purge · residual packaging duals named |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

@@ -71,6 +71,12 @@ def build_host_handlers(
             if "assembly_definition" not in options and "assembly_dna_id" not in options:
                 merged["assembly_dna_id"] = seed["assembly_dna_id"]
                 merged["assembly_definition"] = seed["assembly_definition"]
+        # 0.63.28 — composition membership kings outbox *store wire* on host path.
+        # settings.enable_event_outbox seeds composition at resolve only; after
+        # resolve, composition.has("outbox") is structure truth (not peer OR).
+        # Explicit host.start(enable_event_outbox=…) still wins (named override).
+        if "enable_event_outbox" not in options:
+            merged["enable_event_outbox"] = host.composition.has("outbox")
         host._spawner.spawn_runtimes(merged)
 
     def definitions_load(_ctx: BootContext) -> None:

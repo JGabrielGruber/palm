@@ -180,7 +180,8 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 | Direct **`ResourceEngine.invoke`** | **Unit / non-port** free; **pretender** if product digs | Port law **0.63.24** |
 | **`stop_workload` / stop_owned** | Control path when admission closed | **named_0_63_27** — shutdown must work |
 | Wait plane orch resume | **Paid 0.63.26** | able before resume |
-| Outbox start-option seed · host packaging eyes | Packaging duals | **named_0_63_19** / **named_0_63_23** |
+| Outbox bare runtime `enable_event_outbox` | Packaging for non-host shells | **named_0_63_28** (host path **paid**) |
+| Host packaging eyes (CS-002) | Eyes residual | **named_0_63_23** |
 | More product doors as map shows them | Open growth | Inventory tower + migration |
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
@@ -200,11 +201,11 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63 growth:** Map entry/mode/env into **DNA seed**; after load, assembly status is structure truth; packaging env stays; structure pretender toggles purge or residual kill-date. First DNA: **embedded**; dogfood: cli / server.
 
-**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap `_capabilities_from_settings` derives from that map only; pretender `env.structure_toggles` paid as catalog. Residual: flags still seed at resolve **by design** (honest seed); `enable_event_outbox` start option for outbox store install named; soft-ready dual flags (SD-020 neighbor).
+**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only; bare runtime start option named residual). Residual: flags still seed at resolve **by design**; bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
 
 **Do not:** Leave profiles as public dual structure forever “for compatibility.” Remove packaging env wholesale.
 
-**Status:** open (seed map + membership catalog paid — residual SD-020 soft-ready / packaging duals).
+**Status:** open (seed map + membership catalog + host outbox composition king paid — bare runtime seed residual).
 
 ---
 

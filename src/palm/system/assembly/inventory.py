@@ -193,6 +193,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "WorkloadEngine.exec remains ungated (unit / non-port)"
         ),
     },
+    {
+        "id": "host.outbox_composition_king",
+        "slice": "0.63.28",
+        "law": (
+            "host system_spawn aligns enable_event_outbox from "
+            "composition.has('outbox') unless explicit start override"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -232,12 +240,24 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "outbox.start_option_seed",
         "note": (
-            "runtime_start_options still passes enable_event_outbox for outbox store "
-            "install (phase_outbox); composition.has('outbox') gates host recovery wire"
+            "0.63.28: host system_spawn sets enable_event_outbox from "
+            "composition.has('outbox') when not explicit; recovery already "
+            "composition.has. Bare BaseRuntime.start(enable_event_outbox=) remains "
+            "packaging residual for non-host shells."
         ),
-        "intent": "name residual — start packaging seed, not peer structure king after load",
-        "status": "named_0_63_19",
+        "intent": "paid host path — composition king; bare runtime seed named residual",
+        "status": "paid_host_0_63_28",
     },
+    {
+        "id": "runtime.enable_event_outbox_bare",
+        "note": (
+            "BaseRuntime / runtime_start_options still accept enable_event_outbox "
+            "for non-host and test shells without a CompositionProfile."
+        ),
+        "intent": "name residual — packaging seed for bare start, not dual on host path",
+        "status": "named_0_63_28",
+    },
+
     {
         "id": "place_book.os_spawn",
         "note": (
