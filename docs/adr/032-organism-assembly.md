@@ -163,5 +163,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.8** — kingdom inventory (gated vs pretender) · packaging nests admission.  
 - **0.63.9** — create_cli_host seeds BootMode.cli / local.cli DNA.  
 - **0.63.10** — inspect present nests admission on top/vitality.  
-- Next: env pretenders · place handlers · intents (**0.63.11+**).  
+- **0.63.11** — in-process place book effect hands (ensure/release).  
+- Next: run_host DNA seed · env pretenders · OS place spawn (**0.63.12+**).  
 - Accept + theme close when José judges readiness proper.

@@ -238,7 +238,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.8** | ✅ Kingdom inventory tower + packaging admission pointer |
 | **0.63.9** | ✅ create_cli_host → BootMode.cli → local.cli |
 | **0.63.10** | ✅ inspect top/vitality present nest admission |
-| **0.63.11+** | Env pretenders · place handlers · intents |
+| **0.63.11** | ✅ In-process place book hands |
+| **0.63.12+** | run_host DNA seed · env pretenders · OS place spawn |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

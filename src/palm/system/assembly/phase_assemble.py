@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from palm.core.assembly import AssemblyDefinition, resolve_builtin_dna
-from palm.system.assembly.effects import RecordingEffectPort
+from palm.system.assembly.place_book import PlaceBookEffectPort
 from palm.system.assembly.seat import AssemblySeat
 from palm.system.boot.context import BootContext
 from palm.system.boot.definition import PhaseDefinition
@@ -37,8 +37,8 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     shell = resolve_shell(ctx)
     seat: AssemblySeat | None = getattr(shell, "assembly", None)
     if seat is None:
-        auto_ack = bool(options.get("assembly_auto_ack_places", False))
-        seat = AssemblySeat(effects=RecordingEffectPort(auto_ack_places=auto_ack))
+        # 0.63.11 — in-process place book hands (ensure/release), not OS spawn.
+        seat = AssemblySeat(effects=PlaceBookEffectPort())
         shell.assembly = seat  # type: ignore[attr-defined]
 
     dna = _resolve_definition(options)

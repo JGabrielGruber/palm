@@ -71,6 +71,10 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - `present_top` / `present_vitality` nest living **admission** snapshot  
 - Assist/inspect operate paths show the gate without inventing soft ready  
 
+#### Place book hands (0.63.11)
+- `InProcessPlaceBook` + `PlaceBookEffectPort` — ENSURE/RELEASE place  
+- Default assembly seat hands; DNA with `places_required` can converge  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

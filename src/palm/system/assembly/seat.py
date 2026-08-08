@@ -15,12 +15,13 @@ from palm.core.assembly import (
     local_embedded,
     refuse_violations,
 )
-from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
+from palm.system.assembly.effects import AssemblyEffectPort
 from palm.system.assembly.loop import (
     AssembleLoopResult,
     DEFAULT_MAX_TICKS,
     assemble_until_steady,
 )
+from palm.system.assembly.place_book import PlaceBookEffectPort
 
 
 @dataclass
@@ -28,7 +29,7 @@ class AssemblySeat:
     """System-owned assembly organ (not product control)."""
 
     engine: AssemblyEngine = field(default_factory=AssemblyEngine)
-    effects: AssemblyEffectPort = field(default_factory=RecordingEffectPort)
+    effects: AssemblyEffectPort = field(default_factory=PlaceBookEffectPort)
     last_loop: AssembleLoopResult | None = None
     definition: AssemblyDefinition | None = None
 

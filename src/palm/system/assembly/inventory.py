@@ -65,6 +65,11 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.10",
         "law": "present_top / present_vitality nest admission snapshot",
     },
+    {
+        "id": "place_book.in_process",
+        "slice": "0.63.11",
+        "law": "PlaceBookEffectPort ensure/release → PLACE_READY/GONE",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -93,9 +98,10 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "intent": "map into seed or kill (SD-021)",
     },
     {
-        "id": "place_book.handlers",
-        "note": "ENSURE_PLACE auto-ack only; no real place book hands yet",
-        "intent": "live handlers under growth",
+        "id": "place_book.os_spawn",
+        "note": "In-process place ledger ready (0.63.11); OS/workload spawn not wired",
+        "intent": "wire place book to workload/runners when DNA needs bodies",
+        "status": "growth",
     },
 )
 

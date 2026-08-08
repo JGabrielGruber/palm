@@ -1,6 +1,7 @@
 """System assembly — loop, effect port, seat, admission on the shell (0.63)."""
 
 from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
+from palm.system.assembly.place_book import InProcessPlaceBook, PlaceBookEffectPort
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
     require_business_admission,
@@ -33,6 +34,8 @@ __all__ = [
     "AssembleLoopResult",
     "AssemblyEffectPort",
     "AssemblySeat",
+    "InProcessPlaceBook",
+    "PlaceBookEffectPort",
     "RecordingEffectPort",
     "assemble_until_steady",
     "dna_id_for_boot_mode",
