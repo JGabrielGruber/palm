@@ -58,6 +58,11 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Vitality seat **`assembly`** — samples admission + definition id  
 - `may_run_business` false → degraded state (honest eyes)  
 
+#### Kingdom inventory (0.63.8)
+- `kingdom_map` / `kingdom_snapshot` — gated citizens vs pretender edges  
+- Host packaging nests admission pointer (not a second ready flag)  
+- `ApplicationHost.admission` → primary runtime snapshot  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

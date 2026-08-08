@@ -848,6 +848,16 @@ class ApplicationHost:
         """Process due WorkIntents (and optional schedule triggers). Returns count."""
         return self._workplane.tick_work(limit=limit, schedules=schedules)
 
+    @property
+    def admission(self) -> Any:
+        """Primary runtime admission snapshot (0.63) — fail closed when absent."""
+        from palm.core.assembly import AdmissionSnapshot
+
+        try:
+            return self._app.runtime().admission
+        except Exception:
+            return AdmissionSnapshot.empty()
+
     def packaging_status(self) -> dict[str, Any]:
         """Single residual packaging bag (CS-002) — not living seat law.
 

@@ -205,8 +205,10 @@ class HostObservability:
             "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
             "server/prod CI use server_port=0. CompositionProfile is the sole "
             "membership switch (0.59.5); deployment feeds resolver only; "
-            "modes + PhaseSkip strictness."
+            "modes + PhaseSkip strictness. 0.63: assembly admission is law — "
+            "see assembly bag (not a soft dual of membership)."
         )
+        assembly_bag = self._assembly_packaging()
         return _with_packaging_markers(
             {
                 "work_pending": work_pending,
@@ -230,11 +232,46 @@ class HostObservability:
                     "last_walk": getattr(host, "boot_walk", None),
                     "note": domain_note,
                 },
+                # 0.63.8 tower — nest live admission; packaging does not invent readiness.
+                "assembly": assembly_bag,
                 "event_plane": self.event_plane_status(),
                 "ops": self.ops_status(),
             },
             extra_note=domain_note,
         )
+
+    def _assembly_packaging(self) -> dict[str, Any]:
+        """Pointer to living admission (0.63) — not a second ready flag."""
+        host = self._host
+        try:
+            from palm.system.assembly.inventory import kingdom_snapshot
+
+            runtime = host._app.runtime()
+            snap = kingdom_snapshot(runtime)
+            live = snap.get("live") or {}
+            return {
+                "role": "admission_pointer",
+                "eyes": "palm.system.vitality seat assembly",
+                "may_run_business": (live.get("admission") or {}).get(
+                    "may_run_business"
+                ),
+                "definition_id": live.get("definition_id")
+                or (live.get("admission") or {}).get("definition_id"),
+                "phase": (live.get("admission") or {}).get("phase"),
+                "gated_count": snap.get("gated_count"),
+                "pretender_count": snap.get("pretender_count"),
+                "note": (
+                    "Read admission from the primary runtime / vitality assembly seat. "
+                    "This bag is packaging residual, not structure law."
+                ),
+            }
+        except Exception as exc:
+            return {
+                "role": "admission_pointer",
+                "may_run_business": None,
+                "error": f"{type(exc).__name__}: {exc}",
+                "note": "Primary runtime not ready or assembly not present",
+            }
 
 
 __all__ = [
