@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from palm.runtimes.cli.commands.views import render_definition_catalog
+from palm.runtimes.cli.shared.admission_voice import print_cli_error
 from palm.runtimes.cli.shared.context import CliContext
 from palm.runtimes.cli.tui import actions as tui_actions
 
@@ -21,7 +22,7 @@ def cmd_process_submit(ctx: CliContext, args: list[str]) -> int:
         tui_actions.submit_process(ctx, args[0])
         ctx.console.print("[dim]Process submitted.[/]")
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     return 0
 

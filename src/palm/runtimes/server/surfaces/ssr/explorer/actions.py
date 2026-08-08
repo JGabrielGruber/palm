@@ -16,6 +16,7 @@ from palm.patterns.wizard.bindings.cqrs.commands import (
     ProvideWizardInputCommand,
     RequestWizardBacktrackCommand,
 )
+from palm.runtimes.server.surfaces.ssr.explorer.admission_voice import operator_error_text
 from palm.runtimes.server.surfaces.ssr.explorer.components import (
     assist_handoff_result,
     assist_workspace,
@@ -53,7 +54,9 @@ class ExplorerActions:
         except JobNotFoundError:
             return redirect(f"/explorer/jobs/{job_id}?error=Job+not+found")
         except (TypeError, ValueError, RuntimeError) as exc:
-            return redirect(f"/explorer/jobs/{job_id}?error={_quote(str(exc))}")
+            return redirect(
+                f"/explorer/jobs/{job_id}?error={_quote(operator_error_text(exc))}"
+            )
 
         self._ctx.wait_until_idle()
         return redirect(f"/explorer/jobs/{job_id}?notice=Input+accepted")
@@ -88,7 +91,7 @@ class ExplorerActions:
             return self._wizard_action_response(
                 request,
                 instance_id,
-                error=str(exc),
+                error=operator_error_text(exc),
             )
 
         self._ctx.wait_until_idle()
@@ -140,7 +143,7 @@ class ExplorerActions:
             return self._wizard_action_response(
                 request,
                 instance_id,
-                error=str(exc),
+                error=operator_error_text(exc),
             )
 
         self._ctx.wait_until_idle()
@@ -164,11 +167,12 @@ class ExplorerActions:
                 instance_id,
                 error="Wizard not found",
             )
-        except (TypeError, ValueError) as exc:
+        except (TypeError, ValueError, RuntimeError) as exc:
+            # 0.63.37: AdmissionRefusedError is RuntimeError — honest voice, not 500
             return self._wizard_action_response(
                 request,
                 instance_id,
-                error=str(exc),
+                error=operator_error_text(exc),
             )
 
         self._ctx.wait_until_idle()
@@ -221,7 +225,9 @@ class ExplorerActions:
         try:
             self._fetch.provide_assist_input(instance_id, raw_value)
         except Exception as exc:
-            return self._assist_action_response(request, instance_id, error=str(exc))
+            return self._assist_action_response(
+                request, instance_id, error=operator_error_text(exc)
+            )
 
         self._ctx.wait_until_idle()
         return self._assist_action_response(request, instance_id, notice="Answer accepted")
@@ -232,7 +238,9 @@ class ExplorerActions:
         try:
             self._fetch.backtrack_assist_session(instance_id, to_step)
         except Exception as exc:
-            return self._assist_action_response(request, instance_id, error=str(exc))
+            return self._assist_action_response(
+                request, instance_id, error=operator_error_text(exc)
+            )
 
         self._ctx.wait_until_idle()
         label = to_step or "previous step"
@@ -242,7 +250,10 @@ class ExplorerActions:
         try:
             self._fetch.cancel_assist_session(instance_id)
         except Exception as exc:
-            return redirect(f"/explorer/assist/instance/{instance_id}?error={_quote(str(exc))}")
+            return redirect(
+                f"/explorer/assist/instance/{instance_id}"
+                f"?error={_quote(operator_error_text(exc))}"
+            )
 
         self._ctx.wait_until_idle()
         return redirect("/explorer/assist?notice=Assist+session+cancelled")
@@ -251,7 +262,9 @@ class ExplorerActions:
         try:
             result = self._fetch.handoff_assist_session(instance_id)
         except Exception as exc:
-            return self._assist_action_response(request, instance_id, error=str(exc))
+            return self._assist_action_response(
+                request, instance_id, error=operator_error_text(exc)
+            )
 
         self._ctx.wait_until_idle()
         if is_htmx_request(request):
@@ -302,7 +315,8 @@ class ExplorerActions:
             view = self._fetch.start_assist_scenario(scenario_id)
         except Exception as exc:
             return redirect(
-                f"/explorer/assist/scenarios/{_quote(scenario_id)}?error={_quote(str(exc))}"
+                f"/explorer/assist/scenarios/{_quote(scenario_id)}"
+                f"?error={_quote(operator_error_text(exc))}"
             )
 
         self._ctx.wait_until_idle()
@@ -325,9 +339,9 @@ class ExplorerActions:
             command = _flow_command_from_form(values)
             job = self._ctx.execute(command)
         except (TypeError, ValueError, KeyError) as exc:
-            return redirect(_submit_redirect_url(values, error=str(exc)))
+            return redirect(_submit_redirect_url(values, error=operator_error_text(exc)))
         except Exception as exc:
-            return redirect(_submit_redirect_url(values, error=str(exc)))
+            return redirect(_submit_redirect_url(values, error=operator_error_text(exc)))
 
         self._ctx.wait_until_idle()
         job_id = getattr(job, "id", None) or str(job)

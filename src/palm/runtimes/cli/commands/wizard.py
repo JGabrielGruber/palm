@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from palm.runtimes.cli.commands.diagnostics import cmd_status
 from palm.runtimes.cli.commands.input import cmd_input
+from palm.runtimes.cli.shared.admission_voice import print_cli_error
 from palm.runtimes.cli.shared.context import CliContext
 from palm.runtimes.cli.tui import actions as tui_actions
 
@@ -33,7 +34,7 @@ def cmd_wizard_start(ctx: CliContext, args: list[str]) -> int:
     try:
         tui_actions.start_flow(ctx, args[0], via_shortcut="wizard")
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     return 0
 

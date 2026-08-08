@@ -339,6 +339,16 @@ Product façades (assist · flows · execution services) remain the preferred pe
 
 **Not a break** for happy path when admitted. Agents/tools that only matched generic errors should treat **`admission_refused`** as organism closed, not tool bug.
 
+## Behavior changes (0.63.37) — CLI + SSR explorer admission voice
+
+| Was | Now |
+|-----|-----|
+| CLI market-day/continue printed bare red exception text | **`admission_refused`** Rich label + detail |
+| SSR explorer banners used raw `str(exc)` | Prefix **`admission_refused:`** when gate closed |
+| Wizard backtrack only caught TypeError/ValueError | Also **RuntimeError** so admission refusal is not unhandled 500 |
+
+**Not a break** for happy path when admitted. Operators and SSR banners can distinguish closed gate from form/validation failure.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

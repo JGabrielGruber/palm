@@ -244,6 +244,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `surface.mcp_ws_admission_voice` gated · edge paid  
 - Coherence: `tests/assembly/test_surface_admission_voice_0_63_36.py`  
 
+#### CLI + SSR explorer admission voice (0.63.37)
+- **CLI** — `print_cli_error` / `format_cli_error` brand closed gate as **`admission_refused`** on market-day and continue commands (assist, flow, process, resume, input, wizard, resource invoke)
+- **SSR explorer** — `operator_error_text` prefixes **`admission_refused:`** on submit/provide/resume/assist/resource invoke banners
+- Wizard backtrack catches **RuntimeError** so closed gate is honest voice, not unhandled 500
+- Kingdom inventory · tests `test_cli_ssr_admission_voice_0_63_37.py`
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

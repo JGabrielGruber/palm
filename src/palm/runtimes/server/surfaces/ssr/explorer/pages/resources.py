@@ -7,6 +7,7 @@ from typing import Any
 
 from palm.kits.server.protocol import ServerRequest, ServerResponse
 from palm.kits.server.ssr.render import escape, html_response
+from palm.runtimes.server.surfaces.ssr.explorer.admission_voice import operator_error_text
 from palm.runtimes.server.surfaces.ssr.explorer.components import (
     action_button,
     action_catalog,
@@ -300,7 +301,7 @@ class ResourcePages:
                         "metadata": invoke_result.metadata,
                     }
             except Exception as exc:
-                errors.append(str(exc))
+                errors.append(operator_error_text(exc))
 
         form_values = {str(key): form.get(str(key), "") for key in param_keys}
         form_values["action"] = action

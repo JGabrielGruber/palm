@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from palm.runtimes.cli.shared.admission_voice import print_cli_error
 from palm.runtimes.cli.shared.context import CliContext
 from palm.runtimes.cli.shared.flow_labels import flow_detail_label
 from palm.runtimes.cli.tui import actions as tui_actions
@@ -36,7 +37,7 @@ def cmd_flow_start(ctx: CliContext, args: list[str]) -> int:
     try:
         tui_actions.start_flow(ctx, args[0])
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     return 0
 

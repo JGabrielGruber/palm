@@ -289,6 +289,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "500/400) on market-day and continue"
         ),
     },
+    {
+        "id": "surface.cli_ssr_admission_voice",
+        "slice": "0.63.37",
+        "law": (
+            "CLI print_cli_error labels admission_refused; SSR explorer "
+            "operator_error_text + wizard backtrack catches RuntimeError "
+            "(not bare red / generic form failure)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -554,6 +563,17 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid MCP + WS honest voice for closed gate",
         "status": "paid_0_63_36",
+    },
+    {
+        "id": "surface.cli_ssr_admission_voice_edge",
+        "note": (
+            "0.63.37: CLI market-day/continue commands use print_cli_error "
+            "(admission_refused brand); SSR explorer market-day + continue "
+            "banners use operator_error_text; wizard backtrack catches "
+            "RuntimeError so closed gate is not an unhandled 500."
+        ),
+        "intent": "paid CLI + SSR explorer honest voice for closed gate",
+        "status": "paid_0_63_37",
     },
 )
 

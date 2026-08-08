@@ -107,7 +107,9 @@ def cmd_resource_invoke(ctx: CliContext, args: list[str]) -> int:
             params=dict(state),
         )
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        from palm.runtimes.cli.shared.admission_voice import print_cli_error
+
+        print_cli_error(ctx.console, exc)
         return 1
 
     if result.success:

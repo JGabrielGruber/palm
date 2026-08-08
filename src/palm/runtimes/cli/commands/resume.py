@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from palm.runtimes.cli.shared.admission_voice import print_cli_error
 from palm.runtimes.cli.shared.context import CliContext
 from palm.runtimes.cli.tui import actions as tui_actions
 
@@ -15,6 +16,6 @@ def cmd_resume(ctx: CliContext, args: list[str]) -> int:
         instance_id = ctx.resolve_instance_id(args[0])
         tui_actions.resume_instance(ctx, instance_id)
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     return 0

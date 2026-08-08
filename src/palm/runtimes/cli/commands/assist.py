@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from palm.runtimes.cli.shared.admission_voice import print_cli_error
 from palm.runtimes.cli.shared.context import CliContext
 from palm.runtimes.cli.tui.display import render_assistant_panel
 
@@ -40,7 +41,7 @@ def cmd_assist_start(ctx: CliContext, args: list[str]) -> int:
     try:
         view = ctx.host.assist.start_scenario(scenario_id, {})
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     ctx.set_active_assist(view)
     render_assistant_panel(ctx.console, view)
@@ -60,7 +61,7 @@ def cmd_assist_input(ctx: CliContext, args: list[str]) -> int:
         handle = ctx.host.assist.session(session_id)
         view = handle.input(value, view_format="assistant").to_dict(view_format="assistant")
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     ctx.set_active_assist(view)
     render_assistant_panel(ctx.console, view)
@@ -75,7 +76,7 @@ def cmd_assist_handoff(ctx: CliContext, _args: list[str]) -> int:
     try:
         result = ctx.host.assist.handoff(session_id)
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
 
     from rich.panel import Panel
@@ -119,7 +120,7 @@ def cmd_assist_status(ctx: CliContext, args: list[str]) -> int:
         handle = ctx.host.assist.session(session_id)
         view = handle.context(view_format=view_format).to_dict(view_format=view_format)
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
 
     if view_format == "assistant":
@@ -144,7 +145,7 @@ def cmd_assist_cancel(ctx: CliContext, _args: list[str]) -> int:
     try:
         result = ctx.host.assist.session(session_id).cancel()
     except Exception as exc:
-        ctx.console.print(f"[red]{exc}[/]")
+        print_cli_error(ctx.console, exc)
         return 1
     ctx.clear_active_assist()
     ctx.console.print(f"[yellow]Assist session cancelled.[/] {result}")

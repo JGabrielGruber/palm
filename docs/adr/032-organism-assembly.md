@@ -189,5 +189,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.34** — Surface fealty: CLI resume/invoke and SSR explorer invoke/resume route through host (or admit+port host-less); wizard CQRS Provide/Backtrack edge admission; `host.resume_job` packaging door.  
 - **0.63.35** — REST honest voice: `AdmissionRefusedError` → **503 `admission_refused`** (not 500 `submit_failed` / not 400 `input_rejected`) on market-day and continue REST handlers.  
 - **0.63.36** — MCP in-process + WebSocket assist honest voice: **503 / code `admission_refused`** (not fake 500 or WS `internal`).  
-- Next: residual packaging duals named · exit readiness (**0.63.37+**).  
+- **0.63.37** — CLI + SSR explorer honest voice: **`admission_refused`** brand on market-day/continue; wizard backtrack catches RuntimeError so closed gate is not 500.  
+- Next: residual packaging duals named · exit readiness (**0.63.38+**).  
 - Accept + theme close when José judges readiness proper.
