@@ -153,5 +153,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 ## Status notes
 
 - **0.63.0** — plan + this ADR **Proposed** · debt **SD-020** / **SD-021** named.  
-- Execution starts **0.63.1**.  
+- **0.63.1** — `palm.core.assembly` pure engine + types + tests (embedded DNA factory).  
+- Next: system admission seat + household assemble (**0.63.2**).  
 - Accept + theme close when José judges readiness proper.

@@ -38,7 +38,7 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | Patch | Status |
 |-------|--------|
 | **0.63.0** | ✅ plan + ADR-032 Proposed + SD-020/021 + STATUS |
-| **0.63.1** | ⬜ core assembly types + thin engine + pure tests |
+| **0.63.1** | ✅ `palm.core.assembly` — definition · status · intents · observations · thin engine · pure tests |
 | **0.63.2** | ⬜ system admission + household assemble (embedded DNA) |
 | **0.63.3** | ⬜ raise gate — one citizen fail-closed + break inventory |
 | **0.63.4** | ⬜ coherence suite home + negative citizenship |

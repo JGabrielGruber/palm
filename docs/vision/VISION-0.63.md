@@ -228,7 +228,7 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | Patch | Intent |
 |-------|--------|
 | **0.63.0** | ✅ Plan + ADR-032 Proposed + debt rows + STATUS (this open) |
-| **0.63.1** | Core `palm.core.assembly` — definition, status, admission snapshot types, thin engine, pure tests |
+| **0.63.1** | ✅ Core `palm.core.assembly` — definition, status, admission, intents, observations, thin engine, pure tests |
 | **0.63.2** | System admission seat + install; household assemble for **embedded** DNA seed |
 | **0.63.3** | **Raise the gate** — one citizen path fail-closed (work-plane starts that need ground, or declared first); break inventory |
 | **0.63.4** | Coherence suite home + guards scaffolding; negative citizenship tests as law |

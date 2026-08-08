@@ -19,6 +19,11 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Debt named: **SD-020** (dual readiness) · **SD-021** (profile/env structure dual)  
 - Exit: **José** when readiness feels proper  
 
+#### Core floor (0.63.1)
+- **`palm.core.assembly`** — `AssemblyDefinition` / `local_embedded`, `AssemblyStatus` / `AdmissionSnapshot`, closed `EffectIntent` + `Observation`, `AssemblyEngine`  
+- Pure reconciler: receive definition → tick → ready (empty places) · ensure_place intents · truth-home / place block · new definition invalidates  
+- Fail closed when empty or not ready; pure tests in `tests/core/test_assembly_engine.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)
