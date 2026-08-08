@@ -166,5 +166,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.11** — in-process place book effect hands (ensure/release).  
 - **0.63.12** — deployment profile seeds DNA + composition (run_host / palm host server).  
 - **0.63.13** — env DNA seed (`PALM_ASSEMBLY_DNA_ID`); membership always for refuse; drain DNA king; SD-021 partial.  
-- Next: OS place spawn · intents · residual enable_* membership seeds (**0.63.14+**).  
+- **0.63.14** — PlaceSpawnPort / RegisteredPlaceSpawn; `os:` fail-closed until body; place book hands grow.  
+- Next: real OS/workload runner wire · intents · residual enable_* (**0.63.15+**).  
 - Accept + theme close when José judges readiness proper.

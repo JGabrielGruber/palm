@@ -83,7 +83,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - **`PALM_ASSEMBLY_DNA_ID`** / `settings.assembly_dna_id` — explicit DNA seed (wins over mode/composition)  
 - Host spawn always seeds membership for refuse (caller DNA override no longer hides dual shape)  
 - Continuous work_drain respects DNA refuse `background_drain` (env/composition cannot peer-law)  
-- Cartography: `STRUCTURE_SEED_ENV` · pretender `env.structure_toggles` → partial_0_63_13 
+- Cartography: `STRUCTURE_SEED_ENV` · pretender `env.structure_toggles` → partial_0_63_13  
+
+#### Place spawn port (0.63.14)
+- **`PlaceSpawnPort`** + `InProcessPlaceSpawn` (default) + `RegisteredPlaceSpawn`  
+- `PlaceBookEffectPort` calls spawn hands before ledger mark — fail closed on spawn fail  
+- **`os:`** prefix via `os_prefix_spawn_port` — fail closed without body handle (no soft place)  
+- Residual: real OS process / workload runner wire 
 - `run_host` accepts optional boot_mode; deployment still seeds when omitted  
 
 ## [0.62.8] — 2026-08-04

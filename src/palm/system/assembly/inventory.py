@@ -80,6 +80,11 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.13",
         "law": "PALM_ASSEMBLY_DNA_ID seed · membership refuse always · drain DNA king",
     },
+    {
+        "id": "place_book.spawn_port",
+        "slice": "0.63.14",
+        "law": "PlaceSpawnPort · RegisteredPlaceSpawn · os: fail-closed until body",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -114,9 +119,12 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     },
     {
         "id": "place_book.os_spawn",
-        "note": "In-process place ledger ready (0.63.11); OS/workload spawn not wired",
-        "intent": "wire place book to workload/runners when DNA needs bodies",
-        "status": "growth",
+        "note": (
+            "0.63.14: PlaceSpawnPort + RegisteredPlaceSpawn; os: prefix fail-closed "
+            "without body. Residual: real OS process / workload runner spawn"
+        ),
+        "intent": "partial — contract + fail-closed os:; wire runners next",
+        "status": "partial_0_63_14",
     },
 )
 

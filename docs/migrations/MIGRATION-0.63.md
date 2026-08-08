@@ -91,6 +91,16 @@ Citizen fail-closed lands in **0.63.3+**. Until then admission is published but 
 
 `PALM_ENABLE_WORK_DRAIN_SERVICE` remains a **membership seed** at composition resolve — not a peer OR after DNA load.
 
+## Behavior changes (0.63.14) — place spawn port
+
+| Was | Now |
+|-----|-----|
+| ENSURE_PLACE only marked ledger ready | Optional **PlaceSpawnPort** runs first; ledger records outcome |
+| No OS place contract | `os:` places **fail closed** without body handle (`os_spawn_not_configured`) |
+| — | `RegisteredPlaceSpawn` routes exact id / prefix strategies |
+
+Default remains in-process success (behavior-preserving for floor DNA with no `os:` places).
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

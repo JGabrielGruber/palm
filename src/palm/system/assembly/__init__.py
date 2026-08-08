@@ -2,6 +2,14 @@
 
 from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
 from palm.system.assembly.place_book import InProcessPlaceBook, PlaceBookEffectPort
+from palm.system.assembly.place_spawn import (
+    InProcessPlaceSpawn,
+    PlaceSpawnPort,
+    PlaceSpawnResult,
+    RegisteredPlaceSpawn,
+    fail_closed_os_ensure,
+    os_prefix_spawn_port,
+)
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
     require_business_admission,
@@ -42,8 +50,14 @@ __all__ = [
     "AssemblyEffectPort",
     "AssemblySeat",
     "InProcessPlaceBook",
+    "InProcessPlaceSpawn",
     "PlaceBookEffectPort",
+    "PlaceSpawnPort",
+    "PlaceSpawnResult",
     "RecordingEffectPort",
+    "RegisteredPlaceSpawn",
+    "fail_closed_os_ensure",
+    "os_prefix_spawn_port",
     "assemble_until_steady",
     "boot_mode_name_for_deployment",
     "dna_id_for_boot_mode",
