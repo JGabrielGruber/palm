@@ -528,7 +528,15 @@ class BaseRuntime:
         idempotency_key: str | None = None,
         host_id: str | None = None,
     ) -> Any:
-        """Start a workload via the workload engine (ExecutionPort)."""
+        """Start a workload via the workload engine (ExecutionPort).
+
+        **0.63.20 citizen:** product / graph start through this port requires
+        admission (same law as submit_flow). Household place spawn uses
+        ``WorkloadEngine`` directly and is not forced through this door.
+        """
+        from palm.system.assembly.errors import require_business_admission
+
+        require_business_admission(self)
         engine = self._require_workload_engine()
         parsed = (
             spec if isinstance(spec, WorkloadSpec) else WorkloadSpec.from_dict(dict(spec))

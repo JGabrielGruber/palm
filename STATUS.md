@@ -57,7 +57,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.17** | ✅ host auto-bind WorkloadEngine into default assembly seat (`assembly_bind_workload`) |
 | **0.63.18** | ✅ reassemble edges — force invalidate · membership refuse re-check · seat.reassemble |
 | **0.63.19** | ✅ membership seed catalog — `MEMBERSHIP_CAPABILITY_SEEDS` · bootstrap single source (SD-021) |
-| **0.63.20+** | ⬜ more citizens / pretender purge · residual packaging duals named |
+| **0.63.20** | ✅ product workload start citizen — `ExecutionPort.start_workload` admission gate |
+| **0.63.21+** | ⬜ more citizens / pretender purge · residual packaging duals named |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

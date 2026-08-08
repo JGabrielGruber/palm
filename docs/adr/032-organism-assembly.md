@@ -172,5 +172,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.17** — Host auto-bind shell WorkloadEngine into default assembly place hands; `assembly_bind_workload` opt-out.  
 - **0.63.18** — Reassemble edges: `AssemblySeat.reassemble`, `receive_definition(force=)`, `invalidate()`, membership refuse re-check.  
 - **0.63.19** — Full membership seed cartography (`MEMBERSHIP_CAPABILITY_SEEDS`); bootstrap derives capabilities from one map (SD-021 catalog pay); residual outbox start-option packaging named.  
-- Next: more citizens / pretender purge (**0.63.20+**).  
+- **0.63.20** — Product `ExecutionPort.start_workload` fail-closed on admission; household `WorkloadEngine` place path stays ungated.  
+- Next: more citizens / pretender purge (**0.63.21+**).  
 - Accept + theme close when José judges readiness proper.

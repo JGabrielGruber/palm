@@ -124,6 +124,11 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `env.membership_seed_catalog` gated · `env.structure_toggles` paid_catalog · outbox start-option residual named  
 - Coherence: `tests/assembly/test_membership_seed_0_63_19.py`  
 
+#### Workload start citizen (0.63.20)
+- **`BaseRuntime.start_workload`** — `require_business_admission` before engine (product / graph citizen)  
+- Household place-book still uses **`WorkloadEngine` directly** (not forced through ExecutionPort gate)  
+- Coherence: `tests/assembly/test_workload_start_gate_0_63_20.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

@@ -119,6 +119,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "STRUCTURE_SEED_ENV full enable_* cartography (SD-021)"
         ),
     },
+    {
+        "id": "execution.start_workload",
+        "slice": "0.63.20",
+        "law": (
+            "ExecutionPort.start_workload requires admission · household "
+            "WorkloadEngine path remains ungated"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.

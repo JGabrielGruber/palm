@@ -150,6 +150,15 @@ Citizens stay fail-closed while phase is `invalidated` / `blocked`.
 **Not a break:** flags still feed composition at resolve (honest seed). They do not peer-OR after DNA load.  
 **Named residual:** `enable_event_outbox` still seeds outbox *store* install via runtime start options (packaging); host recovery continues to gate on `composition.has("outbox")`.
 
+## Behavior changes (0.63.20) — workload start citizen
+
+| Was | Now |
+|-----|-----|
+| `ExecutionPort.start_workload` only needed a started machine | Also **`admission.may_run_business`** or **`AdmissionRefusedError`** |
+| Product workload start could run under dual soft-ready | Same gate as submit_flow / work plane |
+
+**Household:** assembly place-book `WorkloadPlaceSpawn` / direct `WorkloadEngine` is **not** this door — structure hands stay ungated by business admission.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  
