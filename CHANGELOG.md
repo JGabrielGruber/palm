@@ -78,6 +78,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 #### Deployment walls (0.63.12)
 - `boot_mode_name_for_deployment` — server/worker/all_in_one/cli seed names  
 - Host without BootMode: profile seeds composition + DNA (server → local.server)  
+
+#### Env structure seed (0.63.13) — SD-021 growth
+- **`PALM_ASSEMBLY_DNA_ID`** / `settings.assembly_dna_id` — explicit DNA seed (wins over mode/composition)  
+- Host spawn always seeds membership for refuse (caller DNA override no longer hides dual shape)  
+- Continuous work_drain respects DNA refuse `background_drain` (env/composition cannot peer-law)  
+- Cartography: `STRUCTURE_SEED_ENV` · pretender `env.structure_toggles` → partial_0_63_13 
 - `run_host` accepts optional boot_mode; deployment still seeds when omitted  
 
 ## [0.62.8] — 2026-08-04

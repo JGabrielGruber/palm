@@ -535,16 +535,37 @@ class ApplicationHost:
     def _work_drain_background_enabled(self) -> bool:
         """True when continuous WorkIntent drain should run.
 
-        **0.59.5 membership truth:** only ``composition.has("work_drain")`` decides
-        membership. Deployment may *feed* that capability when resolving composition
-        from settings (``composition_profile_from_settings(..., deployment=…)``);
-        it is not a second OR at gate time. Explicit ``CompositionProfile`` wins.
+        **0.59.5 membership truth:** ``composition.has("work_drain")`` is the
+        packaging membership seed. Deployment may *feed* that capability when
+        resolving composition from settings; it is not a second OR at gate time.
 
-        0.59.2: boot mode may forbid background drain (safe/test).
+        **0.63.13 structure king:** DNA refuse ``background_drain`` wins after
+        load — env / composition cannot peer-law continuous drain under embedded
+        (or any refuse) DNA. Boot mode may also forbid drain (safe/test).
         """
         if self.boot_mode is not None and not self.boot_mode.allow_background_drain:
             return False
-        return self.composition.has("work_drain")
+        if not self.composition.has("work_drain"):
+            return False
+        # DNA refuse is structure law after assemble (0.63.13 / SD-021).
+        try:
+            runtime = self._app.runtime()
+        except Exception:
+            runtime = None
+        if runtime is not None:
+            from palm.system.assembly.seed import dna_refuses_background_drain
+
+            assembly = getattr(runtime, "assembly", None)
+            dna = getattr(assembly, "definition", None) if assembly is not None else None
+            if dna is None:
+                admission = getattr(runtime, "admission", None)
+                # Fall back: reasons from refuse observation path.
+                reasons = tuple(getattr(admission, "reasons", ()) or ())
+                if any(str(r).startswith("refuse:background_drain") for r in reasons):
+                    return False
+            elif dna_refuses_background_drain(dna):
+                return False
+        return True
 
     def shutdown(self) -> None:
         """Stop services, projections, and all runtimes."""

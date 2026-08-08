@@ -75,6 +75,11 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.12",
         "law": "deployment profile → DNA + composition (server/worker/all_in_one)",
     },
+    {
+        "id": "env.structure_seed",
+        "slice": "0.63.13",
+        "law": "PALM_ASSEMBLY_DNA_ID seed · membership refuse always · drain DNA king",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -99,8 +104,13 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     },
     {
         "id": "env.structure_toggles",
-        "note": "structure-shaped PALM_* knobs may still peer-law membership",
-        "intent": "map into seed or kill (SD-021)",
+        "note": (
+            "0.63.13: PALM_ASSEMBLY_DNA_ID seed; work_drain env is membership seed only; "
+            "DNA refuse blocks continuous drain. Residual: other enable_* membership "
+            "flags still feed composition at resolve (honest seed, not dual king after load)."
+        ),
+        "intent": "partial pay SD-021 — catalog STRUCTURE_SEED_ENV; residual packaging flags",
+        "status": "partial_0_63_13",
     },
     {
         "id": "place_book.os_spawn",

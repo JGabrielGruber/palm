@@ -57,6 +57,8 @@ class PalmSettings(BaseSettings):
     outbox_poll_interval: float = 0.5
     enable_event_outbox: bool = True
     # 0.40.2 — continuous WorkIntent drain; ``host server`` profile enables by default (0.44.1)
+    # Structure membership *seed* only (0.63.13 / SD-021) — feeds composition at resolve;
+    # after DNA load, refuse + drain gate are structure king (not a peer OR).
     enable_work_drain_service: bool = False
     work_drain_poll_interval: float = 1.0
     work_drain_batch_size: int = 10
@@ -64,6 +66,9 @@ class PalmSettings(BaseSettings):
     # 0.62 — multi-claimer drain (default 1; needs exclusive claim)
     work_drain_workers: int = 1
     work_drain_lease_seconds: float = 60.0
+    # 0.63.13 — explicit DNA seed from packaging/env (``PALM_ASSEMBLY_DNA_ID``).
+    # Chooses which definition loads; not a second readiness flag.
+    assembly_dna_id: str | None = None
     rebuild_projections_on_startup: bool = True
     projection_rebuild_batch_size: int = 100
     projection_rebuild_max_instances: int = 5000

@@ -165,5 +165,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.10** — inspect present nests admission on top/vitality.  
 - **0.63.11** — in-process place book effect hands (ensure/release).  
 - **0.63.12** — deployment profile seeds DNA + composition (run_host / palm host server).  
-- Next: env pretenders · OS place spawn · intents (**0.63.13+**).  
+- **0.63.13** — env DNA seed (`PALM_ASSEMBLY_DNA_ID`); membership always for refuse; drain DNA king; SD-021 partial.  
+- Next: OS place spawn · intents · residual enable_* membership seeds (**0.63.14+**).  
 - Accept + theme close when José judges readiness proper.

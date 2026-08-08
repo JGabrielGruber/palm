@@ -1,7 +1,12 @@
-"""Assembly DNA seed map — packaging chooses the decree (0.63.5).
+"""Assembly DNA seed map — packaging chooses the decree (0.63.5+).
 
-Profiles, boot modes, and composition are **seeds**, not parallel structure
-kings. After load, assembly status under the DNA is truth.
+Profiles, boot modes, composition, and structure-shaped env are **seeds**, not
+parallel structure kings. After load, assembly status under the DNA is truth.
+
+**0.63.13 — env pretenders (SD-021 growth):**
+- ``PALM_ASSEMBLY_DNA_ID`` / ``settings.assembly_dna_id`` is the explicit DNA seed.
+- Membership-shaped flags (e.g. ``PALM_ENABLE_WORK_DRAIN_SERVICE``) feed composition
+  only at resolve time; DNA refuse + drain gate remain structure king after load.
 """
 
 from __future__ import annotations
@@ -31,6 +36,46 @@ _MODE_TO_DNA: dict[str, str] = {
     "all_in_one": LOCAL_ALL_IN_ONE_ID,
     "dev": LOCAL_ALL_IN_ONE_ID,
 }
+
+# 0.63.13 — cartography: env / settings that *seed* structure (not packaging).
+# Packaging stays free (storage, ports, log, pool widths, secrets).
+STRUCTURE_SEED_ENV: tuple[dict[str, str], ...] = (
+    {
+        "env": "PALM_ASSEMBLY_DNA_ID",
+        "settings": "assembly_dna_id",
+        "role": "explicit_dna_seed",
+        "note": "Chooses which DNA loads; wins over mode/composition inference",
+    },
+    {
+        "env": "PALM_ENABLE_WORK_DRAIN_SERVICE",
+        "settings": "enable_work_drain_service",
+        "role": "membership_seed",
+        "note": "Feeds composition.work_drain at resolve only; DNA refuse is king after load",
+    },
+    {
+        "env": "PALM_HOST_PROFILE",
+        "settings": "host_profile",
+        "role": "deployment_seed",
+        "note": "Deployment preset seed when no BootMode",
+    },
+    {
+        "env": "PALM_HOST_ROLES",
+        "settings": "host_roles",
+        "role": "deployment_seed",
+        "note": "Deployment roles seed when no preset / BootMode",
+    },
+)
+
+# Packaging knobs (not structure kings) — non-exhaustive; spirit not inventory.
+PACKAGING_ENV_SPIRIT: tuple[str, ...] = (
+    "PALM_STORAGE_BACKEND",
+    "PALM_DATA_DIR",
+    "PALM_SERVER_HOST",
+    "PALM_SERVER_PORT",
+    "PALM_WORK_DRAIN_WORKERS",
+    "PALM_WORK_DRAIN_LEASE_SECONDS",
+    "PALM_QUEUED_WORKERS",
+)
 
 
 def dna_id_for_boot_mode(mode_name: str | None) -> str | None:
@@ -66,6 +111,17 @@ def dna_id_for_composition(
         return LOCAL_CLI_ID
 
     return LOCAL_ALL_IN_ONE_ID
+
+
+def dna_id_from_settings(settings: Any | None) -> str | None:
+    """Explicit DNA seed from packaging settings / ``PALM_ASSEMBLY_DNA_ID``."""
+    if settings is None:
+        return None
+    raw = getattr(settings, "assembly_dna_id", None)
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    return text or None
 
 
 def resolve_seed_dna(
@@ -109,11 +165,20 @@ def boot_mode_name_for_deployment(profile: Any) -> str | None:
     return None
 
 
+def dna_refuses_background_drain(definition: AssemblyDefinition | None) -> bool:
+    """True when DNA structure law forbids continuous work_drain membership."""
+    if definition is None:
+        return False
+    refuse = getattr(definition, "refuse", None) or frozenset()
+    return "background_drain" in refuse
+
+
 def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     """Build runtime.start kwargs for assembly seed from ApplicationHost-like shell.
 
-    Does not override if the caller already set ``assembly_definition`` or
-    ``assembly_dna_id`` (or ``assembly_skip``).
+    Priority for DNA id: settings.assembly_dna_id → boot mode → deployment →
+    composition inference. Membership surfaces/capabilities always come from the
+    host composition (refuse checks dual membership — 0.63.6).
     """
     mode = getattr(host, "boot_mode", None)
     mode_name = getattr(mode, "name", None) if mode is not None else None
@@ -128,11 +193,14 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
         surfaces = tuple(getattr(composition, "surfaces", ()) or ())
         capabilities = frozenset(getattr(composition, "capabilities", ()) or ())
 
+    settings = getattr(host, "settings", None)
+    explicit = dna_id_from_settings(settings)
     dna = resolve_seed_dna(
         mode_name=mode_name,
         services=services,
         surfaces=surfaces,
         capabilities=capabilities,
+        explicit_dna_id=explicit,
     )
     return {
         "assembly_dna_id": dna.id,
@@ -144,8 +212,13 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
 
 
 __all__ = [
+    "PACKAGING_ENV_SPIRIT",
+    "STRUCTURE_SEED_ENV",
+    "boot_mode_name_for_deployment",
     "dna_id_for_boot_mode",
     "dna_id_for_composition",
+    "dna_id_from_settings",
+    "dna_refuses_background_drain",
     "resolve_seed_dna",
     "seed_assembly_options_from_host",
 ]

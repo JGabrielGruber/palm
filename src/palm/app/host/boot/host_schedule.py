@@ -56,16 +56,21 @@ def build_host_handlers(
 
     def system_spawn(_ctx: BootContext) -> None:
         merged = runtime_start_options(host.settings, **options)
-        # 0.63.5 — seed DNA from boot mode / composition unless caller set one.
-        if (
-            not merged.get("assembly_skip")
-            and not merged.get("skip_assembly")
-            and "assembly_definition" not in merged
-            and "assembly_dna_id" not in options
-        ):
+        # 0.63.5 / 0.63.13 — seed DNA + membership for refuse.
+        # Caller DNA override still wins; membership always seeds so dual shapes
+        # fail closed under refuse (env/composition cannot hide from the wall).
+        if not merged.get("assembly_skip") and not merged.get("skip_assembly"):
             from palm.system.assembly.seed import seed_assembly_options_from_host
 
-            merged.update(seed_assembly_options_from_host(host))
+            seed = seed_assembly_options_from_host(host)
+            # Membership facts always from host composition unless caller set them.
+            for key in ("assembly_surfaces", "assembly_capabilities"):
+                if key not in options:
+                    merged[key] = seed[key]
+            # DNA: runtime options / explicit definition win; else seed (incl. env).
+            if "assembly_definition" not in options and "assembly_dna_id" not in options:
+                merged["assembly_dna_id"] = seed["assembly_dna_id"]
+                merged["assembly_definition"] = seed["assembly_definition"]
         host._spawner.spawn_runtimes(merged)
 
     def definitions_load(_ctx: BootContext) -> None:

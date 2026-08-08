@@ -59,7 +59,7 @@ Runtime doubles used with `DefinitionExecutor` must publish an `admission` snaps
 | DNA id from real dogfood shapes | **Seeded** (0.63.5) — refuse not yet hard-enforced on membership |
 | Assist / MCP packaging soft-ready | Open pretender |
 | Host soft “definitions ready” dual flags | Open pretender (SD-020 remainder) |
-| Composition dual structure after DNA load | Partial — seed map done; purge host dual flags later (SD-021) |
+| Composition dual structure after DNA load | Partial — seed map + env DNA seed (0.63.13); residual enable_* membership seeds (SD-021) |
 
 ## Expected direction of break (honest early)
 
@@ -79,6 +79,17 @@ Citizen fail-closed lands in **0.63.3+**. Until then admission is published but 
 | Packaging (`PALM_STORAGE_*`, `PALM_DATA_DIR`, ports, log, workers, …) | **Keep** as packaging |
 | Structure toggles that rewrite membership as peer law | Map into DNA seed or purge (SD-021) |
 | DNA / mode seed (when introduced) | Chooses which definition loads |
+
+## Behavior changes (0.63.13) — env structure seed (SD-021)
+
+| Was | Now |
+|-----|-----|
+| No first-class env DNA chooser | **`PALM_ASSEMBLY_DNA_ID`** / `assembly_dna_id` seeds DNA (wins over mode/composition) |
+| Caller `assembly_dna_id` skipped membership seed | Membership always seeded for refuse (dual shape fails closed) |
+| Continuous drain only composition + boot mode | Also **DNA refuse** `background_drain` (structure king after load) |
+| Structure env uncatalogued | `STRUCTURE_SEED_ENV` cartography in `palm.system.assembly.seed` |
+
+`PALM_ENABLE_WORK_DRAIN_SERVICE` remains a **membership seed** at composition resolve — not a peer OR after DNA load.
 
 ## Residual
 

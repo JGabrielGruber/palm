@@ -240,7 +240,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.10** | ✅ inspect top/vitality present nest admission |
 | **0.63.11** | ✅ In-process place book hands |
 | **0.63.12** | ✅ Deployment/run_host DNA + composition walls |
-| **0.63.13+** | Env pretenders · OS place spawn · intents growth |
+| **0.63.13** | ✅ Env structure seed — `PALM_ASSEMBLY_DNA_ID` · membership always for refuse · drain DNA king |
+| **0.63.14+** | OS place spawn · intents growth · residual enable_* membership seeds |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

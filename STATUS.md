@@ -50,7 +50,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.10** | ✅ inspect top/vitality present nest living admission |
 | **0.63.11** | ✅ in-process place book hands (ENSURE/RELEASE) |
 | **0.63.12** | ✅ deployment/run_host seed DNA + composition walls |
-| **0.63.13+** | ⬜ env pretenders · OS place spawn · intents growth |
+| **0.63.13** | ✅ env DNA seed (`PALM_ASSEMBLY_DNA_ID`) · membership refuse always · drain DNA king |
+| **0.63.14+** | ⬜ OS place spawn · intents growth · residual env membership seeds |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

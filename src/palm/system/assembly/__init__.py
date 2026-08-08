@@ -20,9 +20,13 @@ from palm.system.assembly.inventory import (
     kingdom_snapshot,
 )
 from palm.system.assembly.seed import (
+    PACKAGING_ENV_SPIRIT,
+    STRUCTURE_SEED_ENV,
     boot_mode_name_for_deployment,
     dna_id_for_boot_mode,
     dna_id_for_composition,
+    dna_id_from_settings,
+    dna_refuses_background_drain,
     resolve_seed_dna,
     seed_assembly_options_from_host,
 )
@@ -30,7 +34,9 @@ from palm.system.assembly.seed import (
 __all__ = [
     "DEFAULT_MAX_TICKS",
     "GATED_CITIZENS",
+    "PACKAGING_ENV_SPIRIT",
     "PRETENDER_EDGES",
+    "STRUCTURE_SEED_ENV",
     "AdmissionRefusedError",
     "AssembleLoopResult",
     "AssemblyEffectPort",
@@ -42,6 +48,8 @@ __all__ = [
     "boot_mode_name_for_deployment",
     "dna_id_for_boot_mode",
     "dna_id_for_composition",
+    "dna_id_from_settings",
+    "dna_refuses_background_drain",
     "kingdom_map",
     "kingdom_snapshot",
     "load_and_assemble",
