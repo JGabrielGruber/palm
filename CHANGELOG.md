@@ -89,7 +89,12 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - **`PlaceSpawnPort`** + `InProcessPlaceSpawn` (default) + `RegisteredPlaceSpawn`  
 - `PlaceBookEffectPort` calls spawn hands before ledger mark — fail closed on spawn fail  
 - **`os:`** prefix via `os_prefix_spawn_port` — fail closed without body handle (no soft place)  
-- Residual: real OS process / workload runner wire 
+- Residual: real OS process / workload runner wire  
+
+#### Household hands + OS process (0.63.15)
+- **`HouseholdEffectPort`** — default seat hands: places + invalidate/refresh projection, apply policy, request seed  
+- **`OsProcessRegistry`** — real `subprocess` for `os:` when `argv`/`command` given; release terminates process group  
+- Seat/phase default household; residual: workload place-book wire 
 - `run_host` accepts optional boot_mode; deployment still seeds when omitted  
 
 ## [0.62.8] — 2026-08-04

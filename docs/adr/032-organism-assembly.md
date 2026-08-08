@@ -167,5 +167,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.12** — deployment profile seeds DNA + composition (run_host / palm host server).  
 - **0.63.13** — env DNA seed (`PALM_ASSEMBLY_DNA_ID`); membership always for refuse; drain DNA king; SD-021 partial.  
 - **0.63.14** — PlaceSpawnPort / RegisteredPlaceSpawn; `os:` fail-closed until body; place book hands grow.  
-- Next: real OS/workload runner wire · intents · residual enable_* (**0.63.15+**).  
+- **0.63.15** — HouseholdEffectPort (structure intents) · OsProcessRegistry real process spawn/release.  
+- Next: workload place-book wire · residual enable_* · reassemble (**0.63.16+**).  
 - Accept + theme close when José judges readiness proper.

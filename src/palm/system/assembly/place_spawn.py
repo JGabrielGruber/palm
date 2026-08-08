@@ -154,10 +154,10 @@ class RegisteredPlaceSpawn:
 def fail_closed_os_ensure(
     place_id: str, payload: Mapping[str, Any]
 ) -> PlaceSpawnResult:
-    """Honest OS pretender purge: refuse unless payload supplies a body handle.
+    """Honest OS pretender purge: refuse unless body handle or spawnable argv.
 
-    Real process spawn is growth; this wall names the hand and fails closed
-    when no body is provided — no soft-ready place.
+    Prefer :class:`OsProcessRegistry` via :func:`os_prefix_spawn_port` for real
+    process spawn. This pure helper still accepts pre-supplied handles.
     """
     handle = payload.get("handle") or payload.get("process") or payload.get("pid")
     if handle is not None:
@@ -167,6 +167,13 @@ def fail_closed_os_ensure(
             handle=handle,
             payload=dict(payload),
         )
+    if _argv_from_payload(payload):
+        # Pure helper does not spawn — point callers at OsProcessRegistry.
+        return PlaceSpawnResult(
+            state="failed",
+            reason="os_spawn_use_registry",
+            payload={"place_id": place_id, **dict(payload)},
+        )
     return PlaceSpawnResult(
         state="failed",
         reason="os_spawn_not_configured",
@@ -174,15 +181,167 @@ def fail_closed_os_ensure(
     )
 
 
-def os_prefix_spawn_port() -> RegisteredPlaceSpawn:
-    """Port where ``os:`` places fail closed unless body payload is supplied."""
+def _argv_from_payload(payload: Mapping[str, Any]) -> list[str] | None:
+    raw = payload.get("argv")
+    if raw is not None:
+        if isinstance(raw, str):
+            import shlex
+
+            parts = shlex.split(raw)
+            return parts or None
+        if isinstance(raw, (list, tuple)):
+            parts = [str(x) for x in raw]
+            return parts or None
+    command = payload.get("command")
+    if command:
+        import shlex
+
+        parts = shlex.split(str(command))
+        return parts or None
+    return None
+
+
+@dataclass
+class OsProcessRegistry:
+    """Real OS process bodies for assembly place ensure (0.63.15).
+
+    Household only — not product job path. Tracks :class:`subprocess.Popen`
+    by place id; release terminates the process group when possible.
+    """
+
+    processes: dict[str, Any] = field(default_factory=dict)
+
+    def ensure(
+        self, place_id: str, payload: Mapping[str, Any] | None = None
+    ) -> PlaceSpawnResult:
+        key = str(place_id or "").strip()
+        if not key:
+            return PlaceSpawnResult(state="failed", reason="empty_place_id")
+        body = dict(payload or {})
+
+        # Pre-supplied body (tests / external supervisor).
+        handle = body.get("handle") or body.get("process") or body.get("pid")
+        if handle is not None and not _argv_from_payload(body):
+            return PlaceSpawnResult(
+                state="ready",
+                reason="os_body_provided",
+                handle=handle,
+                payload=body,
+            )
+
+        # Already running?
+        existing = self.processes.get(key)
+        if existing is not None:
+            poll = getattr(existing, "poll", lambda: None)()
+            if poll is None:
+                pid = getattr(existing, "pid", None)
+                return PlaceSpawnResult(
+                    state="ready",
+                    reason="os_process_already",
+                    handle=pid,
+                    payload={"place_id": key},
+                )
+            self.processes.pop(key, None)
+
+        argv = _argv_from_payload(body)
+        if not argv:
+            return PlaceSpawnResult(
+                state="failed",
+                reason="os_spawn_not_configured",
+                payload={"place_id": key, **body},
+            )
+
+        import subprocess
+
+        try:
+            proc = subprocess.Popen(
+                argv,
+                cwd=body.get("cwd") or None,
+                env=body.get("env") if isinstance(body.get("env"), dict) else None,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+        except OSError as exc:
+            return PlaceSpawnResult(
+                state="failed",
+                reason="os_spawn_error",
+                payload={"place_id": key, "error": str(exc), **body},
+            )
+
+        self.processes[key] = proc
+        return PlaceSpawnResult(
+            state="ready",
+            reason="os_process_spawned",
+            handle=proc.pid,
+            payload={"place_id": key, "pid": proc.pid, "argv": list(argv)},
+        )
+
+    def release(self, place_id: str) -> PlaceSpawnResult:
+        key = str(place_id or "").strip()
+        if not key:
+            return PlaceSpawnResult(state="gone", reason="empty_place_id")
+        proc = self.processes.pop(key, None)
+        if proc is None:
+            return PlaceSpawnResult(state="gone", reason="os_not_tracked")
+        poll = getattr(proc, "poll", lambda: 0)()
+        if poll is None:
+            import os
+            import signal
+            import subprocess
+
+            pid = getattr(proc, "pid", None)
+            try:
+                if pid is not None:
+                    os.killpg(pid, signal.SIGTERM)
+            except (ProcessLookupError, PermissionError, OSError):
+                try:
+                    proc.terminate()
+                except OSError:
+                    pass
+            try:
+                proc.wait(timeout=2.0)
+            except (subprocess.TimeoutExpired, OSError):
+                try:
+                    if pid is not None:
+                        os.killpg(pid, signal.SIGKILL)
+                    else:
+                        proc.kill()
+                except (ProcessLookupError, PermissionError, OSError):
+                    pass
+                try:
+                    proc.wait(timeout=1.0)
+                except (subprocess.TimeoutExpired, OSError):
+                    pass
+        return PlaceSpawnResult(
+            state="gone",
+            reason="os_process_released",
+            handle=getattr(proc, "pid", None),
+        )
+
+
+def os_prefix_spawn_port(
+    registry: OsProcessRegistry | None = None,
+) -> RegisteredPlaceSpawn:
+    """Port where ``os:`` places spawn real processes when argv/command given.
+
+    Without argv/handle: fail closed (``os_spawn_not_configured``).
+    """
+    reg = registry if registry is not None else OsProcessRegistry()
     port = RegisteredPlaceSpawn()
-    port.register_prefix("os:", ensure=fail_closed_os_ensure)
+    port.register_prefix(
+        "os:",
+        ensure=lambda pid, payload: reg.ensure(pid, payload),
+        release=lambda pid: reg.release(pid),
+    )
+    # Keep registry reachable for tests / shutdown.
+    port.handles["__os_registry__"] = reg  # type: ignore[index]
     return port
 
 
 __all__ = [
     "InProcessPlaceSpawn",
+    "OsProcessRegistry",
     "PlaceEnsureFn",
     "PlaceReleaseFn",
     "PlaceSpawnPort",

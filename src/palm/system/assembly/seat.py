@@ -16,12 +16,12 @@ from palm.core.assembly import (
     refuse_violations,
 )
 from palm.system.assembly.effects import AssemblyEffectPort
+from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.loop import (
     AssembleLoopResult,
     DEFAULT_MAX_TICKS,
     assemble_until_steady,
 )
-from palm.system.assembly.place_book import PlaceBookEffectPort
 
 
 @dataclass
@@ -29,7 +29,7 @@ class AssemblySeat:
     """System-owned assembly organ (not product control)."""
 
     engine: AssemblyEngine = field(default_factory=AssemblyEngine)
-    effects: AssemblyEffectPort = field(default_factory=PlaceBookEffectPort)
+    effects: AssemblyEffectPort = field(default_factory=HouseholdEffectPort)
     last_loop: AssembleLoopResult | None = None
     definition: AssemblyDefinition | None = None
 
@@ -58,6 +58,9 @@ class AssemblySeat:
         """
         dna = definition if definition is not None else local_embedded()
         self.definition = dna
+        bind = getattr(self.effects, "bind_structure", None)
+        if callable(bind):
+            bind(dna, surfaces=surfaces, capabilities=capabilities)
         self.engine.receive_definition(dna)
         for reason in refuse_violations(
             dna, surfaces=surfaces, capabilities=capabilities

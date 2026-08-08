@@ -33,7 +33,7 @@ def test_place_book_ensure_release() -> None:
 
 
 def test_seat_assemble_with_places_converges() -> None:
-    seat = AssemblySeat(effects=PlaceBookEffectPort())
+    seat = AssemblySeat()  # default HouseholdEffectPort (0.63.15)
     dna = AssemblyDefinition(
         id="local.with_places",
         version="1",
@@ -44,9 +44,7 @@ def test_seat_assemble_with_places_converges() -> None:
     assert seat.admission().may_run_business is True
     assert seat.admission().phase is AssemblyPhase.READY
     assert seat.status().places_ready == frozenset({"support_home", "work_yard"})
-    port = seat.effects
-    assert isinstance(port, PlaceBookEffectPort)
-    assert set(port.book.places) == {"support_home", "work_yard"}
+    assert set(seat.effects.book.places) == {"support_home", "work_yard"}  # type: ignore[union-attr]
 
 
 def test_runtime_default_place_book_hands() -> None:

@@ -1,0 +1,164 @@
+"""0.63.15 — household structure intents + OS process spawn."""
+
+from __future__ import annotations
+
+import sys
+import time
+
+from palm.core.assembly import (
+    AssemblyDefinition,
+    AssemblyPhase,
+    EffectIntent,
+    EffectIntentKind,
+    local_embedded,
+)
+from palm.system.assembly import (
+    AssemblySeat,
+    HouseholdEffectPort,
+    OsProcessRegistry,
+    PlaceBookEffectPort,
+    os_prefix_spawn_port,
+)
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+
+
+def test_household_projection_invalidate_refresh() -> None:
+    hands = HouseholdEffectPort()
+    hands.bind_structure(local_embedded())
+    inv = hands.apply(
+        EffectIntent(kind=EffectIntentKind.INVALIDATE_PROJECTION, target="home")
+    )
+    assert inv[0].kind.value == "projection_failed"
+    assert "home" not in hands.projections_loaded
+
+    ref = hands.apply(
+        EffectIntent(kind=EffectIntentKind.REFRESH_PROJECTION, target="home")
+    )
+    assert ref[0].kind.value == "projection_loaded"
+    assert "home" in hands.projections_loaded
+
+
+def test_household_structure_policy_refuse() -> None:
+    hands = HouseholdEffectPort()
+    hands.bind_structure(
+        local_embedded(),
+        surfaces=(),
+        capabilities=("work_drain",),
+    )
+    obs = hands.apply(EffectIntent(kind=EffectIntentKind.APPLY_STRUCTURE_POLICY))
+    assert any(o.kind.value == "structure_policy_violation" for o in obs)
+    assert any("background_drain" in o.target for o in obs)
+
+
+def test_household_structure_policy_clear() -> None:
+    hands = HouseholdEffectPort()
+    hands.bind_structure(local_embedded(), surfaces=(), capabilities=())
+    obs = hands.apply(EffectIntent(kind=EffectIntentKind.APPLY_STRUCTURE_POLICY))
+    assert all(o.kind.value == "structure_policy_cleared" for o in obs)
+
+
+def test_household_request_structure_seed() -> None:
+    hands = HouseholdEffectPort()
+    hands.bind_structure(local_embedded())
+    obs = hands.apply(EffectIntent(kind=EffectIntentKind.REQUEST_STRUCTURE_SEED))
+    assert obs[0].kind.value == "structure_seed_finished"
+    assert obs[0].target == "local.embedded"
+
+
+def test_seat_binds_structure_on_assemble() -> None:
+    seat = AssemblySeat()
+    seat.assemble(local_embedded(), capabilities=("work_drain",))
+    assert isinstance(seat.effects, HouseholdEffectPort)
+    assert seat.effects.definition is not None
+    assert "work_drain" in seat.effects.capabilities
+    assert seat.admission().may_run_business is False
+
+
+def test_os_process_spawn_and_release() -> None:
+    reg = OsProcessRegistry()
+    spawn = os_prefix_spawn_port(registry=reg)
+    port = PlaceBookEffectPort(spawn=spawn)
+    # long-lived child
+    obs = port.apply(
+        EffectIntent(
+            kind=EffectIntentKind.ENSURE_PLACE,
+            target="os:sleeper",
+            payload={
+                "argv": [
+                    sys.executable,
+                    "-c",
+                    "import time; time.sleep(60)",
+                ]
+            },
+        )
+    )
+    assert obs[0].kind.value == "place_ready"
+    assert obs[0].payload.get("spawn") == "os_process_spawned"
+    pid = obs[0].payload.get("pid")
+    assert isinstance(pid, int)
+    assert "os:sleeper" in reg.processes
+    # release terminates
+    gone = port.apply(
+        EffectIntent(kind=EffectIntentKind.RELEASE_PLACE, target="os:sleeper")
+    )
+    assert gone[0].kind.value == "place_gone"
+    assert "os:sleeper" not in reg.processes
+    # process should be dead soon
+    deadline = time.time() + 3.0
+    while time.time() < deadline:
+        try:
+            import os
+
+            os.kill(pid, 0)
+            time.sleep(0.05)
+        except OSError:
+            break
+    else:
+        # best-effort; some kernels leave zombies briefly
+        pass
+
+
+def test_os_process_fail_closed_without_argv() -> None:
+    reg = OsProcessRegistry()
+    result = reg.ensure("os:x", {})
+    assert result.state == "failed"
+    assert result.reason == "os_spawn_not_configured"
+
+
+def test_runtime_household_default_hands() -> None:
+    reset_system_log_for_tests()
+    rt = BaseRuntime()
+    rt.start(storage_backend="memory", enable_event_outbox=False)
+    try:
+        assert rt.admission.may_run_business is True
+        assert isinstance(rt.assembly.effects, HouseholdEffectPort)  # type: ignore[union-attr]
+    finally:
+        rt.stop()
+
+
+def test_engine_projection_intents_via_loop() -> None:
+    """Invalidate then refresh folds through household into engine admission."""
+    from palm.core.assembly import AssemblyEngine
+    from palm.system.assembly.loop import assemble_until_steady
+
+    engine = AssemblyEngine()
+    engine.initialize()
+    hands = HouseholdEffectPort()
+    hands.bind_structure(local_embedded())
+    engine.receive_definition(local_embedded())
+    assemble_until_steady(engine, hands)
+    assert engine.admission().may_run_business is True
+    for obs in hands.apply(
+        EffectIntent(kind=EffectIntentKind.INVALIDATE_PROJECTION, target="home")
+    ):
+        engine.observe(obs)
+    assert engine.admission().may_run_business is False
+    assert engine.admission().phase is AssemblyPhase.BLOCKED
+    for obs in hands.apply(
+        EffectIntent(kind=EffectIntentKind.REFRESH_PROJECTION, target="home")
+    ):
+        engine.observe(obs)
+    loop2 = assemble_until_steady(engine, hands)
+    assert loop2.steady is True
+    assert engine.admission().may_run_business is True

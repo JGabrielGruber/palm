@@ -101,6 +101,14 @@ Citizen fail-closed lands in **0.63.3+**. Until then admission is published but 
 
 Default remains in-process success (behavior-preserving for floor DNA with no `os:` places).
 
+## Behavior changes (0.63.15) — household + OS process
+
+| Was | Now |
+|-----|-----|
+| Default hands = place book only | **`HouseholdEffectPort`** — places + projection/policy/seed intents |
+| `os:` only accept pre-supplied handle | **`OsProcessRegistry`** spawns `argv`/`command`; release terminates |
+| Structure intents recorded no-op | Invalidate → `PROJECTION_FAILED`; refresh → `PROJECTION_LOADED`; policy re-checks refuse; seed finishes |
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

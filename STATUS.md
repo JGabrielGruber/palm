@@ -52,7 +52,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.12** | ✅ deployment/run_host seed DNA + composition walls |
 | **0.63.13** | ✅ env DNA seed (`PALM_ASSEMBLY_DNA_ID`) · membership refuse always · drain DNA king |
 | **0.63.14** | ✅ PlaceSpawnPort · RegisteredPlaceSpawn · `os:` fail-closed until body |
-| **0.63.15+** | ⬜ real OS/workload runner wire · intents growth · residual env membership seeds |
+| **0.63.15** | ✅ HouseholdEffectPort · OS process spawn · projection/policy/seed intents |
+| **0.63.16+** | ⬜ workload place-book wire · residual env membership seeds · reassemble edges |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 

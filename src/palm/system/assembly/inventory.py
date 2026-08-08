@@ -85,6 +85,11 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.14",
         "law": "PlaceSpawnPort · RegisteredPlaceSpawn · os: fail-closed until body",
     },
+    {
+        "id": "household.structure_intents",
+        "slice": "0.63.15",
+        "law": "HouseholdEffectPort · OS process spawn · projection/policy/seed hands",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -120,11 +125,12 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "place_book.os_spawn",
         "note": (
-            "0.63.14: PlaceSpawnPort + RegisteredPlaceSpawn; os: prefix fail-closed "
-            "without body. Residual: real OS process / workload runner spawn"
+            "0.63.15: OsProcessRegistry spawns real processes for os: when argv/"
+            "command given; release terminates. Residual: workload-runner place "
+            "wire (not product job path)"
         ),
-        "intent": "partial — contract + fail-closed os:; wire runners next",
-        "status": "partial_0_63_14",
+        "intent": "partial — OS process done; workload place book next",
+        "status": "partial_0_63_15",
     },
 )
 

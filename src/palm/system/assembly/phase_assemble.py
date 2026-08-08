@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from palm.core.assembly import AssemblyDefinition, resolve_builtin_dna
-from palm.system.assembly.place_book import PlaceBookEffectPort
+from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.seat import AssemblySeat
 from palm.system.boot.context import BootContext
 from palm.system.boot.definition import PhaseDefinition
@@ -37,8 +37,8 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     shell = resolve_shell(ctx)
     seat: AssemblySeat | None = getattr(shell, "assembly", None)
     if seat is None:
-        # 0.63.11 — in-process place book hands (ensure/release), not OS spawn.
-        seat = AssemblySeat(effects=PlaceBookEffectPort())
+        # 0.63.15 — household hands: place book + structure intents.
+        seat = AssemblySeat(effects=HouseholdEffectPort())
         shell.assembly = seat  # type: ignore[attr-defined]
 
     dna = _resolve_definition(options)

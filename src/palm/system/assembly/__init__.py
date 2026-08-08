@@ -1,9 +1,11 @@
 """System assembly — loop, effect port, seat, admission on the shell (0.63)."""
 
 from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
+from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.place_book import InProcessPlaceBook, PlaceBookEffectPort
 from palm.system.assembly.place_spawn import (
     InProcessPlaceSpawn,
+    OsProcessRegistry,
     PlaceSpawnPort,
     PlaceSpawnResult,
     RegisteredPlaceSpawn,
@@ -49,8 +51,10 @@ __all__ = [
     "AssembleLoopResult",
     "AssemblyEffectPort",
     "AssemblySeat",
+    "HouseholdEffectPort",
     "InProcessPlaceBook",
     "InProcessPlaceSpawn",
+    "OsProcessRegistry",
     "PlaceBookEffectPort",
     "PlaceSpawnPort",
     "PlaceSpawnResult",
