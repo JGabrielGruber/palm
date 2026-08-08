@@ -20,6 +20,7 @@ from palm.system.assembly.inventory import (
     kingdom_snapshot,
 )
 from palm.system.assembly.seed import (
+    boot_mode_name_for_deployment,
     dna_id_for_boot_mode,
     dna_id_for_composition,
     resolve_seed_dna,
@@ -38,6 +39,7 @@ __all__ = [
     "PlaceBookEffectPort",
     "RecordingEffectPort",
     "assemble_until_steady",
+    "boot_mode_name_for_deployment",
     "dna_id_for_boot_mode",
     "dna_id_for_composition",
     "kingdom_map",

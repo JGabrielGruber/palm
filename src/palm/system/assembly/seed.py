@@ -91,6 +91,24 @@ def resolve_seed_dna(
     return resolve_builtin_dna(inferred, version=version)
 
 
+def boot_mode_name_for_deployment(profile: Any) -> str | None:
+    """Map DeploymentProfile roles to a BootMode-like seed name (0.63.12)."""
+    if profile is None:
+        return None
+    master = bool(getattr(profile, "master", False))
+    worker = bool(getattr(profile, "worker", False))
+    server = bool(getattr(profile, "server", False))
+    if server:
+        return "server"
+    if worker and not master:
+        return "worker"
+    if master and worker and not server:
+        return "all_in_one"
+    if master and not worker:
+        return "cli"  # command-only collapsed-ish
+    return None
+
+
 def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     """Build runtime.start kwargs for assembly seed from ApplicationHost-like shell.
 
@@ -99,6 +117,8 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     """
     mode = getattr(host, "boot_mode", None)
     mode_name = getattr(mode, "name", None) if mode is not None else None
+    if mode_name is None:
+        mode_name = boot_mode_name_for_deployment(getattr(host, "profile", None))
     composition = getattr(host, "composition", None)
     services: tuple[str, ...] = ()
     surfaces: tuple[str, ...] = ()

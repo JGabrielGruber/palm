@@ -70,6 +70,11 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.11",
         "law": "PlaceBookEffectPort ensure/release → PLACE_READY/GONE",
     },
+    {
+        "id": "run_host.deployment_seed",
+        "slice": "0.63.12",
+        "law": "deployment profile → DNA + composition (server/worker/all_in_one)",
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.

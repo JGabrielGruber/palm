@@ -119,17 +119,29 @@ class ApplicationHost:
                 else deployment_profile_from_settings(self.settings)
             )
         )
-        self.composition = (
-            composition
-            if composition is not None
-            else (
-                mode.composition
-                if mode is not None
-                else composition_profile_from_settings(
+        if composition is not None:
+            self.composition = composition
+        elif mode is not None:
+            self.composition = mode.composition
+        else:
+            # 0.63.12 — deployment roles seed composition when no BootMode
+            # (server/worker/all_in_one walls), else settings-composed all_in_one.
+            from palm.app.host.composition import CompositionProfile
+            from palm.system.assembly.seed import boot_mode_name_for_deployment
+
+            seed_name = boot_mode_name_for_deployment(self.profile)
+            if seed_name == "server":
+                # Server wall — full surfaces + drain membership intent
+                self.composition = CompositionProfile.server()
+            elif seed_name == "worker":
+                self.composition = CompositionProfile.worker()
+            elif seed_name == "cli":
+                self.composition = CompositionProfile.cli()
+            else:
+                # all_in_one and unknown: settings-composed (capabilities from flags)
+                self.composition = composition_profile_from_settings(
                     self.settings, deployment=self.profile
                 )
-            )
-        )
         self._app = PalmKernel(self.settings, storage=storage)
         self._event = EventEngine()
         self._command_bus = CommandBus()
@@ -914,15 +926,20 @@ def run_host(
     profile: DeploymentProfile | str = "all_in_one",
     *,
     settings: PalmSettings | None = None,
+    boot_mode: BootMode | str | None = None,
     **start_options: Any,
 ) -> None:
     """
     Start an :class:`ApplicationHost`, block on signals, then shut down.
 
     Library helper for standalone master/worker/server processes.
+
+    **0.63.12:** when *boot_mode* is omitted, deployment roles seed DNA via
+    host spawn (server → ``local.server``, worker → ``local.worker``, …).
+    Pass *boot_mode* to pin a BootMode decree explicitly.
     """
     resolved = profile if isinstance(profile, DeploymentProfile) else DeploymentProfile.from_preset(profile)
-    host = ApplicationHost(settings=settings, profile=resolved)
+    host = ApplicationHost(settings=settings, profile=resolved, boot_mode=boot_mode)
     host.start(**start_options)
     try:
         host.run_until_signal()

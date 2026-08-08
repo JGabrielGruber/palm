@@ -75,6 +75,11 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - `InProcessPlaceBook` + `PlaceBookEffectPort` — ENSURE/RELEASE place  
 - Default assembly seat hands; DNA with `places_required` can converge  
 
+#### Deployment walls (0.63.12)
+- `boot_mode_name_for_deployment` — server/worker/all_in_one/cli seed names  
+- Host without BootMode: profile seeds composition + DNA (server → local.server)  
+- `run_host` accepts optional boot_mode; deployment still seeds when omitted  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

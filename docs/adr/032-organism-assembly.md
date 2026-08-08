@@ -164,5 +164,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.9** — create_cli_host seeds BootMode.cli / local.cli DNA.  
 - **0.63.10** — inspect present nests admission on top/vitality.  
 - **0.63.11** — in-process place book effect hands (ensure/release).  
-- Next: run_host DNA seed · env pretenders · OS place spawn (**0.63.12+**).  
+- **0.63.12** — deployment profile seeds DNA + composition (run_host / palm host server).  
+- Next: env pretenders · OS place spawn · intents (**0.63.13+**).  
 - Accept + theme close when José judges readiness proper.
