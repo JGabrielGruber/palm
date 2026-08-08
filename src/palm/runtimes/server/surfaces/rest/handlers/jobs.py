@@ -76,6 +76,8 @@ def submit_job(ctx: ServerContext, request: ServerRequest) -> ServerResponse:
     except (TypeError, ValueError, KeyError) as exc:
         return errors.bad_request(str(exc))
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.submit_failed(str(exc))
 
     ctx.wait_until_idle()
@@ -112,6 +114,8 @@ def provide_input(ctx: ServerContext, request: ServerRequest, *, job_id: str) ->
     except JobNotFoundError:
         return errors.job_not_found(job_id)
     except (TypeError, RuntimeError) as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.input_rejected(str(exc))
 
     ctx.wait_until_idle()

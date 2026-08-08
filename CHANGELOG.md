@@ -229,6 +229,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Kingdom: `surface.fealty` gated · surface edge paid  
 - Coherence: `tests/assembly/test_surface_fealty_0_63_34.py`  
 
+#### REST admission voice (0.63.35)
+- **`errors.admission_refused`** — HTTP **503**, code **`admission_refused`** (not 500 `submit_failed`)  
+- **`maybe_admission_refused`** on assist / flows / processes / providers / workloads / jobs / plans / instances market-day + continue handlers  
+- Gate already raised under product/port; REST surface now speaks honest closed-gate voice  
+- Kingdom: `surface.rest_admission_voice` gated · edge paid  
+- Coherence: `tests/assembly/test_rest_admission_voice_0_63_35.py`  
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

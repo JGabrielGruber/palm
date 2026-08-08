@@ -271,6 +271,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "edge admission; host.resume_job packaging door"
         ),
     },
+    {
+        "id": "surface.rest_admission_voice",
+        "slice": "0.63.35",
+        "law": (
+            "REST maps AdmissionRefusedError → 503 admission_refused "
+            "(not submit_failed 500 / input_rejected 400) on market-day "
+            "and continue handlers"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -514,6 +523,17 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid surface fealty boy-scout",
         "status": "paid_0_63_34",
+    },
+    {
+        "id": "surface.rest_admission_voice_edge",
+        "note": (
+            "0.63.35: REST error helper admission_refused (503) + "
+            "maybe_admission_refused on assist/flows/processes/providers/"
+            "workloads/jobs/plans/instances market-day and continue paths. "
+            "Gate already raised under product/port; surface now speaks truth."
+        ),
+        "intent": "paid REST honest voice for closed gate",
+        "status": "paid_0_63_35",
     },
 )
 

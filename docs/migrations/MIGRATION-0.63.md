@@ -319,6 +319,16 @@ Product façades (assist · flows · execution services) remain the preferred pe
 
 **Not a break** for happy path when admitted. Surfaces that still dig kernel/runtime for business are pretenders under **kernel.direct_dig** residual.
 
+## Behavior changes (0.63.35) — REST admission voice
+
+| Was | Now |
+|-----|-----|
+| Closed-gate market-day REST often **500 `submit_failed`** | **503 `admission_refused`** with admission detail |
+| Closed-gate continue often **400 `input_rejected`** (because `AdmissionRefusedError` ⊆ `RuntimeError`) | **503 `admission_refused`** first |
+| Clients could not tell gate closed from internal failure | Distinct error code + non-500 status |
+
+**Not a break** for happy path when admitted. Clients that only checked for 500 on submit may need to treat **503 + `admission_refused`** as retry-when-ready (organism closed), not as a server bug.
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

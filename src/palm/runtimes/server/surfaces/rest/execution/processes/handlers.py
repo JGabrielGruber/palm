@@ -46,6 +46,10 @@ def prepare_process(
         )
     except (TypeError, ValueError, KeyError) as exc:
         return errors.bad_request(str(exc))
+    except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
+        return errors.submit_failed(str(exc))
 
     return created(result)
 
@@ -69,6 +73,8 @@ def submit_process(ctx: ServerContext, request: ServerRequest) -> ServerResponse
     except PlanNotFoundError as exc:
         return errors.plan_not_found(exc.plan_id)
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.submit_failed(str(exc))
 
     return accepted(result)
@@ -91,6 +97,8 @@ def run_process(
     except (TypeError, ValueError, KeyError) as exc:
         return errors.bad_request(str(exc))
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.submit_failed(str(exc))
 
     return accepted(result)

@@ -262,7 +262,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.32** | ✅ Flow product start — `submit_flow_body` / `run_wizard` / `run_flow` via `admission_gate()`; LIST/DESCRIBE soft catalog **named** residual |
 | **0.63.33** | ✅ Host packaging market-day — public submit/provide/resume/invoke + CQRS write citizens; kernel dig **named** residual |
 | **0.63.34** | ✅ Surface fealty — CLI/SSR market-day digs → host packaging; wizard CQRS Provide/Backtrack admission; `host.resume_job` |
-| **0.63.35+** | More citizens / pretender purge · residual packaging duals named |
+| **0.63.35** | ✅ REST admission voice — `admission_refused` 503 (not `submit_failed` 500 / mislabeled continue 400) |
+| **0.63.36+** | Residual packaging duals named · exit readiness José |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

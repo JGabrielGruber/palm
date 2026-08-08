@@ -77,6 +77,8 @@ def create_session(
     except (TypeError, ValueError, KeyError) as exc:
         return errors.bad_request(str(exc))
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.submit_failed(str(exc))
 
     payload = _create_body(result)
@@ -138,6 +140,8 @@ def instance_input(
     except TypeError as exc:
         return errors.bad_request(str(exc))
     except (ValueError, RuntimeError) as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.input_rejected(str(exc))
 
     return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))
@@ -174,6 +178,10 @@ def instance_backtrack(
         return errors.bad_request(str(exc))
     except ValueError as exc:
         return errors.backtrack_rejected(str(exc))
+    except RuntimeError as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
+        return errors.backtrack_rejected(str(exc))
 
     return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))
 
@@ -196,6 +204,8 @@ def instance_resume(
     except (InstanceNotFoundError, InstanceNotFoundServiceError):
         return errors.wizard_not_found(instance_id)
     except RuntimeError as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.input_rejected(str(exc))
 
     return ok(_session_body(ctx, request, ctx_obj, flow_id=flow_id, instance_id=instance_id))

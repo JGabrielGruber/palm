@@ -29,6 +29,8 @@ def _workloads(ctx: ServerContext) -> Any:
 
 
 def _map_error(exc: Exception) -> Any:
+    if (refused := errors.maybe_admission_refused(exc)) is not None:
+        return refused
     if isinstance(exc, WorkloadNotFoundError):
         return error_response(404, "workload_not_found", str(exc))
     if isinstance(

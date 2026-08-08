@@ -37,6 +37,8 @@ def invoke_provider(
     except ValueError as exc:
         return errors.bad_request(str(exc))
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.submit_failed(str(exc))
 
     return ok(payload)
@@ -65,6 +67,8 @@ def invoke_resource(
     except ValueError as exc:
         return errors.bad_request(str(exc))
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.submit_failed(str(exc))
 
     return ok(payload)

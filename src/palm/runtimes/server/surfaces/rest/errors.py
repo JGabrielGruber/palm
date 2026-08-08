@@ -74,6 +74,24 @@ def submit_failed(detail: str) -> ServerResponse:
     return error_response(500, "submit_failed", detail)
 
 
+def admission_refused(detail: str) -> ServerResponse:
+    """Organism gate closed — not a 500 bug and not a 400 validation error.
+
+    Status **503** = service not ready for business (admission fail closed).
+    Code **admission_refused** so clients distinguish gate from internal failure.
+    """
+    return error_response(503, "admission_refused", detail)
+
+
+def maybe_admission_refused(exc: BaseException) -> ServerResponse | None:
+    """Map :class:`AdmissionRefusedError` to honest REST voice; else ``None``."""
+    from palm.system.assembly.errors import AdmissionRefusedError
+
+    if isinstance(exc, AdmissionRefusedError):
+        return admission_refused(str(exc))
+    return None
+
+
 def input_rejected(detail: str) -> ServerResponse:
     return error_response(400, "input_rejected", detail)
 

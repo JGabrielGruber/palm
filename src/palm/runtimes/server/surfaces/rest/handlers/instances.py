@@ -73,6 +73,8 @@ def resume_instance(
     try:
         job = ctx.execute(ResumeProcessCommand(instance_id=instance_id))
     except Exception as exc:
+        if (refused := errors.maybe_admission_refused(exc)) is not None:
+            return refused
         return errors.resume_failed(str(exc))
 
     ctx.wait_until_idle()
