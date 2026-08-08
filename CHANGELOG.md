@@ -100,8 +100,15 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - **`WorkloadPlaceSpawn`** — `workload:` places via WorkloadEngine (fail closed unbound)  
 - Default kind **workspace** (warm body); `kind=run` needs argv  
 - `combined_structure_spawn_port` — `os:` + `workload:` on one port  
-- Residual: host auto-bind engine into default assembly seat 
+- Residual: host auto-bind engine into default assembly seat  
 - `run_host` accepts optional boot_mode; deployment still seeds when omitted  
+
+#### Host structure bind (0.63.17)
+- **`bind_host_structure_to_seat`** / **`default_household_effects`** — combined place spawn on assemble  
+- Default host path binds live **`shell.workload`** after engines init  
+- Opt-out: **`assembly_bind_workload=False`** (workload: stays fail-closed)  
+- Does not clobber recording / custom effect ports without a place book  
+- Coherence: `tests/assembly/test_host_bind_0_63_17.py` · residual place_book.os_spawn paid  
 
 ## [0.62.8] — 2026-08-04
 

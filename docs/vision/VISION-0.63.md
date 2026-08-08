@@ -244,7 +244,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.14** | ✅ Place spawn port — hands contract · `os:` fail-closed · registered strategies |
 | **0.63.15** | ✅ HouseholdEffectPort · OS process spawn · structure intent hands |
 | **0.63.16** | ✅ Workload place-book — `workload:` via WorkloadPlaceSpawn (fail closed unbound) |
-| **0.63.17+** | Host auto-bind workload engine · residual enable_* · reassemble edges |
+| **0.63.17** | ✅ Host auto-bind WorkloadEngine into default assembly seat (opt-out `assembly_bind_workload=False`) |
+| **0.63.18+** | Residual enable_* membership packaging · reassemble edges |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

@@ -95,6 +95,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.16",
         "law": "workload: places via WorkloadPlaceSpawn · fail closed unbound",
     },
+    {
+        "id": "host.structure_bind",
+        "slice": "0.63.17",
+        "law": (
+            "default assemble binds shell WorkloadEngine into combined place spawn "
+            "(assembly_bind_workload opt-out)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -130,11 +138,11 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "place_book.os_spawn",
         "note": (
-            "0.63.15–16: OS process + workload: place spawn. Residual: auto-bind "
-            "host WorkloadEngine into default assembly seat (opt-in wiring)"
+            "0.63.15–17: OS process + workload: place spawn + host auto-bind "
+            "WorkloadEngine on assemble (assembly_bind_workload=False opt-out)"
         ),
-        "intent": "partial — ports ready; host auto-bind residual",
-        "status": "partial_0_63_16",
+        "intent": "paid for host path; residual only if custom seats bypass bind",
+        "status": "paid_0_63_17",
     },
 )
 

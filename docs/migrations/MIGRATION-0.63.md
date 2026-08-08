@@ -117,7 +117,16 @@ Default remains in-process success (behavior-preserving for floor DNA with no `o
 | Unbound place soft? | Fail closed: `workload_engine_not_bound` |
 | — | `combined_structure_spawn_port` routes `os:` + `workload:` |
 
-Default assembly seat still uses in-process places (no auto engine bind yet).
+## Behavior changes (0.63.17) — host structure bind
+
+| Was | Now |
+|-----|-----|
+| Default assemble seat = in-process place spawn only | **Combined** `os:` + `workload:` spawn on household hands |
+| Workload engine only in tests | **`system.assembly.assemble`** binds shell `workload` when initialized |
+| No opt-out | **`assembly_bind_workload=False`** keeps `workload:` fail-closed |
+| — | Custom effect ports without place book are not clobbered |
+
+Bare place ids still succeed in-process (fallback). DNA that requires `workload:` places can converge on the real host path after engines init.
 
 ## Residual
 

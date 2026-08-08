@@ -169,5 +169,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.14** — PlaceSpawnPort / RegisteredPlaceSpawn; `os:` fail-closed until body; place book hands grow.  
 - **0.63.15** — HouseholdEffectPort (structure intents) · OsProcessRegistry real process spawn/release.  
 - **0.63.16** — WorkloadPlaceSpawn / `workload:` places · combined structure spawn port.  
-- Next: host auto-bind · residual enable_* · reassemble (**0.63.17+**).  
+- **0.63.17** — Host auto-bind shell WorkloadEngine into default assembly place hands; `assembly_bind_workload` opt-out.  
+- Next: residual enable_* membership packaging · reassemble edges (**0.63.18+**).  
 - Accept + theme close when José judges readiness proper.

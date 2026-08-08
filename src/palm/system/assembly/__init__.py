@@ -17,6 +17,13 @@ from palm.system.assembly.workload_place import (
     combined_structure_spawn_port,
     workload_prefix_spawn_port,
 )
+from palm.system.assembly.host_bind import (
+    bind_host_structure_to_seat,
+    default_household_effects,
+    place_book_port,
+    resolve_workload_engine,
+    workload_spawn_hands,
+)
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
     require_business_admission,
@@ -66,10 +73,15 @@ __all__ = [
     "RecordingEffectPort",
     "RegisteredPlaceSpawn",
     "WorkloadPlaceSpawn",
+    "bind_host_structure_to_seat",
     "combined_structure_spawn_port",
+    "default_household_effects",
     "fail_closed_os_ensure",
     "os_prefix_spawn_port",
+    "place_book_port",
+    "resolve_workload_engine",
     "workload_prefix_spawn_port",
+    "workload_spawn_hands",
     "assemble_until_steady",
     "boot_mode_name_for_deployment",
     "dna_id_for_boot_mode",

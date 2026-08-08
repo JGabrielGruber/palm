@@ -54,7 +54,8 @@ Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) →
 | **0.63.14** | ✅ PlaceSpawnPort · RegisteredPlaceSpawn · `os:` fail-closed until body |
 | **0.63.15** | ✅ HouseholdEffectPort · OS process spawn · projection/policy/seed intents |
 | **0.63.16** | ✅ `workload:` places via WorkloadPlaceSpawn · combined os+workload port |
-| **0.63.17+** | ⬜ host auto-bind workload engine · residual env membership · reassemble |
+| **0.63.17** | ✅ host auto-bind WorkloadEngine into default assembly seat (`assembly_bind_workload`) |
+| **0.63.18+** | ⬜ residual env membership (SD-021) · reassemble edges |
 | **0.63.U*** | ⬜ unplanned reserve (break list · dual discoveries) |
 | **exit** | ⬜ José judges · ADR Accepted · residual named |
 
