@@ -10,3 +10,5 @@
 | Places | Named bodies as required by structure | Place book / workload under structure hands |
 
 Admission is the published signal that structure ready allows business that needs ground. It is not a substitute for materialize.
+
+**Structure stack:** pure **reconciler (engine)** in core; **manager** in system (resolve → materialize → tick hands → publish admission). Detail: [structure-management.md](../c3-components/structure-management.md).

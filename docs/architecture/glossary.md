@@ -40,20 +40,36 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | **Structure manager** | System loop: load definition, tick reconciler, apply effect intents, fold observations, **materialize** membership, publish admission. | Admission-only dashboard; host soft-ready flags |
 | **Effect intent** | Closed-set structure action the reconciler requests (ensure place, release place, policy, projection, …). System applies. | Business side effects on ExecutionPort |
 | **Observation** | Structure fact folded into the reconciler (place ready/failed, truth home down, policy violation, …). | Business events on the job path |
-| **Materialize** | Make the process match the definition: wire only allowed capabilities, ensure places, refuse illegal life. | Only flipping `may_run_business` after freelanced boot |
+| **Materialize** | Make the process match the definition: resolve membership units, wire only allowed life, ensure places, refuse illegal installs. | Only flipping `may_run_business` after freelanced boot |
 | **Admission** | Published read gate: **may business that needs ground run?** Fail closed when no. | Authn / authz; soft “definitions ready” |
 | **Admission snapshot** | Immutable view of admission (may run, phase, definition id, reasons). | Live mutable seat as the only API forever |
 | **Seed** | How packaging chooses which structure definition (or membership input) to load: mode, profile, env. **Chooser, not king after load.** | Peer structure law after load |
 | **Refuse** | Definition tokens for shapes this process must not carry (e.g. server surfaces, background drain). | Business validation errors |
-| **Capability** | Named membership unit of a process (journal, outbox, work_drain, surfaces, …). Composition / definition speak in capabilities. | Product feature flag marketing |
-| **Composition** | Capability membership of a process (what is declared present). Intended: driven by structure definition + seed, not freelanced OR of settings. | Docker Compose the product |
+| **Capability** | Named system membership unit (journal, outbox, work_drain, …) — machine organs, not product domains. | Product feature flag marketing |
+| **Membership unit** | One installable structure entry: a **plugin**, **product** service, **surface**, or **capability** the definition may list. | A running job |
+| **Membership section** | Grouping in the structure definition (intended: `plugins`, `products`, `surfaces`, `capabilities`, plus refuse/places). Like `INSTALLED_APPS` families. | Business catalog sections |
+| **Composition** | Capability / membership set declared present on a process. Intended: driven by structure definition + seed, not freelanced OR of settings. | Docker Compose the product |
+| **Membership source** | Where a unit or definition package is obtained: **local** (already on machine) or **provider** (Palm protocol), later **cache**. Attribute of membership, not a second manager. | Ad-hoc curl/git as architecture |
+| **Structure source resolver** | Hands that obtain definition/membership artifacts for a given source, then hand them to materialize. Local resolver first; provider resolver later. | Business resource providers in general |
+| **Local (source)** | Units already importable as Python packages / local definition on this system. Materialize installs/wires them. | Remote provide |
+| **Palm provider** (structure) | Remote path: **provide** definition packages / membership via Palm protocol (not freestyle download-as-law). Same materialize step after provide. | SQL/HTTP product providers only |
+| **Definition package** | Portable bundle of structure or membership definitions a resolver can make local enough to materialize. Schema open. | Business flow zip alone |
+| **Provide** | Protocol act: home/support delivers definitions or artifacts to this process. | Silent side-load without definition |
+| **Cache / replicate** | Optional: after provide, store locally so later boots look **local**. Supporter replication, cold workers. Far future. | Primary remote story (primary is provide) |
 | **Authority** | Author of structure definition when not only local seed (later: remote / org). Does not stand at every client gate. | Local host packaging |
 | **Reassemble** | Load new or forced definition; void prior ready; converge again. | Soft-skip admission for CI |
 | **Readiness dashboard** | See admission, refuse market-day paths, map duals — **without** yet owning materialize. Progress honesty for early structure work. | Claiming structure manager is done |
 | **Dual readiness** | Two or more peer answers for “may business run?” (soft flags, catalog order, host dig, admission). **Architecture debt** — purge or name. | Honest residual control paths (cancel when closed) |
 | **Assembly** | **Legacy / theme code name** for structure management and its packages (`palm.*.assembly`). Prefer structure-* in this vault; code may lag. | A second product |
 
-**Code alias (as-built lag):** structure definition ≈ assembly definition / DNA; structure reconciler ≈ AssemblyEngine; structure status ≈ AssemblyStatus; structure manager ≈ system assembly seat + loop.
+**Code alias (as-built lag):**
+
+| Intended | Typical code today |
+|----------|-------------------|
+| Structure definition | `AssemblyDefinition` / DNA helpers |
+| Structure reconciler | `AssemblyEngine` (`palm.core.assembly`) |
+| Structure status / admission | `AssemblyStatus` / `AdmissionSnapshot` |
+| Structure manager | System seat + loop + hands (`palm.system.assembly`) — **partial** (dashboard strong; materialize weak) |
 
 ---
 
