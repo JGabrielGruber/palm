@@ -14,7 +14,7 @@ Palm’s knowledge house under `docs/`. Layers are law ([ADR-021](adr/021-living
 | `docs/adr/` | Decisions — index [adr/README.md](adr/README.md); **ADR or explicit waive** (AGENTS §5) |
 | `docs/migrations/`, `docs/releases/` | Point-in-time notes |
 | `docs/VERSIONING.md` | Version scheme + **theme discipline** (floor · growth · exit; **José** decides) |
-| **`docs/blueprint/`** | **Intended architecture** (C4 / SE vault) — [index](blueprint/README.md) · not theme PM |
+| **`docs/architecture/`** | **Intended architecture** (C4 / SE vault) — [index](architecture/README.md) · not theme PM |
 | **`docs/vision/`** | Theme plans — [index](vision/README.md) · **current:** [ASSEMBLY](vision/VISION-ASSEMBLY.md) · [0.56 workload](vision/VISION-0.56.md) · [SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) · [GROVE](vision/VISION-GROVE.md) · **closed:** [vision/closed/](vision/closed/) |
 | **`TECH-DEBT.md` (root)** | Live open residual + master index · paid detail [audit/TECH-DEBT-PAID.md](audit/TECH-DEBT-PAID.md) · PD era [audit/TECH-DEBT-ERA-0.45.md](audit/TECH-DEBT-ERA-0.45.md) |
 | `docs/llms.txt`, `docs/mcp.txt`, `docs/MCP.md`, `docs/skills/` | Agent progressive disclosure |

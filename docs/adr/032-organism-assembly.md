@@ -191,6 +191,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.36** — MCP in-process + WebSocket assist honest voice: **503 / code `admission_refused`** (not fake 500 or WS `internal`).  
 - **0.63.37** — CLI + SSR explorer honest voice: **`admission_refused`** brand on market-day/continue; wizard backtrack catches RuntimeError so closed gate is not 500.  
 - **0.63.38** — Exit residual ledger: `open_pretender_edges` / `kingdom_map` open_residual_* split named from paid; doctor + packaging present for exit judgment.  
-- **Progress honesty (2026-08-08)** — Much of 0.63 so far is readiness **dashboard** (admission + fail-closed paths + residual map). **Structure manager** (materialize under definition) remains the deeper build. See [VISION-ASSEMBLY §0](../vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08). Palm-wide intended architecture: [docs/blueprint/](../blueprint/README.md).  
-- Next: manager depth vs exit judgment (**José**); blueprint fill; residual duals named.  
+- **Progress honesty (2026-08-08)** — Much of 0.63 so far is readiness **dashboard** (admission + fail-closed paths + residual map). **Structure manager** (materialize under definition) remains the deeper build. See [VISION-ASSEMBLY §0](../vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08). Palm-wide intended architecture: [docs/architecture/](../architecture/README.md).  
+- Next: manager depth vs exit judgment (**José**); architecture vault fill; residual duals named.  
 - Accept + theme close when José judges readiness proper.

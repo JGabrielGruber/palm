@@ -2,7 +2,7 @@
 
 **Status:** Stub. Target laws for Palm design. Refine with the vault.
 
-1. **Intended over as-built** — this blueprint describes the shape we build toward.  
+1. **Intended over as-built** — this vault describes the shape we build toward.  
 2. **One structure truth after load** — structure definition (and status under it) is structure law; profiles and env seed or package, they do not stay peer kings.  
 3. **Materialize then admit** — decide what exists, wire only that, then gate business. Do not only refuse at the door.  
 4. **Host wires once** — product and surfaces use published ports and admission, not the composition root as a bag.  

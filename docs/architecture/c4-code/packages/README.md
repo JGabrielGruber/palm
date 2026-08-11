@@ -1,6 +1,6 @@
 # Intended package map
 
-**Status:** Stub. Target layout — refine as the blueprint grows.
+**Status:** Stub. Target layout — refine as the architecture vault grows.
 
 | Area | Intended home (sketch) | Notes |
 |------|------------------------|--------|

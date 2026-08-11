@@ -2,9 +2,9 @@
 
 **Status:** Teaching and history only. Not architecture law.
 
-Earlier theme talk used kingdom / wall / citizen / household / pretender / DNA / fealty. That language helped discovery and the readiness **dashboard**. It is **not** the vocabulary of this blueprint.
+Earlier theme talk used kingdom / wall / citizen / household / pretender / DNA / fealty. That language helped discovery and the readiness **dashboard**. It is **not** the vocabulary of this architecture vault.
 
-| Metaphor (avoid in blueprint law) | Prefer (engineering) |
+| Metaphor (avoid in architecture law) | Prefer (engineering) |
 |-----------------------------------|----------------------|
 | Kingdom | Palm process / organism (if needed) |
 | DNA | Structure definition |

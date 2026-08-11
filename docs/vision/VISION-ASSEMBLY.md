@@ -3,7 +3,7 @@
 **Status:** 📗 **Seed essay (normative law)** — theme **open** as **[VISION-0.63](VISION-0.63.md)** at `0.63.0` · [ADR-032](../adr/032-organism-assembly.md) **Proposed**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08** · progress honesty **2026-08-08**.  
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
-**Intended architecture:** [docs/blueprint/](../blueprint/README.md) (Palm-wide; structure management is one component).  
+**Intended architecture:** [docs/architecture/](../architecture/README.md) (Palm-wide; structure management is one component).  
 **Active plan:** [VISION-0.63](VISION-0.63.md) — gate · DNA · coherence · slices. This file keeps **roles · ports · citizenship · modules**.  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
 **Horizon order:** **0.63 assembly** → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
@@ -25,7 +25,7 @@ Theme work so far did real work — and it is easy to over-read it.
 
 **Manager** means: Palm takes care of its own structure the way an OS-shaped system must — definition drives what exists; trial-and-error at the door is not the only control.
 
-Engineering language for the target lives in the [blueprint](../blueprint/README.md) (structure definition · reconciler · manager · admission). Teaching metaphor is transitional — [appendix](../blueprint/appendix/metaphor.md).
+Engineering language for the target lives in the [architecture vault](../architecture/README.md) (structure definition · reconciler · manager · admission). Teaching metaphor is transitional — [appendix](../architecture/appendix/metaphor.md).
 
 Exit remains **José’s** judgment when organism readiness feels proper — including how deep the manager must be before the theme may close.
 

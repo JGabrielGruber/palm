@@ -4,7 +4,8 @@
 **Not:** project management (use [STATUS.md](../../STATUS.md) · themes · debt).  
 **Not:** a tour of every as-built dig (optional later in [appendix/as-built-notes.md](appendix/as-built-notes.md)).
 
-**Status:** Skeleton (2026-08-08). Fill notes over time. Empty leaves are intentional.
+**Status:** Skeleton (2026-08-08). Fill notes over time. Empty leaves are intentional.  
+**Agent rules (this mode):** [AGENTS.md](AGENTS.md) · development mode: [src/palm/AGENTS.md](../../src/palm/AGENTS.md) · router: [AGENTS.md](../../AGENTS.md)
 
 **Map:** [PALM.md](../PALM.md) · themes [vision/](../vision/README.md) · writing [WRITING.md](../WRITING.md)
 
@@ -34,7 +35,7 @@ This vault uses **C4 altitudes** plus cross-cuts. Prefer **links** over copying 
 
 ## What this is for
 
-Palm needs a durable **intended** structure so seasons (including structure management / assembly) can be designed against something stable. Theme plans own **when**; this blueprint owns **how Palm is meant to be shaped**.
+Palm needs a durable **intended** structure so seasons (including structure management / assembly) can be designed against something stable. Theme plans own **when**; this vault owns **how Palm is meant to be shaped**.
 
 ---
 
