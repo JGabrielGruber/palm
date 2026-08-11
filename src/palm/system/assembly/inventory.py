@@ -298,6 +298,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
             "(not bare red / generic form failure)"
         ),
     },
+    {
+        "id": "kingdom.exit_residual_ledger",
+        "slice": "0.63.38",
+        "law": (
+            "open_pretender_edges / kingdom_map open_residual_* split "
+            "named residuals from paid; doctor + packaging present for "
+            "exit judgment (not dual readiness)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -575,11 +584,43 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "intent": "paid CLI + SSR explorer honest voice for closed gate",
         "status": "paid_0_63_37",
     },
+    {
+        "id": "kingdom.exit_residual_ledger_edge",
+        "note": (
+            "0.63.38: kingdom_map exposes open_residuals / open_residual_ids "
+            "and paid_edge_count; doctor prints Assembly admission + open "
+            "residual ledger; packaging bag nests open_residual_count. "
+            "Does not invent dual readiness — cartography for José exit."
+        ),
+        "intent": "paid exit residual ledger cartography",
+        "status": "paid_0_63_38",
+    },
 )
 
 
+def _status_kind(status: str) -> str:
+    """Classify pretender row status for exit cartography."""
+    if status.startswith("named_"):
+        return "open"
+    if status.startswith("paid"):
+        return "paid"
+    return "other"
+
+
+def open_pretender_edges() -> list[dict[str, str]]:
+    """Named residuals still open — not architecture; exit judgment map."""
+    return [dict(row) for row in PRETENDER_EDGES if _status_kind(row["status"]) == "open"]
+
+
+def paid_pretender_edges() -> list[dict[str, str]]:
+    """Edges paid or boy-scouted (status starts with ``paid``)."""
+    return [dict(row) for row in PRETENDER_EDGES if _status_kind(row["status"]) == "paid"]
+
+
 def kingdom_map() -> dict[str, Any]:
-    """Static cartography of the wall — gated vs pretender."""
+    """Static cartography of the wall — gated vs pretender · open residual ledger."""
+    open_rows = open_pretender_edges()
+    paid_rows = paid_pretender_edges()
     return {
         "theme": "0.63",
         "role": "assembly_kingdom_inventory",
@@ -587,6 +628,12 @@ def kingdom_map() -> dict[str, Any]:
         "pretender_edges": list(PRETENDER_EDGES),
         "gated_count": len(GATED_CITIZENS),
         "pretender_count": len(PRETENDER_EDGES),
+        # 0.63.38 exit readiness — open named residuals first-class
+        "open_residuals": open_rows,
+        "open_residual_count": len(open_rows),
+        "open_residual_ids": [row["id"] for row in open_rows],
+        "paid_edge_count": len(paid_rows),
+        "paid_edge_ids": [row["id"] for row in paid_rows],
     }
 
 
@@ -623,6 +670,8 @@ def kingdom_snapshot(runtime: Any | None = None) -> dict[str, Any]:
 __all__ = [
     "GATED_CITIZENS",
     "PRETENDER_EDGES",
+    "open_pretender_edges",
+    "paid_pretender_edges",
     "kingdom_map",
     "kingdom_snapshot",
 ]

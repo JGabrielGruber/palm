@@ -349,6 +349,16 @@ Product façades (assist · flows · execution services) remain the preferred pe
 
 **Not a break** for happy path when admitted. Operators and SSR banners can distinguish closed gate from form/validation failure.
 
+## Behavior changes (0.63.38) — exit residual ledger
+
+| Was | Now |
+|-----|-----|
+| Pretender inventory mixed paid + open in one flat list | **`open_residuals` / `open_residual_ids`** + `paid_edge_*` on `kingdom_map` |
+| Doctor silent on assembly admission / residual map | **Assembly** table: `may_run_business`, gated/paid/open counts, open ids |
+| Packaging bag only gated/pretender counts | Nests **`open_residual_count`** / ids (cartography, not dual ready) |
+
+**Not a break.** Operators and José can read the exit residual map without digging inventory source. Named residuals remain intentional (control paths, engine digs, soft catalog, bare kernel).
+
 ## Residual
 
 Multi-process shared claim CAS remains [SD-019](../../TECH-DEBT.md#sd-019) — not this theme’s subject.  

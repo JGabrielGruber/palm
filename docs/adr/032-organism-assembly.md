@@ -190,5 +190,6 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **0.63.35** — REST honest voice: `AdmissionRefusedError` → **503 `admission_refused`** (not 500 `submit_failed` / not 400 `input_rejected`) on market-day and continue REST handlers.  
 - **0.63.36** — MCP in-process + WebSocket assist honest voice: **503 / code `admission_refused`** (not fake 500 or WS `internal`).  
 - **0.63.37** — CLI + SSR explorer honest voice: **`admission_refused`** brand on market-day/continue; wizard backtrack catches RuntimeError so closed gate is not 500.  
-- Next: residual packaging duals named · exit readiness (**0.63.38+**).  
+- **0.63.38** — Exit residual ledger: `open_pretender_edges` / `kingdom_map` open_residual_* split named from paid; doctor + packaging present for exit judgment.  
+- Next: residual packaging duals · exit readiness (**0.63.39+**).  
 - Accept + theme close when José judges readiness proper.

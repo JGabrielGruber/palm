@@ -170,9 +170,9 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63:** Core/status + system admission; one citizen path fail-closed; coherence suite maps pretenders; purge or kill-date residual. Law: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) §6.4 · [ADR-032](docs/adr/032-organism-assembly.md).
 
-**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.33** product + host packaging + CQRS. **0.63.34** — surface fealty (CLI/SSR → host; wizard CQRS continue edge).
+**Progress:** **0.63.1–0.63.7** seats · gates · coherence · seed · refuse · eyes. **0.63.20–0.63.33** product + host packaging + CQRS. **0.63.34** surface fealty. **0.63.35–0.63.37** surface admission voice (REST · MCP/WS · CLI/SSR). **0.63.38** exit residual ledger (`open_pretender_edges` / doctor present).
 
-**Named residual (not this door — not architecture):**
+**Named residual (not this door — not architecture):** live list via `open_pretender_edges()` / `kingdom_map()["open_residual_ids"]` (0.63.38). Summary:
 
 | Residual | Kind | Why named |
 |----------|------|-----------|
@@ -184,20 +184,14 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 | **Workload product stop/cancel** | Control path when admission closed | **named_0_63_31** — operator stop must work |
 | **Flow LIST / DESCRIBE** | Soft catalog browse when admission closed | **named_0_63_32** — packaging eyes, not start |
 | **PalmKernel / bare runtime public dig** | Port-gated only; bypasses host packaging edge | **named_0_63_33** — port is law |
-| Wait plane orch resume | **Paid 0.63.26** | able before resume |
-| Assist continue edge | **Paid 0.63.29** | oath gate on input/resume/backtrack |
-| Flow continue edge + inject | **Paid 0.63.30** | oath gate + host `admission_source` |
-| Execution façade edge + inject | **Paid 0.63.31** | workloads/providers/processes |
-| Flow product start edge | **Paid 0.63.32** | submit_flow_body / run_wizard / run_flow |
-| Host packaging market-day + CQRS | **Paid 0.63.33** | submit/provide/resume/invoke + write commands |
-| Surface fealty (CLI / SSR / wizard CQRS) | **Paid 0.63.34** | dig host packaging; pattern continue edge |
 | Outbox bare runtime `enable_event_outbox` | Packaging for non-host shells | **named_0_63_28** (host path **paid**) |
 | Host packaging eyes (CS-002) | Eyes residual | **named_0_63_23** |
-| More product doors as map shows them | Open growth | Inventory tower + migration |
+
+**Paid (not residual architecture):** planes, ports, product façades, host packaging market-day, surface fealty, surface admission voice ring, exit residual ledger cartography — see `paid_pretender_edges()` / kingdom inventory.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (start + continue planes under able/admission; engine digs still named residual; packaging duals remain).
+**Status:** open (theme 0.63; walls largely up; open residuals **named** and cartographed for José exit).
 
 ---
 

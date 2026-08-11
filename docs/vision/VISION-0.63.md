@@ -265,7 +265,8 @@ Slices may merge, split, or extend. **Unplanned** rows are real budget.
 | **0.63.35** | ✅ REST admission voice — `admission_refused` 503 (not `submit_failed` 500 / mislabeled continue 400) |
 | **0.63.36** | ✅ MCP + WebSocket admission voice — same honest code (not 500 / not WS `internal`) |
 | **0.63.37** | ✅ CLI + SSR explorer admission voice — `admission_refused` brand (not bare red / form failure) |
-| **0.63.38+** | Residual packaging duals named · exit readiness José |
+| **0.63.38** | ✅ Exit residual ledger — `open_pretender_edges` · kingdom open_residual_* · doctor + packaging present |
+| **0.63.39+** | Residual packaging duals · exit readiness José |
 | **0.63.N** | Effect intents / handlers as needed for real assemble |
 | **0.63.N+** | cli / server DNA seeds; profile demotion; projection/invalidate; vitality/inspect present |
 | **0.63.U*** | **Unplanned reserve** — break-list work, dual discoveries, reassemble edge cases, unknown impact |

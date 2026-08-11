@@ -42,6 +42,8 @@ from palm.system.assembly.inventory import (
     PRETENDER_EDGES,
     kingdom_map,
     kingdom_snapshot,
+    open_pretender_edges,
+    paid_pretender_edges,
 )
 from palm.system.assembly.seed import (
     ALWAYS_ON_MEMBERSHIP_CAPABILITIES,
@@ -97,6 +99,8 @@ __all__ = [
     "dna_refuses_background_drain",
     "kingdom_map",
     "kingdom_snapshot",
+    "open_pretender_edges",
+    "paid_pretender_edges",
     "load_and_assemble",
     "membership_capabilities_from_settings",
     "admission_source_from_runtime_resolver",

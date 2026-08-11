@@ -149,10 +149,61 @@ def run_doctor(ctx: CliContext) -> int:
     elif not summaries:
         console.print("[dim]No process instances yet — try[/] [cyan]flow start onboard[/]")
 
+    # 0.63.38 — Assembly admission + open residual ledger (exit cartography)
+    try:
+        from palm.system.assembly.inventory import kingdom_snapshot
+
+        runtime = None
+        try:
+            runtime = host.runtime() if hasattr(host, "runtime") else None
+        except Exception:
+            runtime = None
+        if runtime is None and hasattr(host, "_app"):
+            try:
+                runtime = host._app.runtime()
+            except Exception:
+                runtime = None
+        snap = kingdom_snapshot(runtime)
+        live = snap.get("live") or {}
+        adm = live.get("admission") or {}
+        may = adm.get("may_run_business")
+        may_style = "green" if may else "yellow"
+        asm_table = Table(title="Assembly (organism admission)", show_lines=True)
+        asm_table.add_column("Item", style="cyan")
+        asm_table.add_column("Value")
+        asm_table.add_row(
+            "may_run_business",
+            f"[{may_style}]{may}[/]" if may is not None else "[dim]unknown[/]",
+        )
+        asm_table.add_row("phase", str(adm.get("phase") or live.get("phase") or "—"))
+        asm_table.add_row(
+            "definition_id",
+            str(live.get("definition_id") or adm.get("definition_id") or "—"),
+        )
+        asm_table.add_row("gated citizens", str(snap.get("gated_count", "—")))
+        asm_table.add_row("paid edges", str(snap.get("paid_edge_count", "—")))
+        open_n = int(snap.get("open_residual_count") or 0)
+        asm_table.add_row(
+            "open residuals (named)",
+            f"[yellow]{open_n}[/]" if open_n else "[green]0[/]",
+        )
+        console.print(asm_table)
+        open_ids = snap.get("open_residual_ids") or []
+        if open_ids:
+            console.print(
+                "[dim]Open named residuals (not dual readiness — exit map):[/] "
+                + ", ".join(f"[yellow]{rid}[/]" for rid in open_ids)
+            )
+        console.print(
+            "[dim]Living eyes: inspect top / vitality. "
+            "Open residual list is cartography for theme exit judgment.[/]"
+        )
+    except Exception as exc:
+        console.print(f"[yellow]Assembly doctor section skipped:[/] {exc}")
+
     # Host packaging residual (CS-002) — living eyes are inspect top/vitality.
     console.print(
-        "[dim]Living eyes: inspect top / vitality (system vitality). "
-        "Host ops / event-plane tables below are packaging residual (CS-002).[/]"
+        "[dim]Host ops / event-plane tables below are packaging residual (CS-002).[/]"
     )
 
     if hasattr(host, "ops_status"):

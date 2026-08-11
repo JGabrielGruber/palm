@@ -250,6 +250,13 @@ Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](doc
 - Wizard backtrack catches **RuntimeError** so closed gate is honest voice, not unhandled 500
 - Kingdom inventory · tests `test_cli_ssr_admission_voice_0_63_37.py`
 
+#### Exit residual ledger (0.63.38)
+- **`open_pretender_edges` / `paid_pretender_edges`** — named open vs paid cartography  
+- **`kingdom_map`** — `open_residuals` · `open_residual_ids` · `open_residual_count` · `paid_edge_*`  
+- **Doctor** — Assembly admission table + open residual ids (exit map, not dual ready)  
+- **Packaging bag** nests open residual counts; REPL outer catch uses admission voice  
+- Coherence: `tests/assembly/test_exit_residual_ledger_0_63_38.py`
+
 ## [0.62.8] — 2026-08-04
 
 ### 0.62 — Multi-claimer work drain (**theme closed**)

@@ -260,9 +260,14 @@ class HostObservability:
                 "phase": (live.get("admission") or {}).get("phase"),
                 "gated_count": snap.get("gated_count"),
                 "pretender_count": snap.get("pretender_count"),
+                # 0.63.38 exit residual ledger (cartography, not dual ready)
+                "open_residual_count": snap.get("open_residual_count"),
+                "open_residual_ids": snap.get("open_residual_ids"),
+                "paid_edge_count": snap.get("paid_edge_count"),
                 "note": (
                     "Read admission from the primary runtime / vitality assembly seat. "
-                    "This bag is packaging residual, not structure law."
+                    "This bag is packaging residual, not structure law. "
+                    "open_residual_* is named-debt cartography for exit judgment."
                 ),
             }
         except Exception as exc:

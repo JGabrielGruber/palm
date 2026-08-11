@@ -75,5 +75,8 @@ def run_repl(ctx: CliContext, *, history_path: Path | None = None) -> int:
             ctx.console.print("^C")
             continue
         except Exception as exc:
-            ctx.console.print(f"[red bold]Error:[/] {exc}")
+            # 0.63.38 — honest admission brand if a command path re-raises
+            from palm.runtimes.cli.shared.admission_voice import print_cli_error
+
+            print_cli_error(ctx.console, exc)
     return 0
