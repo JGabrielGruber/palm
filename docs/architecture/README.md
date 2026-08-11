@@ -43,7 +43,7 @@ Palm needs a durable **intended** structure so seasons (including structure mana
 
 | Note | Intent |
 |------|--------|
-| [glossary.md](glossary.md) | Clean language |
+| [glossary.md](glossary.md) | Clean language (extended; living) |
 | [principles.md](principles.md) | Design laws |
 | [c1-context/](c1-context/README.md) | Actors and external systems |
 | [c2-containers/](c2-containers/README.md) | Palm process, storage, workers |
