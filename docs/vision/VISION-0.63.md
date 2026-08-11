@@ -14,6 +14,10 @@
 
 **Exit judgment:** **José’s call** when he feels the organism readiness home is proper — not when a slice table is empty. Residual must be named. Dual readiness must not be architecture.
 
+**Intended architecture (Palm-wide):** [docs/blueprint/](../blueprint/README.md) — software engineering spine; not theme PM.
+
+**Progress honesty (2026-08-08):** Much of 0.63 so far is a **readiness dashboard** (admission, fail-closed market-day paths, residual map). The **structure manager** (materialize membership under definition; wire only allowed structure) is the deeper remaining build. Full statement: [VISION-ASSEMBLY §0](VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08).
+
 ---
 
 ## 1. Goal

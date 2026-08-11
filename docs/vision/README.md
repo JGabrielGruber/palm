@@ -25,7 +25,8 @@ Seeds deepen; they do not hide that law only inside one file.
 | [VISION-SURFACE-DEFLATION.md](VISION-SURFACE-DEFLATION.md) | Surface compost |
 | [VISION-GROVE.md](VISION-GROVE.md) | Multi-Palm crown · continuous interface · updated org meaning |
 
-**Map / status:** [PALM.md](../PALM.md) · [STATUS.md](../../STATUS.md) · [VERSIONING.md](../VERSIONING.md)
+**Map / status:** [PALM.md](../PALM.md) · [STATUS.md](../../STATUS.md) · [VERSIONING.md](../VERSIONING.md)  
+**Intended architecture:** [docs/blueprint/](../blueprint/README.md) (C4-shaped software engineering vault — not theme PM)
 
 ## Closed
 

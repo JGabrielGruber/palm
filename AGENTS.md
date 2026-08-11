@@ -18,6 +18,7 @@ Not the system map. Not the theme history. Not the debt ledger.
 | **Theme discipline** | [docs/VERSIONING.md](docs/VERSIONING.md) — floor · growth · exit; **José** decides |
 | **Live debt** | [TECH-DEBT.md](TECH-DEBT.md) · intentions [docs/STUBS.md](docs/STUBS.md) |
 | **Vision (current)** | [docs/vision/](docs/vision/README.md) — assembly · workload · surface seed · Grove |
+| **Intended architecture** | [docs/blueprint/](docs/blueprint/README.md) — C4 SE vault (Palm-wide; not theme PM) |
 | **Vision (closed)** | [docs/vision/closed/](docs/vision/closed/) — history, grouped |
 | **Docs voice** | [docs/WRITING.md](docs/WRITING.md) |
 | **Operate via MCP** | [docs/MCP.md](docs/MCP.md) · [docs/skills/palm/SKILL.md](docs/skills/palm/SKILL.md) |

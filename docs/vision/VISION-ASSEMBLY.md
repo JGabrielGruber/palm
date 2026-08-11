@@ -1,12 +1,33 @@
 # VISION — Assembly (organism truth · tree scale)
 
-**Status:** 📗 **Seed essay (normative law)** — theme **open** as **[VISION-0.63](VISION-0.63.md)** at `0.63.0` · [ADR-032](../adr/032-organism-assembly.md) **Proposed**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08**.  
+**Status:** 📗 **Seed essay (normative law)** — theme **open** as **[VISION-0.63](VISION-0.63.md)** at `0.63.0` · [ADR-032](../adr/032-organism-assembly.md) **Proposed**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08** · progress honesty **2026-08-08**.  
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
+**Intended architecture:** [docs/blueprint/](../blueprint/README.md) (Palm-wide; structure management is one component).  
 **Active plan:** [VISION-0.63](VISION-0.63.md) — gate · DNA · coherence · slices. This file keeps **roles · ports · citizenship · modules**.  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
 **Horizon order:** **0.63 assembly** → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
 **Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
+
+---
+
+## 0. Progress honesty (2026-08-08)
+
+Theme work so far did real work — and it is easy to over-read it.
+
+| Built (roughly) | Not built yet (roughly) |
+|-----------------|-------------------------|
+| **Readiness dashboard** — admission snapshot, fail-closed doors on many business paths, surface honest refuse, residual cartography | **Structure manager** — desired structure that **materializes** membership and only wires allowed life (compose-like control of services-ish) |
+| Pure reconciler + system seat + thin DNA seed map | Structure definition as the **install set** for the process |
+| Gate-first purge of market-day pretenders | Bootstrap/host freelancing replaced by structure plan → materialize → admit |
+
+**Dashboard** means: we can see readiness, refuse business when admission is down, and map dual paths. That is necessary. It is **not** the full seed goal.
+
+**Manager** means: Palm takes care of its own structure the way an OS-shaped system must — definition drives what exists; trial-and-error at the door is not the only control.
+
+Engineering language for the target lives in the [blueprint](../blueprint/README.md) (structure definition · reconciler · manager · admission). Teaching metaphor is transitional — [appendix](../blueprint/appendix/metaphor.md).
+
+Exit remains **José’s** judgment when organism readiness feels proper — including how deep the manager must be before the theme may close.
 
 ---
 

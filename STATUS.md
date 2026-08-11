@@ -10,7 +10,8 @@
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (law) → [PALM.md](docs/PALM.md) · [TECH-DEBT.md](TECH-DEBT.md) (**SD-020** · **SD-021** · **SD-019** · **SD-016**).
+Read in order: **this STATUS** → [VISION-0.63](docs/vision/VISION-0.63.md) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (law) → [PALM.md](docs/PALM.md) · [TECH-DEBT.md](TECH-DEBT.md) (**SD-020** · **SD-021** · **SD-019** · **SD-016**).  
+**Intended architecture (SE):** [docs/blueprint/](docs/blueprint/README.md) — Palm-wide C4 vault; structure manager still the deeper build (dashboard vs manager: [VISION-ASSEMBLY §0](docs/vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08)).
 
 | Spirit | Decision |
 |--------|----------|
