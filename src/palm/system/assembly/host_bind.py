@@ -13,10 +13,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.place_book import PlaceBookEffectPort
 from palm.system.assembly.place_spawn import InProcessPlaceSpawn, RegisteredPlaceSpawn
 from palm.system.assembly.seat import AssemblySeat
+from palm.system.assembly.structure_effects import StructureEffectPort
 from palm.system.assembly.workload_place import (
     WorkloadPlaceSpawn,
     combined_structure_spawn_port,
@@ -34,7 +34,7 @@ def resolve_workload_engine(shell: Any) -> Any | None:
 
 
 def place_book_port(effects: Any) -> PlaceBookEffectPort | None:
-    """Extract the place-book hands from HouseholdEffectPort or bare place-book effects."""
+    """Extract the place-book hands from StructureEffectPort or bare place-book effects."""
     if isinstance(effects, PlaceBookEffectPort):
         return effects
     places = getattr(effects, "places", None)
@@ -130,16 +130,16 @@ def bind_host_structure_to_seat(
     return report
 
 
-def default_household_effects(*, engine: Any | None = None) -> HouseholdEffectPort:
+def default_structure_effects(*, engine: Any | None = None) -> StructureEffectPort:
     """Default place-book hands with combined structure spawn (os: + workload:)."""
-    return HouseholdEffectPort(
+    return StructureEffectPort(
         places=PlaceBookEffectPort(spawn=combined_structure_spawn_port(engine=engine))
     )
 
 
 __all__ = [
     "bind_host_structure_to_seat",
-    "default_household_effects",
+    "default_structure_effects",
     "place_book_port",
     "resolve_workload_engine",
     "workload_spawn_hands",

@@ -203,7 +203,7 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "system.assembly.assemble",
         "system",
         "implemented",
-        "Household assemble — DNA, reconcile, publish admission (0.63)",
+        "Structure assemble — load definition, reconcile, publish admission (0.63)",
     ),
     PhaseSpec(
         "system.background.start",

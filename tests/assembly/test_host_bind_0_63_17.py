@@ -5,12 +5,12 @@ from __future__ import annotations
 from palm.core.assembly import AssemblyDefinition, AssemblyPhase, local_embedded
 from palm.system.assembly import (
     AssemblySeat,
-    HouseholdEffectPort,
     PlaceBookEffectPort,
     RecordingEffectPort,
+    StructureEffectPort,
     WorkloadPlaceSpawn,
     bind_host_structure_to_seat,
-    default_household_effects,
+    default_structure_effects,
     place_book_port,
     resolve_workload_engine,
     workload_spawn_hands,
@@ -26,9 +26,9 @@ def test_resolve_workload_engine_uninitialized() -> None:
     assert resolve_workload_engine(_Shell()) is None
 
 
-def test_default_household_effects_has_structure_prefixes() -> None:
-    hands = default_household_effects(engine=None)
-    assert isinstance(hands, HouseholdEffectPort)
+def test_default_structure_effects_has_structure_prefixes() -> None:
+    hands = default_structure_effects(engine=None)
+    assert isinstance(hands, StructureEffectPort)
     spawn = hands.spawn
     assert "workload:" in spawn.prefix_ensures
     assert "os:" in spawn.prefix_ensures
@@ -56,7 +56,7 @@ def test_bind_upgrades_in_process_and_attaches_engine() -> None:
         class _Shell:
             workload = eng
 
-        seat = AssemblySeat()  # default HouseholdEffectPort / in-process
+        seat = AssemblySeat()  # default StructureEffectPort / in-process
         report = bind_host_structure_to_seat(seat, _Shell(), bind_workload=True)
         assert report["bound"] is True
         assert report["engine"] is True
@@ -129,7 +129,7 @@ def test_bind_idempotent_already_bound() -> None:
         class _Shell:
             workload = eng
 
-        seat = AssemblySeat(effects=default_household_effects(engine=eng))
+        seat = AssemblySeat(effects=default_structure_effects(engine=eng))
         report = bind_host_structure_to_seat(seat, _Shell())
         assert report["spawn"] == "already"
         assert report["engine"] is True
@@ -144,7 +144,7 @@ def test_runtime_start_binds_workload_engine() -> None:
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
         assert rt.assembly is not None
-        assert isinstance(rt.assembly.effects, HouseholdEffectPort)
+        assert isinstance(rt.assembly.effects, StructureEffectPort)
         book = place_book_port(rt.assembly.effects)
         assert book is not None
         hands = workload_spawn_hands(book.spawn)
@@ -210,6 +210,6 @@ def test_runtime_workload_place_converges_on_host_path() -> None:
 def test_place_book_port_helper() -> None:
     bare = PlaceBookEffectPort()
     assert place_book_port(bare) is bare
-    house = HouseholdEffectPort()
-    assert place_book_port(house) is house.places
+    port = StructureEffectPort()
+    assert place_book_port(port) is port.places
     assert place_book_port(RecordingEffectPort()) is None

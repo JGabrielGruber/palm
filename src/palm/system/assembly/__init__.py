@@ -10,12 +10,11 @@ from palm.system.assembly.errors import (
 from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 from palm.system.assembly.host_bind import (
     bind_host_structure_to_seat,
-    default_household_effects,
+    default_structure_effects,
     place_book_port,
     resolve_workload_engine,
     workload_spawn_hands,
 )
-from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.inventory import (
     GATED_PATHS,
     READINESS_EDGES,
@@ -58,6 +57,7 @@ from palm.system.assembly.seed import (
     resolve_seed_dna,
     seed_assembly_options_from_host,
 )
+from palm.system.assembly.structure_effects import StructureEffectPort
 from palm.system.assembly.workload_place import (
     WorkloadPlaceSpawn,
     combined_structure_spawn_port,
@@ -78,7 +78,7 @@ __all__ = [
     "AssembleLoopResult",
     "AssemblyEffectPort",
     "AssemblySeat",
-    "HouseholdEffectPort",
+    "StructureEffectPort",
     "InProcessPlaceBook",
     "InProcessPlaceSpawn",
     "OsProcessRegistry",
@@ -90,7 +90,7 @@ __all__ = [
     "WorkloadPlaceSpawn",
     "bind_host_structure_to_seat",
     "combined_structure_spawn_port",
-    "default_household_effects",
+    "default_structure_effects",
     "fail_closed_os_ensure",
     "os_prefix_spawn_port",
     "place_book_port",

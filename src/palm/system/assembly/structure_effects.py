@@ -21,7 +21,7 @@ from palm.system.assembly.place_book import PlaceBookEffectPort
 
 
 @dataclass
-class HouseholdEffectPort:
+class StructureEffectPort:
     """Default assembly hands: places + projection/policy/seed structure intents."""
 
     places: PlaceBookEffectPort = field(default_factory=PlaceBookEffectPort)
@@ -140,4 +140,4 @@ class HouseholdEffectPort:
         return ()
 
 
-__all__ = ["HouseholdEffectPort"]
+__all__ = ["StructureEffectPort"]

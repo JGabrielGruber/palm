@@ -63,7 +63,7 @@ def test_invoke_resource_allowed_when_admitted() -> None:
         rt.stop()
 
 
-def test_household_resource_engine_not_gated_by_port() -> None:
+def test_structure_resource_engine_not_gated_by_port() -> None:
     """Direct ResourceEngine.invoke is not the ExecutionPort admission door."""
     reset_system_log_for_tests()
     rt = BaseRuntime()

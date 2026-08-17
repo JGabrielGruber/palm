@@ -88,7 +88,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
     {
         "id": "structure.effect_intents",
         "slice": "0.63.15",
-        "law": "HouseholdEffectPort · OS process spawn · projection/policy/seed hands",
+        "law": "StructureEffectPort · OS process spawn · projection/policy/seed hands",
     },
     {
         "id": "place_book.workload",
@@ -123,7 +123,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "id": "execution.start_workload",
         "slice": "0.63.20",
         "law": (
-            "ExecutionPort.start_workload requires admission · household "
+            "ExecutionPort.start_workload requires admission · structure "
             "WorkloadEngine path remains ungated"
         ),
     },
@@ -396,7 +396,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "id": "execution.workload_engine_dig",
         "note": (
             "0.63.20 start_workload · 0.63.27 exec_workload gated on port. Direct "
-            "WorkloadEngine.start/exec: household place book + unit free; product dig "
+            "WorkloadEngine.start/exec: structure place book + unit free; product dig "
             "for business is dual readiness."
         ),
         "intent": "name residual — port is law; dig ≠ free pass (SD-020)",

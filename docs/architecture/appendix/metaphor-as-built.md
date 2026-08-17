@@ -27,11 +27,11 @@ Teaching map: [metaphor.md](metaphor.md).
 
 Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / observability.
 
-**2026-08-17 identifier cut (smallest, José locked):** inventory API, row ids, doctor / Assist labels. Household types, DNA / env, `Assembly*` packages, and the living-docs pass wait.
+**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; then household types. DNA / env, `Assembly*` packages, and the living-docs pass wait.
 
 | Family | What code names today | Kind | Prefer |
 |--------|------------------------|------|--------|
-| **household** | module `household.py`; `HouseholdEffectPort`; `default_household_effects` (types wait); row id now `structure.effect_intents` | Public type + factory | Structure materialize / effect port |
+| **household** | **renamed** → module `structure_effects.py`; `StructureEffectPort`; `default_structure_effects`; row id `structure.effect_intents` | Public type + factory | Structure materialize / effect port |
 | **kingdom** | **renamed** → `admission_inventory` / `admission_inventory_snapshot`; `role=admission_inventory` | Public inventory API | Admission inventory |
 | **citizen** | **renamed** → `GATED_PATHS`; keys `gated_paths` / `gated_count` | Public constant + snapshot | Admitted paths |
 | **pretender** | **renamed** → `READINESS_EDGES`; `open_residual_edges`; `paid_readiness_edges`; keys `readiness_edges` / `readiness_edge_count` | Public inventory API | Dual readiness / named residual |
@@ -55,7 +55,7 @@ Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`
 
 **2026-08-17:** comments and docstrings under `src/palm/` and `tests/` restated toward glossary words.
 
-**2026-08-17 (later):** smallest identifier cut landed. Inventory tuple `id` / `law` / `intent` restated with the map above. Household type names and DNA / env identifiers unchanged.
+**2026-08-17 (later):** smallest identifier cut landed, then household types. Inventory tuple `id` / `law` / `intent` restated with the map above. DNA / env identifiers unchanged.
 
 ---
 
@@ -98,7 +98,7 @@ Do not rewrite those in the same sitting as a code rename.
 | Cut | Scope |
 |-----|--------|
 | **Comments + inventory names** | `kingdom_*`, `GATED_CITIZENS`, `PRETENDER_*`, `HouseholdEffectPort` / `household.py`, inventory row ids, doctor / assist labels |
-| **Comments + inventory only; household types wait** | **Locked 2026-08-17.** Inventory API, row ids, doctor / Assist labels landed. `HouseholdEffectPort` stays with `Assembly*` |
+| **Household types** | **Locked 2026-08-17.** `HouseholdEffectPort` / `household.py` / `default_household_effects` → `StructureEffectPort` / `structure_effects.py` / `default_structure_effects`. No aliases. |
 | **DNA / env** | `PALM_ASSEMBLY_DNA_ID`, `assembly_dna_id`, `resolve_builtin_dna` — public seed; own sitting |
 | **Package / type rename** | `AssemblyDefinition`, `AssemblyEngine`, `palm.*.assembly` — own sitting |
 | **Docs pass** | VISION-ASSEMBLY §4/§6.4, PALM, WRITING, ADR-032 — own sitting |

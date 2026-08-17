@@ -33,7 +33,7 @@ def test_place_book_ensure_release() -> None:
 
 
 def test_seat_assemble_with_places_converges() -> None:
-    seat = AssemblySeat()  # default HouseholdEffectPort (0.63.15)
+    seat = AssemblySeat()  # default StructureEffectPort (0.63.15)
     dna = AssemblyDefinition(
         id="local.with_places",
         version="1",

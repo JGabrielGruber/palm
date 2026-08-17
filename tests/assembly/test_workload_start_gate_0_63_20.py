@@ -83,7 +83,7 @@ def test_start_workload_allowed_when_admitted() -> None:
         rt.stop()
 
 
-def test_household_workload_engine_not_gated_by_port() -> None:
+def test_structure_workload_engine_not_gated_by_port() -> None:
     """Place-book path uses engine directly — unit path, not ExecutionPort admission path."""
     reset_system_log_for_tests()
     rt = BaseRuntime()

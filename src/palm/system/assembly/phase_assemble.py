@@ -13,7 +13,7 @@ from palm.core.assembly import AssemblyDefinition, resolve_builtin_dna
 from palm.system.assembly.hands import CapabilitySeats
 from palm.system.assembly.host_bind import (
     bind_host_structure_to_seat,
-    default_household_effects,
+    default_structure_effects,
     resolve_workload_engine,
 )
 from palm.system.assembly.seat import AssemblySeat
@@ -54,7 +54,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     if seat is None:
         # 0.63.17 — place-book hands + combined structure spawn; bind engine when ready.
         engine = resolve_workload_engine(shell) if bind_workload else None
-        seat = AssemblySeat(effects=default_household_effects(engine=engine))
+        seat = AssemblySeat(effects=default_structure_effects(engine=engine))
         shell.assembly = seat
         bind_report = {
             "bound": True,
@@ -98,7 +98,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     ctx.set("assembly_structure_bind", bind_report)
     get_system_log().info(
         "assembly.assemble",
-        "household assemble complete",
+        "structure assemble complete",
         schedule="system",
         runtime=ctx.runtime,
         definition_id=dna.id,
@@ -116,7 +116,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
 DEFINITION = PhaseDefinition(
     id="system.assembly.assemble",
     run=run,
-    description="Household assemble — load DNA, reconcile, publish admission",
+    description="Structure assemble — load definition, reconcile, publish admission",
 )
 
 __all__ = ["DEFINITION", "run"]

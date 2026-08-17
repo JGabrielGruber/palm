@@ -13,17 +13,17 @@ from palm.core.assembly import (
 )
 from palm.system.assembly import (
     AssemblySeat,
-    HouseholdEffectPort,
     OsProcessRegistry,
     PlaceBookEffectPort,
+    StructureEffectPort,
     os_prefix_spawn_port,
 )
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
 
-def test_household_projection_invalidate_refresh() -> None:
-    hands = HouseholdEffectPort()
+def test_structure_projection_invalidate_refresh() -> None:
+    hands = StructureEffectPort()
     hands.bind_structure(local_embedded())
     inv = hands.apply(
         EffectIntent(kind=EffectIntentKind.INVALIDATE_PROJECTION, target="home")
@@ -38,8 +38,8 @@ def test_household_projection_invalidate_refresh() -> None:
     assert "home" in hands.projections_loaded
 
 
-def test_household_structure_policy_refuse() -> None:
-    hands = HouseholdEffectPort()
+def test_structure_policy_refuse() -> None:
+    hands = StructureEffectPort()
     hands.bind_structure(
         local_embedded(),
         surfaces=("rest",),
@@ -50,15 +50,15 @@ def test_household_structure_policy_refuse() -> None:
     assert any("server_surfaces" in o.target for o in obs)
 
 
-def test_household_structure_policy_clear() -> None:
-    hands = HouseholdEffectPort()
+def test_structure_policy_clear() -> None:
+    hands = StructureEffectPort()
     hands.bind_structure(local_embedded(), surfaces=(), capabilities=())
     obs = hands.apply(EffectIntent(kind=EffectIntentKind.APPLY_STRUCTURE_POLICY))
     assert all(o.kind.value == "structure_policy_cleared" for o in obs)
 
 
-def test_household_request_structure_seed() -> None:
-    hands = HouseholdEffectPort()
+def test_structure_request_seed() -> None:
+    hands = StructureEffectPort()
     hands.bind_structure(local_embedded())
     obs = hands.apply(EffectIntent(kind=EffectIntentKind.REQUEST_STRUCTURE_SEED))
     assert obs[0].kind.value == "structure_seed_finished"
@@ -68,7 +68,7 @@ def test_household_request_structure_seed() -> None:
 def test_seat_binds_structure_on_assemble() -> None:
     seat = AssemblySeat()
     seat.assemble(local_embedded(), capabilities=("work_drain",))
-    assert isinstance(seat.effects, HouseholdEffectPort)
+    assert isinstance(seat.effects, StructureEffectPort)
     assert seat.effects.definition is not None
     assert "work_drain" in seat.effects.capabilities
     # Bag is recorded. Drain membership is DNA — embedded does not list it.
@@ -126,13 +126,13 @@ def test_os_process_fail_closed_without_argv() -> None:
     assert result.reason == "os_spawn_not_configured"
 
 
-def test_runtime_household_default_hands() -> None:
+def test_runtime_structure_default_hands() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
         assert rt.admission.may_run_business is True
-        assert isinstance(rt.assembly.effects, HouseholdEffectPort)  # type: ignore[union-attr]
+        assert isinstance(rt.assembly.effects, StructureEffectPort)  # type: ignore[union-attr]
     finally:
         rt.stop()
 
@@ -144,7 +144,7 @@ def test_engine_projection_intents_via_loop() -> None:
 
     engine = AssemblyEngine()
     engine.initialize()
-    hands = HouseholdEffectPort()
+    hands = StructureEffectPort()
     hands.bind_structure(local_embedded())
     engine.receive_definition(local_embedded())
     assemble_until_steady(engine, hands)
