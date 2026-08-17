@@ -393,6 +393,53 @@ def test_default_probe_catalog_has_core_seeds() -> None:
     assert SEAT_WORK_PLANE not in ids
 
 
+def test_first_resolver_picks_first_non_none() -> None:
+    from palm.system.vitality.probe import attr_resolver, first_resolver
+
+    class _Shell:
+        named = None
+        other = "kept"
+
+    resolve = first_resolver(attr_resolver("named"), attr_resolver("other"))
+    assert resolve(_Shell()) == "kept"
+
+
+def test_default_probes_use_shared_resolvers() -> None:
+    """Seat table uses attr_resolver / hub / first_resolver — no getattr wrappers."""
+    import palm.system.vitality.seats as seats
+    from palm.system.subsystems.planes.hub import get_system_planes
+    from palm.system.vitality.schema import SEAT_ASSEMBLY, SEAT_INSTALL, SEAT_PLANES
+    from palm.system.vitality.seats import build_default_probes
+
+    for name in (
+        "_resolve_execution",
+        "_resolve_install",
+        "_resolve_system_log",
+        "_resolve_planes",
+        "_resolve_assembly",
+    ):
+        assert not hasattr(seats, name), name
+
+    probes = {p.seat_id: p for p in build_default_probes()}
+
+    def attr_names(resolve: object) -> tuple[str, ...]:
+        assert getattr(resolve, "__qualname__", "") == "attr_resolver.<locals>._resolve"
+        closure = getattr(resolve, "__closure__", None)
+        assert closure is not None
+        return closure[0].cell_contents
+
+    assert attr_names(probes[SEAT_SUPERVISOR].resolve) == ("supervisor",)
+    assert attr_names(probes[SEAT_EXECUTION].resolve) == ("execution",)
+    assert attr_names(probes[SEAT_INSTALL].resolve) == ("install",)
+    assert attr_names(probes[SEAT_ASSEMBLY].resolve) == ("assembly",)
+    assert probes[SEAT_PLANES].resolve is get_system_planes
+    boot = probes[SEAT_BOOT_MEMBERSHIP].resolve
+    assert getattr(boot, "__qualname__", "") == "private_attr_resolver.<locals>._resolve"
+    slog = probes[SEAT_SYSTEM_LOG].resolve
+    assert getattr(slog, "__qualname__", "") == "first_resolver.<locals>._resolve"
+    assert probes[SEAT_SYSTEM_LOG].report_instance is None
+
+
 # ── lean shell: honest absent ────────────────────────────────────────────────
 
 

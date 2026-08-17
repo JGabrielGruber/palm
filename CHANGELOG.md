@@ -15,6 +15,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - Host `start_plane` and coordinator `_start_plane` aliases gone. The start plane is `runtime.work_plane`. The boot window `host.background.start_plane` stays.
 - Assemble reads and writes `shell.assembly`. Settings and deployment no longer carry `enable_work_drain_service`.
 - Vitality assembly probe uses `attr_resolver("assembly")`, same as supervisor.
+- Vitality default probes share `attr_resolver` / `get_system_planes` / `first_resolver`. Duck-type execution fallback and dead install/log wrappers gone.
 
 ### 0.63.39 — work_drain materialize
 - `AssemblyDefinition.capabilities` — builtin DNA lists `work_drain` on cli/server/all_in_one/worker (not embedded/mcp)

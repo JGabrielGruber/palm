@@ -192,6 +192,21 @@ def private_attr_resolver(*names: str) -> SeatResolver:
     return _resolve
 
 
+def first_resolver(*resolvers: SeatResolver) -> SeatResolver:
+    """Resolve with the first resolver that returns non-None."""
+
+    fns = tuple(resolvers)
+
+    def _resolve(instance: Any) -> Any | None:
+        for fn in fns:
+            value = fn(instance)
+            if value is not None:
+                return value
+        return None
+
+    return _resolve
+
+
 def fixed_probes(probes: Sequence[SeatProbe]) -> ProbeCatalog:
     """Build a catalog from an explicit sequence."""
     return ProbeCatalog().extend(probes)
@@ -205,6 +220,7 @@ __all__ = [
     "SeatReporter",
     "SeatResolver",
     "attr_resolver",
+    "first_resolver",
     "fixed_probes",
     "private_attr_resolver",
 ]

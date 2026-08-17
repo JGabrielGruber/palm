@@ -13,10 +13,12 @@ from __future__ import annotations
 
 from typing import Any
 
+from palm.system.subsystems.planes.hub import get_system_planes
 from palm.system.vitality.probe import (
     ProbeCatalog,
     SeatProbe,
     attr_resolver,
+    first_resolver,
     private_attr_resolver,
 )
 from palm.system.vitality.raw import (
@@ -44,46 +46,14 @@ from palm.system.vitality.schema import (
 )
 
 
-def _resolve_execution(instance: Any) -> Any | None:
-    port = getattr(instance, "execution", None)
-    if port is not None:
-        return port
-    if callable(getattr(instance, "invoke_resource", None)):
-        return instance
-    return None
-
-
-def _resolve_install(instance: Any) -> Any | None:
-    """InstallInterface board on the shell (explicit bind; not bag scrape)."""
-    board = getattr(instance, "install", None)
-    if board is None:
-        return None
-    # Prefer objects that look like the install board (status of ports).
-    if callable(getattr(board, "status", None)):
-        return board
-    return board
-
-
-def _resolve_system_log(instance: Any) -> Any | None:
-    bound = getattr(instance, "system_log", None)
-    if bound is not None:
-        return bound
+def _process_system_log(_instance: Any) -> Any | None:
+    """Process-wide log when the instance does not seat one."""
     try:
         from palm.system.log import get_system_log
 
         return get_system_log()
     except Exception:
         return None
-
-
-def _resolve_planes(instance: Any) -> Any | None:
-    """Hub only — never invent plane members from vitality."""
-    from palm.system.subsystems.planes.hub import SystemPlanes, get_system_planes
-
-    hub = get_system_planes(instance)
-    if isinstance(hub, SystemPlanes):
-        return hub
-    return None
 
 
 def _report_execution(instance: Any, port: Any) -> SeatReport:
@@ -184,24 +154,13 @@ def _report_system_log(instance: Any, log: Any) -> SeatReport:
     )
 
 
-def _report_system_log_instance(instance: Any) -> SeatReport:
-    log = _resolve_system_log(instance)
-    if log is None:
-        return SeatReport.absent(
-            SEAT_SYSTEM_LOG,
-            KIND_LOG,
-            reason="system_log_unavailable",
-        )
-    return _report_system_log(instance, log)
-
-
 def build_default_probes() -> list[SeatProbe]:
     """Ordered default probes — planes hub + supervisor + ports + log + boot."""
     return [
         SeatProbe(
             seat_id=SEAT_PLANES,
             kind=KIND_OTHER,
-            resolve=_resolve_planes,
+            resolve=get_system_planes,
             report=bound_method_reporter(SEAT_PLANES, KIND_OTHER, "status"),
             order=5,
             tags=("core", "planes", "hub"),
@@ -219,7 +178,7 @@ def build_default_probes() -> list[SeatProbe]:
         SeatProbe(
             seat_id=SEAT_EXECUTION,
             kind=KIND_PORT,
-            resolve=_resolve_execution,
+            resolve=attr_resolver("execution"),
             report=_report_execution,
             order=50,
             tags=("core", "port"),
@@ -228,7 +187,7 @@ def build_default_probes() -> list[SeatProbe]:
         SeatProbe(
             seat_id=SEAT_INSTALL,
             kind=KIND_PORT,
-            resolve=_resolve_install,
+            resolve=attr_resolver("install"),
             report=_report_install,
             order=55,
             tags=("core", "port", "install"),
@@ -247,9 +206,11 @@ def build_default_probes() -> list[SeatProbe]:
         SeatProbe(
             seat_id=SEAT_SYSTEM_LOG,
             kind=KIND_LOG,
-            resolve=_resolve_system_log,
+            resolve=first_resolver(
+                attr_resolver("system_log"),
+                _process_system_log,
+            ),
             report=_report_system_log,
-            report_instance=_report_system_log_instance,
             order=60,
             tags=("core", "log", "process"),
             description="System log — raw public attrs",

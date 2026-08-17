@@ -67,6 +67,7 @@ from palm.system.vitality.probe import (
     ProbeCatalog,
     SeatProbe,
     attr_resolver,
+    first_resolver,
     fixed_probes,
     private_attr_resolver,
 )
@@ -252,6 +253,7 @@ __all__ = [
     "diff_load_points",
     "discover_seats",
     "extract_load_points",
+    "first_resolver",
     "fixed_probes",
     "has_seat_report",
     "index_by_seat_id",

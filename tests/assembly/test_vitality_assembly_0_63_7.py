@@ -21,21 +21,6 @@ def test_assembly_seat_in_default_probes() -> None:
     assert any(p.seat_id == SEAT_ASSEMBLY for p in build_default_probes())
 
 
-def test_assembly_probe_uses_attr_resolver() -> None:
-    """Eyes probe assembly the same way they probe supervisor."""
-    import palm.system.vitality.seats as seats
-    from palm.system.vitality import SEAT_SUPERVISOR
-    from palm.system.vitality.seats import build_default_probes
-
-    assert not hasattr(seats, "_resolve_assembly")
-    probes = {p.seat_id: p for p in build_default_probes()}
-    assembly = probes[SEAT_ASSEMBLY]
-    supervisor = probes[SEAT_SUPERVISOR]
-    assert assembly.resolve.__qualname__ == "attr_resolver.<locals>._resolve"
-    assert supervisor.resolve.__qualname__ == "attr_resolver.<locals>._resolve"
-    assert assembly.resolve.__closure__[0].cell_contents == ("assembly",)
-
-
 def test_started_runtime_assembly_seat_ok() -> None:
     reset_system_log_for_tests()
     reset_default_probe_catalog_for_tests()
