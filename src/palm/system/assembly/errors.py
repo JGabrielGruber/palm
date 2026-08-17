@@ -11,7 +11,7 @@ from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
 class AdmissionRefusedError(RuntimeError):
     """Business that needs ground was refused — admission fail closed.
 
-    Raised when a citizen path (submit_flow, work-plane tick, …) runs while
+    Raised when a business path that needs admission (submit_flow, work-plane tick, …) runs while
     ``may_run_business`` is false.
     """
 
@@ -60,7 +60,7 @@ def _from_duck(obj: Any) -> AdmissionSnapshot | None:
 def coerce_admission_snapshot(source: object) -> AdmissionSnapshot | None:
     """Normalize a published admission *source* into a snapshot.
 
-    Accepts (peasants' oath shapes — not host dig):
+    Accepts (published admission shapes — not host dig):
 
     - :class:`AdmissionSnapshot`
     - zero-arg callable returning any of the below

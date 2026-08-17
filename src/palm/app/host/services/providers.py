@@ -55,7 +55,7 @@ def _build_definitions(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 
 def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
-    # 0.63.30/31 — inject published admission for execution product façades (oath).
+    # 0.63.30/31 — inject published admission for execution product façades.
     from palm.system.assembly.access import admission_source_from_runtime_resolver
 
     admission_source = admission_source_from_runtime_resolver(
@@ -94,7 +94,7 @@ def _build_execution(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
 
 
 def _build_assist(ctx: HostServiceContext, built: dict[str, Any]) -> Any:
-    # 0.63.22/23 — inject published admission (oath); packaging digs once.
+    # 0.63.22/23 — inject published admission; packaging binds it once.
     from palm.system.assembly.access import admission_source_from_runtime_resolver
 
     return AssistService(

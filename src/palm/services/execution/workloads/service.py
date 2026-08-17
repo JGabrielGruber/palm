@@ -35,7 +35,7 @@ class WorkloadExecutionService(BaseService):
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
-        # 0.63.31 — peasants' oath (product façade; no base class).
+        # 0.63.31 — published admission (product façade; no base class).
         self._admission_source = admission_source
 
     def resolve_runtime(self, runtime_name: str | None = None) -> BaseRuntime:
@@ -46,7 +46,7 @@ class WorkloadExecutionService(BaseService):
         return self._runtime
 
     def admission_gate(self) -> object:
-        """Published admission source for product workload citizens (0.63.31)."""
+        """Published admission source for product workload start (0.63.31)."""
         if self._admission_source is not None:
             return self._admission_source
         return self.resolve_runtime()
@@ -64,10 +64,10 @@ class WorkloadExecutionService(BaseService):
         host_id: str | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Start a workload (product citizen — admission + ExecutionPort).
+        """Start a workload (product start — admission + ExecutionPort).
 
-        **0.63.31:** product edge fails closed via ``admission_gate()``; port is
-        the second wall.
+        **0.63.31:** product edge fails closed via ``admission_gate()``; port
+        remains a second admission check.
         """
         from palm.system.assembly.errors import require_business_admission
 
@@ -97,7 +97,7 @@ class WorkloadExecutionService(BaseService):
         env: dict[str, str] | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Exec argv on a READY workspace/service (product citizen).
+        """Exec argv on a READY workspace/service (product start).
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
@@ -118,7 +118,7 @@ class WorkloadExecutionService(BaseService):
         *,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Idempotent stop — control path (not admission citizen).
+        """Idempotent stop — control path (not a business path that needs admission).
 
         Named residual: shutdown/cleanup when admission is closed.
         """

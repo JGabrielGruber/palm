@@ -222,7 +222,7 @@ def build_menu_page(
     elif may_start:
         actions.append({"label": "Operator entry", "alias": "operator-entry/start"})
     else:
-        # Honest eyes — do not CTA a citizen start when the gate is closed.
+        # Honest eyes — do not CTA a product start when the gate is closed.
         actions.append(
             {
                 "label": "Admission (starts closed)",

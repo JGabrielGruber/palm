@@ -7,7 +7,7 @@ wire, recovery, workplane) are tools — they do not own boot order.
 
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
 capabilities other than ``work_drain``. After assemble, ``work_drain`` start
-reads walker output (supervisor ``work_drain``) — not DNA. Skip
+reads walker output (supervisor ``work_drain``) — not the structure definition. Skip
 ``structure_off:work_drain`` when the service is unregistered or there is no
 runtime/supervisor.
 
@@ -58,9 +58,9 @@ def build_host_handlers(
 
     def system_spawn(_ctx: BootContext) -> None:
         merged = runtime_start_options(host.settings, **options)
-        # 0.63.5 / 0.63.13 — seed DNA + membership for refuse.
-        # Caller DNA override still wins; membership always seeds so dual shapes
-        # fail closed under refuse (env/composition cannot hide from the wall).
+        # 0.63.5 / 0.63.13 — seed structure definition + membership for refuse.
+        # Caller definition override still wins; membership always seeds so dual shapes
+        # fail closed under refuse (env/composition cannot hide from admission).
         if not merged.get("assembly_skip") and not merged.get("skip_assembly"):
             from palm.system.assembly.seed import seed_assembly_options_from_host
 
@@ -69,11 +69,11 @@ def build_host_handlers(
             for key in ("assembly_surfaces", "assembly_capabilities"):
                 if key not in options:
                     merged[key] = seed[key]
-            # DNA: runtime options / explicit definition win; else seed (incl. env).
+            # Structure definition: runtime options / explicit definition win; else seed (incl. env).
             if "assembly_definition" not in options and "assembly_dna_id" not in options:
                 merged["assembly_dna_id"] = seed["assembly_dna_id"]
                 merged["assembly_definition"] = seed["assembly_definition"]
-        # 0.63.28 — composition membership kings outbox *store wire* on host path.
+        # 0.63.28 — composition membership decides outbox *store wire* on host path.
         # settings.enable_event_outbox seeds composition at resolve only; after
         # resolve, composition.has("outbox") is structure truth (not peer OR).
         # Explicit host.start(enable_event_outbox=…) still wins (named override).

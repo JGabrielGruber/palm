@@ -1,6 +1,6 @@
-"""Assembly definition (DNA) — pure desired structure.
+"""Assembly definition — structure definition, pure desired structure.
 
-Floor DNA: identity, role intent, refuse, capabilities, places required.
+Floor: identity, role intent, refuse, capabilities, places required.
 Capabilities are the local install set. First unit: work_drain.
 Richer fields (projection, authority pointers) grow without breaking these names.
 """
@@ -26,7 +26,7 @@ _WORK_DRAIN = frozenset({CAPABILITY_WORK_DRAIN})
 
 @dataclass(frozen=True, slots=True)
 class AssemblyDefinition:
-    """Declarative desired structure for one process (DNA).
+    """Declarative desired structure for one process.
 
     After load, this is structure law. Profiles/env only *seed* it.
     """
@@ -75,7 +75,7 @@ class AssemblyDefinition:
 
 
 def local_embedded(*, version: str = "1") -> AssemblyDefinition:
-    """Floor builtin DNA: thin body — core ground, no surfaces, no drain membership."""
+    """Floor builtin structure definition: thin body — core ground, no surfaces, no drain membership."""
     return AssemblyDefinition(
         id=LOCAL_EMBEDDED_ID,
         version=version,

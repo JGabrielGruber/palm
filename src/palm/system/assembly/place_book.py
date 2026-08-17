@@ -1,6 +1,6 @@
 """In-process place book — assembly effect hands for ENSURE/RELEASE place (0.63.11+).
 
-Ledger of places the household can mark ready so DNA with places_required can
+Ledger of places the place-book can mark ready so a definition with places_required can
 converge. **0.63.14:** optional :class:`PlaceSpawnPort` grows bodies (OS /
 workload strategies); default remains in-process success. Not Grove.
 """

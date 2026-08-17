@@ -196,7 +196,7 @@ class ExplorerFetcher:
         state: Any = None,
         resource_id: str | None = None,
     ) -> Any:
-        """Invoke a resource (0.63.34 surface fealty).
+        """Invoke a resource (0.63.34 — host packaging door or admission + port).
 
         Prefer host packaging when attached; host-less path admits then uses
         ExecutionPort (keeps ProviderResult shape for explorer pages).

@@ -1,7 +1,7 @@
 """AssemblyEngine — pure desired-structure reconciler.
 
 No sockets. No OS spawn. No business jobs. System applies effect intents;
-clients read admission. Floor: embedded DNA with empty places becomes READY
+clients read admission. Floor: embedded definition with empty places becomes READY
 after tick when not blocked.
 """
 

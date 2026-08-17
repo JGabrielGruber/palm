@@ -56,7 +56,7 @@ def handle_wizard_command(command: Command, ctx: Any) -> Any | None:
             return ctx._submit_flow(submit)
         raise RuntimeError("CQRS context cannot submit wizard flows")
     if isinstance(command, ProvideWizardInputCommand):
-        # 0.63.34 — pattern CQRS continue citizen (port was already second wall)
+        # 0.63.34 — pattern CQRS product continue (port was already a second admission check)
         runtime = _resolve_runtime(ctx, command.runtime_name)
         from palm.system.assembly.errors import require_business_admission
 

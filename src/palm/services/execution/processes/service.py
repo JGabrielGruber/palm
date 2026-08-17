@@ -34,7 +34,7 @@ class ProcessExecutionService(BaseService):
         super().__init__(commands=commands, queries=queries, schemas=schemas)
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
-        # 0.63.31 — peasants' oath (product façade; no base class).
+        # 0.63.31 — published admission (product façade; no base class).
         self._admission_source = admission_source
 
     def dispatch(
@@ -91,7 +91,7 @@ class ProcessExecutionService(BaseService):
         body: dict[str, Any] | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Stage execution plans (product citizen — needs definition ground).
+        """Stage execution plans (product start — needs definition ground).
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
@@ -117,7 +117,7 @@ class ProcessExecutionService(BaseService):
         *,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Consume staged plan ids and submit jobs (product citizen).
+        """Consume staged plan ids and submit jobs (product start).
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
@@ -147,7 +147,7 @@ class ProcessExecutionService(BaseService):
         body: dict[str, Any] | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Submit a process in one call (product citizen).
+        """Submit a process in one call (product start).
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
@@ -179,7 +179,7 @@ class ProcessExecutionService(BaseService):
         raise RuntimeError("ProcessExecutionService requires a runtime or runtime_resolver")
 
     def admission_gate(self) -> object:
-        """Published admission source for process product citizens (0.63.31)."""
+        """Published admission source for process product start (0.63.31)."""
         if self._admission_source is not None:
             return self._admission_source
         return self.resolve_runtime()

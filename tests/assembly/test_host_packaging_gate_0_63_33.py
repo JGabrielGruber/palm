@@ -1,4 +1,4 @@
-"""0.63.33 — host packaging market-day doors are citizens; kernel dig named."""
+"""0.63.33 — host packaging business start / continue doors need admission; kernel dig named."""
 
 from __future__ import annotations
 

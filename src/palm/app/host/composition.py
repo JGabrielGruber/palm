@@ -7,8 +7,8 @@ The composition axis, twin of ``DeploymentProfile`` (the deployment axis, in
 
 **0.59.5 membership truth:** this profile seeds product services, surfaces, and
 capabilities other than ``work_drain``. Deployment may feed the settings resolver
-but does not OR at phase time. After DNA load, ``work_drain`` install is DNA
-``capabilities`` (0.64). See ADR-028 D4, VISION-0.64, and
+but does not OR at phase time. After structure definition load, ``work_drain``
+install is definition ``capabilities`` (0.64). See ADR-028 D4, VISION-0.64, and
 ``composition_profile_from_settings``.
 
 History: skeleton 0.50 · living capabilities 0.51 · boot schedule 0.59.2-.4 ·

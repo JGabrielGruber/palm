@@ -1,4 +1,4 @@
-"""Household effect port — place book + structure intents (0.63.15).
+"""Place-book + structure-intent effect port (0.63.15).
 
 Closed intent set from pure assembly: ensure/release place, invalidate/refresh
 projection, apply structure policy, request structure seed. System hands only.
@@ -38,7 +38,7 @@ class HouseholdEffectPort:
         surfaces: Iterable[str] = (),
         capabilities: Iterable[str] = (),
     ) -> None:
-        """Bind DNA + membership so APPLY_STRUCTURE_POLICY can re-check refuse."""
+        """Bind structure definition + membership so APPLY_STRUCTURE_POLICY can re-check refuse."""
         self.definition = definition
         self.surfaces = tuple(str(s) for s in surfaces if s)
         self.capabilities = tuple(str(c) for c in capabilities if c)

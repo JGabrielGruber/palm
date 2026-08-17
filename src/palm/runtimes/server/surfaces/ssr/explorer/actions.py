@@ -130,7 +130,7 @@ class ExplorerActions:
                     f"Instance {instance_id!r} is not waiting for input "
                     f"(status={job.status.value})"
                 )
-            # 0.63.34 surface fealty — host packaging or admission + port
+            # 0.63.34 — host packaging door or admission + port
             host = self._ctx.host
             if host is not None:
                 host.resume_job(job.id)

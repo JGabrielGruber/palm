@@ -37,7 +37,7 @@ class WaitPlaneService:
     * :meth:`attach` — wire orchestration + optional event engine + *able*
     * :meth:`detach` — unsubscribe
 
-    **0.63.26:** *able* gates **resume** (continue citizen). Default fail closed.
+    **0.63.26:** *able* gates **resume** (product continue). Default fail closed.
     Target **fail** still applies (honest completer failure). Install wires the
     same ``started ∧ admission`` able as the work plane.
     """
@@ -112,7 +112,7 @@ class WaitPlaneService:
             if job is None:
                 return
             if not self.is_able():
-                # 0.63.26 — continue citizen: do not re-drive business when
+                # 0.63.26 — product continue: do not re-drive business when
                 # admission/started is down. Fail closed (not soft resume dig).
                 self._refused_resumes += 1
                 from palm.system.assembly.errors import AdmissionRefusedError

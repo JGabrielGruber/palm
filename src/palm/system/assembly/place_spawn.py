@@ -2,9 +2,9 @@
 
 In-process ledger (0.63.11) marks ready. This port is the **structure hand** that
 may later OS-spawn or workload-place. Floor default is in-process success so
-embedded DNA stays green. Fail closed when a registered strategy refuses.
+embedded definition stays green. Fail closed when a registered strategy refuses.
 
-Not Grove. Not product job path. Assembly household only.
+Not Grove. Not product job path. Structure assemble / place-book only.
 """
 
 from __future__ import annotations
@@ -154,7 +154,7 @@ class RegisteredPlaceSpawn:
 def fail_closed_os_ensure(
     place_id: str, payload: Mapping[str, Any]
 ) -> PlaceSpawnResult:
-    """Honest OS pretender purge: refuse unless body handle or spawnable argv.
+    """Refuse unless body handle or spawnable argv (illegal fake OS body).
 
     Prefer :class:`OsProcessRegistry` via :func:`os_prefix_spawn_port` for real
     process spawn. This pure helper still accepts pre-supplied handles.
@@ -205,7 +205,7 @@ def _argv_from_payload(payload: Mapping[str, Any]) -> list[str] | None:
 class OsProcessRegistry:
     """Real OS process bodies for assembly place ensure (0.63.15).
 
-    Household only — not product job path. Tracks :class:`subprocess.Popen`
+    Structure assemble / place-book only — not the product job path. Tracks :class:`subprocess.Popen`
     by place id; release terminates the process group when possible.
     """
 

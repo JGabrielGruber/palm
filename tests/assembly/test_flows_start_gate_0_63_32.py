@@ -1,4 +1,4 @@
-"""0.63.32 — flow product start doors are citizens; list/describe soft residual."""
+"""0.63.32 — flow product start doors are business paths that need admission; list/describe soft residual."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def _flows_with_closed_inject() -> FlowExecutionService:
         admission_source=lambda: closed,
     )
     flows.resolve_runtime = MagicMock(  # type: ignore[method-assign]
-        side_effect=AssertionError("oath broken: resolve_runtime used for admission")
+        side_effect=AssertionError("published admission broken: resolve_runtime used for admission")
     )
     flows.dispatch_command = MagicMock(  # type: ignore[method-assign]
         side_effect=AssertionError("must not dispatch when admission closed")

@@ -133,7 +133,7 @@ class BaseRuntime:
 
     @property
     def assembly(self) -> AssemblySeat | None:
-        """Assembly seat (DNA + engine + admission) after household assemble."""
+        """Assembly seat (definition + engine + admission) after structure assemble."""
         return self._assembly
 
     @assembly.setter
@@ -235,7 +235,7 @@ class BaseRuntime:
         def _able() -> bool:
             """Machine ready **and** admission allows business that needs ground.
 
-            0.63.3 — work-plane / drain citizen path is fail-closed on admission.
+            0.63.3 — work-plane / drain business path that needs admission is fail-closed.
             Live check: assembly may complete after planes attach.
             """
             if not self._started:
@@ -451,7 +451,7 @@ class BaseRuntime:
     def provide_input(self, job_id: str, value: Any) -> str | None:
         """Provide input for a waiting interactive job and resume execution.
 
-        **0.63.25 citizen:** product continue through the shell requires
+        **0.63.25:** product continue through the shell requires
         admission (same law as submit / resume_job). Wait-plane deliver that
         drives orchestration directly is a named residual (not this door).
         """
@@ -462,11 +462,11 @@ class BaseRuntime:
         return self.orchestration.deliver_input(job_id, value)
 
     def resume_process(self, instance_id: str) -> Job:
-        """Resume a persisted process instance (product continue citizen).
+        """Resume a persisted process instance (product continue).
 
         **0.63.29 cartography:** fail closed under admission. Enforcement is
         on ``DefinitionExecutor.resume_process`` via ``_require_runtime``
-        (same gate as submit since 0.63.4); shell documents the citizen door.
+        (same gate as submit since 0.63.4); shell documents the product-continue door.
         """
         self._require_started()
         return self.executor.resume_process(instance_id)
@@ -482,7 +482,7 @@ class BaseRuntime:
         return self.orchestration.get_job(job_id)
 
     def cancel_job(self, job_id: str) -> bool:
-        """Cancel a non-terminal job — control path (not admission citizen).
+        """Cancel a non-terminal job — control path (not an admission-gated business path).
 
         **0.63.30 named residual:** remains available when admission is closed
         so operators and shutdown can stop work (same spirit as stop_workload).
@@ -529,9 +529,9 @@ class BaseRuntime:
     ) -> Any:
         """Invoke a resource via the resource engine (ExecutionPort).
 
-        **0.63.24 citizen:** product / graph resource effects through this port
+        **0.63.24:** product / graph resource effects through this port
         require admission (same law as submit_flow / start_workload). Direct
-        ``ResourceEngine.invoke`` remains available for unit / household paths
+        ``ResourceEngine.invoke`` remains available for unit / place-book paths
         that are not product business doors.
         """
         from palm.system.assembly.errors import require_business_admission
@@ -561,8 +561,8 @@ class BaseRuntime:
     ) -> Any:
         """Start a workload via the workload engine (ExecutionPort).
 
-        **0.63.20 citizen:** product / graph start through this port requires
-        admission (same law as submit_flow). Household place spawn uses
+        **0.63.20:** product / graph start through this port requires
+        admission (same law as submit_flow). Structure assemble / place-book spawn uses
         ``WorkloadEngine`` directly and is not forced through this door.
         """
         from palm.system.assembly.errors import require_business_admission
@@ -593,7 +593,7 @@ class BaseRuntime:
     ) -> Any:
         """Exec argv on a READY workload (ExecutionPort).
 
-        **0.63.27 citizen:** product / graph exec through this port requires
+        **0.63.27:** product / graph exec through this port requires
         admission (same law as start_workload). Direct ``WorkloadEngine.exec``
         remains ungated for unit / non-port paths (named residual).
         """
@@ -610,7 +610,7 @@ class BaseRuntime:
     def stop_workload(self, workload_id: str, **kwargs: Any) -> Any:
         """Idempotent stop of a workload (ExecutionPort).
 
-        Not an admission citizen: stop/cancel must remain available for
+        Not an admission-gated business path: stop/cancel must remain available for
         shutdown and cleanup when business is closed (named residual under
         SD-020 if product misuse appears).
         """
@@ -627,7 +627,7 @@ class BaseRuntime:
     def resume_job(self, job_id: str) -> Any:
         """Re-drive a registered orchestration job (ExecutionPort).
 
-        **0.63.25 citizen:** product / surface re-drive through this port
+        **0.63.25:** product / surface re-drive through this port
         requires admission. Wait plane may still call ``orchestration.resume_job``
         directly — named residual under SD-020 (system continue spine).
         """

@@ -1,7 +1,7 @@
-"""Published admission access helpers — oath without a product base class (0.63.23).
+"""Published admission access helpers — no product base class (0.63.23).
 
 Shape discovered from assist inject (0.63.22): packaging digs once and hands a
-zero-arg factory; citizens call ``require_business_admission`` on that source.
+zero-arg factory; business paths that need admission call ``require_business_admission`` on that source.
 No service hierarchy required.
 """
 

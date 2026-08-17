@@ -1,4 +1,4 @@
-"""0.63.21 — assist product start is a citizen; menu nests admission."""
+"""0.63.21 — assist product start is a business path that needs admission; menu nests admission."""
 
 from __future__ import annotations
 

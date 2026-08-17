@@ -71,7 +71,7 @@ def open_target(
         )
 
     if kind_s in {"flow", "flows"}:
-        # 0.63.21 gate · 0.63.22 oath — published admission, not runtime dig.
+        # 0.63.21 gate · 0.63.22 — published admission, not runtime dig.
         from palm.system.assembly.errors import require_business_admission
 
         require_business_admission(assist.admission_gate())

@@ -54,7 +54,7 @@ def test_require_admission_ready_ok() -> None:
 
 
 def test_require_admission_accepts_snapshot_and_factory() -> None:
-    """0.63.22 — published gate shapes (oath), not only runtime shells."""
+    """0.63.22 — published admission shapes, not only runtime shells."""
     seat = AssemblySeat()
     seat.assemble(local_embedded())
     ready = seat.admission()
@@ -108,7 +108,7 @@ def test_submit_fail_closed_truth_home_down() -> None:
 
 
 def test_work_plane_and_submit_same_gate() -> None:
-    """Both citizen paths refuse under the same admission snapshot."""
+    """Both business paths that need admission refuse under the same snapshot."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(

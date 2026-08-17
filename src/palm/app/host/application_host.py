@@ -125,13 +125,13 @@ class ApplicationHost:
             self.composition = mode.composition
         else:
             # 0.63.12 — deployment roles seed composition when no BootMode
-            # (server/worker/all_in_one walls), else settings-composed all_in_one.
+            # (server/worker/all_in_one roles), else settings-composed all_in_one.
             from palm.app.host.composition import CompositionProfile
             from palm.system.assembly.seed import boot_mode_name_for_deployment
 
             seed_name = boot_mode_name_for_deployment(self.profile)
             if seed_name == "server":
-                # Server wall — full surfaces + drain membership intent
+                # Server role — full surfaces + drain membership intent
                 self.composition = CompositionProfile.server()
             elif seed_name == "worker":
                 self.composition = CompositionProfile.worker()
@@ -653,8 +653,9 @@ class ApplicationHost:
     ) -> ProviderResult:
         """Invoke a resource definition or direct provider on the host runtime.
 
-        **0.63.33:** packaging market-day door — admission fail closed (ports
-        remain a second wall; product façades are preferred for peasants).
+        **0.63.33:** host packaging door for business start — admission fail closed
+        (ports remain a second admission check; product façades are preferred
+        for surfaces).
         """
         self._require_business_admission()
         return self.app.invoke_resource(
@@ -683,7 +684,7 @@ class ApplicationHost:
 
         Job metadata and edge use one name: ``session_id`` (system subject only).
 
-        **0.63.33:** packaging market-day door — admission fail closed.
+        **0.63.33:** host packaging door for business start — admission fail closed.
         """
         self._require_business_admission()
         meta = dict(metadata or {})
@@ -714,7 +715,7 @@ class ApplicationHost:
     ) -> Job | list[Job]:
         """Submit a process.
 
-        **0.63.33:** packaging market-day door — admission fail closed.
+        **0.63.33:** host packaging door for business start — admission fail closed.
         """
         self._require_business_admission()
         return self.execute(
@@ -733,7 +734,7 @@ class ApplicationHost:
     ) -> str | None:
         """Provide interactive input for a waiting job.
 
-        **0.63.33:** packaging market-day door — admission fail closed.
+        **0.63.33:** host packaging door for business start — admission fail closed.
         """
         self._require_business_admission()
         return self.execute(
@@ -747,7 +748,7 @@ class ApplicationHost:
     def resume_process(self, instance_id: str, *, runtime_name: str | None = None) -> Job:
         """Resume a process/instance (product continue packaging door).
 
-        **0.63.33:** packaging market-day door — admission fail closed.
+        **0.63.33:** host packaging door for business continue — admission fail closed.
         """
         self._require_business_admission()
         return self.execute(
@@ -760,8 +761,9 @@ class ApplicationHost:
     def resume_job(self, job_id: str, *, runtime_name: str | None = None) -> None:
         """Resume orchestration for a job (packaging continue door).
 
-        **0.63.34:** packaging market-day door — admission fail closed; port
-        remains second wall. Surfaces must use this instead of dig kernel.
+        **0.63.34:** host packaging door for business continue — admission fail
+        closed; port remains a second admission check. Surfaces must use this
+        instead of the kernel.
         """
         self._require_business_admission()
         self._app.resume_job(job_id, runtime_name=runtime_name)
@@ -935,7 +937,7 @@ class ApplicationHost:
             raise RuntimeError("ApplicationHost is not started; call start() first")
 
     def _require_business_admission(self) -> None:
-        """Packaging crown market-day gate (0.63.33) — fail closed on admission."""
+        """Host packaging door for business start (0.63.33) — fail closed on admission."""
         from palm.system.assembly.errors import require_business_admission
 
         require_business_admission(self.admission)
@@ -953,9 +955,9 @@ def run_host(
 
     Library helper for standalone master/worker/server processes.
 
-    **0.63.12:** when *boot_mode* is omitted, deployment roles seed DNA via
-    host spawn (server → ``local.server``, worker → ``local.worker``, …).
-    Pass *boot_mode* to pin a BootMode decree explicitly.
+    **0.63.12:** when *boot_mode* is omitted, deployment roles seed structure
+    definition via host spawn (server → ``local.server``, worker → ``local.worker``, …).
+    Pass *boot_mode* to pin a BootMode seed explicitly.
     """
     resolved = profile if isinstance(profile, DeploymentProfile) else DeploymentProfile.from_preset(profile)
     host = ApplicationHost(settings=settings, profile=resolved, boot_mode=boot_mode)

@@ -1,4 +1,4 @@
-"""0.63.2 — system assembly seat + household assemble phase."""
+"""0.63.2 — system assembly seat + structure assemble phase."""
 
 from __future__ import annotations
 

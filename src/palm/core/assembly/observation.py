@@ -20,7 +20,7 @@ class ObservationKind(StrEnum):
     STRUCTURE_SEED_FINISHED = "structure_seed_finished"
     STRUCTURE_SEED_FAILED = "structure_seed_failed"
     SEAT_BOUND = "seat_bound"
-    #: Membership violates DNA refuse — target is reason code (refuse:…).
+    #: Membership violates definition refuse — target is reason code (refuse:…).
     STRUCTURE_POLICY_VIOLATION = "structure_policy_violation"
     #: Clear a prior policy violation reason (target = reason code).
     STRUCTURE_POLICY_CLEARED = "structure_policy_cleared"

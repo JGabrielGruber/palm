@@ -1,4 +1,4 @@
-"""0.63.20 — product workload start is a citizen (admission fail closed)."""
+"""0.63.20 — product workload start is a business path that needs admission (fail closed)."""
 
 from __future__ import annotations
 
@@ -84,7 +84,7 @@ def test_start_workload_allowed_when_admitted() -> None:
 
 
 def test_household_workload_engine_not_gated_by_port() -> None:
-    """Place-book path uses engine directly — household, not ExecutionPort citizen."""
+    """Place-book path uses engine directly — unit path, not ExecutionPort admission path."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(
@@ -96,7 +96,7 @@ def test_household_workload_engine_not_gated_by_port() -> None:
     try:
         engine = rt.workload
         assert engine is not None
-        # Direct engine start is household-shaped; does not call require_business_admission.
+        # Direct engine start is place-book / unit path; does not call require_business_admission.
         # May still fail on host runtime packaging — only assert no AdmissionRefusedError.
         try:
             engine.start(_minimal_spec())

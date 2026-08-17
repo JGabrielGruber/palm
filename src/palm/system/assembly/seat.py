@@ -54,10 +54,10 @@ class AssemblySeat:
         capabilities: Iterable[str] = (),
         force: bool = False,
     ) -> AssembleLoopResult:
-        """Household: load DNA (default embedded) and reconcile until steady.
+        """Structure assemble: load definition (default embedded) and reconcile until steady.
 
-        When *surfaces* are provided, DNA refuse is checked (0.63.6).
-        ``work_drain`` refuse reads DNA capabilities, not *capabilities*.
+        When *surfaces* are provided, definition refuse is checked (0.63.6).
+        ``work_drain`` refuse reads definition capabilities, not *capabilities*.
         Violations block admission — fail closed, no soft dual.
 
         *force* voids same-id READY and re-converges (0.63.18 reassemble edge).
@@ -91,7 +91,7 @@ class AssemblySeat:
         return result
 
     def materialize(self, seats: CapabilitySeats) -> frozenset[str]:
-        """Apply local capability membership from loaded DNA onto *seats*."""
+        """Apply local capability membership from loaded definition onto *seats*."""
         from palm.system.assembly.materialize import apply_local_capabilities
 
         applied = apply_local_capabilities(self.definition, seats)
@@ -107,10 +107,10 @@ class AssemblySeat:
         capabilities: Iterable[str] = (),
         force: bool = False,
     ) -> AssembleLoopResult:
-        """Re-converge after DNA or membership change (0.63.18).
+        """Re-converge after definition or membership change (0.63.18).
 
         Uses the current seat definition when *definition* is omitted.
-        Fails closed while invalidated/blocked; citizens must not soft-skip.
+        Fails closed while invalidated/blocked; business paths that need admission must not soft-skip.
         """
         dna = (
             definition

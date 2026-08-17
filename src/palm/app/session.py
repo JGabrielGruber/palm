@@ -35,7 +35,7 @@ def create_cli_host(
     """
     Construct a started :class:`~palm.app.host.ApplicationHost` for the CLI.
 
-    **0.63.9:** seeds **BootMode.cli** → DNA ``local.cli`` (operator body, no
+    **0.63.9:** seeds **BootMode.cli** → structure definition ``local.cli`` (operator body, no
     HTTP surfaces). Deployment stays collapsed all-in-one under that mode so
     command/query buses and projections stay available to terminal commands.
     """

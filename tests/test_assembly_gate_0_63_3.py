@@ -1,4 +1,4 @@
-"""0.63.3 — admission gate on work-plane citizen path (fail closed)."""
+"""0.63.3 — admission gate on work-plane business path that needs admission (fail closed)."""
 
 from __future__ import annotations
 

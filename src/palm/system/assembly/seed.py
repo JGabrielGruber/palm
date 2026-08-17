@@ -1,9 +1,9 @@
-"""Assembly DNA seed map — packaging chooses the decree (0.63.5+).
+"""Assembly seed map — env/composition are seed only; after load, status under the definition is truth (0.63.5+).
 
 Profiles, boot modes, composition, and structure-shaped env are **seeds**, not
-parallel structure kings. After load, assembly status under the DNA is truth.
+parallel law. After load, assembly status under the definition is truth.
 
-**0.63.13 — env pretenders (SD-021 growth):**
+**0.63.13 — env/composition are seed only (SD-021 growth):**
 - ``PALM_ASSEMBLY_DNA_ID`` / ``settings.assembly_dna_id`` is the explicit DNA seed.
 - Membership-shaped flags feed composition at resolve for organs that still
   live there. ``work_drain`` is not one of them.
@@ -11,7 +11,7 @@ parallel structure kings. After load, assembly status under the DNA is truth.
 **0.63.19 — full membership seed cartography (SD-021 residual):**
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
 - Bootstrap derives capabilities from this map — one truth for seed resolve.
-- ``work_drain`` install reads DNA ``capabilities``. Other capabilities still
+- ``work_drain`` install reads definition ``capabilities``. Other capabilities still
   seed composition at resolve.
 """
 
@@ -117,7 +117,7 @@ STRUCTURE_SEED_ENV: tuple[dict[str, str], ...] = (
     },
 )
 
-# Packaging knobs (not structure kings) — non-exhaustive; spirit not inventory.
+# Packaging knobs (seed choosers, not law after load) — non-exhaustive; spirit not inventory.
 PACKAGING_ENV_SPIRIT: tuple[str, ...] = (
     "PALM_STORAGE_BACKEND",
     "PALM_DATA_DIR",
@@ -182,7 +182,7 @@ def membership_capabilities_from_settings(
     """Derive composition capabilities from membership *seeds* (0.63.19).
 
     Settings ``enable_*`` / analytics flags seed membership **at resolve only**.
-    ``work_drain`` is not a composition seed — DNA ``capabilities`` list it.
+    ``work_drain`` is not a composition seed — definition ``capabilities`` list it.
     """
     capabilities: set[str] = set(ALWAYS_ON_MEMBERSHIP_CAPABILITIES)
     if settings is not None:
@@ -202,7 +202,7 @@ def resolve_seed_dna(
     version: str = "1",
     explicit_dna_id: str | None = None,
 ) -> AssemblyDefinition:
-    """Choose DNA: explicit id → boot mode → composition inference."""
+    """Choose definition: explicit id → boot mode → composition inference."""
     if explicit_dna_id:
         return resolve_builtin_dna(explicit_dna_id, version=version)
     from_mode = dna_id_for_boot_mode(mode_name)
@@ -266,7 +266,7 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     return {
         "assembly_dna_id": dna.id,
         "assembly_definition": dna,
-        # Membership facts for refuse check (0.63.6) — not a second structure king.
+        # Membership facts for refuse check (0.63.6) — seed only; status under the definition is truth.
         "assembly_surfaces": list(surfaces),
         "assembly_capabilities": sorted(capabilities),
     }

@@ -35,7 +35,7 @@ class ProviderExecutionService(BaseService):
         self._runtime_resolver = runtime_resolver
         self._definitions = definitions
         self._event_engine = event_engine
-        # 0.63.31 — peasants' oath (product façade; no base class).
+        # 0.63.31 — published admission (product façade; no base class).
         self._admission_source = admission_source
 
     def resolve_runtime(self, runtime_name: str | None = None) -> BaseRuntime:
@@ -62,7 +62,7 @@ class ProviderExecutionService(BaseService):
         resource_id: str | None = None,
         runtime_name: str | None = None,
     ) -> dict[str, Any]:
-        """Invoke a resource (product citizen — admission + ExecutionPort).
+        """Invoke a resource (product start — admission + ExecutionPort).
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """

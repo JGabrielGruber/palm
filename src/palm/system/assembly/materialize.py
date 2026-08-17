@@ -1,6 +1,6 @@
 """Local membership materialize — walker over the hands table.
 
-DNA names units. This module does not import organs. It looks up
+The structure definition names units. This module does not import organs. It looks up
 ``LOCAL_CAPABILITY_HANDS`` and applies each hand.
 """
 
@@ -11,7 +11,7 @@ from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 
 
 def definition_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
-    """True when DNA names work_drain as an install capability."""
+    """True when the definition names work_drain as an install capability."""
     if definition is None:
         return False
     return definition.has_capability(CAPABILITY_WORK_DRAIN)

@@ -1,4 +1,4 @@
-"""0.63.29 — assist product continue doors are citizens; cancel named residual."""
+"""0.63.29 — assist product continue doors are business paths that need admission; cancel named residual."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ def _closed_assist() -> MagicMock:
     assist = MagicMock()
     assist.admission_gate.return_value = closed
     assist.resolve_runtime.side_effect = AssertionError(
-        "oath broken: resolve_runtime used for admission"
+        "published admission broken: resolve_runtime used for admission"
     )
     return assist
 

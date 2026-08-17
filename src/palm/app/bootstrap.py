@@ -157,7 +157,7 @@ def _capabilities_from_settings(
     capabilities other than ``work_drain`` still read ``composition.has(...)``.
     They do not re-OR deployment flags.
 
-    ``work_drain`` is not written here. DNA ``capabilities`` list it.
+    ``work_drain`` is not written here. Structure definition ``capabilities`` list it.
 
     **0.64 / SD-021:** flag → capability map lives in
     ``palm.system.assembly.seed.MEMBERSHIP_CAPABILITY_SEEDS``.

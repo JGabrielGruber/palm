@@ -1,4 +1,4 @@
-"""0.63.27 — product workload exec is a citizen (admission fail closed)."""
+"""0.63.27 — product workload exec is a business path that needs admission (fail closed)."""
 
 from __future__ import annotations
 

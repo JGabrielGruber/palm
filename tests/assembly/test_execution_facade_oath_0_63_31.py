@@ -1,4 +1,4 @@
-"""0.63.31 — execution product façades swear admission oath at the edge."""
+"""0.63.31 — execution product façades use published admission at the edge."""
 
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ def test_workload_start_refused_on_oath_without_runtime_dig() -> None:
         admission_source=lambda: _closed(),
     )
     svc.resolve_runtime = MagicMock(  # type: ignore[method-assign]
-        side_effect=AssertionError("oath broken: resolve_runtime for admission")
+        side_effect=AssertionError("published admission broken: resolve_runtime used for admission")
     )
     with pytest.raises(AdmissionRefusedError, match="test_closed"):
         # Gate runs before spec parse — body shape irrelevant when refused.
@@ -90,7 +90,7 @@ def test_provider_invoke_refused_on_oath_without_runtime_dig() -> None:
         admission_source=lambda: _closed(),
     )
     svc.resolve_runtime = MagicMock(  # type: ignore[method-assign]
-        side_effect=AssertionError("oath broken: resolve_runtime for admission")
+        side_effect=AssertionError("published admission broken: resolve_runtime used for admission")
     )
     with pytest.raises(AdmissionRefusedError, match="test_closed"):
         svc.invoke("res-1", action="get")
@@ -103,7 +103,7 @@ def test_process_run_refused_on_oath() -> None:
         admission_source=lambda: _closed(),
     )
     svc.resolve_runtime = MagicMock(  # type: ignore[method-assign]
-        side_effect=AssertionError("oath broken")
+        side_effect=AssertionError("published admission broken")
     )
     with pytest.raises(AdmissionRefusedError, match="test_closed"):
         svc.run("proc-1")

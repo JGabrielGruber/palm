@@ -1,6 +1,6 @@
-"""Structure policy — DNA refuse vs declared membership (pure, 0.63.6).
+"""Structure policy — definition refuse vs declared membership (pure, 0.63.6).
 
-Refuse tokens are structure law. Packaging seeds DNA; if membership still
+Refuse tokens are structure law. Packaging seeds the structure definition; if membership still
 carries a refused shape, admission must not green-bar the lie.
 """
 
@@ -22,11 +22,11 @@ def refuse_violations(
     surfaces: Iterable[str] = (),
     capabilities: Iterable[str] = (),
 ) -> tuple[str, ...]:
-    """Return reason codes when membership violates DNA refuse.
+    """Return reason codes when membership violates definition refuse.
 
     Empty tuple means policy holds. Reasons are stable strings for admission.
     *capabilities* is the leftover external bag (other organs still seed
-    composition). ``work_drain`` is omit-enough: DNA that does not list it
+    composition). ``work_drain`` is omit-enough: a definition that does not list it
     does not install it.
     """
     refuse = definition.refuse

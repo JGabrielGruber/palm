@@ -1,4 +1,4 @@
-"""0.63.24 — product resource invoke is a citizen (admission fail closed)."""
+"""0.63.24 — product resource invoke is a business path that needs admission (fail closed)."""
 
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def test_invoke_resource_allowed_when_admitted() -> None:
 
 
 def test_household_resource_engine_not_gated_by_port() -> None:
-    """Direct ResourceEngine.invoke is not the ExecutionPort citizen door."""
+    """Direct ResourceEngine.invoke is not the ExecutionPort admission door."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(

@@ -1,4 +1,4 @@
-"""0.63.15 — household structure intents + OS process spawn."""
+"""0.63.15 — structure assemble / place-book intents + OS process spawn."""
 
 from __future__ import annotations
 
@@ -138,7 +138,7 @@ def test_runtime_household_default_hands() -> None:
 
 
 def test_engine_projection_intents_via_loop() -> None:
-    """Invalidate then refresh folds through household into engine admission."""
+    """Invalidate then refresh folds through structure assemble / place-book into engine admission."""
     from palm.core.assembly import AssemblyEngine
     from palm.system.assembly.loop import assemble_until_steady
 

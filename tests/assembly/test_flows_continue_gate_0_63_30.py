@@ -1,4 +1,4 @@
-"""0.63.30 — flow product continue doors are citizens; cancel_job named residual."""
+"""0.63.30 — flow product continue doors are business paths that need admission; cancel_job named residual."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ def _flows_with_closed_inject() -> FlowExecutionService:
         admission_source=lambda: closed,
     )
     flows.resolve_runtime = MagicMock(  # type: ignore[method-assign]
-        side_effect=AssertionError("oath broken: resolve_runtime used for admission")
+        side_effect=AssertionError("published admission broken: resolve_runtime used for admission")
     )
     return flows
 

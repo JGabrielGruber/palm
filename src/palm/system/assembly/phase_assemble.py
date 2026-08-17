@@ -1,6 +1,6 @@
-"""System start phase: household assemble (system.assembly.assemble).
+"""System start phase: structure assemble (system.assembly.assemble).
 
-After the machine is ready (``system.ready``), load DNA and reconcile until
+After the machine is ready (``system.ready``), load the structure definition and reconcile until
 steady. Publishes admission on the shell. Does **not** start business.
 """
 
@@ -52,7 +52,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     bind_workload = _bind_workload_flag(options)
     seat: AssemblySeat | None = shell.assembly
     if seat is None:
-        # 0.63.17 — household hands + combined structure spawn; bind engine when ready.
+        # 0.63.17 — place-book hands + combined structure spawn; bind engine when ready.
         engine = resolve_workload_engine(shell) if bind_workload else None
         seat = AssemblySeat(effects=default_household_effects(engine=engine))
         shell.assembly = seat

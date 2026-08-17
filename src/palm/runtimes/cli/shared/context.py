@@ -237,7 +237,7 @@ class CliContext:
         return self.app.get_job(job_id)
 
     def resume_job(self, job_id: str) -> None:
-        # 0.63.34 surface fealty — host packaging door, not kernel dig
+        # 0.63.34 — host packaging door, not kernel dig
         self.host.resume_job(job_id)
 
     def persist_job(self, job: Job) -> None:

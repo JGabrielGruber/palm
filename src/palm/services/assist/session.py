@@ -72,10 +72,10 @@ class AssistSession:
         params: dict[str, Any] | None = None,
         view_format: str = "assistant",
     ) -> AssistSessionContext:
-        """Deliver interactive input (product continue citizen).
+        """Deliver interactive input (product continue).
 
         **0.63.29:** requires admission via published ``admission_gate()``
-        (peasants' oath — same law as start / provide_input).
+        (published admission — same law as start / provide_input).
         """
         from palm.common.operator.flows_session_input import flatten_session_read_model
         from palm.common.operator.input_coercion import resolve_mcp_wizard_input
@@ -95,7 +95,7 @@ class AssistSession:
         return self.context(view_format=view_format, sync_gate=True)
 
     def backtrack(self, to_step: str | None = None, *, view_format: str = "assistant") -> AssistSessionContext:
-        """Backtrack an interactive flow (product continue citizen).
+        """Backtrack an interactive flow (product continue).
 
         **0.63.29:** requires admission via published ``admission_gate()``.
         """
@@ -106,7 +106,7 @@ class AssistSession:
         return self.context(view_format=view_format)
 
     def resume(self) -> AssistSession:
-        """Re-drive a waiting interactive session (product continue citizen).
+        """Re-drive a waiting interactive session (product continue).
 
         **0.63.29:** requires admission via published ``admission_gate()``.
         """
@@ -117,7 +117,7 @@ class AssistSession:
         return self
 
     def cancel(self) -> dict[str, Any]:
-        """Cancel the backing job — control path (not admission citizen).
+        """Cancel the backing job — control path (not a business path that needs admission).
 
         Stays available when admission is closed so operators can stop work
         (named residual under SD-020, same spirit as stop_workload).

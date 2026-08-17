@@ -63,7 +63,7 @@ class AssistService(BaseService):
         self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
-        # 0.63.22 — peasants' oath: published admission gate (snapshot factory or
+        # 0.63.22 — published admission gate (snapshot factory or
         # object with .admission). Prefer inject over resolve_runtime dig.
         self._admission_source = admission_source
         self._analytics = analytics
@@ -306,11 +306,12 @@ class AssistService(BaseService):
         return self._execution.flows.resolve_runtime(runtime_name)
 
     def admission_gate(self) -> object:
-        """Published admission source for citizen gates (0.63.22 oath).
+        """Published admission source for product start/continue (0.63.22).
 
         Prefer the injected *admission_source* (snapshot, factory, or object
         with ``.admission``). Fallback digs the execution runtime shell only
-        when packaging omitted the inject — not the preferred fealty shape.
+        when packaging omitted the inject — surfaces should use host or port,
+        not dig the kernel.
         """
         if self._admission_source is not None:
             return self._admission_source

@@ -65,10 +65,10 @@ class FlowSession:
         return self.context().to_dict()
 
     def input(self, value: Any, *, params: dict[str, Any] | None = None) -> SessionContext:
-        """Deliver interactive input (product continue citizen).
+        """Deliver interactive input (product continue).
 
         **0.63.30:** requires admission via published ``flows.admission_gate()``
-        (oath — same law as assist continue / provide_input).
+        (published admission — same law as assist continue / provide_input).
         """
         from palm.common.operator.mutation_gate import assert_on_write, should_validate_mutation
         from palm.system.assembly.errors import require_business_admission
@@ -113,7 +113,7 @@ class FlowSession:
         return ctx
 
     def backtrack(self, to_step: str | None = None) -> SessionContext:
-        """Backtrack an interactive flow (product continue citizen).
+        """Backtrack an interactive flow (product continue).
 
         **0.63.30:** requires admission via published ``flows.admission_gate()``.
         """
@@ -138,7 +138,7 @@ class FlowSession:
         return ctx
 
     def resume(self) -> FlowSession:
-        """Re-drive a waiting interactive flow (product continue citizen).
+        """Re-drive a waiting interactive flow (product continue).
 
         **0.63.30:** requires admission via published ``flows.admission_gate()``.
         """
@@ -163,7 +163,7 @@ class FlowSession:
         return self
 
     def cancel(self) -> dict[str, Any]:
-        """Cancel the orchestration job — control path (not admission citizen).
+        """Cancel the orchestration job — control path (not a business path that needs admission).
 
         Stays available when admission is closed (named residual under SD-020,
         same spirit as stop_workload / assist cancel).

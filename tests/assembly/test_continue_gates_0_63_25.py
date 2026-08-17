@@ -1,4 +1,4 @@
-"""0.63.25 — product continue doors are citizens; not-this-door residuals named."""
+"""0.63.25 — product continue doors are business paths that need admission; not-this-door residuals named."""
 
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ def test_resume_job_allowed_when_admitted_reaches_orchestrator() -> None:
 
 
 def test_orch_resume_not_gated_as_product_door() -> None:
-    """Wait-plane spine dig — named residual, not ExecutionPort citizen."""
+    """Wait-plane spine dig — named residual, not ExecutionPort admission path."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(

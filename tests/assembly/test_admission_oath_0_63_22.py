@@ -1,4 +1,4 @@
-"""0.63.22 — peasants' oath: admission inject, not runtime dig for readiness."""
+"""0.63.22 — published admission: inject, not runtime dig for readiness."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ def test_coerce_factory_refused() -> None:
 
 
 def test_assist_admission_gate_prefers_inject_over_runtime() -> None:
-    """Citizen path must use injected source — never require resolve_runtime."""
+    """Business path that needs admission must use injected source — never require resolve_runtime."""
     from palm.services.assist.service import AssistService
 
     closed = AdmissionSnapshot(
@@ -49,7 +49,7 @@ def test_assist_admission_gate_prefers_inject_over_runtime() -> None:
     assist = MagicMock(spec=AssistService)
     assist.admission_gate.return_value = closed
     assist.resolve_runtime.side_effect = AssertionError(
-        "oath broken: resolve_runtime used for admission"
+        "published admission broken: resolve_runtime used for admission"
     )
     with pytest.raises(AdmissionRefusedError, match="test_closed"):
         require_business_admission(assist.admission_gate())

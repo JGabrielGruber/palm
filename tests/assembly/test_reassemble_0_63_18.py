@@ -84,7 +84,7 @@ def test_engine_invalidate_blocks_until_reassemble() -> None:
     assert snap.may_run_business is False
     assert snap.phase is AssemblyPhase.INVALIDATED
 
-    # citizens fail closed while invalidated
+    # business paths that need admission fail closed while invalidated
     assert seat.admission().may_run_business is False
 
     seat.reassemble()

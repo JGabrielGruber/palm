@@ -15,7 +15,7 @@ def format_cli_error(exc: BaseException) -> str:
 
 
 def print_cli_error(console: Any, exc: BaseException) -> None:
-    """Print a market-day / continue error with honest admission branding."""
+    """Print a business start / continue error with honest admission branding."""
     console.print(format_cli_error(exc))
 
 

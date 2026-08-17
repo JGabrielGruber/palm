@@ -275,7 +275,7 @@ class WorkPlaneService:
         """
         if self._store is None or self._submit_flow is None:
             return 0
-        # Citizen gate: able includes admission after 0.63.3 (fail closed).
+        # Admission gate: able includes admission after 0.63.3 (fail closed).
         if not self.is_able():
             return 0
         cid = str(claimer_id or self._claimer_id or DEFAULT_CLAIMER_ID)

@@ -1,6 +1,6 @@
-"""Kingdom inventory — gates raised vs pretenders still open (0.63.8).
+"""Admission inventory — admitted paths vs dual-readiness residual (0.63.8).
 
-A **guard tower**: read this to know the surrounding wall. Not product control.
+Read this for admitted paths vs dual-readiness residual. Not product control.
 Living admission is on the shell; this map is honest cartography.
 """
 
@@ -599,7 +599,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
 
 
 def _status_kind(status: str) -> str:
-    """Classify pretender row status for exit cartography."""
+    """Classify dual-readiness residual row status for exit cartography."""
     if status.startswith("named_"):
         return "open"
     if status.startswith("paid"):
@@ -618,7 +618,7 @@ def paid_pretender_edges() -> list[dict[str, str]]:
 
 
 def kingdom_map() -> dict[str, Any]:
-    """Static cartography of the wall — gated vs pretender · open residual ledger."""
+    """Static admission inventory — admitted paths vs dual-readiness residual · open residual ledger."""
     open_rows = open_pretender_edges()
     paid_rows = paid_pretender_edges()
     return {

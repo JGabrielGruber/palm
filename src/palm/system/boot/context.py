@@ -57,11 +57,11 @@ class BootContext:
     supervisor: Any = None
     """Supervisor subsystem after wire phase."""
     assembly: Any = None
-    """Assembly seat after household assemble (0.63)."""
+    """Assembly seat after structure assemble (0.63)."""
     assembly_admission: Any = None
     """Admission snapshot after assemble."""
     assembly_definition: Any = None
-    """DNA loaded for this walk."""
+    """Structure definition loaded for this walk."""
 
     extras: dict[str, Any] = field(default_factory=dict)
 

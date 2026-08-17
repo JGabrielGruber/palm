@@ -1,4 +1,4 @@
-"""Assembly loop — household: tick engine, apply intents, fold observations."""
+"""Assembly loop — structure assemble: tick engine, apply intents, fold observations."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ DEFAULT_MAX_TICKS = 32
 
 @dataclass(frozen=True, slots=True)
 class AssembleLoopResult:
-    """Outcome of household assemble-until-steady."""
+    """Outcome of structure assemble-until-steady."""
 
     last: AssembleResult
     ticks: int
@@ -34,8 +34,8 @@ def assemble_until_steady(
 ) -> AssembleLoopResult:
     """Run reconcile loop until ready/blocked or tick budget exhausted.
 
-    Household only — does not start business. System applies effect intents
-    between ticks.
+    Structure assemble / place-book only — not the product job path.
+    System applies effect intents between ticks.
     """
     if max_ticks < 1:
         max_ticks = 1
@@ -68,7 +68,7 @@ def load_and_assemble(
     max_ticks: int = DEFAULT_MAX_TICKS,
     pre_observations: tuple[Observation, ...] = (),
 ) -> AssembleLoopResult:
-    """Receive DNA, fold optional observations, then assemble until steady."""
+    """Receive the structure definition, fold optional observations, then assemble until steady."""
     engine.receive_definition(definition)
     for obs in pre_observations:
         engine.observe(obs)

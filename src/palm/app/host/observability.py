@@ -234,7 +234,7 @@ class HostObservability:
                     "last_walk": getattr(host, "boot_walk", None),
                     "note": domain_note,
                 },
-                # 0.63.8 tower — nest live admission; packaging does not invent readiness.
+                # 0.63.8 admission inventory — nest live admission; packaging does not invent readiness.
                 "assembly": assembly_bag,
                 "event_plane": self.event_plane_status(),
                 "ops": self.ops_status(),

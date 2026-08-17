@@ -1,6 +1,6 @@
 """Host structure bind — wire shell WorkloadEngine into assembly place hands (0.63.17).
 
-Default household hands stay in-process for bare places. Host assemble upgrades
+Default place-book hands stay in-process for bare places. Host assemble upgrades
 them to the combined ``os:`` + ``workload:`` spawn port and binds the live
 engine when it is initialized.
 
@@ -34,7 +34,7 @@ def resolve_workload_engine(shell: Any) -> Any | None:
 
 
 def place_book_port(effects: Any) -> PlaceBookEffectPort | None:
-    """Extract the place-book hands from household or bare place-book effects."""
+    """Extract the place-book hands from HouseholdEffectPort or bare place-book effects."""
     if isinstance(effects, PlaceBookEffectPort):
         return effects
     places = getattr(effects, "places", None)
@@ -131,7 +131,7 @@ def bind_host_structure_to_seat(
 
 
 def default_household_effects(*, engine: Any | None = None) -> HouseholdEffectPort:
-    """Household hands with combined structure spawn (os: + workload:)."""
+    """Default place-book hands with combined structure spawn (os: + workload:)."""
     return HouseholdEffectPort(
         places=PlaceBookEffectPort(spawn=combined_structure_spawn_port(engine=engine))
     )

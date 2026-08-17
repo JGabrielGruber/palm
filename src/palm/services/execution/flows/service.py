@@ -48,7 +48,7 @@ class FlowExecutionService(BaseService):
         self._session = session
         self._runtime = runtime
         self._runtime_resolver = runtime_resolver
-        # 0.63.30–0.63.32 — peasants' oath: published admission for product
+        # 0.63.30–0.63.32 — published admission for product
         # start + continue (same shape as AssistService; no product base class).
         self._admission_source = admission_source
 
@@ -210,7 +210,7 @@ class FlowExecutionService(BaseService):
         """Submit any flow from a REST-shaped body and wait until idle (work drain, triggers).
 
         **0.63.32:** product start edge fails closed via ``admission_gate()``
-        (peasants' oath — same law as continue; port remains second wall).
+        (published admission — same law as continue; port remains a second admission check).
         """
         from palm.system.assembly.errors import require_business_admission
 
@@ -222,7 +222,7 @@ class FlowExecutionService(BaseService):
     def run_wizard(self, body: dict[str, Any]) -> FlowSession:
         """Submit a wizard flow and return a session on the new instance.
 
-        **0.63.32:** gates via ``submit_flow_body`` (product start citizen).
+        **0.63.32:** gates via ``submit_flow_body`` (product start).
         """
         job = self.submit_flow_body(body)
         session_id = instance_id_for_job(job)
@@ -372,7 +372,7 @@ class FlowExecutionService(BaseService):
         raise RuntimeError("FlowExecutionService requires a runtime or runtime_resolver")
 
     def admission_gate(self) -> object:
-        """Published admission source for product start + continue (0.63.30–32 oath).
+        """Published admission source for product start + continue (0.63.30–32).
 
         Prefer injected *admission_source*. Fallback digs the runtime shell only
         when packaging omitted the inject — same shape as AssistService.

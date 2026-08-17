@@ -1,4 +1,4 @@
-"""0.63.34 — surface fealty: CLI/SSR dig host packaging; wizard CQRS continue gate."""
+"""0.63.34 — surface uses host packaging door; wizard CQRS continue gate."""
 
 from __future__ import annotations
 
