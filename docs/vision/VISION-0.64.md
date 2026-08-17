@@ -18,6 +18,17 @@
 
 Cleanup of `host.work_drain` as owner, coordinator bag scrape, and tests that freeze that past is **in** this theme. Alias-to-keep-green is out.
 
+**Admission and capability (José 2026-08-17).** Admission is the **business-rule face**: may this act run. Capability is the **structure fact**: is this organ here. The face should read the fact. It is not a second membership.
+
+| Step | When | Meaning |
+|------|------|---------|
+| **1. Contract** | 0.63 (closed) | Map citizen edges. Fail closed. Learn the shape. |
+| **2. Work** | **this theme** | Real control: name + hand. Omit means it does not run. |
+| **3. New contract** | after copyable | Admission still answers the business question. It sits on capabilities (and ready / refuse), not a wall that pretends to be membership. |
+| **4. Dependents** | after 3 | Change who still calls the old face (`able`, façades, surfaces, tests that freeze `may_run_business` as the organ list). [SD-020](../../TECH-DEBT.md#sd-020) lives here. |
+
+Do not swap 2 and 3. Do not open SD-020 as a mid-theme dump. Ready / refuse stay a short gate — not a fake capability named `ready`.
+
 No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-materialize-cut.md](../architecture/appendix/structure-materialize-cut.md).
 
 **Exit:** José, when this organ is a home someone can copy.

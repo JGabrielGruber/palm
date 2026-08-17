@@ -191,7 +191,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (theme 0.63; walls largely up; open residuals **named** and cartographed for José exit).
+**Status:** open (0.63 walls up; residuals **named**). Not a 0.64 dump. José: pay by reshaping admission around capabilities after copyable, then change dependents. Sequence: [VISION-0.64](docs/vision/VISION-0.64.md).
 
 ---
 

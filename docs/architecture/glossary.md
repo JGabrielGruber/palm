@@ -44,11 +44,11 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | **Effect intent** | Closed-set structure action the reconciler requests (ensure place, release place, policy, projection, …). System applies. | Business side effects on ExecutionPort |
 | **Observation** | Structure fact folded into the reconciler (place ready/failed, truth home down, policy violation, …). | Business events on the job path |
 | **Materialize** | Make the process match the definition: resolve membership units, wire only allowed life, ensure places, refuse illegal installs. | Only flipping `may_run_business` after freelanced boot |
-| **Admission** | Published read gate: **may business that needs ground run?** Fail closed when no. | Authn / authz; soft “definitions ready” |
+| **Admission** | Published read gate: **may this act run?** Business-rule face. Should read **capability** (and ready / refuse). Not a second membership list. Sequence: [VISION-0.64](../vision/VISION-0.64.md). | Authn / authz; soft “definitions ready”; organ catalog |
 | **Admission snapshot** | Immutable view of admission (may run, phase, definition id, reasons). | Live mutable seat as the only API forever |
 | **Seed** | How packaging chooses which structure definition (or membership input) to load: mode, profile, env. **Chooser, not king after load.** | Peer structure law after load |
 | **Refuse** | Definition tokens for shapes this process must not carry (e.g. server surfaces, background drain). | Business validation errors |
-| **Capability** | Named system membership unit (journal, outbox, work_drain, …) — machine organs, not product domains. | Product feature flag marketing |
+| **Capability** | Named system membership unit (journal, outbox, work_drain, …) — machine organs, not product domains. Structure fact: listed → hand installs → it runs. Omitted → it does not run. | Product feature flag marketing; a second `may_run_business` |
 | **Membership unit** | One installable structure entry: a **plugin**, **product** service, **surface**, or **capability** the definition may list. | A running job |
 | **Membership section** | Grouping in the structure definition (intended: `plugins`, `products`, `surfaces`, `capabilities`, plus refuse/places). Like `INSTALLED_APPS` families. | Business catalog sections |
 | **Composition** | Capability / membership set declared present on a process. Intended: driven by structure definition + seed, not freelanced OR of settings. | Docker Compose the product |

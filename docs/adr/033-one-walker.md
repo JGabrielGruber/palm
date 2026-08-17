@@ -22,6 +22,8 @@ José accepts. This record stays **Proposed** until he locks.
 
 **Code now (2026-08-17).** The host start window and the coordinator start/stop pair are **gone**. `system.background.start` is the one `work_drain` loop start. Host schedule ends at `host.ready`. Host shutdown freezes the supervisor seat, then `runtime.stop` stops it again.
 
+**Admission is not this delete target.** Admission is the business-rule face ([VISION-0.64](../vision/VISION-0.64.md)). Capability is the structure fact. 0.64 does the work (step 2). Changing that face (step 3) and its dependents (step 4 / [SD-020](../../TECH-DEBT.md#sd-020)) comes after copyable. Leaving the old face as a **second membership king** is old wiring. Deleting the face before the hands exist is a prettier soft lock.
+
 ---
 
 ## Decision
@@ -90,6 +92,7 @@ Lists exist only if something walks them.
 
 - This ADR does not close 0.64. José still judges copyable.  
 - This ADR does not invent definition `requires`. It does not land journal/outbox.  
+- This ADR does not rewrite [ADR-032](032-organism-assembly.md) D2. The admission contract changes after the work.  
 - Horizon speech stays assembly → tunnels → Grove.
 
 ---

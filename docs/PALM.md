@@ -119,7 +119,7 @@ These words are **stable**. Use them with one meaning only.
 | **Structure definition** | Declarative desired structure for this process. Code: `StructureDefinition` / `structure_definition_id`. Vision still says **assembly definition**. |
 | **Structure reconciler** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Code: `StructureEngine` (`palm.core.structure`) + manager (`palm.system.structure`). Vision still says **assembly** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). Theme: [VISION-0.64](vision/VISION-0.64.md). |
 | **Structure status** | Local readiness under the current definition. Code: `StructureStatus`. Single readiness truth. Vision: assembly status. |
-| **Admission** | Read gate for work that needs a true organism (definition-ready). |
+| **Admission** | Read gate for work that needs a true organism (definition-ready). Business-rule face; should sit on **capability**. Sequence: [VISION-0.64](vision/VISION-0.64.md). |
 | **Effect intent** | Structure action the reconciler requests; system applies via `EffectPort`. |
 | **Tunnel** | Trusted path between places after home is known. Seed: [VISION-TUNNELS](vision/VISION-TUNNELS.md). |
 | **Vertical axis** | Authority and meaning climb the tree (home up, hop home, projection). |

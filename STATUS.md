@@ -16,6 +16,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-h
 | Spirit | Decision |
 |--------|----------|
 | **0.64 open** | `work_drain` as first real capability — copyable home |
+| **Contract then work** | Admission is the business face; capability is the fact. 0.64 is the work. New contract + SD-020 after copyable — [VISION-0.64](docs/vision/VISION-0.64.md) |
 | **0.63 closed** | José (2026-08-17) — admission floor real; slice queue crushed |
 | **ADR-032** | [032](docs/adr/032-organism-assembly.md) **Accepted** |
 | **ADR-033** | [033](docs/adr/033-one-walker.md) **Proposed** — old wiring dies in the same cut. José accepts |
@@ -28,7 +29,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-h
 **Cut:** [docs/architecture/appendix/structure-materialize-cut.md](docs/architecture/appendix/structure-materialize-cut.md)  
 **Seed:** [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
 
-**0.64 is `work_drain` as the first real capability.** Walker + seats + no freelance wire + composition does not write the name. Costume field, seed twins, plane aliases, assemble getattr scrape, and the settings/deployment drain switch are gone. Vitality default probes share `attr_resolver` / hub / `first_resolver`. Next: José exits when the organ is copyable. No patch queue.
+**0.64 is `work_drain` as the first real capability.** Walker + seats + no freelance wire + composition does not write the name. Costume field, seed twins, plane aliases, assemble getattr scrape, and the settings/deployment drain switch are gone. Vitality default probes share `attr_resolver` / hub / `first_resolver`. Admission stays the business face until the contract changes after copyable. Next: José exits when the organ is copyable. No patch queue. No SD-020 dump mid-theme.
 
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 

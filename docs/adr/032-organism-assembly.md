@@ -27,6 +27,8 @@
 
 D5 below is the season’s package law. Code now is the table. Glossary: [architecture/glossary.md](../architecture/glossary.md).
 
+**Present (0.64).** D2 below is the **0.63 contract** — chronicle, not rewritten. Admission stays the business-rule face until José changes that contract after capabilities are real control. Sequence: [VISION-0.64](../vision/VISION-0.64.md). Do not treat D2 as a second membership catalog.
+
 ---
 
 ## Context
