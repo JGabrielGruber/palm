@@ -86,7 +86,7 @@ Example packs (todos, inbound tests) use this path so behavior stays determinist
 | Field | Meaning |
 |-------|---------|
 | `work_pending` | Queued WorkIntents not yet processed |
-| `work_drain_running` | Background drain thread active |
+| `start_plane_running` | Start-plane loop active |
 | `work_dropped_depth` | Intents refused (depth limit) |
 | `inbound_bindings` | Inbound listeners (0.43+) |
 

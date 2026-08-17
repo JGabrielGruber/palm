@@ -113,10 +113,10 @@ HOST_PHASES: tuple[PhaseSpec, ...] = (
         "Host STARTED + ready mark",
     ),
     PhaseSpec(
-        "host.background.work_drain",
+        "host.background.start_plane",
         "host",
         "implemented",
-        "Optional continuous WorkIntent drain",
+        "Start the work-plane loop when DNA lists work_drain",
         optional=True,
     ),
 )

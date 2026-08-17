@@ -104,13 +104,13 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
 
         # Background work drain: DNA capabilities list (not composition.has).
         if expected.composition.has("work_drain"):
-            assert by_id["host.background.work_drain"]["outcome"] == "ok"
-            assert host.work_drain is not None
-            assert host.work_drain.is_running is True
+            assert by_id["host.background.start_plane"]["outcome"] == "ok"
+            assert host.start_plane is not None
+            assert host.start_plane.is_running is True
         else:
-            assert by_id["host.background.work_drain"]["outcome"] == "skip"
+            assert by_id["host.background.start_plane"]["outcome"] == "skip"
             assert (
-                by_id["host.background.work_drain"]["reason"]
+                by_id["host.background.start_plane"]["reason"]
                 == "structure_off:work_drain"
             )
 

@@ -43,7 +43,7 @@ export PALM_INBOUND_DEMO_SECRET=my-secret
 # bindings + signal counts
 curl -s http://127.0.0.1:8080/v1/api/inbound -H 'X-Palm-Subject: dev' | jq .
 
-# control plane (work_pending, work_drain_running, inbound_bindings)
+# control plane (work_pending, start_plane_running, inbound_bindings)
 curl -s http://127.0.0.1:8080/v1/api/system/doctor -H 'X-Palm-Subject: dev' \
   | jq '.data.control_plane'
 

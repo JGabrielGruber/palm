@@ -44,6 +44,7 @@ When a note needs theme context: link [vision/](../vision/README.md) or [STATUS]
 ## 2. Rules for work in this vault
 
 1. **Intended over as-built** — write the target. Put contrast in [appendix/as-built-notes.md](appendix/as-built-notes.md) only when useful.  
+1a. **Growth path in the first unit** — [principles.md](principles.md) §6. Drafts must not specify a one-name `if` as the install spine.  
 2. **One term, one meaning** — extend [glossary.md](glossary.md); do not invent dual names in a leaf note.  
 3. **No metaphor in law** — teaching language stays in the appendix. Prefer structure definition / reconciler / manager / admission.  
 4. **C4 altitude** — context, container, component, or code. Do not dump package detail into C1.  

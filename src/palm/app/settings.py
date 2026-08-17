@@ -62,12 +62,12 @@ class PalmSettings(BaseSettings):
     # Structure membership *seed* only (0.63.13 / SD-021) — feeds composition at resolve;
     # after DNA load, refuse + drain gate are structure king (not a peer OR).
     enable_work_drain_service: bool = False
-    work_drain_poll_interval: float = 1.0
-    work_drain_batch_size: int = 10
-    work_drain_max_depth: int = 8
-    # 0.62 — multi-claimer drain (default 1; needs exclusive claim)
-    work_drain_workers: int = 1
-    work_drain_lease_seconds: float = 60.0
+    # Start-plane packaging (attach). Not work_drain membership.
+    work_plane_poll_interval: float = 1.0
+    work_plane_batch_size: int = 10
+    work_plane_max_depth: int = 8
+    work_plane_workers: int = 1
+    work_plane_lease_seconds: float = 60.0
     # 0.63.13 — explicit DNA seed from packaging/env (``PALM_ASSEMBLY_DNA_ID``).
     # Chooses which definition loads; not a second readiness flag.
     assembly_dna_id: str | None = None

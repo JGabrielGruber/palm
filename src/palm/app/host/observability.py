@@ -172,8 +172,9 @@ class HostObservability:
         """Residual work/journal/boot packaging (0.38 / 0.40.3). Not living seat law."""
         host = self._host
         work_pending = 0
-        if host.work_drain is not None:
-            work_pending = host.work_drain.store.pending_count()
+        plane = host.start_plane
+        if plane is not None:
+            work_pending = plane.store.pending_count()
         journal_status: dict[str, Any] = {}
         if host.event_journal is not None:
             journal_status = journal_consumer_status(
@@ -185,13 +186,13 @@ class HostObservability:
             outbox_pending = host.outbox_service.store.pending_count()
         bg = False
         dropped = 0
-        if host.work_drain is not None:
-            bg = bool(host.work_drain.is_running)
-            dropped = int(host.work_drain.dropped_depth_count)
+        if plane is not None:
+            bg = bool(plane.is_running)
+            dropped = int(plane.dropped_depth_count)
         schedules: list[dict[str, Any]] = []
-        if host.work_drain is not None:
+        if plane is not None:
             try:
-                schedules = list(host.work_drain.schedules.list_entries())
+                schedules = list(plane.schedules.list_entries())
             except Exception:
                 schedules = []
         inbound_bindings: list[dict[str, Any]] = []
@@ -212,9 +213,7 @@ class HostObservability:
         return _with_packaging_markers(
             {
                 "work_pending": work_pending,
-                "work_drain_running": bg,
-                # Residual alias (compat); same as work_drain_running.
-                "work_drain_background": bg,
+                "start_plane_running": bg,
                 "work_dropped_depth": dropped,
                 "schedules": schedules,
                 "schedule_count": len(schedules),

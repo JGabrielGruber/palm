@@ -42,8 +42,7 @@ OPS_KEYS = {
 
 CONTROL_PLANE_KEYS = {
     "work_pending",
-    "work_drain_running",
-    "work_drain_background",
+    "start_plane_running",
     "work_dropped_depth",
     "schedules",
     "schedule_count",
@@ -110,8 +109,7 @@ def test_control_plane_status_full_contract(host: ApplicationHost) -> None:
     assert cp["schedule_count"] == len(cp["schedules"])
     assert cp["inbound_count"] == len(cp["inbound_bindings"])
     assert cp["journal_consumers"] == list(DEFAULT_JOURNAL_CONSUMERS)
-    # work_drain_background residual alias of work_drain_running.
-    assert cp["work_drain_background"] == cp["work_drain_running"]
+    assert "start_plane_running" in cp
     assert isinstance(cp["work_pending"], int)
     assert isinstance(cp["outbox_pending"], int)
     # Nested residual bags also demoted.
@@ -127,7 +125,7 @@ def test_status_reports_degrade_without_started_workplane() -> None:
         settings=PalmSettings.for_tests(load_examples=False),
         profile=DeploymentProfile.all_in_one(),
     )
-    # No start() — _work_drain / _inbound / _event_journal are None.
+    # No start() — start plane / inbound / journal are unset.
     ep = host.event_plane_status()
     assert EVENT_PLANE_KEYS <= set(ep)
     assert ep["orchestration_bus"] == "host_fallback"
@@ -138,7 +136,7 @@ def test_status_reports_degrade_without_started_workplane() -> None:
     assert CONTROL_PLANE_KEYS <= set(cp)
     assert cp["work_pending"] == 0
     assert cp["outbox_pending"] == 0
-    assert cp["work_drain_running"] is False
+    assert cp["start_plane_running"] is False
     assert cp["schedules"] == []
     assert cp["inbound_bindings"] == []
     _assert_packaging_demotion(cp)

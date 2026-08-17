@@ -25,9 +25,9 @@ def test_server_profile_starts_work_drain_without_env() -> None:
     host.start()
     try:
         assert host.admission.definition_id == "local.server"
-        assert host._work_drain_background_enabled() is True
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert host._work_drain_listed() is True
+        assert host.start_plane is not None
+        assert host.start_plane.is_running is True
     finally:
         host.shutdown()
 
@@ -42,8 +42,8 @@ def test_all_in_one_profile_starts_drain_from_dna() -> None:
     host.start()
     try:
         assert host.admission.definition_id == "local.all_in_one"
-        assert host._work_drain_background_enabled() is True
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert host._work_drain_listed() is True
+        assert host.start_plane is not None
+        assert host.start_plane.is_running is True
     finally:
         host.shutdown()

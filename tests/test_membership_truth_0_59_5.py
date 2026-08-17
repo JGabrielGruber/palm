@@ -43,9 +43,9 @@ def test_server_profile_host_gains_work_drain_membership() -> None:
     host.start()
     try:
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "ok"
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert by_id["host.background.start_plane"].outcome == "ok"
+        assert host.start_plane is not None
+        assert host.start_plane.is_running is True
     finally:
         host.shutdown()
 
@@ -61,11 +61,11 @@ def test_explicit_composition_does_not_veto_dna_work_drain() -> None:
     assert not host.composition.has("work_drain")
     host.start()
     try:
-        assert host._work_drain_background_enabled() is True
+        assert host._work_drain_listed() is True
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "ok"
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert by_id["host.background.start_plane"].outcome == "ok"
+        assert host.start_plane is not None
+        assert host.start_plane.is_running is True
     finally:
         host.shutdown()
 
@@ -85,7 +85,7 @@ def test_work_drain_gate_is_dna_not_composition_or() -> None:
     try:
         assert host.profile.enable_work_drain_service is True
         assert not host.composition.has("work_drain")
-        assert host._work_drain_background_enabled() is True
+        assert host._work_drain_listed() is True
     finally:
         host.shutdown()
 
@@ -100,9 +100,9 @@ def test_composition_capability_enables_work_drain_without_deployment_flag() -> 
     )
     host.start()
     try:
-        assert host._work_drain_background_enabled() is True
+        assert host._work_drain_listed() is True
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "ok"
+        assert by_id["host.background.start_plane"].outcome == "ok"
     finally:
         host.shutdown()
 
@@ -151,8 +151,8 @@ def test_boot_mode_test_skips_background_with_mode_reason() -> None:
     host.start()
     try:
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "skip"
-        assert by_id["host.background.work_drain"].reason == "structure_off:work_drain"
+        assert by_id["host.background.start_plane"].outcome == "skip"
+        assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
         boot = host.control_plane_status()["boot"]
         assert boot["membership"]["services"]
         assert "capabilities" in boot["membership"]

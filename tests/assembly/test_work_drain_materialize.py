@@ -23,6 +23,8 @@ from palm.core.assembly import (
     resolve_builtin_dna,
 )
 from palm.system.assembly import (
+    LOCAL_CAPABILITY_HANDS,
+    CapabilitySeats,
     apply_local_capabilities,
     definition_lists_work_drain,
     dna_lists_work_drain,
@@ -66,20 +68,42 @@ class _FakePlane:
         return {"name": "work_drain", "running": False}
 
 
-class _FakeShell:
-    def __init__(self, *, plane: object | None, supervisor: SystemSupervisor) -> None:
-        self.work_plane = plane
-        self.supervisor = supervisor
+def test_walker_table_owns_work_drain_not_a_private_if() -> None:
+    assert "work_drain" in LOCAL_CAPABILITY_HANDS
+    seen: list[bool] = []
+
+    def extra(seats: CapabilitySeats, *, listed: bool) -> None:
+        seen.append(listed)
+
+    LOCAL_CAPABILITY_HANDS["test.extra"] = extra
+    try:
+        apply_local_capabilities(
+            local_cli().from_dict(
+                {**local_cli().to_dict(), "capabilities": ["work_drain", "test.extra"]}
+            ),
+            CapabilitySeats(
+                supervisor=SystemSupervisor(definitions=()),
+                work_plane=_FakePlane(),
+            ),
+        )
+        assert seen == [True]
+    finally:
+        del LOCAL_CAPABILITY_HANDS["test.extra"]
 
 
 def test_materialize_registers_work_drain_only_when_listed() -> None:
     sup = SystemSupervisor(definitions=())
-    shell = _FakeShell(plane=_FakePlane(), supervisor=sup)
-    applied = apply_local_capabilities(local_cli(), shell)
+    applied = apply_local_capabilities(
+        local_cli(),
+        CapabilitySeats(supervisor=sup, work_plane=_FakePlane()),
+    )
     assert CAPABILITY_WORK_DRAIN in applied
     assert "work_drain" in sup.names()
 
-    dropped = apply_local_capabilities(local_embedded(), shell)
+    dropped = apply_local_capabilities(
+        local_embedded(),
+        CapabilitySeats(supervisor=sup, work_plane=_FakePlane()),
+    )
     assert dropped == frozenset()
     assert "work_drain" not in sup.names()
 
@@ -89,8 +113,10 @@ def test_materialize_unregisters_freelance_work_drain() -> None:
     plane = _FakePlane()
     register_work_drain(sup, ContinuousWireContext(work_plane=plane))
     assert "work_drain" in sup.names()
-    shell = _FakeShell(plane=plane, supervisor=sup)
-    apply_local_capabilities(local_embedded(), shell)
+    apply_local_capabilities(
+        local_embedded(),
+        CapabilitySeats(supervisor=sup, work_plane=plane),
+    )
     assert "work_drain" not in sup.names()
 
 
@@ -104,11 +130,12 @@ def test_embedded_host_does_not_start_drain() -> None:
     host.start()
     try:
         assert host.admission.definition_id == LOCAL_EMBEDDED_ID
-        assert host._work_drain_background_enabled() is False
+        assert host._work_drain_listed() is False
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "skip"
-        assert by_id["host.background.work_drain"].reason == "structure_off:work_drain"
-        assert host.work_drain is None or host.work_drain.is_running is False
+        assert by_id["host.background.start_plane"].outcome == "skip"
+        assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
+        plane = host.runtime().work_plane
+        assert plane is None or plane.is_running is False
         rt = host.runtime()
         assert rt.assembly is not None
         assert CAPABILITY_WORK_DRAIN not in rt.assembly.materialized_capabilities
@@ -129,12 +156,12 @@ def test_cli_host_starts_drain_even_when_composition_omits_it() -> None:
     try:
         assert host.admission.definition_id == LOCAL_CLI_ID
         assert host.admission.may_run_business is True
-        assert host._work_drain_background_enabled() is True
+        assert host._work_drain_listed() is True
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "ok"
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert by_id["host.background.start_plane"].outcome == "ok"
         rt = host.runtime()
+        assert rt.work_plane is not None
+        assert rt.work_plane.is_running is True
         assert rt.assembly is not None
         assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
@@ -148,9 +175,9 @@ def test_server_dna_starts_drain() -> None:
     host.start()
     try:
         assert host.admission.definition_id == LOCAL_SERVER_ID
-        assert host._work_drain_background_enabled() is True
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert host._work_drain_listed() is True
+        assert host.runtime().work_plane is not None
+        assert host.runtime().work_plane.is_running is True
     finally:
         host.shutdown()
 
@@ -164,11 +191,11 @@ def test_boot_mode_cannot_forbid_drain_when_dna_lists_it() -> None:
         assert host.boot_mode is not None
         assert host.boot_mode.allow_background_drain is False
         assert host.admission.definition_id == LOCAL_CLI_ID
-        assert host._work_drain_background_enabled() is True
+        assert host._work_drain_listed() is True
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "ok"
-        assert host.work_drain is not None
-        assert host.work_drain.is_running is True
+        assert by_id["host.background.start_plane"].outcome == "ok"
+        assert host.runtime().work_plane is not None
+        assert host.runtime().work_plane.is_running is True
     finally:
         host.shutdown()
 
@@ -179,8 +206,8 @@ def test_mcp_dna_does_not_list_or_start_drain() -> None:
     host.start()
     try:
         assert host.admission.definition_id == LOCAL_MCP_ID
-        assert host._work_drain_background_enabled() is False
+        assert host._work_drain_listed() is False
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].reason == "structure_off:work_drain"
+        assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
     finally:
         host.shutdown()

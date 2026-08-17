@@ -32,7 +32,7 @@ def test_packaging_status_is_demoted_control_plane() -> None:
         assert "CS-002" in pkg["note"]
         # Same residual body as control_plane_status (single bag).
         assert pkg["work_pending"] == cp["work_pending"]
-        assert pkg["work_drain_running"] == cp["work_drain_running"]
+        assert pkg["start_plane_running"] == cp["start_plane_running"]
         assert pkg["boot"]["mode"] == cp["boot"]["mode"]
         # Nested residual still demoted.
         assert pkg["event_plane"]["role"] == PACKAGING_ROLE

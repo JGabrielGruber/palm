@@ -17,7 +17,6 @@ from typing import TYPE_CHECKING, Any, ClassVar
 from palm import __version__
 from palm.common import DefinitionRepository, InstanceRepository
 from palm.common.events import OutboxProcessor, OutboxStore
-from palm.system.executions import DefinitionExecutor
 from palm.common.managers import InstanceManager
 from palm.common.providers._registry import get_runtime_unbinding
 from palm.core import (
@@ -30,6 +29,7 @@ from palm.core import (
     ResourceEngine,
     StorageEngine,
 )
+from palm.core.assembly import AdmissionSnapshot
 from palm.core.workload import WorkloadEngine
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.spec import WorkloadSpec
@@ -37,21 +37,21 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
 from palm.states import BlackboardState
+from palm.system.assembly.seat import AssemblySeat
 from palm.system.boot import (
     SYSTEM_PHASES,
     BootContext,
     build_system_handlers,
     walk_schedule,
 )
+from palm.system.executions import DefinitionExecutor
+from palm.system.interfaces.install import SystemInstall
 from palm.system.log import get_system_log
+from palm.system.runtime.schedulers import QueuedScheduler
+from palm.system.runtime.wiring import SchedulerPolicy
 from palm.system.subsystems.planes.hub import SystemPlanes
 from palm.system.subsystems.planes.session.plane import SessionPlaneService
 from palm.system.subsystems.planes.wait.plane import WaitPlaneService
-from palm.core.assembly import AdmissionSnapshot
-from palm.system.assembly.seat import AssemblySeat
-from palm.system.interfaces.install import SystemInstall
-from palm.system.runtime.schedulers import QueuedScheduler
-from palm.system.runtime.wiring import SchedulerPolicy
 
 if TYPE_CHECKING:
     from palm.system.interfaces.execution import ExecutionPort
@@ -110,6 +110,7 @@ class BaseRuntime:
         self._install = SystemInstall()
         self._assembly: AssemblySeat | None = None
         self._last_boot_walk: list[Any] | None = None
+        self._start_options: dict[str, Any] = {}
 
     @property
     def is_started(self) -> bool:
@@ -241,14 +242,17 @@ class BaseRuntime:
                 return False
             return bool(self.admission.may_run_business)
 
+        opts = self._start_options
+        submit = opts.get("install_submit") or _submit
+        able = opts.get("install_able") or _able
         self._install.bind(
             orchestration=self.orchestration,
             event=self.event,
             storage=self.storage,
             instance_manager=self.instance_manager,
             get_job=_get_job,
-            submit=_submit,
-            able=_able,
+            submit=submit,
+            able=able,
             outbox_store=self._outbox_store,
             outbox_processor=self._outbox_processor,
             work_plane=self.work_plane,
@@ -277,6 +281,7 @@ class BaseRuntime:
         if self._started:
             return
 
+        self._start_options = dict(options)
         slog = get_system_log()
         runtime = getattr(self, "name", None) or self.runtime_name
         ctx = BootContext(

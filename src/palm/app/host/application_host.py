@@ -294,9 +294,12 @@ class ApplicationHost:
         return self._analytics
 
     @property
-    def work_drain(self):
-        """WorkIntent drain (0.37) — run-when-able deferred flows."""
-        return self._workplane.work_drain
+    def start_plane(self):
+        """System start plane, if the runtime is up. Not a host-owned drain."""
+        try:
+            return self.runtime().work_plane
+        except Exception:
+            return None
 
     @property
     def event_journal(self):
@@ -543,7 +546,7 @@ class ApplicationHost:
             return None
         return getattr(assembly, "definition", None)
 
-    def _work_drain_background_enabled(self) -> bool:
+    def _work_drain_listed(self) -> bool:
         """True when continuous WorkIntent drain should run.
 
         After load, DNA ``capabilities`` is the install king. Composition and
@@ -886,7 +889,7 @@ class ApplicationHost:
         self._design = bag.design
         self._analytics = bag.analytics
         # Host-only packaging: workplane seats (not product service identity).
-        self._workplane.wire_work_drain()
+        self._workplane.wire_start_ports()
         self._workplane.wire_event_journal()
         self._workplane.wire_inbound()
 

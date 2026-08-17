@@ -23,6 +23,7 @@ Not the system map. Not the theme history. Not the intended-architecture vault. 
 | **Vision (current)** | [docs/vision/](../../docs/vision/README.md) |
 | **Vision (closed)** | [docs/vision/closed/](../../docs/vision/closed/) |
 | **Intended architecture** | [docs/architecture/](../../docs/architecture/README.md) — design target; not as-built law |
+| **Inversion / growth** | **this file §1.1** — plan the inversion before a new organ; first unit is the growth shape |
 | **Docs voice** | [docs/WRITING.md](../../docs/WRITING.md) |
 | **Operate via MCP** | [docs/MCP.md](../../docs/MCP.md) · [docs/skills/palm/SKILL.md](../../docs/skills/palm/SKILL.md) |
 | **Low-level system** | [docs/SYSTEM-LOW-LEVEL.md](../../docs/SYSTEM-LOW-LEVEL.md) when you touch seats/ports |
@@ -56,14 +57,18 @@ Spirit: [PHILOSOPHY.md](../../PHILOSOPHY.md) (purpose over doom; dead maps are s
 
 ### 1.1 Registry extension
 
-**Shape:** definition at the edge; consumer only holds and runs.
+**Shape:** definition at the edge; consumer only holds and runs.  
+**Growth:** the first unit must already be that shape. A new organ is a **name + hand** in the table, not a new `if` or a deferred `from palm.…`.
 
 | Prefer | Avoid |
 |--------|--------|
-| Law next to the subject; register; one loop | Private menu of concretes in hub/schedule/walk |
+| Law next to the subject; register; one loop (walker) | Private menu of concretes in hub/schedule/walk |
 | New member = new definition + register | Edit core/hub to name every new type |
+| Plan the inversion **before** implementing the unit | Ship the unit, leave the second organ as a class edit |
+| Treat a deferred import as a missing inversion | Hide a cycle in a function-local `from` |
 
-**Boy scout:** when you touch an open-coded menu, move toward registry extension — do not only relocate the list.
+**Boy scout:** when you touch an open-coded menu, move toward registry extension — do not only relocate the list.  
+A compact cut does **not** override this section. If the cut is a one-name `if`, stop and invert first.
 
 ### 1.2 Seat DI
 
@@ -187,6 +192,9 @@ Agents **propose and implement**; they negotiate with José — they do not clos
 | Break dual truth; pay or name debt | Permanent workaround as architecture |
 | Leave theme open until José judges | Checklist theater exit |
 | Non-goals = “not this subject” | Forever-bans without layer reason |
+| **Stop and report to José** when a bug or workaround appears | Keep pushing a slice that needs an `if` to stay green |
+
+When the next step is a workaround (missing home, overlooked impact, race papered by a flag): **stop**, leave the work as is, **report to José**. Do not finish the slice first. See [VERSIONING.md](../../docs/VERSIONING.md).
 
 Path when building new homes: **engine → alternate path → validate → migrate → clean**. Prefer 80/20. Complete open intent. Plan debt into theme homes.
 

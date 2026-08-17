@@ -7,6 +7,7 @@ from palm.system.assembly.errors import (
     coerce_admission_snapshot,
     require_business_admission,
 )
+from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 from palm.system.assembly.host_bind import (
     bind_host_structure_to_seat,
     default_household_effects,
@@ -69,10 +70,12 @@ __all__ = [
     "ALWAYS_ON_MEMBERSHIP_CAPABILITIES",
     "DEFAULT_MAX_TICKS",
     "GATED_CITIZENS",
+    "LOCAL_CAPABILITY_HANDS",
     "MEMBERSHIP_CAPABILITY_SEEDS",
     "PACKAGING_ENV_SPIRIT",
     "PRETENDER_EDGES",
     "STRUCTURE_SEED_ENV",
+    "CapabilitySeats",
     "AdmissionRefusedError",
     "AssembleLoopResult",
     "AssemblyEffectPort",

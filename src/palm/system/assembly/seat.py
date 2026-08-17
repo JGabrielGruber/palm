@@ -16,6 +16,7 @@ from palm.core.assembly import (
     refuse_violations,
 )
 from palm.system.assembly.effects import AssemblyEffectPort
+from palm.system.assembly.hands import CapabilitySeats
 from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.loop import (
     DEFAULT_MAX_TICKS,
@@ -88,11 +89,11 @@ class AssemblySeat:
         self.last_loop = result
         return result
 
-    def materialize(self, shell: object) -> frozenset[str]:
-        """Apply local capability membership from loaded DNA onto *shell*."""
+    def materialize(self, seats: CapabilitySeats) -> frozenset[str]:
+        """Apply local capability membership from loaded DNA onto *seats*."""
         from palm.system.assembly.materialize import apply_local_capabilities
 
-        applied = apply_local_capabilities(self.definition, shell)
+        applied = apply_local_capabilities(self.definition, seats)
         self.materialized_capabilities = applied
         return applied
 

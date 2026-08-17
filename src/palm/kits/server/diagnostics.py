@@ -192,7 +192,7 @@ def build_doctor_report(
         # control_plane from host is CS-002 residual — packaging, not living law.
         "control_plane": cp or {
             "work_pending": 0,
-            "work_drain_running": False,
+            "start_plane_running": False,
             "outbox_pending": 0,
             "journal": {},
         },

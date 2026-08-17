@@ -28,8 +28,7 @@ There is **no** `/v1/api/resources/...` route without `/invoke`.
 
 | Key | Meaning |
 |-----|---------|
-| `work_drain_running` | Background drain thread active |
-| `work_drain_background` | Same (deprecated alias, 0.45.8) |
+| `start_plane_running` | Start-plane loop active |
 | `ops.invoke_route` / `ops.invoke_route_short` | Invoke path templates |
 | `ops.storage_durable` | Host storage survives restart |
 | `ops.event_log_durable` | `palm-system-event-log` kv backend ≠ memory |

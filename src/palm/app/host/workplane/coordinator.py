@@ -1,16 +1,16 @@
 """
 WorkPlaneCoordinator — host packaging over system start plane + inbound + journal.
 
-Owns host slots (`_work_drain` / `_inbound` / `_event_journal`). ``_work_drain`` is
-the system :class:`~palm.system.subsystems.planes.work.plane.WorkPlaneService` when
-attached (rebind submit / able / catalog); never a second host drain stack.
-Public host methods (`reload_work_triggers`, `tick_work`, …) stay thin delegates.
+Owns host slots (`_inbound` / `_event_journal`). The start plane is
+system-owned — read ``runtime.work_plane``. Host only binds product submit/able
+and reloads catalog. Public methods stay thin delegates.
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from palm.app.host.workplane.start_ports import product_start_ports
 from palm.common.events import wire_event_journal as _wire_event_journal
 from palm.common.events.consumers import consume_for_projections, consume_for_webhooks
 from palm.system.subsystems.planes.work.inbound import InboundBindingService
@@ -25,13 +25,15 @@ class WorkPlaneCoordinator:
 
     def __init__(self, host: ApplicationHost) -> None:
         self._host = host
-        self._work_drain: Any | None = None
         self._inbound: Any | None = None
         self._event_journal: Any | None = None
 
-    @property
-    def work_drain(self) -> Any | None:
-        return self._work_drain
+    def _start_plane(self) -> Any | None:
+        """System start plane. Host does not stash it."""
+        try:
+            return self._host._app.runtime().work_plane
+        except Exception:
+            return None
 
     @property
     def inbound(self) -> Any | None:
@@ -52,139 +54,62 @@ class WorkPlaneCoordinator:
 
     # ── wiring (called during host start) ────────────────────────────────────
 
-    def wire_work_drain(self) -> None:
-        """Bind host packaging onto the system start plane (fail closed).
+    def start_ports(self) -> tuple[Any, Any]:
+        """Product submit + host able. Seats, not hasattr soup."""
+        host = self._host
+        return product_start_ports(
+            execution=host._execution,
+            session=host.session,
+            started=lambda: bool(host._started),
+        )
 
-        **0.60.5 / residual pay:** one owner — ``runtime.work_plane``. Host only
-        rebinds product submit (session enrich), able gate, and drain knobs.
-        No second host ``WorkDrainService`` queue.
-        """
+    def wire_start_ports(self) -> None:
+        """Bind product start ports on the install board. Does not take the plane."""
         host = self._host
         if not host._app.storage.is_initialized:
             return
-
-        plane = None
         try:
             runtime = host._app.runtime()
-            plane = getattr(runtime, "work_plane", None)
         except Exception:
-            plane = None
-
-        if plane is None or not getattr(plane, "is_attached", False):
-            # Fail closed: start law lives on the system plane only.
-            self._work_drain = None
             return
-
-        def _submit(flow_id: str, payload: dict[str, Any]) -> Any:
-            body = dict(payload or {})
-            seed = body.pop("_seed_state", None)
-            submit_body: dict[str, Any] = {"flow_name": flow_id, "metadata": body}
-            if seed is not None:
-                submit_body["state"] = seed
-            # SI-011 / 0.58.16: inherit-or-service — if the WorkIntent signal
-            # carries a system session_id, keep that walk; else stable service
-            # session by origin (work-drain / schedule / inbound). Never random
-            # outside sess- for reactive start.
-            session = getattr(host, "session", None) or getattr(host, "_session", None)
-            if session is not None:
-                if hasattr(session, "reactive_origin") and hasattr(
-                    session, "enrich_reactive_start"
-                ):
-                    origin = session.reactive_origin(flow_id, body)
-                    submit_body = session.enrich_reactive_start(
-                        submit_body,
-                        origin=origin,
-                        surface="work-drain",
-                    )
-                elif hasattr(session, "enrich_submit_body"):
-                    origin = f"work-drain:{flow_id}" if flow_id else "work-drain"
-                    submit_body = session.enrich_submit_body(
-                        submit_body,
-                        surface="work-drain",
-                        origin=origin,
-                    )
-            return host._execution.flows.submit_flow_body(submit_body)
-
-        settings = host.settings
-        if hasattr(plane, "set_submit_flow"):
-            plane.set_submit_flow(_submit)
-        else:
-            plane._submit_flow = _submit
-        plane._able = lambda: bool(host._started)
-        plane._max_depth = max(1, int(settings.work_drain_max_depth))
-        plane._batch_size = max(1, int(settings.work_drain_batch_size))
-        plane._poll_interval = max(
-            0.05, float(settings.work_drain_poll_interval)
-        )
-        plane._workers = max(
-            1, int(getattr(settings, "work_drain_workers", 1) or 1)
-        )
-        plane._lease_seconds = max(
-            0.1,
-            float(getattr(settings, "work_drain_lease_seconds", 60.0) or 60.0),
-        )
-        self._work_drain = plane
+        plane = runtime.work_plane
+        install = runtime.install
+        if plane is None or not getattr(plane, "is_attached", False) or install is None:
+            return
+        submit, able = self.start_ports()
+        install.bind(submit=submit, able=able)
         self.reload_work_triggers()
 
     def wire_inbound(self) -> None:
-        """Inbound resource bindings (0.43) — metadata.inbound → WorkIntent."""
+        """Inbound resource bindings — enqueue on the system start plane."""
         host = self._host
-        if self._work_drain is None:
+        plane = self._start_plane()
+        if plane is None:
             return
-
-        def _list() -> list[dict[str, Any]]:
-            try:
-                return list(host._definitions.list_resources() or [])
-            except Exception:
-                return []
-
-        def _get(name: str) -> dict[str, Any] | None:
-            try:
-                return host._definitions.get_resource(name)
-            except Exception:
-                return None
-
-        def _enqueue(intent: Any) -> str:
-            return self._work_drain.enqueue(intent)
-
-        def _invoke(
-            resource_ref: str,
-            *,
-            action: str | None = None,
-            params: dict[str, Any] | None = None,
-        ) -> Any:
-            return host.invoke_resource(resource_ref, action=action, params=params)
-
-        self._inbound = InboundBindingService(
-            enqueue=_enqueue,
+        defs = host._definitions
+        inbound = InboundBindingService(
+            enqueue=plane.enqueue,
             event_engine=host._runtime_event_engine(),
-            list_resources=_list,
-            get_resource=_get,
-            invoke_resource=_invoke,
+            list_resources=lambda: list(defs.list_resources() or []),
+            get_resource=defs.get_resource,
+            invoke_resource=host.invoke_resource,
         )
+        self._inbound = inbound
         self.reload_inbound_bindings()
-        # 0.60.8 — register continuous inbound workers on the system supervisor.
         try:
-            runtime = host._app.runtime()
-            sup = getattr(runtime, "supervisor", None)
-            if sup is not None:
-
-                def _start() -> None:
-                    self._inbound.start_workers()
-
-                def _stop() -> None:
-                    self._inbound.stop()
-
-                sup.register(
-                    CallableSystemService(
-                        "inbound",
-                        start=_start,
-                        stop=_stop,
-                        status=self._inbound.status,
-                    )
-                )
+            supervisor = host.runtime().supervisor
         except Exception:
-            pass
+            return
+        if supervisor is None:
+            return
+        supervisor.register(
+            CallableSystemService(
+                "inbound",
+                start=inbound.start_workers,
+                stop=inbound.stop,
+                status=inbound.status,
+            )
+        )
 
     def wire_event_journal(self) -> None:
         host = self._host
@@ -211,7 +136,7 @@ class WorkPlaneCoordinator:
         repository on the system instance.
         """
         host = self._host
-        if self._work_drain is None:
+        if self._start_plane() is None:
             return 0
         try:
             rows = host._definitions.list_flows() or []
@@ -230,10 +155,10 @@ class WorkPlaneCoordinator:
                 opts = detail.get("options")
                 return opts if isinstance(opts, dict) else meta
 
-            return int(self._work_drain.reload_triggers(rows, get_metadata=_meta) or 0)
+            return int(self._start_plane().reload_triggers(rows, get_metadata=_meta) or 0)
         except Exception:
             # Hostless / product-thin: repository on the system instance.
-            plane = self._work_drain
+            plane = self._start_plane()
             if hasattr(plane, "reload_from_repository"):
                 try:
                     runtime = host._app.runtime()
@@ -268,12 +193,13 @@ class WorkPlaneCoordinator:
         """Process due WorkIntents (and optional schedule triggers). Returns count."""
         if self._inbound is not None:
             self._inbound.flush_debounced()
-        if self._work_drain is None:
+        plane = self._start_plane()
+        if plane is None:
             return 0
         n = 0
         if schedules:
-            n += self._work_drain.tick_schedules()
-        n += self._work_drain.tick(limit=limit)
+            n += plane.tick_schedules()
+        n += plane.tick(limit=limit)
         return n
 
     def drain_journal_webhooks(self, *, limit: int = 50, on_entry: Any | None = None) -> int:
@@ -338,8 +264,9 @@ class WorkPlaneCoordinator:
                 return
         except Exception:
             pass
-        if self._work_drain is not None:
-            self._work_drain.start_background()
+        plane = self._start_plane()
+        if plane is not None:
+            plane.start_background()
 
     def stop_background(self) -> None:
         try:
@@ -350,8 +277,9 @@ class WorkPlaneCoordinator:
                 return
         except Exception:
             pass
-        if self._work_drain is not None:
-            self._work_drain.stop_background()
+        plane = self._start_plane()
+        if plane is not None:
+            plane.stop_background()
 
     def stop_inbound(self) -> None:
         try:

@@ -10,6 +10,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from palm.core.assembly import AssemblyDefinition, resolve_builtin_dna
+from palm.system.assembly.hands import CapabilitySeats
 from palm.system.assembly.host_bind import (
     bind_host_structure_to_seat,
     default_household_effects,
@@ -83,7 +84,16 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         surfaces=surfaces,
         capabilities=capabilities,
     )
-    seat.materialize(shell)
+    install = getattr(shell, "install", None)
+    plane = getattr(install, "work_plane", None) if install is not None else None
+    if plane is None:
+        plane = getattr(shell, "work_plane", None)
+    seat.materialize(
+        CapabilitySeats(
+            supervisor=getattr(shell, "supervisor", None),
+            work_plane=plane,
+        )
+    )
     admission = seat.admission()
 
     ctx.publish(

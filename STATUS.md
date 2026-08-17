@@ -27,7 +27,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table.
 **Cut:** [docs/architecture/appendix/structure-materialize-cut.md](docs/architecture/appendix/structure-materialize-cut.md)  
 **Seed:** [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
 
-Definition owns membership. First unit in code: `work_drain`. No patch queue.
+**0.64 is `work_drain` as the first real capability** — seats, walker table, system plane. Cleanup of host-owned drain is in theme. No patch queue.
 
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 

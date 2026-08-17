@@ -41,7 +41,7 @@ def test_control_plane_ops_and_drain_aliases() -> None:
     host.start()
     try:
         cp = host.control_plane_status()
-        assert cp["work_drain_running"] == cp["work_drain_background"]
+        assert "start_plane_running" in cp
         ops = cp["ops"]
         assert "providers/{provider}/{resource_ref}/invoke" in ops["invoke_route"]
         assert "resources/{resource_ref}/invoke" in ops["invoke_route_short"]

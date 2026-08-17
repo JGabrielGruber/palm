@@ -54,8 +54,8 @@ def _log_events(host: ApplicationHost) -> list:
 
 
 def _drain_all(host: ApplicationHost) -> None:
-    while host.work_drain.store.pending_count():
-        host.work_drain.tick(limit=20)
+    while host.start_plane.store.pending_count():
+        host.start_plane.tick(limit=20)
     host._execution.flows.wait_until_idle(timeout=10.0)
 
 
@@ -187,7 +187,7 @@ def test_watch_ingress_skips_self_job_completed() -> None:
         _drain_all(host)
         pending = [
             intent
-            for intent in host.work_drain.store.list_pending(limit=20)
+            for intent in host.start_plane.store.list_pending(limit=20)
             if intent.target == _WATCH_FLOW
         ]
         assert pending == []
@@ -211,7 +211,7 @@ def test_resource_changed_does_not_enqueue_watch() -> None:
             action="put",
             provider="kv",
         )
-        pending = host.work_drain.store.list_pending(limit=20)
+        pending = host.start_plane.store.list_pending(limit=20)
         assert not any(intent.target == _WATCH_FLOW for intent in pending)
     finally:
         host.shutdown()

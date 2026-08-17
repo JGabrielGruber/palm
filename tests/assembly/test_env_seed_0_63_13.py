@@ -92,7 +92,7 @@ def test_dna_override_still_checks_composition_membership() -> None:
         reasons = host.admission.reasons
         assert any("refuse:background_drain" in str(r) for r in reasons)
         # Continuous drain must not peer-law under DNA refuse
-        assert host._work_drain_background_enabled() is False
+        assert host._work_drain_listed() is False
     finally:
         host.shutdown()
 

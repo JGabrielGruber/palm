@@ -18,6 +18,7 @@
 | **System** | Running Palm: shell, engines, interfaces, subsystems (planes, supervisor), boot, vitality, structure manager. | Product business rules; HTTP surface code |
 | **Shared** | Reusable code that is not system and not product (common helpers, kits that many layers use carefully). | A place to hide layer violations |
 | **Plugin** | Registry extension (pattern, provider, storage, runner, …) installed at the edge. | Ad-hoc `if type ==` menus in hubs |
+| **Hand** | Function that fills or drops one **named** organ. Lives next to the organ; listed in an explicit table. | Import-time self-register; host `if` |
 | **Product** | Userland services (assist, execution façades, domain APIs). Client of system ports and admission. | Transport adapters; composition root digs |
 | **Surface** | Transport edge only (`palm.runtimes`: CLI, REST, MCP, SSR, WebSocket, …). Depends on system — never reverse. | Structure law; business policy |
 | **Host** | Composition root: seed choice, wire seats once, package settings. Not a public structure API. | Readiness king after structure definition load |

@@ -120,13 +120,13 @@ def test_internal_inbound_on_host_without_loopback() -> None:
             action="put",
             provider="kv",
         )
-        pending = host.work_drain.store.list_pending(limit=20)
+        pending = host.start_plane.store.list_pending(limit=20)
         assert any(
             intent.target == "internal-react" and intent.payload.get("source") == "internal"
             for intent in pending
         )
-        while host.work_drain.store.pending_count():
-            host.work_drain.tick(limit=10)
+        while host.start_plane.store.pending_count():
+            host.start_plane.tick(limit=10)
         host._execution.flows.wait_until_idle(timeout=5.0)
 
         jobs = host.app.runtime().orchestration.list_jobs()

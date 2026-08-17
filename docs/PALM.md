@@ -61,7 +61,7 @@ If a piece has no home in this table, the design is incomplete. Name the home be
 | **Human-first** | Wizards, choices, backtrack, resume after interruption |
 | **Truth-seeking** | Explicit job status, durable instances, visible failures |
 | **Agent-operable** | Assist and MCP drive the same work path as a human |
-| **Extensible** | New capability by **registry**, not by editing core contracts (Open/Closed · dependency inversion) |
+| **Extensible** | New capability by **registry**, not by editing core contracts (Open/Closed · dependency inversion). Law: [architecture principles §6](architecture/principles.md). |
 | **Seat DI** | Inject **interfaces** and **subsystems**; do not inject the system instance as ambient DI |
 | **Local maturity, Grove horizon** | One Palm is complete; many Palms talk later by the same laws |
 

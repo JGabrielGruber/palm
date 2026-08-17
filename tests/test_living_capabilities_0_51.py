@@ -234,7 +234,7 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     on.start()
     try:
-        assert on._work_drain_background_enabled() is True  # membership alone
+        assert on._work_drain_listed() is True  # membership alone
     finally:
         on.shutdown()
 
@@ -245,7 +245,7 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     off.start(assembly_dna_id="local.embedded")
     try:
-        assert off._work_drain_background_enabled() is False  # DNA omits work_drain
+        assert off._work_drain_listed() is False  # DNA omits work_drain
     finally:
         off.shutdown()
 

@@ -48,8 +48,8 @@ def _register_watch(host: ApplicationHost) -> None:
 
 
 def _drain_all(host: ApplicationHost) -> None:
-    while host.work_drain.store.pending_count():
-        host.work_drain.tick(limit=20)
+    while host.start_plane.store.pending_count():
+        host.start_plane.tick(limit=20)
     host._execution.flows.wait_until_idle(timeout=10.0)
 
 
@@ -98,7 +98,7 @@ def test_watch_ingress_skips_self_flow_session_succeeded() -> None:
         _drain_all(host)
         pending = [
             intent
-            for intent in host.work_drain.store.list_pending(limit=20)
+            for intent in host.start_plane.store.list_pending(limit=20)
             if intent.target == _WATCH_FLOW
         ]
         assert pending == []
@@ -123,8 +123,8 @@ def test_host_bus_emit_does_not_reach_internal_inbound() -> None:
     host.start()
     try:
         _register_watch(host)
-        before = host.work_drain.store.pending_count()
+        before = host.start_plane.store.pending_count()
         host.event.emit("job.completed", job_id="wrong-bus", flow="quick", status="SUCCEEDED")
-        assert host.work_drain.store.pending_count() == before
+        assert host.start_plane.store.pending_count() == before
     finally:
         host.shutdown()

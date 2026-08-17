@@ -141,6 +141,27 @@ class WorkPlaneService:
         """
         self._able = able if able is not None else (lambda: False)
 
+    def configure(
+        self,
+        *,
+        max_depth: int | None = None,
+        batch_size: int | None = None,
+        poll_interval: float | None = None,
+        workers: int | None = None,
+        lease_seconds: float | None = None,
+    ) -> None:
+        """Packaging knobs. Does not rebind submit/able."""
+        if max_depth is not None:
+            self._max_depth = max(1, int(max_depth))
+        if batch_size is not None:
+            self._batch_size = max(1, int(batch_size))
+        if poll_interval is not None:
+            self._poll_interval = max(0.05, float(poll_interval))
+        if workers is not None:
+            self._workers = max(1, int(workers))
+        if lease_seconds is not None:
+            self._lease_seconds = max(0.1, float(lease_seconds))
+
     def is_able(self) -> bool:
         """Whether tick may start business work (fail closed when false)."""
         try:

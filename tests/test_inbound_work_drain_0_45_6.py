@@ -117,7 +117,7 @@ def test_work_drain_uses_submit_flow_body(monkeypatch) -> None:
             return object()
 
         monkeypatch.setattr(host._execution.flows, "submit_flow_body", _spy)
-        host.work_drain._submit_flow("noop-flow", {"source": "test"})
+        host.start_plane._submit_flow("noop-flow", {"source": "test"})
         assert len(calls) == 1
         assert calls[0]["flow_name"] == "noop-flow"
         assert calls[0]["metadata"]["source"] == "test"

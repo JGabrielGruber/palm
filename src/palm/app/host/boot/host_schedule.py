@@ -7,7 +7,8 @@ wire, recovery, workplane) are tools — they do not own boot order.
 
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
 capabilities other than ``work_drain``. ``work_drain`` start reads DNA
-``capabilities`` (``structure_off:work_drain``). Do not grow peer-OR forests.
+``capabilities`` and install start ports (``structure_off:work_drain`` /
+``ports_off:work_drain``).
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
 are the switches. Do not restore import-order magic.
@@ -77,9 +78,12 @@ def build_host_handlers(
         # Explicit host.start(enable_event_outbox=…) still wins (named override).
         if "enable_event_outbox" not in options:
             merged["enable_event_outbox"] = host.composition.has("outbox")
-        # Host starts drain after product.wire; do not race system.background.start.
-        if "defer_work_drain_start" not in options:
-            merged["defer_work_drain_start"] = True
+        # Start ports on the install board from spawn — able is host._started
+        # (false until host.ready). Drain may start; the loop idles until able.
+        if "install_submit" not in options:
+            submit, able = host._workplane.start_ports()
+            merged["install_submit"] = submit
+            merged["install_able"] = able
         host._spawner.spawn_runtimes(merged)
 
     def definitions_load(_ctx: BootContext) -> None:
@@ -143,9 +147,8 @@ def build_host_handlers(
             roles=",".join(roles) or "(none)",
         )
 
-    def background_work_drain(_ctx: BootContext) -> None:
-        # DNA capabilities list is the install king (work_drain first unit).
-        if not host._work_drain_background_enabled():
+    def background_start_plane(_ctx: BootContext) -> None:
+        if not host._work_drain_listed():
             raise PhaseSkip("structure_off:work_drain")
         host._workplane.start_background()
 
@@ -161,7 +164,7 @@ def build_host_handlers(
         "host.projections.attach": projections_attach,
         "host.recover": recover,
         "host.ready": ready,
-        "host.background.work_drain": background_work_drain,
+        "host.background.start_plane": background_start_plane,
     }
 
 

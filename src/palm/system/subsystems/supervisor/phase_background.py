@@ -37,8 +37,8 @@ def start_supervised_background(
 ) -> BackgroundStartResult:
     """Start work_drain / outbox when DNA / options allow.
 
-    ``work_drain`` starts when DNA lists it (not ``enable_work_drain_service``
-    or ``allow_background_drain``). Outbox still uses the start option.
+    ``work_drain`` starts when DNA lists it and install start ports are bound.
+    Outbox still uses the start option.
     """
     from palm.system.assembly.seed import (
         dna_lists_work_drain,
@@ -46,19 +46,19 @@ def start_supervised_background(
     )
 
     opts = dict(options or {})
+    install = opts.get("install")
+    ports_bound = bool(getattr(install, "start_ports_bound", lambda: False)())
     want_drain = (
         dna_lists_work_drain(definition)
         and not dna_refuses_background_drain(definition)
-        and not bool(opts.get("defer_work_drain_start", False))
+        and ports_bound
     )
     want_outbox = bool(opts.get("enable_outbox_background", False))
     if not want_drain and not want_outbox:
-        if bool(opts.get("defer_work_drain_start", False)) and dna_lists_work_drain(
-            definition
-        ):
-            skip = "deferred_work_drain_start"
-        elif definition is not None and not dna_lists_work_drain(definition):
+        if definition is not None and not dna_lists_work_drain(definition):
             skip = "structure_off:work_drain"
+        elif dna_lists_work_drain(definition) and not ports_bound:
+            skip = "ports_off:work_drain"
         else:
             skip = "no_background_services_enabled"
         return BackgroundStartResult(started=[], skip_reason=skip)
@@ -86,7 +86,10 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         raise PhaseSkip("no_supervisor")
     seat = getattr(shell, "assembly", None)
     definition = getattr(seat, "definition", None) if seat is not None else None
-    result = start_supervised_background(sup, options, definition=definition)
+    merged = dict(options)
+    if "install" not in merged:
+        merged["install"] = getattr(shell, "install", None)
+    result = start_supervised_background(sup, merged, definition=definition)
     if result.should_skip:
         raise PhaseSkip(result.skip_reason or "background_skip")
     get_system_log().info(

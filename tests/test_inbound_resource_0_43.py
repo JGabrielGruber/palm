@@ -92,7 +92,7 @@ def test_webhook_enqueues_work_intent() -> None:
         assert result["accepted"] is True
         assert result.get("intent_id")
 
-        pending = host.work_drain.store.pending_count()
+        pending = host.start_plane.store.pending_count()
         assert pending >= 1
 
         processed = host.tick_work(limit=5)

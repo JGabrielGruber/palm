@@ -292,11 +292,11 @@ def test_runtime_install_is_first_class_interface() -> None:
 
     ctx = InstallContext.from_install(
         rt.install,
-        options={"work_drain_max_depth": 3},
+        options={"work_plane_max_depth": 3},
         get_session_plane=lambda: None,
     )
     assert isinstance(ctx, InstallContext)
-    assert ctx.options.get("work_drain_max_depth") == 3
+    assert ctx.options.get("work_plane_max_depth") == 3
     assert ctx.orchestration is rt.orchestration
 
 

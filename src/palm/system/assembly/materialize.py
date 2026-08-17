@@ -1,18 +1,13 @@
-"""Local membership materialize — manager applies definition capabilities.
+"""Local membership materialize — walker over the hands table.
 
-First unit: ``work_drain``. Register on the supervisor only when DNA lists it.
-Host / boot mode / composition do not freelance that membership.
+DNA names units. This module does not import organs. It looks up
+``LOCAL_CAPABILITY_HANDS`` and applies each hand.
 """
 
 from __future__ import annotations
 
-from typing import Any
-
 from palm.core.assembly import CAPABILITY_WORK_DRAIN, AssemblyDefinition
-from palm.system.subsystems.supervisor.definition import (
-    ContinuousWireContext,
-    register_work_drain,
-)
+from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 
 
 def definition_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
@@ -24,40 +19,20 @@ def definition_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
 
 def apply_local_capabilities(
     definition: AssemblyDefinition | None,
-    shell: Any,
+    seats: CapabilitySeats,
 ) -> frozenset[str]:
-    """Install local capabilities listed on *definition*. Returns what was applied.
+    """Apply every registered hand. Listed → install; else drop.
 
-    ``work_drain``: register on the supervisor when listed; unregister otherwise.
-    Other capability names are ignored until they have a materialize hand.
+    New organ: add a hand to ``LOCAL_CAPABILITY_HANDS``. Do not add an ``if`` here.
     """
+    wanted = frozenset(definition.capabilities) if definition is not None else frozenset()
     applied: set[str] = set()
-    supervisor = getattr(shell, "supervisor", None)
-    if definition_lists_work_drain(definition):
-        _ensure_work_drain_registered(shell, supervisor)
-        applied.add(CAPABILITY_WORK_DRAIN)
-    else:
-        _drop_work_drain(supervisor)
+    for name, hand in LOCAL_CAPABILITY_HANDS.items():
+        listed = name in wanted
+        hand(seats, listed=listed)
+        if listed:
+            applied.add(name)
     return frozenset(applied)
-
-
-def _ensure_work_drain_registered(shell: Any, supervisor: Any) -> None:
-    if supervisor is None:
-        return
-    if supervisor.get("work_drain") is not None:
-        return
-    plane = getattr(shell, "work_plane", None)
-    if plane is None:
-        return
-    register_work_drain(supervisor, ContinuousWireContext(work_plane=plane))
-
-
-def _drop_work_drain(supervisor: Any) -> None:
-    if supervisor is None:
-        return
-    unregister = getattr(supervisor, "unregister", None)
-    if callable(unregister):
-        unregister("work_drain")
 
 
 __all__ = [

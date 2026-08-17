@@ -54,7 +54,7 @@ def test_inbound_webhook_seeds_pipeline_state() -> None:
             body={"id": "evt-1", "type": "resource.changed"},
             headers={},
         )
-        host.work_drain.tick(limit=1)
+        host.start_plane.tick(limit=1)
         host._execution.flows.wait_until_idle(timeout=5.0)
 
         instances = host.system.list_instances(limit=5)

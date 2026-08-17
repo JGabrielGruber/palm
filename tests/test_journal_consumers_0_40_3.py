@@ -66,7 +66,7 @@ def test_doctor_embeds_control_plane() -> None:
         def control_plane_status(self) -> dict:
             return {
                 "work_pending": 0,
-                "work_drain_running": False,
+                "start_plane_running": False,
                 "work_dropped_depth": 0,
                 "outbox_pending": 0,
                 "journal": {

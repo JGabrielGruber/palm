@@ -89,6 +89,16 @@ If implementing the theme would require a **permanent** workaround:
 
 Do **not** ship the workaround as the architecture of record.
 
+### Stop when the home is wrong (José)
+
+When a slice hits a **bug that reveals a missing home**, or when the next step is a **workaround to keep the slice green**:
+
+1. **Stop.** Leave the tree as it is.  
+2. **Report to José** — what the unit needed, what the overlook was, what the workaround would hide.  
+3. Do **not** keep pushing to finish the slice. Replan the real issue first.
+
+Agents do not invent `if`s to protect a patch number. José decides whether to break, name, or drop.
+
 ### Slices
 
 - Prefer **one purpose** per slice-commit (`feat(0.X.N): …`).  

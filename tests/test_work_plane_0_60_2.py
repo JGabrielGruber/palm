@@ -108,9 +108,9 @@ def test_work_plane_multi_worker_background() -> None:
         storage_backend="memory",
         enable_event_outbox=False,
         assembly_dna_id="local.cli",
-        work_drain_workers=3,
-        work_drain_poll_interval=0.05,
-        work_drain_batch_size=1,
+        work_plane_workers=3,
+        work_plane_poll_interval=0.05,
+        work_plane_batch_size=1,
     )
     try:
         plane = rt.work_plane

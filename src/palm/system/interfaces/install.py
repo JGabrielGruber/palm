@@ -177,7 +177,31 @@ class SystemInstall:
             self._outbox_processor = outbox_processor
         if work_plane is not _UNSET:
             self._work_plane = work_plane
+        self._push_start_ports()
         return self
+
+    def start_ports_bound(self) -> bool:
+        """True when work_drain start ports are on this board."""
+        return (
+            self._work_plane is not None
+            and self._submit is not None
+            and self._able is not None
+        )
+
+    def _push_start_ports(self) -> None:
+        """Plane reads submit/able from this board — bind is the only writer."""
+        plane = self._work_plane
+        if plane is None:
+            return
+        if self._submit is not None:
+            setter = getattr(plane, "set_submit_flow", None)
+            if callable(setter):
+                setter(self._submit)
+            else:
+                plane._submit_flow = self._submit
+        set_able = getattr(plane, "set_able", None)
+        if callable(set_able):
+            set_able(self._able)
 
     def status(self) -> dict[str, Any]:
         """Public snapshot (vitality / doctor)."""
@@ -192,6 +216,7 @@ class SystemInstall:
             "outbox_store": self._outbox_store is not None,
             "outbox_processor": self._outbox_processor is not None,
             "work_plane": self._work_plane is not None,
+            "start_ports": self.start_ports_bound(),
         }
 
     def require_orchestration(self) -> Any:

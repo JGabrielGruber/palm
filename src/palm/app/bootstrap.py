@@ -224,6 +224,12 @@ def runtime_start_options(settings: PalmSettings, **overrides: Any) -> dict[str,
     }
     options["workload_host_enabled"] = settings.workload_host_enabled
     options["workload_default_runtime"] = settings.workload_default_runtime
+    # Work *plane* packaging (attach reads these). Not drain membership.
+    options["work_plane_max_depth"] = settings.work_plane_max_depth
+    options["work_plane_batch_size"] = settings.work_plane_batch_size
+    options["work_plane_poll_interval"] = settings.work_plane_poll_interval
+    options["work_plane_workers"] = settings.work_plane_workers
+    options["work_plane_lease_seconds"] = settings.work_plane_lease_seconds
     if settings.data_dir is not None:
         options["data_dir"] = settings.data_dir
     options.update(overrides)
