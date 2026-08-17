@@ -12,7 +12,6 @@ def test_server_profile_starts_work_drain_without_env() -> None:
     settings = PalmSettings(
         load_example_definitions=False,
         storage_backend="memory",
-        enable_work_drain_service=False,
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
         enable_compensation=False,

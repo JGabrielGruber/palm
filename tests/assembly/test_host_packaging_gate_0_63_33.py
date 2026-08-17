@@ -21,7 +21,6 @@ def _settings() -> PalmSettings:
         enable_compensation=False,
         enable_outbox_service=False,
         enable_event_outbox=False,
-        enable_work_drain_service=False,
     )
 
 

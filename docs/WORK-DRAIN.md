@@ -40,11 +40,7 @@ palm host server
 
 That command loads **server** DNA. DNA lists `work_drain`. You do not need an env var for inbound webhooks or triggers.
 
-### Seed leftover (not install)
-
-`PALM_ENABLE_WORK_DRAIN_SERVICE` and `DeploymentProfile.enable_work_drain_service` are leftover packaging. They do not write composition and are not a second install king.
-
-`PALM_ENABLE_WORK_DRAIN_SERVICE=0` does **not** stop drain on server, cli, worker, or all-in-one DNA. To omit drain, load DNA that does not list it (for example `local.embedded`).
+To omit drain, load DNA that does not list it (for example `local.embedded`). There is no settings or deployment switch.
 
 Related knobs:
 

@@ -58,7 +58,6 @@ def _lean_settings(**overrides: object) -> PalmSettings:
         "enable_outbox_service": False,
         "enable_event_outbox": False,
         "enable_webhook_dispatcher": False,
-        "enable_work_drain_service": False,
         "enable_neonroot_runners": True,
         "analytics_enabled": True,
     }
@@ -99,7 +98,6 @@ def test_bootstrap_uses_membership_seed_map() -> None:
         enable_compensation=True,
         enable_event_outbox=False,
         enable_webhook_dispatcher=True,
-        enable_work_drain_service=True,
         enable_neonroot_runners=False,
         analytics_enabled=False,
         rebuild_projections_on_startup=False,

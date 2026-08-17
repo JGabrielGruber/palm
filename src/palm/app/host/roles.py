@@ -33,9 +33,6 @@ class DeploymentProfile:
     enable_outbox_service: bool = True
     outbox_poll_interval: float = 0.5
     outbox_recover_on_startup: bool = True
-    # Seed leftover — feeds composition at resolve on the settings path.
-    # After DNA load, install is DNA ``capabilities`` (not this flag).
-    enable_work_drain_service: bool = False
 
     def __post_init__(self) -> None:
         if self.worker_count < 1:
@@ -84,7 +81,6 @@ class DeploymentProfile:
             server=True,
             server_host=host,
             server_port=port,
-            enable_work_drain_service=True,
         )
 
     @classmethod
@@ -113,11 +109,8 @@ class DeploymentProfile:
         enable_outbox_service: bool = True,
         outbox_poll_interval: float = 0.5,
         outbox_recover_on_startup: bool = True,
-        enable_work_drain_service: bool | None = None,
     ) -> Self:
         normalized = {str(role).lower() for role in roles}
-        if enable_work_drain_service is None:
-            enable_work_drain_service = "server" in normalized
         return cls(
             master="master" in normalized,
             worker="worker" in normalized,
@@ -128,5 +121,4 @@ class DeploymentProfile:
             enable_outbox_service=enable_outbox_service,
             outbox_poll_interval=outbox_poll_interval,
             outbox_recover_on_startup=outbox_recover_on_startup,
-            enable_work_drain_service=bool(enable_work_drain_service),
         )

@@ -273,6 +273,28 @@ def test_mcp_dna_does_not_list_or_start_drain() -> None:
         host.shutdown()
 
 
+def test_assemble_uses_shell_assembly_seat() -> None:
+    """Assemble reads and writes the seat. No getattr bag scrape."""
+    import inspect
+
+    from palm.system.assembly.phase_assemble import run as _run
+
+    src = inspect.getsource(_run)
+    assert 'getattr(shell, "assembly"' not in src
+    ctx, _ = _assemble_from_ctx_seats(dna_id=LOCAL_CLI_ID)
+    assert ctx.shell.assembly is ctx.assembly
+    assert ctx.assembly is not None
+
+
+def test_packaging_has_no_work_drain_service_flag() -> None:
+    """DNA lists the name. Settings and deployment do not keep a dead switch."""
+    from palm.app.host.roles import DeploymentProfile
+    from palm.app.settings import PalmSettings
+
+    assert "enable_work_drain_service" not in PalmSettings.model_fields
+    assert "enable_work_drain_service" not in DeploymentProfile.__dataclass_fields__
+
+
 def test_host_does_not_alias_start_plane() -> None:
     """Plane lives on the runtime. Host start_plane is costume."""
     assert not hasattr(ApplicationHost, "start_plane")

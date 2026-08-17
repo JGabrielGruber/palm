@@ -50,12 +50,12 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
 
     shell = resolve_shell(ctx)
     bind_workload = _bind_workload_flag(options)
-    seat: AssemblySeat | None = getattr(shell, "assembly", None)
+    seat: AssemblySeat | None = shell.assembly
     if seat is None:
         # 0.63.17 — household hands + combined structure spawn; bind engine when ready.
         engine = resolve_workload_engine(shell) if bind_workload else None
         seat = AssemblySeat(effects=default_household_effects(engine=engine))
-        shell.assembly = seat  # type: ignore[attr-defined]
+        shell.assembly = seat
         bind_report = {
             "bound": True,
             "engine": engine is not None,

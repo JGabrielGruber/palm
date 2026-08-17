@@ -90,7 +90,7 @@ Citizen fail-closed lands in **0.63.3+**. Until then admission is published but 
 | Continuous drain only composition + boot mode | Also **DNA refuse** `background_drain` (structure king after load) |
 | Structure env uncatalogued | `STRUCTURE_SEED_ENV` cartography in `palm.system.assembly.seed` |
 
-`PALM_ENABLE_WORK_DRAIN_SERVICE` remains a **membership seed** at composition resolve — not a peer OR after DNA load.
+`PALM_ENABLE_WORK_DRAIN_SERVICE` is gone. DNA lists `work_drain`; omit is enough.
 
 ## Behavior changes (0.63.14) — place spawn port
 

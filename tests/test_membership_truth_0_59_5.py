@@ -23,7 +23,6 @@ from palm.system.log import get_system_log, reset_system_log_for_tests
 def test_settings_resolver_does_not_write_work_drain() -> None:
     """Flag and deployment do not write work_drain onto composition."""
     settings = PalmSettings.for_tests(load_examples=False)
-    assert settings.enable_work_drain_service is False
     bare = composition_profile_from_settings(settings)
     assert "work_drain" not in bare.capabilities
 
@@ -80,15 +79,11 @@ def test_work_drain_gate_is_dna_not_composition_or() -> None:
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(
         settings=settings,
-        profile=replace(
-            DeploymentProfile.all_in_one(),
-            enable_work_drain_service=True,
-        ),
+        profile=DeploymentProfile.all_in_one(),
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
     host.start()
     try:
-        assert host.profile.enable_work_drain_service is True
         assert not host.composition.has("work_drain")
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
@@ -102,7 +97,7 @@ def test_composition_capability_enables_work_drain_without_deployment_flag() -> 
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(
         settings=settings,
-        profile=DeploymentProfile.all_in_one(),  # enable_work_drain_service False
+        profile=DeploymentProfile.all_in_one(),
         composition=replace(CP.all_in_one(), capabilities=frozenset({"work_drain"})),
     )
     host.start()

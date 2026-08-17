@@ -41,8 +41,8 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
 | **B2** | **Landed** — refuse reads DNA capabilities | Composition listing the name is not a refuse input. Omit is enough. |
 | **B3** | **Landed** — composition / flag do not write `work_drain` | Presets, seed-map row, and the settings/deployment fold are gone. Omit is enough. `refuse:background_drain` is not a live wall. |
-| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Boot window `host.background.start_plane` stays. `getattr(shell, "assembly")` remains named leftover (seat already exists). Journal/outbox **hands** = exit proof, not cleanup. DNA `requires` — do not invent. |
+| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Boot window stays. Assemble uses `shell.assembly`. No `enable_work_drain_service`. Journal/outbox **hands** = exit proof, not cleanup. DNA `requires` — do not invent. |
 
-A, B1–B3, C landed. Plane alias is gone. Copyable-home leftover: `getattr(shell, "assembly")`, settings/deployment `enable_work_drain_service` packaging.
+A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.assembly`; settings/deployment have no `enable_work_drain_service`.
 
 **Start next session:** José judges whether the organ is copyable. Journal as second organ only after that.

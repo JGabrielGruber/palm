@@ -72,8 +72,7 @@ def test_each_flag_toggles_exactly_its_capability() -> None:
     assert "outbox" not in _caps(enable_event_outbox=False)
     assert "webhook" in _caps(enable_webhook_dispatcher=True)
     assert "webhook" not in _caps(enable_webhook_dispatcher=False)
-    assert "work_drain" not in _caps(enable_work_drain_service=True)
-    assert "work_drain" not in _caps(enable_work_drain_service=False)
+    assert "work_drain" not in _caps()
     assert "analytics" in _caps(analytics_enabled=True)
     assert "analytics" not in _caps(analytics_enabled=False)
 
@@ -220,8 +219,8 @@ def test_outbox_drainer_is_available_times_activated() -> None:
 
 def test_work_drain_settings_side_routes_through_the_capability() -> None:
     """Drain install follows DNA, not the leftover flag or composition write."""
-    settings = PalmSettings.for_tests(load_examples=False)  # enable_work_drain_service False
-    profile = DeploymentProfile.all_in_one()  # enable_work_drain_service False
+    settings = PalmSettings.for_tests(load_examples=False)
+    profile = DeploymentProfile.all_in_one()
 
     on = ApplicationHost(
         settings=settings,
