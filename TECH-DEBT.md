@@ -3,7 +3,7 @@
 **Status:** Live open residual · **2026-08-05**.  
 **Paid/closed detail:** [docs/audit/TECH-DEBT-PAID.md](docs/audit/TECH-DEBT-PAID.md)  
 **PD-era archive:** [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
-**Map:** [docs/PALM.md](docs/PALM.md) · **Status:** [STATUS.md](STATUS.md) · **Active theme:** [VISION-0.63](docs/vision/VISION-0.63.md) assembly · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)  
+**Map:** [docs/PALM.md](docs/PALM.md) · **Status:** [STATUS.md](STATUS.md) · **Active theme:** [VISION-0.64](docs/vision/VISION-0.64.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)  
 **Language:** ASD-STE100 (practical).
 
 Closed theme chronicles live under [docs/vision/closed/](docs/vision/closed/).  
@@ -164,7 +164,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-020"></a>
 
-**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor ([VISION-0.63](docs/vision/VISION-0.63.md))
+**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · residual under [VISION-0.64](docs/vision/VISION-0.64.md)
 
 **Observation:** Business that needs ground can start without a single **admission** surface. Soft “definitions ready,” host flags, catalog order, and half-host tests act as peer readiness. Dual mode hides as green.
 
@@ -200,13 +200,13 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-021"></a>
 
-**Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth ([VISION-0.63](docs/vision/VISION-0.63.md))
+**Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth (closed) · residual under [VISION-0.64](docs/vision/VISION-0.64.md)
 
 **Observation:** `CompositionProfile`, `DeploymentProfile`, `BootMode`, and some structure-shaped `PALM_*` toggles still act as **structure law** beside any future DNA. That is dual king after assembly lands.
 
 **Pay in 0.63 growth:** Map entry/mode/env into **DNA seed**; after load, assembly status is structure truth; packaging env stays; structure pretender toggles purge or residual kill-date. First DNA: **embedded**; dogfood: cli / server.
 
-**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only; bare runtime start option named residual). Residual: flags still seed at resolve **by design**; bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
+**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only; bare runtime start option named residual). **0.63.39** — DNA `capabilities` lists `work_drain`; manager materializes (register/start) only when listed; `composition.has` / `BootMode.allow_background_drain` no longer peer-gate that unit. Residual: flags still seed at resolve **by design**; other capabilities still composition; bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
 
 **Do not:** Leave profiles as public dual structure forever “for compatibility.” Remove packaging env wholesale.
 
@@ -553,7 +553,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | Seed | Debt | Spirit |
 |------|------|--------|
 | **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Closed 0.62** — [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) Accepted |
-| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **Opened as 0.63** — [VISION-0.63](docs/vision/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) Proposed · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63 closed** · present [VISION-0.64](docs/vision/VISION-0.64.md) · [ADR-032](docs/adr/032-organism-assembly.md) Accepted · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |

@@ -7,9 +7,9 @@ Record decisions in ADRs, [principles.md](../principles.md), or glossary when lo
 
 ## Structure definition and membership
 
-- Exact schema of membership sections (`plugins`, `products`, `surfaces`, `capabilities`, refuse, places)?  
-- First capability or unit to materialize fully under definition (local compose prototype)?  
-- How far does structure definition own bootstrap wire vs host seed still freelancing?  
+- Exact schema of membership sections (`plugins`, `products`, `surfaces`, refuse, places) **beyond first cut**?  
+- **Locked (2026-08-17):** first unit = **`work_drain`** under a **`capabilities`** section (local only). No no-op prove-out. See [structure-materialize-cut.md](structure-materialize-cut.md).  
+- How far does structure definition own bootstrap wire vs host seed still freelancing? (First unit paid: `work_drain` install reads DNA `capabilities`.)  
 - Package names: keep `assembly` in code or rename toward `structure`?
 
 ---
@@ -40,6 +40,7 @@ Record decisions in ADRs, [principles.md](../principles.md), or glossary when lo
 
 ## Theme 0.63 exit
 
+- **Open (2026-08-17):** stay on **0.63** for this materialize cut, or stamp **0.64** later. Engineering cut does not wait on that stamp. Do not draft a new VISION until José chooses.  
 - How deep must **structure manager / materialize** be before José exits 0.63 vs admission-floor + named residual?  
 - Is architecture vault fill a gate for exit, or parallel standing work?
 

@@ -1,22 +1,22 @@
 # VISION 0.63 — Organism assembly (gate · DNA · single readiness)
 
-**Status:** 🌱 **Theme open** at **0.63.0** (plan).  
+**Status:** ✅ **Theme closed** (José 2026-08-17). Present: [VISION-0.64](../VISION-0.64.md).  
 **Language:** ASD-STE100 Simplified Technical English (practical).  
-**Map:** [PALM.md](../PALM.md) — read first.  
-**Seed essay (normative law):** [VISION-ASSEMBLY](VISION-ASSEMBLY.md) — roles · ports · citizenship · purge · modules.  
-**ADR:** [032-organism-assembly.md](../adr/032-organism-assembly.md) **Proposed**.  
-**Migration:** [MIGRATION-0.63](../migrations/MIGRATION-0.63.md) (grows as paths break).  
-**Theme law:** [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides) · [AGENTS.md](../../AGENTS.md).  
-**Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · neighbors [SD-016](../../TECH-DEBT.md#sd-016) · [SD-019](../../TECH-DEBT.md#sd-019) · BI residual.  
-**Prior closed:** [VISION-0.62](closed/VISION-0.62.md) capacity · [VISION-0.61](closed/VISION-0.61.md) vitality · [VISION-0.60](closed/VISION-0.60.md) supervisor + work plane · [VISION-0.59](closed/VISION-0.59.md) boot.  
-**Queue later:** [VISION-TUNNELS](VISION-TUNNELS.md) · [VISION-GROVE](VISION-GROVE.md) · [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) · workload remainder.  
-**North star:** [VISION-GROVE](VISION-GROVE.md).
+**Map:** [PALM.md](../../PALM.md) — read first.  
+**Seed essay (normative law):** [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) — roles · ports · citizenship · purge · modules.  
+**ADR:** [032-organism-assembly.md](../../adr/032-organism-assembly.md) **Accepted**.  
+**Migration:** [MIGRATION-0.63](../../migrations/MIGRATION-0.63.md) (grows as paths break).  
+**Theme law:** [VERSIONING.md](../../VERSIONING.md) (floor · growth · exit · **José** decides) · [AGENTS.md](../../../AGENTS.md).  
+**Debt:** [SD-020](../../../TECH-DEBT.md#sd-020) · [SD-021](../../../TECH-DEBT.md#sd-021) · neighbors [SD-016](../../../TECH-DEBT.md#sd-016) · [SD-019](../../../TECH-DEBT.md#sd-019) · BI residual.  
+**Prior closed:** [VISION-0.62](VISION-0.62.md) capacity · [VISION-0.61](VISION-0.61.md) vitality · [VISION-0.60](VISION-0.60.md) supervisor + work plane · [VISION-0.59](VISION-0.59.md) boot.  
+**Queue later:** [VISION-TUNNELS](../VISION-TUNNELS.md) · [VISION-GROVE](../VISION-GROVE.md) · [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) · workload remainder.  
+**North star:** [VISION-GROVE](../VISION-GROVE.md).
 
-**Exit judgment:** **José’s call** when he feels the organism readiness home is proper — not when a slice table is empty. Residual must be named. Dual readiness must not be architecture.
+**Exit judgment (2026-08-17):** José closed the theme. Admission floor is real. Present work is [VISION-0.64](../VISION-0.64.md).
 
-**Intended architecture (Palm-wide):** [docs/architecture/](../architecture/README.md) — software engineering spine; not theme PM.
+**Intended architecture (Palm-wide):** [docs/architecture/](../../architecture/README.md) — software engineering spine; not theme PM.
 
-**Progress honesty (2026-08-08):** Much of 0.63 so far is a **readiness dashboard** (admission, fail-closed market-day paths, residual map). The **structure manager** (materialize membership under definition; wire only allowed structure) is the deeper remaining build. Full statement: [VISION-ASSEMBLY §0](VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08).
+**Progress honesty (2026-08-08):** Much of 0.63 so far is a **readiness dashboard** (admission, fail-closed market-day paths, residual map). The **structure manager** (materialize membership under definition; wire only allowed structure) is the deeper remaining build. Full statement: [VISION-ASSEMBLY §0](../VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08).
 
 ---
 
@@ -74,7 +74,7 @@ This theme is **not** multi-process CAS (SD-019) unless natural.
 
 1. **Body exists** — boot, planes, supervisor, vitality, capacity (0.59–0.62).  
 2. **Glue still pretends** — profiles, host enrich, catalog order, soft ready.  
-3. **Seed refined** — [VISION-ASSEMBLY](VISION-ASSEMBLY.md) names roles, ports, citizenship, purge (2026-08-07).  
+3. **Seed refined** — [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) names roles, ports, citizenship, purge (2026-08-07).  
 4. **Dogfood is clear** — `palm` and `palm host server` need real DNA; **embedded** is the first decree to prove.  
 5. Further growth without one gate ships dual readiness as architecture.
 
@@ -88,9 +88,9 @@ This theme is **not** multi-process CAS (SD-019) unless natural.
 
 | Out of this theme’s *subject* | Relation |
 |-------------------------------|----------|
-| Full surface purge (SU-*) | [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) |
-| Grove multi-Palm mesh / org crown | [VISION-GROVE](VISION-GROVE.md) |
-| Tunnels / trusted reach | [VISION-TUNNELS](VISION-TUNNELS.md) |
+| Full surface purge (SU-*) | [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) |
+| Grove multi-Palm mesh / org crown | [VISION-GROVE](../VISION-GROVE.md) |
+| Tunnels / trusted reach | [VISION-TUNNELS](../VISION-TUNNELS.md) |
 | Full SD-016 seat DI cleanup | Boy-scout on touch; not theme exit gate |
 | SD-019 multi-process claim CAS | Residual unless natural plug |
 | Replace job orchestration / CQRS product edge | Unchanged subjects |
@@ -112,7 +112,7 @@ This theme is **not** multi-process CAS (SD-019) unless natural.
 
 ## 4. Principles
 
-Bind to [PALM.md](../PALM.md), [VISION-ASSEMBLY](VISION-ASSEMBLY.md), [PHILOSOPHY.md](../../PHILOSOPHY.md), and ADR-032.
+Bind to [PALM.md](../../PALM.md), [VISION-ASSEMBLY](../VISION-ASSEMBLY.md), [PHILOSOPHY.md](../../PHILOSOPHY.md), and ADR-032.
 
 1. **One readiness truth** — admission from assembly status.  
 2. **One gate** — citizens fail closed; household is assemble, not a market-day skip.  
@@ -136,7 +136,7 @@ Bind to [PALM.md](../PALM.md), [VISION-ASSEMBLY](VISION-ASSEMBLY.md), [PHILOSOPH
 
 ## 5. Lexicon
 
-Use [VISION-ASSEMBLY](VISION-ASSEMBLY.md) §3–§4 and [PALM.md](../PALM.md) §3. Short table for this theme:
+Use [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) §3–§4 and [PALM.md](../../PALM.md) §3. Short table for this theme:
 
 | Term | Meaning |
 |------|---------|
@@ -220,7 +220,7 @@ palm/core/assembly/     # pure: definition, status, intent, observation, engine,
 palm/system/assembly/   # loop, admission, effect port, handlers
 ```
 
-Detail: [VISION-ASSEMBLY](VISION-ASSEMBLY.md) §6–§7.  
+Detail: [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) §6–§7.  
 Install via interfaces/subsystems — not ambient shell as bag (SD-016 spirit).
 
 ---
@@ -319,7 +319,7 @@ Assembly **absorbs become-Palm glue**. It does not erase the seasons that built 
 3. How thin floor DNA fields are (role, refuse, seat intent) before place intents.  
 4. Whether cli DNA is still floor before exit feel — **José**.  
 5. Authority pull — not floor; local seed only until later.  
-6. Migration sharpness per entrypoint — grow [MIGRATION-0.63](../migrations/MIGRATION-0.63.md).
+6. Migration sharpness per entrypoint — grow [MIGRATION-0.63](../../migrations/MIGRATION-0.63.md).
 
 Decisions already taken at open:
 

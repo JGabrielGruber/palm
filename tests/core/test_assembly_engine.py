@@ -37,6 +37,7 @@ def test_local_embedded_builtin() -> None:
     assert dna.id == LOCAL_EMBEDDED_ID
     assert dna.role_intent == "embedded"
     assert "server_surfaces" in dna.refuse
+    assert dna.capabilities == frozenset()
     assert dna.places_required == ()
     assert AssemblyDefinition.from_dict(dna.to_dict()).id == dna.id
 

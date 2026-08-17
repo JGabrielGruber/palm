@@ -1,12 +1,12 @@
 # VISION — Assembly (organism truth · tree scale)
 
-**Status:** 📗 **Seed essay (normative law)** — theme **open** as **[VISION-0.63](VISION-0.63.md)** at `0.63.0` · [ADR-032](../adr/032-organism-assembly.md) **Proposed**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08** · progress honesty **2026-08-08**.  
+**Status:** 📗 **Seed essay (normative law)** — **[VISION-0.64](VISION-0.64.md)** open · [VISION-0.63](closed/VISION-0.63.md) closed · [ADR-032](../adr/032-organism-assembly.md) **Accepted**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08** · progress honesty **2026-08-08**.  
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
 **Intended architecture:** [docs/architecture/](../architecture/README.md) (Palm-wide; structure management is one component).  
-**Active plan:** [VISION-0.63](VISION-0.63.md) — gate · DNA · coherence · slices. This file keeps **roles · ports · citizenship · modules**.  
+**Active plan:** [VISION-0.64](VISION-0.64.md). This file keeps **roles · ports · citizenship · modules**.  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
-**Horizon order:** **0.63 assembly** → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
+**Horizon order:** assembly → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
 **Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
 
 ---
@@ -40,7 +40,7 @@ That glue multiplies when Palm scales past one process.
 
 This file names the **missing home** and the **reassembly of the organism** around it.  
 It names **roles**, **ports**, and **what every layer must change**.  
-**Theme open:** [VISION-0.63](VISION-0.63.md). This essay remains the deep law; the minor owns slices and exit.  
+**Theme open:** [VISION-0.64](VISION-0.64.md). This essay remains the deep law.  
 It does **not** replace boot, orchestration, or the workload plane.
 
 **Duty:** write the structure Palm will grow into — realistic, named, honest about what we cannot do yet.  
@@ -447,10 +447,10 @@ Palm’s rare packaging: **assembly** next to **orchestration** and **workload**
 
 ---
 
-## 12. Growth path (theme **0.63** open)
+## 12. Growth path (theme **0.64** open)
 
 Same rhythm: **engine → alternate path → validate → migrate · clean**.  
-**Authoritative slice table:** [VISION-0.63](VISION-0.63.md) §9. Summary:
+Closed 0.63 chronicle: [VISION-0.63](closed/VISION-0.63.md) §9 (history, not a queue). Summary:
 
 | Stage | Spirit |
 |-------|--------|

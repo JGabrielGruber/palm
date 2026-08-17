@@ -18,7 +18,7 @@ Seeds deepen; they do not hide that law only inside one file.
 
 | Doc | Role |
 |------|------|
-| [VISION-0.63.md](VISION-0.63.md) | **Active theme** — organism assembly (gate · DNA · coherence) |
+| [VISION-0.64.md](VISION-0.64.md) | **Active theme** — structure manager |
 | [VISION-ASSEMBLY.md](VISION-ASSEMBLY.md) | Seed essay (law) · roles · ports · admission · citizenship · modules |
 | [VISION-0.56.md](VISION-0.56.md) | Workload — **horizontal** place book (scout) |
 | [VISION-TUNNELS.md](VISION-TUNNELS.md) | **Reach** only · after assembly, before Grove |

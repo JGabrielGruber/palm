@@ -83,6 +83,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         surfaces=surfaces,
         capabilities=capabilities,
     )
+    seat.materialize(shell)
     admission = seat.admission()
 
     ctx.publish(

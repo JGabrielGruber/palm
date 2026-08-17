@@ -102,7 +102,7 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
                 == "composition_off:projections"
             )
 
-        # Background work drain: mode allows; membership decides.
+        # Background work drain: DNA capabilities list (not composition.has).
         if expected.composition.has("work_drain"):
             assert by_id["host.background.work_drain"]["outcome"] == "ok"
             assert host.work_drain is not None
@@ -111,7 +111,7 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
             assert by_id["host.background.work_drain"]["outcome"] == "skip"
             assert (
                 by_id["host.background.work_drain"]["reason"]
-                == "composition_off:work_drain"
+                == "structure_off:work_drain"
             )
 
         # Declared services must exist; chrome outside the dep closure must not.

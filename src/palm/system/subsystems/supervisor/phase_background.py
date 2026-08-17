@@ -32,19 +32,36 @@ class BackgroundStartResult:
 def start_supervised_background(
     supervisor: Any,
     options: Mapping[str, Any] | None = None,
+    *,
+    definition: Any | None = None,
 ) -> BackgroundStartResult:
-    """Start work_drain / outbox when options and membership allow."""
-    opts = dict(options or {})
-    if bool(opts.get("allow_background_drain", True)) is False:
-        return BackgroundStartResult(started=[], skip_reason="allow_background_drain_off")
+    """Start work_drain / outbox when DNA / options allow.
 
-    want_drain = bool(opts.get("enable_work_drain_service", False))
+    ``work_drain`` starts when DNA lists it (not ``enable_work_drain_service``
+    or ``allow_background_drain``). Outbox still uses the start option.
+    """
+    from palm.system.assembly.seed import (
+        dna_lists_work_drain,
+        dna_refuses_background_drain,
+    )
+
+    opts = dict(options or {})
+    want_drain = (
+        dna_lists_work_drain(definition)
+        and not dna_refuses_background_drain(definition)
+        and not bool(opts.get("defer_work_drain_start", False))
+    )
     want_outbox = bool(opts.get("enable_outbox_background", False))
     if not want_drain and not want_outbox:
-        return BackgroundStartResult(
-            started=[],
-            skip_reason="no_background_services_enabled",
-        )
+        if bool(opts.get("defer_work_drain_start", False)) and dna_lists_work_drain(
+            definition
+        ):
+            skip = "deferred_work_drain_start"
+        elif definition is not None and not dna_lists_work_drain(definition):
+            skip = "structure_off:work_drain"
+        else:
+            skip = "no_background_services_enabled"
+        return BackgroundStartResult(started=[], skip_reason=skip)
 
     has_drain = supervisor.get("work_drain") is not None
     has_outbox = supervisor.get("outbox") is not None
@@ -67,7 +84,9 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     sup = ctx.supervisor if ctx.supervisor is not None else shell.supervisor
     if sup is None:
         raise PhaseSkip("no_supervisor")
-    result = start_supervised_background(sup, options)
+    seat = getattr(shell, "assembly", None)
+    definition = getattr(seat, "definition", None) if seat is not None else None
+    result = start_supervised_background(sup, options, definition=definition)
     if result.should_skip:
         raise PhaseSkip(result.skip_reason or "background_skip")
     get_system_log().info(

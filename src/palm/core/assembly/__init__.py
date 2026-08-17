@@ -4,14 +4,8 @@ Core purity: no imports outside ``palm.core``.
 System applies effect intents; clients use :class:`AdmissionSnapshot`.
 """
 
-from palm.core.assembly.policy import (
-    REFUSE_BACKGROUND_DRAIN,
-    REFUSE_HTTP_SERVER_SURFACES,
-    REFUSE_PRODUCT_CATALOG_HOME,
-    REFUSE_SERVER_SURFACES,
-    refuse_violations,
-)
 from palm.core.assembly.definition import (
+    CAPABILITY_WORK_DRAIN,
     LOCAL_ALL_IN_ONE_ID,
     LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
@@ -35,6 +29,13 @@ from palm.core.assembly.exceptions import (
 )
 from palm.core.assembly.intent import EffectIntent, EffectIntentKind
 from palm.core.assembly.observation import Observation, ObservationKind
+from palm.core.assembly.policy import (
+    REFUSE_BACKGROUND_DRAIN,
+    REFUSE_HTTP_SERVER_SURFACES,
+    REFUSE_PRODUCT_CATALOG_HOME,
+    REFUSE_SERVER_SURFACES,
+    refuse_violations,
+)
 from palm.core.assembly.result import AssembleResult
 from palm.core.assembly.status import (
     AdmissionSnapshot,
@@ -43,6 +44,7 @@ from palm.core.assembly.status import (
 )
 
 __all__ = [
+    "CAPABILITY_WORK_DRAIN",
     "LOCAL_ALL_IN_ONE_ID",
     "LOCAL_CLI_ID",
     "LOCAL_EMBEDDED_ID",

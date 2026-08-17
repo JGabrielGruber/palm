@@ -5,9 +5,9 @@ Host schedule handlers — start law for ApplicationHost (0.59.4 / 0.59.5).
 comes up. Handlers here are the rules. Collaborators (kernel, spawner, CQRS
 wire, recovery, workplane) are tools — they do not own boot order.
 
-**Membership (0.59.5):** ``CompositionProfile`` is the switch for services,
-surfaces, and capabilities. Skips use ``composition_off:<name>`` (or mode /
-deployment reasons). Do not grow parallel ``if`` forests that ignore the profile.
+**Membership:** ``CompositionProfile`` still switches services, surfaces, and
+capabilities other than ``work_drain``. ``work_drain`` start reads DNA
+``capabilities`` (``structure_off:work_drain``). Do not grow peer-OR forests.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
 are the switches. Do not restore import-order magic.
@@ -77,6 +77,9 @@ def build_host_handlers(
         # Explicit host.start(enable_event_outbox=…) still wins (named override).
         if "enable_event_outbox" not in options:
             merged["enable_event_outbox"] = host.composition.has("outbox")
+        # Host starts drain after product.wire; do not race system.background.start.
+        if "defer_work_drain_start" not in options:
+            merged["defer_work_drain_start"] = True
         host._spawner.spawn_runtimes(merged)
 
     def definitions_load(_ctx: BootContext) -> None:
@@ -141,11 +144,9 @@ def build_host_handlers(
         )
 
     def background_work_drain(_ctx: BootContext) -> None:
-        # Membership truth: composition only; mode may forbid (0.59.5).
-        if host.boot_mode is not None and not host.boot_mode.allow_background_drain:
-            raise PhaseSkip("mode_background_off")
-        if not host.composition.has("work_drain"):
-            raise PhaseSkip("composition_off:work_drain")
+        # DNA capabilities list is the install king (work_drain first unit).
+        if not host._work_drain_background_enabled():
+            raise PhaseSkip("structure_off:work_drain")
         host._workplane.start_background()
 
     return {

@@ -15,7 +15,7 @@ def test_outbox_registered_when_outbox_wired() -> None:
         assert rt.outbox_processor is not None
         assert rt.supervisor is not None
         assert "outbox" in rt.supervisor.names()
-        assert "work_drain" in rt.supervisor.names()
+        assert "work_drain" not in rt.supervisor.names()
         assert rt.supervisor.status()["running_count"] == 0
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.background.start"].outcome == "skip"
@@ -50,7 +50,7 @@ def test_outbox_and_work_drain_both_start() -> None:
         storage_backend="memory",
         enable_event_outbox=True,
         enable_outbox_background=True,
-        enable_work_drain_service=True,
+        assembly_dna_id="local.cli",
     )
     try:
         assert rt.supervisor is not None

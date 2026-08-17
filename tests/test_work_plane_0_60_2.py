@@ -68,10 +68,10 @@ def test_system_schedule_attaches_work_plane() -> None:
         assert rt.wait_plane is not None
         assert rt.session_plane is not None
         assert rt.supervisor is not None
-        assert "work_drain" in rt.supervisor.names()
+        assert "work_drain" not in rt.supervisor.names()
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.background.start"].outcome == "skip"
-        assert by_id["system.background.start"].reason == "no_background_services_enabled"
+        assert by_id["system.background.start"].reason == "structure_off:work_drain"
     finally:
         rt.stop()
 
@@ -82,7 +82,7 @@ def test_supervised_work_drain_background_when_enabled() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        enable_work_drain_service=True,
+        assembly_dna_id="local.cli",
     )
     try:
         assert rt.supervisor is not None
@@ -107,7 +107,7 @@ def test_work_plane_multi_worker_background() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        enable_work_drain_service=True,
+        assembly_dna_id="local.cli",
         work_drain_workers=3,
         work_drain_poll_interval=0.05,
         work_drain_batch_size=1,

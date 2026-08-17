@@ -47,7 +47,7 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert by_id["host.recover"]["outcome"] == "skip"
         assert by_id["host.recover"]["reason"] == "mode_recover_off"
         assert by_id["host.background.work_drain"]["outcome"] == "skip"
-        assert by_id["host.background.work_drain"]["reason"] == "mode_background_off"
+        assert by_id["host.background.work_drain"]["reason"] == "structure_off:work_drain"
         # Embedded: no surfaces, no projections capability.
         assert by_id["host.surfaces.mount"]["outcome"] == "skip"
         assert by_id["host.projections.attach"]["outcome"] == "skip"
@@ -61,7 +61,7 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert host.assist is None
         assert host.design is None
         assert host.analytics is None
-        # Embedded + mode_background_off: drain never starts.
+        # Embedded DNA: drain never starts.
         assert host.work_drain is None or host.work_drain.is_running is False
 
 

@@ -21,7 +21,7 @@ def test_base_runtime_reactive_seats_without_host() -> None:
         assert isinstance(rt.session_plane, SessionPlaneService)
         assert isinstance(rt.supervisor, SystemSupervisor)
         names = set(rt.supervisor.names())
-        assert "work_drain" in names
+        assert "work_drain" not in names
         assert "outbox" in names
         # Continuous services registered; not auto-started without flags.
         assert rt.supervisor.status()["running_count"] == 0
@@ -38,6 +38,6 @@ def test_server_runtime_subclass_inherits_seats() -> None:
     try:
         assert rt.work_plane is not None
         assert rt.supervisor is not None
-        assert "work_drain" in rt.supervisor.names()
+        assert "work_drain" not in rt.supervisor.names()
     finally:
         rt.stop()

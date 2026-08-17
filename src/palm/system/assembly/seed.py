@@ -11,7 +11,9 @@ parallel structure kings. After load, assembly status under the DNA is truth.
 **0.63.19 — full membership seed cartography (SD-021 residual):**
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
 - Bootstrap derives capabilities from this map — one truth for seed resolve.
-- After load, gates read ``composition.has`` + DNA refuse, not peer-OR settings.
+- After load, ``work_drain`` install reads DNA ``capabilities`` (not
+  ``composition.has`` / ``BootMode.allow_background_drain``). Other
+  capabilities still seed composition at resolve.
 """
 
 from __future__ import annotations
@@ -77,8 +79,8 @@ MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
         "capability": "work_drain",
         "role": "membership_seed",
         "note": (
-            "Feeds composition.work_drain at resolve; DNA refuse background_drain is "
-            "king after load (0.63.13)"
+            "Feeds composition.work_drain at resolve (refuse dual). After load, "
+            "DNA capabilities list is the install king — not composition.has"
         ),
     },
     {
@@ -260,6 +262,17 @@ def dna_refuses_background_drain(definition: AssemblyDefinition | None) -> bool:
     return "background_drain" in refuse
 
 
+def dna_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
+    """True when DNA lists work_drain as a capability to materialize."""
+    if definition is None:
+        return False
+    has = getattr(definition, "has_capability", None)
+    if callable(has):
+        return bool(has("work_drain"))
+    caps = getattr(definition, "capabilities", None) or frozenset()
+    return "work_drain" in caps
+
+
 def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     """Build runtime.start kwargs for assembly seed from ApplicationHost-like shell.
 
@@ -307,6 +320,7 @@ __all__ = [
     "dna_id_for_boot_mode",
     "dna_id_for_composition",
     "dna_id_from_settings",
+    "dna_lists_work_drain",
     "dna_refuses_background_drain",
     "membership_capabilities_from_settings",
     "resolve_seed_dna",

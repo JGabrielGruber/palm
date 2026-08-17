@@ -24,6 +24,7 @@ from palm.app.host.outbox_service import OutboxBackgroundService
 from palm.app.host.roles import DeploymentProfile
 from palm.app.host.router import RuntimeRouter
 from palm.app.host.services import HostServiceContext, core_service_registry
+from palm.app.host.services.packaging import apply_product_packaging
 from palm.app.host.wiring import (
     build_host_projections,
     register_host_projections,
@@ -58,22 +59,21 @@ from palm.common.cqrs.query import (
 )
 from palm.common.cqrs.schemas import build_schema_registry
 from palm.common.events.external import WebhookDispatcher
-from palm.kits.server.cqrs import wire_standalone_query_bus
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
+from palm.kits.server.cqrs import wire_standalone_query_bus
 from palm.patterns.wizard.bindings.cqrs.projection import (
     WizardProgressReadModel,
 )
-from palm.app.host.services.packaging import apply_product_packaging
 from palm.system.boot import HOST_PHASES, BootContext, walk_schedule
 from palm.system.log import get_system_log
 
 if TYPE_CHECKING:
-    from palm.system.runtime.base import BaseRuntime
     from palm.core.orchestration import Job
     from palm.core.resource import ProviderResult
     from palm.definitions.flow import FlowDefinition
     from palm.definitions.process import ProcessDefinition
+    from palm.system.runtime.base import BaseRuntime
 
 
 class ApplicationHost:
@@ -532,40 +532,35 @@ class ApplicationHost:
             return None
         return [w.to_dict() for w in self._last_boot_walk]
 
-    def _work_drain_background_enabled(self) -> bool:
-        """True when continuous WorkIntent drain should run.
-
-        **0.59.5 membership truth:** ``composition.has("work_drain")`` is the
-        packaging membership seed. Deployment may *feed* that capability when
-        resolving composition from settings; it is not a second OR at gate time.
-
-        **0.63.13 structure king:** DNA refuse ``background_drain`` wins after
-        load — env / composition cannot peer-law continuous drain under embedded
-        (or any refuse) DNA. Boot mode may also forbid drain (safe/test).
-        """
-        if self.boot_mode is not None and not self.boot_mode.allow_background_drain:
-            return False
-        if not self.composition.has("work_drain"):
-            return False
-        # DNA refuse is structure law after assemble (0.63.13 / SD-021).
+    def _loaded_assembly_definition(self):
+        """DNA on the primary runtime assembly seat, or None before assemble."""
         try:
             runtime = self._app.runtime()
         except Exception:
-            runtime = None
-        if runtime is not None:
-            from palm.system.assembly.seed import dna_refuses_background_drain
+            return None
+        assembly = getattr(runtime, "assembly", None)
+        if assembly is None:
+            return None
+        return getattr(assembly, "definition", None)
 
-            assembly = getattr(runtime, "assembly", None)
-            dna = getattr(assembly, "definition", None) if assembly is not None else None
-            if dna is None:
-                admission = getattr(runtime, "admission", None)
-                # Fall back: reasons from refuse observation path.
-                reasons = tuple(getattr(admission, "reasons", ()) or ())
-                if any(str(r).startswith("refuse:background_drain") for r in reasons):
-                    return False
-            elif dna_refuses_background_drain(dna):
-                return False
-        return True
+    def _work_drain_background_enabled(self) -> bool:
+        """True when continuous WorkIntent drain should run.
+
+        After load, DNA ``capabilities`` is the install king. Composition and
+        ``BootMode.allow_background_drain`` seed the decree; they are not a
+        peer OR. Refuse ``background_drain`` still fail-closes.
+        """
+        from palm.system.assembly.seed import (
+            dna_lists_work_drain,
+            dna_refuses_background_drain,
+        )
+
+        dna = self._loaded_assembly_definition()
+        if dna is None:
+            return False
+        if dna_refuses_background_drain(dna):
+            return False
+        return dna_lists_work_drain(dna)
 
     def shutdown(self) -> None:
         """Stop services, projections, and all runtimes."""

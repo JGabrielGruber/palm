@@ -68,8 +68,8 @@ def test_system_boot_wires_empty_supervisor() -> None:
     try:
         assert rt.is_started
         assert isinstance(rt.supervisor, SystemSupervisor)
-        # 0.60.5 registers work_drain over the work plane (not started by default).
-        assert "work_drain" in rt.supervisor.names()
+        # Embedded DNA does not list work_drain — materialize drops the freelance register.
+        assert "work_drain" not in rt.supervisor.names()
         assert rt.supervisor.status()["running_count"] == 0
 
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}

@@ -1,6 +1,6 @@
 # Migration — 0.63 Organism assembly
 
-**Theme:** [VISION-0.63](../vision/VISION-0.63.md) (**open**) · **ADR:** [032](../adr/032-organism-assembly.md) **Proposed**  
+**Theme:** [VISION-0.63](../vision/closed/VISION-0.63.md) (**closed**) · **ADR:** [032](../adr/032-organism-assembly.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)
 
 Palm is pre-1.0. This theme introduces **assembly DNA**, **admission**, and **fail-closed** citizens.  

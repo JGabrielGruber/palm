@@ -1,7 +1,38 @@
 """System assembly — loop, effect port, seat, admission on the shell (0.63)."""
 
+from palm.system.assembly.access import admission_source_from_runtime_resolver
 from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
+from palm.system.assembly.errors import (
+    AdmissionRefusedError,
+    coerce_admission_snapshot,
+    require_business_admission,
+)
+from palm.system.assembly.host_bind import (
+    bind_host_structure_to_seat,
+    default_household_effects,
+    place_book_port,
+    resolve_workload_engine,
+    workload_spawn_hands,
+)
 from palm.system.assembly.household import HouseholdEffectPort
+from palm.system.assembly.inventory import (
+    GATED_CITIZENS,
+    PRETENDER_EDGES,
+    kingdom_map,
+    kingdom_snapshot,
+    open_pretender_edges,
+    paid_pretender_edges,
+)
+from palm.system.assembly.loop import (
+    DEFAULT_MAX_TICKS,
+    AssembleLoopResult,
+    assemble_until_steady,
+    load_and_assemble,
+)
+from palm.system.assembly.materialize import (
+    apply_local_capabilities,
+    definition_lists_work_drain,
+)
 from palm.system.assembly.place_book import InProcessPlaceBook, PlaceBookEffectPort
 from palm.system.assembly.place_spawn import (
     InProcessPlaceSpawn,
@@ -12,39 +43,7 @@ from palm.system.assembly.place_spawn import (
     fail_closed_os_ensure,
     os_prefix_spawn_port,
 )
-from palm.system.assembly.workload_place import (
-    WorkloadPlaceSpawn,
-    combined_structure_spawn_port,
-    workload_prefix_spawn_port,
-)
-from palm.system.assembly.host_bind import (
-    bind_host_structure_to_seat,
-    default_household_effects,
-    place_book_port,
-    resolve_workload_engine,
-    workload_spawn_hands,
-)
-from palm.system.assembly.access import admission_source_from_runtime_resolver
-from palm.system.assembly.errors import (
-    AdmissionRefusedError,
-    coerce_admission_snapshot,
-    require_business_admission,
-)
-from palm.system.assembly.loop import (
-    DEFAULT_MAX_TICKS,
-    AssembleLoopResult,
-    assemble_until_steady,
-    load_and_assemble,
-)
 from palm.system.assembly.seat import AssemblySeat
-from palm.system.assembly.inventory import (
-    GATED_CITIZENS,
-    PRETENDER_EDGES,
-    kingdom_map,
-    kingdom_snapshot,
-    open_pretender_edges,
-    paid_pretender_edges,
-)
 from palm.system.assembly.seed import (
     ALWAYS_ON_MEMBERSHIP_CAPABILITIES,
     MEMBERSHIP_CAPABILITY_SEEDS,
@@ -54,10 +53,16 @@ from palm.system.assembly.seed import (
     dna_id_for_boot_mode,
     dna_id_for_composition,
     dna_id_from_settings,
+    dna_lists_work_drain,
     dna_refuses_background_drain,
     membership_capabilities_from_settings,
     resolve_seed_dna,
     seed_assembly_options_from_host,
+)
+from palm.system.assembly.workload_place import (
+    WorkloadPlaceSpawn,
+    combined_structure_spawn_port,
+    workload_prefix_spawn_port,
 )
 
 __all__ = [
@@ -96,7 +101,10 @@ __all__ = [
     "dna_id_for_boot_mode",
     "dna_id_for_composition",
     "dna_id_from_settings",
+    "dna_lists_work_drain",
     "dna_refuses_background_drain",
+    "definition_lists_work_drain",
+    "apply_local_capabilities",
     "kingdom_map",
     "kingdom_snapshot",
     "open_pretender_edges",

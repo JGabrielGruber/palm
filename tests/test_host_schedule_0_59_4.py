@@ -33,8 +33,7 @@ def test_host_start_walks_full_phase_table() -> None:
         assert by_id["host.projections.attach"].outcome == "ok"
         assert by_id["host.recover"].outcome == "ok"
         assert by_id["host.ready"].outcome == "ok"
-        assert by_id["host.background.work_drain"].outcome == "skip"
-        assert by_id["host.background.work_drain"].reason == "composition_off:work_drain"
+        assert by_id["host.background.work_drain"].outcome == "ok"
 
         slog = get_system_log()
         assert "boot.start" in slog.events()

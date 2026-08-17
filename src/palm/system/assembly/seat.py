@@ -18,8 +18,8 @@ from palm.core.assembly import (
 from palm.system.assembly.effects import AssemblyEffectPort
 from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.loop import (
-    AssembleLoopResult,
     DEFAULT_MAX_TICKS,
+    AssembleLoopResult,
     assemble_until_steady,
 )
 
@@ -32,6 +32,7 @@ class AssemblySeat:
     effects: AssemblyEffectPort = field(default_factory=HouseholdEffectPort)
     last_loop: AssembleLoopResult | None = None
     definition: AssemblyDefinition | None = None
+    materialized_capabilities: frozenset[str] = field(default_factory=frozenset)
 
     def __post_init__(self) -> None:
         if not self.engine.is_initialized:
@@ -87,6 +88,14 @@ class AssemblySeat:
         self.last_loop = result
         return result
 
+    def materialize(self, shell: object) -> frozenset[str]:
+        """Apply local capability membership from loaded DNA onto *shell*."""
+        from palm.system.assembly.materialize import apply_local_capabilities
+
+        applied = apply_local_capabilities(self.definition, shell)
+        self.materialized_capabilities = applied
+        return applied
+
     def reassemble(
         self,
         definition: AssemblyDefinition | None = None,
@@ -119,6 +128,7 @@ class AssemblySeat:
         self.engine.initialize()
         self.last_loop = None
         self.definition = None
+        self.materialized_capabilities = frozenset()
 
 
 __all__ = ["AssemblySeat"]

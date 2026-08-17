@@ -121,10 +121,13 @@ Roles at scale (later): thin orchestrator, support **serves** definitions, worke
 
 | Built (roughly) | Deeper remaining |
 |-----------------|------------------|
-| Reconciler + status + admission | Full membership **materialize** |
-| Fail-closed doors on many business paths | Definition as install set for plugins/product/surfaces |
+| Reconciler + status + admission | Full membership **materialize** (plugins / product / surfaces) |
+| Fail-closed doors on many business paths | Definition as install set beyond `work_drain` |
+| DNA `capabilities` + manager materialize of **`work_drain`** | Other capability units still host/composition |
 | Seed map (mode/env → definition id) | Provider source resolver; cache/replicate |
 | Place hands (partial) | Structure as sole owner of freelanced bootstrap soup |
+
+First implementation cut (capabilities / `work_drain`; theme stamp open): [appendix/structure-materialize-cut.md](../../appendix/structure-materialize-cut.md).
 
 ---
 

@@ -337,8 +337,8 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "id": "env.structure_toggles",
         "note": (
             "0.63.13 DNA seed + drain king; 0.63.19 full MEMBERSHIP_CAPABILITY_SEEDS "
-            "catalog + bootstrap single source. Flags remain honest resolve seeds; "
-            "gates after load use composition.has + DNA refuse."
+            "catalog + bootstrap single source. work_drain install reads DNA "
+            "capabilities after load (not composition.has / BootMode)."
         ),
         "intent": "paid catalog SD-021 — residual only named packaging duals (outbox start option)",
         "status": "paid_catalog_0_63_19",

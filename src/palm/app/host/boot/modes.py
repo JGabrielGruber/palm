@@ -50,6 +50,8 @@ class BootMode:
     #: None → leave SystemLog console policy to env/pytest defaults.
     system_log_console: bool | None = None
     recover_on_start: bool = True
+    #: Seed / phenotype note. After DNA load, work_drain start reads
+    #: definition.capabilities — this flag is not a peer OR.
     allow_background_drain: bool = True
 
     def to_dict(self) -> dict[str, object]:

@@ -70,6 +70,8 @@ def test_builtin_refuse_differs() -> None:
     assert "background_drain" in emb.refuse
     assert "background_drain" not in cli.refuse
     assert "server_surfaces" in cli.refuse
+    assert "work_drain" not in emb.capabilities
+    assert "work_drain" in cli.capabilities
 
 
 def test_host_for_mode_cli_seeds_cli_dna() -> None:

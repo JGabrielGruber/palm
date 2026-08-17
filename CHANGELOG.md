@@ -4,11 +4,21 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.64 — present (José 2026-08-17)
+- **0.63 closed.** Live path is [VISION-0.64](docs/vision/VISION-0.64.md). No slice table.
+- ADR-032 **Accepted**
+
+### 0.63.39 — work_drain materialize
+- `AssemblyDefinition.capabilities` — builtin DNA lists `work_drain` on cli/server/all_in_one/worker (not embedded/mcp)
+- Structure manager materializes `work_drain` (supervisor register) only when DNA lists it
+- Host and system background start read DNA, not `composition.has("work_drain")` or `BootMode.allow_background_drain`
+- Theme stamp (stay 0.63 vs open 0.64) still open
+
 ## [0.63.0] — 2026-08-08
 
 ### 0.63 — Organism assembly (**theme open**)
 
-Vision: [VISION-0.63](docs/vision/VISION-0.63.md) · seed: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · ADR: [032](docs/adr/032-organism-assembly.md) **Proposed** · Migration: [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md)
+Vision: [VISION-0.63](docs/vision/closed/VISION-0.63.md) · seed: [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · ADR: [032](docs/adr/032-organism-assembly.md) **Accepted** · Migration: [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md)
 
 #### Plan (0.63.0)
 - **Theme open** — DNA · admission gate · single readiness · purge pretenders  

@@ -50,8 +50,8 @@ def test_server_profile_host_gains_work_drain_membership() -> None:
         host.shutdown()
 
 
-def test_explicit_composition_wins_over_deployment_work_drain() -> None:
-    """Explicit empty capabilities stay empty even when deployment would feed work_drain."""
+def test_explicit_composition_does_not_veto_dna_work_drain() -> None:
+    """Empty composition is not a peer king; server DNA lists work_drain."""
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(
         settings=settings,
@@ -61,18 +61,18 @@ def test_explicit_composition_wins_over_deployment_work_drain() -> None:
     assert not host.composition.has("work_drain")
     host.start()
     try:
-        assert host._work_drain_background_enabled() is False
+        assert host._work_drain_background_enabled() is True
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.work_drain"].outcome == "skip"
-        assert by_id["host.background.work_drain"].reason == "composition_off:work_drain"
+        assert by_id["host.background.work_drain"].outcome == "ok"
+        assert host.work_drain is not None
+        assert host.work_drain.is_running is True
     finally:
         host.shutdown()
 
 
-def test_work_drain_gate_is_composition_only_not_or() -> None:
-    """Deployment flag alone (without membership) does not enable background drain."""
+def test_work_drain_gate_is_dna_not_composition_or() -> None:
+    """all_in_one DNA lists work_drain; composition empty and flags are not kings."""
     settings = PalmSettings.for_tests(load_examples=False)
-    # Explicit composition omits work_drain; deployment still "wants" it.
     host = ApplicationHost(
         settings=settings,
         profile=replace(
@@ -84,7 +84,8 @@ def test_work_drain_gate_is_composition_only_not_or() -> None:
     host.start()
     try:
         assert host.profile.enable_work_drain_service is True
-        assert host._work_drain_background_enabled() is False
+        assert not host.composition.has("work_drain")
+        assert host._work_drain_background_enabled() is True
     finally:
         host.shutdown()
 
@@ -151,8 +152,7 @@ def test_boot_mode_test_skips_background_with_mode_reason() -> None:
     try:
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.background.work_drain"].outcome == "skip"
-        # mode forbids first
-        assert by_id["host.background.work_drain"].reason == "mode_background_off"
+        assert by_id["host.background.work_drain"].reason == "structure_off:work_drain"
         boot = host.control_plane_status()["boot"]
         assert boot["membership"]["services"]
         assert "capabilities" in boot["membership"]

@@ -1,8 +1,8 @@
 # ADR-032 — Organism assembly (DNA · admission · single readiness)
 
-**Status:** Proposed  
-**Date:** 2026-08-08  
-**Theme:** [VISION-0.63](../vision/VISION-0.63.md) (**open** at `0.63.0`)  
+**Status:** Accepted  
+**Date:** 2026-08-08 · **Accepted:** 2026-08-17  
+**Theme:** [VISION-0.63](../vision/closed/VISION-0.63.md) (**closed**) · present [VISION-0.64](../vision/VISION-0.64.md)  
 **Seed law:** [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.63](../migrations/MIGRATION-0.63.md)  

@@ -52,6 +52,11 @@ class _SupervisorOutboxFacade:
     def process_once(self) -> int:
         return self._processor.process_batch(limit=self._batch_size)
 
+    @property
+    def is_running(self) -> bool:
+        """Supervisor already started outbox when this facade is installed."""
+        return True
+
     def start(self, *, recover: bool = True) -> None:
         return None
 

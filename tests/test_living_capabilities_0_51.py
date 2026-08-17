@@ -243,9 +243,9 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
         profile=profile,
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    off.start()
+    off.start(assembly_dna_id="local.embedded")
     try:
-        assert off._work_drain_background_enabled() is False  # no membership
+        assert off._work_drain_background_enabled() is False  # DNA omits work_drain
     finally:
         off.shutdown()
 

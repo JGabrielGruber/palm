@@ -51,5 +51,6 @@ Palm needs a durable **intended** structure so seasons (including structure mana
 | [c4-code/packages/](c4-code/packages/README.md) | Package map |
 | [views/lifecycle.md](views/lifecycle.md) | Boot → structure ready → business |
 | [appendix/metaphor.md](appendix/metaphor.md) | Retired / teaching language |
+| [appendix/structure-materialize-cut.md](appendix/structure-materialize-cut.md) | First materialize unit (`work_drain`); theme stamp open |
 
 Fill order suggestion: glossary · principles · c1 · lifecycle view · c3 structure management · c4 package law.

@@ -62,7 +62,7 @@ Detail and proof live in [STATUS.md](STATUS.md) and [PALM.md](docs/PALM.md). Sho
 | Vitality + Inspect | **Closed** |
 | Multi-claimer work drain (in-process) | **Closed** · residual multi-process CAS named |
 | Workload plane | **Scout** — engine, runners, CQRS, dogfood; remainder queued |
-| Assembly / definition-ready reconciler | **Theme open 0.63** — [VISION-0.63](docs/vision/VISION-0.63.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| Assembly / definition-ready reconciler | **0.64** — [VISION-0.64](docs/vision/VISION-0.64.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | MCP assist-first, CLI, server surfaces | **Real** · surface deflation queued |
 
 **Recommended entry:** `ApplicationHost` + deployment/composition profiles. Prefer system seats and product doors over digging engines from surfaces.
@@ -92,7 +92,7 @@ Ordered by **organism need**, not marketing.
 | Horizon | Intent | Doc |
 |---------|--------|-----|
 | **Now** | Hold closed seasons honest; residual debt named; dogfood spine | [STATUS.md](STATUS.md) |
-| **Near structure** | Assembly (0.63): definition, status, effect intents, admission, subsystem contracts, recursive support, two axes | [VISION-0.63](docs/vision/VISION-0.63.md) · [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · [PALM §8](docs/PALM.md) |
+| **Near structure** | Assembly: definition, status, effect intents, admission, subsystem contracts, recursive support, two axes | [VISION-0.64](docs/vision/VISION-0.64.md) · [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · [PALM §8](docs/PALM.md) |
 | **Workload growth** | Place book depth; cancel/ownership; more runners | [VISION-0.56](docs/vision/VISION-0.56.md) |
 | **Reach** | Tunnels after assembly | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) |
 | **Surface honesty** | Thin faces; assist-first; drop pre-plane furniture | [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
