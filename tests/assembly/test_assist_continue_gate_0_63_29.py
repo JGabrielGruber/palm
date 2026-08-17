@@ -11,7 +11,7 @@ from palm.app.settings import PalmSettings
 from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
 from palm.services.assist.session import AssistSession
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
@@ -113,10 +113,10 @@ def test_resume_process_refused_when_assembly_skipped() -> None:
 
 
 def test_inventory_assist_continue_and_resume_process() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "assist.continue_session" in gated
     assert "executor.resume_process" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["assist.session_cancel_ungated"] == "named_0_63_29"
     assert pretenders["assist.continue_edge"] == "paid_0_63_29"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

@@ -6,7 +6,7 @@ from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import has_open_waits, make_job_wait
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 from palm.system.subsystems.planes.wait.plane import WaitPlaneService
@@ -115,7 +115,7 @@ def test_runtime_wait_plane_able_when_admitted() -> None:
 
 
 def test_inventory_wait_able_paid() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "wait_plane.able_resume" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["wait_plane.orch_resume_dig"] == "paid_0_63_26"

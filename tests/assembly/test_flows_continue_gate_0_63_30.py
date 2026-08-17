@@ -13,7 +13,7 @@ from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
 from palm.services.execution.flows.service import FlowExecutionService
 from palm.services.execution.flows.session import FlowSession
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
@@ -159,11 +159,11 @@ def test_cancel_job_not_admission_citizen() -> None:
 
 
 def test_inventory_flows_continue_and_cancel_residuals() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "flows.continue_session" in gated
-    assert "flows.admission_oath" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    assert "flows.published_admission" in gated
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["flows.continue_edge"] == "paid_0_63_30"
     assert pretenders["flows.session_cancel_ungated"] == "named_0_63_30"
     assert pretenders["runtime.cancel_job_ungated"] == "named_0_63_30"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

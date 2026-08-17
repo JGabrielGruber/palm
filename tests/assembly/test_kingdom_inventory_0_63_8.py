@@ -5,34 +5,34 @@ from __future__ import annotations
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.system.assembly import (
-    GATED_CITIZENS,
-    PRETENDER_EDGES,
-    kingdom_map,
-    kingdom_snapshot,
+    GATED_PATHS,
+    READINESS_EDGES,
+    admission_inventory,
+    admission_inventory_snapshot,
 )
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
 
-def test_kingdom_map_has_walls() -> None:
-    m = kingdom_map()
+def test_admission_inventory_has_walls() -> None:
+    m = admission_inventory()
     assert m["gated_count"] >= 8
-    assert m["pretender_count"] >= 1
-    ids = {g["id"] for g in GATED_CITIZENS}
+    assert m["readiness_edge_count"] >= 1
+    ids = {g["id"] for g in GATED_PATHS}
     assert "work_plane.tick" in ids
     assert "executor.submit_flow" in ids
     assert "dna.refuse" in ids
     assert "vitality.assembly" in ids
-    pret = {p["id"] for p in PRETENDER_EDGES}
+    pret = {p["id"] for p in READINESS_EDGES}
     assert "env.structure_toggles" in pret
 
 
-def test_kingdom_snapshot_live() -> None:
+def test_admission_inventory_snapshot_live() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
-        snap = kingdom_snapshot(rt)
+        snap = admission_inventory_snapshot(rt)
         assert snap["live"]["is_started"] is True
         assert snap["live"]["admission"]["may_run_business"] is True
         assert snap["live"]["definition_id"] == "local.embedded"

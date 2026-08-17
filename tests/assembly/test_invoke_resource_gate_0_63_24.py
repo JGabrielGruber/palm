@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
@@ -86,6 +86,6 @@ def test_household_resource_engine_not_gated_by_port() -> None:
 
 
 def test_inventory_lists_invoke_resource_citizen() -> None:
-    ids = {row["id"] for row in GATED_CITIZENS}
+    ids = {row["id"] for row in GATED_PATHS}
     assert "execution.invoke_resource" in ids
-    assert kingdom_map()["gated_count"] >= len(GATED_CITIZENS)
+    assert admission_inventory()["gated_count"] >= len(GATED_PATHS)

@@ -11,7 +11,7 @@ from palm.system.assembly import (
     admission_source_from_runtime_resolver,
     require_business_admission,
 )
-from palm.system.assembly.inventory import GATED_CITIZENS, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, admission_inventory
 from palm.system.subsystems.planes.work.plane import WorkPlaneService
 
 
@@ -82,8 +82,8 @@ def test_admission_source_from_runtime_resolver() -> None:
 
 
 def test_inventory_marks_able_fail_closed() -> None:
-    ids = {c["id"] for c in GATED_CITIZENS}
+    ids = {c["id"] for c in GATED_PATHS}
     assert "work_plane.able_fail_closed" in ids
-    pretenders = {p["id"]: p for p in kingdom_map()["pretender_edges"]}
+    pretenders = {p["id"]: p for p in admission_inventory()["readiness_edges"]}
     assert pretenders["work_plane.able_default_open"]["status"] == "paid_0_63_23"
     assert pretenders["host.soft_definitions_ready"]["status"] == "named_0_63_23"

@@ -168,11 +168,11 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | Structure status | AssemblyStatus | Soft definitions ready |
 | Interface | Port (code) | Digging composition root |
 | Business definition | Flow / process definition | Structure definition |
-| Dual readiness path | Pretender (metaphor); `PRETENDER_EDGES` | Corridor police as forever design |
+| Dual readiness path | Pretender (metaphor); `READINESS_EDGES` | Corridor police as forever design |
 | Structure materialize path | Household (metaphor); `HouseholdEffectPort` | Business skip of admission |
-| Business path needing admission | Citizen (metaphor); `GATED_CITIZENS` | — |
-| Admission inventory | `kingdom_map` / `kingdom_snapshot` | Guard tower as architecture |
-| Published admission (façades) | Peasants’ oath; `*.admission_oath` | Host dig for readiness |
+| Business path needing admission | Citizen (metaphor); `GATED_PATHS` | — |
+| Admission inventory | `admission_inventory` / `admission_inventory_snapshot` | Guard tower as architecture |
+| Published admission (façades) | Peasants’ oath; `*.published_admission` | Host dig for readiness |
 | Surface uses host / port | Fealty (metaphor) | Kernel dig as product path |
 | Business start / continue | Market day (metaphor) | — |
 | Seed (chooser, not king) | DNA helpers; `PALM_ASSEMBLY_DNA_ID`; composition “king” | Packaging as structure law after load |

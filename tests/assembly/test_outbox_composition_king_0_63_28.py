@@ -5,7 +5,7 @@ from __future__ import annotations
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.composition import CompositionProfile
 from palm.app.settings import PalmSettings
-from palm.system.assembly.inventory import PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -83,7 +83,7 @@ def test_explicit_start_option_still_overrides_composition() -> None:
 
 
 def test_inventory_outbox_host_paid() -> None:
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["outbox.start_option_seed"] == "paid_host_0_63_28"
     assert pretenders["runtime.enable_event_outbox_bare"] == "named_0_63_28"
-    assert kingdom_map()["pretender_count"] >= 2
+    assert admission_inventory()["readiness_edge_count"] >= 2

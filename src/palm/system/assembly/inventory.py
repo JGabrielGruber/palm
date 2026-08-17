@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 # Paths that must fail closed under admission (law landed).
-GATED_CITIZENS: tuple[dict[str, str], ...] = (
+GATED_PATHS: tuple[dict[str, str], ...] = (
     {
         "id": "work_plane.tick",
         "slice": "0.63.3",
@@ -38,7 +38,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
     {
         "id": "dna.seed",
         "slice": "0.63.5",
-        "law": "host mode/composition → DNA decree",
+        "law": "host mode/composition → DNA seed",
     },
     {
         "id": "dna.refuse",
@@ -51,9 +51,9 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "law": "eyes sample admission + definition id",
     },
     {
-        "id": "inventory.tower",
+        "id": "inventory.admission",
         "slice": "0.63.8",
-        "law": "kingdom_map / packaging admission pointer",
+        "law": "admission_inventory / packaging admission pointer",
     },
     {
         "id": "cli.seed_local_cli",
@@ -78,7 +78,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
     {
         "id": "env.structure_seed",
         "slice": "0.63.13",
-        "law": "PALM_ASSEMBLY_DNA_ID seed · membership refuse always · drain DNA king",
+        "law": "PALM_ASSEMBLY_DNA_ID seed · membership refuse always · drain DNA seed",
     },
     {
         "id": "place_book.spawn_port",
@@ -86,7 +86,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "law": "PlaceSpawnPort · RegisteredPlaceSpawn · os: fail-closed until body",
     },
     {
-        "id": "household.structure_intents",
+        "id": "structure.effect_intents",
         "slice": "0.63.15",
         "law": "HouseholdEffectPort · OS process spawn · projection/policy/seed hands",
     },
@@ -136,12 +136,12 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "assist.admission_oath",
+        "id": "assist.published_admission",
         "slice": "0.63.22",
         "law": (
-            "AssistService.admission_source inject · citizen gates use "
+            "AssistService.admission_source inject · path gates use "
             "admission_gate() · coerce_admission_snapshot · no resolve_runtime dig "
-            "for readiness (peasants' oath / SD-016 boy-scout)"
+            "for readiness (published admission / SD-016 boy-scout)"
         ),
     },
     {
@@ -194,7 +194,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "host.outbox_composition_king",
+        "id": "host.outbox_composition_seed",
         "slice": "0.63.28",
         "law": (
             "host system_spawn aligns enable_event_outbox from "
@@ -206,14 +206,14 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.29",
         "law": (
             "AssistSession input / resume / backtrack require admission via "
-            "admission_gate() (oath) · cancel stays control residual"
+            "admission_gate() (published admission) · cancel stays control residual"
         ),
     },
     {
         "id": "executor.resume_process",
         "slice": "0.63.29",
         "law": (
-            "resume_process is product continue citizen · gated via "
+            "resume_process is product continue path · gated via "
             "_require_runtime admission since 0.63.4 (cartography honesty)"
         ),
     },
@@ -227,7 +227,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "flows.admission_oath",
+        "id": "flows.published_admission",
         "slice": "0.63.30",
         "law": (
             "FlowExecutionService.admission_source inject · admission_gate() · "
@@ -235,7 +235,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "execution.product_facade_oath",
+        "id": "execution.product_facade_admission",
         "slice": "0.63.31",
         "law": (
             "Workload / Provider / Process execution services inject "
@@ -253,7 +253,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "host.packaging_market_day",
+        "id": "host.packaging_start_continue",
         "slice": "0.63.33",
         "law": (
             "ApplicationHost submit_flow / submit_process / provide_input / "
@@ -263,7 +263,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "surface.fealty",
+        "id": "surface.host_port",
         "slice": "0.63.34",
         "law": (
             "CLI resume_job / invoke → host packaging; SSR explorer invoke / "
@@ -276,8 +276,8 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "slice": "0.63.35",
         "law": (
             "REST maps AdmissionRefusedError → 503 admission_refused "
-            "(not submit_failed 500 / input_rejected 400) on market-day "
-            "and continue handlers"
+            "(not submit_failed 500 / input_rejected 400) on business "
+            "start/continue handlers"
         ),
     },
     {
@@ -286,7 +286,7 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         "law": (
             "MCP in-process PalmRestError 503 admission_refused + "
             "WebSocket assist error code admission_refused (not internal/"
-            "500/400) on market-day and continue"
+            "500/400) on business start/continue"
         ),
     },
     {
@@ -299,10 +299,10 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "kingdom.exit_residual_ledger",
+        "id": "inventory.exit_residual_ledger",
         "slice": "0.63.38",
         "law": (
-            "open_pretender_edges / kingdom_map open_residual_* split "
+            "open_residual_edges / admission_inventory open_residual_* split "
             "named residuals from paid; doctor + packaging present for "
             "exit judgment (not dual readiness)"
         ),
@@ -310,15 +310,15 @@ GATED_CITIZENS: tuple[dict[str, str], ...] = (
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
-PRETENDER_EDGES: tuple[dict[str, str], ...] = (
+READINESS_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "assist.soft_catalog",
         "note": (
             "0.63.10 operate eyes; 0.63.21 scenario start + open flow create gated; "
-            "0.63.22 admission_source inject (oath); menu nests admission / "
-            "start_allowed (no start CTA when closed)"
+            "0.63.22 admission_source inject (published admission); menu nests "
+            "admission / start_allowed (no start CTA when closed)"
         ),
-        "intent": "paid start + oath inject; residual only soft catalog browse packaging",
+        "intent": "paid start + published-admission inject; residual only soft catalog browse packaging",
         "status": "paid_oath_0_63_22",
     },
     {
@@ -336,7 +336,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "env.structure_toggles",
         "note": (
-            "0.63.13 DNA seed + drain king; 0.63.19 full MEMBERSHIP_CAPABILITY_SEEDS "
+            "0.63.13 DNA seed + drain seed; 0.63.19 full MEMBERSHIP_CAPABILITY_SEEDS "
             "catalog + bootstrap single source. work_drain install reads DNA "
             "capabilities after load (not composition.has / BootMode)."
         ),
@@ -351,7 +351,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
             "composition.has. Bare BaseRuntime.start(enable_event_outbox=) remains "
             "packaging residual for non-host shells."
         ),
-        "intent": "paid host path — composition king; bare runtime seed named residual",
+        "intent": "paid host path — composition chooser; bare runtime seed named residual",
         "status": "paid_host_0_63_28",
     },
     {
@@ -397,7 +397,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "note": (
             "0.63.20 start_workload · 0.63.27 exec_workload gated on port. Direct "
             "WorkloadEngine.start/exec: household place book + unit free; product dig "
-            "for business is pretender."
+            "for business is dual readiness."
         ),
         "intent": "name residual — port is law; dig ≠ free pass (SD-020)",
         "status": "named_0_63_27",
@@ -408,7 +408,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
             "stop_workload / stop_owned remain without business admission so "
             "shutdown and cleanup work when admission is closed."
         ),
-        "intent": "name residual — control path, not market-day start; revisit if product misuses",
+        "intent": "name residual — control path, not business start; revisit if product misuses",
         "status": "named_0_63_27",
     },
 
@@ -416,7 +416,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "id": "execution.resource_engine_dig",
         "note": (
             "0.63.24 gates ExecutionPort.invoke_resource. Direct ResourceEngine.invoke "
-            "is unit/non-port free; product/surface dig for business effects is pretender."
+            "is unit/non-port free; product/surface dig for business effects is dual readiness."
         ),
         "intent": "name residual — port is law; dig ≠ free pass (SD-020)",
         "status": "named_0_63_25",
@@ -437,15 +437,15 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
             "AssistSession.cancel / session verb cancel remain without business "
             "admission so operators can stop work when the organism is closed."
         ),
-        "intent": "name residual — control path, not market-day continue (SD-020)",
+        "intent": "name residual — control path, not business continue (SD-020)",
         "status": "named_0_63_29",
     },
     {
         "id": "assist.continue_edge",
         "note": (
             "0.63.29: AssistSession input / resume / backtrack gate on "
-            "admission_gate() at product edge (oath); deep provide_input / "
-            "resume_job remain second wall."
+            "admission_gate() at product edge (published admission); deep "
+            "provide_input / resume_job remain second wall."
         ),
         "intent": "paid product continue edge",
         "status": "paid_0_63_29",
@@ -455,7 +455,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "note": (
             "0.63.30: FlowSession input / resume / backtrack gate on "
             "flows.admission_gate(); host injects admission_source via "
-            "admission_source_from_runtime_resolver (oath boy-scout)."
+            "admission_source_from_runtime_resolver (published-admission boy-scout)."
         ),
         "intent": "paid product continue edge + inject",
         "status": "paid_0_63_30",
@@ -475,7 +475,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
             "BaseRuntime.cancel_job / CQRS CancelJobCommand remain without "
             "business admission for operator stop and shutdown."
         ),
-        "intent": "name residual — control path, not market-day start (SD-020)",
+        "intent": "name residual — control path, not business start (SD-020)",
         "status": "named_0_63_30",
     },
     {
@@ -502,8 +502,8 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "id": "flows.start_edge",
         "note": (
             "0.63.32: FlowExecutionService submit_flow_body / run_wizard / "
-            "run_flow gate on admission_gate() at product edge (oath); deep "
-            "submit_flow / executor remain second wall. LIST/DESCRIBE catalog "
+            "run_flow gate on admission_gate() at product edge (published admission); "
+            "deep submit_flow / executor remain second wall. LIST/DESCRIBE catalog "
             "browse stays soft packaging eyes."
         ),
         "intent": "paid product start edge",
@@ -513,20 +513,20 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "id": "flows.soft_catalog",
         "note": (
             "FlowExecutionService LIST / DESCRIBE remain without business "
-            "admission — packaging catalog browse, not market-day start."
+            "admission — packaging catalog browse, not business start."
         ),
         "intent": "named residual — soft catalog eyes (same spirit as assist.soft_catalog)",
         "status": "named_0_63_32",
     },
     {
-        "id": "host.packaging_market_day_edge",
+        "id": "host.packaging_start_continue_edge",
         "note": (
-            "0.63.33: ApplicationHost market-day doors + PalmCommandHandlers "
+            "0.63.33: ApplicationHost business start/continue doors + PalmCommandHandlers "
             "SubmitFlow/Process, ProvideInput, ResumeProcess, PreparePlans, "
             "SubmitPlans gate on admission; product façades remain preferred "
-            "peasant path; ports remain second wall."
+            "product path; ports remain second wall."
         ),
-        "intent": "paid packaging crown market-day edge",
+        "intent": "paid packaging host business start/continue edge",
         "status": "paid_0_63_33",
     },
     {
@@ -534,21 +534,21 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "note": (
             "PalmKernel / BaseRuntime public submit/provide/invoke remain "
             "port-gated only. Digging host.app or bare runtime bypasses "
-            "host packaging edge — pretender if product uses it for business. "
-            "0.63.34: CLI + SSR explorer market-day digs boy-scouted to host."
+            "host packaging edge — dual readiness if product uses it for business. "
+            "0.63.34: CLI + SSR explorer business start/continue digs boy-scouted to host."
         ),
-        "intent": "name residual — port is law; packaging crown is host (SD-020)",
+        "intent": "name residual — port is law; packaging host is the door (SD-020)",
         "status": "named_0_63_33",
     },
     {
-        "id": "surface.fealty_edge",
+        "id": "surface.host_port_edge",
         "note": (
             "0.63.34: CLI resume_job/invoke and SSR explorer invoke/resume "
             "route through host packaging (or admit+port when host-less); "
             "wizard CQRS ProvideWizardInput / RequestWizardBacktrack gate "
             "admission at pattern handler; host.resume_job packaging door."
         ),
-        "intent": "paid surface fealty boy-scout",
+        "intent": "paid surface host/port boy-scout",
         "status": "paid_0_63_34",
     },
     {
@@ -556,7 +556,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "note": (
             "0.63.35: REST error helper admission_refused (503) + "
             "maybe_admission_refused on assist/flows/processes/providers/"
-            "workloads/jobs/plans/instances market-day and continue paths. "
+            "workloads/jobs/plans/instances business start/continue paths. "
             "Gate already raised under product/port; surface now speaks truth."
         ),
         "intent": "paid REST honest voice for closed gate",
@@ -566,7 +566,7 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "id": "surface.mcp_ws_admission_voice_edge",
         "note": (
             "0.63.36: MCP maybe_admission_refused_error → PalmRestError 503 "
-            "admission_refused on in-process market-day/continue; WebSocket "
+            "admission_refused on in-process business start/continue; WebSocket "
             "assist maps AdmissionRefusedError to code admission_refused "
             "(not internal). HTTP MCP inherits REST voice via bridge."
         ),
@@ -576,8 +576,8 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "surface.cli_ssr_admission_voice_edge",
         "note": (
-            "0.63.37: CLI market-day/continue commands use print_cli_error "
-            "(admission_refused brand); SSR explorer market-day + continue "
+            "0.63.37: CLI business start/continue commands use print_cli_error "
+            "(admission_refused brand); SSR explorer start/continue "
             "banners use operator_error_text; wizard backtrack catches "
             "RuntimeError so closed gate is not an unhandled 500."
         ),
@@ -585,10 +585,10 @@ PRETENDER_EDGES: tuple[dict[str, str], ...] = (
         "status": "paid_0_63_37",
     },
     {
-        "id": "kingdom.exit_residual_ledger_edge",
+        "id": "inventory.exit_residual_ledger_edge",
         "note": (
-            "0.63.38: kingdom_map exposes open_residuals / open_residual_ids "
-            "and paid_edge_count; doctor prints Assembly admission + open "
+            "0.63.38: admission_inventory exposes open_residuals / open_residual_ids "
+            "and paid_edge_count; doctor prints structure admission + open "
             "residual ledger; packaging bag nests open_residual_count. "
             "Does not invent dual readiness — cartography for José exit."
         ),
@@ -607,27 +607,27 @@ def _status_kind(status: str) -> str:
     return "other"
 
 
-def open_pretender_edges() -> list[dict[str, str]]:
+def open_residual_edges() -> list[dict[str, str]]:
     """Named residuals still open — not architecture; exit judgment map."""
-    return [dict(row) for row in PRETENDER_EDGES if _status_kind(row["status"]) == "open"]
+    return [dict(row) for row in READINESS_EDGES if _status_kind(row["status"]) == "open"]
 
 
-def paid_pretender_edges() -> list[dict[str, str]]:
+def paid_readiness_edges() -> list[dict[str, str]]:
     """Edges paid or boy-scouted (status starts with ``paid``)."""
-    return [dict(row) for row in PRETENDER_EDGES if _status_kind(row["status"]) == "paid"]
+    return [dict(row) for row in READINESS_EDGES if _status_kind(row["status"]) == "paid"]
 
 
-def kingdom_map() -> dict[str, Any]:
+def admission_inventory() -> dict[str, Any]:
     """Static admission inventory — admitted paths vs dual-readiness residual · open residual ledger."""
-    open_rows = open_pretender_edges()
-    paid_rows = paid_pretender_edges()
+    open_rows = open_residual_edges()
+    paid_rows = paid_readiness_edges()
     return {
         "theme": "0.63",
-        "role": "assembly_kingdom_inventory",
-        "gated_citizens": list(GATED_CITIZENS),
-        "pretender_edges": list(PRETENDER_EDGES),
-        "gated_count": len(GATED_CITIZENS),
-        "pretender_count": len(PRETENDER_EDGES),
+        "role": "admission_inventory",
+        "gated_paths": list(GATED_PATHS),
+        "readiness_edges": list(READINESS_EDGES),
+        "gated_count": len(GATED_PATHS),
+        "readiness_edge_count": len(READINESS_EDGES),
         # 0.63.38 exit readiness — open named residuals first-class
         "open_residuals": open_rows,
         "open_residual_count": len(open_rows),
@@ -637,9 +637,9 @@ def kingdom_map() -> dict[str, Any]:
     }
 
 
-def kingdom_snapshot(runtime: Any | None = None) -> dict[str, Any]:
+def admission_inventory_snapshot(runtime: Any | None = None) -> dict[str, Any]:
     """Static map plus live admission when *runtime* is given."""
-    body = kingdom_map()
+    body = admission_inventory()
     body["live"] = None
     if runtime is None:
         return body
@@ -668,10 +668,10 @@ def kingdom_snapshot(runtime: Any | None = None) -> dict[str, Any]:
 
 
 __all__ = [
-    "GATED_CITIZENS",
-    "PRETENDER_EDGES",
-    "open_pretender_edges",
-    "paid_pretender_edges",
-    "kingdom_map",
-    "kingdom_snapshot",
+    "GATED_PATHS",
+    "READINESS_EDGES",
+    "open_residual_edges",
+    "paid_readiness_edges",
+    "admission_inventory",
+    "admission_inventory_snapshot",
 ]

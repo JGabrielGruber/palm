@@ -151,7 +151,7 @@ def run_doctor(ctx: CliContext) -> int:
 
     # 0.63.38 — Assembly admission + open residual ledger (exit cartography)
     try:
-        from palm.system.assembly.inventory import kingdom_snapshot
+        from palm.system.assembly.inventory import admission_inventory_snapshot
 
         runtime = None
         try:
@@ -163,12 +163,12 @@ def run_doctor(ctx: CliContext) -> int:
                 runtime = host._app.runtime()
             except Exception:
                 runtime = None
-        snap = kingdom_snapshot(runtime)
+        snap = admission_inventory_snapshot(runtime)
         live = snap.get("live") or {}
         adm = live.get("admission") or {}
         may = adm.get("may_run_business")
         may_style = "green" if may else "yellow"
-        asm_table = Table(title="Assembly (organism admission)", show_lines=True)
+        asm_table = Table(title="Structure admission", show_lines=True)
         asm_table.add_column("Item", style="cyan")
         asm_table.add_column("Value")
         asm_table.add_row(
@@ -180,7 +180,7 @@ def run_doctor(ctx: CliContext) -> int:
             "definition_id",
             str(live.get("definition_id") or adm.get("definition_id") or "—"),
         )
-        asm_table.add_row("gated citizens", str(snap.get("gated_count", "—")))
+        asm_table.add_row("gated paths", str(snap.get("gated_count", "—")))
         asm_table.add_row("paid edges", str(snap.get("paid_edge_count", "—")))
         open_n = int(snap.get("open_residual_count") or 0)
         asm_table.add_row(

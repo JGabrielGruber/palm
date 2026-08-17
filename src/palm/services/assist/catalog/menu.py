@@ -239,7 +239,7 @@ def build_menu_page(
     )
     if not may_start:
         hint = (
-            "Organism admission is closed — starting flows/scenarios will refuse. "
+            "Admission is closed — starting flows/scenarios will refuse. "
             "Browse catalog eyes only, or fix structure (assemble / DNA refuse). "
             + hint
         )

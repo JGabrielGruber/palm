@@ -12,7 +12,7 @@ from palm.common.cqrs.bus import CommandBus, QueryBus
 from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
 from palm.services.execution.flows.service import FlowExecutionService
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -88,9 +88,9 @@ def test_host_flows_start_refused_when_assembly_skipped() -> None:
 
 
 def test_inventory_flows_start_and_soft_catalog() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "flows.start_session" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["flows.start_edge"] == "paid_0_63_32"
     assert pretenders["flows.soft_catalog"] == "named_0_63_32"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

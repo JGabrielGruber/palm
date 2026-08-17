@@ -14,7 +14,7 @@ from palm.services.execution.processes.service import ProcessExecutionService
 from palm.services.execution.providers.service import ProviderExecutionService
 from palm.services.execution.workloads.service import WorkloadExecutionService
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -145,9 +145,9 @@ def test_host_execution_facade_refused_when_assembly_skipped() -> None:
 
 
 def test_inventory_execution_facade_oath() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
-    assert "execution.product_facade_oath" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    gated = {row["id"] for row in GATED_PATHS}
+    assert "execution.product_facade_admission" in gated
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["execution.product_facade_edge"] == "paid_0_63_31"
     assert pretenders["workloads.product_stop_ungated"] == "named_0_63_31"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

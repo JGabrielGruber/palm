@@ -8,7 +8,7 @@ from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.command import CancelJobCommand, SubmitFlowCommand
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -71,9 +71,9 @@ def test_host_cancel_job_not_admission_citizen() -> None:
 
 
 def test_inventory_host_packaging_and_kernel_residual() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
-    assert "host.packaging_market_day" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
-    assert pretenders["host.packaging_market_day_edge"] == "paid_0_63_33"
+    gated = {row["id"] for row in GATED_PATHS}
+    assert "host.packaging_start_continue" in gated
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
+    assert pretenders["host.packaging_start_continue_edge"] == "paid_0_63_33"
     assert pretenders["kernel.direct_dig"] == "named_0_63_33"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

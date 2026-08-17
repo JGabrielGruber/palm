@@ -246,10 +246,10 @@ class HostObservability:
         """Pointer to living admission (0.63) — not a second ready flag."""
         host = self._host
         try:
-            from palm.system.assembly.inventory import kingdom_snapshot
+            from palm.system.assembly.inventory import admission_inventory_snapshot
 
             runtime = host._app.runtime()
-            snap = kingdom_snapshot(runtime)
+            snap = admission_inventory_snapshot(runtime)
             live = snap.get("live") or {}
             return {
                 "role": "admission_pointer",
@@ -261,7 +261,7 @@ class HostObservability:
                 or (live.get("admission") or {}).get("definition_id"),
                 "phase": (live.get("admission") or {}).get("phase"),
                 "gated_count": snap.get("gated_count"),
-                "pretender_count": snap.get("pretender_count"),
+                "readiness_edge_count": snap.get("readiness_edge_count"),
                 # 0.63.38 exit residual ledger (cartography, not dual ready)
                 "open_residual_count": snap.get("open_residual_count"),
                 "open_residual_ids": snap.get("open_residual_ids"),

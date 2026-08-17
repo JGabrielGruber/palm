@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
@@ -105,8 +105,8 @@ def test_engine_exec_not_gated_by_port() -> None:
 
 
 def test_inventory_exec_workload_and_named_stop() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "execution.exec_workload" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["execution.stop_workload_ungated"] == "named_0_63_27"
     assert pretenders["execution.workload_engine_dig"] == "named_0_63_27"

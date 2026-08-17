@@ -9,7 +9,7 @@ from palm.system.assembly import (
     ALWAYS_ON_MEMBERSHIP_CAPABILITIES,
     MEMBERSHIP_CAPABILITY_SEEDS,
     STRUCTURE_SEED_ENV,
-    kingdom_map,
+    admission_inventory,
     membership_capabilities_from_settings,
 )
 
@@ -116,10 +116,10 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     assert profile.has("workloads")
 
 
-def test_kingdom_catalog_paid_env_structure() -> None:
-    body = kingdom_map()
-    gated_ids = {c["id"] for c in body["gated_citizens"]}
+def test_admission_inventory_catalog_paid_env_structure() -> None:
+    body = admission_inventory()
+    gated_ids = {c["id"] for c in body["gated_paths"]}
     assert "env.membership_seed_catalog" in gated_ids
-    pretenders = {p["id"]: p for p in body["pretender_edges"]}
+    pretenders = {p["id"]: p for p in body["readiness_edges"]}
     assert pretenders["env.structure_toggles"]["status"] == "paid_catalog_0_63_19"
     assert "outbox.start_option_seed" in pretenders

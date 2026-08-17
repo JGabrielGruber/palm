@@ -14,7 +14,7 @@ from palm.patterns.wizard.bindings.cqrs.commands import (
 )
 from palm.patterns.wizard.bindings.cqrs.handlers import handle_wizard_command
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -74,9 +74,9 @@ def test_wizard_backtrack_refused_when_runtime_closed() -> None:
         )
 
 
-def test_inventory_surface_fealty() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
-    assert "surface.fealty" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
-    assert pretenders["surface.fealty_edge"] == "paid_0_63_34"
-    assert kingdom_map()["gated_count"] >= 1
+def test_inventory_surface_host_port() -> None:
+    gated = {row["id"] for row in GATED_PATHS}
+    assert "surface.host_port" in gated
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
+    assert pretenders["surface.host_port_edge"] == "paid_0_63_34"
+    assert admission_inventory()["gated_count"] >= 1

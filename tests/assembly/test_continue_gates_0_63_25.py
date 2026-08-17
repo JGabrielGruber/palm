@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
@@ -81,10 +81,10 @@ def test_orch_resume_not_gated_as_product_door() -> None:
 
 
 def test_inventory_continue_citizens_and_named_digs() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "execution.resume_job" in gated
     assert "runtime.provide_input" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["execution.workload_engine_dig"] in (
         "named_0_63_25",
         "named_0_63_27",
@@ -95,4 +95,4 @@ def test_inventory_continue_citizens_and_named_digs() -> None:
         "named_0_63_25",
         "paid_0_63_26",
     )
-    assert kingdom_map()["pretender_count"] >= 3
+    assert admission_inventory()["readiness_edge_count"] >= 3

@@ -5,7 +5,7 @@ from __future__ import annotations
 from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
 from palm.runtimes.server.surfaces.rest import errors
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def test_admission_refused_helper_is_503_not_500() -> None:
@@ -42,8 +42,8 @@ def test_submit_failed_still_500() -> None:
 
 
 def test_inventory_rest_admission_voice() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "surface.rest_admission_voice" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["surface.rest_admission_voice_edge"] == "paid_0_63_35"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

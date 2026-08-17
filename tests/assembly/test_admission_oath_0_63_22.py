@@ -13,7 +13,7 @@ from palm.system.assembly import (
     coerce_admission_snapshot,
     require_business_admission,
 )
-from palm.system.assembly.inventory import GATED_CITIZENS, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, admission_inventory
 
 
 def test_coerce_snapshot_direct() -> None:
@@ -86,8 +86,8 @@ def test_assist_service_admission_gate_uses_source() -> None:
     execution.flows.resolve_runtime.assert_not_called()
 
 
-def test_inventory_marks_oath_citizen() -> None:
-    ids = {c["id"] for c in GATED_CITIZENS}
-    assert "assist.admission_oath" in ids
-    body = kingdom_map()
-    assert any(c["id"] == "assist.admission_oath" for c in body["gated_citizens"])
+def test_inventory_marks_published_admission() -> None:
+    ids = {c["id"] for c in GATED_PATHS}
+    assert "assist.published_admission" in ids
+    body = admission_inventory()
+    assert any(c["id"] == "assist.published_admission" for c in body["gated_paths"])

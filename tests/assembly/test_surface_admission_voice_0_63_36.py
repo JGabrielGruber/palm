@@ -9,7 +9,7 @@ from palm.runtimes.mcp.rest_client import (
     maybe_admission_refused_error,
 )
 from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_CITIZENS, PRETENDER_EDGES, kingdom_map
+from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def test_admission_refused_error_is_503() -> None:
@@ -64,8 +64,8 @@ def test_websocket_maps_admission_not_internal() -> None:
 
 
 def test_inventory_surface_admission_voice() -> None:
-    gated = {row["id"] for row in GATED_CITIZENS}
+    gated = {row["id"] for row in GATED_PATHS}
     assert "surface.mcp_ws_admission_voice" in gated
-    pretenders = {row["id"]: row["status"] for row in PRETENDER_EDGES}
+    pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
     assert pretenders["surface.mcp_ws_admission_voice_edge"] == "paid_0_63_36"
-    assert kingdom_map()["gated_count"] >= 1
+    assert admission_inventory()["gated_count"] >= 1

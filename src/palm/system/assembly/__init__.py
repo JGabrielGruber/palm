@@ -17,12 +17,12 @@ from palm.system.assembly.host_bind import (
 )
 from palm.system.assembly.household import HouseholdEffectPort
 from palm.system.assembly.inventory import (
-    GATED_CITIZENS,
-    PRETENDER_EDGES,
-    kingdom_map,
-    kingdom_snapshot,
-    open_pretender_edges,
-    paid_pretender_edges,
+    GATED_PATHS,
+    READINESS_EDGES,
+    admission_inventory,
+    admission_inventory_snapshot,
+    open_residual_edges,
+    paid_readiness_edges,
 )
 from palm.system.assembly.loop import (
     DEFAULT_MAX_TICKS,
@@ -67,11 +67,11 @@ from palm.system.assembly.workload_place import (
 __all__ = [
     "ALWAYS_ON_MEMBERSHIP_CAPABILITIES",
     "DEFAULT_MAX_TICKS",
-    "GATED_CITIZENS",
+    "GATED_PATHS",
     "LOCAL_CAPABILITY_HANDS",
     "MEMBERSHIP_CAPABILITY_SEEDS",
     "PACKAGING_ENV_SPIRIT",
-    "PRETENDER_EDGES",
+    "READINESS_EDGES",
     "STRUCTURE_SEED_ENV",
     "CapabilitySeats",
     "AdmissionRefusedError",
@@ -104,10 +104,10 @@ __all__ = [
     "dna_id_from_settings",
     "definition_lists_work_drain",
     "apply_local_capabilities",
-    "kingdom_map",
-    "kingdom_snapshot",
-    "open_pretender_edges",
-    "paid_pretender_edges",
+    "admission_inventory",
+    "admission_inventory_snapshot",
+    "open_residual_edges",
+    "paid_readiness_edges",
     "load_and_assemble",
     "membership_capabilities_from_settings",
     "admission_source_from_runtime_resolver",
