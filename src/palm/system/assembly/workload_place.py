@@ -1,6 +1,6 @@
 """Workload place spawn — assembly hands against WorkloadEngine (0.63.16).
 
-``workload:`` places are structure bodies in the place book. Not product job
+``workload:`` places are structure bodies in the place registry. Not product job
 path. Fail closed when no engine is bound. Default kind is *workspace* (warm
 body) so ensure does not require a one-shot command.
 """

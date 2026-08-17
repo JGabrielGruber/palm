@@ -11,7 +11,7 @@ from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 from palm.system.assembly.host_bind import (
     bind_host_structure_to_seat,
     default_structure_effects,
-    place_book_port,
+    place_effect_port,
     resolve_workload_engine,
     workload_spawn_hands,
 )
@@ -33,7 +33,7 @@ from palm.system.assembly.materialize import (
     apply_local_capabilities,
     definition_lists_work_drain,
 )
-from palm.system.assembly.place_book import InProcessPlaceBook, PlaceBookEffectPort
+from palm.system.assembly.place_registry import InProcessPlaceRegistry, PlaceEffectPort
 from palm.system.assembly.place_spawn import (
     InProcessPlaceSpawn,
     OsProcessRegistry,
@@ -79,10 +79,10 @@ __all__ = [
     "AssemblyEffectPort",
     "AssemblySeat",
     "StructureEffectPort",
-    "InProcessPlaceBook",
+    "InProcessPlaceRegistry",
     "InProcessPlaceSpawn",
     "OsProcessRegistry",
-    "PlaceBookEffectPort",
+    "PlaceEffectPort",
     "PlaceSpawnPort",
     "PlaceSpawnResult",
     "RecordingEffectPort",
@@ -93,7 +93,7 @@ __all__ = [
     "default_structure_effects",
     "fail_closed_os_ensure",
     "os_prefix_spawn_port",
-    "place_book_port",
+    "place_effect_port",
     "resolve_workload_engine",
     "workload_prefix_spawn_port",
     "workload_spawn_hands",

@@ -66,9 +66,9 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "present_top / present_vitality nest admission snapshot",
     },
     {
-        "id": "place_book.in_process",
+        "id": "place_registry.in_process",
         "slice": "0.63.11",
-        "law": "PlaceBookEffectPort ensure/release → PLACE_READY/GONE",
+        "law": "PlaceEffectPort ensure/release → PLACE_READY/GONE",
     },
     {
         "id": "run_host.deployment_seed",
@@ -81,7 +81,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "PALM_ASSEMBLY_DNA_ID seed · membership refuse always · drain DNA seed",
     },
     {
-        "id": "place_book.spawn_port",
+        "id": "place_registry.spawn_port",
         "slice": "0.63.14",
         "law": "PlaceSpawnPort · RegisteredPlaceSpawn · os: fail-closed until body",
     },
@@ -91,7 +91,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "StructureEffectPort · OS process spawn · projection/policy/seed hands",
     },
     {
-        "id": "place_book.workload",
+        "id": "place_registry.workload",
         "slice": "0.63.16",
         "law": "workload: places via WorkloadPlaceSpawn · fail closed unbound",
     },
@@ -299,7 +299,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "inventory.exit_residual_ledger",
+        "id": "inventory.exit_residual",
         "slice": "0.63.38",
         "law": (
             "open_residual_edges / admission_inventory open_residual_* split "
@@ -365,7 +365,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
     },
 
     {
-        "id": "place_book.os_spawn",
+        "id": "place_registry.os_spawn",
         "note": (
             "0.63.15–17: OS process + workload: place spawn + host auto-bind "
             "WorkloadEngine on assemble (assembly_bind_workload=False opt-out)"
@@ -396,7 +396,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "id": "execution.workload_engine_dig",
         "note": (
             "0.63.20 start_workload · 0.63.27 exec_workload gated on port. Direct "
-            "WorkloadEngine.start/exec: structure place book + unit free; product dig "
+            "WorkloadEngine.start/exec: structure place registry + unit free; product dig "
             "for business is dual readiness."
         ),
         "intent": "name residual — port is law; dig ≠ free pass (SD-020)",
@@ -585,14 +585,14 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "status": "paid_0_63_37",
     },
     {
-        "id": "inventory.exit_residual_ledger_edge",
+        "id": "inventory.exit_residual_edge",
         "note": (
             "0.63.38: admission_inventory exposes open_residuals / open_residual_ids "
             "and paid_edge_count; doctor prints structure admission + open "
-            "residual ledger; packaging bag nests open_residual_count. "
+            "residuals; packaging bag nests open_residual_count. "
             "Does not invent dual readiness — cartography for José exit."
         ),
-        "intent": "paid exit residual ledger cartography",
+        "intent": "paid exit residual cartography",
         "status": "paid_0_63_38",
     },
 )
@@ -618,7 +618,7 @@ def paid_readiness_edges() -> list[dict[str, str]]:
 
 
 def admission_inventory() -> dict[str, Any]:
-    """Static admission inventory — admitted paths vs dual-readiness residual · open residual ledger."""
+    """Static admission inventory — admitted paths vs dual-readiness residual · open residuals."""
     open_rows = open_residual_edges()
     paid_rows = paid_readiness_edges()
     return {

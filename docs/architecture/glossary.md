@@ -37,7 +37,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | **Structure management** | Whole care: definition, reconcile, materialize, admission. Intended component name. | Job orchestration |
 | **Structure definition** | Declarative desired structure for this process (roles, refuse, places, membership intent). **Structure law after load.** | Business flow / process definition; env flag soup as peer law |
 | **Structure reconciler** | Pure engine: definition + observations → status + effect intents. No sockets, no OS spawn, no business jobs. | System hands that apply intents |
-| **Structure status** | Local ledger under the current definition (phase, places, block reasons). | A second structure definition |
+| **Structure status** | Local record under the current definition (phase, places, block reasons). | A second structure definition |
 | **Structure manager** | System loop: load definition, tick reconciler, apply effect intents, fold observations, **materialize** membership, publish admission. | Admission-only dashboard; host soft-ready flags |
 | **Effect intent** | Closed-set structure action the reconciler requests (ensure place, release place, policy, projection, …). System applies. | Business side effects on ExecutionPort |
 | **Observation** | Structure fact folded into the reconciler (place ready/failed, truth home down, policy violation, …). | Business events on the job path |
@@ -115,8 +115,8 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 
 | Term | Intended meaning | Do not use for |
 |------|------------------|----------------|
-| **Place** | Named body or ground unit in the structure / place book (process, worker, support, …). | UI screen |
-| **Place book** | Registry of places this process knows; horizontal scale (many bodies). | Business product catalog |
+| **Place** | Named body or ground unit in the structure / place registry (process, worker, support, …). | UI screen |
+| **Place registry** | Map of places this process knows; horizontal scale (many bodies). | Business product catalog |
 | **Truth home** | Place that is authoritative for durable meaning this process projects. | Local packaging defaults |
 | **Projection** | Local view of authoritative state — not a second truth. | CQRS product board only |
 | **Control home** | Who assigns work / whose control doors this process uses. | Truth home (may differ) |
@@ -124,7 +124,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | **Support place** | Place that holds ground (or weight) another node projects from. | Customer support desk |
 | **Work place** | Place that executes work a light center will not carry. | Job path “work plane” (different word: *plane* vs *place*) |
 | **Vertical axis** | Authority and meaning (home up, projection, hop home). | Package layer stack alone |
-| **Horizontal axis** | Bodies in the place book (workers, hosts, resources). | REST surface fan-out alone |
+| **Horizontal axis** | Bodies in the place registry (workers, hosts, resources). | REST surface fan-out alone |
 | **Tunnel** | Trusted path between places after home is known (later seed). | SSH product feature only |
 
 ---
@@ -176,6 +176,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | Surface uses host / port | Fealty (metaphor) | Kernel dig as product path |
 | Business start / continue | Market day (metaphor) | — |
 | Seed (chooser, not king) | DNA helpers; `PALM_ASSEMBLY_DNA_ID`; composition “king” | Packaging as structure law after load |
+| Place registry | Place book (theme lag); `PlaceEffectPort` / `InProcessPlaceRegistry` | Address book as architecture |
 
 ---
 

@@ -63,7 +63,7 @@ class AdmissionSnapshot:
 
 @dataclass(frozen=True, slots=True)
 class AssemblyStatus:
-    """In-engine ledger of readiness under the current definition."""
+    """In-engine status of readiness under the current definition."""
 
     phase: AssemblyPhase
     definition_id: str | None = None

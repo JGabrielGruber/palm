@@ -1,19 +1,19 @@
 """Host structure bind — wire shell WorkloadEngine into assembly place hands (0.63.17).
 
-Default place-book hands stay in-process for bare places. Host assemble upgrades
+Default place-effect hands stay in-process for bare places. Host assemble upgrades
 them to the combined ``os:`` + ``workload:`` spawn port and binds the live
 engine when it is initialized.
 
 **Opt-in:** on by default when the engine is ready; off via
 ``assembly_bind_workload=False``. Does not force composition membership.
-Does not replace custom effect ports without a place book.
+Does not replace custom effect ports without a place registry.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from palm.system.assembly.place_book import PlaceBookEffectPort
+from palm.system.assembly.place_registry import PlaceEffectPort
 from palm.system.assembly.place_spawn import InProcessPlaceSpawn, RegisteredPlaceSpawn
 from palm.system.assembly.seat import AssemblySeat
 from palm.system.assembly.structure_effects import StructureEffectPort
@@ -33,12 +33,12 @@ def resolve_workload_engine(shell: Any) -> Any | None:
     return engine
 
 
-def place_book_port(effects: Any) -> PlaceBookEffectPort | None:
-    """Extract the place-book hands from StructureEffectPort or bare place-book effects."""
-    if isinstance(effects, PlaceBookEffectPort):
+def place_effect_port(effects: Any) -> PlaceEffectPort | None:
+    """Extract the place-effect hands from StructureEffectPort or bare place effects."""
+    if isinstance(effects, PlaceEffectPort):
         return effects
     places = getattr(effects, "places", None)
-    if isinstance(places, PlaceBookEffectPort):
+    if isinstance(places, PlaceEffectPort):
         return places
     return None
 
@@ -75,7 +75,7 @@ def bind_host_structure_to_seat(
           "bound": bool,           # spawn port mutated or engine attached
           "engine": bool,          # live engine bound
           "spawn": str,            # combined | existing | unchanged
-          "skipped": str | None,   # why no work (no_place_book, …)
+          "skipped": str | None,   # why no work (no_place_effects, …)
         }
     """
     report: dict[str, Any] = {
@@ -84,13 +84,13 @@ def bind_host_structure_to_seat(
         "spawn": "unchanged",
         "skipped": None,
     }
-    book = place_book_port(seat.effects)
-    if book is None:
-        report["skipped"] = "no_place_book"
+    port = place_effect_port(seat.effects)
+    if port is None:
+        report["skipped"] = "no_place_effects"
         return report
 
     engine = resolve_workload_engine(shell) if bind_workload else None
-    existing = workload_spawn_hands(book.spawn)
+    existing = workload_spawn_hands(port.spawn)
 
     if existing is not None:
         if engine is not None and existing.engine is not engine:
@@ -112,10 +112,10 @@ def bind_host_structure_to_seat(
         return report
 
     # Default in-process (or bare registered without structure prefixes) → combined.
-    if isinstance(book.spawn, InProcessPlaceSpawn) or not _has_structure_prefixes(
-        book.spawn
+    if isinstance(port.spawn, InProcessPlaceSpawn) or not _has_structure_prefixes(
+        port.spawn
     ):
-        book.spawn = combined_structure_spawn_port(engine=engine)
+        port.spawn = combined_structure_spawn_port(engine=engine)
         report["bound"] = True
         report["engine"] = engine is not None
         report["spawn"] = "combined"
@@ -131,16 +131,16 @@ def bind_host_structure_to_seat(
 
 
 def default_structure_effects(*, engine: Any | None = None) -> StructureEffectPort:
-    """Default place-book hands with combined structure spawn (os: + workload:)."""
+    """Default place-effect hands with combined structure spawn (os: + workload:)."""
     return StructureEffectPort(
-        places=PlaceBookEffectPort(spawn=combined_structure_spawn_port(engine=engine))
+        places=PlaceEffectPort(spawn=combined_structure_spawn_port(engine=engine))
     )
 
 
 __all__ = [
     "bind_host_structure_to_seat",
     "default_structure_effects",
-    "place_book_port",
+    "place_effect_port",
     "resolve_workload_engine",
     "workload_spawn_hands",
 ]

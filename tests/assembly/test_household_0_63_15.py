@@ -1,4 +1,4 @@
-"""0.63.15 — structure assemble / place-book intents + OS process spawn."""
+"""0.63.15 — structure assemble / place-registry intents + OS process spawn."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from palm.core.assembly import (
 from palm.system.assembly import (
     AssemblySeat,
     OsProcessRegistry,
-    PlaceBookEffectPort,
+    PlaceEffectPort,
     StructureEffectPort,
     os_prefix_spawn_port,
 )
@@ -78,7 +78,7 @@ def test_seat_binds_structure_on_assemble() -> None:
 def test_os_process_spawn_and_release() -> None:
     reg = OsProcessRegistry()
     spawn = os_prefix_spawn_port(registry=reg)
-    port = PlaceBookEffectPort(spawn=spawn)
+    port = PlaceEffectPort(spawn=spawn)
     # long-lived child
     obs = port.apply(
         EffectIntent(
@@ -138,7 +138,7 @@ def test_runtime_structure_default_hands() -> None:
 
 
 def test_engine_projection_intents_via_loop() -> None:
-    """Invalidate then refresh folds through structure assemble / place-book into engine admission."""
+    """Invalidate then refresh folds through structure assemble / place registry into engine admission."""
     from palm.core.assembly import AssemblyEngine
     from palm.system.assembly.loop import assemble_until_steady
 

@@ -1,4 +1,4 @@
-"""Place-book + structure-intent effect port (0.63.15).
+"""Place registry + structure-intent effect port (0.63.15).
 
 Closed intent set from pure assembly: ensure/release place, invalidate/refresh
 projection, apply structure policy, request structure seed. System hands only.
@@ -17,14 +17,14 @@ from palm.core.assembly import (
     ObservationKind,
     refuse_violations,
 )
-from palm.system.assembly.place_book import PlaceBookEffectPort
+from palm.system.assembly.place_registry import PlaceEffectPort
 
 
 @dataclass
 class StructureEffectPort:
     """Default assembly hands: places + projection/policy/seed structure intents."""
 
-    places: PlaceBookEffectPort = field(default_factory=PlaceBookEffectPort)
+    places: PlaceEffectPort = field(default_factory=PlaceEffectPort)
     definition: AssemblyDefinition | None = None
     surfaces: tuple[str, ...] = ()
     capabilities: tuple[str, ...] = ()
@@ -44,9 +44,9 @@ class StructureEffectPort:
         self.capabilities = tuple(str(c) for c in capabilities if c)
 
     @property
-    def book(self):
-        """Ledger passthrough for tests that dig ``effects.book``."""
-        return self.places.book
+    def registry(self):
+        """Registry passthrough for tests that dig ``effects.registry``."""
+        return self.places.registry
 
     @property
     def spawn(self):

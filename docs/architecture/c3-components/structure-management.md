@@ -71,7 +71,7 @@ Intended: definition carries **sections** of membership units (names open; spiri
 | **plugins** | patterns, providers, storages, runners, … |
 | **products** | assist, execution façades, domain services, … |
 | **surfaces** | cli, rest, mcp, ssr, … |
-| **refuse / places / role** | structure policy and place book intent |
+| **refuse / places / role** | structure policy and place registry intent |
 
 Each unit may eventually carry a **membership source** (`local` | `provider` | …).  
 Manager materializes units; it does not become their business logic.

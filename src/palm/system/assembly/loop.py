@@ -12,7 +12,6 @@ from palm.core.assembly import (
 )
 from palm.system.assembly.effects import AssemblyEffectPort
 
-
 DEFAULT_MAX_TICKS = 32
 
 
@@ -34,7 +33,7 @@ def assemble_until_steady(
 ) -> AssembleLoopResult:
     """Run reconcile loop until ready/blocked or tick budget exhausted.
 
-    Structure assemble / place-book only — not the product job path.
+    Structure assemble / place registry only — not the product job path.
     System applies effect intents between ticks.
     """
     if max_ticks < 1:

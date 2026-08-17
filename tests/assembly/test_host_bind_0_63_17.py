@@ -5,13 +5,13 @@ from __future__ import annotations
 from palm.core.assembly import AssemblyDefinition, AssemblyPhase, local_embedded
 from palm.system.assembly import (
     AssemblySeat,
-    PlaceBookEffectPort,
+    PlaceEffectPort,
     RecordingEffectPort,
     StructureEffectPort,
     WorkloadPlaceSpawn,
     bind_host_structure_to_seat,
     default_structure_effects,
-    place_book_port,
+    place_effect_port,
     resolve_workload_engine,
     workload_spawn_hands,
 )
@@ -61,7 +61,7 @@ def test_bind_upgrades_in_process_and_attaches_engine() -> None:
         assert report["bound"] is True
         assert report["engine"] is True
         assert report["spawn"] == "combined"
-        hands = workload_spawn_hands(place_book_port(seat.effects).spawn)  # type: ignore[union-attr]
+        hands = workload_spawn_hands(place_effect_port(seat.effects).spawn)  # type: ignore[union-attr]
         assert isinstance(hands, WorkloadPlaceSpawn)
         assert hands.engine is eng
 
@@ -111,7 +111,7 @@ def test_bind_skips_recording_effect_port() -> None:
 
     seat = AssemblySeat(effects=RecordingEffectPort(auto_ack_places=True))
     report = bind_host_structure_to_seat(seat, _Shell())
-    assert report["skipped"] == "no_place_book"
+    assert report["skipped"] == "no_place_effects"
     assert report["bound"] is False
 
 
@@ -145,9 +145,9 @@ def test_runtime_start_binds_workload_engine() -> None:
     try:
         assert rt.assembly is not None
         assert isinstance(rt.assembly.effects, StructureEffectPort)
-        book = place_book_port(rt.assembly.effects)
-        assert book is not None
-        hands = workload_spawn_hands(book.spawn)
+        port = place_effect_port(rt.assembly.effects)
+        assert port is not None
+        hands = workload_spawn_hands(port.spawn)
         assert hands is not None
         assert hands.engine is rt.workload
         assert rt.workload.is_initialized
@@ -168,9 +168,9 @@ def test_runtime_bind_workload_false() -> None:
     )
     try:
         assert rt.assembly is not None
-        book = place_book_port(rt.assembly.effects)
-        assert book is not None
-        hands = workload_spawn_hands(book.spawn)
+        port = place_effect_port(rt.assembly.effects)
+        assert port is not None
+        hands = workload_spawn_hands(port.spawn)
         assert hands is not None
         assert hands.engine is None
         # Explicit DNA with workload place fails closed when bind off.
@@ -200,16 +200,16 @@ def test_runtime_workload_place_converges_on_host_path() -> None:
         assert loop.steady is True
         assert rt.assembly.admission().may_run_business is True  # type: ignore[union-attr]
         assert rt.assembly.admission().phase is AssemblyPhase.READY  # type: ignore[union-attr]
-        book = place_book_port(rt.assembly.effects)  # type: ignore[union-attr]
-        assert book is not None
-        assert "workload:support" in book.book.places
+        port = place_effect_port(rt.assembly.effects)  # type: ignore[union-attr]
+        assert port is not None
+        assert "workload:support" in port.registry.places
     finally:
         rt.stop()
 
 
-def test_place_book_port_helper() -> None:
-    bare = PlaceBookEffectPort()
-    assert place_book_port(bare) is bare
+def test_place_effect_port_helper() -> None:
+    bare = PlaceEffectPort()
+    assert place_effect_port(bare) is bare
     port = StructureEffectPort()
-    assert place_book_port(port) is port.places
-    assert place_book_port(RecordingEffectPort()) is None
+    assert place_effect_port(port) is port.places
+    assert place_effect_port(RecordingEffectPort()) is None

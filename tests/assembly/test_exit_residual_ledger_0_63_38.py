@@ -1,4 +1,4 @@
-"""0.63.38 — exit residual ledger: open named pretenders first-class cartography."""
+"""0.63.38 — exit residuals: open named dual-readiness rows as cartography."""
 
 from __future__ import annotations
 
@@ -23,15 +23,15 @@ def test_open_residuals_are_named_status_only() -> None:
     assert "flows.soft_catalog" in open_ids
 
 
-def test_paid_edges_not_in_open_ledger() -> None:
+def test_paid_edges_not_in_open_residuals() -> None:
     open_ids = {row["id"] for row in open_residual_edges()}
     paid_ids = {row["id"] for row in paid_readiness_edges()}
     assert open_ids.isdisjoint(paid_ids)
     assert "surface.cli_ssr_admission_voice_edge" in paid_ids
-    assert "inventory.exit_residual_ledger_edge" in paid_ids
+    assert "inventory.exit_residual_edge" in paid_ids
 
 
-def test_admission_inventory_exposes_open_residual_ledger() -> None:
+def test_admission_inventory_exposes_open_residuals() -> None:
     m = admission_inventory()
     assert m["open_residual_count"] == len(m["open_residuals"])
     assert m["open_residual_count"] == len(m["open_residual_ids"])
@@ -40,8 +40,8 @@ def test_admission_inventory_exposes_open_residual_ledger() -> None:
     assert set(m["open_residual_ids"]) == {r["id"] for r in m["open_residuals"]}
 
 
-def test_inventory_exit_residual_ledger_path() -> None:
+def test_inventory_exit_residual_path() -> None:
     gated = {row["id"] for row in GATED_PATHS}
-    assert "inventory.exit_residual_ledger" in gated
+    assert "inventory.exit_residual" in gated
     pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
-    assert pretenders["inventory.exit_residual_ledger_edge"] == "paid_0_63_38"
+    assert pretenders["inventory.exit_residual_edge"] == "paid_0_63_38"

@@ -14,7 +14,7 @@ from palm.core.workload import WorkloadEngine
 from palm.runners.local.runtime import LocalWorkloadRuntime
 from palm.system.assembly import (
     AssemblySeat,
-    PlaceBookEffectPort,
+    PlaceEffectPort,
     WorkloadPlaceSpawn,
     combined_structure_spawn_port,
     workload_prefix_spawn_port,
@@ -41,7 +41,7 @@ def test_workload_workspace_place_ready() -> None:
     eng = _engine_with_local()
     try:
         spawn = workload_prefix_spawn_port(engine=eng)
-        port = PlaceBookEffectPort(spawn=spawn)
+        port = PlaceEffectPort(spawn=spawn)
         obs = port.apply(
             EffectIntent(
                 kind=EffectIntentKind.ENSURE_PLACE,
@@ -50,7 +50,7 @@ def test_workload_workspace_place_ready() -> None:
         )
         assert obs[0].kind.value == "place_ready"
         assert obs[0].payload.get("spawn") == "workload_started"
-        assert "workload:support" in port.book.places
+        assert "workload:support" in port.registry.places
         # release
         gone = port.apply(
             EffectIntent(
@@ -84,7 +84,7 @@ def test_seat_workload_place_converges() -> None:
     eng = _engine_with_local()
     try:
         seat = AssemblySeat(
-            effects=PlaceBookEffectPort(spawn=workload_prefix_spawn_port(engine=eng))
+            effects=PlaceEffectPort(spawn=workload_prefix_spawn_port(engine=eng))
         )
         dna = AssemblyDefinition(
             id="local.with_workload_place",
@@ -99,7 +99,7 @@ def test_seat_workload_place_converges() -> None:
 
 def test_seat_workload_unbound_blocks() -> None:
     seat = AssemblySeat(
-        effects=PlaceBookEffectPort(spawn=workload_prefix_spawn_port(engine=None))
+        effects=PlaceEffectPort(spawn=workload_prefix_spawn_port(engine=None))
     )
     dna = AssemblyDefinition(
         id="local.needs_wl",
@@ -114,7 +114,7 @@ def test_combined_os_and_workload_prefixes() -> None:
     eng = _engine_with_local()
     try:
         spawn = combined_structure_spawn_port(engine=eng)
-        port = PlaceBookEffectPort(spawn=spawn)
+        port = PlaceEffectPort(spawn=spawn)
         # workload works
         obs = port.apply(
             EffectIntent(kind=EffectIntentKind.ENSURE_PLACE, target="workload:a")

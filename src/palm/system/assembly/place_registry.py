@@ -1,8 +1,9 @@
-"""In-process place book — assembly effect hands for ENSURE/RELEASE place (0.63.11+).
+"""In-process place registry — assembly effect hands for ENSURE/RELEASE place (0.63.11+).
 
-Ledger of places the place-book can mark ready so a definition with places_required can
-converge. **0.63.14:** optional :class:`PlaceSpawnPort` grows bodies (OS /
-workload strategies); default remains in-process success. Not Grove.
+Registry of places this process can mark ready so a definition with
+places_required can converge. **0.63.14:** optional :class:`PlaceSpawnPort`
+grows bodies (OS / workload strategies); default remains in-process success.
+Not Grove.
 """
 
 from __future__ import annotations
@@ -17,8 +18,8 @@ PlaceState = Literal["ready", "failed", "gone"]
 
 
 @dataclass
-class InProcessPlaceBook:
-    """Local place ledger for one process (structure only)."""
+class InProcessPlaceRegistry:
+    """Local place registry for one process (structure only)."""
 
     places: dict[str, PlaceState] = field(default_factory=dict)
 
@@ -51,10 +52,10 @@ class InProcessPlaceBook:
 
 
 @dataclass
-class PlaceBookEffectPort:
-    """Apply structure intents against ledger + optional spawn port (0.63.14)."""
+class PlaceEffectPort:
+    """Apply structure place intents against the registry + optional spawn port (0.63.14)."""
 
-    book: InProcessPlaceBook = field(default_factory=InProcessPlaceBook)
+    registry: InProcessPlaceRegistry = field(default_factory=InProcessPlaceRegistry)
     spawn: PlaceSpawnPort = field(default_factory=InProcessPlaceSpawn)
     applied: list[EffectIntent] = field(default_factory=list)
 
@@ -72,10 +73,10 @@ class PlaceBookEffectPort:
                         payload={"reason": "empty_place_id"},
                     ),
                 )
-            # Spawn hands first (structure body); ledger records the outcome.
+            # Spawn hands first (structure body); registry records the outcome.
             result = self.spawn.ensure(target, payload=dict(intent.payload or {}))
             if result.state == "ready":
-                self.book.mark(target, "ready")
+                self.registry.mark(target, "ready")
                 return (
                     Observation(
                         kind=ObservationKind.PLACE_READY,
@@ -83,7 +84,7 @@ class PlaceBookEffectPort:
                         payload={"spawn": result.reason, **dict(result.payload)},
                     ),
                 )
-            self.book.mark(target, "failed")
+            self.registry.mark(target, "failed")
             return (
                 Observation(
                     kind=ObservationKind.PLACE_FAILED,
@@ -98,7 +99,7 @@ class PlaceBookEffectPort:
         if kind is EffectIntentKind.RELEASE_PLACE:
             if target:
                 result = self.spawn.release(target)
-                self.book.release(target)
+                self.registry.release(target)
                 return (
                     Observation(
                         kind=ObservationKind.PLACE_GONE,
@@ -113,7 +114,7 @@ class PlaceBookEffectPort:
 
 
 __all__ = [
-    "InProcessPlaceBook",
-    "PlaceBookEffectPort",
+    "InProcessPlaceRegistry",
+    "PlaceEffectPort",
     "PlaceState",
 ]

@@ -531,7 +531,7 @@ class BaseRuntime:
 
         **0.63.24:** product / graph resource effects through this port
         require admission (same law as submit_flow / start_workload). Direct
-        ``ResourceEngine.invoke`` remains available for unit / place-book paths
+        ``ResourceEngine.invoke`` remains available for unit / place-registry paths
         that are not product business doors.
         """
         from palm.system.assembly.errors import require_business_admission
@@ -562,7 +562,7 @@ class BaseRuntime:
         """Start a workload via the workload engine (ExecutionPort).
 
         **0.63.20:** product / graph start through this port requires
-        admission (same law as submit_flow). Structure assemble / place-book spawn uses
+        admission (same law as submit_flow). Structure assemble / place-registry spawn uses
         ``WorkloadEngine`` directly and is not forced through this door.
         """
         from palm.system.assembly.errors import require_business_admission

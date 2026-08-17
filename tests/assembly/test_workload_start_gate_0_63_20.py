@@ -96,7 +96,7 @@ def test_structure_workload_engine_not_gated_by_port() -> None:
     try:
         engine = rt.workload
         assert engine is not None
-        # Direct engine start is place-book / unit path; does not call require_business_admission.
+        # Direct engine start is place-registry / unit path; does not call require_business_admission.
         # May still fail on host runtime packaging — only assert no AdmissionRefusedError.
         try:
             engine.start(_minimal_spec())

@@ -1,4 +1,4 @@
-"""0.63.11 — in-process place book hands for ENSURE_PLACE."""
+"""0.63.11 — in-process place registry hands for ENSURE_PLACE."""
 
 from __future__ import annotations
 
@@ -10,26 +10,26 @@ from palm.core.assembly import (
 )
 from palm.system.assembly import (
     AssemblySeat,
-    InProcessPlaceBook,
-    PlaceBookEffectPort,
+    InProcessPlaceRegistry,
+    PlaceEffectPort,
 )
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
 
 
-def test_place_book_ensure_release() -> None:
-    book = InProcessPlaceBook()
-    port = PlaceBookEffectPort(book=book)
+def test_place_registry_ensure_release() -> None:
+    registry = InProcessPlaceRegistry()
+    port = PlaceEffectPort(registry=registry)
     obs = port.apply(
         EffectIntent(kind=EffectIntentKind.ENSURE_PLACE, target="support_home")
     )
     assert obs[0].kind.value == "place_ready"
-    assert book.places["support_home"] == "ready"
+    assert registry.places["support_home"] == "ready"
     obs2 = port.apply(
         EffectIntent(kind=EffectIntentKind.RELEASE_PLACE, target="support_home")
     )
     assert obs2[0].kind.value == "place_gone"
-    assert "support_home" not in book.places
+    assert "support_home" not in registry.places
 
 
 def test_seat_assemble_with_places_converges() -> None:
@@ -44,10 +44,10 @@ def test_seat_assemble_with_places_converges() -> None:
     assert seat.admission().may_run_business is True
     assert seat.admission().phase is AssemblyPhase.READY
     assert seat.status().places_ready == frozenset({"support_home", "work_yard"})
-    assert set(seat.effects.book.places) == {"support_home", "work_yard"}  # type: ignore[union-attr]
+    assert set(seat.effects.registry.places) == {"support_home", "work_yard"}  # type: ignore[union-attr]
 
 
-def test_runtime_default_place_book_hands() -> None:
+def test_runtime_default_place_registry_hands() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(
@@ -60,6 +60,6 @@ def test_runtime_default_place_book_hands() -> None:
     )
     try:
         assert rt.admission.may_run_business is True
-        assert "manor_a" in (rt.assembly.effects.book.places if rt.assembly else {})  # type: ignore[union-attr]
+        assert "manor_a" in (rt.assembly.effects.registry.places if rt.assembly else {})  # type: ignore[union-attr]
     finally:
         rt.stop()

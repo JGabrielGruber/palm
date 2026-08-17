@@ -149,7 +149,7 @@ def run_doctor(ctx: CliContext) -> int:
     elif not summaries:
         console.print("[dim]No process instances yet — try[/] [cyan]flow start onboard[/]")
 
-    # 0.63.38 — Assembly admission + open residual ledger (exit cartography)
+    # 0.63.38 — Assembly admission + open residuals (exit cartography)
     try:
         from palm.system.assembly.inventory import admission_inventory_snapshot
 

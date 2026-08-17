@@ -1,10 +1,10 @@
 """Place spawn port — hands that can grow bodies for ENSURE place (0.63.14).
 
-In-process ledger (0.63.11) marks ready. This port is the **structure hand** that
+In-process registry (0.63.11) marks ready. This port is the **structure hand** that
 may later OS-spawn or workload-place. Floor default is in-process success so
 embedded definition stays green. Fail closed when a registered strategy refuses.
 
-Not Grove. Not product job path. Structure assemble / place-book only.
+Not Grove. Not product job path. Structure assemble / place registry only.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ class PlaceSpawnPort(Protocol):
 
 @dataclass
 class InProcessPlaceSpawn:
-    """Default hands: no OS body — ensure means present-in-ledger ready."""
+    """Default hands: no OS body — ensure means present-in-registry ready."""
 
     def ensure(
         self, place_id: str, *, payload: Mapping[str, Any] | None = None
@@ -205,7 +205,7 @@ def _argv_from_payload(payload: Mapping[str, Any]) -> list[str] | None:
 class OsProcessRegistry:
     """Real OS process bodies for assembly place ensure (0.63.15).
 
-    Structure assemble / place-book only — not the product job path. Tracks :class:`subprocess.Popen`
+    Structure assemble / place registry only — not the product job path. Tracks :class:`subprocess.Popen`
     by place id; release terminates the process group when possible.
     """
 

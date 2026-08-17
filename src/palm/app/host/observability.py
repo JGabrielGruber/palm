@@ -262,7 +262,7 @@ class HostObservability:
                 "phase": (live.get("admission") or {}).get("phase"),
                 "gated_count": snap.get("gated_count"),
                 "readiness_edge_count": snap.get("readiness_edge_count"),
-                # 0.63.38 exit residual ledger (cartography, not dual ready)
+                # 0.63.38 exit residuals (cartography, not dual ready)
                 "open_residual_count": snap.get("open_residual_count"),
                 "open_residual_ids": snap.get("open_residual_ids"),
                 "paid_edge_count": snap.get("paid_edge_count"),

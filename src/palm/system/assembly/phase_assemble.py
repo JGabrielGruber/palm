@@ -52,7 +52,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     bind_workload = _bind_workload_flag(options)
     seat: AssemblySeat | None = shell.assembly
     if seat is None:
-        # 0.63.17 — place-book hands + combined structure spawn; bind engine when ready.
+        # 0.63.17 — place-effect hands + combined structure spawn; bind engine when ready.
         engine = resolve_workload_engine(shell) if bind_workload else None
         seat = AssemblySeat(effects=default_structure_effects(engine=engine))
         shell.assembly = seat

@@ -1,8 +1,8 @@
 """Assembly effect port — apply structure effect intents (system hands).
 
-Floor: no place-book spawn yet. ENSURE_PLACE is recorded and can be
+Floor: no place-registry spawn yet. ENSURE_PLACE is recorded and can be
 auto-satisfied for tests via ``auto_ack_places`` (default off in production;
-on for pure loop dogfood when no place book is wired).
+on for pure loop dogfood when no place registry is wired).
 """
 
 from __future__ import annotations

@@ -10,7 +10,7 @@ from palm.core.assembly import (
 )
 from palm.system.assembly import (
     AssemblySeat,
-    PlaceBookEffectPort,
+    PlaceEffectPort,
     PlaceSpawnResult,
     RegisteredPlaceSpawn,
     fail_closed_os_ensure,
@@ -19,28 +19,28 @@ from palm.system.assembly import (
 
 
 def test_in_process_default_unchanged() -> None:
-    port = PlaceBookEffectPort()
+    port = PlaceEffectPort()
     obs = port.apply(
         EffectIntent(kind=EffectIntentKind.ENSURE_PLACE, target="support_home")
     )
     assert obs[0].kind.value == "place_ready"
-    assert port.book.places["support_home"] == "ready"
+    assert port.registry.places["support_home"] == "ready"
 
 
 def test_os_prefix_fail_closed_without_body() -> None:
     spawn = os_prefix_spawn_port()
-    port = PlaceBookEffectPort(spawn=spawn)
+    port = PlaceEffectPort(spawn=spawn)
     obs = port.apply(
         EffectIntent(kind=EffectIntentKind.ENSURE_PLACE, target="os:worker-a")
     )
     assert obs[0].kind.value == "place_failed"
     assert obs[0].payload.get("reason") == "os_spawn_not_configured"
-    assert port.book.places.get("os:worker-a") == "failed"
+    assert port.registry.places.get("os:worker-a") == "failed"
 
 
 def test_os_prefix_ready_when_body_provided() -> None:
     spawn = os_prefix_spawn_port()
-    port = PlaceBookEffectPort(spawn=spawn)
+    port = PlaceEffectPort(spawn=spawn)
     obs = port.apply(
         EffectIntent(
             kind=EffectIntentKind.ENSURE_PLACE,
@@ -49,7 +49,7 @@ def test_os_prefix_ready_when_body_provided() -> None:
         )
     )
     assert obs[0].kind.value == "place_ready"
-    assert port.book.places["os:worker-a"] == "ready"
+    assert port.registry.places["os:worker-a"] == "ready"
 
 
 def test_registered_place_spawn_exact() -> None:
@@ -61,14 +61,14 @@ def test_registered_place_spawn_exact() -> None:
 
     spawn = RegisteredPlaceSpawn()
     spawn.register("work_yard", ensure=ensure_yard)
-    port = PlaceBookEffectPort(spawn=spawn)
+    port = PlaceEffectPort(spawn=spawn)
     obs = port.apply(EffectIntent(kind=EffectIntentKind.ENSURE_PLACE, target="work_yard"))
     assert calls == ["work_yard"]
     assert obs[0].kind.value == "place_ready"
 
 
 def test_seat_assemble_os_place_blocks_admission() -> None:
-    seat = AssemblySeat(effects=PlaceBookEffectPort(spawn=os_prefix_spawn_port()))
+    seat = AssemblySeat(effects=PlaceEffectPort(spawn=os_prefix_spawn_port()))
     dna = AssemblyDefinition(
         id="local.needs_os",
         version="1",

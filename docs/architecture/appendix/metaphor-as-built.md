@@ -27,7 +27,7 @@ Teaching map: [metaphor.md](metaphor.md).
 
 Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / observability.
 
-**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; then household types. DNA / env, `Assembly*` packages, and the living-docs pass wait.
+**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; then place-book / residual-ledger → registry (CS names, not feudal). DNA / env, `Assembly*` packages, and the living-docs pass wait.
 
 | Family | What code names today | Kind | Prefer |
 |--------|------------------------|------|--------|
@@ -40,7 +40,8 @@ Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / ob
 | **fealty** | **renamed** → `surface.host_port`; `surface.host_port_edge` | Inventory contract | Surface uses host / port, not kernel dig |
 | **market day** | **renamed** → `host.packaging_start_continue*` | Inventory contract | Business start / continue doors |
 | **tower** | **renamed** → `inventory.admission` | Inventory contract | Admission inventory (same map) |
-| **king** | **renamed** → `host.outbox_composition_seed`; `inventory.exit_residual_ledger*` | Inventory contract | Seed / composition chooser |
+| **king** | **renamed** → `host.outbox_composition_seed`; `inventory.exit_residual*` | Inventory contract | Seed / composition chooser |
+| **place book / ledger** | **renamed** → `place_registry.py`; `InProcessPlaceRegistry`; `PlaceEffectPort`; `place_effect_port`; field `registry`; row ids `place_registry.*` / `inventory.exit_residual*` | Public type + inventory | Place registry |
 
 **No identifier:** steward.  
 **Comment / docstring only:** phenotype (on `BootMode` and definition shape), peasants, crown, decree, second wall.
@@ -99,6 +100,7 @@ Do not rewrite those in the same sitting as a code rename.
 |-----|--------|
 | **Comments + inventory names** | `kingdom_*`, `GATED_CITIZENS`, `PRETENDER_*`, `HouseholdEffectPort` / `household.py`, inventory row ids, doctor / assist labels |
 | **Household types** | **Locked 2026-08-17.** `HouseholdEffectPort` / `household.py` / `default_household_effects` → `StructureEffectPort` / `structure_effects.py` / `default_structure_effects`. No aliases. |
+| **Place book / ledger** | **Locked 2026-08-17.** `PlaceBookEffectPort` / `place_book.py` / `InProcessPlaceBook` → `PlaceEffectPort` / `place_registry.py` / `InProcessPlaceRegistry`. Residual row `inventory.exit_residual*`. No aliases. |
 | **DNA / env** | `PALM_ASSEMBLY_DNA_ID`, `assembly_dna_id`, `resolve_builtin_dna` — public seed; own sitting |
 | **Package / type rename** | `AssemblyDefinition`, `AssemblyEngine`, `palm.*.assembly` — own sitting |
 | **Docs pass** | VISION-ASSEMBLY §4/§6.4, PALM, WRITING, ADR-032 — own sitting |
