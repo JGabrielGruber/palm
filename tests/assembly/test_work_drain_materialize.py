@@ -271,3 +271,35 @@ def test_mcp_dna_does_not_list_or_start_drain() -> None:
         assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
     finally:
         host.shutdown()
+
+
+def test_host_does_not_alias_start_plane() -> None:
+    """Plane lives on the runtime. Host start_plane is costume."""
+    assert not hasattr(ApplicationHost, "start_plane")
+
+
+def test_coordinator_has_no_start_plane_alias() -> None:
+    from palm.app.host.workplane.coordinator import WorkPlaneCoordinator
+
+    assert not hasattr(WorkPlaneCoordinator, "_start_plane")
+
+
+def test_coordinator_tick_reads_runtime_work_plane() -> None:
+    from palm.app.host.workplane.coordinator import WorkPlaneCoordinator
+
+    class _Plane:
+        def tick(self, *, limit: int = 10) -> int:
+            return limit
+
+        def tick_schedules(self) -> int:
+            return 2
+
+    class _Runtime:
+        work_plane = _Plane()
+
+    class _Host:
+        def runtime(self):
+            return _Runtime()
+
+    n = WorkPlaneCoordinator(_Host()).tick_work(limit=3)  # type: ignore[arg-type]
+    assert n == 5

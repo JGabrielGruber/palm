@@ -21,7 +21,7 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 | Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No DNA `requires` / start-fact vocabulary. |
 | System assembly | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / outbox / inbound are not hands. |
 | Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
-| Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status reads `runtime.work_plane`. Composition does not list `work_drain`. | `host.start_plane` thin alias. Settings/deployment `enable_work_drain_service` leftover packaging. |
+| Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. | Settings/deployment `enable_work_drain_service` leftover packaging. `getattr(shell, "assembly")` on assemble (seat already on the runtime). |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |
 
@@ -123,6 +123,6 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **B1** | **Landed.** Default catalog is outbox-only. Hand registers `work_drain`. Unregister-on-unlist stays. | Do not put `work_drain` back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
 | **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded DNA no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
-| **C** | Coordinator reads `runtime.work_plane`. Optional: publish assembly seat without `getattr(shell, "assembly")`. | Journal as second hand only after B. No DNA `requires`. |
+| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Boot window stays. | Journal as second hand only after José says copyable. No DNA `requires`. `getattr(shell, "assembly")` stays named leftover. |
 
-**First act next session:** **C** (coordinator plane alias) or José judges whether the organ is copyable. Journal as second organ only after that.
+**First act next session:** José judges whether the organ is copyable. Journal as second organ only after that.

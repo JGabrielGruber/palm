@@ -12,6 +12,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - Drain refuse reads DNA capabilities, not the composition / `assembly_capabilities` bag.
 - Composition presets and the `enable_work_drain_service` fold do not write `work_drain`. Omit is enough.
 - `BootMode.allow_background_drain` and the seed twins (`dna_lists_work_drain`, `dna_refuses_background_drain`) are gone.
+- Host `start_plane` and coordinator `_start_plane` aliases gone. The start plane is `runtime.work_plane`. The boot window `host.background.start_plane` stays.
 
 ### 0.63.39 — work_drain materialize
 - `AssemblyDefinition.capabilities` — builtin DNA lists `work_drain` on cli/server/all_in_one/worker (not embedded/mcp)

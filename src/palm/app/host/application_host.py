@@ -294,14 +294,6 @@ class ApplicationHost:
         return self._analytics
 
     @property
-    def start_plane(self):
-        """System start plane, if the runtime is up. Not a host-owned drain."""
-        try:
-            return self.runtime().work_plane
-        except Exception:
-            return None
-
-    @property
     def event_journal(self):
         """Append-only event journal (0.38) — offsets + redrive."""
         return self._workplane.event_journal

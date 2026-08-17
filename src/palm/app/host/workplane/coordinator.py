@@ -28,13 +28,6 @@ class WorkPlaneCoordinator:
         self._inbound: Any | None = None
         self._event_journal: Any | None = None
 
-    def _start_plane(self) -> Any | None:
-        """System start plane. Host does not stash it."""
-        try:
-            return self._host._app.runtime().work_plane
-        except Exception:
-            return None
-
     @property
     def inbound(self) -> Any | None:
         return self._inbound
@@ -69,7 +62,7 @@ class WorkPlaneCoordinator:
         if not host._app.storage.is_initialized:
             return
         try:
-            runtime = host._app.runtime()
+            runtime = host.runtime()
         except Exception:
             return
         plane = runtime.work_plane
@@ -83,7 +76,10 @@ class WorkPlaneCoordinator:
     def wire_inbound(self) -> None:
         """Inbound resource bindings — enqueue on the system start plane."""
         host = self._host
-        plane = self._start_plane()
+        try:
+            plane = host.runtime().work_plane
+        except Exception:
+            plane = None
         if plane is None:
             return
         defs = host._definitions
@@ -136,7 +132,11 @@ class WorkPlaneCoordinator:
         repository on the system instance.
         """
         host = self._host
-        if self._start_plane() is None:
+        try:
+            plane = host.runtime().work_plane
+        except Exception:
+            plane = None
+        if plane is None:
             return 0
         try:
             rows = host._definitions.list_flows() or []
@@ -155,14 +155,12 @@ class WorkPlaneCoordinator:
                 opts = detail.get("options")
                 return opts if isinstance(opts, dict) else meta
 
-            return int(self._start_plane().reload_triggers(rows, get_metadata=_meta) or 0)
+            return int(plane.reload_triggers(rows, get_metadata=_meta) or 0)
         except Exception:
             # Hostless / product-thin: repository on the system instance.
-            plane = self._start_plane()
             if hasattr(plane, "reload_from_repository"):
                 try:
-                    runtime = host._app.runtime()
-                    repo = getattr(runtime, "repository", None)
+                    repo = getattr(host.runtime(), "repository", None)
                     if repo is not None:
                         return int(plane.reload_from_repository(repo) or 0)
                 except Exception:
@@ -193,7 +191,10 @@ class WorkPlaneCoordinator:
         """Process due WorkIntents (and optional schedule triggers). Returns count."""
         if self._inbound is not None:
             self._inbound.flush_debounced()
-        plane = self._start_plane()
+        try:
+            plane = self._host.runtime().work_plane
+        except Exception:
+            plane = None
         if plane is None:
             return 0
         n = 0
@@ -257,27 +258,33 @@ class WorkPlaneCoordinator:
     def start_background(self) -> None:
         # Prefer supervisor when the system registered work_drain (0.60.5).
         try:
-            runtime = self._host._app.runtime()
+            runtime = self._host.runtime()
+        except Exception:
+            return
+        try:
             sup = getattr(runtime, "supervisor", None)
             if sup is not None and sup.get("work_drain") is not None:
                 sup.start("work_drain")
                 return
         except Exception:
             pass
-        plane = self._start_plane()
+        plane = runtime.work_plane
         if plane is not None:
             plane.start_background()
 
     def stop_background(self) -> None:
         try:
-            runtime = self._host._app.runtime()
+            runtime = self._host.runtime()
+        except Exception:
+            return
+        try:
             sup = getattr(runtime, "supervisor", None)
             if sup is not None and sup.get("work_drain") is not None:
                 sup.stop("work_drain")
                 return
         except Exception:
             pass
-        plane = self._start_plane()
+        plane = runtime.work_plane
         if plane is not None:
             plane.stop_background()
 

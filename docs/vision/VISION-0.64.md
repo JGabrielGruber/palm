@@ -27,9 +27,9 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 
 **Commits:** `6e50fd6b` first capability (seats, names, no host drain) · `d1b3c23a` ctx seats, no host listed bag · B1 wire catalog no longer freelances `work_drain`. Master may be ahead of origin. Not pushed.
 
-**Law that landed:** DNA lists the name. Walker loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from boot `ctx` + install `work_plane`. Start reads `supervisor.get("work_drain")` (walker effect), not DNA again, not `host._work_drain_listed`. Tests and status learn `runtime.work_plane`. Default wire catalog does not register `work_drain`. Composition / flag do not write the name. Omit is enough.
+**Law that landed:** DNA lists the name. Walker loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from boot `ctx` + install `work_plane`. Start reads `supervisor.get("work_drain")` (walker effect), not DNA again, not `host._work_drain_listed`. Coordinator, tests, and status read `runtime.work_plane`. Default wire catalog does not register `work_drain`. Composition / flag do not write the name. Omit is enough. No host `start_plane` alias.
 
-**Do not:** invent DNA `requires`; reuse VitalityRegistry for hands; open a 0.64 slice table; fan shared types across worktrees; start journal/outbox as a second organ until pile B below is honest.
+**Do not:** invent DNA `requires`; reuse VitalityRegistry for hands; open a 0.64 slice table; fan shared types across worktrees; start journal/outbox as a second organ until José says the home is copyable.
 
 **Process:** parallel **read** (explore agents). One **writer** at a time. Parent keeps the contract short. `src/palm/AGENTS.md` §1.1 / §1.2.
 
@@ -41,8 +41,8 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
 | **B2** | **Landed** — refuse reads DNA capabilities | Composition listing the name is not a refuse input. Omit is enough. |
 | **B3** | **Landed** — composition / flag do not write `work_drain` | Presets, seed-map row, and the settings/deployment fold are gone. Omit is enough. `refuse:background_drain` is not a live wall. |
-| **C** | Later or optional | Coordinator `_start_plane` / `host.start_plane` alias. `getattr(shell, "assembly")` (seat the organ). Journal/outbox **hands** = exit proof, not cleanup. DNA `requires` — do not invent. |
+| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Boot window `host.background.start_plane` stays. `getattr(shell, "assembly")` remains named leftover (seat already exists). Journal/outbox **hands** = exit proof, not cleanup. DNA `requires` — do not invent. |
 
-A, B1–B3 landed. Coordinator plane (C) is leftover alias, not a second install king.
+A, B1–B3, C landed. Plane alias is gone. Copyable-home leftover: `getattr(shell, "assembly")`, settings/deployment `enable_work_drain_service` packaging.
 
-**Start next session:** cut [§7](../architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → **C** (coordinator plane alias) or José judges whether the organ is copyable. Journal as second organ only after that.
+**Start next session:** José judges whether the organ is copyable. Journal as second organ only after that.
