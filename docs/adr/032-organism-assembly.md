@@ -9,6 +9,18 @@
 **Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · boy-scout [SD-016](../../TECH-DEBT.md#sd-016)  
 **Related:** [ADR-026](026-palm-system-layer.md) · [ADR-028](028-system-boot.md) · [ADR-029](029-system-supervisor.md) · [ADR-030](030-system-vitality.md) · [ADR-031](031-multi-claimer-work-drain.md) · [ADR-019](019-composition-profiles.md)
 
+**Code now (2026-08-17).** This ADR keeps **assembly**. Identifiers moved. Status notes below are chronicle — not rewritten.
+
+| This ADR / 0.63 | Now in code |
+|-----------------|-------------|
+| DNA / `PALM_ASSEMBLY_DNA_ID` | Structure definition / `PALM_STRUCTURE_DEFINITION_ID` / `structure_definition_id` |
+| Assembly effect port | `EffectPort` |
+| HouseholdEffectPort | `StructureEffectPort` |
+| Place book | Place registry (`PlaceEffectPort` / `InProcessPlaceRegistry`) |
+| Citizen / pretender inventory | `GATED_PATHS` / `READINESS_EDGES` / `open_residual_edges` |
+
+Glossary: [architecture/glossary.md](../architecture/glossary.md).
+
 ---
 
 ## Context
@@ -194,3 +206,4 @@ When single readiness holds on owned paths, pretenders are purged or kill-dated,
 - **Progress honesty (2026-08-08)** — Much of 0.63 so far is readiness **dashboard** (admission + fail-closed paths + residual map). **Structure manager** (materialize under definition) remains the deeper build. See [VISION-ASSEMBLY §0](../vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08). Palm-wide intended architecture: [docs/architecture/](../architecture/README.md).  
 - Next: manager depth vs exit judgment (**José**); architecture vault fill; residual duals named.  
 - Accept + theme close when José judges readiness proper.
+- **2026-08-17 names** — DNA / household / place book / assembly effect port above are the season’s words. Now: structure definition, `StructureEffectPort`, place registry, `EffectPort`. Hey, now is that.

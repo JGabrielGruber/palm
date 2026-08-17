@@ -46,7 +46,7 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [029](029-system-supervisor.md) | System supervisor + work plane on SystemInstance (0.60) | Accepted |
 | [030](030-system-vitality.md) | System vitality — living-kernel observation (0.61) | Accepted |
 | [031](031-multi-claimer-work-drain.md) | Multi-claimer work drain — exclusive claim first (0.62) | Accepted |
-| [032](032-organism-assembly.md) | Organism assembly — DNA · admission · single readiness (0.63) | Proposed |
+| [032](032-organism-assembly.md) | Organism assembly — DNA · admission · single readiness (0.63) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 

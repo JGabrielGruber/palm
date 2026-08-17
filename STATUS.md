@@ -6,7 +6,7 @@
 **Migration / release:** [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) · prior [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-book scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect** · **capacity / multi-claimer** · **assembly (0.63 closed)** → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-registry scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect** · **capacity / multi-claimer** · **assembly (0.63 closed)** → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
@@ -32,7 +32,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-h
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 
 **Vision:** [docs/vision/closed/VISION-0.63.md](docs/vision/closed/VISION-0.63.md) · **ADR-032** **Accepted**  
-Admission + DNA seed + fail-closed citizens landed. Last code: `work_drain` on DNA `capabilities`.  
+Admission + structure definition seed + fail-closed admitted paths landed. Last code: `work_drain` on definition `capabilities`.  
 **Exit:** José (2026-08-17). Chronicle stays in the closed vision; do not extend it.
 
 ## 0.62 — Multi-claimer work drain (**closed** · theme exit `0.62.8`)

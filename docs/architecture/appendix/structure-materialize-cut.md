@@ -18,14 +18,14 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 
 | Layer | Built | Residual |
 |-------|--------|----------|
-| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No DNA `requires` / start-fact vocabulary. |
+| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin definitions list `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No definition `requires` / start-fact vocabulary. |
 | System assembly | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / outbox / inbound are not hands. |
 | Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
-| Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.assembly`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes assembly as eyes. |
+| Host | Definition seed at spawn. Start window reads supervisor service, not a host listed bag. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.assembly`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes assembly as eyes. |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |
 
-A new organ is a DNA name + hand. Composition no longer writes `work_drain`. Settings/deployment have no drain switch.
+A new organ is a definition name + hand. Composition no longer writes `work_drain`. Settings/deployment have no drain switch.
 
 ---
 
@@ -36,8 +36,8 @@ A new organ is a DNA name + hand. Composition no longer writes `work_drain`. Set
 | **Spine** | Sequential. One owner. Definition as install set. | Membership field on definition; manager apply; demote `composition.has` / `BootMode` on that unit. |
 | **Same-cut** | After the interface is frozen. May parallel later. | Product `ExecutionPort` / session seat / drop `admission_gate()` fallback to the runtime. |
 | **Named residual** | Leave named. | Cancel/stop, LIST/DESCRIBE, unit engine access, packaging env, doctor, `*_to_runtime`. |
-| **Other theme** | Do not open here. | Surface deflation, plugin catalog as DNA, OS/workload place spawn as first unit, SD-019, Grove. |
-| **Docs drift** | Do not treat as done. | Seed comments that DNA is king of **wiring**; `composition.py` as sole membership switch; vault skeleton. |
+| **Other theme** | Do not open here. | Surface deflation, plugin catalog as structure definition, OS/workload place spawn as first unit, SD-019, Grove. |
+| **Docs drift** | Do not treat as done. | Seed comments that definition is king of **wiring**; `composition.py` as sole membership switch; vault skeleton. |
 
 Isolated “fix SD-016 everywhere” or residual-ledger cleanup is a workaround. Product does not own structure.
 
@@ -55,17 +55,17 @@ Isolated “fix SD-016 everywhere” or residual-ledger cleanup is a workaround.
 
 ### 3.1 Why `work_drain`
 
-It is already a triple king: settings flag → `MEMBERSHIP_CAPABILITY_SEEDS` → `composition.has("work_drain")` → host schedule → DNA `refuse:background_drain`.
+It is already a triple king: settings flag → `MEMBERSHIP_CAPABILITY_SEEDS` → `composition.has("work_drain")` → host schedule → definition `refuse:background_drain`.
 
 Not first: default planes (always-on kernel), `ensure_core_plugins` (wide), always-on `journal` / `projections` / `workloads`, `outbox` (store vs loop vs node role).
 
 ### 3.2 Spine steps (sequential, one workspace)
 
-1. Add local **capabilities** on `AssemblyDefinition` (frozenset of names). Builtin DNA **lists what the phenotype has**, not only what it refuses.
+1. Add local **capabilities** on `AssemblyDefinition` (frozenset of names). Builtin definitions **list what the body has**, not only what it refuses.
 2. Manager **materializes** that set: register/start `work_drain` only if listed.
 3. `composition.has("work_drain")` becomes a projection of the definition, or dies on that path.
 4. `BootMode.allow_background_drain` stops being a peer OR.
-5. Proof: drain starts iff DNA lists it (embedded vs cli/server).
+5. Proof: drain starts iff the definition lists it (embedded vs cli/server).
 
 Do not fan this out across worktrees. Shared types.
 
@@ -104,7 +104,7 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 - Surface compost, MCP dual stack, explorer splits.
 - Full SD-016 sweep.
 - Provider / cache membership sources (local only).
-- Invent DNA `requires` / install-port vocabulary.
+- Invent definition `requires` / install-port vocabulary.
 - Land journal / outbox as a second organ before pile B is honest.
 
 ---
@@ -113,7 +113,7 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 
 José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 
-**Landed:** DNA `capabilities` · walker · `CapabilitySeats` from `ctx` + board · start from registered service · no `host._work_drain_listed` · tests/status use `runtime.work_plane` · default wire catalog does not register `work_drain`. Commits `6e50fd6b`, `d1b3c23a`.
+**Landed:** definition `capabilities` · walker · `CapabilitySeats` from `ctx` + board · start from registered service · no `host._work_drain_listed` · tests/status use `runtime.work_plane` · default wire catalog does not register `work_drain`. Commits `6e50fd6b`, `d1b3c23a`.
 
 **Process:** explore agents in parallel. One implementer at a time. Do not fan `seed.py`, `hands.py`, `phase_assemble.py`, `definition.py` (supervisor) across writers.
 
@@ -122,7 +122,7 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **A** | **Landed.** `allow_background_drain` gone. Seed twins gone. | Do not put the field back. |
 | **B1** | **Landed.** Default catalog is outbox-only. Hand registers `work_drain`. Unregister-on-unlist stays. | Do not put `work_drain` back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
-| **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded DNA no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
-| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Boot window stays. Assemble uses `shell.assembly`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Journal as second hand only after José says copyable. No DNA `requires`. |
+| **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
+| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Boot window stays. Assemble uses `shell.assembly`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Journal as second hand only after José says copyable. No definition `requires`. |
 
 **First act next session:** José judges whether the organ is copyable. Journal as second organ only after that.

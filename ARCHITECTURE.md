@@ -940,14 +940,14 @@ Recursion guardrails (depth limits, cycle detection, child job linkage on parent
 ## Growth: places, assembly, living work (beyond closed seasons)
 
 Do **not** read this as doom or “Palm cannot.” Read it as **named next wood**.  
-**Canonical scale vocabulary:** [PALM.md §8](docs/PALM.md) — vertical home · horizontal place book · recursive support · assembly → tunnels → Grove.
+**Canonical scale vocabulary:** [PALM.md §8](docs/PALM.md) — vertical home · horizontal place registry · recursive support · assembly → tunnels → Grove.
 
 | Care | Intent | Doc |
 |------|--------|-----|
-| **Horizontal / place book** | Named places (spawn or adopt); readiness; multi-host bodies | [VISION-0.56](docs/vision/VISION-0.56.md) · scout |
-| **Vertical / assembly** | Organism truth; DNA; home up; org/realm as recursive support | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · seed |
+| **Horizontal / place registry** | Named places (spawn or adopt); readiness; multi-host bodies | [VISION-0.56](docs/vision/VISION-0.56.md) · scout |
+| **Vertical / assembly** | Organism truth; structure definition; home up; org/realm as recursive support | [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · seed |
 | **Tunnels** | Trusted reach after home known | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) · seed |
-| **Datasets / train / TinyML** | Business flows + bodies as places | SCOPE · place book |
+| **Datasets / train / TinyML** | Business flows + bodies as places | SCOPE · place registry |
 | **Grove** | Multi-Palm continuous interface (crown) | [VISION-GROVE](docs/vision/VISION-GROVE.md) |
 
 Archive GPU batch prototypes under `archive/experimental/gpubatches/` are **history and R&D**, not the architecture of record. New work places compute through **workload runners** and product paths — not archive imports.
@@ -1001,7 +1001,7 @@ runtime.event  ──►  WaitPlaneService (continue)  ──►  resume / fail 
 - **Durable truth** — definitions + instances survive restarts
 - **Reactive interests** — start (WorkIntent) and continue (wait) on one bus
 - **System seats** — boot, planes, supervisor, vitality; thin surfaces
-- **Place book** — workload tracks bodies; readiness gates honesty
+- **Place registry** — workload tracks bodies; readiness gates honesty
 - **Organism assembly (seed)** — definition-ready after system, before business pretends
 - **Tree before mesh** — scale as named places under home, not chaos
 - **One genome, many surfaces** — embedded, CLI, server, daemon, MCP

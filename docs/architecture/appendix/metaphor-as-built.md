@@ -27,7 +27,7 @@ Teaching map: [metaphor.md](metaphor.md).
 
 Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / observability.
 
-**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; place-book / residual-ledger → registry; DNA / env → structure definition seed; `AssemblyEffectPort` → `EffectPort`. `Assembly*` packages and the living-docs pass wait.
+**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; place-book / residual-ledger → registry; DNA / env → structure definition seed; `AssemblyEffectPort` → `EffectPort`. Living present docs updated 2026-08-17. `Assembly*` packages wait.
 
 | Family | What code names today | Kind | Prefer |
 |--------|------------------------|------|--------|
@@ -71,27 +71,22 @@ Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`
 
 ---
 
-## 5. Living docs that still speak the feudal table
+## 5. Living docs vs chronicle
 
-Architecture vault retired the words. These still teach them as law:
+**2026-08-17 docs pass:** present-tense homes use glossary words. Vision and ADR keep **assembly** and point at the new names. Chronicle is not rewritten.
 
-| Home | What it still says |
-|------|--------------------|
-| [VISION-ASSEMBLY.md](../../vision/VISION-ASSEMBLY.md) §4 + §6.4 | Citizen / household / pretender as **normative** terms |
-| [PALM.md](../../PALM.md) (admission / household sentence) | Citizens, household, pretenders, market-day |
-| [WRITING.md](../../WRITING.md) term list | Citizen, household, pretender, DNA |
-| [ADR-032](../../adr/032-organism-assembly.md) | DNA, steward, household, pretenders, structure king |
-| [STATUS.md](../../../STATUS.md) | DNA seed; fail-closed citizens |
-| [TECH-DEBT.md](../../../TECH-DEBT.md) SD-020 | Dual readiness / pretenders |
-| [MIGRATION-0.63.md](../../migrations/MIGRATION-0.63.md) + CHANGELOG 0.63 | Chronicle in feudal voice |
+| Home | Presence |
+|------|----------|
+| [VISION-ASSEMBLY.md](../../vision/VISION-ASSEMBLY.md) | Essay keeps assembly, citizen, household, DNA. **Code now** box + §4 / §6.4 pointers. |
+| [ADR-032](../../adr/032-organism-assembly.md) | Decision text stays. **Code now** box + status-note pointer. |
+| [PALM.md](../../PALM.md) · [WRITING.md](../../WRITING.md) · [STATUS.md](../../../STATUS.md) · [WORK-DRAIN.md](../../WORK-DRAIN.md) · [VISION-0.64](../../vision/VISION-0.64.md) | Updated to structure definition, place registry, `EffectPort`, admitted / assemble path, dual readiness. |
+| [MIGRATION-0.63.md](../../migrations/MIGRATION-0.63.md) + CHANGELOG 0.63 | Chronicle — leave |
 
-**Allowed teaching (leave unless a docs pass is named):**
+**Allowed teaching (leave):**
 
 - [PHILOSOPHY.md](../../../PHILOSOPHY.md) “On the kingdom”
 - [VISION-0.63](../../vision/closed/VISION-0.63.md) (closed chronicle)
 - [metaphor.md](metaphor.md) (this appendix)
-
-Do not rewrite those in the same sitting as a code rename.
 
 ---
 
@@ -105,7 +100,7 @@ Do not rewrite those in the same sitting as a code rename.
 | **DNA / env** | **Locked 2026-08-17.** `PALM_ASSEMBLY_DNA_ID` / `assembly_dna_id` / `resolve_builtin_dna` / `dna_id_*` / `dna.seed` → `PALM_STRUCTURE_DEFINITION_ID` / `structure_definition_id` / `resolve_builtin_definition` / `definition_id_*` / `definition.seed`. No aliases. |
 | **EffectPort** | **Locked 2026-08-17.** `AssemblyEffectPort` → `EffectPort`. `StructureEffectPort` and `PlaceEffectPort` keep those names. No aliases. |
 | **Package / type rename** | `AssemblyDefinition`, `AssemblyEngine`, `palm.*.assembly` — own sitting |
-| **Docs pass** | VISION-ASSEMBLY §4/§6.4, PALM, WRITING, ADR-032 — own sitting |
+| **Docs pass** | **Locked 2026-08-17.** Vision + ADR keep assembly and point at new names. Present-tense homes updated. Chronicle left. |
 | **Biology register** | genome / phenotype in PHILOSOPHY — not this leftover |
 
 Cleanup of this leftover does not close a theme by itself.

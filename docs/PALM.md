@@ -93,8 +93,8 @@ These words are **stable**. Use them with one meaning only.
 | **State** | Blackboard data for the run (`BaseState` and schemas). |
 | **Resource** | Named way to **speak** to an external or internal system (provider + action). |
 | **Provider** | Plugin that implements resource speak. (Not a DI “provider.”) |
-| **Workload** | Isolated **place** for foreign work (run or long service). Entry in the **place book**. Not “just another resource.” |
-| **Place book** | Named places Palm may mean (spawn or adopt); lifecycle + readiness. Workload plane is the home of this book. |
+| **Workload** | Isolated **place** for foreign work (run or long service). Entry in the **place registry**. Not “just another resource.” |
+| **Place registry** | Named places Palm may mean (spawn or adopt); lifecycle + readiness. Workload plane is the home of this registry. (Vision still says place book.) |
 | **Runner** | Plugin that implements a workload runtime (host, neonroot, …). |
 | **Event** | Signal on a bus. Completers describe themselves. |
 | **Interest** | Explicit want: **start** (trigger) or **continue** (wait). |
@@ -116,14 +116,14 @@ These words are **stable**. Use them with one meaning only.
 | **Support place** | Place that holds ground (or weight) another node projects from. **Org / realm** are recursive supports when they have children of the same kind. |
 | **Work place** | Place that executes work a light center will not carry. |
 | **Authority** | Author of desired structure (publishes assembly definition). |
-| **Assembly definition** | Declarative desired structure (DNA) for this process. |
+| **Assembly definition** | Declarative desired structure for this process. Code: `AssemblyDefinition` / `structure_definition_id`. |
 | **Assembly** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Pure engine + system apply loop + admission. Theme: [VISION-0.64](vision/VISION-0.64.md) · seed: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). |
 | **Assembly status** | Local readiness under the current definition. Single readiness truth when assembly lands. |
 | **Admission** | Read gate for work that needs a true organism (definition-ready). |
-| **Effect intent** | Structure action the assembly engine requests; system applies via assembly effect port. |
+| **Effect intent** | Structure action the assembly engine requests; system applies via `EffectPort`. |
 | **Tunnel** | Trusted path between places after home is known. Seed: [VISION-TUNNELS](vision/VISION-TUNNELS.md). |
 | **Vertical axis** | Authority and meaning climb the tree (home up, hop home, projection). |
-| **Horizontal axis** | Bodies spread in the place book (many hosts, workers, resources). |
+| **Horizontal axis** | Bodies spread in the place registry (many hosts, workers, resources). |
 
 ---
 
@@ -476,7 +476,7 @@ It names how Palm grows past one process **without** a second soul.
 | Axis | What it is | Home of the law |
 |------|------------|-----------------|
 | **Vertical** | Authority and meaning. Home points **up**. Truth home, projection, hop home, light center, recursive support. | [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) · this map |
-| **Horizontal** | Bodies and capacity. Place book: spawn or adopt; readiness; many hosts. | Workload ([VISION-0.56](vision/VISION-0.56.md)) |
+| **Horizontal** | Bodies and capacity. Place registry: spawn or adopt; readiness; many hosts. | Workload ([VISION-0.56](vision/VISION-0.56.md)) |
 
 **Horizontal placement. Vertical ownership.**  
 Physically, workers and resources may sit side by side. Logically, meaning still climbs home.  
@@ -543,11 +543,11 @@ Grove does not replace local structure. Local structure + two axes + path above 
 16. **Incomplete maps are false maps.** When structure changes, update this file in the same theme of work.  
 17. **Boy-scout extension shape.** When you touch open-coded peer menus, move them toward registry extension if suitable; do not only relocate the menu.  
 18. **Seat DI.** Inject interfaces and subsystems. Do not pass the system instance as ambient DI when a seat suffices.  
-19. **Two axes of scale.** Vertical = home and meaning. Horizontal = place book. Do not collapse them. Do not market multi-process without readiness and home.  
+19. **Two axes of scale.** Vertical = home and meaning. Horizontal = place registry. Do not collapse them. Do not market multi-process without readiness and home.  
 20. **Business BT ≠ organism topology.** Flows are business rules. Assembly (and later tunnels) are organism cares.  
 21. **Assembly is structure reconciliation.** Desired definition + status + effect intents + admission. Not a second job orchestrator. Not host glue as architecture.  
 22. **Clients use published ports.** Product and surfaces do not dig the composition root for structure or readiness. Structure effect ports stay separate from business execution.  
-23. **Admission is one gate for business that needs ground.** Fail closed. Citizens through the gate; assemble household is not a market-day citizen; pretenders are purged — not permanent checkpoints. Detail: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) §6.4.
+23. **Admission is one gate for business that needs ground.** Fail closed. Admitted paths go through the gate. The assemble path is not a business start. Dual readiness is purged or named — not a permanent checkpoint. Detail: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) §6.4.
 
 ---
 
@@ -609,7 +609,7 @@ A map that only names **ideals** without today is also incomplete.
 | Patterns / providers / storages registries | **Real** |
 | Wizard and Assist product loops | **Real** (product maturity varies by surface) |
 | Reactive start / continue law | **Landed** (0.55) |
-| Workload plane (place book) | **Scout** (0.56) — engine, runners, product path; multi-process **control** via named places — remainder + [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) |
+| Workload plane (place registry) | **Scout** (0.56) — engine, runners, product path; multi-process **control** via named places — remainder + [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) |
 | Named system layer in packages | **Live** — `palm.system` holds shell, `interfaces/`, `subsystems/` (planes, supervisor), boot, vitality, executions (**0.57+**; seat DI **0.61**) |
 | Unified execution port | **Live** — product + graphs + edges for effects and catalog inspect |
 | Shared vs system split in tree | **Deflated** (0.57.6–13); kits exposed (`palm.kits.server`); plans DTO shared |

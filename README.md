@@ -53,7 +53,7 @@ Palm aims to be **simple at the core and powerful at the edges**:
 - **Truth-seeking** — durable instances, one start path, one continue path, named debt
 - **Extensible** — patterns, providers, storages, runners register at the edge; core stays pure
 - **Alive as a system** — boot, planes, supervisor, vitality, capacity (in-process multi-claimer)
-- **Two axes of scale** — **vertical** home and meaning; **horizontal** place book (bodies across hosts)
+- **Two axes of scale** — **vertical** home and meaning; **horizontal** place registry (bodies across hosts)
 - **Horizon path** — [assembly](docs/vision/VISION-0.64.md) → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md)
 - **Fit for living work** — datasets, training flows, TinyML and model bodies as places under one genome
 

@@ -30,7 +30,7 @@ Background drain is a **supervisor** service over the system **work plane** (not
 
 ## Enable background drain
 
-DNA lists the name `work_drain` on `local.cli`, `local.server`, `local.all_in_one`, and `local.worker`. The walker registers the supervisor service. Start runs that service when install start ports are bound.
+The structure definition lists the name `work_drain` on `local.cli`, `local.server`, `local.all_in_one`, and `local.worker`. The walker registers the supervisor service. Start runs that service when install start ports are bound.
 
 `local.embedded` and `local.mcp` omit the name. Those bodies do not install drain.
 
@@ -38,9 +38,9 @@ DNA lists the name `work_drain` on `local.cli`, `local.server`, `local.all_in_on
 palm host server
 ```
 
-That command loads **server** DNA. DNA lists `work_drain`. You do not need an env var for inbound webhooks or triggers.
+That command loads the **server** definition. The definition lists `work_drain`. You do not need an env var for inbound webhooks or triggers.
 
-To omit drain, load DNA that does not list it (for example `local.embedded`). There is no settings or deployment switch.
+To omit drain, load a definition that does not list it (for example `local.embedded`). There is no settings or deployment switch.
 
 Related knobs:
 

@@ -49,7 +49,7 @@ This file holds **what still needs work** plus a **master index** of all IDs.
 | [SD-017](docs/audit/TECH-DEBT-PAID.md#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.3** | ✅ paid (exclusive claim + reclaim + plane claimer) |
 | [SD-018](docs/audit/TECH-DEBT-PAID.md#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.7** | ✅ drain N + Queued pool + exclusive drive |
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
-| [SD-020](#sd-020) | Dual readiness / pretenders (no single admission gate) | S1 | L | **0.63** floor | open (theme open 0.63.0) |
+| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.63 closed; residual under 0.64) |
 | [SD-021](#sd-021) | Profile / composition / env as parallel structure king | S2 | L | **0.63** growth | open (seed map + purge) |
 
 ### Surface debt (SU)
@@ -160,7 +160,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 ---
 
 
-### SD-020 — Dual readiness / pretenders (no single admission gate)
+### SD-020 — Dual readiness / residual edges (no single admission gate)
 
 <a id="sd-020"></a>
 
@@ -176,8 +176,8 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 | Residual | Kind | Why named |
 |----------|------|-----------|
-| Direct **`WorkloadEngine.start` / `.exec`** | **Household / unit** free; **pretender** if product digs for business | Port law **0.63.20** / **0.63.27** |
-| Direct **`ResourceEngine.invoke`** | **Unit / non-port** free; **pretender** if product digs | Port law **0.63.24** |
+| Direct **`WorkloadEngine.start` / `.exec`** | **Assemble / unit** free; **residual** if product digs for business | Port law **0.63.20** / **0.63.27** |
+| Direct **`ResourceEngine.invoke`** | **Unit / non-port** free; **residual** if product digs | Port law **0.63.24** |
 | **`stop_workload` / stop_owned** | Control path when admission closed | **named_0_63_27** — shutdown must work |
 | **Assist session cancel** | Control path when admission closed | **named_0_63_29** — operator stop must work |
 | **Flow cancel · `cancel_job`** | Control path when admission closed | **named_0_63_30** — operator stop must work |
@@ -202,9 +202,9 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth (closed) · residual under [VISION-0.64](docs/vision/VISION-0.64.md)
 
-**Observation:** `CompositionProfile`, `DeploymentProfile`, `BootMode`, and some structure-shaped `PALM_*` toggles still act as **structure law** beside any future DNA. That is dual king after assembly lands.
+**Observation:** `CompositionProfile`, `DeploymentProfile`, `BootMode`, and some structure-shaped `PALM_*` toggles still act as **structure law** beside the structure definition. That is dual king after assembly lands.
 
-**Pay in 0.63 growth:** Map entry/mode/env into **DNA seed**; after load, assembly status is structure truth; packaging env stays; structure pretender toggles purge or residual kill-date. First DNA: **embedded**; dogfood: cli / server.
+**Pay in 0.63 growth:** Map entry/mode/env into **definition seed**; after load, assembly status is structure truth; packaging env stays; structure dual toggles purge or residual kill-date. First definition: **embedded**; dogfood: cli / server.
 
 **Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only; bare runtime start option named residual). **0.63.39** — DNA `capabilities` lists `work_drain`; manager materializes (register/start) only when listed; `composition.has` / `BootMode.allow_background_drain` no longer peer-gate that unit. Residual: flags still seed at resolve **by design**; other capabilities still composition; bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
 
@@ -558,7 +558,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
-| **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh; place book for assembly |
+| **Workload remainder** | 0.56 queue | Full placement, cancel hooks, peer mesh; place registry for assembly |
 | **Tunnels / reach** | after assembly | Trusted paths · neighborhood · edge/cloud — [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) (queue seed; not open) |
 
 **Closed (not a seed):** **System vitality** — [VISION-0.61](docs/vision/closed/VISION-0.61.md) closed · [ADR-030](docs/adr/030-system-vitality.md) Accepted · residual BI-015 · SD-016.

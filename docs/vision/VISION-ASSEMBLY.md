@@ -9,6 +9,18 @@
 **Horizon order:** assembly → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
 **Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
 
+**Code now (2026-08-17).** This essay keeps **assembly**. Identifiers moved. Chronicle is not rewritten.
+
+| This essay / 0.63 | Now in code |
+|-------------------|-------------|
+| DNA / `PALM_ASSEMBLY_DNA_ID` | Structure definition / `PALM_STRUCTURE_DEFINITION_ID` / `structure_definition_id` |
+| Assembly effect port | `EffectPort` |
+| Household hands | `StructureEffectPort` |
+| Place book | Place registry (`PlaceEffectPort` / `InProcessPlaceRegistry`) |
+| Citizen / pretender inventory | `GATED_PATHS` / `READINESS_EDGES` / `open_residual_edges` |
+
+Glossary: [architecture/glossary.md](../architecture/glossary.md).
+
 ---
 
 ## 0. Progress honesty (2026-08-08)
@@ -158,6 +170,8 @@ Define once. Reuse. Map: [PALM.md §3](../PALM.md).
 | **Household** | Boot / assemble / apply path; not a market-day citizen; not forced through business admission. |
 | **Pretender** | Path that pretends readiness without admission; purge when the gate is law. |
 
+These names stay. Code now: `EffectPort` (assembly effect port); place registry (`PlaceEffectPort` / `InProcessPlaceRegistry`); `PALM_STRUCTURE_DEFINITION_ID` (DNA seed); `StructureEffectPort` (household hands); inventory `GATED_PATHS` / `READINESS_EDGES`.
+
 **Invocation** (call another Palm’s door) ≠ **projection** (represent their truth as part of *our* readiness).  
 **CQRS projection** (product read model) ≠ **assembly projection** (organism view of truth home).
 
@@ -235,7 +249,8 @@ Authority / seed  →  assembly definition
 
 ### 6.4 Citizenship and purge (implementation posture)
 
-This section is **normative** for how the theme lands. It is not optional soft migration culture.
+This section is **normative** for how the theme lands. It is not optional soft migration culture.  
+Code inventory: admitted paths `GATED_PATHS`; assemble hands `StructureEffectPort`; residual `open_residual_edges`. This section keeps the vision names.
 
 #### Who is a citizen?
 
@@ -318,7 +333,7 @@ Invariant: **nothing in `palm.core` imports outside `palm.core`.**
 ```text
 palm/system/assembly/   # name may adjust at theme open
   loop.py               # load → tick → apply → observe until steady | blocked
-  effects.py            # AssemblyEffectPort implementation
+  effects.py            # EffectPort (protocol; was AssemblyEffectPort)
   admission.py          # snapshot for clients and planes
   handlers/             # ensure_place, projection, policy, …
 ```

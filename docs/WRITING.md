@@ -49,19 +49,19 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 | **Instance** | Durable record of a run |
 | **Definition** | Declared contract of work (also: participation law at the edge for registry extension) |
 | **Interest** | Start (trigger) or continue (wait) |
-| **Place book** | Named places (workload); horizontal scale axis |
+| **Place registry** | Named places (workload); horizontal scale axis |
 | **Truth home** | Authoritative place for projected meaning |
 | **Projection** | Local view of authority — not a second truth |
 | **Light center** | Role: refuse heavy body/ground on purpose |
 | **Support / realm** | Ground place; realm = recursive sub-support |
 | **Authority** | Author of assembly definition (desired structure) |
-| **Assembly definition** | Declarative desired structure (DNA) |
+| **Assembly definition** | Declarative desired structure. Code: structure definition / `structure_definition_id` |
 | **Assembly** | Structure reconciler; organism ready — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) |
 | **Assembly status** | Local readiness under current definition |
 | **Admission** | Read gate for business that needs ground |
-| **Citizen** | Act that needs organism whole; only via admission |
-| **Household** | Boot/assemble path — not forced through business admission |
-| **Pretender** | Readiness without admission — purge when gate is law |
+| **Admitted path** | Act that needs the organism whole; only via admission |
+| **Assemble path** | Boot / assemble / apply — not forced through business admission |
+| **Dual readiness** | Readiness without admission — purge or name |
 | **Effect intent** | Structure action assembly requests; system applies |
 | **Composition root** | Host wiring — not product’s structure API |
 | **Vertical / horizontal** | Meaning climbs home · bodies spread in the book — [PALM §8](PALM.md) |
