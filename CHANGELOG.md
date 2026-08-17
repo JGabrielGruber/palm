@@ -7,6 +7,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 ### 0.64 — present (José 2026-08-17)
 - **0.63 closed.** Live path is [VISION-0.64](docs/vision/VISION-0.64.md). No slice table.
 - ADR-032 **Accepted**
+- Assemble fills `CapabilitySeats` from boot ctx + install board. Start reads the supervisor service the walker registered. Host listed bag gone. Tests and status learn `runtime.work_plane`.
 
 ### 0.63.39 — work_drain materialize
 - `AssemblyDefinition.capabilities` — builtin DNA lists `work_drain` on cli/server/all_in_one/worker (not embedded/mcp)

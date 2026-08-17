@@ -535,36 +535,6 @@ class ApplicationHost:
             return None
         return [w.to_dict() for w in self._last_boot_walk]
 
-    def _loaded_assembly_definition(self):
-        """DNA on the primary runtime assembly seat, or None before assemble."""
-        try:
-            runtime = self._app.runtime()
-        except Exception:
-            return None
-        assembly = getattr(runtime, "assembly", None)
-        if assembly is None:
-            return None
-        return getattr(assembly, "definition", None)
-
-    def _work_drain_listed(self) -> bool:
-        """True when continuous WorkIntent drain should run.
-
-        After load, DNA ``capabilities`` is the install king. Composition and
-        ``BootMode.allow_background_drain`` seed the decree; they are not a
-        peer OR. Refuse ``background_drain`` still fail-closes.
-        """
-        from palm.system.assembly.seed import (
-            dna_lists_work_drain,
-            dna_refuses_background_drain,
-        )
-
-        dna = self._loaded_assembly_definition()
-        if dna is None:
-            return False
-        if dna_refuses_background_drain(dna):
-            return False
-        return dna_lists_work_drain(dna)
-
     def shutdown(self) -> None:
         """Stop services, projections, and all runtimes."""
         if not self._started:

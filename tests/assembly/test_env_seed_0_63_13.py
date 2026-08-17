@@ -5,7 +5,12 @@ from __future__ import annotations
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.boot.modes import BootMode
 from palm.app.settings import PalmSettings
-from palm.core.assembly import LOCAL_CLI_ID, LOCAL_EMBEDDED_ID
+from palm.core.assembly import (
+    CAPABILITY_WORK_DRAIN,
+    LOCAL_CLI_ID,
+    LOCAL_EMBEDDED_ID,
+    resolve_builtin_dna,
+)
 from palm.system.assembly import (
     STRUCTURE_SEED_ENV,
     dna_id_from_settings,
@@ -13,7 +18,6 @@ from palm.system.assembly import (
     resolve_seed_dna,
     seed_assembly_options_from_host,
 )
-from palm.core.assembly import resolve_builtin_dna
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -91,8 +95,10 @@ def test_dna_override_still_checks_composition_membership() -> None:
         assert host.admission.may_run_business is False
         reasons = host.admission.reasons
         assert any("refuse:background_drain" in str(r) for r in reasons)
-        # Continuous drain must not peer-law under DNA refuse
-        assert host._work_drain_listed() is False
+        # Walker output after assemble — refuse is admission, not a start re-read
+        rt = host.runtime()
+        assert CAPABILITY_WORK_DRAIN not in rt.assembly.materialized_capabilities
+        assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
     finally:
         host.shutdown()
 

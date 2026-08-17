@@ -40,6 +40,8 @@ def refuse_violations(
         if httpish:
             reasons.append(f"refuse:{REFUSE_HTTP_SERVER_SURFACES}")
 
+    # Dual name: refuse token ``background_drain`` vs capability ``work_drain``.
+    # Do not rename here — admission still fail-closes the pair.
     if REFUSE_BACKGROUND_DRAIN in refuse and "work_drain" in caps:
         reasons.append(f"refuse:{REFUSE_BACKGROUND_DRAIN}")
 

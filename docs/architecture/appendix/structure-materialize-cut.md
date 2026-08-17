@@ -14,18 +14,18 @@ Do not re-harvest the tree unless code contradicts this note.
 
 ## 1. Situation (as-built)
 
-Admission is real. Membership install is not.
+Admission is real. **`work_drain` membership install is real.** Other capabilities still live on composition.
 
-| Layer | Built | Missing |
-|-------|--------|---------|
-| Core assembly | Reconciler: phase + places + admission. `tick` emits only `ENSURE_PLACE`. | No membership sections on `AssemblyDefinition`. |
-| System assembly | Load DNA, refuse-check, place hands, publish fail-closed admission. | No `materialize`. Capabilities/surfaces are start kwargs for refuse only. |
-| Boot / runtime | `InstallInterface` used by plane and supervisor **install**. | Phase catalogs still choose membership (planes, plugins, engines, outbox, drain). |
-| Host | DNA **seed** at spawn (`PALM_ASSEMBLY_DNA_ID` → mode → composition inference). | After load, `CompositionProfile.has` is still the install king. `BootMode` still peer-gates drain/recover. |
-| Product | Admission oath on assist + four execution façades. Does not assemble or set ready. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
+| Layer | Built | Residual |
+|-------|--------|----------|
+| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. | No DNA `requires` / start-fact vocabulary. Refuse token `background_drain` is a second name. |
+| System assembly | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / outbox / inbound are not hands. |
+| Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
+| Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status reads `runtime.work_plane`. | `host.start_plane` thin alias. Flags still seed composition. `allow_background_drain` is serialize-only. |
+| Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |
 
-Builtin DNA lists **no** `places_required` and **no** install set. The default assemble path can go READY without installing a unit.
+A new organ is still not only a DNA name + hand: seed flags and composition still *look* like membership. That is leftover honesty, not a second install king.
 
 ---
 
@@ -43,7 +43,7 @@ Isolated “fix SD-016 everywhere” or residual-ledger cleanup is a workaround.
 
 ---
 
-## 3. Locked for the next implementation session
+## 3. Locked (landed) — first unit
 
 | Decision | Lock |
 |----------|------|

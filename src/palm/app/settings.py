@@ -58,9 +58,8 @@ class PalmSettings(BaseSettings):
     outbox_poll_interval: float = 0.5
     # Membership *seed* (0.63.19 / SD-021) — feeds composition.outbox at resolve only.
     enable_event_outbox: bool = True
-    # 0.40.2 — continuous WorkIntent drain; ``host server`` profile enables by default (0.44.1)
-    # Structure membership *seed* only (0.63.13 / SD-021) — feeds composition at resolve;
-    # after DNA load, refuse + drain gate are structure king (not a peer OR).
+    # Membership seed only — feeds composition at resolve (SD-021).
+    # After DNA load, install is DNA ``capabilities``; this flag does not veto drain.
     enable_work_drain_service: bool = False
     # Start-plane packaging (attach). Not work_drain membership.
     work_plane_poll_interval: float = 1.0

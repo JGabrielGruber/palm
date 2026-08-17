@@ -22,6 +22,7 @@ from palm.app.host.composition import (
 from palm.app.host.composition import CompositionProfile as CP
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
+from palm.core.assembly import CAPABILITY_WORK_DRAIN
 
 
 def _caps(**overrides: object) -> frozenset[str]:
@@ -234,7 +235,9 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     on.start()
     try:
-        assert on._work_drain_listed() is True  # membership alone
+        # membership seeds DNA; walker output is listed after assemble
+        assert CAPABILITY_WORK_DRAIN in on.runtime().assembly.materialized_capabilities
+        assert "work_drain" in on.runtime().supervisor.names()
     finally:
         on.shutdown()
 
@@ -245,7 +248,11 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     off.start(assembly_dna_id="local.embedded")
     try:
-        assert off._work_drain_listed() is False  # DNA omits work_drain
+        assert CAPABILITY_WORK_DRAIN not in off.runtime().assembly.materialized_capabilities
+        assert (
+            off.runtime().supervisor is None
+            or "work_drain" not in off.runtime().supervisor.names()
+        )
     finally:
         off.shutdown()
 

@@ -62,7 +62,8 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert host.design is None
         assert host.analytics is None
         # Embedded DNA: drain never starts.
-        assert host.start_plane is None or host.start_plane.is_running is False
+        plane = host.runtime().work_plane
+        assert plane is None or plane.is_running is False
 
 
         boot = host.control_plane_status()["boot"]

@@ -32,47 +32,34 @@ class BackgroundStartResult:
 def start_supervised_background(
     supervisor: Any,
     options: Mapping[str, Any] | None = None,
-    *,
-    definition: Any | None = None,
 ) -> BackgroundStartResult:
-    """Start work_drain / outbox when DNA / options allow.
+    """Start work_drain / outbox from walker membership and start options.
 
-    ``work_drain`` starts when DNA lists it and install start ports are bound.
-    Outbox still uses the start option.
+    ``work_drain`` starts when the supervisor has the service and install start
+    ports are bound. Outbox still uses the start option.
     """
-    from palm.system.assembly.seed import (
-        dna_lists_work_drain,
-        dna_refuses_background_drain,
-    )
-
     opts = dict(options or {})
     install = opts.get("install")
     ports_bound = bool(getattr(install, "start_ports_bound", lambda: False)())
-    want_drain = (
-        dna_lists_work_drain(definition)
-        and not dna_refuses_background_drain(definition)
-        and ports_bound
-    )
+    has_drain = supervisor.get("work_drain") is not None
+    want_drain = has_drain and ports_bound
     want_outbox = bool(opts.get("enable_outbox_background", False))
     if not want_drain and not want_outbox:
-        if definition is not None and not dna_lists_work_drain(definition):
+        if not has_drain:
             skip = "structure_off:work_drain"
-        elif dna_lists_work_drain(definition) and not ports_bound:
-            skip = "ports_off:work_drain"
         else:
-            skip = "no_background_services_enabled"
+            skip = "ports_off:work_drain"
         return BackgroundStartResult(started=[], skip_reason=skip)
 
-    has_drain = supervisor.get("work_drain") is not None
     has_outbox = supervisor.get("outbox") is not None
-    if not ((want_drain and has_drain) or (want_outbox and has_outbox)):
+    if not (want_drain or (want_outbox and has_outbox)):
         return BackgroundStartResult(
             started=[],
             skip_reason="no_matching_supervised_services",
         )
 
     started: list[str] = []
-    if want_drain and has_drain:
+    if want_drain:
         started.extend(supervisor.start("work_drain"))
     if want_outbox and has_outbox:
         started.extend(supervisor.start("outbox"))
@@ -84,12 +71,10 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     sup = ctx.supervisor if ctx.supervisor is not None else shell.supervisor
     if sup is None:
         raise PhaseSkip("no_supervisor")
-    seat = getattr(shell, "assembly", None)
-    definition = getattr(seat, "definition", None) if seat is not None else None
     merged = dict(options)
     if "install" not in merged:
-        merged["install"] = getattr(shell, "install", None)
-    result = start_supervised_background(sup, merged, definition=definition)
+        merged["install"] = ctx.install if ctx.install is not None else shell.install
+    result = start_supervised_background(sup, merged)
     if result.should_skip:
         raise PhaseSkip(result.skip_reason or "background_skip")
     get_system_log().info(

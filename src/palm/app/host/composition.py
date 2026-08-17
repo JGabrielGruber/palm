@@ -5,15 +5,15 @@ The composition axis, twin of ``DeploymentProfile`` (the deployment axis, in
 ``roles.py``). A running app is assembled from one ``CompositionProfile`` and one
 ``DeploymentProfile``; the two are orthogonal and never merge.
 
-**0.59.5 membership truth:** on the migrated host path this profile is the **only**
-runtime switch for product services, surfaces, and capabilities. Deployment may
-feed the settings resolver (e.g. server role → ``work_drain``) but does not OR at
-phase time. Boot modes may forbid phases (recover / background). See ADR-028 D4,
-VISION-0.59, and ``composition_profile_from_settings``.
+**0.59.5 membership truth:** this profile seeds product services, surfaces, and
+capabilities other than ``work_drain``. Deployment may feed the settings resolver
+but does not OR at phase time. After DNA load, ``work_drain`` install is DNA
+``capabilities`` (0.64). See ADR-028 D4, VISION-0.64, and
+``composition_profile_from_settings``.
 
-History: skeleton 0.50 · living capabilities 0.51 · boot schedule 0.59.2–.4 ·
+History: skeleton 0.50 · living capabilities 0.51 · boot schedule 0.59.2-.4 ·
 membership truth 0.59.5. Design mirrors ``DeploymentProfile``: typed name-tuples +
-presets, palm's ``INSTALLED_*`` idiom — not a manifest DSL.
+presets, palm's ``INSTALLED_*`` idiom - not a manifest DSL.
 """
 
 from __future__ import annotations

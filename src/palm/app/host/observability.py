@@ -172,7 +172,11 @@ class HostObservability:
         """Residual work/journal/boot packaging (0.38 / 0.40.3). Not living seat law."""
         host = self._host
         work_pending = 0
-        plane = host.start_plane
+        plane = None
+        try:
+            plane = host.runtime().work_plane
+        except Exception:
+            plane = None
         if plane is not None:
             work_pending = plane.store.pending_count()
         journal_status: dict[str, Any] = {}
@@ -204,10 +208,9 @@ class HostObservability:
         boot_mode = getattr(host, "boot_mode", None)
         domain_note = (
             "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
-            "server/prod CI use server_port=0. CompositionProfile is the sole "
-            "membership switch (0.59.5); deployment feeds resolver only; "
-            "modes + PhaseSkip strictness. 0.63: assembly admission is law — "
-            "see assembly bag (not a soft dual of membership)."
+            "server/prod CI use server_port=0. CompositionProfile seeds membership "
+            "except work_drain (DNA capabilities after load). 0.63: assembly "
+            "admission is law — see assembly bag (not a soft dual of membership)."
         )
         assembly_bag = self._assembly_packaging()
         return _with_packaging_markers(

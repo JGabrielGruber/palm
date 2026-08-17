@@ -89,7 +89,7 @@ def test_webhook_store_resource_persists_inbox() -> None:
         envelope = stored.get("value") if isinstance(stored.get("value"), dict) else stored
         assert envelope.get("payload", {}).get("id") == "evt-store-1"
 
-        pending = host.start_plane.store.pending_count()
+        pending = host.runtime().work_plane.store.pending_count()
         assert pending >= 1
     finally:
         host.shutdown()

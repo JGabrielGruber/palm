@@ -30,25 +30,21 @@ Background drain is a **supervisor** service over the system **work plane** (not
 
 ## Enable background drain
 
-### Server profile (default since 0.44.1)
+DNA lists the name `work_drain` on `local.cli`, `local.server`, `local.all_in_one`, and `local.worker`. The walker registers the supervisor service. Start runs that service when install start ports are bound.
+
+`local.embedded` and `local.mcp` omit the name. Those bodies do not install drain.
 
 ```bash
 palm host server
 ```
 
-The **`server`** host profile sets `enable_work_drain_service=True` on `DeploymentProfile`. No env var required for inbound webhooks or triggers to run.
+That command loads **server** DNA. DNA lists `work_drain`. You do not need an env var for inbound webhooks or triggers.
 
-### Environment override
+### Seed leftover (not install)
 
-```bash
-# force on (any profile)
-export PALM_ENABLE_WORK_DRAIN_SERVICE=1
+`PALM_ENABLE_WORK_DRAIN_SERVICE` and `DeploymentProfile.enable_work_drain_service` feed **composition** at resolve. After DNA load they are not a second install king.
 
-# force off (even on server profile)
-export PALM_ENABLE_WORK_DRAIN_SERVICE=0
-```
-
-Settings (`PalmSettings.enable_work_drain_service`) win when set explicitly; otherwise the host profile applies.
+`PALM_ENABLE_WORK_DRAIN_SERVICE=0` does **not** stop drain on server, cli, worker, or all-in-one DNA. To omit drain, load DNA that does not list it (for example `local.embedded`).
 
 Related knobs:
 

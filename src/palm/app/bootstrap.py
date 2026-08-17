@@ -153,17 +153,18 @@ def _capabilities_from_settings(
 ) -> frozenset[str]:
     """Derive the *available* capabilities for membership (0.51.1 / 0.59.5).
 
-    This is the composition axis — **membership**. Runtime gates read
-    ``composition.has(...)`` only; they do not re-OR deployment flags.
+    This is the composition axis — **membership seed**. Runtime gates for
+    capabilities other than ``work_drain`` still read ``composition.has(...)``.
+    They do not re-OR deployment flags.
 
     **0.59.5:** when resolving from settings *without* an explicit
     ``CompositionProfile``, deployment may **feed** membership (e.g.
     ``enable_work_drain_service`` on a server role adds ``work_drain``). That
     fold happens here once — not as a second switch at phase time.
 
-    **0.63.19 / SD-021:** flag → capability map lives in
-    ``palm.system.assembly.seed.MEMBERSHIP_CAPABILITY_SEEDS`` —
-    packaging seeds only; after DNA load, refuse + composition are structure truth.
+    **0.64 / SD-021:** flag → capability map lives in
+    ``palm.system.assembly.seed.MEMBERSHIP_CAPABILITY_SEEDS``.
+    After DNA load, ``work_drain`` install is DNA ``capabilities``.
 
     ``journal``, ``projections``, and ``workloads`` have no settings flag: they
     are always available on a settings-composed host (a lean *explicit*

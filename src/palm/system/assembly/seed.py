@@ -6,7 +6,7 @@ parallel structure kings. After load, assembly status under the DNA is truth.
 **0.63.13 — env pretenders (SD-021 growth):**
 - ``PALM_ASSEMBLY_DNA_ID`` / ``settings.assembly_dna_id`` is the explicit DNA seed.
 - Membership-shaped flags (e.g. ``PALM_ENABLE_WORK_DRAIN_SERVICE``) feed composition
-  only at resolve time; DNA refuse + drain gate remain structure king after load.
+  only at resolve time. After load, ``work_drain`` install is DNA ``capabilities``.
 
 **0.63.19 — full membership seed cartography (SD-021 residual):**
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.

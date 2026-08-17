@@ -33,7 +33,8 @@ class DeploymentProfile:
     enable_outbox_service: bool = True
     outbox_poll_interval: float = 0.5
     outbox_recover_on_startup: bool = True
-    # 0.44.1 — continuous WorkIntent drain on network-facing profiles (override via PALM_ENABLE_WORK_DRAIN_SERVICE)
+    # Seed leftover — feeds composition at resolve on the settings path.
+    # After DNA load, install is DNA ``capabilities`` (not this flag).
     enable_work_drain_service: bool = False
 
     def __post_init__(self) -> None:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from palm.app import ApplicationHost, PalmSettings
 from palm.app.host.roles import DeploymentProfile
+from palm.core.assembly import CAPABILITY_WORK_DRAIN
 
 
 def test_server_profile_starts_work_drain_without_env() -> None:
@@ -25,9 +26,12 @@ def test_server_profile_starts_work_drain_without_env() -> None:
     host.start()
     try:
         assert host.admission.definition_id == "local.server"
-        assert host._work_drain_listed() is True
-        assert host.start_plane is not None
-        assert host.start_plane.is_running is True
+        rt = host.runtime()
+        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert "work_drain" in rt.supervisor.names()
+        plane = host.runtime().work_plane
+        assert plane is not None
+        assert plane.is_running is True
     finally:
         host.shutdown()
 
@@ -42,8 +46,11 @@ def test_all_in_one_profile_starts_drain_from_dna() -> None:
     host.start()
     try:
         assert host.admission.definition_id == "local.all_in_one"
-        assert host._work_drain_listed() is True
-        assert host.start_plane is not None
-        assert host.start_plane.is_running is True
+        rt = host.runtime()
+        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert "work_drain" in rt.supervisor.names()
+        plane = host.runtime().work_plane
+        assert plane is not None
+        assert plane.is_running is True
     finally:
         host.shutdown()

@@ -16,6 +16,7 @@ from palm.app.host.application_host import ApplicationHost
 from palm.app.host.composition import CompositionProfile as CP
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
+from palm.core.assembly import CAPABILITY_WORK_DRAIN
 from palm.system.log import get_system_log, reset_system_log_for_tests
 
 
@@ -44,8 +45,9 @@ def test_server_profile_host_gains_work_drain_membership() -> None:
     try:
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.background.start_plane"].outcome == "ok"
-        assert host.start_plane is not None
-        assert host.start_plane.is_running is True
+        plane = host.runtime().work_plane
+        assert plane is not None
+        assert plane.is_running is True
     finally:
         host.shutdown()
 
@@ -61,11 +63,14 @@ def test_explicit_composition_does_not_veto_dna_work_drain() -> None:
     assert not host.composition.has("work_drain")
     host.start()
     try:
-        assert host._work_drain_listed() is True
+        rt = host.runtime()
+        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert "work_drain" in rt.supervisor.names()
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.background.start_plane"].outcome == "ok"
-        assert host.start_plane is not None
-        assert host.start_plane.is_running is True
+        plane = host.runtime().work_plane
+        assert plane is not None
+        assert plane.is_running is True
     finally:
         host.shutdown()
 
@@ -85,7 +90,9 @@ def test_work_drain_gate_is_dna_not_composition_or() -> None:
     try:
         assert host.profile.enable_work_drain_service is True
         assert not host.composition.has("work_drain")
-        assert host._work_drain_listed() is True
+        rt = host.runtime()
+        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert "work_drain" in rt.supervisor.names()
     finally:
         host.shutdown()
 
@@ -100,7 +107,9 @@ def test_composition_capability_enables_work_drain_without_deployment_flag() -> 
     )
     host.start()
     try:
-        assert host._work_drain_listed() is True
+        rt = host.runtime()
+        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert "work_drain" in rt.supervisor.names()
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.background.start_plane"].outcome == "ok"
     finally:
