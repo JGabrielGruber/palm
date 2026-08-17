@@ -70,6 +70,7 @@ When a note needs theme context: link [vision/](../vision/README.md) or [STATUS]
 | Cross-cut (lifecycle, deploy) | [views/](views/) |
 | Sequence / state / package UML | [uml/](uml/README.md) or local `diagrams/` |
 | Retired teaching words | [appendix/metaphor.md](appendix/metaphor.md) |
+| Feudal leftover in code / living docs | [appendix/metaphor-as-built.md](appendix/metaphor-as-built.md) |
 | Unresolved design choice | [appendix/open-questions.md](appendix/open-questions.md) |
 
 Update the parent **README** index when you add a first-wave note.  

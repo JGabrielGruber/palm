@@ -59,7 +59,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | **Cache / replicate** | Optional: after provide, store locally so later boots look **local**. Supporter replication, cold workers. Far future. | Primary remote story (primary is provide) |
 | **Authority** | Author of structure definition when not only local seed (later: remote / org). Does not stand at every client gate. | Local host packaging |
 | **Reassemble** | Load new or forced definition; void prior ready; converge again. | Soft-skip admission for CI |
-| **Readiness dashboard** | See admission, refuse market-day paths, map duals — **without** yet owning materialize. Progress honesty for early structure work. | Claiming structure manager is done |
+| **Readiness dashboard** | See admission, refuse business start / continue paths, map duals — **without** yet owning materialize. Progress honesty for early structure work. | Claiming structure manager is done |
 | **Dual readiness** | Two or more peer answers for “may business run?” (soft flags, catalog order, host dig, admission). **Architecture debt** — purge or name. | Honest residual control paths (cancel when closed) |
 | **Assembly** | **Legacy / theme code name** for structure management and its packages (`palm.*.assembly`). Prefer structure-* in this vault; code may lag. | A second product |
 
@@ -168,9 +168,14 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | Structure status | AssemblyStatus | Soft definitions ready |
 | Interface | Port (code) | Digging composition root |
 | Business definition | Flow / process definition | Structure definition |
-| Dual readiness path | Pretender (metaphor) | Corridor police as forever design |
-| Structure materialize path | Household (metaphor) | Business skip of admission |
-| Business path needing admission | Citizen (metaphor) | — |
+| Dual readiness path | Pretender (metaphor); `PRETENDER_EDGES` | Corridor police as forever design |
+| Structure materialize path | Household (metaphor); `HouseholdEffectPort` | Business skip of admission |
+| Business path needing admission | Citizen (metaphor); `GATED_CITIZENS` | — |
+| Admission inventory | `kingdom_map` / `kingdom_snapshot` | Guard tower as architecture |
+| Published admission (façades) | Peasants’ oath; `*.admission_oath` | Host dig for readiness |
+| Surface uses host / port | Fealty (metaphor) | Kernel dig as product path |
+| Business start / continue | Market day (metaphor) | — |
+| Seed (chooser, not king) | DNA helpers; `PALM_ASSEMBLY_DNA_ID`; composition “king” | Packaging as structure law after load |
 
 ---
 
