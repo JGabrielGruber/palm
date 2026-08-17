@@ -91,7 +91,7 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 | Hands / walker | `src/palm/system/assembly/hands.py`, `materialize.py` |
 | Host start window | `src/palm/app/host/boot/host_schedule.py` (`host.background.start_plane`) |
 | System start | `src/palm/system/subsystems/supervisor/phase_background.py` |
-| Freelance catalog | `src/palm/system/subsystems/supervisor/definition.py` (`DEFAULT_CONTINUOUS_DEFINITIONS`) |
+| Freelance catalog | `src/palm/system/subsystems/supervisor/definition.py` (`DEFAULT_CONTINUOUS_DEFINITIONS` is outbox-only; `WORK_DRAIN_SERVICE` exists, wire does not walk it) |
 | Bootstrap flag → cap | `src/palm/app/bootstrap.py` |
 
 ---
@@ -113,16 +113,16 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 
 José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 
-**Landed:** DNA `capabilities` · walker · `CapabilitySeats` from `ctx` + board · start from registered service · no `host._work_drain_listed` · tests/status use `runtime.work_plane`. Commits `6e50fd6b`, `d1b3c23a`.
+**Landed:** DNA `capabilities` · walker · `CapabilitySeats` from `ctx` + board · start from registered service · no `host._work_drain_listed` · tests/status use `runtime.work_plane` · default wire catalog does not register `work_drain`. Commits `6e50fd6b`, `d1b3c23a`.
 
 **Process:** explore agents in parallel. One implementer at a time. Do not fan `seed.py`, `hands.py`, `phase_assemble.py`, `definition.py` (supervisor) across writers.
 
 | Pile | Do | Do not |
 |------|----|--------|
 | **A** | STATUS header (done if this file + VISION match). Delete `BootMode.allow_background_drain`. Collapse `dna_lists_work_drain` in seed. | Do not rewrite seed fold here if B3 is in flight. |
-| **B1** | Continuous catalog must not register `work_drain` at wire. Hand is the only register. | Do not delete unregister-on-unlist (reassemble still needs it). |
+| **B1** | **Landed.** Default catalog is outbox-only. Hand registers `work_drain`. Unregister-on-unlist stays. | Do not put `work_drain` back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | Refuse `work_drain` against DNA capabilities, not `assembly_capabilities` from composition. | Do not invent a new refuse vocabulary. |
 | **B3** | Stop writing `"work_drain"` on composition presets and `enable_work_drain_service` seed. Then drop `refuse:background_drain` if omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
 | **C** | Coordinator reads `runtime.work_plane`. Optional: publish assembly seat without `getattr(shell, "assembly")`. | Journal as second hand only after B. No DNA `requires`. |
 
-**First act next session:** census B1 (read-only): `SystemSupervisor.install`, `DEFAULT_CONTINUOUS_DEFINITIONS`, tests that expect freelance register then materialize drop (`test_supervisor_0_60_1`, `test_materialize_unregisters_freelance_work_drain`). Then one writer. Cheap A may ride along if it does not touch the same files as B1.
+**First act next session:** **B2** — refuse `work_drain` against DNA capabilities, not `assembly_capabilities` from composition. Then B3 can stop writing the name on composition / flag. Cheap A may ride if it does not share `seed.py` with B2.

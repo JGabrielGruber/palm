@@ -104,7 +104,7 @@ WORK_DRAIN_SERVICE = ContinuousServiceDefinition(
     name="work_drain",
     order=10,
     register=register_work_drain,
-)
+)  # Named recipe. Default wire does not walk this.
 
 OUTBOX_SERVICE = ContinuousServiceDefinition(
     name="outbox",
@@ -112,8 +112,9 @@ OUTBOX_SERVICE = ContinuousServiceDefinition(
     register=register_outbox,
 )
 
+# work_drain is DNA-listed. The capability hand registers it.
+# Wire must not freelance that organ.
 DEFAULT_CONTINUOUS_DEFINITIONS: tuple[ContinuousServiceDefinition, ...] = (
-    WORK_DRAIN_SERVICE,
     OUTBOX_SERVICE,
 )
 

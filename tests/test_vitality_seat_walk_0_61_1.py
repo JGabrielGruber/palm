@@ -182,7 +182,8 @@ def test_supervisor_install_walks_definitions() -> None:
     from palm.system.subsystems.supervisor.supervisor import SystemSupervisor
 
     names = {d.name for d in DEFAULT_CONTINUOUS_DEFINITIONS}
-    assert "work_drain" in names
+    # work_drain is a DNA-listed organ. The hand registers it. Wire must not freelance.
+    assert "work_drain" not in names
     assert "outbox" in names
 
     src = inspect.getsource(SystemSupervisor.install)

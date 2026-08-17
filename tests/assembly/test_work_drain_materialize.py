@@ -111,7 +111,24 @@ def test_materialize_registers_work_drain_only_when_listed() -> None:
     assert "work_drain" not in sup.names()
 
 
-def test_materialize_unregisters_freelance_work_drain() -> None:
+def test_wire_catalog_does_not_freelance_register_work_drain() -> None:
+    """Default install walks outbox, not work_drain. The hand is the only register."""
+    plane = _FakePlane()
+    board = SystemInstall()
+    board.bind(work_plane=plane)
+    sup = SystemSupervisor()
+    sup.install(board)
+    assert "work_drain" not in {d.name for d in sup.definitions()}
+    assert "work_drain" not in sup.names()
+    apply_local_capabilities(
+        local_cli(),
+        CapabilitySeats(supervisor=sup, work_plane=plane),
+    )
+    assert "work_drain" in sup.names()
+
+
+def test_materialize_unregisters_work_drain_when_unlisted() -> None:
+    """Reassemble still drops a registered service when DNA omits the name."""
     sup = SystemSupervisor(definitions=())
     plane = _FakePlane()
     register_work_drain(sup, ContinuousWireContext(work_plane=plane))

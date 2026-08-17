@@ -27,7 +27,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-h
 **Cut:** [docs/architecture/appendix/structure-materialize-cut.md](docs/architecture/appendix/structure-materialize-cut.md)  
 **Seed:** [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
 
-**0.64 is `work_drain` as the first real capability.** Walker + seats landed (`6e50fd6b`, `d1b3c23a`). Next: wire must not freelance register; then stop composition/flag listing the name. José exits when the organ is copyable. No patch queue.
+**0.64 is `work_drain` as the first real capability.** Walker + seats + no freelance wire register. Next: refuse reads DNA, then stop composition/flag listing the name. José exits when the organ is copyable. No patch queue.
 
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 

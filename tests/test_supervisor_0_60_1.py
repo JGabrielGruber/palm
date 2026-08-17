@@ -68,7 +68,7 @@ def test_system_boot_wires_empty_supervisor() -> None:
     try:
         assert rt.is_started
         assert isinstance(rt.supervisor, SystemSupervisor)
-        # Embedded DNA does not list work_drain — materialize drops the freelance register.
+        # Wire catalog does not freelance work_drain. Embedded DNA does not list it.
         assert "work_drain" not in rt.supervisor.names()
         assert rt.supervisor.status()["running_count"] == 0
 
