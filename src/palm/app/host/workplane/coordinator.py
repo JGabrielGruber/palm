@@ -244,24 +244,7 @@ class WorkPlaneCoordinator:
         )
         return [e.to_dict() for e in entries]
 
-    # ── background lifecycle (called from host start/shutdown) ───────────────
-
-    def start_background(self) -> None:
-        # Prefer supervisor when the system registered work_drain (0.60.5).
-        try:
-            runtime = self._host.runtime()
-        except Exception:
-            return
-        try:
-            sup = getattr(runtime, "supervisor", None)
-            if sup is not None and sup.get("work_drain") is not None:
-                sup.start("work_drain")
-                return
-        except Exception:
-            pass
-        plane = runtime.work_plane
-        if plane is not None:
-            plane.start_background()
+    # ── background lifecycle (host shutdown). Start is system.background.start.
 
     def stop_background(self) -> None:
         try:
@@ -272,12 +255,8 @@ class WorkPlaneCoordinator:
             sup = getattr(runtime, "supervisor", None)
             if sup is not None and sup.get("work_drain") is not None:
                 sup.stop("work_drain")
-                return
         except Exception:
-            pass
-        plane = runtime.work_plane
-        if plane is not None:
-            plane.stop_background()
+            return
 
     def stop_inbound(self) -> None:
         try:

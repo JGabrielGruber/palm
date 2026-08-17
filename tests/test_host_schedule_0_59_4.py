@@ -33,7 +33,6 @@ def test_host_start_walks_full_phase_table() -> None:
         assert by_id["host.projections.attach"].outcome == "ok"
         assert by_id["host.recover"].outcome == "ok"
         assert by_id["host.ready"].outcome == "ok"
-        assert by_id["host.background.start_plane"].outcome == "ok"
 
         slog = get_system_log()
         assert "boot.start" in slog.events()
@@ -54,6 +53,7 @@ def test_host_start_walks_full_phase_table() -> None:
         ]
         assert "system.plugins.ensure" in sys_starts
         assert "system.planes.attach" in sys_starts
+        assert "system.background.start" in sys_starts
     finally:
         host.shutdown()
 
@@ -77,4 +77,4 @@ def test_host_boot_mode_test_walk_skips_recover() -> None:
 def test_all_host_phases_implemented() -> None:
     assert all(p.seat == "implemented" for p in HOST_PHASES)
     assert host_phase_ids()[0] == "host.system_log"
-    assert host_phase_ids()[-1] == "host.background.start_plane"
+    assert host_phase_ids()[-1] == "host.ready"

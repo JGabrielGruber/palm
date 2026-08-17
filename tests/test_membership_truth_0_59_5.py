@@ -42,8 +42,6 @@ def test_server_profile_host_gains_work_drain_membership() -> None:
     assert not host.composition.has("work_drain")
     host.start()
     try:
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "ok"
         plane = host.runtime().work_plane
         assert plane is not None
         assert plane.is_running is True
@@ -65,8 +63,6 @@ def test_explicit_composition_does_not_veto_dna_work_drain() -> None:
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "ok"
         plane = host.runtime().work_plane
         assert plane is not None
         assert plane.is_running is True
@@ -88,6 +84,9 @@ def test_work_drain_gate_is_dna_not_composition_or() -> None:
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
+        plane = rt.work_plane
+        assert plane is not None
+        assert plane.is_running is True
     finally:
         host.shutdown()
 
@@ -105,8 +104,9 @@ def test_composition_capability_enables_work_drain_without_deployment_flag() -> 
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "ok"
+        plane = rt.work_plane
+        assert plane is not None
+        assert plane.is_running is True
     finally:
         host.shutdown()
 
@@ -154,9 +154,10 @@ def test_boot_mode_test_skips_background_with_mode_reason() -> None:
     host = ApplicationHost(settings=settings, boot_mode="test")
     host.start()
     try:
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "skip"
-        assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
+        plane = host.runtime().work_plane
+        assert plane is None or plane.is_running is False
+        rt = host.runtime()
+        assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
         boot = host.control_plane_status()["boot"]
         assert boot["membership"]["services"]
         assert "capabilities" in boot["membership"]

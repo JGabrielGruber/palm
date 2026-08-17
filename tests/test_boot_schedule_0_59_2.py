@@ -31,7 +31,7 @@ def test_locked_phase_tables_order() -> None:
     assert "host.kernel.bootstrap" in host_ids
     assert "host.system.spawn" in host_ids
     assert host_ids.index("host.system.spawn") < host_ids.index("host.product.wire")
-    assert host_ids[-1] == "host.background.start_plane"
+    assert host_ids[-1] == "host.ready"
 
     sys_ids = system_phase_ids()
     assert sys_ids[0] == "system.log.ready"

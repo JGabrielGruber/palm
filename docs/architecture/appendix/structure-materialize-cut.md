@@ -21,7 +21,7 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 | Core structure | Reconciler + `StructureDefinition.capabilities`. Builtin definitions list `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No definition `requires` / start-fact vocabulary. |
 | System structure | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / outbox / inbound are not hands. |
 | Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
-| Host | Definition seed at spawn. Start window reads supervisor service, not a host listed bag. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.structure`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes structure as eyes. |
+| Host | Definition seed at spawn. Host schedule ends at ready. Host does not start drain. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.structure`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes structure as eyes. |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |
 
@@ -89,8 +89,8 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 | Seat / assemble | `src/palm/system/structure/seat.py`, `loop.py`, `phase_assemble.py` |
 | Composition seed | `src/palm/app/host/composition.py` (still lists `work_drain`; not install) |
 | Hands / walker | `src/palm/system/structure/hands.py`, `materialize.py` |
-| Host start window | `src/palm/app/host/boot/host_schedule.py` (`host.background.start_plane`) |
-| System start | `src/palm/system/subsystems/supervisor/phase_background.py` |
+| Host schedule | `src/palm/app/host/boot/host_schedule.py` (ends at `host.ready`; does not start drain) |
+| System start | `src/palm/system/subsystems/supervisor/phase_background.py` (`system.background.start`) |
 | Freelance catalog | `src/palm/system/subsystems/supervisor/definition.py` (`DEFAULT_CONTINUOUS_DEFINITIONS` is outbox-only; `WORK_DRAIN_SERVICE` exists, wire does not walk it) |
 | Bootstrap flag → cap | `src/palm/app/bootstrap.py` |
 
@@ -123,6 +123,6 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **B1** | **Landed.** Default catalog is outbox-only. Hand registers `work_drain`. Unregister-on-unlist stays. | Do not put `work_drain` back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
 | **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
-| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Boot window stays. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Journal as second hand only after José says copyable. No definition `requires`. |
+| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Journal as second hand only after José says copyable. No definition `requires`. |
 
 **First act next session:** José judges whether the organ is copyable. Journal as second organ only after that.

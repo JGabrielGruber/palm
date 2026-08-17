@@ -112,13 +112,6 @@ HOST_PHASES: tuple[PhaseSpec, ...] = (
         "implemented",
         "Host STARTED + ready mark",
     ),
-    PhaseSpec(
-        "host.background.start_plane",
-        "host",
-        "implemented",
-        "Start the work-plane loop when the definition lists work_drain",
-        optional=True,
-    ),
 )
 
 # ── System schedule (BaseRuntime) ────────────────────────────────────────────

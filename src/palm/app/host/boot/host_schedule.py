@@ -6,10 +6,9 @@ comes up. Handlers here are the rules. Collaborators (kernel, spawner, CQRS
 wire, recovery, workplane) are tools — they do not own boot order.
 
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
-capabilities other than ``work_drain``. After assemble, ``work_drain`` start
-reads walker output (supervisor ``work_drain``) — not the structure definition. Skip
-``structure_off:work_drain`` when the service is unregistered or there is no
-runtime/supervisor.
+capabilities other than ``work_drain``. ``work_drain`` start lives on the
+system schedule (``system.background.start``) after assemble. The host does
+not start the loop again.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
 are the switches. Do not restore import-order magic.
@@ -80,7 +79,8 @@ def build_host_handlers(
         if "enable_event_outbox" not in options:
             merged["enable_event_outbox"] = host.composition.has("outbox")
         # Start ports on the install board from spawn — able is host._started
-        # (false until host.ready). Drain may start; the loop idles until able.
+        # (false until host.ready). System background start may start drain;
+        # the loop idles until able.
         if "install_submit" not in options:
             submit, able = host._workplane.start_ports()
             merged["install_submit"] = submit
@@ -148,15 +148,6 @@ def build_host_handlers(
             roles=",".join(roles) or "(none)",
         )
 
-    def background_start_plane(_ctx: BootContext) -> None:
-        try:
-            supervisor = host.runtime().supervisor
-        except Exception:
-            supervisor = None
-        if supervisor is None or supervisor.get("work_drain") is None:
-            raise PhaseSkip("structure_off:work_drain")
-        host._workplane.start_background()
-
     return {
         "host.system_log": make_host_system_log_handler(host.boot_mode),
         "host.kernel.bootstrap": kernel_bootstrap,
@@ -169,7 +160,6 @@ def build_host_handlers(
         "host.projections.attach": projections_attach,
         "host.recover": recover,
         "host.ready": ready,
-        "host.background.start_plane": background_start_plane,
     }
 
 

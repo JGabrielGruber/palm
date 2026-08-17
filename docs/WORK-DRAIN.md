@@ -30,7 +30,7 @@ Background drain is a **supervisor** service over the system **work plane** (not
 
 ## Enable background drain
 
-The structure definition lists the name `work_drain` on `local.cli`, `local.server`, `local.all_in_one`, and `local.worker`. The walker registers the supervisor service. Start runs that service when install start ports are bound.
+The structure definition lists the name `work_drain` on `local.cli`, `local.server`, `local.all_in_one`, and `local.worker`. The walker registers the supervisor service. `system.background.start` runs that service when install start ports are bound. The host does not start the loop again.
 
 `local.embedded` and `local.mcp` omit the name. Those bodies do not install drain.
 

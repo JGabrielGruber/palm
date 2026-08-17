@@ -44,7 +44,6 @@ HOST_WALK_PHASE_IDS: tuple[str, ...] = (
     "host.projections.attach",
     "host.recover",
     "host.ready",
-    "host.background.start_plane",
 )
 
 
@@ -210,6 +209,6 @@ def test_inventory_constants_match_documented_count() -> None:
     assert len(HOST_START_PHASE_ORDER) == 7
     assert HOST_START_PHASE_ORDER[0] == "kernel.bootstrap"
     assert HOST_START_PHASE_ORDER[-1] == "recover"
-    assert len(HOST_WALK_PHASE_IDS) == 12
+    assert len(HOST_WALK_PHASE_IDS) == 11
     assert HOST_WALK_PHASE_IDS[0] == "host.system_log"
-    assert HOST_WALK_PHASE_IDS[-1] == "host.background.start_plane"
+    assert HOST_WALK_PHASE_IDS[-1] == "host.ready"

@@ -45,8 +45,6 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert by_id["host.ready"]["outcome"] == "ok"
         assert by_id["host.recover"]["outcome"] == "skip"
         assert by_id["host.recover"]["reason"] == "mode_recover_off"
-        assert by_id["host.background.start_plane"]["outcome"] == "skip"
-        assert by_id["host.background.start_plane"]["reason"] == "structure_off:work_drain"
         # Embedded: no surfaces, no projections capability.
         assert by_id["host.surfaces.mount"]["outcome"] == "skip"
         assert by_id["host.projections.attach"]["outcome"] == "skip"
@@ -63,7 +61,6 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         # Embedded DNA: drain never starts.
         plane = host.runtime().work_plane
         assert plane is None or plane.is_running is False
-
 
         boot = host.control_plane_status()["boot"]
         assert boot["mode"] == mode_name

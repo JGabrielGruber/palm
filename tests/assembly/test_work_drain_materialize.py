@@ -180,9 +180,6 @@ def test_embedded_host_does_not_start_drain() -> None:
     host.start()
     try:
         assert host.admission.definition_id == LOCAL_EMBEDDED_ID
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "skip"
-        assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
         plane = host.runtime().work_plane
         assert plane is None or plane.is_running is False
         rt = host.runtime()
@@ -205,8 +202,6 @@ def test_cli_host_starts_drain_even_when_composition_omits_it() -> None:
     try:
         assert host.admission.definition_id == LOCAL_CLI_ID
         assert host.admission.may_run_business is True
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "ok"
         rt = host.runtime()
         assert rt.work_plane is not None
         assert rt.work_plane.is_running is True
@@ -243,8 +238,6 @@ def test_boot_mode_cannot_forbid_drain_when_dna_lists_it() -> None:
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].outcome == "ok"
         assert host.runtime().work_plane is not None
         assert host.runtime().work_plane.is_running is True
     finally:
@@ -260,8 +253,8 @@ def test_mcp_dna_does_not_list_or_start_drain() -> None:
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN not in rt.structure.materialized_capabilities
         assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
+        plane = rt.work_plane
+        assert plane is None or plane.is_running is False
     finally:
         host.shutdown()
 
@@ -297,6 +290,7 @@ def test_coordinator_has_no_start_plane_alias() -> None:
     from palm.app.host.workplane.coordinator import WorkPlaneCoordinator
 
     assert not hasattr(WorkPlaneCoordinator, "_start_plane")
+    assert not hasattr(WorkPlaneCoordinator, "start_background")
 
 
 def test_coordinator_tick_reads_runtime_work_plane() -> None:

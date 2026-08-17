@@ -311,7 +311,7 @@ class WorkPlaneService:
         return self._workers
 
     def start_background(self) -> None:
-        """Continuous poll loop(s) (supervisor or host may call).
+        """Continuous poll loop(s). Supervisor start walks this.
 
         Starts ``workers`` daemon threads (default 1). Each thread has a
         distinct claimer id under exclusive claim (0.62).

@@ -107,16 +107,12 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
             rt.structure is not None
             and "work_drain" in rt.structure.materialized_capabilities
         ):
-            assert by_id["host.background.start_plane"]["outcome"] == "ok"
             plane = rt.work_plane
             assert plane is not None
             assert plane.is_running is True
         else:
-            assert by_id["host.background.start_plane"]["outcome"] == "skip"
-            assert (
-                by_id["host.background.start_plane"]["reason"]
-                == "structure_off:work_drain"
-            )
+            plane = rt.work_plane
+            assert plane is None or plane.is_running is False
 
         # Declared services must exist; chrome outside the dep closure must not.
         # Note: ``build_all(only=…)`` also builds transitive deps (worker asks for
