@@ -41,8 +41,8 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
 | **B2** | **Landed** — refuse reads definition capabilities | Composition listing the name is not a refuse input. Omit is enough. |
 | **B3** | **Landed** — composition / flag do not write `work_drain` | Presets, seed-map row, and the settings/deployment fold are gone. Omit is enough. `refuse:background_drain` is not a live wall. |
-| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Boot window stays. Assemble uses `shell.assembly`. No `enable_work_drain_service`. Journal/outbox **hands** = exit proof, not cleanup. Definition `requires` — do not invent. |
+| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Boot window stays. Assemble uses `shell.structure`. No `enable_work_drain_service`. Journal/outbox **hands** = exit proof, not cleanup. Definition `requires` — do not invent. |
 
-A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.assembly`; settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` (supervisor, execution, install, assembly), `get_system_planes` (hub), and `first_resolver` for process log. Inventory `admission_inventory_snapshot` stays as eyes.
+A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.structure`; settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` (supervisor, execution, install, structure), `get_system_planes` (hub), and `first_resolver` for process log. Inventory `admission_inventory_snapshot` stays as eyes.
 
 **Start next session:** José judges whether the organ is copyable. Journal as second organ only after that.

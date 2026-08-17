@@ -36,12 +36,12 @@ class _MinimalHost:
     @property
     def admission(self) -> object:
         """0.63.4 — doubles publish admission; no silent bypass of the gate."""
-        from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+        from palm.core.structure import AdmissionSnapshot, StructurePhase
 
         if self._started:
             return AdmissionSnapshot(
                 may_run_business=True,
-                phase=AssemblyPhase.READY,
+                phase=StructurePhase.READY,
                 definition_id="test.minimal",
                 definition_version="1",
             )

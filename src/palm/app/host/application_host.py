@@ -127,7 +127,7 @@ class ApplicationHost:
             # 0.63.12 — deployment roles seed composition when no BootMode
             # (server/worker/all_in_one roles), else settings-composed all_in_one.
             from palm.app.host.composition import CompositionProfile
-            from palm.system.assembly.seed import boot_mode_name_for_deployment
+            from palm.system.structure.seed import boot_mode_name_for_deployment
 
             seed_name = boot_mode_name_for_deployment(self.profile)
             if seed_name == "server":
@@ -485,7 +485,7 @@ class ApplicationHost:
             capabilities=capabilities_s,
         )
         try:
-            # Boot owns order + handlers; this shell is the assembly target.
+            # Boot owns order + handlers; this shell is the structure target.
             self._last_boot_walk = walk_schedule(
                 HOST_PHASES,
                 build_host_handlers(self, options),
@@ -878,7 +878,7 @@ class ApplicationHost:
     @property
     def admission(self) -> Any:
         """Primary runtime admission snapshot (0.63) — fail closed when absent."""
-        from palm.core.assembly import AdmissionSnapshot
+        from palm.core.structure import AdmissionSnapshot
 
         try:
             return self._app.runtime().admission
@@ -938,7 +938,7 @@ class ApplicationHost:
 
     def _require_business_admission(self) -> None:
         """Host packaging door for business start (0.63.33) — fail closed on admission."""
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission)
 

@@ -10,7 +10,7 @@ Record decisions in ADRs, [principles.md](../principles.md), or glossary when lo
 - Exact schema of membership sections (`plugins`, `products`, `surfaces`, refuse, places) **beyond first cut**?  
 - **Locked (2026-08-17):** first unit = **`work_drain`** under a **`capabilities`** section (local only). No no-op prove-out. See [structure-materialize-cut.md](structure-materialize-cut.md).  
 - How far does structure definition own bootstrap wire vs host seed still freelancing? (First unit paid: `work_drain` install reads definition `capabilities`.)  
-- Package names: keep `assembly` in code or rename toward `structure`?
+- **Locked (2026-08-17):** packages `palm.core.structure` / `palm.system.structure`. Types `StructureDefinition` / `StructureEngine` / `StructureStatus` / `StructureSeat`. Vision/ADR keep the word assembly.
 
 ---
 
@@ -48,4 +48,4 @@ Record decisions in ADRs, [principles.md](../principles.md), or glossary when lo
 
 ## Package diagram (next SE step)
 
-- First diagram: package families only, or include `core.assembly` / `system.assembly` split in v1?
+- First diagram: package families only, or include `core.structure` / `system.structure` split in v1?

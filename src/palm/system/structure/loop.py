@@ -1,16 +1,16 @@
-"""Assembly loop — structure assemble: tick engine, apply intents, fold observations."""
+"""Structure loop — assemble: tick engine, apply intents, fold observations."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from palm.core.assembly import (
+from palm.core.structure import (
     AssembleResult,
-    AssemblyDefinition,
-    AssemblyEngine,
     Observation,
+    StructureDefinition,
+    StructureEngine,
 )
-from palm.system.assembly.effects import EffectPort
+from palm.system.structure.effects import EffectPort
 
 DEFAULT_MAX_TICKS = 32
 
@@ -26,7 +26,7 @@ class AssembleLoopResult:
 
 
 def assemble_until_steady(
-    engine: AssemblyEngine,
+    engine: StructureEngine,
     effects: EffectPort,
     *,
     max_ticks: int = DEFAULT_MAX_TICKS,
@@ -60,9 +60,9 @@ def assemble_until_steady(
 
 
 def load_and_assemble(
-    engine: AssemblyEngine,
+    engine: StructureEngine,
     effects: EffectPort,
-    definition: AssemblyDefinition,
+    definition: StructureDefinition,
     *,
     max_ticks: int = DEFAULT_MAX_TICKS,
     pre_observations: tuple[Observation, ...] = (),

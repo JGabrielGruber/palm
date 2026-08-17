@@ -1,38 +1,38 @@
-"""Assembly seat — engine + effect port + published admission on the shell."""
+"""Structure seat — engine + effect port + published admission on the shell."""
 
 from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-from palm.core.assembly import (
+from palm.core.structure import (
     AdmissionSnapshot,
-    AssemblyDefinition,
-    AssemblyEngine,
-    AssemblyStatus,
     Observation,
     ObservationKind,
+    StructureDefinition,
+    StructureEngine,
+    StructureStatus,
     local_embedded,
     refuse_violations,
 )
-from palm.system.assembly.effects import EffectPort
-from palm.system.assembly.hands import CapabilitySeats
-from palm.system.assembly.loop import (
+from palm.system.structure.effects import EffectPort
+from palm.system.structure.hands import CapabilitySeats
+from palm.system.structure.loop import (
     DEFAULT_MAX_TICKS,
     AssembleLoopResult,
     assemble_until_steady,
 )
-from palm.system.assembly.structure_effects import StructureEffectPort
+from palm.system.structure.structure_effects import StructureEffectPort
 
 
 @dataclass
-class AssemblySeat:
-    """System-owned assembly organ (not product control)."""
+class StructureSeat:
+    """System-owned structure organ (not product control)."""
 
-    engine: AssemblyEngine = field(default_factory=AssemblyEngine)
+    engine: StructureEngine = field(default_factory=StructureEngine)
     effects: EffectPort = field(default_factory=StructureEffectPort)
     last_loop: AssembleLoopResult | None = None
-    definition: AssemblyDefinition | None = None
+    definition: StructureDefinition | None = None
     materialized_capabilities: frozenset[str] = field(default_factory=frozenset)
 
     def __post_init__(self) -> None:
@@ -42,12 +42,12 @@ class AssemblySeat:
     def admission(self) -> AdmissionSnapshot:
         return self.engine.admission()
 
-    def status(self) -> AssemblyStatus:
+    def status(self) -> StructureStatus:
         return self.engine.status()
 
     def assemble(
         self,
-        definition: AssemblyDefinition | None = None,
+        definition: StructureDefinition | None = None,
         *,
         max_ticks: int = DEFAULT_MAX_TICKS,
         surfaces: Iterable[str] = (),
@@ -93,7 +93,7 @@ class AssemblySeat:
 
     def materialize(self, seats: CapabilitySeats) -> frozenset[str]:
         """Apply local capability membership from loaded definition onto *seats*."""
-        from palm.system.assembly.materialize import apply_local_capabilities
+        from palm.system.structure.materialize import apply_local_capabilities
 
         applied = apply_local_capabilities(self.definition, seats)
         self.materialized_capabilities = applied
@@ -101,7 +101,7 @@ class AssemblySeat:
 
     def reassemble(
         self,
-        definition: AssemblyDefinition | None = None,
+        definition: StructureDefinition | None = None,
         *,
         max_ticks: int = DEFAULT_MAX_TICKS,
         surfaces: Iterable[str] = (),
@@ -133,4 +133,4 @@ class AssemblySeat:
         self.materialized_capabilities = frozenset()
 
 
-__all__ = ["AssemblySeat"]
+__all__ = ["StructureSeat"]

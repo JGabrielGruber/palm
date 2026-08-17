@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.core.assembly import AssemblyPhase, Observation, ObservationKind
+from palm.core.structure import Observation, ObservationKind, StructurePhase
 from palm.core.work import WorkIntent
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
@@ -28,18 +28,18 @@ def test_work_plane_tick_when_admission_ready() -> None:
 
 
 def test_work_plane_fail_closed_when_assembly_skipped() -> None:
-    """assembly_skip → no admission → tick must not start business."""
+    """structure_skip → no admission → tick must not start business."""
     reset_system_log_for_tests()
     submitted: list[str] = []
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False
-        assert rt.admission.phase is AssemblyPhase.EMPTY
+        assert rt.admission.phase is StructurePhase.EMPTY
         plane = rt.work_plane
         assert plane is not None
         assert plane.is_able() is False
@@ -68,8 +68,8 @@ def test_work_plane_fail_closed_when_truth_home_down() -> None:
         plane._submit_flow = lambda fid, _p: submitted.append(fid)
         plane.enqueue(WorkIntent(kind="run_flow", target="blocked-flow"))
 
-        assert rt.assembly is not None
-        rt.assembly.engine.observe(
+        assert rt.structure is not None
+        rt.structure.engine.observe(
             Observation(kind=ObservationKind.TRUTH_HOME_DOWN)
         )
         assert rt.admission.may_run_business is False
@@ -77,11 +77,11 @@ def test_work_plane_fail_closed_when_truth_home_down() -> None:
         assert plane.tick(limit=10) == 0
         assert submitted == []
 
-        rt.assembly.engine.observe(
+        rt.structure.engine.observe(
             Observation(kind=ObservationKind.TRUTH_HOME_UP)
         )
         # Need a tick of the engine to leave BLOCKED → READY
-        rt.assembly.engine.tick()
+        rt.structure.engine.tick()
         assert rt.admission.may_run_business is True
         assert plane.is_able() is True
         assert plane.tick(limit=10) == 1

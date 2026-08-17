@@ -5,10 +5,10 @@ from __future__ import annotations
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import has_open_waits, make_job_wait
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES
 from palm.system.subsystems.planes.wait.plane import WaitPlaneService
 
 
@@ -90,7 +90,7 @@ def test_runtime_wait_plane_able_tracks_admission() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False

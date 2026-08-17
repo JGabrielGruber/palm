@@ -1,11 +1,11 @@
-"""Host structure bind — wire shell WorkloadEngine into assembly place hands (0.63.17).
+"""Host structure bind — wire shell WorkloadEngine into structure place hands (0.63.17).
 
 Default place-effect hands stay in-process for bare places. Host assemble upgrades
 them to the combined ``os:`` + ``workload:`` spawn port and binds the live
 engine when it is initialized.
 
 **Opt-in:** on by default when the engine is ready; off via
-``assembly_bind_workload=False``. Does not force composition membership.
+``structure_bind_workload=False``. Does not force composition membership.
 Does not replace custom effect ports without a place registry.
 """
 
@@ -13,11 +13,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.system.assembly.place_registry import PlaceEffectPort
-from palm.system.assembly.place_spawn import InProcessPlaceSpawn, RegisteredPlaceSpawn
-from palm.system.assembly.seat import AssemblySeat
-from palm.system.assembly.structure_effects import StructureEffectPort
-from palm.system.assembly.workload_place import (
+from palm.system.structure.place_registry import PlaceEffectPort
+from palm.system.structure.place_spawn import InProcessPlaceSpawn, RegisteredPlaceSpawn
+from palm.system.structure.seat import StructureSeat
+from palm.system.structure.structure_effects import StructureEffectPort
+from palm.system.structure.workload_place import (
     WorkloadPlaceSpawn,
     combined_structure_spawn_port,
 )
@@ -62,7 +62,7 @@ def _has_structure_prefixes(spawn: Any) -> bool:
 
 
 def bind_host_structure_to_seat(
-    seat: AssemblySeat,
+    seat: StructureSeat,
     shell: Any,
     *,
     bind_workload: bool = True,

@@ -5,7 +5,7 @@ from __future__ import annotations
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.boot.modes import BootMode
 from palm.app.settings import PalmSettings
-from palm.core.assembly import (
+from palm.core.structure import (
     LOCAL_ALL_IN_ONE_ID,
     LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
@@ -13,12 +13,12 @@ from palm.core.assembly import (
     LOCAL_WORKER_ID,
     resolve_builtin_definition,
 )
-from palm.system.assembly.seed import (
+from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.seed import (
     definition_id_for_boot_mode,
     definition_id_for_composition,
     resolve_seed_definition,
 )
-from palm.system.log import reset_system_log_for_tests
 
 
 def test_mode_to_definition_ids() -> None:
@@ -85,9 +85,9 @@ def test_host_for_mode_cli_seeds_cli_definition() -> None:
         rt = host.runtime()
         assert rt.admission.may_run_business is True
         assert rt.admission.definition_id == LOCAL_CLI_ID
-        assert rt.assembly is not None
-        assert rt.assembly.definition is not None
-        assert "server_surfaces" in rt.assembly.definition.refuse
+        assert rt.structure is not None
+        assert rt.structure.definition is not None
+        assert "server_surfaces" in rt.structure.definition.refuse
     finally:
         host.shutdown()
 

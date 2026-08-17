@@ -5,7 +5,7 @@ from __future__ import annotations
 from palm.app.bootstrap import composition_profile_from_settings
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
-from palm.system.assembly import (
+from palm.system.structure import (
     ALWAYS_ON_MEMBERSHIP_CAPABILITIES,
     MEMBERSHIP_CAPABILITY_SEEDS,
     STRUCTURE_SEED_ENV,

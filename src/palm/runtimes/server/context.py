@@ -78,7 +78,7 @@ class ServerContext:
     residual). What stays distinct is *dispatch phenotype*: an attached host
     routes through projection-ful buses; host-less, local buses serve reads live
     from the runtime. The type is **retained** (ADR-019 · scout 0.51.6) — dual
-    *types* for host vs surface view; one *assembly law* for product services.
+    *types* for host vs surface view; one *structure law* for product services.
     """
 
     def __init__(

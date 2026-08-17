@@ -34,11 +34,11 @@ from palm.system.vitality.schema import (
     KIND_OTHER,
     KIND_PORT,
     KIND_SUPERVISOR,
-    SEAT_ASSEMBLY,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
     SEAT_INSTALL,
     SEAT_PLANES,
+    SEAT_STRUCTURE,
     SEAT_SUPERVISOR,
     SEAT_SYSTEM_LOG,
     STATE_DEGRADED,
@@ -93,7 +93,7 @@ def _report_install(instance: Any, board: Any) -> SeatReport:
     )
 
 
-def _report_assembly(instance: Any, seat: Any) -> SeatReport:
+def _report_structure(instance: Any, seat: Any) -> SeatReport:
     """Raw admission + definition — eyes only, not control."""
     admission = None
     definition = None
@@ -108,12 +108,12 @@ def _report_assembly(instance: Any, seat: Any) -> SeatReport:
         )
     except Exception as exc:
         return SeatReport(
-            seat_id=SEAT_ASSEMBLY,
+            seat_id=SEAT_STRUCTURE,
             kind=KIND_ENGINE,
             present=True,
             state=STATE_DEGRADED,
-            notes=[f"assembly_sample_error:{type(exc).__name__}"],
-            meta={"source": "assembly_seat", "error": str(exc)},
+            notes=[f"structure_sample_error:{type(exc).__name__}"],
+            meta={"source": "structure_seat", "error": str(exc)},
         )
 
     may = bool(admission and admission.get("may_run_business"))
@@ -123,7 +123,7 @@ def _report_assembly(instance: Any, seat: Any) -> SeatReport:
         notes.extend(str(r) for r in (admission.get("reasons") or [])[:8])
 
     return SeatReport(
-        seat_id=SEAT_ASSEMBLY,
+        seat_id=SEAT_STRUCTURE,
         kind=KIND_ENGINE,
         present=True,
         state=state,
@@ -134,7 +134,7 @@ def _report_assembly(instance: Any, seat: Any) -> SeatReport:
         },
         notes=notes,
         meta={
-            "source": "assembly_seat",
+            "source": "structure_seat",
             "raw": {
                 "admission": admission,
                 "definition_id": def_id,
@@ -194,14 +194,14 @@ def build_default_probes() -> list[SeatProbe]:
             description="InstallInterface — raw status() of collaborator ports",
         ),
         SeatProbe(
-            seat_id=SEAT_ASSEMBLY,
+            seat_id=SEAT_STRUCTURE,
             kind=KIND_ENGINE,
-            resolve=attr_resolver("assembly"),
-            report=_report_assembly,
+            resolve=attr_resolver("structure"),
+            report=_report_structure,
             when_absent="report",
             order=57,
-            tags=("core", "assembly", "admission"),
-            description="Assembly — admission + definition id (0.63 eyes)",
+            tags=("core", "structure", "admission"),
+            description="Structure seat — admission + definition id (0.63 eyes)",
         ),
         SeatProbe(
             seat_id=SEAT_SYSTEM_LOG,

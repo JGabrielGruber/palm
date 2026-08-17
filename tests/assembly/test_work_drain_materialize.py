@@ -8,7 +8,7 @@ from palm.app.host.application_host import ApplicationHost
 from palm.app.host.boot.modes import BootMode
 from palm.app.host.composition import CompositionProfile as CP
 from palm.app.settings import PalmSettings
-from palm.core.assembly import (
+from palm.core.structure import (
     CAPABILITY_WORK_DRAIN,
     LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
@@ -22,16 +22,16 @@ from palm.core.assembly import (
     local_worker,
     resolve_builtin_definition,
 )
-from palm.system.assembly import (
+from palm.system.boot.context import BootContext
+from palm.system.interfaces.install import SystemInstall
+from palm.system.log import reset_system_log_for_tests
+from palm.system.structure import (
     LOCAL_CAPABILITY_HANDS,
     CapabilitySeats,
     apply_local_capabilities,
     definition_lists_work_drain,
 )
-from palm.system.assembly.phase_assemble import run as assemble_run
-from palm.system.boot.context import BootContext
-from palm.system.interfaces.install import SystemInstall
-from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.phase_assemble import run as assemble_run
 from palm.system.subsystems.supervisor import SystemSupervisor
 from palm.system.subsystems.supervisor.definition import (
     ContinuousWireContext,
@@ -142,7 +142,7 @@ class _LeanShell:
     """No work_plane. Assemble fill must take seats from ctx + board."""
 
     def __init__(self) -> None:
-        self.assembly = None
+        self.structure = None
         self.install = None
         self.supervisor = None
 
@@ -166,15 +166,15 @@ def test_phase_assemble_materializes_work_drain_from_ctx_board() -> None:
     ctx, supervisor = _assemble_from_ctx_seats(definition_id=LOCAL_CLI_ID)
     assert not hasattr(ctx.shell, "work_plane")
     assert "work_drain" in supervisor.names()
-    assert ctx.assembly is not None
-    assert CAPABILITY_WORK_DRAIN in ctx.assembly.materialized_capabilities
+    assert ctx.structure is not None
+    assert CAPABILITY_WORK_DRAIN in ctx.structure.materialized_capabilities
 
 
 def test_phase_assemble_embedded_does_not_register_work_drain() -> None:
     ctx, supervisor = _assemble_from_ctx_seats(definition_id=LOCAL_EMBEDDED_ID)
     assert "work_drain" not in supervisor.names()
-    assert ctx.assembly is not None
-    assert CAPABILITY_WORK_DRAIN not in ctx.assembly.materialized_capabilities
+    assert ctx.structure is not None
+    assert CAPABILITY_WORK_DRAIN not in ctx.structure.materialized_capabilities
 
 
 def _lean() -> PalmSettings:
@@ -193,8 +193,8 @@ def test_embedded_host_does_not_start_drain() -> None:
         plane = host.runtime().work_plane
         assert plane is None or plane.is_running is False
         rt = host.runtime()
-        assert rt.assembly is not None
-        assert CAPABILITY_WORK_DRAIN not in rt.assembly.materialized_capabilities
+        assert rt.structure is not None
+        assert CAPABILITY_WORK_DRAIN not in rt.structure.materialized_capabilities
         assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
     finally:
         host.shutdown()
@@ -217,8 +217,8 @@ def test_cli_host_starts_drain_even_when_composition_omits_it() -> None:
         rt = host.runtime()
         assert rt.work_plane is not None
         assert rt.work_plane.is_running is True
-        assert rt.assembly is not None
-        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert rt.structure is not None
+        assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
     finally:
         host.shutdown()
@@ -231,7 +231,7 @@ def test_server_dna_starts_drain() -> None:
     try:
         assert host.admission.definition_id == LOCAL_SERVER_ID
         rt = host.runtime()
-        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
         assert rt.work_plane is not None
         assert rt.work_plane.is_running is True
@@ -248,7 +248,7 @@ def test_boot_mode_cannot_forbid_drain_when_dna_lists_it() -> None:
         assert host.boot_mode is not None
         assert host.admission.definition_id == LOCAL_CLI_ID
         rt = host.runtime()
-        assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities
+        assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.background.start_plane"].outcome == "ok"
@@ -265,7 +265,7 @@ def test_mcp_dna_does_not_list_or_start_drain() -> None:
     try:
         assert host.admission.definition_id == LOCAL_MCP_ID
         rt = host.runtime()
-        assert CAPABILITY_WORK_DRAIN not in rt.assembly.materialized_capabilities
+        assert CAPABILITY_WORK_DRAIN not in rt.structure.materialized_capabilities
         assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.background.start_plane"].reason == "structure_off:work_drain"
@@ -277,13 +277,13 @@ def test_assemble_uses_shell_assembly_seat() -> None:
     """Assemble reads and writes the seat. No getattr bag scrape."""
     import inspect
 
-    from palm.system.assembly.phase_assemble import run as _run
+    from palm.system.structure.phase_assemble import run as _run
 
     src = inspect.getsource(_run)
-    assert 'getattr(shell, "assembly"' not in src
+    assert 'getattr(shell, "structure"' not in src
     ctx, _ = _assemble_from_ctx_seats(definition_id=LOCAL_CLI_ID)
-    assert ctx.shell.assembly is ctx.assembly
-    assert ctx.assembly is not None
+    assert ctx.shell.structure is ctx.structure
+    assert ctx.structure is not None
 
 
 def test_packaging_has_no_work_drain_service_flag() -> None:

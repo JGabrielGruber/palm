@@ -1,4 +1,4 @@
-"""AssemblyEngine — pure desired-structure reconciler.
+"""StructureEngine — pure desired-structure reconciler.
 
 No sockets. No OS spawn. No business jobs. System applies effect intents;
 clients read admission. Floor: embedded definition with empty places becomes READY
@@ -10,27 +10,27 @@ from __future__ import annotations
 import threading
 from typing import Any
 
-from palm.core.assembly.definition import AssemblyDefinition
-from palm.core.assembly.exceptions import AssemblyEngineError
-from palm.core.assembly.intent import EffectIntent, EffectIntentKind
-from palm.core.assembly.observation import Observation, ObservationKind
-from palm.core.assembly.result import AssembleResult
-from palm.core.assembly.status import (
-    AdmissionSnapshot,
-    AssemblyPhase,
-    AssemblyStatus,
-)
 from palm.core.base import BasePalmEngine
+from palm.core.structure.definition import StructureDefinition
+from palm.core.structure.exceptions import StructureEngineError
+from palm.core.structure.intent import EffectIntent, EffectIntentKind
+from palm.core.structure.observation import Observation, ObservationKind
+from palm.core.structure.result import AssembleResult
+from palm.core.structure.status import (
+    AdmissionSnapshot,
+    StructurePhase,
+    StructureStatus,
+)
 
 
-class AssemblyEngine(BasePalmEngine):
-    """In-memory assembly reconciler (durable projection later in system)."""
+class StructureEngine(BasePalmEngine):
+    """In-memory structure reconciler (durable projection later in system)."""
 
     def __init__(self) -> None:
-        super().__init__(name="assembly")
+        super().__init__(name="structure")
         self._lock = threading.RLock()
-        self._definition: AssemblyDefinition | None = None
-        self._phase: AssemblyPhase = AssemblyPhase.EMPTY
+        self._definition: StructureDefinition | None = None
+        self._phase: StructurePhase = StructurePhase.EMPTY
         self._places_ready: set[str] = set()
         self._block_reasons: list[str] = []
         self._truth_home_up: bool = True
@@ -42,7 +42,7 @@ class AssemblyEngine(BasePalmEngine):
     def _do_shutdown(self) -> None:
         with self._lock:
             self._definition = None
-            self._phase = AssemblyPhase.EMPTY
+            self._phase = StructurePhase.EMPTY
             self._places_ready.clear()
             self._block_reasons.clear()
             self._truth_home_up = True
@@ -52,7 +52,7 @@ class AssemblyEngine(BasePalmEngine):
 
     def receive_definition(
         self,
-        definition: AssemblyDefinition,
+        definition: StructureDefinition,
         *,
         force: bool = False,
     ) -> AdmissionSnapshot:
@@ -62,26 +62,26 @@ class AssemblyEngine(BasePalmEngine):
         *force* is True (0.63.18 reassemble edge — external structure change).
         """
         if not definition.id:
-            raise AssemblyEngineError("assembly definition id must be non-empty")
+            raise StructureEngineError("structure definition id must be non-empty")
         with self._lock:
             same = (
                 not force
                 and self._definition is not None
                 and self._definition.id == definition.id
                 and self._definition.version == definition.version
-                and self._phase is AssemblyPhase.READY
+                and self._phase is StructurePhase.READY
             )
             if same:
                 return self._status_unlocked().admission()
 
-            had_ready = self._phase is AssemblyPhase.READY
+            had_ready = self._phase is StructurePhase.READY
             self._definition = definition
             self._places_ready.clear()
             self._block_reasons.clear()
             self._truth_home_up = True
             self._pending_ensure.clear()
             self._phase = (
-                AssemblyPhase.INVALIDATED if had_ready else AssemblyPhase.RECEIVED
+                StructurePhase.INVALIDATED if had_ready else StructurePhase.RECEIVED
             )
             return self._status_unlocked().admission()
 
@@ -89,10 +89,10 @@ class AssemblyEngine(BasePalmEngine):
         """Void current readiness; keep definition. Requires reassemble to recover."""
         with self._lock:
             if self._definition is None:
-                self._phase = AssemblyPhase.EMPTY
+                self._phase = StructurePhase.EMPTY
                 return self._status_unlocked().admission()
-            if self._phase is not AssemblyPhase.EMPTY:
-                self._phase = AssemblyPhase.INVALIDATED
+            if self._phase is not StructurePhase.EMPTY:
+                self._phase = StructurePhase.INVALIDATED
                 # reason is visible via phase; optional note for callers
                 _ = reason
             return self._status_unlocked().admission()
@@ -123,7 +123,7 @@ class AssemblyEngine(BasePalmEngine):
 
             # Truth home down blocks business even if places look ready.
             if not self._truth_home_up:
-                self._phase = AssemblyPhase.BLOCKED
+                self._phase = StructurePhase.BLOCKED
                 if "truth_home_down" not in self._block_reasons:
                     self._block_reasons.append("truth_home_down")
                 status = self._status_unlocked()
@@ -141,12 +141,12 @@ class AssemblyEngine(BasePalmEngine):
             self._block_reasons = [r for r in self._block_reasons if r != "truth_home_down"]
 
             if self._phase in (
-                AssemblyPhase.RECEIVED,
-                AssemblyPhase.INVALIDATED,
-                AssemblyPhase.BLOCKED,
+                StructurePhase.RECEIVED,
+                StructurePhase.INVALIDATED,
+                StructurePhase.BLOCKED,
             ):
                 # Leave BLOCKED only when block_reasons empty after filter above
-                if self._phase is AssemblyPhase.BLOCKED and self._block_reasons:
+                if self._phase is StructurePhase.BLOCKED and self._block_reasons:
                     status = self._status_unlocked()
                     admission = status.admission()
                     return AssembleResult(
@@ -156,7 +156,7 @@ class AssemblyEngine(BasePalmEngine):
                         changed=False,
                         notes=("still_blocked",),
                     )
-                self._phase = AssemblyPhase.ASSEMBLING
+                self._phase = StructurePhase.ASSEMBLING
                 notes.append("enter_assembling")
 
             missing = self._missing_places_unlocked()
@@ -172,10 +172,10 @@ class AssemblyEngine(BasePalmEngine):
                     notes.append(f"ensure_place:{place}")
 
             if missing:
-                self._phase = AssemblyPhase.ASSEMBLING
+                self._phase = StructurePhase.ASSEMBLING
             else:
                 # No places (embedded floor) or all places ready → definition-ready
-                self._phase = AssemblyPhase.READY
+                self._phase = StructurePhase.READY
                 self._pending_ensure.clear()
                 notes.append("definition_ready")
 
@@ -194,7 +194,7 @@ class AssemblyEngine(BasePalmEngine):
                 notes=tuple(notes),
             )
 
-    def status(self) -> AssemblyStatus:
+    def status(self) -> StructureStatus:
         with self._lock:
             return self._status_unlocked()
 
@@ -202,7 +202,7 @@ class AssemblyEngine(BasePalmEngine):
         with self._lock:
             return self._status_unlocked().admission()
 
-    def definition(self) -> AssemblyDefinition | None:
+    def definition(self) -> StructureDefinition | None:
         with self._lock:
             return self._definition
 
@@ -214,10 +214,10 @@ class AssemblyEngine(BasePalmEngine):
         required = self._definition.places_required
         return tuple(p for p in required if p not in self._places_ready)
 
-    def _status_unlocked(self) -> AssemblyStatus:
+    def _status_unlocked(self) -> StructureStatus:
         definition = self._definition
         missing = self._missing_places_unlocked()
-        return AssemblyStatus(
+        return StructureStatus(
             phase=self._phase,
             definition_id=definition.id if definition else None,
             definition_version=definition.version if definition else None,
@@ -247,12 +247,12 @@ class AssemblyEngine(BasePalmEngine):
                 reason = f"place_failed:{target}"
                 if reason not in self._block_reasons:
                     self._block_reasons.append(reason)
-                self._phase = AssemblyPhase.BLOCKED
+                self._phase = StructurePhase.BLOCKED
         elif kind is ObservationKind.PLACE_GONE:
             if target:
                 self._places_ready.discard(target)
-                if self._phase is AssemblyPhase.READY:
-                    self._phase = AssemblyPhase.INVALIDATED
+                if self._phase is StructurePhase.READY:
+                    self._phase = StructurePhase.INVALIDATED
         elif kind is ObservationKind.TRUTH_HOME_UP:
             self._truth_home_up = True
             self._block_reasons = [
@@ -262,14 +262,14 @@ class AssemblyEngine(BasePalmEngine):
             self._truth_home_up = False
             if "truth_home_down" not in self._block_reasons:
                 self._block_reasons.append("truth_home_down")
-            if self._phase is AssemblyPhase.READY:
-                self._phase = AssemblyPhase.BLOCKED
+            if self._phase is StructurePhase.READY:
+                self._phase = StructurePhase.BLOCKED
         elif kind is ObservationKind.PROJECTION_FAILED:
             reason = f"projection_failed:{target or 'default'}"
             if reason not in self._block_reasons:
                 self._block_reasons.append(reason)
-            if self._phase is AssemblyPhase.READY:
-                self._phase = AssemblyPhase.BLOCKED
+            if self._phase is StructurePhase.READY:
+                self._phase = StructurePhase.BLOCKED
         elif kind is ObservationKind.PROJECTION_LOADED:
             # Floor: no projection required; clear matching fail reason
             reason = f"projection_failed:{target or 'default'}"
@@ -278,7 +278,7 @@ class AssemblyEngine(BasePalmEngine):
             reason = "structure_seed_failed"
             if reason not in self._block_reasons:
                 self._block_reasons.append(reason)
-            self._phase = AssemblyPhase.BLOCKED
+            self._phase = StructurePhase.BLOCKED
         elif kind is ObservationKind.STRUCTURE_SEED_FINISHED:
             self._block_reasons = [
                 r for r in self._block_reasons if r != "structure_seed_failed"
@@ -287,7 +287,7 @@ class AssemblyEngine(BasePalmEngine):
             reason = target or "refuse:policy"
             if reason not in self._block_reasons:
                 self._block_reasons.append(reason)
-            self._phase = AssemblyPhase.BLOCKED
+            self._phase = StructurePhase.BLOCKED
         elif kind is ObservationKind.STRUCTURE_POLICY_CLEARED:
             if target:
                 self._block_reasons = [
@@ -304,4 +304,4 @@ class AssemblyEngine(BasePalmEngine):
             pass
 
 
-__all__ = ["AssemblyEngine"]
+__all__ = ["StructureEngine"]

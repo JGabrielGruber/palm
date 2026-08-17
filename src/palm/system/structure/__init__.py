@@ -1,21 +1,21 @@
-"""System assembly — loop, effect port, seat, admission on the shell (0.63)."""
+"""System structure — loop, effect port, seat, admission on the shell (0.63)."""
 
-from palm.system.assembly.access import admission_source_from_runtime_resolver
-from palm.system.assembly.effects import EffectPort, RecordingEffectPort
-from palm.system.assembly.errors import (
+from palm.system.structure.access import admission_source_from_runtime_resolver
+from palm.system.structure.effects import EffectPort, RecordingEffectPort
+from palm.system.structure.errors import (
     AdmissionRefusedError,
     coerce_admission_snapshot,
     require_business_admission,
 )
-from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
-from palm.system.assembly.host_bind import (
+from palm.system.structure.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
+from palm.system.structure.host_bind import (
     bind_host_structure_to_seat,
     default_structure_effects,
     place_effect_port,
     resolve_workload_engine,
     workload_spawn_hands,
 )
-from palm.system.assembly.inventory import (
+from palm.system.structure.inventory import (
     GATED_PATHS,
     READINESS_EDGES,
     admission_inventory,
@@ -23,18 +23,18 @@ from palm.system.assembly.inventory import (
     open_residual_edges,
     paid_readiness_edges,
 )
-from palm.system.assembly.loop import (
+from palm.system.structure.loop import (
     DEFAULT_MAX_TICKS,
     AssembleLoopResult,
     assemble_until_steady,
     load_and_assemble,
 )
-from palm.system.assembly.materialize import (
+from palm.system.structure.materialize import (
     apply_local_capabilities,
     definition_lists_work_drain,
 )
-from palm.system.assembly.place_registry import InProcessPlaceRegistry, PlaceEffectPort
-from palm.system.assembly.place_spawn import (
+from palm.system.structure.place_registry import InProcessPlaceRegistry, PlaceEffectPort
+from palm.system.structure.place_spawn import (
     InProcessPlaceSpawn,
     OsProcessRegistry,
     PlaceSpawnPort,
@@ -43,8 +43,8 @@ from palm.system.assembly.place_spawn import (
     fail_closed_os_ensure,
     os_prefix_spawn_port,
 )
-from palm.system.assembly.seat import AssemblySeat
-from palm.system.assembly.seed import (
+from palm.system.structure.seat import StructureSeat
+from palm.system.structure.seed import (
     ALWAYS_ON_MEMBERSHIP_CAPABILITIES,
     MEMBERSHIP_CAPABILITY_SEEDS,
     PACKAGING_ENV_SPIRIT,
@@ -55,10 +55,10 @@ from palm.system.assembly.seed import (
     definition_id_from_settings,
     membership_capabilities_from_settings,
     resolve_seed_definition,
-    seed_assembly_options_from_host,
+    seed_structure_options_from_host,
 )
-from palm.system.assembly.structure_effects import StructureEffectPort
-from palm.system.assembly.workload_place import (
+from palm.system.structure.structure_effects import StructureEffectPort
+from palm.system.structure.workload_place import (
     WorkloadPlaceSpawn,
     combined_structure_spawn_port,
     workload_prefix_spawn_port,
@@ -77,7 +77,7 @@ __all__ = [
     "AdmissionRefusedError",
     "AssembleLoopResult",
     "EffectPort",
-    "AssemblySeat",
+    "StructureSeat",
     "StructureEffectPort",
     "InProcessPlaceRegistry",
     "InProcessPlaceSpawn",
@@ -114,5 +114,5 @@ __all__ = [
     "coerce_admission_snapshot",
     "require_business_admission",
     "resolve_seed_definition",
-    "seed_assembly_options_from_host",
+    "seed_structure_options_from_host",
 ]

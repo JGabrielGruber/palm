@@ -1,10 +1,10 @@
-"""System assembly errors — admission gate (0.63)."""
+"""System structure errors — admission gate (0.63)."""
 
 from __future__ import annotations
 
 from typing import Any
 
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 
 
 class AdmissionRefusedError(RuntimeError):
@@ -33,8 +33,8 @@ def _from_duck(obj: Any) -> AdmissionSnapshot | None:
         return None
     may = bool(getattr(obj, "may_run_business", False))
     phase = getattr(obj, "phase", None)
-    if not isinstance(phase, AssemblyPhase):
-        phase = AssemblyPhase.READY if may else AssemblyPhase.EMPTY
+    if not isinstance(phase, StructurePhase):
+        phase = StructurePhase.READY if may else StructurePhase.EMPTY
     if may:
         return AdmissionSnapshot(
             may_run_business=True,

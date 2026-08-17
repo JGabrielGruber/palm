@@ -1,7 +1,7 @@
 """
 PhaseDefinition — participation law for one boot phase (0.61 / seat DI).
 
-**Registry extension:** each phase owns *how* it runs (skip policy, assembly,
+**Registry extension:** each phase owns *how* it runs (skip policy, structure,
 seat publish). The schedule table owns *when* (order). The walker only runs
 handlers bound from the catalog — it does not open-code start soup.
 

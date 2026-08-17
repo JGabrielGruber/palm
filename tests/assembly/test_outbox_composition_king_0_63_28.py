@@ -5,8 +5,8 @@ from __future__ import annotations
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.composition import CompositionProfile
 from palm.app.settings import PalmSettings
-from palm.system.assembly.inventory import READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.inventory import READINESS_EDGES, admission_inventory
 
 
 def _lean(**overrides: object) -> PalmSettings:

@@ -9,11 +9,11 @@ import pytest
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.bus import CommandBus, QueryBus
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 from palm.services.execution.flows.service import FlowExecutionService
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def _settings() -> PalmSettings:
@@ -31,7 +31,7 @@ def _settings() -> PalmSettings:
 def _flows_with_closed_inject() -> FlowExecutionService:
     closed = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("test_closed",),
     )
     inspect = MagicMock()
@@ -76,7 +76,7 @@ def test_run_flow_refused_on_oath() -> None:
 def test_host_flows_start_refused_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.admission.may_run_business is False
         with pytest.raises(AdmissionRefusedError):

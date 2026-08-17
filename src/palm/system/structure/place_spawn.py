@@ -36,7 +36,7 @@ class PlaceSpawnResult:
 
 @runtime_checkable
 class PlaceSpawnPort(Protocol):
-    """Spawn / release place bodies for assembly effect intents."""
+    """Spawn / release place bodies for structure effect intents."""
 
     def ensure(self, place_id: str, *, payload: Mapping[str, Any] | None = None) -> PlaceSpawnResult:
         """Ensure a place body exists; return ready or failed."""
@@ -203,7 +203,7 @@ def _argv_from_payload(payload: Mapping[str, Any]) -> list[str] | None:
 
 @dataclass
 class OsProcessRegistry:
-    """Real OS process bodies for assembly place ensure (0.63.15).
+    """Real OS process bodies for structure place ensure (0.63.15).
 
     Structure assemble / place registry only — not the product job path. Tracks :class:`subprocess.Popen`
     by place id; release terminates the process group when possible.

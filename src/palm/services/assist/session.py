@@ -79,7 +79,7 @@ class AssistSession:
         """
         from palm.common.operator.flows_session_input import flatten_session_read_model
         from palm.common.operator.input_coercion import resolve_mcp_wizard_input
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._assist.admission_gate())
         merged = dict(params or {})
@@ -99,7 +99,7 @@ class AssistSession:
 
         **0.63.29:** requires admission via published ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._assist.admission_gate())
         self._flow_session().backtrack(to_step)
@@ -110,7 +110,7 @@ class AssistSession:
 
         **0.63.29:** requires admission via published ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._assist.admission_gate())
         self._flow_session().resume()

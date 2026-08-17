@@ -9,7 +9,7 @@ def operator_error_text(exc: BaseException) -> str:
     Gate is already raised under host packaging / product / port. Explorer
     must not present ``AdmissionRefusedError`` as a generic form failure.
     """
-    from palm.system.assembly.errors import AdmissionRefusedError
+    from palm.system.structure.errors import AdmissionRefusedError
 
     if isinstance(exc, AdmissionRefusedError):
         return f"admission_refused: {exc}"

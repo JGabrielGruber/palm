@@ -5,21 +5,21 @@ from __future__ import annotations
 import sys
 import time
 
-from palm.core.assembly import (
-    AssemblyPhase,
+from palm.core.structure import (
     EffectIntent,
     EffectIntentKind,
+    StructurePhase,
     local_embedded,
-)
-from palm.system.assembly import (
-    AssemblySeat,
-    OsProcessRegistry,
-    PlaceEffectPort,
-    StructureEffectPort,
-    os_prefix_spawn_port,
 )
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure import (
+    OsProcessRegistry,
+    PlaceEffectPort,
+    StructureEffectPort,
+    StructureSeat,
+    os_prefix_spawn_port,
+)
 
 
 def test_structure_projection_invalidate_refresh() -> None:
@@ -66,7 +66,7 @@ def test_structure_request_seed() -> None:
 
 
 def test_seat_binds_structure_on_assemble() -> None:
-    seat = AssemblySeat()
+    seat = StructureSeat()
     seat.assemble(local_embedded(), capabilities=("work_drain",))
     assert isinstance(seat.effects, StructureEffectPort)
     assert seat.effects.definition is not None
@@ -132,17 +132,17 @@ def test_runtime_structure_default_hands() -> None:
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
         assert rt.admission.may_run_business is True
-        assert isinstance(rt.assembly.effects, StructureEffectPort)  # type: ignore[union-attr]
+        assert isinstance(rt.structure.effects, StructureEffectPort)  # type: ignore[union-attr]
     finally:
         rt.stop()
 
 
 def test_engine_projection_intents_via_loop() -> None:
     """Invalidate then refresh folds through structure assemble / place registry into engine admission."""
-    from palm.core.assembly import AssemblyEngine
-    from palm.system.assembly.loop import assemble_until_steady
+    from palm.core.structure import StructureEngine
+    from palm.system.structure.loop import assemble_until_steady
 
-    engine = AssemblyEngine()
+    engine = StructureEngine()
     engine.initialize()
     hands = StructureEffectPort()
     hands.bind_structure(local_embedded())
@@ -154,7 +154,7 @@ def test_engine_projection_intents_via_loop() -> None:
     ):
         engine.observe(obs)
     assert engine.admission().may_run_business is False
-    assert engine.admission().phase is AssemblyPhase.BLOCKED
+    assert engine.admission().phase is StructurePhase.BLOCKED
     for obs in hands.apply(
         EffectIntent(kind=EffectIntentKind.REFRESH_PROJECTION, target="home")
     ):

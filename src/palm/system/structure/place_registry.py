@@ -1,4 +1,4 @@
-"""In-process place registry — assembly effect hands for ENSURE/RELEASE place (0.63.11+).
+"""In-process place registry — structure effect hands for ENSURE/RELEASE place (0.63.11+).
 
 Registry of places this process can mark ready so a definition with
 places_required can converge. **0.63.14:** optional :class:`PlaceSpawnPort`
@@ -11,8 +11,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
-from palm.core.assembly import EffectIntent, EffectIntentKind, Observation, ObservationKind
-from palm.system.assembly.place_spawn import InProcessPlaceSpawn, PlaceSpawnPort
+from palm.core.structure import EffectIntent, EffectIntentKind, Observation, ObservationKind
+from palm.system.structure.place_spawn import InProcessPlaceSpawn, PlaceSpawnPort
 
 PlaceState = Literal["ready", "failed", "gone"]
 

@@ -14,12 +14,18 @@
 | This essay / 0.63 | Now in code |
 |-------------------|-------------|
 | DNA / `PALM_ASSEMBLY_DNA_ID` | Structure definition / `PALM_STRUCTURE_DEFINITION_ID` / `structure_definition_id` |
+| `palm.core.assembly` / `palm.system.assembly` | `palm.core.structure` / `palm.system.structure` |
+| `AssemblyDefinition` / `AssemblyEngine` / `AssemblyStatus` / `AssemblySeat` | `StructureDefinition` / `StructureEngine` / `StructureStatus` / `StructureSeat` · also `StructurePhase` / `StructureEngineError` / `StructureError` |
+| `system.assembly.assemble` | `system.structure.assemble` |
+| Shell / runtime `.assembly` | `.structure` |
+| `assembly_*` options | `structure_definition` · `structure_skip` · `structure_bind_workload` · `structure_max_ticks` |
+| Vitality seat `assembly` | `structure` (`SEAT_STRUCTURE`) |
 | Assembly effect port | `EffectPort` |
 | Household hands | `StructureEffectPort` |
 | Place book | Place registry (`PlaceEffectPort` / `InProcessPlaceRegistry`) |
 | Citizen / pretender inventory | `GATED_PATHS` / `READINESS_EDGES` / `open_residual_edges` |
 
-Glossary: [architecture/glossary.md](../architecture/glossary.md).
+§7 layout below is **vision shape**. Paths there stay `*/assembly/` as the essay. Code homes are the table. Glossary: [architecture/glossary.md](../architecture/glossary.md).
 
 ---
 
@@ -310,6 +316,8 @@ Not open code yet. This is the intended shape when the theme lands.
 
 ### 7.1 Core (pure)
 
+Vision tree (essay). **Code now:** `palm/core/structure/` — see the box at the top.
+
 ```text
 palm/core/assembly/
   definition.py      # assembly definition (desired state)
@@ -329,6 +337,8 @@ palm/core/assembly/
 Invariant: **nothing in `palm.core` imports outside `palm.core`.**
 
 ### 7.2 System (hands + gate + phase)
+
+Vision tree (essay). **Code now:** `palm/system/structure/` — see the box at the top.
 
 ```text
 palm/system/assembly/   # name may adjust at theme open

@@ -115,7 +115,7 @@ class WaitPlaneService:
                 # 0.63.26 — product continue: do not re-drive business when
                 # admission/started is down. Fail closed (not soft resume dig).
                 self._refused_resumes += 1
-                from palm.system.assembly.errors import AdmissionRefusedError
+                from palm.system.structure.errors import AdmissionRefusedError
 
                 if not job.is_terminal:
                     orch.apply_result(

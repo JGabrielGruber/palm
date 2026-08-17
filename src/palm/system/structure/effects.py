@@ -11,7 +11,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Protocol, runtime_checkable
 
-from palm.core.assembly import EffectIntent, EffectIntentKind, Observation, ObservationKind
+from palm.core.structure import EffectIntent, EffectIntentKind, Observation, ObservationKind
 
 
 @runtime_checkable

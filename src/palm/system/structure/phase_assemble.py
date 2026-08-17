@@ -1,4 +1,4 @@
-"""System start phase: structure assemble (system.assembly.assemble).
+"""System start phase: structure assemble (system.structure.assemble).
 
 After the machine is ready (``system.ready``), load the structure definition and reconcile until
 steady. Publishes admission on the shell. Does **not** start business.
@@ -9,27 +9,27 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from palm.core.assembly import AssemblyDefinition, resolve_builtin_definition
-from palm.system.assembly.hands import CapabilitySeats
-from palm.system.assembly.host_bind import (
-    bind_host_structure_to_seat,
-    default_structure_effects,
-    resolve_workload_engine,
-)
-from palm.system.assembly.seat import AssemblySeat
+from palm.core.structure import StructureDefinition, resolve_builtin_definition
 from palm.system.boot.context import BootContext
 from palm.system.boot.definition import PhaseDefinition
 from palm.system.boot.shell import resolve_shell
 from palm.system.boot.skip import PhaseSkip
 from palm.system.log import get_system_log
+from palm.system.structure.hands import CapabilitySeats
+from palm.system.structure.host_bind import (
+    bind_host_structure_to_seat,
+    default_structure_effects,
+    resolve_workload_engine,
+)
+from palm.system.structure.seat import StructureSeat
 
 
-def _resolve_definition(options: Mapping[str, Any]) -> AssemblyDefinition:
-    raw = options.get("assembly_definition")
-    if isinstance(raw, AssemblyDefinition):
+def _resolve_definition(options: Mapping[str, Any]) -> StructureDefinition:
+    raw = options.get("structure_definition")
+    if isinstance(raw, StructureDefinition):
         return raw
     if isinstance(raw, dict):
-        return AssemblyDefinition.from_dict(raw)
+        return StructureDefinition.from_dict(raw)
     definition_id = str(options.get("structure_definition_id") or "local.embedded")
     version = str(options.get("structure_definition_version") or "1")
     return resolve_builtin_definition(definition_id, version=version)
@@ -37,25 +37,23 @@ def _resolve_definition(options: Mapping[str, Any]) -> AssemblyDefinition:
 
 def _bind_workload_flag(options: Mapping[str, Any]) -> bool:
     """Opt-in engine bind (default True). False keeps workload: fail-closed."""
-    if "assembly_bind_workload" in options:
-        return bool(options.get("assembly_bind_workload"))
-    if "bind_assembly_workload" in options:
-        return bool(options.get("bind_assembly_workload"))
+    if "structure_bind_workload" in options:
+        return bool(options.get("structure_bind_workload"))
     return True
 
 
 def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
-    if options.get("assembly_skip") or options.get("skip_assembly"):
-        raise PhaseSkip("assembly_skip")
+    if options.get("structure_skip"):
+        raise PhaseSkip("structure_skip")
 
     shell = resolve_shell(ctx)
     bind_workload = _bind_workload_flag(options)
-    seat: AssemblySeat | None = shell.assembly
+    seat: StructureSeat | None = shell.structure
     if seat is None:
         # 0.63.17 — place-effect hands + combined structure spawn; bind engine when ready.
         engine = resolve_workload_engine(shell) if bind_workload else None
-        seat = AssemblySeat(effects=default_structure_effects(engine=engine))
-        shell.assembly = seat
+        seat = StructureSeat(effects=default_structure_effects(engine=engine))
+        shell.structure = seat
         bind_report = {
             "bound": True,
             "engine": engine is not None,
@@ -71,9 +69,9 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         )
 
     definition = _resolve_definition(options)
-    max_ticks = int(options.get("assembly_max_ticks") or 32)
-    surfaces = options.get("assembly_surfaces") or ()
-    capabilities = options.get("assembly_capabilities") or ()
+    max_ticks = int(options.get("structure_max_ticks") or 32)
+    surfaces = options.get("structure_surfaces") or ()
+    capabilities = options.get("structure_capabilities") or ()
     if isinstance(surfaces, str):
         surfaces = (surfaces,)
     if isinstance(capabilities, str):
@@ -91,13 +89,13 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     admission = seat.admission()
 
     ctx.publish(
-        assembly=seat,
-        assembly_admission=admission,
-        assembly_definition=definition,
+        structure=seat,
+        structure_admission=admission,
+        structure_definition=definition,
     )
-    ctx.set("assembly_structure_bind", bind_report)
+    ctx.set("structure_bind", bind_report)
     get_system_log().info(
-        "assembly.assemble",
+        "structure.assemble",
         "structure assemble complete",
         schedule="system",
         runtime=ctx.runtime,
@@ -114,7 +112,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
 
 
 DEFINITION = PhaseDefinition(
-    id="system.assembly.assemble",
+    id="system.structure.assemble",
     run=run,
     description="Structure assemble — load definition, reconcile, publish admission",
 )

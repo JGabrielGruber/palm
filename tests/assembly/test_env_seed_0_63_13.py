@@ -5,18 +5,18 @@ from __future__ import annotations
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.boot.modes import BootMode
 from palm.app.settings import PalmSettings
-from palm.core.assembly import (
+from palm.core.structure import (
     CAPABILITY_WORK_DRAIN,
     LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
 )
-from palm.system.assembly import (
+from palm.system.log import reset_system_log_for_tests
+from palm.system.structure import (
     STRUCTURE_SEED_ENV,
     definition_id_from_settings,
     resolve_seed_definition,
-    seed_assembly_options_from_host,
+    seed_structure_options_from_host,
 )
-from palm.system.log import reset_system_log_for_tests
 
 
 def test_structure_seed_env_catalog() -> None:
@@ -54,9 +54,9 @@ def test_settings_definition_wins_over_mode_in_seed() -> None:
         reconcile_instances_on_startup=False,
     )
     host = ApplicationHost.for_mode(BootMode.safe(), settings=settings)
-    seed = seed_assembly_options_from_host(host)
+    seed = seed_structure_options_from_host(host)
     assert seed["structure_definition_id"] == LOCAL_CLI_ID
-    assert seed["assembly_definition"].id == LOCAL_CLI_ID
+    assert seed["structure_definition"].id == LOCAL_CLI_ID
 
 
 def test_host_settings_definition_id_loads() -> None:
@@ -94,7 +94,7 @@ def test_definition_override_does_not_use_composition_as_drain_membership() -> N
         reasons = host.admission.reasons
         assert not any("refuse:background_drain" in str(r) for r in reasons)
         rt = host.runtime()
-        assert CAPABILITY_WORK_DRAIN not in rt.assembly.materialized_capabilities
+        assert CAPABILITY_WORK_DRAIN not in rt.structure.materialized_capabilities
         assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
     finally:
         host.shutdown()

@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from palm.core.assembly import AssemblyDefinition, AssemblyPhase, local_embedded
-from palm.system.assembly import (
-    AssemblySeat,
+from palm.core.structure import StructureDefinition, StructurePhase, local_embedded
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+from palm.system.structure import (
     PlaceEffectPort,
     RecordingEffectPort,
     StructureEffectPort,
+    StructureSeat,
     WorkloadPlaceSpawn,
     bind_host_structure_to_seat,
     default_structure_effects,
@@ -15,8 +17,6 @@ from palm.system.assembly import (
     resolve_workload_engine,
     workload_spawn_hands,
 )
-from palm.system.log import reset_system_log_for_tests
-from palm.system.runtime.base import BaseRuntime
 
 
 def test_resolve_workload_engine_uninitialized() -> None:
@@ -56,7 +56,7 @@ def test_bind_upgrades_in_process_and_attaches_engine() -> None:
         class _Shell:
             workload = eng
 
-        seat = AssemblySeat()  # default StructureEffectPort / in-process
+        seat = StructureSeat()  # default StructureEffectPort / in-process
         report = bind_host_structure_to_seat(seat, _Shell(), bind_workload=True)
         assert report["bound"] is True
         assert report["engine"] is True
@@ -65,13 +65,13 @@ def test_bind_upgrades_in_process_and_attaches_engine() -> None:
         assert isinstance(hands, WorkloadPlaceSpawn)
         assert hands.engine is eng
 
-        dna = AssemblyDefinition(
+        dna = StructureDefinition(
             id="local.with_workload_place",
             places_required=("workload:manor",),
         )
         seat.assemble(dna)
         assert seat.admission().may_run_business is True
-        assert seat.admission().phase is AssemblyPhase.READY
+        assert seat.admission().phase is StructurePhase.READY
     finally:
         eng.shutdown()
 
@@ -90,12 +90,12 @@ def test_bind_disabled_leaves_workload_fail_closed() -> None:
         class _Shell:
             workload = eng
 
-        seat = AssemblySeat()
+        seat = StructureSeat()
         report = bind_host_structure_to_seat(seat, _Shell(), bind_workload=False)
         assert report["bound"] is True
         assert report["engine"] is False
         assert report["skipped"] == "bind_disabled"
-        dna = AssemblyDefinition(
+        dna = StructureDefinition(
             id="local.needs_wl",
             places_required=("workload:x",),
         )
@@ -109,7 +109,7 @@ def test_bind_skips_recording_effect_port() -> None:
     class _Shell:
         workload = type("W", (), {"is_initialized": True})()
 
-    seat = AssemblySeat(effects=RecordingEffectPort(auto_ack_places=True))
+    seat = StructureSeat(effects=RecordingEffectPort(auto_ack_places=True))
     report = bind_host_structure_to_seat(seat, _Shell())
     assert report["skipped"] == "no_place_effects"
     assert report["bound"] is False
@@ -129,7 +129,7 @@ def test_bind_idempotent_already_bound() -> None:
         class _Shell:
             workload = eng
 
-        seat = AssemblySeat(effects=default_structure_effects(engine=eng))
+        seat = StructureSeat(effects=default_structure_effects(engine=eng))
         report = bind_host_structure_to_seat(seat, _Shell())
         assert report["spawn"] == "already"
         assert report["engine"] is True
@@ -143,9 +143,9 @@ def test_runtime_start_binds_workload_engine() -> None:
     rt = BaseRuntime()
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
-        assert rt.assembly is not None
-        assert isinstance(rt.assembly.effects, StructureEffectPort)
-        port = place_effect_port(rt.assembly.effects)
+        assert rt.structure is not None
+        assert isinstance(rt.structure.effects, StructureEffectPort)
+        port = place_effect_port(rt.structure.effects)
         assert port is not None
         hands = workload_spawn_hands(port.spawn)
         assert hands is not None
@@ -164,23 +164,23 @@ def test_runtime_bind_workload_false() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_bind_workload=False,
+        structure_bind_workload=False,
     )
     try:
-        assert rt.assembly is not None
-        port = place_effect_port(rt.assembly.effects)
+        assert rt.structure is not None
+        port = place_effect_port(rt.structure.effects)
         assert port is not None
         hands = workload_spawn_hands(port.spawn)
         assert hands is not None
         assert hands.engine is None
         # Explicit DNA with workload place fails closed when bind off.
-        rt.assembly.assemble(
-            AssemblyDefinition(
+        rt.structure.assemble(
+            StructureDefinition(
                 id="local.wl",
                 places_required=("workload:blocked",),
             )
         )
-        assert rt.assembly.admission().may_run_business is False
+        assert rt.structure.admission().may_run_business is False
     finally:
         rt.stop()
 
@@ -192,15 +192,15 @@ def test_runtime_workload_place_converges_on_host_path() -> None:
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
         assert rt.admission.may_run_business is True
-        dna = AssemblyDefinition(
+        dna = StructureDefinition(
             id="local.host_workload_place",
             places_required=("workload:support",),
         )
-        loop = rt.assembly.assemble(dna)  # type: ignore[union-attr]
+        loop = rt.structure.assemble(dna)  # type: ignore[union-attr]
         assert loop.steady is True
-        assert rt.assembly.admission().may_run_business is True  # type: ignore[union-attr]
-        assert rt.assembly.admission().phase is AssemblyPhase.READY  # type: ignore[union-attr]
-        port = place_effect_port(rt.assembly.effects)  # type: ignore[union-attr]
+        assert rt.structure.admission().may_run_business is True  # type: ignore[union-attr]
+        assert rt.structure.admission().phase is StructurePhase.READY  # type: ignore[union-attr]
+        port = place_effect_port(rt.structure.effects)  # type: ignore[union-attr]
         assert port is not None
         assert "workload:support" in port.registry.places
     finally:

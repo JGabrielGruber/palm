@@ -152,7 +152,7 @@ def _admission_present(assist: AssistService | None) -> dict[str, Any] | None:
     if assist is None:
         return None
     try:
-        from palm.system.assembly.errors import coerce_admission_snapshot
+        from palm.system.structure.errors import coerce_admission_snapshot
 
         snap = coerce_admission_snapshot(assist.admission_gate())
     except Exception:

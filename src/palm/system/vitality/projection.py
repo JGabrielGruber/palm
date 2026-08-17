@@ -16,18 +16,19 @@ architecture of record; native seat reports are the growth path.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import Any, Mapping
+from typing import Any
 
-from palm.system.vitality.capability import (
-    CapabilityFragment,
-    SampleContext,
-)
 from palm.system.vitality.capabilities import (
     BAG_SEAT_REPORTS,
     build_seat_walk_capability,
     sample_seat_walk,
+)
+from palm.system.vitality.capability import (
+    CapabilityFragment,
+    SampleContext,
 )
 from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import SeatReport, coerce_report, reports_to_dicts

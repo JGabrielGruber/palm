@@ -1,7 +1,7 @@
-"""Assembly seed map — env/composition are seed only; after load, status under the definition is truth (0.63.5+).
+"""Structure seed map — env/composition are seed only; after load, status under the definition is truth (0.63.5+).
 
 Profiles, boot modes, composition, and structure-shaped env are **seeds**, not
-parallel law. After load, assembly status under the definition is truth.
+parallel law. After load, structure status under the definition is truth.
 
 **0.63.13 — env/composition are seed only (SD-021 growth):**
 - ``PALM_STRUCTURE_DEFINITION_ID`` / ``settings.structure_definition_id`` is the explicit definition seed.
@@ -19,14 +19,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from palm.core.assembly import (
+from palm.core.structure import (
     LOCAL_ALL_IN_ONE_ID,
     LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
     LOCAL_MCP_ID,
     LOCAL_SERVER_ID,
     LOCAL_WORKER_ID,
-    AssemblyDefinition,
+    StructureDefinition,
     resolve_builtin_definition,
 )
 
@@ -201,7 +201,7 @@ def resolve_seed_definition(
     capabilities: frozenset[str] | set[str] | list[str] = (),
     version: str = "1",
     explicit_definition_id: str | None = None,
-) -> AssemblyDefinition:
+) -> StructureDefinition:
     """Choose definition: explicit id → boot mode → composition inference."""
     if explicit_definition_id:
         return resolve_builtin_definition(explicit_definition_id, version=version)
@@ -234,8 +234,8 @@ def boot_mode_name_for_deployment(profile: Any) -> str | None:
     return None
 
 
-def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
-    """Build runtime.start kwargs for assembly seed from ApplicationHost-like shell.
+def seed_structure_options_from_host(host: Any) -> dict[str, Any]:
+    """Build runtime.start kwargs for structure seed from ApplicationHost-like shell.
 
     Priority for definition id: settings.structure_definition_id → boot mode →
     deployment → composition inference. Membership surfaces/capabilities always
@@ -265,10 +265,10 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     )
     return {
         "structure_definition_id": definition.id,
-        "assembly_definition": definition,
+        "structure_definition": definition,
         # Membership facts for refuse check (0.63.6) — seed only; status under the definition is truth.
-        "assembly_surfaces": list(surfaces),
-        "assembly_capabilities": sorted(capabilities),
+        "structure_surfaces": list(surfaces),
+        "structure_capabilities": sorted(capabilities),
     }
 
 
@@ -283,5 +283,5 @@ __all__ = [
     "definition_id_from_settings",
     "membership_capabilities_from_settings",
     "resolve_seed_definition",
-    "seed_assembly_options_from_host",
+    "seed_structure_options_from_host",
 ]

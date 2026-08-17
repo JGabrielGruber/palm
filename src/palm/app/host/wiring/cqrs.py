@@ -150,7 +150,7 @@ class PalmCommandHandlers:
 
     def _require_business_admission(self, runtime_name: str | None = None) -> None:
         """Packaging CQRS business-start gate (0.63.33)."""
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         name = self._router.route_job_runtime(runtime_name)
         try:

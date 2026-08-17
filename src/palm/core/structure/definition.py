@@ -1,4 +1,4 @@
-"""Assembly definition — structure definition, pure desired structure.
+"""Structure definition — pure desired structure.
 
 Floor: identity, role intent, refuse, capabilities, places required.
 Capabilities are the local install set. First unit: work_drain.
@@ -25,7 +25,7 @@ _WORK_DRAIN = frozenset({CAPABILITY_WORK_DRAIN})
 
 
 @dataclass(frozen=True, slots=True)
-class AssemblyDefinition:
+class StructureDefinition:
     """Declarative desired structure for one process.
 
     After load, this is structure law. Profiles/env only *seed* it.
@@ -74,9 +74,9 @@ class AssemblyDefinition:
         )
 
 
-def local_embedded(*, version: str = "1") -> AssemblyDefinition:
+def local_embedded(*, version: str = "1") -> StructureDefinition:
     """Floor builtin structure definition: thin body — core ground, no surfaces, no drain membership."""
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=LOCAL_EMBEDDED_ID,
         version=version,
         role_intent="embedded",
@@ -87,9 +87,9 @@ def local_embedded(*, version: str = "1") -> AssemblyDefinition:
     )
 
 
-def local_cli(*, version: str = "1") -> AssemblyDefinition:
+def local_cli(*, version: str = "1") -> StructureDefinition:
     """Operator CLI body — full services, no HTTP surfaces, drain membership."""
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=LOCAL_CLI_ID,
         version=version,
         role_intent="cli",
@@ -100,9 +100,9 @@ def local_cli(*, version: str = "1") -> AssemblyDefinition:
     )
 
 
-def local_server(*, version: str = "1") -> AssemblyDefinition:
+def local_server(*, version: str = "1") -> StructureDefinition:
     """HTTP server body — surfaces + continuous drain membership."""
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=LOCAL_SERVER_ID,
         version=version,
         role_intent="server",
@@ -113,9 +113,9 @@ def local_server(*, version: str = "1") -> AssemblyDefinition:
     )
 
 
-def local_all_in_one(*, version: str = "1") -> AssemblyDefinition:
+def local_all_in_one(*, version: str = "1") -> StructureDefinition:
     """Collapsed full host phenotype — includes continuous drain."""
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=LOCAL_ALL_IN_ONE_ID,
         version=version,
         role_intent="all_in_one",
@@ -126,9 +126,9 @@ def local_all_in_one(*, version: str = "1") -> AssemblyDefinition:
     )
 
 
-def local_worker(*, version: str = "1") -> AssemblyDefinition:
+def local_worker(*, version: str = "1") -> StructureDefinition:
     """Headless worker — execution + drain, no surfaces."""
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=LOCAL_WORKER_ID,
         version=version,
         role_intent="worker",
@@ -139,9 +139,9 @@ def local_worker(*, version: str = "1") -> AssemblyDefinition:
     )
 
 
-def local_mcp(*, version: str = "1") -> AssemblyDefinition:
+def local_mcp(*, version: str = "1") -> StructureDefinition:
     """MCP operator surface — full services, MCP surface only (no drain)."""
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=LOCAL_MCP_ID,
         version=version,
         role_intent="mcp",
@@ -152,7 +152,7 @@ def local_mcp(*, version: str = "1") -> AssemblyDefinition:
     )
 
 
-_BUILTIN_FACTORIES: dict[str, Callable[..., AssemblyDefinition]] = {
+_BUILTIN_FACTORIES: dict[str, Callable[..., StructureDefinition]] = {
     LOCAL_EMBEDDED_ID: local_embedded,
     "embedded": local_embedded,
     LOCAL_CLI_ID: local_cli,
@@ -168,13 +168,13 @@ _BUILTIN_FACTORIES: dict[str, Callable[..., AssemblyDefinition]] = {
 }
 
 
-def resolve_builtin_definition(definition_id: str, *, version: str = "1") -> AssemblyDefinition:
+def resolve_builtin_definition(definition_id: str, *, version: str = "1") -> StructureDefinition:
     """Resolve a known builtin structure-definition id (or alias). Unknown ids stay thin shells."""
     key = str(definition_id or "").strip()
     factory = _BUILTIN_FACTORIES.get(key)
     if factory is not None:
         return factory(version=version)
-    return AssemblyDefinition(
+    return StructureDefinition(
         id=key or "local.unknown",
         version=version,
         role_intent="unknown",
@@ -190,7 +190,7 @@ __all__ = [
     "LOCAL_MCP_ID",
     "LOCAL_SERVER_ID",
     "LOCAL_WORKER_ID",
-    "AssemblyDefinition",
+    "StructureDefinition",
     "local_all_in_one",
     "local_cli",
     "local_embedded",

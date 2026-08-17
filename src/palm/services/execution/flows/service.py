@@ -212,7 +212,7 @@ class FlowExecutionService(BaseService):
         **0.63.32:** product start edge fails closed via ``admission_gate()``
         (published admission — same law as continue; port remains a second admission check).
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         job = self.dispatch_command(flow_command_from_body(self._with_system_session(body)))
@@ -284,7 +284,7 @@ class FlowExecutionService(BaseService):
 
         **0.63.32:** product start edge fails closed via ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         job = self.dispatch_command(

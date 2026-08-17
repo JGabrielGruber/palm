@@ -13,9 +13,9 @@ from palm.patterns.wizard.bindings.cqrs.commands import (
     RequestWizardBacktrackCommand,
 )
 from palm.patterns.wizard.bindings.cqrs.handlers import handle_wizard_command
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def _settings() -> PalmSettings:
@@ -33,7 +33,7 @@ def _settings() -> PalmSettings:
 def test_host_resume_job_refused_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.admission.may_run_business is False
         with pytest.raises(AdmissionRefusedError):
@@ -43,12 +43,12 @@ def test_host_resume_job_refused_when_assembly_skipped() -> None:
 
 
 def _closed_wizard_ctx() -> MagicMock:
-    from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+    from palm.core.structure import AdmissionSnapshot, StructurePhase
 
     rt = MagicMock()
     rt.admission = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("wizard_closed",),
     )
     ctx = MagicMock()

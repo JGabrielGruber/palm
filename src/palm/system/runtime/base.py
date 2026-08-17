@@ -29,7 +29,7 @@ from palm.core import (
     ResourceEngine,
     StorageEngine,
 )
-from palm.core.assembly import AdmissionSnapshot
+from palm.core.structure import AdmissionSnapshot
 from palm.core.workload import WorkloadEngine
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.spec import WorkloadSpec
@@ -37,7 +37,6 @@ from palm.definitions.flow import FlowDefinition
 from palm.definitions.process import ProcessDefinition
 from palm.instances import ProcessInstance
 from palm.states import BlackboardState
-from palm.system.assembly.seat import AssemblySeat
 from palm.system.boot import (
     SYSTEM_PHASES,
     BootContext,
@@ -49,6 +48,7 @@ from palm.system.interfaces.install import SystemInstall
 from palm.system.log import get_system_log
 from palm.system.runtime.schedulers import QueuedScheduler
 from palm.system.runtime.wiring import SchedulerPolicy
+from palm.system.structure.seat import StructureSeat
 from palm.system.subsystems.planes.hub import SystemPlanes
 from palm.system.subsystems.planes.session.plane import SessionPlaneService
 from palm.system.subsystems.planes.wait.plane import WaitPlaneService
@@ -108,7 +108,7 @@ class BaseRuntime:
         self._planes: SystemPlanes | None = None
         self._supervisor: Any | None = None
         self._install = SystemInstall()
-        self._assembly: AssemblySeat | None = None
+        self._structure: StructureSeat | None = None
         self._last_boot_walk: list[Any] | None = None
         self._start_options: dict[str, Any] = {}
 
@@ -132,23 +132,23 @@ class BaseRuntime:
         return self._install
 
     @property
-    def assembly(self) -> AssemblySeat | None:
-        """Assembly seat (definition + engine + admission) after structure assemble."""
-        return self._assembly
+    def structure(self) -> StructureSeat | None:
+        """Structure seat (definition + engine + admission) after structure assemble."""
+        return self._structure
 
-    @assembly.setter
-    def assembly(self, seat: AssemblySeat | None) -> None:
-        self._assembly = seat
+    @structure.setter
+    def structure(self, seat: StructureSeat | None) -> None:
+        self._structure = seat
 
     @property
     def admission(self) -> AdmissionSnapshot:
         """Published gate: may business that needs ground run?
 
-        Fail closed when assembly has not run or is not ready.
+        Fail closed when structure assemble has not run or is not ready.
         """
-        if self._assembly is None:
+        if self._structure is None:
             return AdmissionSnapshot.empty()
-        return self._assembly.admission()
+        return self._structure.admission()
 
     @property
     def wire(self) -> SystemInstall:
@@ -236,7 +236,7 @@ class BaseRuntime:
             """Machine ready **and** admission allows business that needs ground.
 
             0.63.3 — work-plane / drain business path that needs admission is fail-closed.
-            Live check: assembly may complete after planes attach.
+            Live check: structure assemble may complete after planes attach.
             """
             if not self._started:
                 return False
@@ -296,7 +296,7 @@ class BaseRuntime:
             runtime=str(runtime),
         )
         try:
-            # Boot owns order + handlers; this shell is the assembly target.
+            # Boot owns order + handlers; this shell is the structure target.
             self._last_boot_walk = walk_schedule(
                 SYSTEM_PHASES,
                 build_system_handlers(self, options),
@@ -340,12 +340,12 @@ class BaseRuntime:
                 pass
             self._supervisor = None
 
-        if self._assembly is not None:
+        if self._structure is not None:
             try:
-                self._assembly.reset()
+                self._structure.reset()
             except Exception:
                 pass
-            self._assembly = None
+            self._structure = None
 
         if self._planes is not None:
             try:
@@ -455,7 +455,7 @@ class BaseRuntime:
         admission (same law as submit / resume_job). Wait-plane deliver that
         drives orchestration directly is a named residual (not this door).
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         self._require_started()
         require_business_admission(self)
@@ -534,7 +534,7 @@ class BaseRuntime:
         ``ResourceEngine.invoke`` remains available for unit / place-registry paths
         that are not product business doors.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self)
         engine = self.resource
@@ -565,7 +565,7 @@ class BaseRuntime:
         admission (same law as submit_flow). Structure assemble / place-registry spawn uses
         ``WorkloadEngine`` directly and is not forced through this door.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self)
         engine = self._require_workload_engine()
@@ -597,7 +597,7 @@ class BaseRuntime:
         admission (same law as start_workload). Direct ``WorkloadEngine.exec``
         remains ungated for unit / non-port paths (named residual).
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self)
         return self._require_workload_engine().exec(
@@ -631,7 +631,7 @@ class BaseRuntime:
         requires admission. Wait plane may still call ``orchestration.resume_job``
         directly — named residual under SD-020 (system continue spine).
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         self._require_started()
         require_business_admission(self)

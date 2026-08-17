@@ -101,8 +101,8 @@ SEAT_SUPERVISOR: Final[str] = "supervisor"
 SEAT_EXECUTION: Final[str] = "execution"
 SEAT_INSTALL: Final[str] = "install"
 """InstallInterface collaborator board (peer of execution)."""
-SEAT_ASSEMBLY: Final[str] = "assembly"
-"""Assembly seat — definition + admission gate (0.63)."""
+SEAT_STRUCTURE: Final[str] = "structure"
+"""Structure seat — definition + admission gate (0.63)."""
 SEAT_SYSTEM_LOG: Final[str] = "system_log"
 SEAT_BOOT_MEMBERSHIP: Final[str] = "boot_membership"
 
@@ -233,7 +233,7 @@ __all__ = [
     "MATURITY_INTENTION",
     "ROLE_OBSERVE",
     "ROLE_TOOL",
-    "SEAT_ASSEMBLY",
+    "SEAT_STRUCTURE",
     "SEAT_BOOT_MEMBERSHIP",
     "SEAT_EXECUTION",
     "SEAT_INSTALL",

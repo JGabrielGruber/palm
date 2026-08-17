@@ -6,7 +6,7 @@
 **Metaphor / teaching words:** [appendix/metaphor.md](appendix/metaphor.md) — not law here.  
 **Agent mode:** [AGENTS.md](AGENTS.md).
 
-**How to use:** When two words fight, this glossary wins for **intended design**. Code may still use older names; as-built notes record the lag.
+**How to use:** When two words fight, this glossary wins for **intended design**. Code names below are **now**. Vision/ADR essays may still say assembly.
 
 ---
 
@@ -61,16 +61,19 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | **Reassemble** | Load new or forced definition; void prior ready; converge again. | Soft-skip admission for CI |
 | **Readiness dashboard** | See admission, refuse business start / continue paths, map duals — **without** yet owning materialize. Progress honesty for early structure work. | Claiming structure manager is done |
 | **Dual readiness** | Two or more peer answers for “may business run?” (soft flags, catalog order, host dig, admission). **Architecture debt** — purge or name. | Honest residual control paths (cancel when closed) |
-| **Assembly** | **Legacy / theme code name** for structure management and its packages (`palm.*.assembly`). Prefer structure-* in this vault; code may lag. | A second product |
+| **Assembly** | **Vision / theme name** for structure management ([VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)). Packages are `palm.*.structure`. | A second product |
 
-**Code alias (as-built lag):**
+**Code now (2026-08-17 — José locked package rename):**
 
-| Intended | Typical code today |
-|----------|-------------------|
-| Structure definition | `AssemblyDefinition` / `resolve_builtin_definition` / `structure_definition_id` |
-| Structure reconciler | `AssemblyEngine` (`palm.core.assembly`) |
-| Structure status / admission | `AssemblyStatus` / `AdmissionSnapshot` |
-| Structure manager | System seat + loop + hands (`palm.system.assembly`) — **partial** (dashboard strong; materialize weak) |
+| Intended | Code today |
+|----------|------------|
+| Structure definition | `StructureDefinition` / `resolve_builtin_definition` / `structure_definition_id` |
+| Structure reconciler | `StructureEngine` (`palm.core.structure`) |
+| Structure status / admission | `StructureStatus` / `AdmissionSnapshot` · phase `StructurePhase` |
+| Structure errors | `StructureEngineError` · `StructureError` |
+| Structure manager | `StructureSeat` + loop + hands (`palm.system.structure`) — **partial** (dashboard strong; materialize weak) |
+| Phase / field / seat | `system.structure.assemble` · shell `.structure` · vitality `structure` (`SEAT_STRUCTURE`) |
+| Options | `structure_definition` · `structure_skip` · `structure_bind_workload` · `structure_max_ticks` |
 
 ---
 
@@ -160,12 +163,12 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 
 ## 8. Aliases and retirements
 
-| Prefer (architecture) | Accept as code/theme lag | Avoid in architecture law |
-|----------------------|---------------------------|----------------------------|
-| Structure definition | Assembly definition; DNA (theme lag) | “Profile is the structure” |
-| Structure reconciler | AssemblyEngine | Host readiness flag |
-| Structure manager | system.assembly seat/loop | Dashboard-only admission |
-| Structure status | AssemblyStatus | Soft definitions ready |
+| Prefer (architecture) | Accept as vision / was | Avoid in architecture law |
+|----------------------|------------------------|----------------------------|
+| Structure definition | Assembly definition (vision); DNA (theme was) | “Profile is the structure” |
+| Structure reconciler | AssemblyEngine (was) | Host readiness flag |
+| Structure manager | system.assembly seat/loop (was) | Dashboard-only admission |
+| Structure status | AssemblyStatus (was) | Soft definitions ready |
 | Interface | Port (code) | Digging composition root |
 | Business definition | Flow / process definition | Structure definition |
 | Dual readiness path | Pretender (metaphor); `READINESS_EDGES` | Corridor police as forever design |
@@ -186,6 +189,6 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 1. New term needed by a note → add a row here **first**.  
 2. Conflict with PALM.md → resolve deliberately (update PALM or note lag).  
 3. Metaphor → [appendix/metaphor.md](appendix/metaphor.md), not this table.  
-4. José locks contested renames (e.g. package rename assembly → structure).
+4. José locks contested renames. **Locked 2026-08-17:** packages `palm.core.structure` / `palm.system.structure`; types `StructureDefinition` / `StructureEngine` / `StructureStatus` / `StructureSeat`. Vision/ADR keep the word assembly.
 
 **Next consumer of this glossary:** package diagram under [c4-code/diagrams/](c4-code/diagrams/).

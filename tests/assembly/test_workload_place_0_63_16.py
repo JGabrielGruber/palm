@@ -4,17 +4,17 @@ from __future__ import annotations
 
 import sys
 
-from palm.core.assembly import (
-    AssemblyDefinition,
-    AssemblyPhase,
+from palm.core.structure import (
     EffectIntent,
     EffectIntentKind,
+    StructureDefinition,
+    StructurePhase,
 )
 from palm.core.workload import WorkloadEngine
 from palm.runners.local.runtime import LocalWorkloadRuntime
-from palm.system.assembly import (
-    AssemblySeat,
+from palm.system.structure import (
     PlaceEffectPort,
+    StructureSeat,
     WorkloadPlaceSpawn,
     combined_structure_spawn_port,
     workload_prefix_spawn_port,
@@ -83,25 +83,25 @@ def test_workload_run_place_with_command() -> None:
 def test_seat_workload_place_converges() -> None:
     eng = _engine_with_local()
     try:
-        seat = AssemblySeat(
+        seat = StructureSeat(
             effects=PlaceEffectPort(spawn=workload_prefix_spawn_port(engine=eng))
         )
-        dna = AssemblyDefinition(
+        dna = StructureDefinition(
             id="local.with_workload_place",
             places_required=("workload:manor",),
         )
         seat.assemble(dna)
         assert seat.admission().may_run_business is True
-        assert seat.admission().phase is AssemblyPhase.READY
+        assert seat.admission().phase is StructurePhase.READY
     finally:
         eng.shutdown()
 
 
 def test_seat_workload_unbound_blocks() -> None:
-    seat = AssemblySeat(
+    seat = StructureSeat(
         effects=PlaceEffectPort(spawn=workload_prefix_spawn_port(engine=None))
     )
-    dna = AssemblyDefinition(
+    dna = StructureDefinition(
         id="local.needs_wl",
         places_required=("workload:x",),
     )

@@ -7,7 +7,7 @@ from typing import Any
 
 def format_cli_error(exc: BaseException) -> str:
     """Rich markup for operator errors — label gate refusals explicitly."""
-    from palm.system.assembly.errors import AdmissionRefusedError
+    from palm.system.structure.errors import AdmissionRefusedError
 
     if isinstance(exc, AdmissionRefusedError):
         return f"[bold red]admission_refused[/] — {exc}"

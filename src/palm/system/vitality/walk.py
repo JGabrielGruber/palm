@@ -14,7 +14,12 @@ from typing import Any, Literal
 from palm.system.vitality.probe import ProbeCatalog, SeatProbe
 from palm.system.vitality.protocol import try_native_report
 from palm.system.vitality.raw import sample_by_convention, sample_method
-from palm.system.vitality.report import SeatReport, coerce_report, index_by_seat_id, reports_to_dicts
+from palm.system.vitality.report import (
+    SeatReport,
+    coerce_report,
+    index_by_seat_id,
+    reports_to_dicts,
+)
 from palm.system.vitality.schema import (
     CAPABILITY_SEAT_WALK,
     KIND_PLANE,

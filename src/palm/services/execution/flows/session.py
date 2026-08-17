@@ -71,7 +71,7 @@ class FlowSession:
         (published admission — same law as assist continue / provide_input).
         """
         from palm.common.operator.mutation_gate import assert_on_write, should_validate_mutation
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._flows.admission_gate())
         params = params or {}
@@ -117,7 +117,7 @@ class FlowSession:
 
         **0.63.30:** requires admission via published ``flows.admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._flows.admission_gate())
         runtime = self._flows.resolve_runtime()
@@ -142,7 +142,7 @@ class FlowSession:
 
         **0.63.30:** requires admission via published ``flows.admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._flows.admission_gate())
         runtime = self._flows.resolve_runtime()

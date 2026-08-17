@@ -135,7 +135,7 @@ class ExplorerActions:
             if host is not None:
                 host.resume_job(job.id)
             else:
-                from palm.system.assembly.errors import require_business_admission
+                from palm.system.structure.errors import require_business_admission
 
                 require_business_admission(self._ctx.runtime)
                 self._ctx.runtime.execution.resume_job(job.id)

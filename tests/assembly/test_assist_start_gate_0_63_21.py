@@ -7,8 +7,8 @@ import pytest
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.services.assist.catalog.menu import build_menu_page, menu_for_assist
-from palm.system.assembly.errors import AdmissionRefusedError
 from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.errors import AdmissionRefusedError
 
 
 def _settings() -> PalmSettings:
@@ -28,7 +28,7 @@ def test_assist_start_scenario_refused_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     # all_in_one composition includes assist service
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.assist is not None
         assert host.admission.may_run_business is False
@@ -55,7 +55,7 @@ def test_assist_start_scenario_refused_when_dna_refuse() -> None:
 def test_assist_menu_nests_admission_when_closed() -> None:
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.assist is not None
         page = menu_for_assist(host.assist, section="root")

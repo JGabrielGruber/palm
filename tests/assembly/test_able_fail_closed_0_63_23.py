@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
 from palm.core.storage import StorageEngine
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 from palm.core.work import WorkIntent
-from palm.system.assembly import (
+from palm.system.structure import (
     admission_source_from_runtime_resolver,
     require_business_admission,
 )
-from palm.system.assembly.inventory import GATED_PATHS, admission_inventory
+from palm.system.structure.inventory import GATED_PATHS, admission_inventory
 from palm.system.subsystems.planes.work.plane import WorkPlaneService
 
 
@@ -69,7 +69,7 @@ def test_attach_with_able_true_ticks() -> None:
 def test_admission_source_from_runtime_resolver() -> None:
     ready = AdmissionSnapshot(
         may_run_business=True,
-        phase=AssemblyPhase.READY,
+        phase=StructurePhase.READY,
         definition_id="local.embedded",
     )
     rt = MagicMock()

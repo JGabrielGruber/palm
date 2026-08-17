@@ -7,9 +7,9 @@ import pytest
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.command import CancelJobCommand, SubmitFlowCommand
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def _settings() -> PalmSettings:
@@ -27,7 +27,7 @@ def _settings() -> PalmSettings:
 def test_host_submit_flow_refused_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.admission.may_run_business is False
         with pytest.raises(AdmissionRefusedError):
@@ -48,7 +48,7 @@ def test_host_execute_submit_flow_refused_when_assembly_skipped() -> None:
     """CQRS bus path also fails closed (not only thin host wrappers)."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         with pytest.raises(AdmissionRefusedError):
             host.execute(SubmitFlowCommand(flow="todo-builder"))
@@ -60,7 +60,7 @@ def test_host_cancel_job_not_admission_citizen() -> None:
     """Cancel remains control residual on packaging CQRS (named_0_63_30)."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.admission.may_run_business is False
         result = host.execute(CancelJobCommand(job_id="job-missing"))

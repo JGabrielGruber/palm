@@ -51,7 +51,7 @@ class AssistScenarioService:
         if contributor is None:
             raise DefinitionNotFoundServiceError("scenario", scenario_id)
         # 0.63.21 gate · 0.63.22 — published admission, not runtime dig.
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._assist.admission_gate())
         run_body = {**body, "flow_name": contributor.flow_id, "by_id": True}

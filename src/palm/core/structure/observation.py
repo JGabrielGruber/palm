@@ -1,4 +1,4 @@
-"""Observations — facts folded into the assembly engine (closed set)."""
+"""Observations — facts folded into the structure engine (closed set)."""
 
 from __future__ import annotations
 

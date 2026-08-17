@@ -209,10 +209,10 @@ class HostObservability:
         domain_note = (
             "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
             "server/prod CI use server_port=0. CompositionProfile seeds membership "
-            "except work_drain (definition capabilities after load). 0.63: assembly "
-            "admission is law — see assembly bag (not a soft dual of membership)."
+            "except work_drain (definition capabilities after load). 0.63: structure "
+            "admission is law — see structure bag (not a soft dual of membership)."
         )
-        assembly_bag = self._assembly_packaging()
+        structure_bag = self._structure_packaging()
         return _with_packaging_markers(
             {
                 "work_pending": work_pending,
@@ -235,25 +235,25 @@ class HostObservability:
                     "note": domain_note,
                 },
                 # 0.63.8 admission inventory — nest live admission; packaging does not invent readiness.
-                "assembly": assembly_bag,
+                "structure": structure_bag,
                 "event_plane": self.event_plane_status(),
                 "ops": self.ops_status(),
             },
             extra_note=domain_note,
         )
 
-    def _assembly_packaging(self) -> dict[str, Any]:
+    def _structure_packaging(self) -> dict[str, Any]:
         """Pointer to living admission (0.63) — not a second ready flag."""
         host = self._host
         try:
-            from palm.system.assembly.inventory import admission_inventory_snapshot
+            from palm.system.structure.inventory import admission_inventory_snapshot
 
             runtime = host._app.runtime()
             snap = admission_inventory_snapshot(runtime)
             live = snap.get("live") or {}
             return {
                 "role": "admission_pointer",
-                "eyes": "palm.system.vitality seat assembly",
+                "eyes": "palm.system.vitality seat structure",
                 "may_run_business": (live.get("admission") or {}).get(
                     "may_run_business"
                 ),
@@ -267,7 +267,7 @@ class HostObservability:
                 "open_residual_ids": snap.get("open_residual_ids"),
                 "paid_edge_count": snap.get("paid_edge_count"),
                 "note": (
-                    "Read admission from the primary runtime / vitality assembly seat. "
+                    "Read admission from the primary runtime / vitality structure seat. "
                     "This bag is packaging residual, not structure law. "
                     "open_residual_* is named-debt cartography for exit judgment."
                 ),
@@ -277,7 +277,7 @@ class HostObservability:
                 "role": "admission_pointer",
                 "may_run_business": None,
                 "error": f"{type(exc).__name__}: {exc}",
-                "note": "Primary runtime not ready or assembly not present",
+                "note": "Primary runtime not ready or structure seat not present",
             }
 
 

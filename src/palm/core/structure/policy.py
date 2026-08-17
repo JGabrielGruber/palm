@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from palm.core.assembly.definition import AssemblyDefinition
+from palm.core.structure.definition import StructureDefinition
 
 # Refuse tokens (closed vocabulary for floor; grow by theme)
 REFUSE_SERVER_SURFACES = "server_surfaces"
@@ -17,7 +17,7 @@ REFUSE_PRODUCT_CATALOG_HOME = "product_catalog_home"
 
 
 def refuse_violations(
-    definition: AssemblyDefinition,
+    definition: StructureDefinition,
     *,
     surfaces: Iterable[str] = (),
     capabilities: Iterable[str] = (),

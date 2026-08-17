@@ -4,8 +4,8 @@
 
 | Area | Intended home (sketch) | Notes |
 |------|------------------------|--------|
-| Pure structure | `palm.core.assembly` | Reconciler + definition types |
-| System structure | `palm.system.assembly` | Manager, seat, hands, seed |
+| Pure structure | `palm.core.structure` | Reconciler + definition types |
+| System structure | `palm.system.structure` | Manager, seat, hands, seed |
 | Boot | `palm.system.boot` | Machine up |
 | Planes / supervisor | `palm.system.subsystems…` | Traffic and continuous care |
 | Product | `palm.services…` | Userland |

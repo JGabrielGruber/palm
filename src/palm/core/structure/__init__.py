@@ -1,10 +1,10 @@
-"""Assembly — pure organism-structure reconciler (0.63).
+"""Structure — pure organism-structure reconciler (0.63).
 
 Core purity: no imports outside ``palm.core``.
 System applies effect intents; clients use :class:`AdmissionSnapshot`.
 """
 
-from palm.core.assembly.definition import (
+from palm.core.structure.definition import (
     CAPABILITY_WORK_DRAIN,
     LOCAL_ALL_IN_ONE_ID,
     LOCAL_CLI_ID,
@@ -12,7 +12,7 @@ from palm.core.assembly.definition import (
     LOCAL_MCP_ID,
     LOCAL_SERVER_ID,
     LOCAL_WORKER_ID,
-    AssemblyDefinition,
+    StructureDefinition,
     local_all_in_one,
     local_cli,
     local_embedded,
@@ -21,25 +21,25 @@ from palm.core.assembly.definition import (
     local_worker,
     resolve_builtin_definition,
 )
-from palm.core.assembly.engine import AssemblyEngine
-from palm.core.assembly.exceptions import (
-    AssemblyEngineError,
-    AssemblyError,
+from palm.core.structure.engine import StructureEngine
+from palm.core.structure.exceptions import (
     NoDefinitionError,
+    StructureEngineError,
+    StructureError,
 )
-from palm.core.assembly.intent import EffectIntent, EffectIntentKind
-from palm.core.assembly.observation import Observation, ObservationKind
-from palm.core.assembly.policy import (
+from palm.core.structure.intent import EffectIntent, EffectIntentKind
+from palm.core.structure.observation import Observation, ObservationKind
+from palm.core.structure.policy import (
     REFUSE_HTTP_SERVER_SURFACES,
     REFUSE_PRODUCT_CATALOG_HOME,
     REFUSE_SERVER_SURFACES,
     refuse_violations,
 )
-from palm.core.assembly.result import AssembleResult
-from palm.core.assembly.status import (
+from palm.core.structure.result import AssembleResult
+from palm.core.structure.status import (
     AdmissionSnapshot,
-    AssemblyPhase,
-    AssemblyStatus,
+    StructurePhase,
+    StructureStatus,
 )
 
 __all__ = [
@@ -52,12 +52,12 @@ __all__ = [
     "LOCAL_WORKER_ID",
     "AdmissionSnapshot",
     "AssembleResult",
-    "AssemblyDefinition",
-    "AssemblyEngine",
-    "AssemblyEngineError",
-    "AssemblyError",
-    "AssemblyPhase",
-    "AssemblyStatus",
+    "StructureDefinition",
+    "StructureEngine",
+    "StructureEngineError",
+    "StructureError",
+    "StructurePhase",
+    "StructureStatus",
     "EffectIntent",
     "EffectIntentKind",
     "NoDefinitionError",

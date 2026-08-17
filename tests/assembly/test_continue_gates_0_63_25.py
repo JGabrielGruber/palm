@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import pytest
 
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def test_resume_job_refused_when_assembly_skipped() -> None:
@@ -16,7 +16,7 @@ def test_resume_job_refused_when_assembly_skipped() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False
@@ -32,7 +32,7 @@ def test_provide_input_refused_when_assembly_skipped() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False
@@ -68,7 +68,7 @@ def test_orch_resume_not_gated_as_product_door() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False

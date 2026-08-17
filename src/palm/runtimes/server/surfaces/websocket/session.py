@@ -639,7 +639,7 @@ def _handle_dispatch(
             InstanceNotOwnedError,
             SessionAttributionError,
         )
-        from palm.system.assembly.errors import AdmissionRefusedError
+        from palm.system.structure.errors import AdmissionRefusedError
 
         if isinstance(exc, AdmissionRefusedError):
             # 0.63.36 — honest gate voice (not "internal")

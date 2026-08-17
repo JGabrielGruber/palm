@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 from palm.runtimes.server.surfaces.rest import errors
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def test_admission_refused_helper_is_503_not_500() -> None:
@@ -19,7 +19,7 @@ def test_admission_refused_helper_is_503_not_500() -> None:
 def test_maybe_admission_refused_maps_error() -> None:
     snap = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("rest_closed",),
     )
     exc = AdmissionRefusedError(snap)

@@ -1,4 +1,4 @@
-"""Workload place spawn — assembly hands against WorkloadEngine (0.63.16).
+"""Workload place spawn — structure hands against WorkloadEngine (0.63.16).
 
 ``workload:`` places are structure bodies in the place registry. Not product job
 path. Fail closed when no engine is bound. Default kind is *workspace* (warm
@@ -20,7 +20,7 @@ from palm.core.workload.spec import (
     WorkloadSpec,
 )
 from palm.core.workload.status import WorkloadStatus, is_terminal
-from palm.system.assembly.place_spawn import (
+from palm.system.structure.place_spawn import (
     PlaceSpawnResult,
     RegisteredPlaceSpawn,
     _argv_from_payload,
@@ -29,7 +29,7 @@ from palm.system.assembly.place_spawn import (
 
 @dataclass
 class WorkloadPlaceSpawn:
-    """Ensure/release assembly places via an optional :class:`WorkloadEngine`."""
+    """Ensure/release structure places via an optional :class:`WorkloadEngine`."""
 
     engine: Any | None = None
     #: place_id → workload_id
@@ -96,7 +96,7 @@ class WorkloadPlaceSpawn:
             )
 
         owner = WorkloadOwner(
-            session_id=str(body.get("session_id") or "assembly"),
+            session_id=str(body.get("session_id") or "structure"),
             lease_id=str(body.get("lease_id") or key),
         )
         # Stable workload id per place for idempotent re-ensure in one process.
@@ -193,7 +193,7 @@ class WorkloadPlaceSpawn:
             env={str(k): str(v) for k, v in env.items()},
             timeout_s=body.get("timeout_s"),
             labels={
-                "assembly_place": place_id,
+                "structure_place": place_id,
                 **{
                     str(k): str(v)
                     for k, v in (body.get("labels") or {}).items()
@@ -228,7 +228,7 @@ def combined_structure_spawn_port(
     os_registry: Any | None = None,
 ) -> RegisteredPlaceSpawn:
     """``os:`` + ``workload:`` structure place routes on one port."""
-    from palm.system.assembly.place_spawn import (
+    from palm.system.structure.place_spawn import (
         OsProcessRegistry,
         os_prefix_spawn_port,
     )

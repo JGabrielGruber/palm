@@ -2,17 +2,17 @@
 
 from __future__ import annotations
 
-from palm.core.assembly import (
-    AssemblyDefinition,
-    AssemblyPhase,
+from palm.core.structure import (
     EffectIntent,
     EffectIntentKind,
+    StructureDefinition,
+    StructurePhase,
 )
-from palm.system.assembly import (
-    AssemblySeat,
+from palm.system.structure import (
     PlaceEffectPort,
     PlaceSpawnResult,
     RegisteredPlaceSpawn,
+    StructureSeat,
     fail_closed_os_ensure,
     os_prefix_spawn_port,
 )
@@ -68,15 +68,15 @@ def test_registered_place_spawn_exact() -> None:
 
 
 def test_seat_assemble_os_place_blocks_admission() -> None:
-    seat = AssemblySeat(effects=PlaceEffectPort(spawn=os_prefix_spawn_port()))
-    dna = AssemblyDefinition(
+    seat = StructureSeat(effects=PlaceEffectPort(spawn=os_prefix_spawn_port()))
+    dna = StructureDefinition(
         id="local.needs_os",
         version="1",
         places_required=("os:edge",),
     )
     seat.assemble(dna)
     assert seat.admission().may_run_business is False
-    assert seat.admission().phase is AssemblyPhase.BLOCKED
+    assert seat.admission().phase is StructurePhase.BLOCKED
     assert any("place_failed:os:edge" in r for r in seat.admission().reasons)
 
 

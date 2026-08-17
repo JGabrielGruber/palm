@@ -115,12 +115,12 @@ These words are **stable**. Use them with one meaning only.
 | **Light center** | Role rule: refuse heavy body and/or ground on purpose; place weight; stay efficient. |
 | **Support place** | Place that holds ground (or weight) another node projects from. **Org / realm** are recursive supports when they have children of the same kind. |
 | **Work place** | Place that executes work a light center will not carry. |
-| **Authority** | Author of desired structure (publishes assembly definition). |
-| **Assembly definition** | Declarative desired structure for this process. Code: `AssemblyDefinition` / `structure_definition_id`. |
-| **Assembly** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Pure engine + system apply loop + admission. Theme: [VISION-0.64](vision/VISION-0.64.md) · seed: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). |
-| **Assembly status** | Local readiness under the current definition. Single readiness truth when assembly lands. |
+| **Authority** | Author of desired structure (publishes structure definition). |
+| **Structure definition** | Declarative desired structure for this process. Code: `StructureDefinition` / `structure_definition_id`. Vision still says **assembly definition**. |
+| **Structure reconciler** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Code: `StructureEngine` (`palm.core.structure`) + manager (`palm.system.structure`). Vision still says **assembly** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). Theme: [VISION-0.64](vision/VISION-0.64.md). |
+| **Structure status** | Local readiness under the current definition. Code: `StructureStatus`. Single readiness truth. Vision: assembly status. |
 | **Admission** | Read gate for work that needs a true organism (definition-ready). |
-| **Effect intent** | Structure action the assembly engine requests; system applies via `EffectPort`. |
+| **Effect intent** | Structure action the reconciler requests; system applies via `EffectPort`. |
 | **Tunnel** | Trusted path between places after home is known. Seed: [VISION-TUNNELS](vision/VISION-TUNNELS.md). |
 | **Vertical axis** | Authority and meaning climb the tree (home up, hop home, projection). |
 | **Horizontal axis** | Bodies spread in the place registry (many hosts, workers, resources). |

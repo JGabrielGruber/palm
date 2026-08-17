@@ -66,7 +66,7 @@ class ProviderExecutionService(BaseService):
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         resource_ref = str(resource_ref or "").strip()

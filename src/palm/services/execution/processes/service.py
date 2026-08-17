@@ -95,7 +95,7 @@ class ProcessExecutionService(BaseService):
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         request_body = _prepare_body(
@@ -121,7 +121,7 @@ class ProcessExecutionService(BaseService):
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         result = self.dispatch_command(
@@ -151,7 +151,7 @@ class ProcessExecutionService(BaseService):
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         request_body = _prepare_body(

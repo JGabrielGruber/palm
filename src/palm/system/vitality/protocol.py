@@ -7,7 +7,8 @@ Otherwise vitality raw-dogs public methods/attrs into ``meta.raw``.
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Protocol, runtime_checkable
+from collections.abc import Mapping
+from typing import Any, Protocol, runtime_checkable
 
 from palm.system.vitality.report import SeatReport
 

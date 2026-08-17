@@ -408,7 +408,7 @@ def test_default_probes_use_shared_resolvers() -> None:
     """Seat table uses attr_resolver / hub / first_resolver — no getattr wrappers."""
     import palm.system.vitality.seats as seats
     from palm.system.subsystems.planes.hub import get_system_planes
-    from palm.system.vitality.schema import SEAT_ASSEMBLY, SEAT_INSTALL, SEAT_PLANES
+    from palm.system.vitality.schema import SEAT_STRUCTURE, SEAT_INSTALL, SEAT_PLANES
     from palm.system.vitality.seats import build_default_probes
 
     for name in (
@@ -416,7 +416,7 @@ def test_default_probes_use_shared_resolvers() -> None:
         "_resolve_install",
         "_resolve_system_log",
         "_resolve_planes",
-        "_resolve_assembly",
+        "_resolve_structure",
     ):
         assert not hasattr(seats, name), name
 
@@ -431,7 +431,7 @@ def test_default_probes_use_shared_resolvers() -> None:
     assert attr_names(probes[SEAT_SUPERVISOR].resolve) == ("supervisor",)
     assert attr_names(probes[SEAT_EXECUTION].resolve) == ("execution",)
     assert attr_names(probes[SEAT_INSTALL].resolve) == ("install",)
-    assert attr_names(probes[SEAT_ASSEMBLY].resolve) == ("assembly",)
+    assert attr_names(probes[SEAT_STRUCTURE].resolve) == ("structure",)
     assert probes[SEAT_PLANES].resolve is get_system_planes
     boot = probes[SEAT_BOOT_MEMBERSHIP].resolve
     assert getattr(boot, "__qualname__", "") == "private_attr_resolver.<locals>._resolve"

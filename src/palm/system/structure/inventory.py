@@ -46,7 +46,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "refuse_violations block admission on dual membership",
     },
     {
-        "id": "vitality.assembly",
+        "id": "vitality.structure",
         "slice": "0.63.7",
         "law": "eyes sample admission + definition id",
     },
@@ -100,11 +100,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "slice": "0.63.17",
         "law": (
             "default assemble binds shell WorkloadEngine into combined place spawn "
-            "(assembly_bind_workload opt-out)"
+            "(structure_bind_workload opt-out)"
         ),
     },
     {
-        "id": "assembly.reassemble",
+        "id": "structure.reassemble",
         "slice": "0.63.18",
         "law": (
             "reassemble / force invalidate · membership refuse re-check · "
@@ -368,7 +368,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "id": "place_registry.os_spawn",
         "note": (
             "0.63.15–17: OS process + workload: place spawn + host auto-bind "
-            "WorkloadEngine on assemble (assembly_bind_workload=False opt-out)"
+            "WorkloadEngine on assemble (structure_bind_workload=False opt-out)"
         ),
         "intent": "paid for host path; residual only if custom seats bypass bind",
         "status": "paid_0_63_17",
@@ -386,7 +386,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "id": "host.soft_definitions_ready",
         "note": (
             "Audit 0.63.23: no host flag invents business readiness beside admission "
-            "pointer (packaging_status.assembly). Residual: packaging bags remain "
+            "pointer (packaging_status.structure). Residual: packaging bags remain "
             "eyes residual (CS-002), not structure law."
         ),
         "intent": "named residual — packaging eyes only, not dual ready flag",
@@ -644,10 +644,10 @@ def admission_inventory_snapshot(runtime: Any | None = None) -> dict[str, Any]:
     if runtime is None:
         return body
     admission = getattr(runtime, "admission", None)
-    assembly = getattr(runtime, "assembly", None)
+    structure = getattr(runtime, "structure", None)
     live: dict[str, Any] = {
         "is_started": bool(getattr(runtime, "is_started", False)),
-        "has_assembly_seat": assembly is not None,
+        "has_structure_seat": structure is not None,
     }
     if admission is not None and hasattr(admission, "to_dict"):
         live["admission"] = admission.to_dict()
@@ -657,8 +657,8 @@ def admission_inventory_snapshot(runtime: Any | None = None) -> dict[str, Any]:
             "phase": str(getattr(admission, "phase", "")),
             "definition_id": getattr(admission, "definition_id", None),
         }
-    if assembly is not None:
-        definition = getattr(assembly, "definition", None)
+    if structure is not None:
+        definition = getattr(structure, "definition", None)
         live["definition_id"] = (
             getattr(definition, "id", None) if definition is not None else None
         )

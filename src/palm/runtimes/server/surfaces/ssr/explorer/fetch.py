@@ -210,7 +210,7 @@ class ExplorerFetcher:
                 state=state,
                 resource_id=resource_id,
             )
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self._ctx.runtime)
         return self._ctx.runtime.execution.invoke_resource(

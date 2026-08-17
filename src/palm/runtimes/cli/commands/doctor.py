@@ -149,9 +149,9 @@ def run_doctor(ctx: CliContext) -> int:
     elif not summaries:
         console.print("[dim]No process instances yet — try[/] [cyan]flow start onboard[/]")
 
-    # 0.63.38 — Assembly admission + open residuals (exit cartography)
+    # 0.63.38 — Structure admission + open residuals (exit cartography)
     try:
-        from palm.system.assembly.inventory import admission_inventory_snapshot
+        from palm.system.structure.inventory import admission_inventory_snapshot
 
         runtime = None
         try:
@@ -199,7 +199,7 @@ def run_doctor(ctx: CliContext) -> int:
             "Open residual list is cartography for theme exit judgment.[/]"
         )
     except Exception as exc:
-        console.print(f"[yellow]Assembly doctor section skipped:[/] {exc}")
+        console.print(f"[yellow]Structure doctor section skipped:[/] {exc}")
 
     # Host packaging residual (CS-002) — living eyes are inspect top/vitality.
     console.print(

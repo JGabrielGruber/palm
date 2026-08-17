@@ -9,13 +9,13 @@ import pytest
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.bus import CommandBus, QueryBus
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 from palm.services.execution.flows.service import FlowExecutionService
 from palm.services.execution.flows.session import FlowSession
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def _settings() -> PalmSettings:
@@ -33,7 +33,7 @@ def _settings() -> PalmSettings:
 def _flows_with_closed_inject() -> FlowExecutionService:
     closed = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("test_closed",),
     )
     inspect = MagicMock()
@@ -76,7 +76,7 @@ def test_flow_session_cancel_not_admission_citizen() -> None:
     """Cancel stays control path when admission is closed (named residual)."""
     closed = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("test_closed",),
     )
     inspect = MagicMock()
@@ -98,7 +98,7 @@ def test_flow_session_cancel_not_admission_citizen() -> None:
 def test_flows_admission_gate_prefers_inject() -> None:
     ready = AdmissionSnapshot(
         may_run_business=True,
-        phase=AssemblyPhase.READY,
+        phase=StructurePhase.READY,
         definition_id="test",
     )
     flows = FlowExecutionService(
@@ -121,7 +121,7 @@ def test_flows_admission_gate_prefers_inject() -> None:
 def test_host_flows_continue_refused_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.admission.may_run_business is False
         flows = host.execution.flows
@@ -143,7 +143,7 @@ def test_cancel_job_not_admission_citizen() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False

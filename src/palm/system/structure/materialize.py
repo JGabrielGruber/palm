@@ -6,11 +6,11 @@ The structure definition names units. This module does not import organs. It loo
 
 from __future__ import annotations
 
-from palm.core.assembly import CAPABILITY_WORK_DRAIN, AssemblyDefinition
-from palm.system.assembly.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
+from palm.core.structure import CAPABILITY_WORK_DRAIN, StructureDefinition
+from palm.system.structure.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 
 
-def definition_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
+def definition_lists_work_drain(definition: StructureDefinition | None) -> bool:
     """True when the definition names work_drain as an install capability."""
     if definition is None:
         return False
@@ -18,7 +18,7 @@ def definition_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
 
 
 def apply_local_capabilities(
-    definition: AssemblyDefinition | None,
+    definition: StructureDefinition | None,
     seats: CapabilitySeats,
 ) -> frozenset[str]:
     """Apply every registered hand. Listed → install; else drop.

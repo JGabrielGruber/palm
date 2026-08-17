@@ -19,15 +19,15 @@ Teaching map: [metaphor.md](metaphor.md).
 
 **Hand** is glossary law (capability walker). Do not treat it as feudal leftover.
 
-**Assembly** / `Assembly*` / `palm.*.assembly` is **legacy package name**, not the feudal register. Same cleanup season is optional. It is a larger front.
+**Assembly** is the **vision / theme word**, not the feudal register. Packages and types are **`structure`** (locked 2026-08-17).
 
 ---
 
 ## 2. Identifier families in `src/`
 
-Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / observability.
+Sweep 2026-08-17. Concentrated in `palm.system.structure` plus seed / doctor / observability.
 
-**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; place-book / residual-ledger → registry; DNA / env → structure definition seed; `AssemblyEffectPort` → `EffectPort`. Living present docs updated 2026-08-17. `Assembly*` packages wait.
+**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; place-book / residual-ledger → registry; DNA / env → structure definition seed; `AssemblyEffectPort` → `EffectPort`. **Package / type rename locked:** `palm.*.structure` · `StructureDefinition` / `StructureEngine` / `StructureStatus` / `StructureSeat`. Living present docs updated 2026-08-17.
 
 | Family | What code names today | Kind | Prefer |
 |--------|------------------------|------|--------|
@@ -47,7 +47,7 @@ Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / ob
 **No identifier:** steward.  
 **Comment / docstring only:** phenotype (on `BootMode` and definition shape), peasants, crown, decree, second wall.
 
-`Assembly*` types: about 227 `src/` line hits. Packages: 9 files under `palm.core.assembly`, 16 under `palm.system.assembly`. Leave until José says the types move.
+`Assembly*` packages **renamed**. Homes: 9 files under `palm.core.structure`, 16 under `palm.system.structure`. Types: `StructureDefinition`, `StructureEngine`, `StructureEngineError`, `StructureError`, `StructurePhase`, `StructureStatus`, `StructureSeat`. Phase `system.structure.assemble`. Shell field `.structure`. Vitality seat `structure`.
 
 Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`. Tests lock the **inventory helpers**, not doctor copy.
 
@@ -79,7 +79,7 @@ Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`
 |------|----------|
 | [VISION-ASSEMBLY.md](../../vision/VISION-ASSEMBLY.md) | Essay keeps assembly, citizen, household, DNA. **Code now** box + §4 / §6.4 pointers. |
 | [ADR-032](../../adr/032-organism-assembly.md) | Decision text stays. **Code now** box + status-note pointer. |
-| [PALM.md](../../PALM.md) · [WRITING.md](../../WRITING.md) · [STATUS.md](../../../STATUS.md) · [WORK-DRAIN.md](../../WORK-DRAIN.md) · [VISION-0.64](../../vision/VISION-0.64.md) | Updated to structure definition, place registry, `EffectPort`, admitted / assemble path, dual readiness. |
+| [PALM.md](../../PALM.md) · [WRITING.md](../../WRITING.md) · [STATUS.md](../../../STATUS.md) · [WORK-DRAIN.md](../../WORK-DRAIN.md) · [VISION-0.64](../../vision/VISION-0.64.md) · vault glossary / packages | Present tense: `palm.*.structure`, `StructureDefinition` / `StructureEngine`, place registry, `EffectPort`. Vision still says assembly. |
 | [MIGRATION-0.63.md](../../migrations/MIGRATION-0.63.md) + CHANGELOG 0.63 | Chronicle — leave |
 
 **Allowed teaching (leave):**
@@ -99,7 +99,7 @@ Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`
 | **Place book / ledger** | **Locked 2026-08-17.** `PlaceBookEffectPort` / `place_book.py` / `InProcessPlaceBook` → `PlaceEffectPort` / `place_registry.py` / `InProcessPlaceRegistry`. Residual row `inventory.exit_residual*`. No aliases. |
 | **DNA / env** | **Locked 2026-08-17.** `PALM_ASSEMBLY_DNA_ID` / `assembly_dna_id` / `resolve_builtin_dna` / `dna_id_*` / `dna.seed` → `PALM_STRUCTURE_DEFINITION_ID` / `structure_definition_id` / `resolve_builtin_definition` / `definition_id_*` / `definition.seed`. No aliases. |
 | **EffectPort** | **Locked 2026-08-17.** `AssemblyEffectPort` → `EffectPort`. `StructureEffectPort` and `PlaceEffectPort` keep those names. No aliases. |
-| **Package / type rename** | `AssemblyDefinition`, `AssemblyEngine`, `palm.*.assembly` — own sitting |
+| **Package / type rename** | **Locked 2026-08-17.** `palm.core.assembly` / `palm.system.assembly` → `palm.core.structure` / `palm.system.structure`. `AssemblyDefinition` / `AssemblyEngine` / `AssemblyStatus` / `AssemblySeat` → `StructureDefinition` / `StructureEngine` / `StructureStatus` / `StructureSeat`. Phase `system.structure.assemble`. Field `.structure`. Options `structure_*`. Vitality `SEAT_STRUCTURE`. No aliases. |
 | **Docs pass** | **Locked 2026-08-17.** Vision + ADR keep assembly and point at new names. Present-tense homes updated. Chronicle left. |
 | **Biology register** | genome / phenotype in PHILOSOPHY — not this leftover |
 

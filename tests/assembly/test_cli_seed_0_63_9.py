@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from palm.app.session import create_cli_host
 from palm.app.settings import PalmSettings
-from palm.core.assembly import LOCAL_CLI_ID
+from palm.core.structure import LOCAL_CLI_ID
 from palm.system.log import reset_system_log_for_tests
 
 
@@ -17,9 +17,9 @@ def test_create_cli_host_seeds_local_cli_dna() -> None:
         assert host.admission.definition_id == LOCAL_CLI_ID
         assert host.admission.may_run_business is True
         rt = host.runtime()
-        assert rt.assembly is not None
-        assert rt.assembly.definition is not None
-        assert "server_surfaces" in rt.assembly.definition.refuse
-        assert "background_drain" not in rt.assembly.definition.refuse
+        assert rt.structure is not None
+        assert rt.structure.definition is not None
+        assert "server_surfaces" in rt.structure.definition.refuse
+        assert "background_drain" not in rt.structure.definition.refuse
     finally:
         host.shutdown()

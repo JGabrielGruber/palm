@@ -69,7 +69,7 @@ class WorkloadExecutionService(BaseService):
         **0.63.31:** product edge fails closed via ``admission_gate()``; port
         remains a second admission check.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         parsed = (
@@ -101,7 +101,7 @@ class WorkloadExecutionService(BaseService):
 
         **0.63.31:** product edge fails closed via ``admission_gate()``.
         """
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(self.admission_gate())
         result = self._port(runtime_name).exec_workload(

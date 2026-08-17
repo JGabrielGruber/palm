@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
-from palm.system.assembly import (
+from palm.system.log import reset_system_log_for_tests
+from palm.system.runtime.base import BaseRuntime
+from palm.system.structure import (
     GATED_PATHS,
     READINESS_EDGES,
     admission_inventory,
     admission_inventory_snapshot,
 )
-from palm.system.log import reset_system_log_for_tests
-from palm.system.runtime.base import BaseRuntime
 
 
 def test_admission_inventory_has_walls() -> None:
@@ -22,7 +22,7 @@ def test_admission_inventory_has_walls() -> None:
     assert "work_plane.tick" in ids
     assert "executor.submit_flow" in ids
     assert "definition.refuse" in ids
-    assert "vitality.assembly" in ids
+    assert "vitality.structure" in ids
     pret = {p["id"] for p in READINESS_EDGES}
     assert "env.structure_toggles" in pret
 
@@ -47,10 +47,10 @@ def test_host_packaging_nests_assembly() -> None:
     host.start()
     try:
         bag = host.packaging_status()
-        assert "assembly" in bag
-        assert bag["assembly"]["role"] == "admission_pointer"
-        assert bag["assembly"]["may_run_business"] is True
-        assert bag["assembly"]["definition_id"] == "local.embedded"
+        assert "structure" in bag
+        assert bag["structure"]["role"] == "admission_pointer"
+        assert bag["structure"]["may_run_business"] is True
+        assert bag["structure"]["definition_id"] == "local.embedded"
         # Host surface
         assert host.admission.may_run_business is True
     finally:

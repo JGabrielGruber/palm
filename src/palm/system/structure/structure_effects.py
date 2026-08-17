@@ -1,6 +1,6 @@
 """Place registry + structure-intent effect port (0.63.15).
 
-Closed intent set from pure assembly: ensure/release place, invalidate/refresh
+Closed intent set from pure structure: ensure/release place, invalidate/refresh
 projection, apply structure policy, request structure seed. System hands only.
 """
 
@@ -9,23 +9,23 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-from palm.core.assembly import (
-    AssemblyDefinition,
+from palm.core.structure import (
     EffectIntent,
     EffectIntentKind,
     Observation,
     ObservationKind,
+    StructureDefinition,
     refuse_violations,
 )
-from palm.system.assembly.place_registry import PlaceEffectPort
+from palm.system.structure.place_registry import PlaceEffectPort
 
 
 @dataclass
 class StructureEffectPort:
-    """Default assembly hands: places + projection/policy/seed structure intents."""
+    """Default structure hands: places + projection/policy/seed structure intents."""
 
     places: PlaceEffectPort = field(default_factory=PlaceEffectPort)
-    definition: AssemblyDefinition | None = None
+    definition: StructureDefinition | None = None
     surfaces: tuple[str, ...] = ()
     capabilities: tuple[str, ...] = ()
     projections_loaded: set[str] = field(default_factory=set)
@@ -33,7 +33,7 @@ class StructureEffectPort:
 
     def bind_structure(
         self,
-        definition: AssemblyDefinition | None,
+        definition: StructureDefinition | None,
         *,
         surfaces: Iterable[str] = (),
         capabilities: Iterable[str] = (),

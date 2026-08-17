@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from palm.system.assembly.inventory import (
+from palm.system.structure.inventory import (
     GATED_PATHS,
     READINESS_EDGES,
     admission_inventory,

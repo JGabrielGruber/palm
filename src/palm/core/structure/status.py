@@ -1,4 +1,4 @@
-"""Assembly status phase and admission snapshot (pure)."""
+"""Structure status phase and admission snapshot (pure)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from enum import StrEnum
 from typing import Any, Self
 
 
-class AssemblyPhase(StrEnum):
+class StructurePhase(StrEnum):
     """Local readiness phase under the current definition."""
 
     EMPTY = "empty"
@@ -38,7 +38,7 @@ class AdmissionSnapshot:
     """
 
     may_run_business: bool
-    phase: AssemblyPhase
+    phase: StructurePhase
     definition_id: str | None = None
     definition_version: str | None = None
     reasons: tuple[str, ...] = ()
@@ -56,16 +56,16 @@ class AdmissionSnapshot:
     def empty(cls) -> Self:
         return cls(
             may_run_business=False,
-            phase=AssemblyPhase.EMPTY,
+            phase=StructurePhase.EMPTY,
             reasons=("no_definition",),
         )
 
 
 @dataclass(frozen=True, slots=True)
-class AssemblyStatus:
+class StructureStatus:
     """In-engine status of readiness under the current definition."""
 
-    phase: AssemblyPhase
+    phase: StructurePhase
     definition_id: str | None = None
     definition_version: str | None = None
     places_ready: frozenset[str] = frozenset()
@@ -75,23 +75,23 @@ class AssemblyStatus:
 
     def admission(self) -> AdmissionSnapshot:
         reasons: list[str] = []
-        if self.phase is AssemblyPhase.EMPTY:
+        if self.phase is StructurePhase.EMPTY:
             reasons.append("no_definition")
-        elif self.phase is AssemblyPhase.RECEIVED:
+        elif self.phase is StructurePhase.RECEIVED:
             reasons.append("definition_not_assembled")
-        elif self.phase is AssemblyPhase.ASSEMBLING:
+        elif self.phase is StructurePhase.ASSEMBLING:
             reasons.append("assembling")
             reasons.extend(f"place_missing:{p}" for p in self.places_missing)
-        elif self.phase is AssemblyPhase.BLOCKED:
+        elif self.phase is StructurePhase.BLOCKED:
             reasons.extend(self.block_reasons or ("blocked",))
-        elif self.phase is AssemblyPhase.INVALIDATED:
+        elif self.phase is StructurePhase.INVALIDATED:
             reasons.append("invalidated")
-        elif self.phase is AssemblyPhase.READY:
+        elif self.phase is StructurePhase.READY:
             if not self.truth_home_up:
                 reasons.append("truth_home_down")
             reasons.extend(self.block_reasons)
 
-        may = self.phase is AssemblyPhase.READY and not reasons and self.truth_home_up
+        may = self.phase is StructurePhase.READY and not reasons and self.truth_home_up
         if may:
             reason_tuple: tuple[str, ...] = ()
         else:
@@ -108,6 +108,6 @@ class AssemblyStatus:
 
 __all__ = [
     "AdmissionSnapshot",
-    "AssemblyPhase",
-    "AssemblyStatus",
+    "StructurePhase",
+    "StructureStatus",
 ]

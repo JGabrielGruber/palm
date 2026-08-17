@@ -54,15 +54,15 @@ Full concept table: [PALM.md §3](PALM.md). Short form:
 | **Projection** | Local view of authority — not a second truth |
 | **Light center** | Role: refuse heavy body/ground on purpose |
 | **Support / realm** | Ground place; realm = recursive sub-support |
-| **Authority** | Author of assembly definition (desired structure) |
-| **Assembly definition** | Declarative desired structure. Code: structure definition / `structure_definition_id` |
-| **Assembly** | Structure reconciler; organism ready — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) |
-| **Assembly status** | Local readiness under current definition |
+| **Authority** | Author of structure definition (desired structure) |
+| **Structure definition** | Declarative desired structure. Code: `StructureDefinition` / `structure_definition_id`. Vision title: Assembly. |
+| **Structure reconciler** | Organism ready — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) (essay keeps **assembly**) |
+| **Structure status** | Local readiness under current definition. Code: `StructureStatus` |
 | **Admission** | Read gate for business that needs ground |
 | **Admitted path** | Act that needs the organism whole; only via admission |
 | **Assemble path** | Boot / assemble / apply — not forced through business admission |
 | **Dual readiness** | Readiness without admission — purge or name |
-| **Effect intent** | Structure action assembly requests; system applies |
+| **Effect intent** | Structure action the reconciler requests; system applies |
 | **Composition root** | Host wiring — not product’s structure API |
 | **Vertical / horizontal** | Meaning climbs home · bodies spread in the book — [PALM §8](PALM.md) |
 | **Registry extension** | OCP/DIP: definition at edge; consumer walks registry — [AGENTS §1.1](../AGENTS.md) · [PALM §7](PALM.md) |

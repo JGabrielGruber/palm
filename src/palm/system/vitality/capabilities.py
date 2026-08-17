@@ -15,13 +15,13 @@ from __future__ import annotations
 
 from typing import Any
 
+from palm.system.vitality.benchmark import sample_benchmark
 from palm.system.vitality.capability import (
     CapabilityFragment,
     SampleContext,
     VitalityCapability,
     intention_stub,
 )
-from palm.system.vitality.benchmark import sample_benchmark
 from palm.system.vitality.emission_window import sample_emission_window
 from palm.system.vitality.loaded_bulk import sample_loaded_bulk
 from palm.system.vitality.process_resources import sample_process_resources
@@ -47,7 +47,6 @@ from palm.system.vitality.schema import (
     STATE_OK,
 )
 from palm.system.vitality.walk import WalkOptions, walk_result
-
 
 BAG_SEAT_REPORTS = "seat_reports"
 BAG_SEAT_WALK_RESULT = "seat_walk_result"

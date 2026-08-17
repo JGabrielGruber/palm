@@ -15,7 +15,7 @@ Engines:
 - ``wait`` — pure continue-interest vocabulary
 - ``work`` — start-plane intent types
 - ``workload`` — pure workload lifecycle (WorkloadEngine)
-- ``assembly`` — pure organism-structure reconciler (AssemblyEngine, 0.63)
+- ``structure`` — pure organism-structure reconciler (StructureEngine, 0.63)
 """
 
 from palm.core.auth import AuthEngine, Principal

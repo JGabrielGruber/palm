@@ -10,9 +10,9 @@ from palm.core.workload import (
     WorkloadKind,
     WorkloadSpec,
 )
-from palm.system.assembly.errors import AdmissionRefusedError
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure.errors import AdmissionRefusedError
 
 
 def _minimal_spec() -> WorkloadSpec:
@@ -30,7 +30,7 @@ def test_start_workload_refused_when_assembly_skipped() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
         workload_host_enabled=True,
     )
     try:
@@ -50,7 +50,7 @@ def test_start_workload_refused_when_dna_refuse_blocks() -> None:
         storage_backend="memory",
         enable_event_outbox=False,
         structure_definition_id="local.embedded",
-        assembly_surfaces=["rest"],
+        structure_surfaces=["rest"],
         workload_host_enabled=True,
     )
     try:
@@ -90,7 +90,7 @@ def test_structure_workload_engine_not_gated_by_port() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
         workload_host_enabled=True,
     )
     try:

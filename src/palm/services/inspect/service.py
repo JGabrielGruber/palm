@@ -103,7 +103,7 @@ class InspectService(BaseService):
         options: ProjectionOptions | None = None,
         **kwargs: Any,
     ) -> dict[str, Any]:
-        """Full vitality snapshot — projection only (not doctor assembly)."""
+        """Full vitality snapshot — projection only (not doctor structure)."""
         return present_vitality(runtime, options, **kwargs)
 
     def benchmark(

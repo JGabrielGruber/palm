@@ -45,11 +45,11 @@ This split is intentional and must stay clean.
          Admission (may business run?)
 ```
 
-| Piece | Layer | Package home (intended / lag) | Duty |
-|-------|--------|-------------------------------|------|
-| **Structure definition** | Data | `palm.core.assembly` types (lag name) | Declarative desired structure + membership sections |
-| **Structure reconciler** | **Core** | `palm.core.assembly` · **AssemblyEngine** | Pure tick: intents + status. No packages install. No provider I/O. |
-| **Effect port / hands** | **System** | `palm.system.assembly` | Apply intents (places, policy, …); return observations |
+| Piece | Layer | Package home | Duty |
+|-------|--------|--------------|------|
+| **Structure definition** | Data | `palm.core.structure` · **StructureDefinition** | Declarative desired structure + membership sections |
+| **Structure reconciler** | **Core** | `palm.core.structure` · **StructureEngine** | Pure tick: intents + status. No packages install. No provider I/O. |
+| **Effect port / hands** | **System** | `palm.system.structure` · **StructureEffectPort** | Apply intents (places, policy, …); return observations |
 | **Structure manager** | **System** | seat + loop + resolvers + materialize | Orchestrates reconcile **and** real-world membership; publishes admission |
 | **Admission** | Published on shell | snapshot from status | Fail-closed gate for business that needs ground |
 
@@ -135,4 +135,4 @@ First implementation cut (capabilities / `work_drain`; theme stamp open): [appen
 
 - Component context: boot → structure management → job path / surfaces  
 - Sequence: load definition → resolve → materialize → tick → admit  
-- Package: `core.assembly` vs `system.assembly` (see [c4-code](../../c4-code/README.md))
+- Package: `core.structure` vs `system.structure` (see [c4-code](../../c4-code/README.md))

@@ -43,7 +43,7 @@ def build_host_handlers(
 ) -> dict[str, PhaseHandler]:
     """Build the full host schedule handler map for one ``start()`` call.
 
-    ``host`` is the ApplicationHost shell — assembly target, not schedule owner.
+    ``host`` is the ApplicationHost shell — structure target, not schedule owner.
     """
 
     def kernel_bootstrap(_ctx: BootContext) -> None:
@@ -61,18 +61,18 @@ def build_host_handlers(
         # 0.63.5 / 0.63.13 — seed structure definition + membership for refuse.
         # Caller definition override still wins; membership always seeds so dual shapes
         # fail closed under refuse (env/composition cannot hide from admission).
-        if not merged.get("assembly_skip") and not merged.get("skip_assembly"):
-            from palm.system.assembly.seed import seed_assembly_options_from_host
+        if not merged.get("structure_skip"):
+            from palm.system.structure.seed import seed_structure_options_from_host
 
-            seed = seed_assembly_options_from_host(host)
+            seed = seed_structure_options_from_host(host)
             # Membership facts always from host composition unless caller set them.
-            for key in ("assembly_surfaces", "assembly_capabilities"):
+            for key in ("structure_surfaces", "structure_capabilities"):
                 if key not in options:
                     merged[key] = seed[key]
             # Structure definition: runtime options / explicit definition win; else seed (incl. env).
-            if "assembly_definition" not in options and "structure_definition_id" not in options:
+            if "structure_definition" not in options and "structure_definition_id" not in options:
                 merged["structure_definition_id"] = seed["structure_definition_id"]
-                merged["assembly_definition"] = seed["assembly_definition"]
+                merged["structure_definition"] = seed["structure_definition"]
         # 0.63.28 — composition membership decides outbox *store wire* on host path.
         # settings.enable_event_outbox seeds composition at resolve only; after
         # resolve, composition.has("outbox") is structure truth (not peer OR).

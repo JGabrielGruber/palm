@@ -24,7 +24,7 @@ class BootContext:
     | ``install`` | ``system.install.bind`` |
     | ``planes`` | ``system.planes.attach`` |
     | ``supervisor`` | ``system.supervisor.wire`` |
-    | ``assembly`` / ``assembly_admission`` / ``assembly_definition`` | ``system.assembly.assemble`` |
+    | ``structure`` / ``structure_admission`` / ``structure_definition`` | ``system.structure.assemble`` |
 
     Keep free of product types so ``palm.system.boot`` stays pure.
     Host-side handlers may hang collaborators on ``extras``.
@@ -35,7 +35,7 @@ class BootContext:
     runtime: str | None = None
     """Log / identity name of the runtime (string), not the shell object."""
     shell: Any = None
-    """System instance that owns seats (assembly target)."""
+    """System instance that owns seats (structure target)."""
 
     # ── engine / collaborator seats (published as phases init them) ─────────
     event: Any = None
@@ -56,11 +56,11 @@ class BootContext:
     """Planes subsystem after attach phase."""
     supervisor: Any = None
     """Supervisor subsystem after wire phase."""
-    assembly: Any = None
-    """Assembly seat after structure assemble (0.63)."""
-    assembly_admission: Any = None
+    structure: Any = None
+    """Structure seat after structure assemble (0.63)."""
+    structure_admission: Any = None
     """Admission snapshot after assemble."""
-    assembly_definition: Any = None
+    structure_definition: Any = None
     """Structure definition loaded for this walk."""
 
     extras: dict[str, Any] = field(default_factory=dict)

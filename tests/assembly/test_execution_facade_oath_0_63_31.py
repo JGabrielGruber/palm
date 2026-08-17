@@ -9,13 +9,13 @@ import pytest
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
 from palm.common.cqrs.bus import CommandBus, QueryBus
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 from palm.services.execution.processes.service import ProcessExecutionService
 from palm.services.execution.providers.service import ProviderExecutionService
 from palm.services.execution.workloads.service import WorkloadExecutionService
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def _settings() -> PalmSettings:
@@ -33,7 +33,7 @@ def _settings() -> PalmSettings:
 def _closed() -> AdmissionSnapshot:
     return AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("test_closed",),
     )
 
@@ -131,7 +131,7 @@ def test_process_prepare_refused_on_oath() -> None:
 def test_host_execution_facade_refused_when_assembly_skipped() -> None:
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.admission.may_run_business is False
         with pytest.raises(AdmissionRefusedError):

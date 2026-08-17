@@ -72,7 +72,7 @@ def open_target(
 
     if kind_s in {"flow", "flows"}:
         # 0.63.21 gate · 0.63.22 — published admission, not runtime dig.
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(assist.admission_gate())
         body: dict[str, Any] = {"format": view_format}

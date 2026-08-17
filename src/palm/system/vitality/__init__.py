@@ -22,19 +22,6 @@ See [VISION-0.61](../../../../docs/vision/closed/VISION-0.61.md) · [ADR-030](do
 
 from __future__ import annotations
 
-from palm.system.vitality.raw import (
-    prefer_native,
-    sample_attrs,
-    sample_method,
-    sample_raw,
-    sample_sequence,
-)
-from palm.system.vitality.capability import (
-    CapabilityFragment,
-    SampleContext,
-    VitalityCapability,
-    intention_stub,
-)
 from palm.system.vitality.benchmark import (
     DEFAULT_ITERATIONS,
     DEFAULT_RECIPE,
@@ -62,6 +49,12 @@ from palm.system.vitality.capabilities import (
     sample_process_resources,
     sample_seat_walk,
 )
+from palm.system.vitality.capability import (
+    CapabilityFragment,
+    SampleContext,
+    VitalityCapability,
+    intention_stub,
+)
 from palm.system.vitality.emission_window import coerce_actor_kind
 from palm.system.vitality.probe import (
     ProbeCatalog,
@@ -80,6 +73,13 @@ from palm.system.vitality.projection import (
     project_top,
 )
 from palm.system.vitality.protocol import SeatReportable, has_seat_report, try_native_report
+from palm.system.vitality.raw import (
+    prefer_native,
+    sample_attrs,
+    sample_method,
+    sample_raw,
+    sample_sequence,
+)
 from palm.system.vitality.registry import VitalityRegistry, installed_only
 from palm.system.vitality.report import (
     SeatReport,
@@ -109,7 +109,6 @@ from palm.system.vitality.schema import (
     COST_EXPENSIVE,
     COST_MODERATE,
     DEFAULT_EMISSION_WINDOW_LIMIT,
-    KNOWN_ACTOR_KINDS,
     KIND_BOOT,
     KIND_ENGINE,
     KIND_LOG,
@@ -118,6 +117,7 @@ from palm.system.vitality.schema import (
     KIND_PORT,
     KIND_SUPERVISOR,
     KIND_SUPERVISOR_SERVICE,
+    KNOWN_ACTOR_KINDS,
     LINEAGE_ADAPTER,
     LINEAGE_NATIVE,
     LINEAGE_SAMPLED,
@@ -125,13 +125,13 @@ from palm.system.vitality.schema import (
     MATURITY_INTENTION,
     ROLE_OBSERVE,
     ROLE_TOOL,
-    SEAT_ASSEMBLY,
     SEAT_BOOT_MEMBERSHIP,
     SEAT_EXECUTION,
     SEAT_INSTALL,
     SEAT_PLANES,
     SEAT_REPORT_SCHEMA,
     SEAT_SESSION_PLANE,
+    SEAT_STRUCTURE,
     SEAT_SUPERVISOR,
     SEAT_SYSTEM_LOG,
     SEAT_WAIT_PLANE,
@@ -211,7 +211,7 @@ __all__ = [
     "RECIPE_WORK_CYCLE",
     "ROLE_OBSERVE",
     "ROLE_TOOL",
-    "SEAT_ASSEMBLY",
+    "SEAT_STRUCTURE",
     "SEAT_BOOT_MEMBERSHIP",
     "SEAT_EXECUTION",
     "SEAT_INSTALL",

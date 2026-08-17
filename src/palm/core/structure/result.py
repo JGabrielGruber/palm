@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from palm.core.assembly.intent import EffectIntent
-from palm.core.assembly.status import AdmissionSnapshot, AssemblyStatus
+from palm.core.structure.intent import EffectIntent
+from palm.core.structure.status import AdmissionSnapshot, StructureStatus
 
 
 @dataclass(frozen=True, slots=True)
 class AssembleResult:
     """Status after tick plus effect intents the system should apply."""
 
-    status: AssemblyStatus
+    status: StructureStatus
     admission: AdmissionSnapshot
     intents: tuple[EffectIntent, ...] = ()
     #: True when phase or readiness changed this tick.

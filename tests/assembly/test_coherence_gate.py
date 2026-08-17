@@ -8,21 +8,21 @@ from __future__ import annotations
 
 import pytest
 
-from palm.core.assembly import (
-    AssemblyPhase,
+from palm.core.structure import (
     Observation,
     ObservationKind,
+    StructurePhase,
     local_embedded,
 )
 from palm.core.work import WorkIntent
 from palm.definitions.flow import FlowDefinition
-from palm.system.assembly import (
-    AdmissionRefusedError,
-    AssemblySeat,
-    require_business_admission,
-)
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure import (
+    AdmissionRefusedError,
+    StructureSeat,
+    require_business_admission,
+)
 
 
 def _noop_flow() -> FlowDefinition:
@@ -42,7 +42,7 @@ def test_require_admission_empty_raises() -> None:
 
 
 def test_require_admission_ready_ok() -> None:
-    seat = AssemblySeat()
+    seat = StructureSeat()
     seat.assemble(local_embedded())
     assert seat.admission().may_run_business is True
 
@@ -55,7 +55,7 @@ def test_require_admission_ready_ok() -> None:
 
 def test_require_admission_accepts_snapshot_and_factory() -> None:
     """0.63.22 — published admission shapes, not only runtime shells."""
-    seat = AssemblySeat()
+    seat = StructureSeat()
     seat.assemble(local_embedded())
     ready = seat.admission()
     assert require_business_admission(ready).may_run_business is True
@@ -68,7 +68,7 @@ def test_submit_flow_fail_closed_when_assembly_skipped() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False
@@ -96,8 +96,8 @@ def test_submit_fail_closed_truth_home_down() -> None:
     rt = BaseRuntime()
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
-        assert rt.assembly is not None
-        rt.assembly.engine.observe(
+        assert rt.structure is not None
+        rt.structure.engine.observe(
             Observation(kind=ObservationKind.TRUTH_HOME_DOWN)
         )
         assert rt.admission.may_run_business is False
@@ -114,7 +114,7 @@ def test_work_plane_and_submit_same_gate() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         plane = rt.work_plane
@@ -124,6 +124,6 @@ def test_work_plane_and_submit_same_gate() -> None:
         assert plane.tick(limit=5) == 0
         with pytest.raises(AdmissionRefusedError):
             rt.submit_flow(_noop_flow())
-        assert rt.admission.phase is AssemblyPhase.EMPTY
+        assert rt.admission.phase is StructurePhase.EMPTY
     finally:
         rt.stop()

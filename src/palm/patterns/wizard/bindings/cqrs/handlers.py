@@ -58,7 +58,7 @@ def handle_wizard_command(command: Command, ctx: Any) -> Any | None:
     if isinstance(command, ProvideWizardInputCommand):
         # 0.63.34 — pattern CQRS product continue (port was already a second admission check)
         runtime = _resolve_runtime(ctx, command.runtime_name)
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(runtime)
         job, slug = provide_interactive_input_for_instance(
@@ -73,7 +73,7 @@ def handle_wizard_command(command: Command, ctx: Any) -> Any | None:
         }
     if isinstance(command, RequestWizardBacktrackCommand):
         runtime = _resolve_runtime(ctx, command.runtime_name)
-        from palm.system.assembly.errors import require_business_admission
+        from palm.system.structure.errors import require_business_admission
 
         require_business_admission(runtime)
         job, to_step = request_interactive_backtrack_for_instance(

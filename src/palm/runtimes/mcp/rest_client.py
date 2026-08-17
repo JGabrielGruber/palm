@@ -39,7 +39,7 @@ def admission_refused_error(detail: str) -> PalmRestError:
 
 def maybe_admission_refused_error(exc: BaseException) -> PalmRestError | None:
     """Map :class:`AdmissionRefusedError` to PalmRestError; else ``None``."""
-    from palm.system.assembly.errors import AdmissionRefusedError
+    from palm.system.structure.errors import AdmissionRefusedError
 
     if isinstance(exc, AdmissionRefusedError):
         return admission_refused_error(str(exc))

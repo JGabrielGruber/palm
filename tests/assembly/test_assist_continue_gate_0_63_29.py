@@ -8,12 +8,12 @@ import pytest
 
 from palm.app.host.application_host import ApplicationHost
 from palm.app.settings import PalmSettings
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase
+from palm.core.structure import AdmissionSnapshot, StructurePhase
 from palm.services.assist.session import AssistSession
-from palm.system.assembly.errors import AdmissionRefusedError
-from palm.system.assembly.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
+from palm.system.structure.errors import AdmissionRefusedError
+from palm.system.structure.inventory import GATED_PATHS, READINESS_EDGES, admission_inventory
 
 
 def _settings() -> PalmSettings:
@@ -31,7 +31,7 @@ def _settings() -> PalmSettings:
 def _closed_assist() -> MagicMock:
     closed = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("test_closed",),
     )
     assist = MagicMock()
@@ -79,7 +79,7 @@ def test_host_assist_continue_refused_when_assembly_skipped() -> None:
     """Live packaging inject: host assist continue uses admission_gate, not dig."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
-    host.start(assembly_skip=True)
+    host.start(structure_skip=True)
     try:
         assert host.assist is not None
         assert host.admission.may_run_business is False
@@ -102,7 +102,7 @@ def test_resume_process_refused_when_assembly_skipped() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         assert rt.admission.may_run_business is False

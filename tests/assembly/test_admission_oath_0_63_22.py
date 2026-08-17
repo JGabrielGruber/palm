@@ -6,18 +6,18 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from palm.core.assembly import AdmissionSnapshot, AssemblyPhase, local_embedded
-from palm.system.assembly import (
+from palm.core.structure import AdmissionSnapshot, StructurePhase, local_embedded
+from palm.system.structure import (
     AdmissionRefusedError,
-    AssemblySeat,
+    StructureSeat,
     coerce_admission_snapshot,
     require_business_admission,
 )
-from palm.system.assembly.inventory import GATED_PATHS, admission_inventory
+from palm.system.structure.inventory import GATED_PATHS, admission_inventory
 
 
 def test_coerce_snapshot_direct() -> None:
-    seat = AssemblySeat()
+    seat = StructureSeat()
     seat.assemble(local_embedded())
     ready = seat.admission()
     assert coerce_admission_snapshot(ready) is ready
@@ -25,7 +25,7 @@ def test_coerce_snapshot_direct() -> None:
 
 
 def test_coerce_zero_arg_factory() -> None:
-    seat = AssemblySeat()
+    seat = StructureSeat()
     seat.assemble(local_embedded())
     snap = require_business_admission(lambda: seat.admission())
     assert snap.may_run_business is True
@@ -43,7 +43,7 @@ def test_assist_admission_gate_prefers_inject_over_runtime() -> None:
 
     closed = AdmissionSnapshot(
         may_run_business=False,
-        phase=AssemblyPhase.BLOCKED,
+        phase=StructurePhase.BLOCKED,
         reasons=("test_closed",),
     )
     assist = MagicMock(spec=AssistService)
@@ -63,7 +63,7 @@ def test_assist_service_admission_gate_uses_source() -> None:
 
     ready = AdmissionSnapshot(
         may_run_business=True,
-        phase=AssemblyPhase.READY,
+        phase=StructurePhase.READY,
         definition_id="test",
     )
     inspect = MagicMock()

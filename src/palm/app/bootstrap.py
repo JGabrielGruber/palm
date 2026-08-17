@@ -160,13 +160,13 @@ def _capabilities_from_settings(
     ``work_drain`` is not written here. Structure definition ``capabilities`` list it.
 
     **0.64 / SD-021:** flag → capability map lives in
-    ``palm.system.assembly.seed.MEMBERSHIP_CAPABILITY_SEEDS``.
+    ``palm.system.structure.seed.MEMBERSHIP_CAPABILITY_SEEDS``.
 
     ``journal``, ``projections``, and ``workloads`` have no settings flag: they
     are always available on a settings-composed host (a lean *explicit*
     composition can still omit them). See VISION-0.51 / ADR-020 / ADR-028 D4.
     """
-    from palm.system.assembly.seed import membership_capabilities_from_settings
+    from palm.system.structure.seed import membership_capabilities_from_settings
 
     return membership_capabilities_from_settings(settings, deployment=deployment)
 

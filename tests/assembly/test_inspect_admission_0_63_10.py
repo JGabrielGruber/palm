@@ -31,7 +31,7 @@ def test_present_top_admission_fail_closed_when_skipped() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_skip=True,
+        structure_skip=True,
     )
     try:
         top = present_top(rt)

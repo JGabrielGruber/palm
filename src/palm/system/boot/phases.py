@@ -200,7 +200,7 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "System instance ready mark",
     ),
     PhaseSpec(
-        "system.assembly.assemble",
+        "system.structure.assemble",
         "system",
         "implemented",
         "Structure assemble — load definition, reconcile, publish admission (0.63)",

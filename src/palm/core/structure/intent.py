@@ -21,7 +21,7 @@ class EffectIntentKind(StrEnum):
 
 @dataclass(frozen=True, slots=True)
 class EffectIntent:
-    """One structure action for the system assembly effect port to apply."""
+    """One structure action for the system structure effect port to apply."""
 
     kind: EffectIntentKind
     target: str = ""
