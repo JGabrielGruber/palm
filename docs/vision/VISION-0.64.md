@@ -3,7 +3,7 @@
 **Status:** **Open** (2026-08-17). José closed **0.63**.  
 **Map:** [PALM.md](../PALM.md) · vault [architecture/](../architecture/README.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md)  
 **Prior:** [VISION-0.63](closed/VISION-0.63.md) (closed) · [ADR-032](../adr/032-organism-assembly.md)  
-**This theme:** [ADR-033](../adr/033-one-walker.md) **Proposed** — one walker per duty. José accepts.
+**This theme:** [ADR-033](../adr/033-one-walker.md) **Proposed** — old wiring dies in the same cut. José accepts.
 
 **This minor is `work_drain` as the first real capability** — the shape every later organ copies. Not a slice queue. Not host-owned drain. Not a private `if`.
 

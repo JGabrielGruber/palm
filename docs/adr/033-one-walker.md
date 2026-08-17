@@ -1,4 +1,4 @@
-# ADR-033 — One walker per duty
+# ADR-033 — Old wiring dies in the same cut
 
 **Status:** Proposed  
 **Date:** 2026-08-17  
@@ -13,14 +13,14 @@ José accepts. This record stays **Proposed** until he locks.
 
 ## Context
 
-1. Palm moves duties from **host packaging** onto **system seats** (supervisor, planes, structure hands).  
-2. A new door often lands **next to** the old walker. Tests green both. The next organ copies the pair.  
-3. That is how bugs hide: a later change updates one walker. The other still runs. Start moves; stop stays. A helper names a branch nobody walks and looks like API.  
-4. ADR-026 already says temporary shims must be debt-listed. ADR-027 already forbids long-lived dual paths. ADR-029 already gives the supervisor start/stop. Those records did not stop a second host start window for `work_drain`.  
-5. Theme **0.64** is the first copyable capability. Later hands (journal, outbox, …) will copy this shape. The law must outlive the theme note.  
-6. Pre-1.0 may break the old walker. José names residual when a dual must stay for a while.
+1. Palm keeps **adding** doors and almost never **removes** the old wire. The tree grows. Two paths do one duty.  
+2. That is the worry. Not a missing type name. Old host phases, coordinator pairs, unused helpers, and “boot window stays” sit next to the new seat. Tests green both. The next organ copies the pile.  
+3. Bugs hide in the leftover: a later change updates one path. The other still runs. Start moves; stop stays. A helper names a branch nobody walks and looks like API.  
+4. ADR-026 already says temporary shims must be debt-listed. ADR-027 already forbids long-lived dual paths. ADR-029 already gives the supervisor start/stop. Those records did not make us **delete** the host start window for `work_drain`. Listing is not removal.  
+5. Theme **0.64** is the first copyable capability. Later hands will copy what we leave. If we leave old wiring, they will add more and never remove.  
+6. Pre-1.0 may break the old wire. José names residual when a dual must stay for a while. Silence is not a stay.
 
-**Code now (2026-08-17).** `system.background.start` is the one `work_drain` loop start. Host schedule ends at `host.ready`. The host coordinator has no start/stop pair. Host shutdown freezes the supervisor seat, then `runtime.stop` stops it again.
+**Code now (2026-08-17).** The host start window and the coordinator start/stop pair are **gone**. `system.background.start` is the one `work_drain` loop start. Host schedule ends at `host.ready`. Host shutdown freezes the supervisor seat, then `runtime.stop` stops it again.
 
 ---
 
@@ -38,9 +38,9 @@ A **walker** is the live code that performs that duty. Something in `src/` must 
 | One **fill site** for install/register | Hand **and** host `if` **and** catalog freelance |
 | Supervisor start/stop for continuous services | Host phase that names the same service again |
 
-### D2 — A new door is not landed until the old walker is gone
+### D2 — Adding is half the cut. Removal is the other half.
 
-Landing the new path is half the cut.
+A new door is not landed until the old walker is gone.
 
 | Landed means | Not landed |
 |--------------|------------|
@@ -76,8 +76,8 @@ Lists exist only if something walks them.
 
 ### Positive
 
-- The next organ copies **name + hand + one start owner**.  
-- Shutdown order stays honest: host may freeze the supervisor seat, then `runtime.stop` runs.  
+- The tree stops growing a second wire for each new seat.  
+- The next organ copies **name + hand + one start owner**, not the old host pair.  
 - Dual fill shows up as a broken test or a named residual, not as a quiet second loop.
 
 ### Negative / cost

@@ -18,7 +18,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-h
 | **0.64 open** | `work_drain` as first real capability — copyable home |
 | **0.63 closed** | José (2026-08-17) — admission floor real; slice queue crushed |
 | **ADR-032** | [032](docs/adr/032-organism-assembly.md) **Accepted** |
-| **ADR-033** | [033](docs/adr/033-one-walker.md) **Proposed** — one walker per duty. José accepts |
+| **ADR-033** | [033](docs/adr/033-one-walker.md) **Proposed** — old wiring dies in the same cut. José accepts |
 | **Later seeds** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 

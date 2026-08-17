@@ -47,7 +47,7 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [030](030-system-vitality.md) | System vitality — living-kernel observation (0.61) | Accepted |
 | [031](031-multi-claimer-work-drain.md) | Multi-claimer work drain — exclusive claim first (0.62) | Accepted |
 | [032](032-organism-assembly.md) | Organism assembly — DNA · admission · single readiness (0.63) | Accepted |
-| [033](033-one-walker.md) | One walker per duty (0.64) | Proposed |
+| [033](033-one-walker.md) | Old wiring dies in the same cut (0.64) | Proposed |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
