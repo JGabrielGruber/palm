@@ -13,7 +13,7 @@ The registry answers: *which observe/tool capabilities are enabled?*
 from __future__ import annotations
 
 import threading
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
@@ -207,11 +207,6 @@ def first_resolver(*resolvers: SeatResolver) -> SeatResolver:
     return _resolve
 
 
-def fixed_probes(probes: Sequence[SeatProbe]) -> ProbeCatalog:
-    """Build a catalog from an explicit sequence."""
-    return ProbeCatalog().extend(probes)
-
-
 __all__ = [
     "AbsentPolicy",
     "InstanceReporter",
@@ -221,6 +216,5 @@ __all__ = [
     "SeatResolver",
     "attr_resolver",
     "first_resolver",
-    "fixed_probes",
     "private_attr_resolver",
 ]

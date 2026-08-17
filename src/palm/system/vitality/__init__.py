@@ -61,7 +61,6 @@ from palm.system.vitality.probe import (
     SeatProbe,
     attr_resolver,
     first_resolver,
-    fixed_probes,
     private_attr_resolver,
 )
 from palm.system.vitality.projection import (
@@ -72,7 +71,7 @@ from palm.system.vitality.projection import (
     project_seat_walk_only,
     project_top,
 )
-from palm.system.vitality.protocol import SeatReportable, has_seat_report, try_native_report
+from palm.system.vitality.protocol import SeatReportable, try_native_report
 from palm.system.vitality.raw import (
     prefer_native,
     sample_attrs,
@@ -80,7 +79,7 @@ from palm.system.vitality.raw import (
     sample_raw,
     sample_sequence,
 )
-from palm.system.vitality.registry import VitalityRegistry, installed_only
+from palm.system.vitality.registry import VitalityRegistry
 from palm.system.vitality.report import (
     SeatReport,
     coerce_report,
@@ -254,10 +253,7 @@ __all__ = [
     "discover_seats",
     "extract_load_points",
     "first_resolver",
-    "fixed_probes",
-    "has_seat_report",
     "index_by_seat_id",
-    "installed_only",
     "intention_stub",
     "prefer_native",
     "private_attr_resolver",

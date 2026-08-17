@@ -320,45 +320,6 @@ def bound_method_reporter(
     return _report
 
 
-def bound_convention_reporter(
-    seat_id: str,
-    kind: str,
-    methods: Sequence[str] = PUBLIC_SAMPLE_METHODS,
-) -> Callable[[Any, Any], SeatReport]:
-    """Probe report: sample by public method convention."""
-
-    def _report(instance: Any, seat: Any) -> SeatReport:
-        return sample_by_convention(
-            seat, seat_id=seat_id, kind=kind, methods=methods
-        )
-
-    return _report
-
-
-def bound_attrs_reporter(
-    seat_id: str,
-    kind: str,
-    attrs: Sequence[str],
-    *,
-    source: str = "attrs",
-    instance_attrs: Sequence[str] = (),
-) -> Callable[[Any, Any], SeatReport]:
-    """Probe report: raw-read attributes."""
-
-    def _report(instance: Any, seat: Any) -> SeatReport:
-        return sample_attrs(
-            seat,
-            seat_id=seat_id,
-            kind=kind,
-            attrs=attrs,
-            source=source,
-            instance=instance,
-            instance_attrs=instance_attrs,
-        )
-
-    return _report
-
-
 def bound_sequence_reporter(
     seat_id: str,
     kind: str,
@@ -375,8 +336,6 @@ def bound_sequence_reporter(
 
 __all__ = [
     "PUBLIC_SAMPLE_METHODS",
-    "bound_attrs_reporter",
-    "bound_convention_reporter",
     "bound_method_reporter",
     "bound_sequence_reporter",
     "call_public",

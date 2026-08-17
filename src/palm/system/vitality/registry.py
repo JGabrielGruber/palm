@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from palm.system.vitality.capability import VitalityCapability
-from palm.system.vitality.schema import MATURITY_INSTALLED, MATURITY_INTENTION
+from palm.system.vitality.schema import MATURITY_INTENTION
 
 
 @dataclass
@@ -173,11 +173,6 @@ class VitalityRegistry:
         return self.contains(capability_id)
 
 
-def installed_only(registry: VitalityRegistry) -> list[VitalityCapability]:
-    return [c for c in registry.list() if c.maturity == MATURITY_INSTALLED]
-
-
 __all__ = [
     "VitalityRegistry",
-    "installed_only",
 ]

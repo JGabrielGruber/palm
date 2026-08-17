@@ -22,17 +22,6 @@ class SeatReportable(Protocol):
         ...
 
 
-def has_seat_report(obj: Any) -> bool:
-    """True when *obj* looks like it implements native seat reporting."""
-    if obj is None:
-        return False
-    if isinstance(obj, SeatReportable):
-        return True
-    # Structural fallback: callable seat_report without full Protocol match.
-    method = getattr(obj, "seat_report", None)
-    return callable(method)
-
-
 def try_native_report(obj: Any) -> SeatReport | Mapping[str, Any] | None:
     """Call ``seat_report()`` when present; return ``None`` if unavailable."""
     if obj is None:
@@ -45,6 +34,5 @@ def try_native_report(obj: Any) -> SeatReport | Mapping[str, Any] | None:
 
 __all__ = [
     "SeatReportable",
-    "has_seat_report",
     "try_native_report",
 ]
