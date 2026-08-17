@@ -291,6 +291,7 @@ def test_coordinator_has_no_start_plane_alias() -> None:
 
     assert not hasattr(WorkPlaneCoordinator, "_start_plane")
     assert not hasattr(WorkPlaneCoordinator, "start_background")
+    assert not hasattr(WorkPlaneCoordinator, "stop_background")
 
 
 def test_coordinator_tick_reads_runtime_work_plane() -> None:

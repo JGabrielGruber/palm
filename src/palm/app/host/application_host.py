@@ -534,7 +534,17 @@ class ApplicationHost:
 
         slog = get_system_log()
         slog.info("shutdown.start", "host shutdown start", schedule="host")
-        self._workplane.stop_background()
+        # Freeze supervised loops before packaging teardown. Start is
+        # system.background.start; runtime.stop stops the supervisor again.
+        try:
+            supervisor = self.runtime().supervisor
+        except Exception:
+            supervisor = None
+        if supervisor is not None:
+            try:
+                supervisor.stop()
+            except Exception:
+                pass
         self._workplane.stop_inbound()
 
         try:
