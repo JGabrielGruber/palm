@@ -27,7 +27,6 @@ from palm.system.assembly import (
     CapabilitySeats,
     apply_local_capabilities,
     definition_lists_work_drain,
-    dna_lists_work_drain,
 )
 from palm.system.assembly.phase_assemble import run as assemble_run
 from palm.system.boot.context import BootContext
@@ -57,7 +56,6 @@ def test_definition_lists_work_drain_helper() -> None:
     assert definition_lists_work_drain(local_cli()) is True
     assert definition_lists_work_drain(local_embedded()) is False
     assert definition_lists_work_drain(None) is False
-    assert dna_lists_work_drain(local_server()) is True
 
 
 class _FakePlane:
@@ -242,13 +240,12 @@ def test_server_dna_starts_drain() -> None:
 
 
 def test_boot_mode_cannot_forbid_drain_when_dna_lists_it() -> None:
-    """allow_background_drain is not a peer OR after DNA load."""
+    """Test mode is not a peer OR. CLI DNA still lists and starts drain."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode(BootMode.test(), settings=_lean())
     host.start(assembly_dna_id=LOCAL_CLI_ID)
     try:
         assert host.boot_mode is not None
-        assert host.boot_mode.allow_background_drain is False
         assert host.admission.definition_id == LOCAL_CLI_ID
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN in rt.assembly.materialized_capabilities

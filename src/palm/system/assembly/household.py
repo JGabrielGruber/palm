@@ -108,7 +108,6 @@ class HouseholdEffectPort:
                 )
             # Clear common refuse codes when membership is clean.
             clear_targets = (
-                "refuse:background_drain",
                 "refuse:server_surfaces",
                 "refuse:http_server_surfaces",
                 "refuse:product_catalog_home",

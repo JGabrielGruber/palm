@@ -130,7 +130,6 @@ def test_boot_modes_registry() -> None:
         assert expected in names
     safe = get_boot_mode("safe")
     assert safe.recover_on_start is False
-    assert safe.allow_background_drain is False
     assert safe.composition.surfaces == ()
     dev = get_boot_mode("dev")
     assert dev.system_log_level == LEVEL_OPERATE

@@ -35,7 +35,6 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
     assert host.composition.surfaces == ()
     assert host.composition.capabilities == frozenset()
     assert host.boot_mode.recover_on_start is False
-    assert host.boot_mode.allow_background_drain is False
 
     host.start()
     try:
@@ -73,7 +72,7 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert boot["last_walk"] is not None
         assert any(r["phase"] == "host.ready" for r in boot["last_walk"])
         assert boot["mode_detail"]["recover_on_start"] is False
-        assert boot["mode_detail"]["allow_background_drain"] is False
+        assert "allow_background_drain" not in boot["mode_detail"]
     finally:
         host.shutdown()
 

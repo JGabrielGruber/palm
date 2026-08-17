@@ -50,9 +50,6 @@ class BootMode:
     #: None → leave SystemLog console policy to env/pytest defaults.
     system_log_console: bool | None = None
     recover_on_start: bool = True
-    #: Serialize / doctor only. Not a start gate. Drain start reads the
-    #: supervisor service the walker registered.
-    allow_background_drain: bool = True
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -60,7 +57,6 @@ class BootMode:
             "description": self.description,
             "system_log_level": self.system_log_level,
             "recover_on_start": self.recover_on_start,
-            "allow_background_drain": self.allow_background_drain,
             "composition_services": list(self.composition.services),
             "composition_surfaces": list(self.composition.surfaces),
             "composition_capabilities": sorted(self.composition.capabilities),
@@ -80,7 +76,6 @@ class BootMode:
             deployment=DeploymentProfile.all_in_one(),
             system_log_level=LEVEL_LIFECYCLE,
             recover_on_start=False,
-            allow_background_drain=False,
         )
 
     @classmethod
@@ -94,7 +89,6 @@ class BootMode:
             system_log_level=LEVEL_LIFECYCLE,
             system_log_console=False,
             recover_on_start=False,
-            allow_background_drain=False,
         )
 
     @classmethod
@@ -107,7 +101,6 @@ class BootMode:
             deployment=DeploymentProfile.all_in_one(),
             system_log_level=LEVEL_OPERATE,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
     @classmethod
@@ -120,7 +113,6 @@ class BootMode:
             deployment=DeploymentProfile.server_only(),
             system_log_level=LEVEL_SYSTEM,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
     # ── Shape presets (map existing composition / deployment) ────────────────
@@ -134,7 +126,6 @@ class BootMode:
             deployment=DeploymentProfile.all_in_one(),
             system_log_level=LEVEL_SYSTEM,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
     @classmethod
@@ -146,7 +137,6 @@ class BootMode:
             deployment=DeploymentProfile.all_in_one(),
             system_log_level=LEVEL_SYSTEM,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
     @classmethod
@@ -158,7 +148,6 @@ class BootMode:
             deployment=DeploymentProfile.worker_only(),
             system_log_level=LEVEL_SYSTEM,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
     @classmethod
@@ -170,7 +159,6 @@ class BootMode:
             deployment=DeploymentProfile.server_only(),
             system_log_level=LEVEL_SYSTEM,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
     @classmethod
@@ -182,7 +170,6 @@ class BootMode:
             deployment=DeploymentProfile.all_in_one(),
             system_log_level=LEVEL_LIFECYCLE,
             recover_on_start=True,
-            allow_background_drain=True,
         )
 
 

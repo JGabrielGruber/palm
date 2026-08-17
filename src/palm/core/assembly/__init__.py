@@ -30,7 +30,6 @@ from palm.core.assembly.exceptions import (
 from palm.core.assembly.intent import EffectIntent, EffectIntentKind
 from palm.core.assembly.observation import Observation, ObservationKind
 from palm.core.assembly.policy import (
-    REFUSE_BACKGROUND_DRAIN,
     REFUSE_HTTP_SERVER_SURFACES,
     REFUSE_PRODUCT_CATALOG_HOME,
     REFUSE_SERVER_SURFACES,
@@ -64,7 +63,6 @@ __all__ = [
     "NoDefinitionError",
     "Observation",
     "ObservationKind",
-    "REFUSE_BACKGROUND_DRAIN",
     "REFUSE_HTTP_SERVER_SURFACES",
     "REFUSE_PRODUCT_CATALOG_HOME",
     "REFUSE_SERVER_SURFACES",

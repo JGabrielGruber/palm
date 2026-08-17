@@ -234,25 +234,6 @@ def boot_mode_name_for_deployment(profile: Any) -> str | None:
     return None
 
 
-def dna_refuses_background_drain(definition: AssemblyDefinition | None) -> bool:
-    """True when DNA structure law forbids continuous work_drain membership."""
-    if definition is None:
-        return False
-    refuse = getattr(definition, "refuse", None) or frozenset()
-    return "background_drain" in refuse
-
-
-def dna_lists_work_drain(definition: AssemblyDefinition | None) -> bool:
-    """True when DNA lists work_drain as a capability to materialize."""
-    if definition is None:
-        return False
-    has = getattr(definition, "has_capability", None)
-    if callable(has):
-        return bool(has("work_drain"))
-    caps = getattr(definition, "capabilities", None) or frozenset()
-    return "work_drain" in caps
-
-
 def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     """Build runtime.start kwargs for assembly seed from ApplicationHost-like shell.
 
@@ -300,8 +281,6 @@ __all__ = [
     "dna_id_for_boot_mode",
     "dna_id_for_composition",
     "dna_id_from_settings",
-    "dna_lists_work_drain",
-    "dna_refuses_background_drain",
     "membership_capabilities_from_settings",
     "resolve_seed_dna",
     "seed_assembly_options_from_host",

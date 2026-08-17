@@ -9,12 +9,10 @@ from palm.core.assembly import (
     CAPABILITY_WORK_DRAIN,
     LOCAL_CLI_ID,
     LOCAL_EMBEDDED_ID,
-    resolve_builtin_dna,
 )
 from palm.system.assembly import (
     STRUCTURE_SEED_ENV,
     dna_id_from_settings,
-    dna_refuses_background_drain,
     resolve_seed_dna,
     seed_assembly_options_from_host,
 )
@@ -100,14 +98,6 @@ def test_dna_override_does_not_use_composition_as_drain_membership() -> None:
         assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
     finally:
         host.shutdown()
-
-
-def test_dna_refuses_background_drain_helper() -> None:
-    emb = resolve_builtin_dna(LOCAL_EMBEDDED_ID)
-    cli = resolve_builtin_dna(LOCAL_CLI_ID)
-    assert dna_refuses_background_drain(emb) is False
-    assert dna_refuses_background_drain(cli) is False
-    assert dna_refuses_background_drain(None) is False
 
 
 def test_resolve_seed_explicit_from_settings_path() -> None:

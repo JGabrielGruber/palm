@@ -37,12 +37,12 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 
 | Pile | Job | Notes |
 |------|-----|--------|
-| **A** | Dead costume | STATUS still said “structure manager” in the header. Delete `allow_background_drain` (serialize only). Collapse `dna_lists_work_drain` in `seed.py` (walker / `has_capability` is enough). |
+| **A** | **Landed** — dead costume gone | `allow_background_drain` deleted. Seed twins collapsed. `has_capability` / walker is enough. |
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
-| **B2** | **Landed** — refuse reads DNA capabilities | Token stays `background_drain`. Composition listing the name no longer fail-closes embedded DNA. |
+| **B2** | **Landed** — refuse reads DNA capabilities | Composition listing the name is not a refuse input. Omit is enough. |
 | **B3** | **Landed** — composition / flag do not write `work_drain` | Presets, seed-map row, and the settings/deployment fold are gone. Omit is enough. `refuse:background_drain` is not a live wall. |
 | **C** | Later or optional | Coordinator `_start_plane` / `host.start_plane` alias. `getattr(shell, "assembly")` (seat the organ). Journal/outbox **hands** = exit proof, not cleanup. DNA `requires` — do not invent. |
 
-A and B3 must not write `seed.py` at the same time. B is sequential (B1 → B2 → B3). Coordinator plane may sit beside B1 if files do not collide.
+A, B1–B3 landed. Coordinator plane (C) is leftover alias, not a second install king.
 
-**Start next session:** cut [§7](../architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → cheap **A** (`allow_background_drain`, collapse `dna_lists_work_drain`) or **C** (coordinator plane alias). José exits when the organ is copyable.
+**Start next session:** cut [§7](../architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → **C** (coordinator plane alias) or José judges whether the organ is copyable. Journal as second organ only after that.

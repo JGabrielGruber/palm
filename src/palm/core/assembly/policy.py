@@ -13,7 +13,6 @@ from palm.core.assembly.definition import AssemblyDefinition
 # Refuse tokens (closed vocabulary for floor; grow by theme)
 REFUSE_SERVER_SURFACES = "server_surfaces"
 REFUSE_HTTP_SERVER_SURFACES = "http_server_surfaces"
-REFUSE_BACKGROUND_DRAIN = "background_drain"
 REFUSE_PRODUCT_CATALOG_HOME = "product_catalog_home"
 
 
@@ -50,7 +49,6 @@ def refuse_violations(
 
 
 __all__ = [
-    "REFUSE_BACKGROUND_DRAIN",
     "REFUSE_HTTP_SERVER_SURFACES",
     "REFUSE_PRODUCT_CATALOG_HOME",
     "REFUSE_SERVER_SURFACES",

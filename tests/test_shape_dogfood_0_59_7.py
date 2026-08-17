@@ -68,7 +68,6 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
     assert host.composition.surfaces == expected.composition.surfaces
     assert host.composition.capabilities == expected.composition.capabilities
     assert host.boot_mode.recover_on_start is True
-    assert host.boot_mode.allow_background_drain is True
     if expected.deployment.server:
         assert host.profile.server is True
         assert host.profile.server_port == 0
@@ -134,7 +133,7 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
         assert boot["membership"]["surfaces"] == list(expected.composition.surfaces)
         assert boot["last_walk"] is not None
         assert boot["mode_detail"]["recover_on_start"] is True
-        assert boot["mode_detail"]["allow_background_drain"] is True
+        assert "allow_background_drain" not in boot["mode_detail"]
     finally:
         host.shutdown()
 
