@@ -19,6 +19,8 @@
 | **Shared** | Reusable code that is not system and not product (common helpers, kits that many layers use carefully). | A place to hide layer violations |
 | **Plugin** | Registry extension (pattern, provider, storage, runner, …) installed at the edge. | Ad-hoc `if type ==` menus in hubs |
 | **Hand** | Function that fills or drops one **named** organ. Lives next to the organ; listed in an explicit table. | Import-time self-register; host `if` |
+| **Walker** | Live code that performs one duty (install, start, stop, apply). Something in `src/` must call it. [ADR-033](../adr/033-one-walker.md). | Helper that only names an unused branch |
+| **Fill site** | The one place that installs or registers a member. Dual fill = two walkers still live. | Host `if` next to the hand |
 | **Product** | Userland services (assist, execution façades, domain APIs). Client of system ports and admission. | Transport adapters; composition root digs |
 | **Surface** | Transport edge only (`palm.runtimes`: CLI, REST, MCP, SSR, WebSocket, …). Depends on system — never reverse. | Structure law; business policy |
 | **Host** | Composition root: seed choice, wire seats once, package settings. Not a public structure API. | Readiness king after structure definition load |
