@@ -21,7 +21,7 @@ def test_admission_inventory_has_walls() -> None:
     ids = {g["id"] for g in GATED_PATHS}
     assert "work_plane.tick" in ids
     assert "executor.submit_flow" in ids
-    assert "dna.refuse" in ids
+    assert "definition.refuse" in ids
     assert "vitality.assembly" in ids
     pret = {p["id"] for p in READINESS_EDGES}
     assert "env.structure_toggles" in pret

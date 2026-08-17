@@ -70,7 +70,7 @@ def test_runtime_membership_from_options() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_dna_id="local.embedded",
+        structure_definition_id="local.embedded",
         assembly_surfaces=["rest"],
     )
     try:

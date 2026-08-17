@@ -50,7 +50,7 @@ def test_outbox_and_work_drain_both_start() -> None:
         storage_backend="memory",
         enable_event_outbox=True,
         enable_outbox_background=True,
-        assembly_dna_id="local.cli",
+        structure_definition_id="local.cli",
     )
     try:
         assert rt.supervisor is not None

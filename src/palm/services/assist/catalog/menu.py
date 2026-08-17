@@ -240,7 +240,7 @@ def build_menu_page(
     if not may_start:
         hint = (
             "Admission is closed — starting flows/scenarios will refuse. "
-            "Browse catalog eyes only, or fix structure (assemble / DNA refuse). "
+            "Browse catalog eyes only, or fix structure (assemble / definition refuse). "
             + hint
         )
 

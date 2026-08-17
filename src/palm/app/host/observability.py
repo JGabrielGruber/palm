@@ -209,7 +209,7 @@ class HostObservability:
         domain_note = (
             "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
             "server/prod CI use server_port=0. CompositionProfile seeds membership "
-            "except work_drain (DNA capabilities after load). 0.63: assembly "
+            "except work_drain (definition capabilities after load). 0.63: assembly "
             "admission is law — see assembly bag (not a soft dual of membership)."
         )
         assembly_bag = self._assembly_packaging()

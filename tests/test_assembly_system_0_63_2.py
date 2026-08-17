@@ -96,8 +96,8 @@ def test_runtime_custom_dna_id() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_dna_id="local.embedded",
-        assembly_dna_version="9",
+        structure_definition_id="local.embedded",
+        structure_definition_version="9",
     )
     try:
         assert rt.admission.definition_version == "9"

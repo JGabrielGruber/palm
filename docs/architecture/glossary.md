@@ -67,7 +67,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 
 | Intended | Typical code today |
 |----------|-------------------|
-| Structure definition | `AssemblyDefinition` / DNA helpers |
+| Structure definition | `AssemblyDefinition` / `resolve_builtin_definition` / `structure_definition_id` |
 | Structure reconciler | `AssemblyEngine` (`palm.core.assembly`) |
 | Structure status / admission | `AssemblyStatus` / `AdmissionSnapshot` |
 | Structure manager | System seat + loop + hands (`palm.system.assembly`) — **partial** (dashboard strong; materialize weak) |
@@ -162,7 +162,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 
 | Prefer (architecture) | Accept as code/theme lag | Avoid in architecture law |
 |----------------------|---------------------------|----------------------------|
-| Structure definition | Assembly definition, DNA | “Profile is the structure” |
+| Structure definition | Assembly definition; DNA (theme lag) | “Profile is the structure” |
 | Structure reconciler | AssemblyEngine | Host readiness flag |
 | Structure manager | system.assembly seat/loop | Dashboard-only admission |
 | Structure status | AssemblyStatus | Soft definitions ready |
@@ -175,7 +175,7 @@ Between **machine up** (boot) and **business runs** (job path). Component note: 
 | Published admission (façades) | Peasants’ oath; `*.published_admission` | Host dig for readiness |
 | Surface uses host / port | Fealty (metaphor) | Kernel dig as product path |
 | Business start / continue | Market day (metaphor) | — |
-| Seed (chooser, not king) | DNA helpers; `PALM_ASSEMBLY_DNA_ID`; composition “king” | Packaging as structure law after load |
+| Seed (chooser, not king) | DNA (theme lag); `PALM_STRUCTURE_DEFINITION_ID`; `structure_definition_id` | Packaging as structure law after load |
 | Place registry | Place book (theme lag); `PlaceEffectPort` / `InProcessPlaceRegistry` | Address book as architecture |
 
 ---

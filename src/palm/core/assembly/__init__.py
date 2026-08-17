@@ -19,7 +19,7 @@ from palm.core.assembly.definition import (
     local_mcp,
     local_server,
     local_worker,
-    resolve_builtin_dna,
+    resolve_builtin_definition,
 )
 from palm.core.assembly.engine import AssemblyEngine
 from palm.core.assembly.exceptions import (
@@ -73,5 +73,5 @@ __all__ = [
     "local_server",
     "local_worker",
     "refuse_violations",
-    "resolve_builtin_dna",
+    "resolve_builtin_definition",
 ]

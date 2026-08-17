@@ -498,7 +498,7 @@ def test_walk_started_base_runtime_seats_present() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=True,
-        assembly_dna_id="local.cli",
+        structure_definition_id="local.cli",
     )
     try:
         result = walk_result(rt)

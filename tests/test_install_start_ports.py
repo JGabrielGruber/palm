@@ -77,7 +77,7 @@ def test_host_cli_binds_start_ports_on_install_not_defer() -> None:
 def test_bare_runtime_cli_starts_drain_when_ports_bound() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", assembly_dna_id=LOCAL_CLI_ID)
+    rt.start(storage_backend="memory", structure_definition_id=LOCAL_CLI_ID)
     try:
         assert rt.install.start_ports_bound() is True
         assert "work_drain" in rt.supervisor.names()

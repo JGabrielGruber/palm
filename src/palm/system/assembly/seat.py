@@ -63,18 +63,19 @@ class AssemblySeat:
         *force* voids same-id READY and re-converges (0.63.18 reassemble edge).
         Membership is always re-evaluated: prior refuse reasons clear first.
         """
-        dna = definition if definition is not None else local_embedded()
-        self.definition = dna
+        if definition is None:
+            definition = local_embedded()
+        self.definition = definition
         bind = getattr(self.effects, "bind_structure", None)
         if callable(bind):
-            bind(dna, surfaces=surfaces, capabilities=capabilities)
+            bind(definition, surfaces=surfaces, capabilities=capabilities)
         # Honest membership re-check before / after definition load.
         self.engine.observe(
             Observation(kind=ObservationKind.STRUCTURE_POLICY_CLEARED)
         )
-        self.engine.receive_definition(dna, force=force)
+        self.engine.receive_definition(definition, force=force)
         for reason in refuse_violations(
-            dna, surfaces=surfaces, capabilities=capabilities
+            definition, surfaces=surfaces, capabilities=capabilities
         ):
             self.engine.observe(
                 Observation(
@@ -112,13 +113,12 @@ class AssemblySeat:
         Uses the current seat definition when *definition* is omitted.
         Fails closed while invalidated/blocked; business paths that need admission must not soft-skip.
         """
-        dna = (
-            definition
-            if definition is not None
-            else (self.definition if self.definition is not None else local_embedded())
-        )
+        if definition is None:
+            definition = (
+                self.definition if self.definition is not None else local_embedded()
+            )
         return self.assemble(
-            dna,
+            definition,
             max_ticks=max_ticks,
             surfaces=surfaces,
             capabilities=capabilities,

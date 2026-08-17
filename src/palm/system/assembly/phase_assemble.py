@@ -9,7 +9,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from palm.core.assembly import AssemblyDefinition, resolve_builtin_dna
+from palm.core.assembly import AssemblyDefinition, resolve_builtin_definition
 from palm.system.assembly.hands import CapabilitySeats
 from palm.system.assembly.host_bind import (
     bind_host_structure_to_seat,
@@ -30,9 +30,9 @@ def _resolve_definition(options: Mapping[str, Any]) -> AssemblyDefinition:
         return raw
     if isinstance(raw, dict):
         return AssemblyDefinition.from_dict(raw)
-    dna_id = str(options.get("assembly_dna_id") or "local.embedded")
-    version = str(options.get("assembly_dna_version") or "1")
-    return resolve_builtin_dna(dna_id, version=version)
+    definition_id = str(options.get("structure_definition_id") or "local.embedded")
+    version = str(options.get("structure_definition_version") or "1")
+    return resolve_builtin_definition(definition_id, version=version)
 
 
 def _bind_workload_flag(options: Mapping[str, Any]) -> bool:
@@ -70,7 +70,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
             seat, shell, bind_workload=bind_workload
         )
 
-    dna = _resolve_definition(options)
+    definition = _resolve_definition(options)
     max_ticks = int(options.get("assembly_max_ticks") or 32)
     surfaces = options.get("assembly_surfaces") or ()
     capabilities = options.get("assembly_capabilities") or ()
@@ -79,7 +79,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     if isinstance(capabilities, str):
         capabilities = (capabilities,)
     loop = seat.assemble(
-        dna,
+        definition,
         max_ticks=max_ticks,
         surfaces=surfaces,
         capabilities=capabilities,
@@ -93,7 +93,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     ctx.publish(
         assembly=seat,
         assembly_admission=admission,
-        assembly_definition=dna,
+        assembly_definition=definition,
     )
     ctx.set("assembly_structure_bind", bind_report)
     get_system_log().info(
@@ -101,8 +101,8 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         "structure assemble complete",
         schedule="system",
         runtime=ctx.runtime,
-        definition_id=dna.id,
-        definition_version=dna.version,
+        definition_id=definition.id,
+        definition_version=definition.version,
         phase=str(admission.phase),
         may_run_business=admission.may_run_business,
         ticks=loop.ticks,

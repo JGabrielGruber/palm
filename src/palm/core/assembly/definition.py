@@ -11,7 +11,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any, Self
 
-# Builtin ids (VISION-0.63 DNA requirements)
+# Builtin structure-definition ids (VISION-0.63 catalog)
 LOCAL_EMBEDDED_ID = "local.embedded"
 LOCAL_CLI_ID = "local.cli"
 LOCAL_SERVER_ID = "local.server"
@@ -168,9 +168,9 @@ _BUILTIN_FACTORIES: dict[str, Callable[..., AssemblyDefinition]] = {
 }
 
 
-def resolve_builtin_dna(dna_id: str, *, version: str = "1") -> AssemblyDefinition:
-    """Resolve a known builtin DNA id (or alias). Unknown ids stay thin shells."""
-    key = str(dna_id or "").strip()
+def resolve_builtin_definition(definition_id: str, *, version: str = "1") -> AssemblyDefinition:
+    """Resolve a known builtin structure-definition id (or alias). Unknown ids stay thin shells."""
+    key = str(definition_id or "").strip()
     factory = _BUILTIN_FACTORIES.get(key)
     if factory is not None:
         return factory(version=version)
@@ -197,5 +197,5 @@ __all__ = [
     "local_mcp",
     "local_server",
     "local_worker",
-    "resolve_builtin_dna",
+    "resolve_builtin_definition",
 ]

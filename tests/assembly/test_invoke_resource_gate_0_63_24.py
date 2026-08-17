@@ -33,7 +33,7 @@ def test_invoke_resource_refused_when_dna_refuse_blocks() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_dna_id="local.embedded",
+        structure_definition_id="local.embedded",
         assembly_surfaces=["rest"],
     )
     try:

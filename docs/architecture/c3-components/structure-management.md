@@ -123,7 +123,7 @@ Roles at scale (later): thin orchestrator, support **serves** definitions, worke
 |-----------------|------------------|
 | Reconciler + status + admission | Full membership **materialize** (plugins / product / surfaces) |
 | Fail-closed doors on many business paths | Definition as install set beyond `work_drain` |
-| DNA `capabilities` + manager materialize of **`work_drain`** | Other capability units still host/composition |
+| Definition `capabilities` + manager materialize of **`work_drain`** | Other capability units still host/composition |
 | Seed map (mode/env → definition id) | Provider source resolver; cache/replicate |
 | Place hands (partial) | Structure as sole owner of freelanced bootstrap soup |
 

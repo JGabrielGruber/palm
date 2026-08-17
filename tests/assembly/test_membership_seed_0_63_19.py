@@ -33,7 +33,7 @@ def test_membership_capability_seeds_catalog_complete() -> None:
 
 def test_structure_seed_env_includes_all_membership_seeds() -> None:
     roles = {row["role"] for row in STRUCTURE_SEED_ENV}
-    assert "explicit_dna_seed" in roles
+    assert "explicit_definition_seed" in roles
     assert "membership_seed" in roles
     assert "deployment_seed" in roles
     member_envs = {

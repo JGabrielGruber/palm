@@ -70,8 +70,8 @@ def build_host_handlers(
                 if key not in options:
                     merged[key] = seed[key]
             # Structure definition: runtime options / explicit definition win; else seed (incl. env).
-            if "assembly_definition" not in options and "assembly_dna_id" not in options:
-                merged["assembly_dna_id"] = seed["assembly_dna_id"]
+            if "assembly_definition" not in options and "structure_definition_id" not in options:
+                merged["structure_definition_id"] = seed["structure_definition_id"]
                 merged["assembly_definition"] = seed["assembly_definition"]
         # 0.63.28 — composition membership decides outbox *store wire* on host path.
         # settings.enable_event_outbox seeds composition at resolve only; after

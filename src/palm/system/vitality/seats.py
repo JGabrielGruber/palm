@@ -201,7 +201,7 @@ def build_default_probes() -> list[SeatProbe]:
             when_absent="report",
             order=57,
             tags=("core", "assembly", "admission"),
-            description="Assembly — admission + DNA id (0.63 eyes)",
+            description="Assembly — admission + definition id (0.63 eyes)",
         ),
         SeatProbe(
             seat_id=SEAT_SYSTEM_LOG,

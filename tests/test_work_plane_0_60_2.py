@@ -82,7 +82,7 @@ def test_supervised_work_drain_background_when_enabled() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_dna_id="local.cli",
+        structure_definition_id="local.cli",
     )
     try:
         assert rt.supervisor is not None
@@ -107,7 +107,7 @@ def test_work_plane_multi_worker_background() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
-        assembly_dna_id="local.cli",
+        structure_definition_id="local.cli",
         work_plane_workers=3,
         work_plane_poll_interval=0.05,
         work_plane_batch_size=1,

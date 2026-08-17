@@ -4,7 +4,7 @@ Profiles, boot modes, composition, and structure-shaped env are **seeds**, not
 parallel law. After load, assembly status under the definition is truth.
 
 **0.63.13 — env/composition are seed only (SD-021 growth):**
-- ``PALM_ASSEMBLY_DNA_ID`` / ``settings.assembly_dna_id`` is the explicit DNA seed.
+- ``PALM_STRUCTURE_DEFINITION_ID`` / ``settings.structure_definition_id`` is the explicit definition seed.
 - Membership-shaped flags feed composition at resolve for organs that still
   live there. ``work_drain`` is not one of them.
 
@@ -27,11 +27,11 @@ from palm.core.assembly import (
     LOCAL_SERVER_ID,
     LOCAL_WORKER_ID,
     AssemblyDefinition,
-    resolve_builtin_dna,
+    resolve_builtin_definition,
 )
 
-# BootMode.name → builtin DNA id (VISION-0.63 §6)
-_MODE_TO_DNA: dict[str, str] = {
+# BootMode.name → builtin structure-definition id (VISION-0.63 §6)
+_MODE_TO_DEFINITION: dict[str, str] = {
     "safe": LOCAL_EMBEDDED_ID,
     "test": LOCAL_EMBEDDED_ID,
     "cli": LOCAL_CLI_ID,
@@ -97,10 +97,10 @@ ALWAYS_ON_MEMBERSHIP_CAPABILITIES: frozenset[str] = frozenset(
 # Packaging stays free (storage, ports, log, pool widths, secrets).
 STRUCTURE_SEED_ENV: tuple[dict[str, str], ...] = (
     {
-        "env": "PALM_ASSEMBLY_DNA_ID",
-        "settings": "assembly_dna_id",
-        "role": "explicit_dna_seed",
-        "note": "Chooses which DNA loads; wins over mode/composition inference",
+        "env": "PALM_STRUCTURE_DEFINITION_ID",
+        "settings": "structure_definition_id",
+        "role": "explicit_definition_seed",
+        "note": "Chooses which structure definition loads; wins over mode/composition inference",
     },
     *MEMBERSHIP_CAPABILITY_SEEDS,
     {
@@ -131,20 +131,20 @@ PACKAGING_ENV_SPIRIT: tuple[str, ...] = (
 )
 
 
-def dna_id_for_boot_mode(mode_name: str | None) -> str | None:
-    """Map a boot mode name to a builtin DNA id, or None if unknown."""
+def definition_id_for_boot_mode(mode_name: str | None) -> str | None:
+    """Map a boot mode name to a builtin structure-definition id, or None if unknown."""
     if not mode_name:
         return None
-    return _MODE_TO_DNA.get(str(mode_name).strip().lower())
+    return _MODE_TO_DEFINITION.get(str(mode_name).strip().lower())
 
 
-def dna_id_for_composition(
+def definition_id_for_composition(
     *,
     services: tuple[str, ...] | list[str] = (),
     surfaces: tuple[str, ...] | list[str] = (),
     capabilities: frozenset[str] | set[str] | list[str] = (),
 ) -> str:
-    """Infer DNA id from composition membership (when no boot mode)."""
+    """Infer structure-definition id from composition membership (when no boot mode)."""
     caps = frozenset(str(c) for c in capabilities)
     surfs = tuple(str(s) for s in surfaces)
     svcs = tuple(str(s) for s in services)
@@ -163,11 +163,11 @@ def dna_id_for_composition(
     return LOCAL_CLI_ID
 
 
-def dna_id_from_settings(settings: Any | None) -> str | None:
-    """Explicit DNA seed from packaging settings / ``PALM_ASSEMBLY_DNA_ID``."""
+def definition_id_from_settings(settings: Any | None) -> str | None:
+    """Explicit definition seed from packaging settings / ``PALM_STRUCTURE_DEFINITION_ID``."""
     if settings is None:
         return None
-    raw = getattr(settings, "assembly_dna_id", None)
+    raw = getattr(settings, "structure_definition_id", None)
     if raw is None:
         return None
     text = str(raw).strip()
@@ -193,27 +193,27 @@ def membership_capabilities_from_settings(
     return frozenset(capabilities)
 
 
-def resolve_seed_dna(
+def resolve_seed_definition(
     *,
     mode_name: str | None = None,
     services: tuple[str, ...] | list[str] = (),
     surfaces: tuple[str, ...] | list[str] = (),
     capabilities: frozenset[str] | set[str] | list[str] = (),
     version: str = "1",
-    explicit_dna_id: str | None = None,
+    explicit_definition_id: str | None = None,
 ) -> AssemblyDefinition:
     """Choose definition: explicit id → boot mode → composition inference."""
-    if explicit_dna_id:
-        return resolve_builtin_dna(explicit_dna_id, version=version)
-    from_mode = dna_id_for_boot_mode(mode_name)
+    if explicit_definition_id:
+        return resolve_builtin_definition(explicit_definition_id, version=version)
+    from_mode = definition_id_for_boot_mode(mode_name)
     if from_mode:
-        return resolve_builtin_dna(from_mode, version=version)
-    inferred = dna_id_for_composition(
+        return resolve_builtin_definition(from_mode, version=version)
+    inferred = definition_id_for_composition(
         services=services,
         surfaces=surfaces,
         capabilities=capabilities,
     )
-    return resolve_builtin_dna(inferred, version=version)
+    return resolve_builtin_definition(inferred, version=version)
 
 
 def boot_mode_name_for_deployment(profile: Any) -> str | None:
@@ -237,9 +237,9 @@ def boot_mode_name_for_deployment(profile: Any) -> str | None:
 def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
     """Build runtime.start kwargs for assembly seed from ApplicationHost-like shell.
 
-    Priority for DNA id: settings.assembly_dna_id → boot mode → deployment →
-    composition inference. Membership surfaces/capabilities always come from the
-    host composition (refuse checks dual membership — 0.63.6).
+    Priority for definition id: settings.structure_definition_id → boot mode →
+    deployment → composition inference. Membership surfaces/capabilities always
+    come from the host composition (refuse checks dual membership — 0.63.6).
     """
     mode = getattr(host, "boot_mode", None)
     mode_name = getattr(mode, "name", None) if mode is not None else None
@@ -255,17 +255,17 @@ def seed_assembly_options_from_host(host: Any) -> dict[str, Any]:
         capabilities = frozenset(getattr(composition, "capabilities", ()) or ())
 
     settings = getattr(host, "settings", None)
-    explicit = dna_id_from_settings(settings)
-    dna = resolve_seed_dna(
+    explicit = definition_id_from_settings(settings)
+    definition = resolve_seed_definition(
         mode_name=mode_name,
         services=services,
         surfaces=surfaces,
         capabilities=capabilities,
-        explicit_dna_id=explicit,
+        explicit_definition_id=explicit,
     )
     return {
-        "assembly_dna_id": dna.id,
-        "assembly_definition": dna,
+        "structure_definition_id": definition.id,
+        "assembly_definition": definition,
         # Membership facts for refuse check (0.63.6) — seed only; status under the definition is truth.
         "assembly_surfaces": list(surfaces),
         "assembly_capabilities": sorted(capabilities),
@@ -278,10 +278,10 @@ __all__ = [
     "PACKAGING_ENV_SPIRIT",
     "STRUCTURE_SEED_ENV",
     "boot_mode_name_for_deployment",
-    "dna_id_for_boot_mode",
-    "dna_id_for_composition",
-    "dna_id_from_settings",
+    "definition_id_for_boot_mode",
+    "definition_id_for_composition",
+    "definition_id_from_settings",
     "membership_capabilities_from_settings",
-    "resolve_seed_dna",
+    "resolve_seed_definition",
     "seed_assembly_options_from_host",
 ]

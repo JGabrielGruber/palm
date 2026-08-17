@@ -240,7 +240,7 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
         profile=profile,
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    off.start(assembly_dna_id="local.embedded")
+    off.start(structure_definition_id="local.embedded")
     try:
         assert CAPABILITY_WORK_DRAIN not in off.runtime().assembly.materialized_capabilities
         assert (

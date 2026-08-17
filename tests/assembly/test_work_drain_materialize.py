@@ -1,4 +1,4 @@
-"""work_drain materialize — DNA capabilities are the install king."""
+"""work_drain materialize — definition capabilities are the install list."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from palm.core.assembly import (
     local_mcp,
     local_server,
     local_worker,
-    resolve_builtin_dna,
+    resolve_builtin_definition,
 )
 from palm.system.assembly import (
     LOCAL_CAPABILITY_HANDS,
@@ -48,7 +48,7 @@ def test_builtin_dna_lists_work_drain_on_drain_phenotypes() -> None:
     assert local_worker().has_capability(CAPABILITY_WORK_DRAIN)
     roundtrip = local_cli().from_dict(local_cli().to_dict())
     assert CAPABILITY_WORK_DRAIN in roundtrip.capabilities
-    unknown = resolve_builtin_dna("local.unknown")
+    unknown = resolve_builtin_definition("local.unknown")
     assert not unknown.has_capability(CAPABILITY_WORK_DRAIN)
 
 
@@ -147,7 +147,7 @@ class _LeanShell:
         self.supervisor = None
 
 
-def _assemble_from_ctx_seats(*, dna_id: str) -> tuple[BootContext, SystemSupervisor]:
+def _assemble_from_ctx_seats(*, definition_id: str) -> tuple[BootContext, SystemSupervisor]:
     reset_system_log_for_tests()
     board = SystemInstall()
     board.bind(work_plane=_FakePlane())
@@ -158,12 +158,12 @@ def _assemble_from_ctx_seats(*, dna_id: str) -> tuple[BootContext, SystemSupervi
         install=board,
         supervisor=supervisor,
     )
-    assemble_run(ctx, {"assembly_dna_id": dna_id})
+    assemble_run(ctx, {"structure_definition_id": definition_id})
     return ctx, supervisor
 
 
 def test_phase_assemble_materializes_work_drain_from_ctx_board() -> None:
-    ctx, supervisor = _assemble_from_ctx_seats(dna_id=LOCAL_CLI_ID)
+    ctx, supervisor = _assemble_from_ctx_seats(definition_id=LOCAL_CLI_ID)
     assert not hasattr(ctx.shell, "work_plane")
     assert "work_drain" in supervisor.names()
     assert ctx.assembly is not None
@@ -171,7 +171,7 @@ def test_phase_assemble_materializes_work_drain_from_ctx_board() -> None:
 
 
 def test_phase_assemble_embedded_does_not_register_work_drain() -> None:
-    ctx, supervisor = _assemble_from_ctx_seats(dna_id=LOCAL_EMBEDDED_ID)
+    ctx, supervisor = _assemble_from_ctx_seats(definition_id=LOCAL_EMBEDDED_ID)
     assert "work_drain" not in supervisor.names()
     assert ctx.assembly is not None
     assert CAPABILITY_WORK_DRAIN not in ctx.assembly.materialized_capabilities
@@ -243,7 +243,7 @@ def test_boot_mode_cannot_forbid_drain_when_dna_lists_it() -> None:
     """Test mode is not a peer OR. CLI DNA still lists and starts drain."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode(BootMode.test(), settings=_lean())
-    host.start(assembly_dna_id=LOCAL_CLI_ID)
+    host.start(structure_definition_id=LOCAL_CLI_ID)
     try:
         assert host.boot_mode is not None
         assert host.admission.definition_id == LOCAL_CLI_ID
@@ -281,7 +281,7 @@ def test_assemble_uses_shell_assembly_seat() -> None:
 
     src = inspect.getsource(_run)
     assert 'getattr(shell, "assembly"' not in src
-    ctx, _ = _assemble_from_ctx_seats(dna_id=LOCAL_CLI_ID)
+    ctx, _ = _assemble_from_ctx_seats(definition_id=LOCAL_CLI_ID)
     assert ctx.shell.assembly is ctx.assembly
     assert ctx.assembly is not None
 

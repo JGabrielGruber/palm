@@ -36,12 +36,12 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "require_business_admission (same _require_runtime)",
     },
     {
-        "id": "dna.seed",
+        "id": "definition.seed",
         "slice": "0.63.5",
-        "law": "host mode/composition → DNA seed",
+        "law": "host mode/composition → structure-definition seed",
     },
     {
-        "id": "dna.refuse",
+        "id": "definition.refuse",
         "slice": "0.63.6",
         "law": "refuse_violations block admission on dual membership",
     },
@@ -58,7 +58,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
     {
         "id": "cli.seed_local_cli",
         "slice": "0.63.9",
-        "law": "create_cli_host → BootMode.cli → local.cli DNA",
+        "law": "create_cli_host → BootMode.cli → local.cli definition",
     },
     {
         "id": "inspect.present_admission",
@@ -73,12 +73,12 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
     {
         "id": "run_host.deployment_seed",
         "slice": "0.63.12",
-        "law": "deployment profile → DNA + composition (server/worker/all_in_one)",
+        "law": "deployment profile → definition + composition (server/worker/all_in_one)",
     },
     {
         "id": "env.structure_seed",
         "slice": "0.63.13",
-        "law": "PALM_ASSEMBLY_DNA_ID seed · membership refuse always · drain DNA seed",
+        "law": "PALM_STRUCTURE_DEFINITION_ID seed · membership refuse always · drain listed on definition",
     },
     {
         "id": "place_registry.spawn_port",
@@ -336,8 +336,8 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "env.structure_toggles",
         "note": (
-            "0.63.13 DNA seed + drain seed; 0.63.19 full MEMBERSHIP_CAPABILITY_SEEDS "
-            "catalog + bootstrap single source. work_drain install reads DNA "
+            "0.63.13 definition seed + drain seed; 0.63.19 full MEMBERSHIP_CAPABILITY_SEEDS "
+            "catalog + bootstrap single source. work_drain install reads definition "
             "capabilities after load (not composition.has / BootMode)."
         ),
         "intent": "paid catalog SD-021 — residual only named packaging duals (outbox start option)",
@@ -658,10 +658,12 @@ def admission_inventory_snapshot(runtime: Any | None = None) -> dict[str, Any]:
             "definition_id": getattr(admission, "definition_id", None),
         }
     if assembly is not None:
-        dna = getattr(assembly, "definition", None)
-        live["definition_id"] = getattr(dna, "id", None) if dna is not None else None
+        definition = getattr(assembly, "definition", None)
+        live["definition_id"] = (
+            getattr(definition, "id", None) if definition is not None else None
+        )
         live["refuse"] = (
-            sorted(getattr(dna, "refuse", ())) if dna is not None else []
+            sorted(getattr(definition, "refuse", ())) if definition is not None else []
         )
     body["live"] = live
     return body

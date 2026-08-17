@@ -102,7 +102,7 @@ SEAT_EXECUTION: Final[str] = "execution"
 SEAT_INSTALL: Final[str] = "install"
 """InstallInterface collaborator board (peer of execution)."""
 SEAT_ASSEMBLY: Final[str] = "assembly"
-"""Assembly seat — DNA + admission gate (0.63)."""
+"""Assembly seat — definition + admission gate (0.63)."""
 SEAT_SYSTEM_LOG: Final[str] = "system_log"
 SEAT_BOOT_MEMBERSHIP: Final[str] = "boot_membership"
 

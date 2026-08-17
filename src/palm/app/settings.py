@@ -64,9 +64,9 @@ class PalmSettings(BaseSettings):
     work_plane_max_depth: int = 8
     work_plane_workers: int = 1
     work_plane_lease_seconds: float = 60.0
-    # 0.63.13 — explicit structure-definition seed from packaging/env (``PALM_ASSEMBLY_DNA_ID``).
+    # 0.63.13 — explicit structure-definition seed from packaging/env (``PALM_STRUCTURE_DEFINITION_ID``).
     # Chooses which definition loads; not a second readiness flag.
-    assembly_dna_id: str | None = None
+    structure_definition_id: str | None = None
     rebuild_projections_on_startup: bool = True
     projection_rebuild_batch_size: int = 100
     projection_rebuild_max_instances: int = 5000
