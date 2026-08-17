@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from palm.system.subsystems.planes.wait import WaitPlaneService
-from palm.system.subsystems.planes.wait.plane import bind_wait_plane_to_runtime
 from palm.core.event import EventEngine
 from palm.core.orchestration import Job, JobStatus
 from palm.core.wait import has_open_waits, make_job_wait
 from palm.providers.palm.bindings.runtimes.wiring import clear_palm_runtime
 from palm.runtimes.embedded import EmbeddedRuntime
+from palm.system.subsystems.planes.wait import WaitPlaneService
 
 
 def test_wait_plane_attach_and_resume() -> None:
@@ -69,8 +68,10 @@ def test_embedded_runtime_exposes_wait_plane() -> None:
         clear_palm_runtime()
 
 
-def test_bind_wait_plane_helper() -> None:
+def test_install_wait_plane_attaches() -> None:
     from palm.system.interfaces.install import SystemInstall
+    from palm.system.subsystems.planes.hub import SystemPlanes
+    from palm.system.subsystems.planes.install_access import require_system_install
 
     engine = EventEngine()
     engine.initialize()
@@ -108,7 +109,10 @@ def test_bind_wait_plane_helper() -> None:
                 able=lambda: True,
             )
 
-    plane = bind_wait_plane_to_runtime(_Rt())
+    rt = _Rt()
+    board = require_system_install(rt)
+    planes = SystemPlanes.ensure_on(rt)
+    plane = planes.install_wait(board)
     assert plane.matcher is not None
     plane.detach()
 

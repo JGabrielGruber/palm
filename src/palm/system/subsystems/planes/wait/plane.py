@@ -1,8 +1,8 @@
 """WaitPlaneService — first-class **continue** plane (0.55.10).
 
 Peer of work-drain (**start**): completer events on the event engine match
-open wait interests and resume or fail owner jobs. Boot / bind helpers
-wire collaborators; the plane never holds a full runtime.
+open wait interests and resume or fail owner jobs. Install wires
+collaborators; the plane never holds a full runtime.
 Completers never import this plane (register-downward).
 """
 
@@ -81,8 +81,8 @@ class WaitPlaneService:
     ) -> WaitMatcher:
         """Wire matcher to orchestration job store and optional event bus.
 
-        Callers (boot schedule, bind helpers) extract collaborators — the plane
-        does not take or store a full runtime.
+        Callers extract collaborators — the plane does not take or store a
+        full runtime.
 
         *able* — when false, match→resume fails the owner closed (admission law);
         omit / *None* fails closed (0.63.26).
@@ -286,30 +286,4 @@ class WaitPlaneService:
         return summarize_waiting_on(rows)
 
 
-def bind_wait_plane(
-    install: Any,
-    planes: Any,
-) -> WaitPlaneService:
-    """
-    Install wait on the *planes* subsystem using *install* interface.
-
-    Seat-first DI — no system instance bag.
-    """
-    return planes.install_wait(install)
-
-
-def bind_wait_plane_to_runtime(runtime: Any) -> WaitPlaneService:
-    """Shell bridge: resolve install + planes seats, then :func:`bind_wait_plane`."""
-    from palm.system.subsystems.planes.hub import SystemPlanes
-    from palm.system.subsystems.planes.install_access import require_system_install
-
-    board = require_system_install(runtime)
-    planes = SystemPlanes.ensure_on(runtime)
-    return bind_wait_plane(board, planes)
-
-
-__all__ = [
-    "WaitPlaneService",
-    "bind_wait_plane",
-    "bind_wait_plane_to_runtime",
-]
+__all__ = ["WaitPlaneService"]

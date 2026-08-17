@@ -8,7 +8,6 @@ import palm.system.subsystems.planes.wait as wait_pkg
 EXPECTED_PUBLIC = frozenset(
     {
         "WaitPlaneService",
-        "bind_wait_plane_to_runtime",
         "close_interest_for_state",
         "close_interest_on_job",
         "find_job_for_state",
@@ -48,5 +47,4 @@ def test_kit_symbols_not_on_package_root() -> None:
 
 def test_plane_is_primary_export() -> None:
     assert wait_pkg.WaitPlaneService is not None
-    assert callable(wait_pkg.bind_wait_plane_to_runtime)
     assert callable(wait_pkg.open_interest_on_job)
