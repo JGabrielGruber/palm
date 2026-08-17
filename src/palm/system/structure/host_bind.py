@@ -14,7 +14,6 @@ from __future__ import annotations
 from typing import Any
 
 from palm.system.structure.place_registry import PlaceEffectPort
-from palm.system.structure.place_spawn import InProcessPlaceSpawn, RegisteredPlaceSpawn
 from palm.system.structure.seat import StructureSeat
 from palm.system.structure.structure_effects import StructureEffectPort
 from palm.system.structure.workload_place import (
@@ -52,13 +51,6 @@ def workload_spawn_hands(spawn: Any) -> WorkloadPlaceSpawn | None:
     if isinstance(hands, WorkloadPlaceSpawn):
         return hands
     return None
-
-
-def _has_structure_prefixes(spawn: Any) -> bool:
-    if not isinstance(spawn, RegisteredPlaceSpawn):
-        return False
-    prefixes = getattr(spawn, "prefix_ensures", {}) or {}
-    return any(p.startswith(("os:", "workload:")) for p in prefixes)
 
 
 def bind_host_structure_to_seat(
@@ -111,22 +103,15 @@ def bind_host_structure_to_seat(
         report["spawn"] = "existing"
         return report
 
-    # Default in-process (or bare registered without structure prefixes) → combined.
-    if isinstance(port.spawn, InProcessPlaceSpawn) or not _has_structure_prefixes(
-        port.spawn
-    ):
-        port.spawn = combined_structure_spawn_port(engine=engine)
-        report["bound"] = True
-        report["engine"] = engine is not None
-        report["spawn"] = "combined"
-        if engine is None and bind_workload:
-            report["skipped"] = "engine_not_ready"
-        elif not bind_workload:
-            report["skipped"] = "bind_disabled"
-        return report
-
-    # Custom registered spawn without our workload hands — do not clobber.
-    report["skipped"] = "custom_spawn"
+    # Default / pre-installed without workload hands → combined.
+    port.spawn = combined_structure_spawn_port(engine=engine)
+    report["bound"] = True
+    report["engine"] = engine is not None
+    report["spawn"] = "combined"
+    if engine is None and bind_workload:
+        report["skipped"] = "engine_not_ready"
+    elif not bind_workload:
+        report["skipped"] = "bind_disabled"
     return report
 
 

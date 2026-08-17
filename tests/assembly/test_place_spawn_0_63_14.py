@@ -13,7 +13,6 @@ from palm.system.structure import (
     PlaceSpawnResult,
     RegisteredPlaceSpawn,
     StructureSeat,
-    fail_closed_os_ensure,
     os_prefix_spawn_port,
 )
 
@@ -78,11 +77,3 @@ def test_seat_assemble_os_place_blocks_admission() -> None:
     assert seat.admission().may_run_business is False
     assert seat.admission().phase is StructurePhase.BLOCKED
     assert any("place_failed:os:edge" in r for r in seat.admission().reasons)
-
-
-def test_fail_closed_os_ensure_helper() -> None:
-    bad = fail_closed_os_ensure("os:x", {})
-    assert bad.state == "failed"
-    good = fail_closed_os_ensure("os:x", {"pid": 42})
-    assert good.state == "ready"
-    assert good.handle == 42

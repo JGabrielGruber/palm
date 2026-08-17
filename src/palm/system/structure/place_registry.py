@@ -23,14 +23,6 @@ class InProcessPlaceRegistry:
 
     places: dict[str, PlaceState] = field(default_factory=dict)
 
-    def ensure(self, place_id: str) -> PlaceState:
-        key = str(place_id or "").strip()
-        if not key:
-            return "failed"
-        # Floor: ensure = present and ready (no external body yet).
-        self.places[key] = "ready"
-        return "ready"
-
     def mark(self, place_id: str, state: PlaceState) -> None:
         key = str(place_id or "").strip()
         if not key:
@@ -46,9 +38,6 @@ class InProcessPlaceRegistry:
             return "gone"
         self.places.pop(key, None)
         return "gone"
-
-    def status(self) -> dict[str, str]:
-        return dict(self.places)
 
 
 @dataclass

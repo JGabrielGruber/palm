@@ -6,15 +6,8 @@ The structure definition names units. This module does not import organs. It loo
 
 from __future__ import annotations
 
-from palm.core.structure import CAPABILITY_WORK_DRAIN, StructureDefinition
+from palm.core.structure import StructureDefinition
 from palm.system.structure.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
-
-
-def definition_lists_work_drain(definition: StructureDefinition | None) -> bool:
-    """True when the definition names work_drain as an install capability."""
-    if definition is None:
-        return False
-    return definition.has_capability(CAPABILITY_WORK_DRAIN)
 
 
 def apply_local_capabilities(
@@ -37,5 +30,4 @@ def apply_local_capabilities(
 
 __all__ = [
     "apply_local_capabilities",
-    "definition_lists_work_drain",
 ]

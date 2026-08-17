@@ -29,7 +29,6 @@ from palm.system.structure import (
     LOCAL_CAPABILITY_HANDS,
     CapabilitySeats,
     apply_local_capabilities,
-    definition_lists_work_drain,
 )
 from palm.system.structure.phase_assemble import run as assemble_run
 from palm.system.subsystems.supervisor import SystemSupervisor
@@ -50,12 +49,6 @@ def test_builtin_dna_lists_work_drain_on_drain_phenotypes() -> None:
     assert CAPABILITY_WORK_DRAIN in roundtrip.capabilities
     unknown = resolve_builtin_definition("local.unknown")
     assert not unknown.has_capability(CAPABILITY_WORK_DRAIN)
-
-
-def test_definition_lists_work_drain_helper() -> None:
-    assert definition_lists_work_drain(local_cli()) is True
-    assert definition_lists_work_drain(local_embedded()) is False
-    assert definition_lists_work_drain(None) is False
 
 
 class _FakePlane:

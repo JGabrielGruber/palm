@@ -151,36 +151,6 @@ class RegisteredPlaceSpawn:
         return self.fallback.release(key)
 
 
-def fail_closed_os_ensure(
-    place_id: str, payload: Mapping[str, Any]
-) -> PlaceSpawnResult:
-    """Refuse unless body handle or spawnable argv (illegal fake OS body).
-
-    Prefer :class:`OsProcessRegistry` via :func:`os_prefix_spawn_port` for real
-    process spawn. This pure helper still accepts pre-supplied handles.
-    """
-    handle = payload.get("handle") or payload.get("process") or payload.get("pid")
-    if handle is not None:
-        return PlaceSpawnResult(
-            state="ready",
-            reason="os_body_provided",
-            handle=handle,
-            payload=dict(payload),
-        )
-    if _argv_from_payload(payload):
-        # Pure helper does not spawn — point callers at OsProcessRegistry.
-        return PlaceSpawnResult(
-            state="failed",
-            reason="os_spawn_use_registry",
-            payload={"place_id": place_id, **dict(payload)},
-        )
-    return PlaceSpawnResult(
-        state="failed",
-        reason="os_spawn_not_configured",
-        payload={"place_id": place_id, **dict(payload)},
-    )
-
-
 def _argv_from_payload(payload: Mapping[str, Any]) -> list[str] | None:
     raw = payload.get("argv")
     if raw is not None:
@@ -348,6 +318,5 @@ __all__ = [
     "PlaceSpawnResult",
     "PlaceSpawnState",
     "RegisteredPlaceSpawn",
-    "fail_closed_os_ensure",
     "os_prefix_spawn_port",
 ]

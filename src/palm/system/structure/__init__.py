@@ -29,10 +29,7 @@ from palm.system.structure.loop import (
     assemble_until_steady,
     load_and_assemble,
 )
-from palm.system.structure.materialize import (
-    apply_local_capabilities,
-    definition_lists_work_drain,
-)
+from palm.system.structure.materialize import apply_local_capabilities
 from palm.system.structure.place_registry import InProcessPlaceRegistry, PlaceEffectPort
 from palm.system.structure.place_spawn import (
     InProcessPlaceSpawn,
@@ -40,7 +37,6 @@ from palm.system.structure.place_spawn import (
     PlaceSpawnPort,
     PlaceSpawnResult,
     RegisteredPlaceSpawn,
-    fail_closed_os_ensure,
     os_prefix_spawn_port,
 )
 from palm.system.structure.seat import StructureSeat
@@ -91,7 +87,6 @@ __all__ = [
     "bind_host_structure_to_seat",
     "combined_structure_spawn_port",
     "default_structure_effects",
-    "fail_closed_os_ensure",
     "os_prefix_spawn_port",
     "place_effect_port",
     "resolve_workload_engine",
@@ -102,7 +97,6 @@ __all__ = [
     "definition_id_for_boot_mode",
     "definition_id_for_composition",
     "definition_id_from_settings",
-    "definition_lists_work_drain",
     "apply_local_capabilities",
     "admission_inventory",
     "admission_inventory_snapshot",
