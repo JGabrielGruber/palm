@@ -20,8 +20,8 @@ from palm.core.assembly import CAPABILITY_WORK_DRAIN
 from palm.system.log import get_system_log, reset_system_log_for_tests
 
 
-def test_settings_resolver_folds_deployment_work_drain() -> None:
-    """Server deployment feeds work_drain into membership when resolving from settings."""
+def test_settings_resolver_does_not_write_work_drain() -> None:
+    """Flag and deployment do not write work_drain onto composition."""
     settings = PalmSettings.for_tests(load_examples=False)
     assert settings.enable_work_drain_service is False
     bare = composition_profile_from_settings(settings)
@@ -30,7 +30,7 @@ def test_settings_resolver_folds_deployment_work_drain() -> None:
     with_server = composition_profile_from_settings(
         settings, deployment=DeploymentProfile.server_only(port=0)
     )
-    assert "work_drain" in with_server.capabilities
+    assert "work_drain" not in with_server.capabilities
 
 
 def test_server_profile_host_gains_work_drain_membership() -> None:
@@ -40,7 +40,7 @@ def test_server_profile_host_gains_work_drain_membership() -> None:
         settings=settings,
         profile=DeploymentProfile.server_only(port=0),
     )
-    assert host.composition.has("work_drain")
+    assert not host.composition.has("work_drain")
     host.start()
     try:
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}

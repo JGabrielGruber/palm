@@ -20,14 +20,14 @@ def test_membership_capability_seeds_catalog_complete() -> None:
         "compensation",
         "outbox",
         "webhook",
-        "work_drain",
         "analytics",
         "neonroot",
     }
+    assert "work_drain" not in caps
     assert "journal" not in caps  # always-on, no flag
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert "enable_compensation" in settings_fields
-    assert "enable_work_drain_service" in settings_fields
+    assert "enable_work_drain_service" not in settings_fields
     assert "analytics_enabled" in settings_fields
 
 
@@ -40,7 +40,7 @@ def test_structure_seed_env_includes_all_membership_seeds() -> None:
         row["env"] for row in STRUCTURE_SEED_ENV if row["role"] == "membership_seed"
     }
     assert "PALM_ENABLE_COMPENSATION" in member_envs
-    assert "PALM_ENABLE_WORK_DRAIN_SERVICE" in member_envs
+    assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in member_envs
     assert "PALM_ENABLE_EVENT_OUTBOX" in member_envs
     assert "PALM_ENABLE_WEBHOOK_DISPATCHER" in member_envs
     assert "PALM_ANALYTICS_ENABLED" in member_envs
@@ -82,14 +82,14 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
     assert "outbox" in full_caps
 
 
-def test_deployment_feeds_work_drain_membership() -> None:
+def test_deployment_does_not_write_work_drain_membership() -> None:
     settings = _lean_settings()
     assert "work_drain" not in membership_capabilities_from_settings(settings)
     fed = membership_capabilities_from_settings(
         settings,
         deployment=DeploymentProfile.server_only(),
     )
-    assert "work_drain" in fed
+    assert "work_drain" not in fed
 
 
 def test_bootstrap_uses_membership_seed_map() -> None:
@@ -109,7 +109,7 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     assert profile.has("compensation")
     assert not profile.has("outbox")
     assert profile.has("webhook")
-    assert profile.has("work_drain")
+    assert not profile.has("work_drain")
     assert not profile.has("neonroot")
     assert not profile.has("analytics")
     # Always-on on settings-composed path

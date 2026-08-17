@@ -41,7 +41,7 @@ def test_composition_inference() -> None:
         dna_id_for_composition(
             services=("execution", "definitions"),
             surfaces=(),
-            capabilities=frozenset({"work_drain"}),
+            capabilities=frozenset({"journal"}),
         )
         == LOCAL_CLI_ID
     )
@@ -49,7 +49,7 @@ def test_composition_inference() -> None:
         dna_id_for_composition(
             services=("execution",),
             surfaces=("rest",),
-            capabilities=frozenset({"work_drain"}),
+            capabilities=frozenset(),
         )
         == LOCAL_SERVER_ID
     )
@@ -67,7 +67,7 @@ def test_resolve_seed_explicit_wins() -> None:
 def test_builtin_refuse_differs() -> None:
     emb = resolve_builtin_dna(LOCAL_EMBEDDED_ID)
     cli = resolve_builtin_dna(LOCAL_CLI_ID)
-    assert "background_drain" in emb.refuse
+    assert "background_drain" not in emb.refuse
     assert "background_drain" not in cli.refuse
     assert "server_surfaces" in cli.refuse
     assert "work_drain" not in emb.capabilities

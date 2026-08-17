@@ -18,14 +18,14 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 
 | Layer | Built | Residual |
 |-------|--------|----------|
-| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. Drain refuse reads DNA. | No DNA `requires` / start-fact vocabulary. Refuse token `background_drain` is a second name (B3 may drop it). |
+| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No DNA `requires` / start-fact vocabulary. `REFUSE_BACKGROUND_DRAIN` constant remains; not a live wall. |
 | System assembly | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / outbox / inbound are not hands. |
 | Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
-| Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status reads `runtime.work_plane`. | `host.start_plane` thin alias. Flags still seed composition. `allow_background_drain` is serialize-only. |
+| Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status reads `runtime.work_plane`. Composition does not list `work_drain`. | `host.start_plane` thin alias. Settings/deployment `enable_work_drain_service` leftover packaging. `allow_background_drain` is serialize-only. |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |
 
-A new organ is still not only a DNA name + hand: seed flags and composition still *look* like membership. That is leftover honesty, not a second install king.
+A new organ is a DNA name + hand. Composition no longer writes `work_drain`. Settings/deployment flags remain leftover packaging.
 
 ---
 
@@ -122,7 +122,7 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **A** | STATUS header (done if this file + VISION match). Delete `BootMode.allow_background_drain`. Collapse `dna_lists_work_drain` in seed. | Do not rewrite seed fold here if B3 is in flight. |
 | **B1** | **Landed.** Default catalog is outbox-only. Hand registers `work_drain`. Unregister-on-unlist stays. | Do not put `work_drain` back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
-| **B3** | Stop writing `"work_drain"` on composition presets and `enable_work_drain_service` seed. Then drop `refuse:background_drain` if omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
+| **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded DNA no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
 | **C** | Coordinator reads `runtime.work_plane`. Optional: publish assembly seat without `getattr(shell, "assembly")`. | Journal as second hand only after B. No DNA `requires`. |
 
-**First act next session:** **B3** — stop writing `"work_drain"` on composition presets and `enable_work_drain_service` seed. Then drop `refuse:background_drain` if omit is enough. Cheap A may share `seed.py` with B3 — one writer.
+**First act next session:** cheap **A** (`BootMode.allow_background_drain`, collapse `dna_lists_work_drain` / `dna_refuses_background_drain`) or **C** (coordinator plane alias). Journal as second organ only after José says the home is copyable.

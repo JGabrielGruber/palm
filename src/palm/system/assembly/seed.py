@@ -5,15 +5,14 @@ parallel structure kings. After load, assembly status under the DNA is truth.
 
 **0.63.13 — env pretenders (SD-021 growth):**
 - ``PALM_ASSEMBLY_DNA_ID`` / ``settings.assembly_dna_id`` is the explicit DNA seed.
-- Membership-shaped flags (e.g. ``PALM_ENABLE_WORK_DRAIN_SERVICE``) feed composition
-  only at resolve time. After load, ``work_drain`` install is DNA ``capabilities``.
+- Membership-shaped flags feed composition at resolve for organs that still
+  live there. ``work_drain`` is not one of them.
 
 **0.63.19 — full membership seed cartography (SD-021 residual):**
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
 - Bootstrap derives capabilities from this map — one truth for seed resolve.
-- After load, ``work_drain`` install reads DNA ``capabilities`` (not
-  ``composition.has`` / ``BootMode.allow_background_drain``). Other
-  capabilities still seed composition at resolve.
+- ``work_drain`` install reads DNA ``capabilities``. Other capabilities still
+  seed composition at resolve.
 """
 
 from __future__ import annotations
@@ -72,16 +71,6 @@ MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
         "capability": "webhook",
         "role": "membership_seed",
         "note": "Feeds composition.webhook at resolve; URLs refine targets within capability",
-    },
-    {
-        "env": "PALM_ENABLE_WORK_DRAIN_SERVICE",
-        "settings": "enable_work_drain_service",
-        "capability": "work_drain",
-        "role": "membership_seed",
-        "note": (
-            "Feeds composition.work_drain at resolve (refuse dual). After load, "
-            "DNA capabilities list is the install king — not composition.has"
-        ),
     },
     {
         "env": "PALM_ANALYTICS_ENABLED",
@@ -168,13 +157,10 @@ def dna_id_for_composition(
     if svcs == ("execution",) or (len(svcs) == 1 and svcs[0] == "execution"):
         return LOCAL_WORKER_ID
 
-    if not surfs and not caps:
+    if not caps:
         return LOCAL_EMBEDDED_ID
 
-    if not surfs and "work_drain" in caps:
-        return LOCAL_CLI_ID
-
-    return LOCAL_ALL_IN_ONE_ID
+    return LOCAL_CLI_ID
 
 
 def dna_id_from_settings(settings: Any | None) -> str | None:
@@ -196,9 +182,7 @@ def membership_capabilities_from_settings(
     """Derive composition capabilities from membership *seeds* (0.63.19).
 
     Settings ``enable_*`` / analytics flags seed membership **at resolve only**.
-    Deployment may feed ``work_drain`` when resolving without an explicit
-    composition (0.59.5). After DNA load, refuse + gates use composition + DNA —
-    not a peer re-OR of these flags.
+    ``work_drain`` is not a composition seed — DNA ``capabilities`` list it.
     """
     capabilities: set[str] = set(ALWAYS_ON_MEMBERSHIP_CAPABILITIES)
     if settings is not None:
@@ -206,10 +190,6 @@ def membership_capabilities_from_settings(
             field = row["settings"]
             if bool(getattr(settings, field, False)):
                 capabilities.add(row["capability"])
-    if deployment is not None and bool(
-        getattr(deployment, "enable_work_drain_service", False)
-    ):
-        capabilities.add("work_drain")
     return frozenset(capabilities)
 
 

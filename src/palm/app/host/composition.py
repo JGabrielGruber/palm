@@ -105,7 +105,7 @@ class CompositionProfile:
         return cls(
             services=ALL_SERVICES,
             surfaces=SERVER_SURFACES,
-            capabilities=DEFAULT_CAPABILITIES | {"work_drain"},
+            capabilities=DEFAULT_CAPABILITIES,
         )
 
     @classmethod
@@ -114,7 +114,7 @@ class CompositionProfile:
         return cls(
             services=ALL_SERVICES,
             surfaces=SERVER_SURFACES,
-            capabilities=DEFAULT_CAPABILITIES | {"work_drain", "webhook"},
+            capabilities=DEFAULT_CAPABILITIES | {"webhook"},
         )
 
     @classmethod
@@ -125,11 +125,11 @@ class CompositionProfile:
 
     @classmethod
     def worker(cls) -> Self:
-        """Headless worker/daemon — execution + deferred-work drain, no surfaces."""
+        """Headless worker/daemon — execution + outbox, no surfaces."""
         return cls(
             services=("execution",),
             surfaces=(),
-            capabilities=frozenset({"work_drain", "outbox"}),
+            capabilities=frozenset({"outbox"}),
         )
 
     @classmethod
@@ -138,7 +138,7 @@ class CompositionProfile:
         return cls(
             services=ALL_SERVICES,
             surfaces=(),
-            capabilities=DEFAULT_CAPABILITIES | {"work_drain"},
+            capabilities=DEFAULT_CAPABILITIES,
         )
 
     @classmethod

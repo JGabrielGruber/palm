@@ -19,16 +19,13 @@ from palm.system.runtime.base import BaseRuntime
 def test_refuse_violations_pure() -> None:
     emb = local_embedded()
     assert refuse_violations(emb, surfaces=(), capabilities=()) == ()
-    # Composition / option bag is not work_drain membership.
+    # Omit is enough: listing work_drain on the bag or on DNA does not refuse.
     assert (
         refuse_violations(emb, surfaces=(), capabilities=frozenset({"work_drain"}))
         == ()
     )
-    # Drain refuse fires only when DNA lists the capability and refuses it.
-    dual = replace(emb, capabilities=frozenset({"work_drain"}))
-    assert refuse_violations(dual, surfaces=(), capabilities=()) == (
-        "refuse:background_drain",
-    )
+    listed = replace(emb, capabilities=frozenset({"work_drain"}))
+    assert refuse_violations(listed, surfaces=(), capabilities=()) == ()
     assert refuse_violations(
         emb, surfaces=("rest",), capabilities=()
     ) == ("refuse:server_surfaces",)
@@ -51,7 +48,8 @@ def test_refuse_violations_pure() -> None:
 def test_seat_blocks_on_refuse_dual() -> None:
     seat = AssemblySeat()
     loop = seat.assemble(
-        replace(local_embedded(), capabilities=frozenset({"work_drain"})),
+        local_embedded(),
+        surfaces=("rest",),
     )
     assert loop.steady is True
     assert seat.admission().may_run_business is False

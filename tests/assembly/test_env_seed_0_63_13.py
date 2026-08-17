@@ -24,7 +24,7 @@ from palm.system.log import reset_system_log_for_tests
 def test_structure_seed_env_catalog() -> None:
     envs = {row["env"] for row in STRUCTURE_SEED_ENV}
     assert "PALM_ASSEMBLY_DNA_ID" in envs
-    assert "PALM_ENABLE_WORK_DRAIN_SERVICE" in envs
+    assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in envs
 
 
 def test_dna_id_from_settings() -> None:
@@ -88,7 +88,7 @@ def test_dna_override_does_not_use_composition_as_drain_membership() -> None:
     reset_system_log_for_tests()
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost.for_mode("cli", settings=settings)
-    assert host.composition.has("work_drain")
+    assert not host.composition.has("work_drain")
     host.start(assembly_dna_id="local.embedded")
     try:
         assert host.admission.definition_id == LOCAL_EMBEDDED_ID
@@ -105,7 +105,7 @@ def test_dna_override_does_not_use_composition_as_drain_membership() -> None:
 def test_dna_refuses_background_drain_helper() -> None:
     emb = resolve_builtin_dna(LOCAL_EMBEDDED_ID)
     cli = resolve_builtin_dna(LOCAL_CLI_ID)
-    assert dna_refuses_background_drain(emb) is True
+    assert dna_refuses_background_drain(emb) is False
     assert dna_refuses_background_drain(cli) is False
     assert dna_refuses_background_drain(None) is False
 

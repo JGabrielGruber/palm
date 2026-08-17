@@ -157,14 +157,10 @@ def _capabilities_from_settings(
     capabilities other than ``work_drain`` still read ``composition.has(...)``.
     They do not re-OR deployment flags.
 
-    **0.59.5:** when resolving from settings *without* an explicit
-    ``CompositionProfile``, deployment may **feed** membership (e.g.
-    ``enable_work_drain_service`` on a server role adds ``work_drain``). That
-    fold happens here once — not as a second switch at phase time.
+    ``work_drain`` is not written here. DNA ``capabilities`` list it.
 
     **0.64 / SD-021:** flag → capability map lives in
     ``palm.system.assembly.seed.MEMBERSHIP_CAPABILITY_SEEDS``.
-    After DNA load, ``work_drain`` install is DNA ``capabilities``.
 
     ``journal``, ``projections``, and ``workloads`` have no settings flag: they
     are always available on a settings-composed host (a lean *explicit*
@@ -183,10 +179,9 @@ def composition_profile_from_settings(
     """Resolve a :class:`~palm.app.host.composition.CompositionProfile` from settings.
 
     The twin of :func:`deployment_profile_from_settings`. **0.51.1:** ``capabilities``
-    are derived from the ``enable_*`` flags. **0.59.5:** optional ``deployment`` may
-    feed membership (server work-drain role → ``work_drain`` capability) so the host
-    has **one** membership truth at resolve time. Explicit ``CompositionProfile``
-    passed to ``ApplicationHost`` still wins and is never rewritten.
+    are derived from the ``enable_*`` flags. ``work_drain`` is not among them.
+    Explicit ``CompositionProfile`` passed to ``ApplicationHost`` still wins
+    and is never rewritten.
 
     ``services`` and ``surfaces`` stay ``all_in_one``'s on this path (0.50). Settings
     *refine* the profile; they never bypass an explicit composition.

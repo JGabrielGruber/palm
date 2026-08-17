@@ -72,7 +72,7 @@ def test_each_flag_toggles_exactly_its_capability() -> None:
     assert "outbox" not in _caps(enable_event_outbox=False)
     assert "webhook" in _caps(enable_webhook_dispatcher=True)
     assert "webhook" not in _caps(enable_webhook_dispatcher=False)
-    assert "work_drain" in _caps(enable_work_drain_service=True)
+    assert "work_drain" not in _caps(enable_work_drain_service=True)
     assert "work_drain" not in _caps(enable_work_drain_service=False)
     assert "analytics" in _caps(analytics_enabled=True)
     assert "analytics" not in _caps(analytics_enabled=False)
@@ -219,12 +219,7 @@ def test_outbox_drainer_is_available_times_activated() -> None:
 
 
 def test_work_drain_settings_side_routes_through_the_capability() -> None:
-    """0.59.5: work_drain is composition.has only (no deployment OR at gate time).
-
-    Explicit composition declaring work_drain enables background drain even when the
-    deployment profile's enable_work_drain_service is False. Deployment may *feed*
-    membership on the settings-resolve path; explicit composition always wins.
-    """
+    """Drain install follows DNA, not the leftover flag or composition write."""
     settings = PalmSettings.for_tests(load_examples=False)  # enable_work_drain_service False
     profile = DeploymentProfile.all_in_one()  # enable_work_drain_service False
 
