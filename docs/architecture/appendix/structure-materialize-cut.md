@@ -5,7 +5,7 @@
 **Code (2026-08-17):** `AssemblyDefinition.capabilities` + manager materialize of `work_drain`; host/mode/composition are no longer peer kings for that unit.  
 **Stamp:** José closed **0.63** and opened **0.64** (2026-08-17).
 
-**Read after compact:** this file → [structure-management.md](../c3-components/structure-management.md) → implement.  
+**Read after compact:** [VISION-0.64 after compact](../../vision/VISION-0.64.md#after-compact-2026-08-17) → **this file §1 + §7** → implement.  
 Do not re-harvest the tree unless code contradicts this note.
 
 **Map:** [PALM.md](../../PALM.md) · [TECH-DEBT SD-020 / SD-021 / SD-016](../../../TECH-DEBT.md) · present [VISION-0.64](../../vision/VISION-0.64.md) · seed [VISION-ASSEMBLY §0](../../vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08)
@@ -87,8 +87,11 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 | Reconciler | `src/palm/core/assembly/engine.py` (today: places + admission only) |
 | Seed catalog | `src/palm/system/assembly/seed.py` (`MEMBERSHIP_CAPABILITY_SEEDS`) |
 | Seat / assemble | `src/palm/system/assembly/seat.py`, `loop.py`, `phase_assemble.py` |
-| Host composition king | `src/palm/app/host/composition.py` |
-| Host drain gate | `src/palm/app/host/application_host.py`, `boot/host_schedule.py`, `boot/modes.py` |
+| Composition seed | `src/palm/app/host/composition.py` (still lists `work_drain`; not install) |
+| Hands / walker | `src/palm/system/assembly/hands.py`, `materialize.py` |
+| Host start window | `src/palm/app/host/boot/host_schedule.py` (`host.background.start_plane`) |
+| System start | `src/palm/system/subsystems/supervisor/phase_background.py` |
+| Freelance catalog | `src/palm/system/subsystems/supervisor/definition.py` (`DEFAULT_CONTINUOUS_DEFINITIONS`) |
 | Bootstrap flag → cap | `src/palm/app/bootstrap.py` |
 
 ---
@@ -101,3 +104,25 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 - Surface compost, MCP dual stack, explorer splits.
 - Full SD-016 sweep.
 - Provider / cache membership sources (local only).
+- Invent DNA `requires` / install-port vocabulary.
+- Land journal / outbox as a second organ before pile B is honest.
+
+---
+
+## 7. Next motion after compact
+
+José locked this order (2026-08-17). Not a slice table. Not patch stamps.
+
+**Landed:** DNA `capabilities` · walker · `CapabilitySeats` from `ctx` + board · start from registered service · no `host._work_drain_listed` · tests/status use `runtime.work_plane`. Commits `6e50fd6b`, `d1b3c23a`.
+
+**Process:** explore agents in parallel. One implementer at a time. Do not fan `seed.py`, `hands.py`, `phase_assemble.py`, `definition.py` (supervisor) across writers.
+
+| Pile | Do | Do not |
+|------|----|--------|
+| **A** | STATUS header (done if this file + VISION match). Delete `BootMode.allow_background_drain`. Collapse `dna_lists_work_drain` in seed. | Do not rewrite seed fold here if B3 is in flight. |
+| **B1** | Continuous catalog must not register `work_drain` at wire. Hand is the only register. | Do not delete unregister-on-unlist (reassemble still needs it). |
+| **B2** | Refuse `work_drain` against DNA capabilities, not `assembly_capabilities` from composition. | Do not invent a new refuse vocabulary. |
+| **B3** | Stop writing `"work_drain"` on composition presets and `enable_work_drain_service` seed. Then drop `refuse:background_drain` if omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
+| **C** | Coordinator reads `runtime.work_plane`. Optional: publish assembly seat without `getattr(shell, "assembly")`. | Journal as second hand only after B. No DNA `requires`. |
+
+**First act next session:** census B1 (read-only): `SystemSupervisor.install`, `DEFAULT_CONTINUOUS_DEFINITIONS`, tests that expect freelance register then materialize drop (`test_supervisor_0_60_1`, `test_materialize_unregisters_freelance_work_drain`). Then one writer. Cheap A may ride along if it does not touch the same files as B1.

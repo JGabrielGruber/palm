@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.63.0` · **Active theme:** **`0.64`** · **Prior closed:** **`0.63` Organism assembly** · **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 17, 2026 · **Theme open:** **0.64** — structure manager (José closed 0.63)  
+**Last Updated:** August 17, 2026 · **Theme open:** **0.64** — first real capability `work_drain` (José closed 0.63)  
 **System map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.64](docs/vision/VISION-0.64.md) · closed [VISION-0.63](docs/vision/closed/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Accepted** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
 **Migration / release:** [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) · prior [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
@@ -10,24 +10,24 @@
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [VISION-0.64](docs/vision/VISION-0.64.md) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (law) → [PALM.md](docs/PALM.md) · [TECH-DEBT.md](TECH-DEBT.md) · [docs/architecture/](docs/architecture/README.md).  
-Do **not** resume 0.63 slice rows. There is no 0.64 slice table.
+Read in order: **this STATUS** → [VISION-0.64](docs/vision/VISION-0.64.md) (after-compact) → [cut §7](docs/architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (law) → [PALM.md](docs/PALM.md).  
+Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-harvest the tree.
 
 | Spirit | Decision |
 |--------|----------|
-| **0.64 open** | Structure manager — definition as install set |
+| **0.64 open** | `work_drain` as first real capability — copyable home |
 | **0.63 closed** | José (2026-08-17) — admission floor real; slice queue crushed |
 | **ADR-032** | [032](docs/adr/032-organism-assembly.md) **Accepted** |
 | **Later seeds** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 
-## 0.64 — Structure manager (**open**)
+## 0.64 — First capability (**open**)
 
 **Vision:** [docs/vision/VISION-0.64.md](docs/vision/VISION-0.64.md)  
 **Cut:** [docs/architecture/appendix/structure-materialize-cut.md](docs/architecture/appendix/structure-materialize-cut.md)  
 **Seed:** [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
 
-**0.64 is `work_drain` as the first real capability** — seats, walker table, system plane. Cleanup of host-owned drain is in theme. No patch queue.
+**0.64 is `work_drain` as the first real capability.** Walker + seats landed (`6e50fd6b`, `d1b3c23a`). Next: wire must not freelance register; then stop composition/flag listing the name. José exits when the organ is copyable. No patch queue.
 
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 
