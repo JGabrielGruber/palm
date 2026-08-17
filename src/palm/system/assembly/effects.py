@@ -1,4 +1,4 @@
-"""Assembly effect port — apply structure effect intents (system hands).
+"""Effect port — apply structure effect intents (system hands).
 
 Floor: no place-registry spawn yet. ENSURE_PLACE is recorded and can be
 auto-satisfied for tests via ``auto_ack_places`` (default off in production;
@@ -15,7 +15,7 @@ from palm.core.assembly import EffectIntent, EffectIntentKind, Observation, Obse
 
 
 @runtime_checkable
-class AssemblyEffectPort(Protocol):
+class EffectPort(Protocol):
     """Apply one structure intent; return observations to fold back."""
 
     def apply(self, intent: EffectIntent) -> tuple[Observation, ...]: ...
@@ -48,6 +48,6 @@ class RecordingEffectPort:
 
 
 __all__ = [
-    "AssemblyEffectPort",
+    "EffectPort",
     "RecordingEffectPort",
 ]

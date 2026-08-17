@@ -1,7 +1,7 @@
 """System assembly — loop, effect port, seat, admission on the shell (0.63)."""
 
 from palm.system.assembly.access import admission_source_from_runtime_resolver
-from palm.system.assembly.effects import AssemblyEffectPort, RecordingEffectPort
+from palm.system.assembly.effects import EffectPort, RecordingEffectPort
 from palm.system.assembly.errors import (
     AdmissionRefusedError,
     coerce_admission_snapshot,
@@ -76,7 +76,7 @@ __all__ = [
     "CapabilitySeats",
     "AdmissionRefusedError",
     "AssembleLoopResult",
-    "AssemblyEffectPort",
+    "EffectPort",
     "AssemblySeat",
     "StructureEffectPort",
     "InProcessPlaceRegistry",

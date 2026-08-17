@@ -27,7 +27,7 @@ Teaching map: [metaphor.md](metaphor.md).
 
 Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / observability.
 
-**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; place-book / residual-ledger → registry; then DNA / env → structure definition seed. `Assembly*` packages and the living-docs pass wait.
+**2026-08-17 identifier cuts:** inventory API + row ids + doctor / Assist labels; household types; place-book / residual-ledger → registry; DNA / env → structure definition seed; `AssemblyEffectPort` → `EffectPort`. `Assembly*` packages and the living-docs pass wait.
 
 | Family | What code names today | Kind | Prefer |
 |--------|------------------------|------|--------|
@@ -42,6 +42,7 @@ Sweep 2026-08-17. Concentrated in `palm.system.assembly` plus seed / doctor / ob
 | **tower** | **renamed** → `inventory.admission` | Inventory contract | Admission inventory (same map) |
 | **king** | **renamed** → `host.outbox_composition_seed`; `inventory.exit_residual*` | Inventory contract | Seed / composition chooser |
 | **place book / ledger** | **renamed** → `place_registry.py`; `InProcessPlaceRegistry`; `PlaceEffectPort`; `place_effect_port`; field `registry`; row ids `place_registry.*` / `inventory.exit_residual*` | Public type + inventory | Place registry |
+| **AssemblyEffectPort** | **renamed** → `EffectPort` (one-method protocol). Concrete stays `StructureEffectPort`; place slice stays `PlaceEffectPort`. | Public protocol | Effect port |
 
 **No identifier:** steward.  
 **Comment / docstring only:** phenotype (on `BootMode` and definition shape), peasants, crown, decree, second wall.
@@ -56,7 +57,7 @@ Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`
 
 **2026-08-17:** comments and docstrings under `src/palm/` and `tests/` restated toward glossary words.
 
-**2026-08-17 (later):** smallest identifier cut landed, then household types, then place-book / ledger → registry, then DNA / env → structure definition seed. Inventory tuple `id` / `law` / `intent` restated with the map above.
+**2026-08-17 (later):** smallest identifier cut landed, then household types, then place-book / ledger → registry, then DNA / env → structure definition seed, then `AssemblyEffectPort` → `EffectPort`. Inventory tuple `id` / `law` / `intent` restated with the map above.
 
 ---
 
@@ -102,6 +103,7 @@ Do not rewrite those in the same sitting as a code rename.
 | **Household types** | **Locked 2026-08-17.** `HouseholdEffectPort` / `household.py` / `default_household_effects` → `StructureEffectPort` / `structure_effects.py` / `default_structure_effects`. No aliases. |
 | **Place book / ledger** | **Locked 2026-08-17.** `PlaceBookEffectPort` / `place_book.py` / `InProcessPlaceBook` → `PlaceEffectPort` / `place_registry.py` / `InProcessPlaceRegistry`. Residual row `inventory.exit_residual*`. No aliases. |
 | **DNA / env** | **Locked 2026-08-17.** `PALM_ASSEMBLY_DNA_ID` / `assembly_dna_id` / `resolve_builtin_dna` / `dna_id_*` / `dna.seed` → `PALM_STRUCTURE_DEFINITION_ID` / `structure_definition_id` / `resolve_builtin_definition` / `definition_id_*` / `definition.seed`. No aliases. |
+| **EffectPort** | **Locked 2026-08-17.** `AssemblyEffectPort` → `EffectPort`. `StructureEffectPort` and `PlaceEffectPort` keep those names. No aliases. |
 | **Package / type rename** | `AssemblyDefinition`, `AssemblyEngine`, `palm.*.assembly` — own sitting |
 | **Docs pass** | VISION-ASSEMBLY §4/§6.4, PALM, WRITING, ADR-032 — own sitting |
 | **Biology register** | genome / phenotype in PHILOSOPHY — not this leftover |

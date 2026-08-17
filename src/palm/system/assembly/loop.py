@@ -10,7 +10,7 @@ from palm.core.assembly import (
     AssemblyEngine,
     Observation,
 )
-from palm.system.assembly.effects import AssemblyEffectPort
+from palm.system.assembly.effects import EffectPort
 
 DEFAULT_MAX_TICKS = 32
 
@@ -27,7 +27,7 @@ class AssembleLoopResult:
 
 def assemble_until_steady(
     engine: AssemblyEngine,
-    effects: AssemblyEffectPort,
+    effects: EffectPort,
     *,
     max_ticks: int = DEFAULT_MAX_TICKS,
 ) -> AssembleLoopResult:
@@ -61,7 +61,7 @@ def assemble_until_steady(
 
 def load_and_assemble(
     engine: AssemblyEngine,
-    effects: AssemblyEffectPort,
+    effects: EffectPort,
     definition: AssemblyDefinition,
     *,
     max_ticks: int = DEFAULT_MAX_TICKS,

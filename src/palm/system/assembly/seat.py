@@ -15,7 +15,7 @@ from palm.core.assembly import (
     local_embedded,
     refuse_violations,
 )
-from palm.system.assembly.effects import AssemblyEffectPort
+from palm.system.assembly.effects import EffectPort
 from palm.system.assembly.hands import CapabilitySeats
 from palm.system.assembly.loop import (
     DEFAULT_MAX_TICKS,
@@ -30,7 +30,7 @@ class AssemblySeat:
     """System-owned assembly organ (not product control)."""
 
     engine: AssemblyEngine = field(default_factory=AssemblyEngine)
-    effects: AssemblyEffectPort = field(default_factory=StructureEffectPort)
+    effects: EffectPort = field(default_factory=StructureEffectPort)
     last_loop: AssembleLoopResult | None = None
     definition: AssemblyDefinition | None = None
     materialized_capabilities: frozenset[str] = field(default_factory=frozenset)
