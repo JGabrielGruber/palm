@@ -123,11 +123,6 @@ def _report_install(instance: Any, board: Any) -> SeatReport:
     )
 
 
-def _resolve_assembly(instance: Any) -> Any | None:
-    """Assembly seat on the shell (0.63) — DNA + admission."""
-    return getattr(instance, "assembly", None)
-
-
 def _report_assembly(instance: Any, seat: Any) -> SeatReport:
     """Raw admission + definition — eyes only, not control."""
     admission = None
@@ -242,7 +237,7 @@ def build_default_probes() -> list[SeatProbe]:
         SeatProbe(
             seat_id=SEAT_ASSEMBLY,
             kind=KIND_ENGINE,
-            resolve=_resolve_assembly,
+            resolve=attr_resolver("assembly"),
             report=_report_assembly,
             when_absent="report",
             order=57,
