@@ -83,8 +83,8 @@ def test_host_settings_dna_id_loads() -> None:
         host.shutdown()
 
 
-def test_dna_override_still_checks_composition_membership() -> None:
-    """Caller DNA override + cli composition with work_drain → refuse on embedded."""
+def test_dna_override_does_not_use_composition_as_drain_membership() -> None:
+    """CLI composition still lists work_drain. Embedded DNA does not. Omit is enough."""
     reset_system_log_for_tests()
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost.for_mode("cli", settings=settings)
@@ -92,10 +92,9 @@ def test_dna_override_still_checks_composition_membership() -> None:
     host.start(assembly_dna_id="local.embedded")
     try:
         assert host.admission.definition_id == LOCAL_EMBEDDED_ID
-        assert host.admission.may_run_business is False
+        assert host.admission.may_run_business is True
         reasons = host.admission.reasons
-        assert any("refuse:background_drain" in str(r) for r in reasons)
-        # Walker output after assemble — refuse is admission, not a start re-read
+        assert not any("refuse:background_drain" in str(r) for r in reasons)
         rt = host.runtime()
         assert CAPABILITY_WORK_DRAIN not in rt.assembly.materialized_capabilities
         assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()

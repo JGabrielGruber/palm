@@ -27,7 +27,7 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 
 **Commits:** `6e50fd6b` first capability (seats, names, no host drain) · `d1b3c23a` ctx seats, no host listed bag · B1 wire catalog no longer freelances `work_drain`. Master may be ahead of origin. Not pushed.
 
-**Law that landed:** DNA lists the name. Walker loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from boot `ctx` + install `work_plane`. Start reads `supervisor.get("work_drain")` (walker effect), not DNA again, not `host._work_drain_listed`. Tests and status learn `runtime.work_plane`. Default wire catalog does not register `work_drain`.
+**Law that landed:** DNA lists the name. Walker loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from boot `ctx` + install `work_plane`. Start reads `supervisor.get("work_drain")` (walker effect), not DNA again, not `host._work_drain_listed`. Tests and status learn `runtime.work_plane`. Default wire catalog does not register `work_drain`. Drain refuse reads DNA capabilities.
 
 **Do not:** invent DNA `requires`; reuse VitalityRegistry for hands; open a 0.64 slice table; fan shared types across worktrees; start journal/outbox as a second organ until pile B below is honest.
 
@@ -39,10 +39,10 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 |------|-----|--------|
 | **A** | Dead costume | STATUS still said “structure manager” in the header. Delete `allow_background_drain` (serialize only). Collapse `dna_lists_work_drain` in `seed.py` (walker / `has_capability` is enough). |
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
-| **B2** | Refuse reads DNA, not composition caps | `assembly_capabilities` still copies composition into refuse. That is why composition still lists the name. |
+| **B2** | **Landed** — refuse reads DNA capabilities | Token stays `background_drain`. Composition listing the name no longer fail-closes embedded DNA. |
 | **B3** | Stop writing the name on composition / flag | After B2: drop preset `"work_drain"`, seed-map row, `enable_work_drain_service` fold. Then `refuse:background_drain` can die (omit is enough). |
 | **C** | Later or optional | Coordinator `_start_plane` / `host.start_plane` alias. `getattr(shell, "assembly")` (seat the organ). Journal/outbox **hands** = exit proof, not cleanup. DNA `requires` — do not invent. |
 
 A and B3 must not write `seed.py` at the same time. B is sequential (B1 → B2 → B3). Coordinator plane may sit beside B1 if files do not collide.
 
-**Start next session:** cut [§7](../architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → **B2** (refuse reads DNA capabilities, not composition). Cheap A may land if it does not touch `seed.py` while B2 is open.
+**Start next session:** cut [§7](../architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → **B3** (stop writing `"work_drain"` on composition / flag; then refuse token can die). Cheap A may share `seed.py` with B3 — one writer.

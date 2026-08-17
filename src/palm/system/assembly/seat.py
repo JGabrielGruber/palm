@@ -56,8 +56,9 @@ class AssemblySeat:
     ) -> AssembleLoopResult:
         """Household: load DNA (default embedded) and reconcile until steady.
 
-        When *surfaces* / *capabilities* are provided, DNA refuse is checked
-        (0.63.6). Violations block admission — fail closed, no soft dual.
+        When *surfaces* are provided, DNA refuse is checked (0.63.6).
+        ``work_drain`` refuse reads DNA capabilities, not *capabilities*.
+        Violations block admission — fail closed, no soft dual.
 
         *force* voids same-id READY and re-converges (0.63.18 reassemble edge).
         Membership is always re-evaluated: prior refuse reasons clear first.

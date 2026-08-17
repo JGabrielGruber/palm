@@ -6,7 +6,6 @@ import sys
 import time
 
 from palm.core.assembly import (
-    AssemblyDefinition,
     AssemblyPhase,
     EffectIntent,
     EffectIntentKind,
@@ -43,12 +42,12 @@ def test_household_structure_policy_refuse() -> None:
     hands = HouseholdEffectPort()
     hands.bind_structure(
         local_embedded(),
-        surfaces=(),
-        capabilities=("work_drain",),
+        surfaces=("rest",),
+        capabilities=(),
     )
     obs = hands.apply(EffectIntent(kind=EffectIntentKind.APPLY_STRUCTURE_POLICY))
     assert any(o.kind.value == "structure_policy_violation" for o in obs)
-    assert any("background_drain" in o.target for o in obs)
+    assert any("server_surfaces" in o.target for o in obs)
 
 
 def test_household_structure_policy_clear() -> None:
@@ -72,7 +71,8 @@ def test_seat_binds_structure_on_assemble() -> None:
     assert isinstance(seat.effects, HouseholdEffectPort)
     assert seat.effects.definition is not None
     assert "work_drain" in seat.effects.capabilities
-    assert seat.admission().may_run_business is False
+    # Bag is recorded. Drain membership is DNA — embedded does not list it.
+    assert seat.admission().may_run_business is True
 
 
 def test_os_process_spawn_and_release() -> None:

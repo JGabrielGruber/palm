@@ -18,7 +18,7 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 
 | Layer | Built | Residual |
 |-------|--------|----------|
-| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. | No DNA `requires` / start-fact vocabulary. Refuse token `background_drain` is a second name. |
+| Core assembly | Reconciler + `AssemblyDefinition.capabilities`. Builtin DNA lists `work_drain` on cli/server/all_in_one/worker. Drain refuse reads DNA. | No DNA `requires` / start-fact vocabulary. Refuse token `background_drain` is a second name (B3 may drop it). |
 | System assembly | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / outbox / inbound are not hands. |
 | Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
 | Host | DNA seed at spawn. Start window reads supervisor service, not a host listed bag. Status reads `runtime.work_plane`. | `host.start_plane` thin alias. Flags still seed composition. `allow_background_drain` is serialize-only. |
@@ -121,8 +121,8 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 |------|----|--------|
 | **A** | STATUS header (done if this file + VISION match). Delete `BootMode.allow_background_drain`. Collapse `dna_lists_work_drain` in seed. | Do not rewrite seed fold here if B3 is in flight. |
 | **B1** | **Landed.** Default catalog is outbox-only. Hand registers `work_drain`. Unregister-on-unlist stays. | Do not put `work_drain` back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
-| **B2** | Refuse `work_drain` against DNA capabilities, not `assembly_capabilities` from composition. | Do not invent a new refuse vocabulary. |
+| **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
 | **B3** | Stop writing `"work_drain"` on composition presets and `enable_work_drain_service` seed. Then drop `refuse:background_drain` if omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
 | **C** | Coordinator reads `runtime.work_plane`. Optional: publish assembly seat without `getattr(shell, "assembly")`. | Journal as second hand only after B. No DNA `requires`. |
 
-**First act next session:** **B2** — refuse `work_drain` against DNA capabilities, not `assembly_capabilities` from composition. Then B3 can stop writing the name on composition / flag. Cheap A may ride if it does not share `seed.py` with B2.
+**First act next session:** **B3** — stop writing `"work_drain"` on composition presets and `enable_work_drain_service` seed. Then drop `refuse:background_drain` if omit is enough. Cheap A may share `seed.py` with B3 — one writer.

@@ -9,6 +9,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - ADR-032 **Accepted**
 - Assemble fills `CapabilitySeats` from boot ctx + install board. Start reads the supervisor service the walker registered. Host listed bag gone. Tests and status learn `runtime.work_plane`.
 - Wire catalog does not freelance-register `work_drain`. The capability hand is the only register.
+- Drain refuse reads DNA capabilities, not the composition / `assembly_capabilities` bag.
 
 ### 0.63.39 — work_drain materialize
 - `AssemblyDefinition.capabilities` — builtin DNA lists `work_drain` on cli/server/all_in_one/worker (not embedded/mcp)

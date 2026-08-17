@@ -34,7 +34,7 @@ def test_exec_workload_refused_when_dna_refuse_blocks() -> None:
         storage_backend="memory",
         enable_event_outbox=False,
         assembly_dna_id="local.embedded",
-        assembly_capabilities=["work_drain"],
+        assembly_surfaces=["rest"],
         workload_host_enabled=True,
     )
     try:

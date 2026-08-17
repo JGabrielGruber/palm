@@ -26,10 +26,11 @@ def refuse_violations(
     """Return reason codes when membership violates DNA refuse.
 
     Empty tuple means policy holds. Reasons are stable strings for admission.
+    ``work_drain`` membership is ``definition.capabilities``. *capabilities*
+    is the leftover external bag (other organs still seed composition).
     """
     refuse = definition.refuse
     surfs = frozenset(str(s) for s in surfaces if s)
-    caps = frozenset(str(c) for c in capabilities if c)
     reasons: list[str] = []
 
     if REFUSE_SERVER_SURFACES in refuse and surfs:
@@ -41,8 +42,8 @@ def refuse_violations(
             reasons.append(f"refuse:{REFUSE_HTTP_SERVER_SURFACES}")
 
     # Dual name: refuse token ``background_drain`` vs capability ``work_drain``.
-    # Do not rename here — admission still fail-closes the pair.
-    if REFUSE_BACKGROUND_DRAIN in refuse and "work_drain" in caps:
+    # Membership is DNA capabilities, not the composition / option bag.
+    if REFUSE_BACKGROUND_DRAIN in refuse and definition.has_capability("work_drain"):
         reasons.append(f"refuse:{REFUSE_BACKGROUND_DRAIN}")
 
     # product_catalog_home — floor: no composition signal yet; reserved token

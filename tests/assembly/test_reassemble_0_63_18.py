@@ -26,21 +26,21 @@ def test_reassemble_new_version_invalidates_then_ready() -> None:
 
 def test_reassemble_membership_worse_blocks() -> None:
     seat = AssemblySeat()
-    seat.assemble(local_embedded(), capabilities=())
+    seat.assemble(local_embedded(), surfaces=())
     assert seat.admission().may_run_business is True
 
-    seat.reassemble(local_embedded(), capabilities=("work_drain",))
+    seat.reassemble(local_embedded(), surfaces=("rest",))
     assert seat.admission().may_run_business is False
     assert seat.admission().phase is AssemblyPhase.BLOCKED
-    assert any("background_drain" in r for r in seat.admission().reasons)
+    assert any("server_surfaces" in r for r in seat.admission().reasons)
 
 
 def test_reassemble_membership_heals_without_soft_dual() -> None:
     seat = AssemblySeat()
-    seat.assemble(local_embedded(), capabilities=("work_drain",))
+    seat.assemble(local_embedded(), surfaces=("rest",))
     assert seat.admission().may_run_business is False
 
-    seat.reassemble(local_embedded(), capabilities=())
+    seat.reassemble(local_embedded(), surfaces=())
     assert seat.admission().may_run_business is True
     assert seat.admission().phase is AssemblyPhase.READY
     assert not any(r.startswith("refuse:") for r in seat.admission().reasons)

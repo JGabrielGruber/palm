@@ -27,14 +27,14 @@ def test_invoke_resource_refused_when_assembly_skipped() -> None:
 
 
 def test_invoke_resource_refused_when_dna_refuse_blocks() -> None:
-    """Embedded DNA + work_drain membership → admission blocked → no product invoke."""
+    """Embedded DNA + server surfaces → admission blocked → no product invoke."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
         enable_event_outbox=False,
         assembly_dna_id="local.embedded",
-        assembly_capabilities=["work_drain"],
+        assembly_surfaces=["rest"],
     )
     try:
         assert rt.admission.may_run_business is False

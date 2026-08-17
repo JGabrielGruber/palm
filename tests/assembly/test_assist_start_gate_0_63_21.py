@@ -41,7 +41,7 @@ def test_assist_start_scenario_refused_when_assembly_skipped() -> None:
 
 def test_assist_start_scenario_refused_when_dna_refuse() -> None:
     reset_system_log_for_tests()
-    # all_in_one has work_drain membership; embedded DNA refuses background_drain
+    # all_in_one composition exposes server surfaces; embedded DNA refuses them
     host = ApplicationHost.for_mode("all_in_one", settings=_settings())
     host.start(assembly_dna_id="local.embedded")
     try:
