@@ -27,6 +27,8 @@
 
 §7 layout below is **vision shape**. Paths there stay `*/assembly/` as the essay. Code homes are the table. Glossary: [architecture/glossary.md](../architecture/glossary.md).
 
+**Remainder (José 2026-08-18).** 0.63 mapped the citizen contract. 0.64 does the work (capabilities as structure fact). What this essay still holds for later: **reshape admission** so it reads capability (and ready / refuse), then change dependents that still dig lower layers. Sequence: [VISION-0.64](VISION-0.64.md). That is not [VISION-0.65](VISION-0.65.md) (outbox proof).
+
 ---
 
 ## 0. Progress honesty (2026-08-08)

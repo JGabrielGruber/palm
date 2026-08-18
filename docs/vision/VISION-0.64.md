@@ -33,6 +33,24 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 
 **Exit:** José, when this organ is a home someone can copy.
 
+### Horizons (catch-up · José 2026-08-18)
+
+Themes **classify** the work. They are not theater. If a later cut shows the first organ is still missing, that work is still **0.64**.
+
+| Horizon | Status | What it is |
+|---------|--------|------------|
+| **0.64** | **open** | First organ `work_drain`. Remaining: first-organ **costume** (below), then José stamps copyable. |
+| **0.65** | [seed](VISION-0.65.md) — not open | Proof the home copies: **outbox**. Name + hand + kill the old walker in the same cut. |
+| **Assembly remainder** | stays on [VISION-ASSEMBLY](VISION-ASSEMBLY.md) | Steps 3–4: admission sits on capability; dependents stop digging. Not a 0.65 dump. |
+
+**Still 0.64 (costume — no second organ):** composition still types `work_drain`; assemble / seed still shovel a dead `capabilities` bag; `WORK_DRAIN_SERVICE` is named and not walked.
+
+**Grow with 0.65, do not invent now:** `CapabilitySeats`, `system.background.start` skip strings.
+
+**Leave named:** host then `runtime.stop` (shutdown order); ops `start_plane_running`; journal *consumer* also named `work_drain`.
+
+Dogfood (`analytics`, `neonroot`) and always-on engine (`workloads`) are not the capability queue. `inbound` is old pile — do not copy.
+
 ---
 
 ## After compact (2026-08-17)
@@ -57,4 +75,4 @@ No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-mater
 
 A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.structure`; settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` (supervisor, execution, install, structure), `get_system_planes` (hub), and `first_resolver` for process log. Inventory `admission_inventory_snapshot` stays as eyes.
 
-**Start next session:** José judges whether the organ is copyable. Journal as second organ only after that.
+**Start next session:** remaining 0.64 is first-organ costume (horizons above). Then José stamps copyable. Outbox is [VISION-0.65](VISION-0.65.md), not a leftover afternoon.

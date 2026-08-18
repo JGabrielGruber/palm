@@ -1,8 +1,8 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.63.0` · **Active theme:** **`0.64`** · **Prior closed:** **`0.63` Organism assembly** · **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 17, 2026 · **Theme open:** **0.64** — first real capability `work_drain` (José closed 0.63)  
-**System map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.64](docs/vision/VISION-0.64.md) · closed [VISION-0.63](docs/vision/closed/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Accepted** · [ADR-033](docs/adr/033-one-walker.md) **Proposed** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
+**Last Updated:** August 18, 2026 · **Theme open:** **0.64** — first real capability `work_drain` (José closed 0.63)  
+**System map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.64](docs/vision/VISION-0.64.md) · next seed [VISION-0.65](docs/vision/VISION-0.65.md) · closed [VISION-0.63](docs/vision/closed/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Accepted** · [ADR-033](docs/adr/033-one-walker.md) **Proposed** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
 **Migration / release:** [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) · prior [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
@@ -10,13 +10,14 @@
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [VISION-0.64](docs/vision/VISION-0.64.md) (after-compact) → [cut §7](docs/architecture/appendix/structure-materialize-cut.md#7-next-motion-after-compact) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (law) → [PALM.md](docs/PALM.md).  
-Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-harvest the tree.
+Read in order: **this STATUS** → [VISION-0.64](docs/vision/VISION-0.64.md) (**horizons**) → [VISION-0.65](docs/vision/VISION-0.65.md) (seed only) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (remainder) → [PALM.md](docs/PALM.md).  
+Do **not** resume 0.63 slice rows. There is no slice table. Themes classify; if outbox shows first-organ costume, that work is still 0.64.
 
 | Spirit | Decision |
 |--------|----------|
-| **0.64 open** | `work_drain` as first real capability — copyable home |
-| **Contract then work** | Admission is the business face; capability is the fact. 0.64 is the work. New contract + SD-020 after copyable — [VISION-0.64](docs/vision/VISION-0.64.md) |
+| **0.64 open** | `work_drain` first organ. Remaining: costume, then José stamps copyable |
+| **0.65 seed** | [VISION-0.65](docs/vision/VISION-0.65.md) — outbox proof. Not open |
+| **Contract then work** | Admission is the business face; capability is the fact. New contract + SD-020 after copyable — [VISION-0.64](docs/vision/VISION-0.64.md) |
 | **0.63 closed** | José (2026-08-17) — admission floor real; slice queue crushed |
 | **ADR-032** | [032](docs/adr/032-organism-assembly.md) **Accepted** |
 | **ADR-033** | [033](docs/adr/033-one-walker.md) **Proposed** — old wiring dies in the same cut. José accepts |
@@ -29,7 +30,7 @@ Do **not** resume 0.63 slice rows. There is no 0.64 slice table. Do **not** re-h
 **Cut:** [docs/architecture/appendix/structure-materialize-cut.md](docs/architecture/appendix/structure-materialize-cut.md)  
 **Seed:** [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)
 
-**0.64 is `work_drain` as the first real capability.** Walker + seats + no freelance wire + composition does not write the name. Costume field, seed twins, plane aliases, assemble getattr scrape, and the settings/deployment drain switch are gone. Vitality default probes share `attr_resolver` / hub / `first_resolver`. Admission stays the business face until the contract changes after copyable. Next: José exits when the organ is copyable. No patch queue. No SD-020 dump mid-theme.
+**0.64 is `work_drain` as the first real capability.** Spine landed. Remaining costume: composition still types the name; dead assemble bag; `WORK_DRAIN_SERVICE` unused. Then José stamps copyable. Outbox is 0.65 (seed). Admission contract stays assembly remainder.
 
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 
