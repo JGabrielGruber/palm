@@ -100,12 +100,6 @@ def register_outbox(
     return svc
 
 
-WORK_DRAIN_SERVICE = ContinuousServiceDefinition(
-    name="work_drain",
-    order=10,
-    register=register_work_drain,
-)  # Named recipe. Default wire does not walk this.
-
 OUTBOX_SERVICE = ContinuousServiceDefinition(
     name="outbox",
     order=20,
@@ -124,7 +118,6 @@ __all__ = [
     "ContinuousWireContext",
     "DEFAULT_CONTINUOUS_DEFINITIONS",
     "OUTBOX_SERVICE",
-    "WORK_DRAIN_SERVICE",
     "register_outbox",
     "register_work_drain",
 ]

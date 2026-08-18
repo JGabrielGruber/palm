@@ -18,29 +18,19 @@ from palm.system.structure import StructureSeat
 
 def test_refuse_violations_pure() -> None:
     emb = local_embedded()
-    assert refuse_violations(emb, surfaces=(), capabilities=()) == ()
-    # Omit is enough: listing work_drain on the bag or on DNA does not refuse.
-    assert (
-        refuse_violations(emb, surfaces=(), capabilities=frozenset({"work_drain"}))
-        == ()
-    )
+    assert refuse_violations(emb, surfaces=()) == ()
+    # Omit is enough: listing work_drain on DNA does not refuse.
     listed = replace(emb, capabilities=frozenset({"work_drain"}))
-    assert refuse_violations(listed, surfaces=(), capabilities=()) == ()
-    assert refuse_violations(
-        emb, surfaces=("rest",), capabilities=()
-    ) == ("refuse:server_surfaces",)
+    assert refuse_violations(listed, surfaces=()) == ()
+    assert refuse_violations(emb, surfaces=("rest",)) == ("refuse:server_surfaces",)
 
     cli = local_cli()
-    assert refuse_violations(
-        cli, surfaces=(), capabilities=frozenset({"work_drain"})
-    ) == ()
-    assert refuse_violations(cli, surfaces=("rest",), capabilities=()) == (
-        "refuse:server_surfaces",
-    )
+    assert refuse_violations(cli, surfaces=()) == ()
+    assert refuse_violations(cli, surfaces=("rest",)) == ("refuse:server_surfaces",)
 
     mcp = local_mcp()
-    assert refuse_violations(mcp, surfaces=("mcp",), capabilities=()) == ()
-    assert refuse_violations(mcp, surfaces=("rest",), capabilities=()) == (
+    assert refuse_violations(mcp, surfaces=("mcp",)) == ()
+    assert refuse_violations(mcp, surfaces=("rest",)) == (
         "refuse:http_server_surfaces",
     )
 
@@ -59,7 +49,8 @@ def test_seat_blocks_on_refuse_dual() -> None:
 
 def test_seat_ready_when_membership_honors_refuse() -> None:
     seat = StructureSeat()
-    seat.assemble(local_cli(), capabilities=frozenset({"work_drain"}))
+    seat.assemble(local_cli())
+    assert local_cli().has_capability("work_drain")
     assert seat.admission().may_run_business is True
 
 

@@ -71,16 +71,12 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     definition = _resolve_definition(options)
     max_ticks = int(options.get("structure_max_ticks") or 32)
     surfaces = options.get("structure_surfaces") or ()
-    capabilities = options.get("structure_capabilities") or ()
     if isinstance(surfaces, str):
         surfaces = (surfaces,)
-    if isinstance(capabilities, str):
-        capabilities = (capabilities,)
     loop = seat.assemble(
         definition,
         max_ticks=max_ticks,
         surfaces=surfaces,
-        capabilities=capabilities,
     )
     board = ctx.install if ctx.install is not None else shell.install
     supervisor = ctx.supervisor if ctx.supervisor is not None else shell.supervisor

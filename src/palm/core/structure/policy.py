@@ -20,19 +20,16 @@ def refuse_violations(
     definition: StructureDefinition,
     *,
     surfaces: Iterable[str] = (),
-    capabilities: Iterable[str] = (),
 ) -> tuple[str, ...]:
     """Return reason codes when membership violates definition refuse.
 
     Empty tuple means policy holds. Reasons are stable strings for admission.
-    *capabilities* is the leftover external bag (other organs still seed
-    composition). ``work_drain`` is omit-enough: a definition that does not list it
-    does not install it.
+    Surfaces refuse stays. ``work_drain`` is omit-enough on the definition —
+    a definition that does not list it does not install it.
     """
     refuse = definition.refuse
     surfs = frozenset(str(s) for s in surfaces if s)
     reasons: list[str] = []
-    _ = capabilities
 
     if REFUSE_SERVER_SURFACES in refuse and surfs:
         reasons.append(f"refuse:{REFUSE_SERVER_SURFACES}")

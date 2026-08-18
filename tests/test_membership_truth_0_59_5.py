@@ -91,17 +91,21 @@ def test_work_drain_gate_is_dna_not_composition_or() -> None:
         host.shutdown()
 
 
-def test_composition_capability_enables_work_drain_without_deployment_flag() -> None:
-    """Membership on composition is enough (deployment flag is not a second AND)."""
+def test_work_drain_follows_definition_not_composition() -> None:
+    """all_in_one DNA lists work_drain; composition does not own membership."""
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(
         settings=settings,
         profile=DeploymentProfile.all_in_one(),
-        composition=replace(CP.all_in_one(), capabilities=frozenset({"work_drain"})),
+        composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
     host.start()
     try:
+        assert not host.composition.has("work_drain")
         rt = host.runtime()
+        definition = rt.structure.definition
+        assert definition is not None
+        assert definition.has_capability(CAPABILITY_WORK_DRAIN)
         assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
         assert "work_drain" in rt.supervisor.names()
         plane = rt.work_plane

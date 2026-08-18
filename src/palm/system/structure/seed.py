@@ -238,8 +238,9 @@ def seed_structure_options_from_host(host: Any) -> dict[str, Any]:
     """Build runtime.start kwargs for structure seed from ApplicationHost-like shell.
 
     Priority for definition id: settings.structure_definition_id → boot mode →
-    deployment → composition inference. Membership surfaces/capabilities always
-    come from the host composition (refuse checks dual membership — 0.63.6).
+    deployment → composition inference. Membership surfaces always come from
+    the host composition (refuse checks dual surface membership — 0.63.6).
+    Composition capabilities still feed definition inference only.
     """
     mode = getattr(host, "boot_mode", None)
     mode_name = getattr(mode, "name", None) if mode is not None else None
@@ -266,9 +267,8 @@ def seed_structure_options_from_host(host: Any) -> dict[str, Any]:
     return {
         "structure_definition_id": definition.id,
         "structure_definition": definition,
-        # Membership facts for refuse check (0.63.6) — seed only; status under the definition is truth.
+        # Surface membership for refuse (0.63.6) — seed only; status under the definition is truth.
         "structure_surfaces": list(surfaces),
-        "structure_capabilities": sorted(capabilities),
     }
 
 

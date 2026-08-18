@@ -218,20 +218,24 @@ def test_outbox_drainer_is_available_times_activated() -> None:
 
 
 def test_work_drain_settings_side_routes_through_the_capability() -> None:
-    """Drain install follows DNA, not the leftover flag or composition write."""
+    """Drain install follows DNA list, not composition write or leftover flag."""
     settings = PalmSettings.for_tests(load_examples=False)
     profile = DeploymentProfile.all_in_one()
 
     on = ApplicationHost(
         settings=settings,
         profile=profile,
-        composition=replace(CP.all_in_one(), capabilities=frozenset({"work_drain"})),
+        composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
     on.start()
     try:
-        # membership seeds DNA; walker output is listed after assemble
-        assert CAPABILITY_WORK_DRAIN in on.runtime().structure.materialized_capabilities
-        assert "work_drain" in on.runtime().supervisor.names()
+        assert not on.composition.has("work_drain")
+        rt = on.runtime()
+        definition = rt.structure.definition
+        assert definition is not None
+        assert definition.has_capability(CAPABILITY_WORK_DRAIN)
+        assert CAPABILITY_WORK_DRAIN in rt.structure.materialized_capabilities
+        assert "work_drain" in rt.supervisor.names()
     finally:
         on.shutdown()
 
@@ -242,11 +246,12 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
     )
     off.start(structure_definition_id="local.embedded")
     try:
-        assert CAPABILITY_WORK_DRAIN not in off.runtime().structure.materialized_capabilities
-        assert (
-            off.runtime().supervisor is None
-            or "work_drain" not in off.runtime().supervisor.names()
-        )
+        rt = off.runtime()
+        definition = rt.structure.definition
+        assert definition is not None
+        assert not definition.has_capability(CAPABILITY_WORK_DRAIN)
+        assert CAPABILITY_WORK_DRAIN not in rt.structure.materialized_capabilities
+        assert rt.supervisor is None or "work_drain" not in rt.supervisor.names()
     finally:
         off.shutdown()
 

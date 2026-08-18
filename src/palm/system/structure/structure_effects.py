@@ -27,7 +27,6 @@ class StructureEffectPort:
     places: PlaceEffectPort = field(default_factory=PlaceEffectPort)
     definition: StructureDefinition | None = None
     surfaces: tuple[str, ...] = ()
-    capabilities: tuple[str, ...] = ()
     projections_loaded: set[str] = field(default_factory=set)
     applied: list[EffectIntent] = field(default_factory=list)
 
@@ -36,12 +35,10 @@ class StructureEffectPort:
         definition: StructureDefinition | None,
         *,
         surfaces: Iterable[str] = (),
-        capabilities: Iterable[str] = (),
     ) -> None:
-        """Bind structure definition + membership so APPLY_STRUCTURE_POLICY can re-check refuse."""
+        """Bind structure definition + surface membership so APPLY_STRUCTURE_POLICY can re-check refuse."""
         self.definition = definition
         self.surfaces = tuple(str(s) for s in surfaces if s)
-        self.capabilities = tuple(str(c) for c in capabilities if c)
 
     @property
     def registry(self):
@@ -96,7 +93,6 @@ class StructureEffectPort:
             violations = refuse_violations(
                 self.definition,
                 surfaces=self.surfaces,
-                capabilities=self.capabilities,
             )
             if violations:
                 return tuple(

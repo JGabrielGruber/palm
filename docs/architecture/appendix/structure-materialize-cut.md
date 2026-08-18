@@ -87,11 +87,11 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 | Reconciler | `src/palm/core/structure/engine.py` (today: places + admission only) |
 | Seed catalog | `src/palm/system/structure/seed.py` (`MEMBERSHIP_CAPABILITY_SEEDS`) |
 | Seat / assemble | `src/palm/system/structure/seat.py`, `loop.py`, `phase_assemble.py` |
-| Composition seed | `src/palm/app/host/composition.py` (still lists `work_drain`; not install) |
+| Composition seed | `src/palm/app/host/composition.py` (does not type `work_drain`) |
 | Hands / walker | `src/palm/system/structure/hands.py`, `materialize.py` |
 | Host schedule | `src/palm/app/host/boot/host_schedule.py` (ends at `host.ready`; does not start drain) |
 | System start | `src/palm/system/subsystems/supervisor/phase_background.py` (`system.background.start`) |
-| Freelance catalog | `src/palm/system/subsystems/supervisor/definition.py` (`DEFAULT_CONTINUOUS_DEFINITIONS` is outbox-only; `WORK_DRAIN_SERVICE` exists, wire does not walk it) |
+| Freelance catalog | `src/palm/system/subsystems/supervisor/definition.py` (`DEFAULT_CONTINUOUS_DEFINITIONS` is outbox-only; hand calls `register_work_drain`; no named `WORK_DRAIN_SERVICE` recipe) |
 | Bootstrap flag → cap | `src/palm/app/bootstrap.py` |
 
 ---
@@ -125,4 +125,4 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
 | **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Journal as second hand only after José says copyable. No definition `requires`. |
 
-**First act next session:** 0.64 remaining is first-organ costume — [VISION-0.64 horizons](../../vision/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/VISION-0.65.md). Do not open [SD-020](../../../TECH-DEBT.md#sd-020) as a mid-theme dump.
+**Costume landed.** José stamps copyable — [VISION-0.64 horizons](../../vision/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/VISION-0.65.md). Do not open [SD-020](../../../TECH-DEBT.md#sd-020) as a mid-theme dump.

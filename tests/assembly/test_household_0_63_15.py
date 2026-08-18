@@ -43,7 +43,6 @@ def test_structure_policy_refuse() -> None:
     hands.bind_structure(
         local_embedded(),
         surfaces=("rest",),
-        capabilities=(),
     )
     obs = hands.apply(EffectIntent(kind=EffectIntentKind.APPLY_STRUCTURE_POLICY))
     assert any(o.kind.value == "structure_policy_violation" for o in obs)
@@ -52,7 +51,7 @@ def test_structure_policy_refuse() -> None:
 
 def test_structure_policy_clear() -> None:
     hands = StructureEffectPort()
-    hands.bind_structure(local_embedded(), surfaces=(), capabilities=())
+    hands.bind_structure(local_embedded(), surfaces=())
     obs = hands.apply(EffectIntent(kind=EffectIntentKind.APPLY_STRUCTURE_POLICY))
     assert all(o.kind.value == "structure_policy_cleared" for o in obs)
 
@@ -67,11 +66,12 @@ def test_structure_request_seed() -> None:
 
 def test_seat_binds_structure_on_assemble() -> None:
     seat = StructureSeat()
-    seat.assemble(local_embedded(), capabilities=("work_drain",))
+    seat.assemble(local_embedded())
     assert isinstance(seat.effects, StructureEffectPort)
     assert seat.effects.definition is not None
-    assert "work_drain" in seat.effects.capabilities
-    # Bag is recorded. Drain membership is DNA — embedded does not list it.
+    assert not hasattr(seat.effects, "capabilities")
+    # Drain membership is DNA — embedded does not list it.
+    assert not local_embedded().has_capability("work_drain")
     assert seat.admission().may_run_business is True
 
 

@@ -39,11 +39,11 @@ Themes **classify** the work. They are not theater. If a later cut shows the fir
 
 | Horizon | Status | What it is |
 |---------|--------|------------|
-| **0.64** | **open** | First organ `work_drain`. Remaining: first-organ **costume** (below), then José stamps copyable. |
+| **0.64** | **open** | First organ `work_drain`. Costume cut landed. José stamps copyable. |
 | **0.65** | [seed](VISION-0.65.md) — not open | Proof the home copies: **outbox**. Name + hand + kill the old walker in the same cut. |
 | **Assembly remainder** | stays on [VISION-ASSEMBLY](VISION-ASSEMBLY.md) | Steps 3–4: admission sits on capability; dependents stop digging. Not a 0.65 dump. |
 
-**Still 0.64 (costume — no second organ):** composition still types `work_drain`; assemble / seed still shovel a dead `capabilities` bag; `WORK_DRAIN_SERVICE` is named and not walked.
+**Costume landed (no second organ):** composition does not type `work_drain`; assemble / seed / refuse no longer shovel a capabilities bag; `WORK_DRAIN_SERVICE` is gone. Hand still calls `register_work_drain`.
 
 **Grow with 0.65, do not invent now:** `CapabilitySeats`, `system.background.start` skip strings.
 
@@ -75,4 +75,4 @@ Dogfood (`analytics`, `neonroot`) and always-on engine (`workloads`) are not the
 
 A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.structure`; settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` (supervisor, execution, install, structure), `get_system_planes` (hub), and `first_resolver` for process log. Inventory `admission_inventory_snapshot` stays as eyes.
 
-**Start next session:** remaining 0.64 is first-organ costume (horizons above). Then José stamps copyable. Outbox is [VISION-0.65](VISION-0.65.md), not a leftover afternoon.
+**Start next session:** costume is cut. José stamps copyable. Outbox is [VISION-0.65](VISION-0.65.md), not a leftover afternoon.

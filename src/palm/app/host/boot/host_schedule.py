@@ -64,10 +64,9 @@ def build_host_handlers(
             from palm.system.structure.seed import seed_structure_options_from_host
 
             seed = seed_structure_options_from_host(host)
-            # Membership facts always from host composition unless caller set them.
-            for key in ("structure_surfaces", "structure_capabilities"):
-                if key not in options:
-                    merged[key] = seed[key]
+            # Surface membership always from host composition unless caller set it.
+            if "structure_surfaces" not in options:
+                merged["structure_surfaces"] = seed["structure_surfaces"]
             # Structure definition: runtime options / explicit definition win; else seed (incl. env).
             if "structure_definition" not in options and "structure_definition_id" not in options:
                 merged["structure_definition_id"] = seed["structure_definition_id"]

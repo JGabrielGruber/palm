@@ -51,13 +51,12 @@ class StructureSeat:
         *,
         max_ticks: int = DEFAULT_MAX_TICKS,
         surfaces: Iterable[str] = (),
-        capabilities: Iterable[str] = (),
         force: bool = False,
     ) -> AssembleLoopResult:
         """Structure assemble: load definition (default embedded) and reconcile until steady.
 
         When *surfaces* are provided, definition refuse is checked (0.63.6).
-        ``work_drain`` refuse reads definition capabilities, not *capabilities*.
+        ``work_drain`` membership is definition ``capabilities`` (omit is enough).
         Violations block admission — fail closed, no soft dual.
 
         *force* voids same-id READY and re-converges (0.63.18 reassemble edge).
@@ -68,15 +67,13 @@ class StructureSeat:
         self.definition = definition
         bind = getattr(self.effects, "bind_structure", None)
         if callable(bind):
-            bind(definition, surfaces=surfaces, capabilities=capabilities)
+            bind(definition, surfaces=surfaces)
         # Honest membership re-check before / after definition load.
         self.engine.observe(
             Observation(kind=ObservationKind.STRUCTURE_POLICY_CLEARED)
         )
         self.engine.receive_definition(definition, force=force)
-        for reason in refuse_violations(
-            definition, surfaces=surfaces, capabilities=capabilities
-        ):
+        for reason in refuse_violations(definition, surfaces=surfaces):
             self.engine.observe(
                 Observation(
                     kind=ObservationKind.STRUCTURE_POLICY_VIOLATION,
@@ -105,7 +102,6 @@ class StructureSeat:
         *,
         max_ticks: int = DEFAULT_MAX_TICKS,
         surfaces: Iterable[str] = (),
-        capabilities: Iterable[str] = (),
         force: bool = False,
     ) -> AssembleLoopResult:
         """Re-converge after definition or membership change (0.63.18).
@@ -121,7 +117,6 @@ class StructureSeat:
             definition,
             max_ticks=max_ticks,
             surfaces=surfaces,
-            capabilities=capabilities,
             force=force,
         )
 
