@@ -132,14 +132,12 @@ def deployment_profile_from_settings(settings: PalmSettings) -> DeploymentProfil
             worker_count=settings.worker_count,
             server_host=settings.server_host,
             server_port=settings.server_port,
-            enable_outbox_service=settings.enable_outbox_service,
             outbox_poll_interval=settings.outbox_poll_interval,
         )
     else:
         profile = DeploymentProfile.all_in_one()
     return replace(
         profile,
-        enable_outbox_service=settings.enable_outbox_service,
         outbox_poll_interval=settings.outbox_poll_interval,
         server_host=settings.server_host,
         server_port=settings.server_port,

@@ -18,10 +18,10 @@ def test_membership_capability_seeds_catalog_complete() -> None:
     caps = {row["capability"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert caps == {
         "compensation",
-        "outbox",
         "webhook",
         "analytics",
     }
+    assert "outbox" not in caps
     assert "work_drain" not in caps
     assert "journal" not in caps  # always-on, no flag
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
@@ -40,7 +40,7 @@ def test_structure_seed_env_includes_all_membership_seeds() -> None:
     }
     assert "PALM_ENABLE_COMPENSATION" in member_envs
     assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in member_envs
-    assert "PALM_ENABLE_EVENT_OUTBOX" in member_envs
+    assert "PALM_ENABLE_EVENT_OUTBOX" not in member_envs
     assert "PALM_ENABLE_WEBHOOK_DISPATCHER" in member_envs
     assert "PALM_ANALYTICS_ENABLED" in member_envs
     assert "PALM_ENABLE_NEONROOT_RUNNERS" not in member_envs
@@ -54,7 +54,6 @@ def _lean_settings(**overrides: object) -> PalmSettings:
         "rebuild_projections_on_startup": False,
         "reconcile_instances_on_startup": False,
         "enable_compensation": False,
-        "enable_outbox_service": False,
         "enable_event_outbox": False,
         "enable_webhook_dispatcher": False,
         "analytics_enabled": True,
@@ -76,7 +75,7 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
     full = _lean_settings(enable_compensation=True, enable_event_outbox=True)
     full_caps = membership_capabilities_from_settings(full)
     assert "compensation" in full_caps
-    assert "outbox" in full_caps
+    assert "outbox" not in full_caps
 
 
 def test_deployment_does_not_write_work_drain_membership() -> None:

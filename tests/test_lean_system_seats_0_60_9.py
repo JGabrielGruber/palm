@@ -22,7 +22,7 @@ def test_base_runtime_reactive_seats_without_host() -> None:
         assert isinstance(rt.supervisor, SystemSupervisor)
         names = set(rt.supervisor.names())
         assert "work_drain" not in names
-        assert "outbox" in names
+        assert "outbox" not in names
         # Continuous services registered; not auto-started without flags.
         assert rt.supervisor.status()["running_count"] == 0
     finally:

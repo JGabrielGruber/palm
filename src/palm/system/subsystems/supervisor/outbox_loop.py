@@ -5,8 +5,6 @@ from __future__ import annotations
 import threading
 from typing import TYPE_CHECKING, Any
 
-from palm.system.subsystems.supervisor.service import ServiceStartContext
-
 if TYPE_CHECKING:
     from palm.common.events import OutboxProcessor, OutboxStore
 
@@ -43,10 +41,6 @@ class OutboxLoopService:
     @property
     def is_running(self) -> bool:
         return self._running and self._thread is not None and self._thread.is_alive()
-
-    def may_start(self, ctx: ServiceStartContext) -> bool:
-        """Freelance residual: start only when the option is on."""
-        return bool((ctx.options or {}).get("enable_outbox_background", False))
 
     def start(self) -> None:
         if self._running:

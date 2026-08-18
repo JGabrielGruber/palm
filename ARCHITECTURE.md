@@ -628,7 +628,7 @@ flowchart TB
     cmd[CommandBus]
     qry[QueryBus]
     proj[ProjectionManager]
-    outbox[OutboxBackgroundService]
+    outbox[OutboxLoopService]
     comp[CompensationCoordinator]
     webhook[WebhookDispatcher]
 
@@ -692,7 +692,7 @@ ADR: [docs/adr/004-cqrs-schemas-service-layer.md](docs/adr/004-cqrs-schemas-serv
 | Services | `palm/services/` | User-facing API composing buses (see table above) |
 | Projections | `palm/common/cqrs/projections/` | Event-driven read models (instance index, wizard progress, job board) |
 | Rebuild policy | `palm/common/cqrs/rebuild.py` | Batch rebuild + skip-if-fresh safeguards for large instance counts |
-| Outbox | `palm/common/events/outbox.py` | Durable critical events; master drains via `OutboxBackgroundService` |
+| Outbox | `palm/common/events/outbox.py` | Durable critical events; DNA-listed `outbox` drains via `OutboxLoopService` |
 | Compensation | `palm/common/compensation/` | Optional saga-style undo on `wizard.commit.failed` |
 | Webhooks | `palm/common/events/external.py` | POST outbox events to external URLs before mark-published |
 

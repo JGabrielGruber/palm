@@ -1,4 +1,4 @@
-"""0.60.6 — outbox continuous service on SystemSupervisor."""
+"""0.60.6 / 0.65.2 — outbox is a DNA-listed supervised service."""
 
 from __future__ import annotations
 
@@ -7,30 +7,30 @@ from palm.system.runtime.base import BaseRuntime
 from palm.system.subsystems.supervisor import OutboxLoopService
 
 
-def test_outbox_registered_when_outbox_wired() -> None:
+def test_embedded_store_does_not_register_outbox() -> None:
+    """Store packaging is not membership. Embedded DNA omits outbox."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(storage_backend="memory", enable_event_outbox=True)
     try:
         assert rt.outbox_processor is not None
         assert rt.supervisor is not None
-        assert "outbox" in rt.supervisor.names()
+        assert "outbox" not in rt.supervisor.names()
         assert "work_drain" not in rt.supervisor.names()
-        assert rt.supervisor.status()["running_count"] == 0
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.background.start"].outcome == "skip"
-        assert by_id["system.background.start"].reason == "none_ready"
+        assert by_id["system.background.start"].reason == "none_registered"
     finally:
         rt.stop()
 
 
-def test_outbox_background_starts_when_enabled() -> None:
+def test_cli_dna_starts_outbox_when_store_wired() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
         enable_event_outbox=True,
-        enable_outbox_background=True,
+        structure_definition_id="local.cli",
     )
     try:
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
@@ -50,7 +50,6 @@ def test_outbox_and_work_drain_both_start() -> None:
     rt.start(
         storage_backend="memory",
         enable_event_outbox=True,
-        enable_outbox_background=True,
         structure_definition_id="local.cli",
     )
     try:

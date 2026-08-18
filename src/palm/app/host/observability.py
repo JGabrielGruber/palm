@@ -186,8 +186,12 @@ class HostObservability:
                 consumers=list(DEFAULT_JOURNAL_CONSUMERS),
             )
         outbox_pending = 0
-        if host.outbox_service is not None:
-            outbox_pending = host.outbox_service.store.pending_count()
+        try:
+            store = host.runtime().outbox_store
+            if store is not None:
+                outbox_pending = store.pending_count()
+        except Exception:
+            outbox_pending = 0
         bg = False
         dropped = 0
         if plane is not None:

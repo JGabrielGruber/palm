@@ -5,7 +5,7 @@
 
 Palm is pre-1.0. This theme copies the 0.64 home onto **outbox**. Old walkers die in the same cut as the hand. No compatibility aliases.
 
-Plan stamp `0.65.0` did not break runtime. **0.65.1** lands the skip-string break.
+Plan stamp `0.65.0` did not break runtime. **0.65.1** landed the skip-string break. **0.65.2** landed the hand + DNA + walker kill.
 
 ## Prefer
 
@@ -23,6 +23,8 @@ Plan stamp `0.65.0` did not break runtime. **0.65.1** lands the skip-string brea
 | `DEFAULT_CONTINUOUS_DEFINITIONS` freelance `outbox` | Hand register / unregister |
 | Host recover AND (master + `enable_outbox_service`) | Same start walker as drain |
 | `structure_off:work_drain` / `ports_off:work_drain` skip | **0.65.1** — `none_registered` (nothing on supervisor) / `none_ready` (registered, nothing may start) |
-| `enable_outbox_background` as start king | Named residual until the hand; then gone |
+| `enable_outbox_background` as start king | **Gone** — listed + registered starts |
+| `enable_outbox_service` | **Gone** — not a start king |
+| `host.outbox_service` | Read `runtime.outbox_store` / supervisor `outbox` |
 
 Admission / [SD-020](../../TECH-DEBT.md#sd-020) is not this theme.

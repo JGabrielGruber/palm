@@ -4,13 +4,9 @@ External event consumers — webhook dispatch from the transactional outbox.
 **Add a webhook consumer**
 
 1. Configure targets via :class:`WebhookTarget` (URL + optional event filter).
-2. Pass targets to :class:`WebhookDispatcher` and wire into
-   :class:`~palm.app.host.outbox_service.OutboxBackgroundService`::
-
-       dispatcher = WebhookDispatcher([WebhookTarget(url="https://hooks.example/palm")])
-       service = OutboxBackgroundService(storage, event_engine, external_dispatcher=dispatcher)
-
-   Or set ``PALM_WEBHOOK_URLS`` / ``PALM_ENABLE_WEBHOOK_DISPATCHER`` on the host.
+2. Pass targets to :class:`WebhookDispatcher` and attach on recover when
+   composition lists ``webhook``. Or set ``PALM_WEBHOOK_URLS`` /
+   ``PALM_ENABLE_WEBHOOK_DISPATCHER`` on the host.
 
 3. For tests, inject :class:`RecordingWebhookDeliverer` to capture deliveries
    without network I/O.

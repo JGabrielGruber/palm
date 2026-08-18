@@ -22,7 +22,7 @@ from palm.app.host.composition import (
 from palm.app.host.composition import CompositionProfile as CP
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
-from palm.core.structure import CAPABILITY_WORK_DRAIN
+from palm.core.structure import CAPABILITY_OUTBOX, CAPABILITY_WORK_DRAIN
 
 
 def _caps(**overrides: object) -> frozenset[str]:
@@ -35,13 +35,12 @@ def _caps(**overrides: object) -> frozenset[str]:
 
 
 def test_full_recovery_derives_exactly_default_capabilities() -> None:
-    """full_recovery turns on compensation + outbox; with analytics + the always-on journal
+    """full_recovery turns on compensation; with analytics + the always-on journal
     and projections that is exactly DEFAULT_CAPABILITIES — the production-default shape."""
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
         {
-            "outbox",
             "compensation",
             "journal",
             "analytics",
@@ -62,7 +61,7 @@ def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -
 def test_each_flag_toggles_exactly_its_capability() -> None:
     assert "compensation" in _caps(enable_compensation=True)
     assert "compensation" not in _caps(enable_compensation=False)
-    assert "outbox" in _caps(enable_event_outbox=True)
+    assert "outbox" not in _caps(enable_event_outbox=True)
     assert "outbox" not in _caps(enable_event_outbox=False)
     assert "webhook" in _caps(enable_webhook_dispatcher=True)
     assert "webhook" not in _caps(enable_webhook_dispatcher=False)
@@ -181,34 +180,44 @@ def test_webhook_gate_reads_composition_not_settings() -> None:
 # ── 0.51.3: available (composition) and activated (deployment) ───────────────
 
 
-def test_outbox_drainer_is_available_times_activated() -> None:
-    """The outbox drainer is composition.has('outbox') AND the deployment role (master +
-    enable_outbox_service). A composition omitting 'outbox' stops the drainer even on a
-    master that would otherwise activate it."""
-    settings = PalmSettings.for_tests(full_recovery=True)  # enable_event_outbox → has('outbox')
-    master = DeploymentProfile.all_in_one()  # master=True, enable_outbox_service=True
+def test_outbox_install_follows_dna_not_composition() -> None:
+    """Outbox install follows DNA list, not composition write or the old recover AND."""
+    settings = PalmSettings.for_tests(full_recovery=True)
+    profile = DeploymentProfile.all_in_one()
 
-    with_cap = ApplicationHost(
+    on = ApplicationHost(
         settings=settings,
-        profile=master,
-        composition=replace(CP.all_in_one(), capabilities=frozenset({"outbox"})),
+        profile=profile,
+        composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    with_cap.start()
+    on.start()
     try:
-        assert with_cap.outbox_service is not None  # available AND activated
+        assert not on.composition.has("outbox")
+        rt = on.runtime()
+        definition = rt.structure.definition
+        assert definition is not None
+        assert definition.has_capability(CAPABILITY_OUTBOX)
+        assert CAPABILITY_OUTBOX in rt.structure.materialized_capabilities
+        assert "outbox" in rt.supervisor.names()
+        assert "outbox" in rt.supervisor.status()["running"]
     finally:
-        with_cap.shutdown()
+        on.shutdown()
 
-    without_cap = ApplicationHost(
+    off = ApplicationHost(
         settings=settings,
-        profile=master,  # role would activate ...
-        composition=replace(CP.all_in_one(), capabilities=frozenset()),  # ... but not available
+        profile=profile,
+        composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    without_cap.start()
+    off.start(structure_definition_id="local.embedded")
     try:
-        assert without_cap.outbox_service is None  # don't drain an outbox you don't have
+        rt = off.runtime()
+        definition = rt.structure.definition
+        assert definition is not None
+        assert not definition.has_capability(CAPABILITY_OUTBOX)
+        assert CAPABILITY_OUTBOX not in rt.structure.materialized_capabilities
+        assert rt.supervisor is None or "outbox" not in rt.supervisor.names()
     finally:
-        without_cap.shutdown()
+        off.shutdown()
 
 
 def test_work_drain_settings_side_routes_through_the_capability() -> None:

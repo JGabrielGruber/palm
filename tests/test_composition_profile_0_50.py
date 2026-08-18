@@ -61,9 +61,9 @@ def test_presets_declare_the_shapes_palm_ships() -> None:
     assert embedded.capabilities == frozenset()
     assert not embedded.has("work_drain")
 
-    # worker is headless execution + outbox; drain membership is DNA, not composition
+    # worker is headless execution; drain/outbox membership is DNA, not composition
     assert CP.worker().services == ("execution",)
-    assert CP.worker().has("outbox")
+    assert not CP.worker().has("outbox")
     assert not CP.worker().has("work_drain")
     assert not CP.cli().has("work_drain")
     assert not CP.all_in_one().has("work_drain")

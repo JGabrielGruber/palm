@@ -53,10 +53,9 @@ class PalmSettings(BaseSettings):
     worker_count: int = 1
     server_host: str = "127.0.0.1"
     server_port: int = 8080
-    # Deployment/node refine — not composition capability seed (0.63.19 packaging spirit).
-    enable_outbox_service: bool = True
+    # Outbox poll packaging. Loop membership is definition ``outbox``.
     outbox_poll_interval: float = 0.5
-    # Membership *seed* (0.63.19 / SD-021) — feeds composition.outbox at resolve only.
+    # Store wire packaging (bare runtime). Host spawn follows DNA listing.
     enable_event_outbox: bool = True
     # Start-plane packaging (attach). Not work_drain membership.
     work_plane_poll_interval: float = 1.0
@@ -119,7 +118,6 @@ class PalmSettings(BaseSettings):
             projection_rebuild_batch_size=50,
             projection_rebuild_max_instances=200,
             enable_compensation=full_recovery,
-            enable_outbox_service=full_recovery,
             enable_event_outbox=full_recovery,
             worker_ready_timeout=0.5,
             outbox_poll_interval=5.0,

@@ -18,10 +18,9 @@ class ServerWebhookBridge:
     """
     Optional bridge between a server context and a :class:`WebhookDispatcher`.
 
-    When an :class:`~palm.app.host.ApplicationHost` owns the dispatcher via
-    :class:`~palm.app.host.outbox_service.OutboxBackgroundService`, the server
-    surface reads it from the host. Standalone servers can attach a dispatcher
-    directly for outbound notifications.
+    When an :class:`~palm.app.host.ApplicationHost` owns the dispatcher, the
+    server surface reads it from the host. Standalone servers can attach a
+    dispatcher directly for outbound notifications.
     """
 
     dispatcher: WebhookDispatcher | None = None

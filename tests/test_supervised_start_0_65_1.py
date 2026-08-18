@@ -100,12 +100,10 @@ def test_work_drain_may_start_follows_install_ports() -> None:
     assert work_drain_may_start(ctx) is True
 
 
-def test_outbox_may_start_follows_option() -> None:
+def test_registered_outbox_starts_without_option() -> None:
+    """Hand register is enough. enable_outbox_background is gone as start king."""
     svc = OutboxLoopService(processor=object(), store=object())  # type: ignore[arg-type]
-    off = ServiceStartContext(options={})
-    on = ServiceStartContext(options={"enable_outbox_background": True})
-    assert svc.may_start(off) is False
-    assert svc.may_start(on) is True
+    assert not hasattr(svc, "may_start") or svc.may_start(ServiceStartContext()) is True
 
 
 def test_embedded_default_does_not_register_drain() -> None:

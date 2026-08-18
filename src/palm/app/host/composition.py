@@ -6,8 +6,9 @@ The composition axis, twin of ``DeploymentProfile`` (the deployment axis, in
 ``DeploymentProfile``; the two are orthogonal and never merge.
 
 **0.59.5 / 0.64 membership:** this profile seeds product services, surfaces, and
-capabilities other than ``work_drain``. ``work_drain`` is not a composition
-name — after structure definition load, install is definition ``capabilities``.
+capabilities other than ``work_drain`` and ``outbox``. Those names are not
+composition members — after structure definition load, install is definition
+``capabilities``.
 Deployment may feed the settings resolver but does not OR at phase time.
 See ADR-028 D4, VISION-0.64, and ``composition_profile_from_settings``.
 
@@ -32,7 +33,6 @@ ServiceName = Literal[
 ]
 SurfaceName = Literal["rest", "websocket", "mcp", "explorer", "studio"]
 Capability = Literal[
-    "outbox",
     "compensation",
     "webhook",
     "journal",
@@ -64,7 +64,6 @@ SERVER_SURFACES: tuple[SurfaceName, ...] = ("rest", "websocket", "mcp", "explore
 #: Background/optional capabilities on for a full host by default.
 DEFAULT_CAPABILITIES: frozenset[Capability] = frozenset(
     {
-        "outbox",
         "compensation",
         "journal",
         "analytics",
@@ -122,11 +121,11 @@ class CompositionProfile:
 
     @classmethod
     def worker(cls) -> Self:
-        """Headless worker/daemon — execution + outbox, no surfaces."""
+        """Headless worker/daemon — execution, no surfaces."""
         return cls(
             services=("execution",),
             surfaces=(),
-            capabilities=frozenset({"outbox"}),
+            capabilities=frozenset(),
         )
 
     @classmethod

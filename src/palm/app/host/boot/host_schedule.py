@@ -6,9 +6,9 @@ comes up. Handlers here are the rules. Collaborators (kernel, spawner, CQRS
 wire, recovery, workplane) are tools — they do not own boot order.
 
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
-capabilities other than ``work_drain``. ``work_drain`` start lives on the
-system schedule (``system.background.start``) after assemble. The host does
-not start the loop again.
+capabilities other than ``work_drain`` and ``outbox``. Those loops start on
+the system schedule (``system.background.start``) after assemble. The host
+does not start them again.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
 are the switches. Do not restore import-order magic.
@@ -71,12 +71,19 @@ def build_host_handlers(
             if "structure_definition" not in options and "structure_definition_id" not in options:
                 merged["structure_definition_id"] = seed["structure_definition_id"]
                 merged["structure_definition"] = seed["structure_definition"]
-        # 0.63.28 — composition membership decides outbox *store wire* on host path.
-        # settings.enable_event_outbox seeds composition at resolve only; after
-        # resolve, composition.has("outbox") is structure truth (not peer OR).
+        # 0.65.2 — DNA listing decides outbox store wire on the host path.
         # Explicit host.start(enable_event_outbox=…) still wins (named override).
         if "enable_event_outbox" not in options:
-            merged["enable_event_outbox"] = host.composition.has("outbox")
+            from palm.core.structure import CAPABILITY_OUTBOX, StructureDefinition
+
+            definition = merged.get("structure_definition")
+            if not isinstance(definition, StructureDefinition):
+                from palm.core.structure import resolve_builtin_definition
+
+                definition = resolve_builtin_definition(
+                    str(merged.get("structure_definition_id") or "local.embedded")
+                )
+            merged["enable_event_outbox"] = definition.has_capability(CAPABILITY_OUTBOX)
         # Start ports on the install board from spawn — able is host._started
         # (false until host.ready). System background start may start drain;
         # the loop idles until able.

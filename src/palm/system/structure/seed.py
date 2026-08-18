@@ -11,8 +11,8 @@ parallel law. After load, structure status under the definition is truth.
 **0.63.19 — full membership seed cartography (SD-021 residual):**
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
 - Bootstrap derives capabilities from this map — one truth for seed resolve.
-- ``work_drain`` install reads definition ``capabilities``. Other capabilities still
-  seed composition at resolve.
+- ``work_drain`` and ``outbox`` install read definition ``capabilities``.
+  Other capabilities still seed composition at resolve.
 """
 
 from __future__ import annotations
@@ -53,17 +53,6 @@ MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
         "capability": "compensation",
         "role": "membership_seed",
         "note": "Feeds composition.compensation at resolve; host wires via composition.has",
-    },
-    {
-        "env": "PALM_ENABLE_EVENT_OUTBOX",
-        "settings": "enable_event_outbox",
-        "capability": "outbox",
-        "role": "membership_seed",
-        "note": (
-            "Feeds composition.outbox at resolve; host spawn aligns "
-            "enable_event_outbox from composition.has (0.63.28); bare runtime "
-            "start option remains packaging for non-host shells"
-        ),
     },
     {
         "env": "PALM_ENABLE_WEBHOOK_DISPATCHER",
@@ -119,7 +108,6 @@ PACKAGING_ENV_SPIRIT: tuple[str, ...] = (
     "PALM_WORK_DRAIN_WORKERS",
     "PALM_WORK_DRAIN_LEASE_SECONDS",
     "PALM_QUEUED_WORKERS",
-    "PALM_ENABLE_OUTBOX_SERVICE",  # deployment/node role refine, not capability seed
     "PALM_ENABLE_STATE_SNAPSHOT",  # product packaging, not composition membership
 )
 
@@ -175,7 +163,8 @@ def membership_capabilities_from_settings(
     """Derive composition capabilities from membership *seeds* (0.63.19).
 
     Settings ``enable_*`` / analytics flags seed membership **at resolve only**.
-    ``work_drain`` is not a composition seed — definition ``capabilities`` list it.
+    ``work_drain`` and ``outbox`` are not composition seeds — definition
+    ``capabilities`` list them.
     """
     capabilities: set[str] = set(ALWAYS_ON_MEMBERSHIP_CAPABILITIES)
     if settings is not None:

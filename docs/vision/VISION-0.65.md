@@ -53,7 +53,7 @@ Not the queue: `analytics`, `neonroot` (dogfood); `workloads` (engine).
 |-------|--------|
 | **0.65.0** | Plan + ADR-034 Proposed. |
 | **0.65.1** | **Landed** — invert start + grow seats. Freelance outbox `may_start` still reads `enable_outbox_background` (named residual). |
-| **0.65.2+** | Hand + DNA list + kill freelance catalog, composition/seed, host recover AND, second host thread. Omit proof. |
+| **0.65.2+** | **Landed** — hand + DNA list + kill freelance catalog, composition/seed, host recover AND, second host thread. Omit proof. |
 
 Extend or merge when the home is the same.
 
@@ -65,43 +65,65 @@ Pay the old outbox walkers in this theme. Leave admission / SD-020 named. Do not
 
 ## After compact (2026-08-18)
 
-**Read locks + this scout.** Do not re-scout the tree unless a cite is stale.
+**Read this block first.** Do not re-scout unless a cite is stale.
 
-**Process:** parent thread holds the contract only. Parallel **read** (explore agents). One **writer** at a time. Each child gets a short brief, not the transcript. [AGENTS §1.1](../../src/palm/AGENTS.md).
+**Present:** Theme **open**. Floor **met**. José has **not** exited. Agent recommended **exit** (proof cut done; journal/webhook are later, not remainder). José asked what cleanup exists — **do it in a cheap thread**, then he exits or not.
+
+**Process:** parent holds the contract. Parallel **read**. One **writer**. Short briefs. [AGENTS §1.1](../../src/palm/AGENTS.md).
+
+**0.65.2 landed (uncommitted as of write):** `outbox` is name + hand + omit on the same phenotypes as drain. Freelance catalog is empty. Composition/seed do not write the name. Host recover does not start the loop. `enable_outbox_background` / `enable_outbox_service` gone. Host `OutboxBackgroundService` deleted. Store wire on the host path follows DNA listing; explicit `host.start(enable_event_outbox=…)` still wins.
+
+**José (keep):** some knobs still live on **profile/settings**, not DNA. Membership is the definition list. Poll / recover-on-start / bare `enable_event_outbox` are packaging. Do not grow another `enable_*` king when journal copies the home.
+
+### Cheap cleanup (next thread — not journal)
+
+Do these if José says clean. Not exit. Not a new organ.
+
+| Item | Why | Leave |
+|------|-----|-------|
+| Delete unused `OUTBOX_SERVICE` recipe | Freelance shape leftover. Hands call `register_outbox`. Drain already deleted `WORK_DRAIN_SERVICE`. | `register_outbox` / `OutboxLoopService` |
+| `phase_outbox.py` module doc | Still says host spawn kings store from `composition.has` | Store phase itself |
+| [TECH-DEBT](../../TECH-DEBT.md) **SD-021** progress line | Still names 0.63.28 composition king as live | The debt row; other caps still composition |
+| Dead test kwargs `enable_outbox_service=False` | Field gone; pydantic `extra=ignore` swallows them | Gate tests themselves |
+| Appendix [structure-materialize-cut](../architecture/appendix/structure-materialize-cut.md) freelance row / B1 | Still says catalog is outbox-only | Closed 0.64 chronicle elsewhere |
+
+**Do not** rewrite closed visions / ADR-020 / MIGRATION-0.60 as “cleanup.” **Do not** accept ADR-034 or close the theme unless José exits.
+
+**Keep (named, not cleanup):** bare `enable_event_outbox` (non-host store); poll numbers on the profile; `from_wire` alias; job-hook opportunistic drain; webhook still composition-gated.
+
+**Not this theme:** admission / SD-020 · `journal` · `inbound` · webhook as an organ.
 
 ### Home to copy (`work_drain`)
 
 | Piece | Live |
 |-------|------|
 | Listing | `StructureDefinition.capabilities` / `has_capability` — [definition.py](../../src/palm/core/structure/definition.py). Lists `work_drain` on `local.cli` / `server` / `all_in_one` / `worker`. Omits on `local.embedded` / `mcp`. No `requires`. |
-| Walker | `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS` — [materialize.py](../../src/palm/system/structure/materialize.py) · [hands.py](../../src/palm/system/structure/hands.py). Table has **only** `work_drain` today. |
-| Hand | `apply_work_drain(seats, *, listed)`. Unlist → `supervisor.unregister`. Listed → `register_work_drain`. |
-| Seats | `CapabilitySeats` is `supervisor` + `work_plane` + optional `outbox_store` / `outbox_processor`. Assemble fills them then materializes — [phase_assemble.py](../../src/palm/system/structure/phase_assemble.py). Hands do not use outbox ports yet. |
+| Walker | `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS` — [materialize.py](../../src/palm/system/structure/materialize.py) · [hands.py](../../src/palm/system/structure/hands.py). Table: `work_drain` + `outbox`. |
+| Hand | `apply_work_drain` / `apply_outbox`. Unlist → `supervisor.unregister`. Listed → `register_*`. |
+| Seats | `CapabilitySeats` is `supervisor` + `work_plane` + optional `outbox_store` / `outbox_processor`. Assemble fills them then materializes — [phase_assemble.py](../../src/palm/system/structure/phase_assemble.py). |
 | Start | After assemble: `system.background.start` walks registered services and asks `may_start` — [phase_background.py](../../src/palm/system/subsystems/supervisor/phase_background.py). Host schedule ends at ready. |
-| Proof tests | [test_work_drain_materialize.py](../../tests/assembly/test_work_drain_materialize.py) |
+| Proof tests | [test_work_drain_materialize.py](../../tests/assembly/test_work_drain_materialize.py) · [test_outbox_materialize.py](../../tests/assembly/test_outbox_materialize.py) |
 
 Name + hand **registers**. It does **not** start a second organ until start walks registration.
 
-### Walkers that must die in the same cut as the hand
+### Walkers that died with the hand (0.65.2)
 
-| Walker | File | What it decides |
+| Walker | File | What it decided |
 |--------|------|-----------------|
-| `composition.has("outbox")` at spawn | [host_schedule.py](../../src/palm/app/host/boot/host_schedule.py) | Store wire (`enable_event_outbox`) |
-| `composition.has` ∧ master ∧ `enable_outbox_service` | [recovery.py](../../src/palm/app/host/lifecycle/recovery.py) | Whether the **loop** may start (the AND) |
-| Host recover start / second thread | `recovery.py` · [outbox_service.py](../../src/palm/app/host/outbox_service.py) | Host starts supervisor `outbox` or `OutboxBackgroundService` |
-| Freelance catalog | [supervisor/definition.py](../../src/palm/system/subsystems/supervisor/definition.py) `DEFAULT_CONTINUOUS_DEFINITIONS` | Register before assemble, no hand |
-| Seed + presets | [seed.py](../../src/palm/system/structure/seed.py) · [composition.py](../../src/palm/app/host/composition.py) | Flag / composition still write the name |
-| `enable_outbox_background` | start option; residual on the service until the hand | Second start owner (host never passes it) |
+| `composition.has("outbox")` at spawn | [host_schedule.py](../../src/palm/app/host/boot/host_schedule.py) | Now DNA `has_capability("outbox")` |
+| `composition.has` ∧ master ∧ `enable_outbox_service` | [recovery.py](../../src/palm/app/host/lifecycle/recovery.py) | Deleted. Loop starts with drain. |
+| Host recover start / second thread | `recovery.py` (host `OutboxBackgroundService` deleted) | Recover no longer starts the loop |
+| Freelance catalog | [supervisor/definition.py](../../src/palm/system/subsystems/supervisor/definition.py) `DEFAULT_CONTINUOUS_DEFINITIONS` | Empty. Hands register. |
+| Seed + presets | [seed.py](../../src/palm/system/structure/seed.py) · [composition.py](../../src/palm/app/host/composition.py) | Do not write `outbox` |
+| `enable_outbox_background` | was start king on the service | Gone |
 
-Builtin DNA **never lists `outbox`** until the hand slice. Default assemble id is `local.embedded`. The organ runs anyway.
+Builtin DNA lists `outbox` on the same phenotypes as drain. Default assemble id `local.embedded` omits it.
 
 **Keep and rehome:** store, processor, `OutboxLoopService`. Job-hook opportunistic drain is not membership. Poll numbers may stay packaging. `BootMode.recover_on_start` stays a mode — outbox must stop depending on that window.
 
-### Freeze set (break, do not alias)
+### Freeze set (rewritten in 0.65.2 — do not alias)
 
-Copy [test_work_drain_materialize.py](../../tests/assembly/test_work_drain_materialize.py). Break: `test_outbox_composition_king_0_63_28`, living-capabilities AND, host master-only recover, `test_outbox_supervisor_0_60_6`, lean seats on `local.embedded`, membership seed, composition presets, vitality walk of `DEFAULT_CONTINUOUS_DEFINITIONS`, drain-named skip strings.
-
-If phenotypes copy drain **and** the AND dies, worker/server tests that assert `outbox_service is None` go red on purpose.
+Proof: [test_outbox_materialize.py](../../tests/assembly/test_outbox_materialize.py). Rewritten: composition king, living-capabilities AND, host recover, `test_outbox_supervisor_0_60_6`, lean embedded, membership seed, composition presets, vitality freelance walk. Worker/server assert supervisor `outbox`, not `host.outbox_service`.
 
 ---
 

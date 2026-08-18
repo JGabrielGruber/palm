@@ -19,9 +19,10 @@ LOCAL_ALL_IN_ONE_ID = "local.all_in_one"
 LOCAL_WORKER_ID = "local.worker"
 LOCAL_MCP_ID = "local.mcp"
 
-# First materialized capability (local source). Other names grow later.
+# Local install names. Phenotypes that list drain also list outbox (0.65).
 CAPABILITY_WORK_DRAIN = "work_drain"
-_WORK_DRAIN = frozenset({CAPABILITY_WORK_DRAIN})
+CAPABILITY_OUTBOX = "outbox"
+_DRAIN_AND_OUTBOX = frozenset({CAPABILITY_WORK_DRAIN, CAPABILITY_OUTBOX})
 
 
 @dataclass(frozen=True, slots=True)
@@ -94,7 +95,7 @@ def local_cli(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="cli",
         refuse=frozenset({"server_surfaces"}),
-        capabilities=_WORK_DRAIN,
+        capabilities=_DRAIN_AND_OUTBOX,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -107,7 +108,7 @@ def local_server(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="server",
         refuse=frozenset(),
-        capabilities=_WORK_DRAIN,
+        capabilities=_DRAIN_AND_OUTBOX,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -120,7 +121,7 @@ def local_all_in_one(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="all_in_one",
         refuse=frozenset(),
-        capabilities=_WORK_DRAIN,
+        capabilities=_DRAIN_AND_OUTBOX,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -133,7 +134,7 @@ def local_worker(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="worker",
         refuse=frozenset({"server_surfaces", "product_catalog_home"}),
-        capabilities=_WORK_DRAIN,
+        capabilities=_DRAIN_AND_OUTBOX,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -183,6 +184,7 @@ def resolve_builtin_definition(definition_id: str, *, version: str = "1") -> Str
 
 
 __all__ = [
+    "CAPABILITY_OUTBOX",
     "CAPABILITY_WORK_DRAIN",
     "LOCAL_ALL_IN_ONE_ID",
     "LOCAL_CLI_ID",

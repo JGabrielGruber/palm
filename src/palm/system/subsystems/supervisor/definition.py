@@ -116,9 +116,8 @@ OUTBOX_SERVICE = ContinuousServiceDefinition(
     register=register_outbox,
 )
 
-# work_drain is listed on the structure definition. The capability hand registers it.
-# Wire must not freelance that organ.
-DEFAULT_CONTINUOUS_DEFINITIONS: tuple[ContinuousServiceDefinition, ...] = (OUTBOX_SERVICE,)
+# Hands register work_drain and outbox. Wire must not freelance those organs.
+DEFAULT_CONTINUOUS_DEFINITIONS: tuple[ContinuousServiceDefinition, ...] = ()
 
 
 __all__ = [

@@ -30,7 +30,6 @@ class DeploymentProfile:
     worker_count: int = 1
     server_host: str = "127.0.0.1"
     server_port: int = 8080
-    enable_outbox_service: bool = True
     outbox_poll_interval: float = 0.5
     outbox_recover_on_startup: bool = True
 
@@ -106,7 +105,6 @@ class DeploymentProfile:
         worker_count: int = 1,
         server_host: str = "127.0.0.1",
         server_port: int = 8080,
-        enable_outbox_service: bool = True,
         outbox_poll_interval: float = 0.5,
         outbox_recover_on_startup: bool = True,
     ) -> Self:
@@ -118,7 +116,6 @@ class DeploymentProfile:
             worker_count=worker_count,
             server_host=server_host,
             server_port=server_port,
-            enable_outbox_service=enable_outbox_service,
             outbox_poll_interval=outbox_poll_interval,
             outbox_recover_on_startup=outbox_recover_on_startup,
         )

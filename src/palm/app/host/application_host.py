@@ -20,7 +20,6 @@ from palm.app.host.events import HostEventType
 from palm.app.host.facades import InstancesFacade, JobsFacade, WizardsFacade
 from palm.app.host.lifecycle import RecoveryCoordinator, RuntimeSpawner
 from palm.app.host.observability import HostObservability
-from palm.app.host.outbox_service import OutboxBackgroundService
 from palm.app.host.roles import DeploymentProfile
 from palm.app.host.router import RuntimeRouter
 from palm.app.host.services import HostServiceContext, core_service_registry
@@ -322,10 +321,6 @@ class ApplicationHost:
 
     def pattern_projection(self, name: str) -> Any | None:
         return self._pattern_projections.get(name)
-
-    @property
-    def outbox_service(self) -> OutboxBackgroundService | None:
-        return self._recovery.outbox_service
 
     @property
     def webhook_dispatcher(self) -> WebhookDispatcher | None:

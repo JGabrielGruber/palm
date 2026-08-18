@@ -354,14 +354,23 @@ def _looks_numeric(value: str) -> bool:
     return True
 
 
+def _outbox_store(host: Any) -> Any | None:
+    try:
+        return host.runtime().outbox_store
+    except Exception:
+        return None
+
+
 def _outbox_pending(host: Any) -> int:
-    if host.outbox_service is None:
+    store = _outbox_store(host)
+    if store is None:
         return 0
-    return int(host.outbox_service.store.pending_count())
+    return int(store.pending_count())
 
 
 def _outbox_label(host: Any) -> str:
-    if host.outbox_service is None:
+    store = _outbox_store(host)
+    if store is None:
         return "[dim]not running[/]"
     pending = _outbox_pending(host)
     if pending:

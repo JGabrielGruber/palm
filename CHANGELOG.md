@@ -20,6 +20,17 @@ Vision: [VISION-0.65](docs/vision/VISION-0.65.md) · ADR: [034](docs/adr/034-sup
 - Locks (José): invert first; list `outbox` on cli/server/all_in_one/worker; omit embedded/mcp
 - Execution starts at `0.65.1`
 
+#### 0.65.1 — invert start
+- `system.background.start` walks registration + `may_start`
+- Skip `none_registered` / `none_ready`
+- `CapabilitySeats` carries `outbox_store` / `outbox_processor`
+
+#### 0.65.2 — outbox hand + DNA
+- DNA lists `outbox` on cli / server / all_in_one / worker; omits embedded / mcp
+- Hand `apply_outbox` is the only register; freelance catalog is empty
+- Host recover does not start the loop; `enable_outbox_service` and `enable_outbox_background` are gone
+- Host store wire follows DNA listing; explicit `enable_event_outbox` still wins
+
 ## [0.64.0] — 2026-08-18
 
 ### 0.64 — First capability (**theme closed** · José)

@@ -195,10 +195,10 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
     },
     {
         "id": "host.outbox_composition_seed",
-        "slice": "0.63.28",
+        "slice": "0.65.2",
         "law": (
             "host system_spawn aligns enable_event_outbox from "
-            "composition.has('outbox') unless explicit start override"
+            "structure definition has_capability('outbox') unless explicit start override"
         ),
     },
     {
@@ -346,13 +346,13 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
     {
         "id": "outbox.start_option_seed",
         "note": (
-            "0.63.28: host system_spawn sets enable_event_outbox from "
-            "composition.has('outbox') when not explicit; recovery already "
-            "composition.has. Bare BaseRuntime.start(enable_event_outbox=) remains "
-            "packaging residual for non-host shells."
+            "0.65.2: host system_spawn sets enable_event_outbox from "
+            "definition has_capability('outbox') when not explicit. "
+            "Bare BaseRuntime.start(enable_event_outbox=) remains packaging "
+            "residual for non-host shells."
         ),
-        "intent": "paid host path — composition chooser; bare runtime seed named residual",
-        "status": "paid_host_0_63_28",
+        "intent": "paid host path — DNA chooser; bare runtime seed named residual",
+        "status": "paid_host_0_65_2",
     },
     {
         "id": "runtime.enable_event_outbox_bare",

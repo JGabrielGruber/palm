@@ -12,6 +12,7 @@ from typing import Any
 
 from palm.system.subsystems.supervisor.definition import (
     ContinuousWireContext,
+    register_outbox,
     register_work_drain,
 )
 
@@ -44,12 +45,33 @@ def apply_work_drain(seats: CapabilitySeats, *, listed: bool) -> None:
     register_work_drain(supervisor, ContinuousWireContext(work_plane=plane))
 
 
+def apply_outbox(seats: CapabilitySeats, *, listed: bool) -> None:
+    """Register supervisor outbox when listed; drop it otherwise."""
+    supervisor = seats.supervisor
+    if not listed:
+        if supervisor is not None:
+            supervisor.unregister("outbox")
+        return
+    if supervisor is None or supervisor.get("outbox") is not None:
+        return
+    store = seats.outbox_store
+    processor = seats.outbox_processor
+    if store is None or processor is None:
+        return
+    register_outbox(
+        supervisor,
+        ContinuousWireContext(outbox_store=store, outbox_processor=processor),
+    )
+
+
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {
     "work_drain": apply_work_drain,
+    "outbox": apply_outbox,
 }
 
 __all__ = [
     "CapabilitySeats",
     "LOCAL_CAPABILITY_HANDS",
+    "apply_outbox",
     "apply_work_drain",
 ]
