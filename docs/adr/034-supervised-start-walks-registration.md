@@ -1,23 +1,23 @@
 # ADR-034 — Supervised start walks registration
 
-**Status:** Proposed  
-**Date:** 2026-08-18  
-**Theme:** [VISION-0.65](../vision/VISION-0.65.md)  
+**Status:** Accepted  
+**Date:** 2026-08-18 · **Accepted:** 2026-08-18  
+**Theme:** [VISION-0.65](../vision/closed/VISION-0.65.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Related:** [ADR-033](033-one-walker.md) **Accepted** · [ADR-029](029-system-supervisor.md) **Accepted**  
 **Law:** [AGENTS §1.1](../../src/palm/AGENTS.md)
 
-José opened theme **0.65** (2026-08-18). Accept at exit.
+José accepted (2026-08-18). Theme closed.
 
 ---
 
 ## Context
 
 1. `work_drain` is copyable: definition lists the name; a hand registers; omit unregisters.  
-2. `system.background.start` still names organs (`if want_drain` / `if want_outbox`) and skip strings name `work_drain`. A second listed hand will not start unless this loop grows.  
+2. `system.background.start` used to name organs (`if want_drain` / `if want_outbox`) and skip strings named `work_drain`. A second listed hand would not start unless this loop grew.  
 3. [AGENTS §1.1](../../src/palm/AGENTS.md) says invert **before** the second organ. Do not add another `if`.  
 4. ADR-033 already says one walker per duty and old wiring dies in the same cut. This record is the **start** invert: the walker must not be a private menu of names.  
-5. Outbox still freelance-registers and still uses `enable_outbox_background`. That option is **named residual** until the outbox hand lands and the old walkers die.
+5. At theme open, outbox still freelance-registered and still used `enable_outbox_background`. That option died with the hand (0.65.2).
 
 ## Decision
 
@@ -29,7 +29,7 @@ José opened theme **0.65** (2026-08-18). Accept at exit.
 
 A service carries `may_start` (or an equivalent hook) given install seats and start options.  
 `work_drain` may start when start ports are bound.  
-Until the outbox hand lands, freelance `outbox` may start only when `enable_outbox_background` is true. That gate sits on the **service**, not in a phase `if name ==`.
+`outbox` may start when it is registered (store + processor seats). There is no option king on that service.
 
 ### D3 — Skip reasons do not name one organ as the world
 
@@ -43,7 +43,7 @@ Do not keep `structure_off:work_drain` / `ports_off:work_drain` as the only skip
 
 ### D5 — Adding is half. Removal is the other half.
 
-The outbox **hand** is not landed until `composition.has`, the freelance catalog, host recover start, the node-role AND, and the second host thread die — or José names residual. ADR-033.
+The outbox **hand** landed when `composition.has` at spawn, the freelance catalog, host recover start, the node-role AND, and the second host thread died. Host store wire follows DNA listing. Bare `enable_event_outbox` is named packaging. ADR-033.
 
 ## Consequences
 
@@ -54,8 +54,9 @@ The outbox **hand** is not landed until `composition.has`, the freelance catalog
 
 ### Negative / residual
 
-- `enable_outbox_background` stays until the hand cut. Honest leftover. Not a second membership king for `work_drain`.  
-- Host recover still starts outbox. That walker dies with the hand.
+- Bare `enable_event_outbox` stays packaging for non-host shells and explicit `host.start` override.  
+- Poll numbers and `outbox_recover_on_startup` stay on the profile.  
+- Webhook stays composition-gated. Journal is later (same membership law).
 
 ### Forbidden
 
@@ -66,11 +67,11 @@ The outbox **hand** is not landed until `composition.has`, the freelance catalog
 ## Alternatives considered
 
 - Add `if want_outbox` and invert later — rejected (§1.1).  
-- Start every registered service with no `may_start` — rejected while the freelance catalog still registers outbox.  
-- Empty the freelance catalog before the hand — rejected as a half-cut (recover `start("outbox")` would have nothing to start).
+- Start every registered service with no `may_start` — rejected while the freelance catalog still registered outbox.  
+- Empty the freelance catalog before the hand — rejected as a half-cut (recover `start("outbox")` would have had nothing to start).
 
 ## Links
 
-- [VISION-0.65](../vision/VISION-0.65.md)  
+- [VISION-0.65](../vision/closed/VISION-0.65.md)  
 - [VISION-0.64](../vision/closed/VISION-0.64.md)  
 - [ADR-033](033-one-walker.md)

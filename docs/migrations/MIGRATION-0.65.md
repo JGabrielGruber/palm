@@ -1,6 +1,6 @@
 # Migration — 0.65 Outbox as the proof cut
 
-**Theme:** [VISION-0.65](../vision/VISION-0.65.md) (**open**) · **ADR:** [034](../adr/034-supervised-start-walks-registration.md) **Proposed**  
+**Theme:** [VISION-0.65](../vision/closed/VISION-0.65.md) (**closed**) · **ADR:** [034](../adr/034-supervised-start-walks-registration.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)
 
 Palm is pre-1.0. This theme copies the 0.64 home onto **outbox**. Old walkers die in the same cut as the hand. No compatibility aliases.

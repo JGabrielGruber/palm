@@ -10,9 +10,9 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [0.65.0] — 2026-08-18
 
-### 0.65 — Outbox as the proof cut (**theme open**)
+### 0.65 — Outbox as the proof cut (**theme closed** · José)
 
-Vision: [VISION-0.65](docs/vision/VISION-0.65.md) · ADR: [034](docs/adr/034-supervised-start-walks-registration.md) **Proposed** · Migration: [MIGRATION-0.65](docs/migrations/MIGRATION-0.65.md)
+Vision: [VISION-0.65](docs/vision/closed/VISION-0.65.md) · ADR: [034](docs/adr/034-supervised-start-walks-registration.md) **Accepted** · Migration: [MIGRATION-0.65](docs/migrations/MIGRATION-0.65.md)
 
 #### Plan (0.65.0)
 - **Theme open** — outbox copies the 0.64 home (name + hand + omit)
@@ -41,6 +41,9 @@ Vision: [VISION-0.65](docs/vision/VISION-0.65.md) · ADR: [034](docs/adr/034-sup
 - CLI `palm host master` is command acceptance, not an outbox processor
 - Drop unused `host.outbox.processed` event name
 - Host notes and ARCHITECTURE no longer treat host as the outbox owner
+
+#### Exit
+- ADR-034 **Accepted**. Theme closed at `0.65.0`. Journal / webhook / admission remain later.
 
 ## [0.64.0] — 2026-08-18
 

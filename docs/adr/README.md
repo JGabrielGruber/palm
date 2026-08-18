@@ -48,12 +48,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [031](031-multi-claimer-work-drain.md) | Multi-claimer work drain — exclusive claim first (0.62) | Accepted |
 | [032](032-organism-assembly.md) | Organism assembly — DNA · admission · single readiness (0.63) | Accepted |
 | [033](033-one-walker.md) | Old wiring dies in the same cut (0.64) | Accepted |
-| [034](034-supervised-start-walks-registration.md) | Supervised start walks registration (0.65) | Proposed |
+| [034](034-supervised-start-walks-registration.md) | Supervised start walks registration (0.65) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
 **Next free number:** 035.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** · assembly **0.63** · first capability **0.64** all **closed** (ADR-026…033 Accepted). **Open theme:** [VISION-0.65](../vision/VISION-0.65.md) · [ADR-034](034-supervised-start-walks-registration.md) **Proposed**. Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-TUNNELS](../vision/VISION-TUNNELS.md) · [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md).
+**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** · assembly **0.63** · first capability **0.64** · outbox proof **0.65** all **closed** (ADR-026…034 Accepted). **No open theme.** Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-TUNNELS](../vision/VISION-TUNNELS.md) · [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md).
 
 ## How to add an ADR
 

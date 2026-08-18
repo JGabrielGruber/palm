@@ -1,22 +1,22 @@
 # Palm Engine — Project Status
 
-**Current Version:** `0.65.0` · **Active theme:** **`0.65` Outbox proof** · **Prior closed:** **`0.64` First capability** · **`0.63` Organism assembly** · **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 18, 2026 · **Theme open:** **0.65** — plan `0.65.0` (José 2026-08-18). Prior closed **0.64** `work_drain` copyable  
-**System map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.65](docs/vision/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) **Proposed** · closed [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) **Accepted** · closed [VISION-0.63](docs/vision/closed/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Accepted** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
+**Current Version:** `0.65.0` · **Active theme:** none · **Prior closed:** **`0.65` Outbox proof** · **`0.64` First capability** · **`0.63` Organism assembly** · **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
+**Last Updated:** August 18, 2026 · **Theme closed:** **0.65** at `0.65.0` (José 2026-08-18). No open minor.  
+**System map:** [docs/PALM.md](docs/PALM.md) · closed [VISION-0.65](docs/vision/closed/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) **Accepted** · closed [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) **Accepted** · closed [VISION-0.63](docs/vision/closed/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Accepted** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
 **Migration / release:** [MIGRATION-0.65](docs/migrations/MIGRATION-0.65.md) · prior [MIGRATION-0.64](docs/migrations/MIGRATION-0.64.md) · [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) · [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
-**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-registry scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect** · **capacity / multi-claimer** · **assembly (0.63 closed)** · **first capability (0.64 closed)** · **outbox proof (0.65 open)** → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
+**Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-registry scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect** · **capacity / multi-claimer** · **assembly (0.63 closed)** · **first capability (0.64 closed)** · **outbox proof (0.65 closed)** → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
 
 ### Agent resume (after compact)
 
-Read in order: **this STATUS** → [VISION-0.65](docs/vision/VISION-0.65.md) (**open** · after-compact scout — do not re-harvest) → [VISION-0.64](docs/vision/closed/VISION-0.64.md) (**closed**) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (remainder) → [PALM.md](docs/PALM.md).  
-Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill). **0.65.3** leftover cleanup landed. **0.65.4** surface / comment costume landed. Floor met. Theme still **open** — José has not exited. Next: exit (ADR-034 Accept) if José locks it. Do not open journal unless José switches. If outbox shows first-organ costume, that work is still 0.64 law.
+Read in order: **this STATUS** → [VISION-0.65](docs/vision/closed/VISION-0.65.md) (**closed**) → [VISION-0.64](docs/vision/closed/VISION-0.64.md) (**closed**) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (remainder) → [PALM.md](docs/PALM.md).  
+Do **not** resume 0.63 / 0.65 slice rows. **0.65 closed** (José 2026-08-18). Outbox is name + hand + omit. ADR-034 **Accepted**. No open minor. Do not open journal unless José switches. If outbox shows first-organ costume, that work is still 0.64 law.
 
 | Spirit | Decision |
 |--------|----------|
-| **0.65 open** | [VISION-0.65](docs/vision/VISION-0.65.md) — outbox proof. Locks: invert first; same phenotypes as drain. José 2026-08-18 |
-| **ADR-034** | [034](docs/adr/034-supervised-start-walks-registration.md) **Proposed** — start walks registration |
+| **0.65 closed** | [VISION-0.65](docs/vision/closed/VISION-0.65.md) — outbox proof. Home copies. José 2026-08-18. Stamp `0.65.0` |
+| **ADR-034** | [034](docs/adr/034-supervised-start-walks-registration.md) **Accepted** — start walks registration |
 | **0.64 closed** | `work_drain` copyable. José 2026-08-18. Stamp `0.64.0` |
 | **Contract then work** | Admission is the business face; capability is the fact. New contract + SD-020 after copyable — [VISION-0.64](docs/vision/closed/VISION-0.64.md) |
 | **0.63 closed** | José (2026-08-17) — admission floor real; slice queue crushed |
@@ -25,9 +25,9 @@ Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill).
 | **Later seeds** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 
-## 0.65 — Outbox as the proof cut (**open** · José 2026-08-18 · plan `0.65.0`)
+## 0.65 — Outbox as the proof cut (**closed** · José 2026-08-18 · `0.65.0`)
 
-**Vision:** [docs/vision/VISION-0.65.md](docs/vision/VISION-0.65.md) · **ADR-034** **Proposed**  
+**Vision:** [docs/vision/closed/VISION-0.65.md](docs/vision/closed/VISION-0.65.md) · **ADR-034** **Accepted**  
 **Migration:** [MIGRATION-0.65](docs/migrations/MIGRATION-0.65.md)
 
 **Outbox proves the home copies.** Invert start first. Then name + hand + omit. Same phenotypes as drain. Old walkers die with the hand.
@@ -39,8 +39,9 @@ Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill).
 | **0.65.2+** | ✅ hand + DNA + kill old walkers |
 | **0.65.3** | ✅ leftover cleanup (`OUTBOX_SERVICE`, docs, dead kwargs) |
 | **0.65.4** | ✅ surface / comment costume (dead host outbox event, stale help) |
+| **exit** | ✅ ADR-034 Accepted · stamp `0.65.0` |
 
-**Floor:** invert + copy + omit. **Exit:** José.  
+**Floor:** invert + copy + omit. **Exit:** José (2026-08-18).  
 **Not this theme:** admission / SD-020 · journal · inbound.
 
 ## 0.64 — First capability (**closed** · José 2026-08-18 · `0.64.0`)
@@ -49,7 +50,7 @@ Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill).
 **Cut:** [docs/architecture/appendix/structure-materialize-cut.md](docs/architecture/appendix/structure-materialize-cut.md)  
 **Migration:** [MIGRATION-0.64](docs/migrations/MIGRATION-0.64.md)
 
-**`work_drain` is the first real capability.** Spine + costume cut. Copyable: next organ is name + hand + omit. Outbox is **0.65** (open). Admission contract stays assembly remainder.  
+**`work_drain` is the first real capability.** Spine + costume cut. Copyable: next organ is name + hand + omit. Outbox is **0.65** (closed). Admission contract stays assembly remainder.  
 **Exit:** José (2026-08-18).  
 **After close:** CLI `palm doctor` renders `InspectService.doctor` (same bag as REST / assist).
 
@@ -351,7 +352,7 @@ NeonRoot provider (`health`/`spawn`, exclude/output), palm-ci / palm-docs images
 - **0.55** Reactive Interests — law closed  
 - **0.56** Workload plane — scout; cancel/ownership consume session; **place book** for multi-process (see assembly seed)  
 - **0.57** System layer — closed  
-- **0.65** Outbox proof — **open** at `0.65.0` ([VISION-0.65](docs/vision/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) Proposed)  
+- **0.65** Outbox proof — **closed** at `0.65.0` ([VISION-0.65](docs/vision/closed/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) Accepted)  
 - **Assembly** ([VISION-0.64](docs/vision/closed/VISION-0.64.md) closed · [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) remainder) — first capability landed; admission reshape later  
 - **Tunnels** seed ([VISION-TUNNELS](docs/vision/VISION-TUNNELS.md)) — not open; after assembly, before Grove  
 - Surface deflation seed ([VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md))  

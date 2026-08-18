@@ -10,7 +10,7 @@ Palm is **pre-1.0** and **experimental**. APIs, packages, and behaviors may brea
 
 Use Palm to explore, dogfood, and build. Pin versions deliberately. Read [STATUS.md](STATUS.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [MIGRATION](docs/migrations/) notes when you upgrade. Structure and honesty matter more than comfort paths while the organism is still growing.
 
-**0.65 open** (outbox proof) — [VISION-0.65](docs/vision/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) Proposed. Prior [VISION-0.64](docs/vision/closed/VISION-0.64.md) closed. Seed law [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md).  
+**0.65 closed** (outbox proof) — [VISION-0.65](docs/vision/closed/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) Accepted. Prior [VISION-0.64](docs/vision/closed/VISION-0.64.md) closed. Seed law [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md). No open minor.  
 **Website:** [palmengine.org](https://palmengine.org) — [`website/`](website/) · build `just website-build` → **`website/dist`** (Cloudflare assets dir).
 
 ---
