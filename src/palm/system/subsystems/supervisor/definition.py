@@ -110,12 +110,6 @@ def register_outbox(
     return svc
 
 
-OUTBOX_SERVICE = ContinuousServiceDefinition(
-    name="outbox",
-    order=20,
-    register=register_outbox,
-)
-
 # Hands register work_drain and outbox. Wire must not freelance those organs.
 DEFAULT_CONTINUOUS_DEFINITIONS: tuple[ContinuousServiceDefinition, ...] = ()
 
@@ -124,7 +118,6 @@ __all__ = [
     "ContinuousServiceDefinition",
     "ContinuousWireContext",
     "DEFAULT_CONTINUOUS_DEFINITIONS",
-    "OUTBOX_SERVICE",
     "register_outbox",
     "register_work_drain",
     "work_drain_may_start",

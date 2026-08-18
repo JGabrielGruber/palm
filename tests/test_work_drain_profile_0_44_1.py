@@ -15,7 +15,6 @@ def test_server_profile_starts_work_drain_without_env() -> None:
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
         enable_compensation=False,
-        enable_outbox_service=False,
         enable_event_outbox=False,
     )
     host = ApplicationHost(

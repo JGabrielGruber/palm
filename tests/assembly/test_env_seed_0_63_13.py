@@ -35,7 +35,6 @@ def test_definition_id_from_settings() -> None:
         structure_definition_id="local.cli",
         rebuild_projections_on_startup=False,
         enable_compensation=False,
-        enable_outbox_service=False,
         enable_event_outbox=False,
         reconcile_instances_on_startup=False,
     )
@@ -49,7 +48,6 @@ def test_settings_definition_wins_over_mode_in_seed() -> None:
         structure_definition_id="local.cli",
         rebuild_projections_on_startup=False,
         enable_compensation=False,
-        enable_outbox_service=False,
         enable_event_outbox=False,
         reconcile_instances_on_startup=False,
     )
@@ -67,7 +65,6 @@ def test_host_settings_definition_id_loads() -> None:
         structure_definition_id="local.cli",
         rebuild_projections_on_startup=False,
         enable_compensation=False,
-        enable_outbox_service=False,
         enable_event_outbox=False,
         reconcile_instances_on_startup=False,
     )

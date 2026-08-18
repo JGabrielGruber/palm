@@ -54,6 +54,7 @@ Not the queue: `analytics`, `neonroot` (dogfood); `workloads` (engine).
 | **0.65.0** | Plan + ADR-034 Proposed. |
 | **0.65.1** | **Landed** — invert start + grow seats. Freelance outbox `may_start` still reads `enable_outbox_background` (named residual). |
 | **0.65.2+** | **Landed** — hand + DNA list + kill freelance catalog, composition/seed, host recover AND, second host thread. Omit proof. |
+| **0.65.3** | **Landed** — leftover cleanup (`OUTBOX_SERVICE`, docs, dead kwargs). |
 
 Extend or merge when the home is the same.
 
@@ -67,25 +68,15 @@ Pay the old outbox walkers in this theme. Leave admission / SD-020 named. Do not
 
 **Read this block first.** Do not re-scout unless a cite is stale.
 
-**Present:** Theme **open**. Floor **met**. José has **not** exited. Agent recommended **exit** (proof cut done; journal/webhook are later, not remainder). José asked what cleanup exists — **do it in a cheap thread**, then he exits or not.
+**Present:** Theme **open**. Floor **met**. José has **not** exited. Agent recommended **exit** (proof cut done; journal/webhook are later, not remainder). Cheap leftover **0.65.3** landed.
 
 **Process:** parent holds the contract. Parallel **read**. One **writer**. Short briefs. [AGENTS §1.1](../../src/palm/AGENTS.md).
 
-**0.65.2 landed (uncommitted as of write):** `outbox` is name + hand + omit on the same phenotypes as drain. Freelance catalog is empty. Composition/seed do not write the name. Host recover does not start the loop. `enable_outbox_background` / `enable_outbox_service` gone. Host `OutboxBackgroundService` deleted. Store wire on the host path follows DNA listing; explicit `host.start(enable_event_outbox=…)` still wins.
+**0.65.2 landed** (`9dbc8b5b`): `outbox` is name + hand + omit on the same phenotypes as drain. Freelance catalog is empty. Composition/seed do not write the name. Host recover does not start the loop. `enable_outbox_background` / `enable_outbox_service` gone. Host `OutboxBackgroundService` deleted. Store wire on the host path follows DNA listing; explicit `host.start(enable_event_outbox=…)` still wins.
+
+**0.65.3 leftover:** unused `OUTBOX_SERVICE` deleted. `phase_outbox` doc, SD-021 progress, dead test kwargs, and appendix freelance / B1 match the cut.
 
 **José (keep):** some knobs still live on **profile/settings**, not DNA. Membership is the definition list. Poll / recover-on-start / bare `enable_event_outbox` are packaging. Do not grow another `enable_*` king when journal copies the home.
-
-### Cheap cleanup (next thread — not journal)
-
-Do these if José says clean. Not exit. Not a new organ.
-
-| Item | Why | Leave |
-|------|-----|-------|
-| Delete unused `OUTBOX_SERVICE` recipe | Freelance shape leftover. Hands call `register_outbox`. Drain already deleted `WORK_DRAIN_SERVICE`. | `register_outbox` / `OutboxLoopService` |
-| `phase_outbox.py` module doc | Still says host spawn kings store from `composition.has` | Store phase itself |
-| [TECH-DEBT](../../TECH-DEBT.md) **SD-021** progress line | Still names 0.63.28 composition king as live | The debt row; other caps still composition |
-| Dead test kwargs `enable_outbox_service=False` | Field gone; pydantic `extra=ignore` swallows them | Gate tests themselves |
-| Appendix [structure-materialize-cut](../architecture/appendix/structure-materialize-cut.md) freelance row / B1 | Still says catalog is outbox-only | Closed 0.64 chronicle elsewhere |
 
 **Do not** rewrite closed visions / ADR-020 / MIGRATION-0.60 as “cleanup.” **Do not** accept ADR-034 or close the theme unless José exits.
 

@@ -3,10 +3,10 @@ System start phase: reliable event outbox (system.outbox.wire).
 
 Subject: shell outbox seats + common events outbox.
 
-**0.63.28:** On the host path, ``enable_event_outbox`` is aligned from
-``composition.has("outbox")`` at spawn (settings only seed composition at
-resolve). Bare ``BaseRuntime.start(enable_event_outbox=…)`` remains packaging
-for tests and non-host shells.
+**0.65.2:** On the host path, ``enable_event_outbox`` is aligned from
+``definition.has_capability("outbox")`` at spawn. Bare
+``BaseRuntime.start(enable_event_outbox=…)`` remains packaging for tests
+and non-host shells.
 """
 
 from __future__ import annotations

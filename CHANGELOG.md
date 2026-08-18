@@ -31,6 +31,12 @@ Vision: [VISION-0.65](docs/vision/VISION-0.65.md) · ADR: [034](docs/adr/034-sup
 - Host recover does not start the loop; `enable_outbox_service` and `enable_outbox_background` are gone
 - Host store wire follows DNA listing; explicit `enable_event_outbox` still wins
 
+#### 0.65.3 — leftover cleanup
+- Delete unused `OUTBOX_SERVICE` recipe (hands call `register_outbox`)
+- `phase_outbox` module doc and SD-021 progress name DNA listing, not composition
+- Strip dead `enable_outbox_service=False` test kwargs
+- Appendix freelance catalog / B1: default catalog is empty
+
 ## [0.64.0] — 2026-08-18
 
 ### 0.64 — First capability (**theme closed** · José)

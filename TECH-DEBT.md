@@ -206,11 +206,11 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Pay in 0.63 growth:** Map entry/mode/env into **definition seed**; after load, assembly status is structure truth; packaging env stays; structure dual toggles purge or residual kill-date. First definition: **embedded**; dogfood: cli / server.
 
-**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only; bare runtime start option named residual). **0.63.39** — DNA `capabilities` lists `work_drain`; manager materializes (register/start) only when listed; `composition.has` / `BootMode.allow_background_drain` no longer peer-gate that unit. Residual: flags still seed at resolve **by design**; other capabilities still composition; bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
+**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only). **0.63.39** — DNA `capabilities` lists `work_drain`; manager materializes (register/start) only when listed; `composition.has` / `BootMode.allow_background_drain` no longer peer-gate that unit. **0.65.2** — host outbox store wire follows DNA `has_capability("outbox")`; the 0.63.28 composition king is paid. Residual: flags still seed at resolve **by design**; other capabilities still composition; bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
 
 **Do not:** Leave profiles as public dual structure forever “for compatibility.” Remove packaging env wholesale.
 
-**Status:** open (seed map + membership catalog + host outbox composition king paid — bare runtime seed residual).
+**Status:** open (seed map + membership catalog + outbox composition king paid — other caps / bare runtime seed residual).
 
 ---
 
