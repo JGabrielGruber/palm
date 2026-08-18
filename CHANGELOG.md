@@ -8,6 +8,18 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - CLI doctor `--format json` emits that bag. Anatomy / admission / neonroot / CS-002 tables render from it. Instance list and definition catalog stay as operator extras.
 - NeonRoot is a WorkloadRuntime only. Composition no longer lists `neonroot`. Settings drop `enable_neonroot_runners`. Doctor reports registered / available / health; it does not invent “declared but missing.”
 
+## [0.65.0] — 2026-08-18
+
+### 0.65 — Outbox as the proof cut (**theme open**)
+
+Vision: [VISION-0.65](docs/vision/VISION-0.65.md) · ADR: [034](docs/adr/034-supervised-start-walks-registration.md) **Proposed** · Migration: [MIGRATION-0.65](docs/migrations/MIGRATION-0.65.md)
+
+#### Plan (0.65.0)
+- **Theme open** — outbox copies the 0.64 home (name + hand + omit)
+- Floor: invert `system.background.start`; grow seats; same phenotypes as drain; old walkers die with the hand
+- Locks (José): invert first; list `outbox` on cli/server/all_in_one/worker; omit embedded/mcp
+- Execution starts at `0.65.1`
+
 ## [0.64.0] — 2026-08-18
 
 ### 0.64 — First capability (**theme closed** · José)

@@ -2,6 +2,7 @@
 System start phase: start supervised background (system.background.start).
 
 Subject: :class:`~palm.system.subsystems.supervisor.SystemSupervisor`.
+Walks registered services. Does not name organs.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from palm.system.boot.definition import PhaseDefinition
 from palm.system.boot.shell import resolve_shell
 from palm.system.boot.skip import PhaseSkip
 from palm.system.log import get_system_log
+from palm.system.subsystems.supervisor.service import ServiceStartContext
 
 
 @dataclass(frozen=True)
@@ -29,40 +31,35 @@ class BackgroundStartResult:
         return self.skip_reason is not None
 
 
+def _service_may_start(svc: Any, ctx: ServiceStartContext) -> bool:
+    hook = getattr(svc, "may_start", None)
+    if hook is None:
+        return True
+    return bool(hook(ctx))
+
+
 def start_supervised_background(
     supervisor: Any,
-    options: Mapping[str, Any] | None = None,
+    ctx: ServiceStartContext | None = None,
 ) -> BackgroundStartResult:
-    """Start work_drain / outbox from walker membership and start options.
+    """Start every registered service that may start."""
+    start_ctx = ctx if ctx is not None else ServiceStartContext()
+    names = list(supervisor.names())
+    if not names:
+        return BackgroundStartResult(started=[], skip_reason="none_registered")
 
-    ``work_drain`` starts when the supervisor has the service and install start
-    ports are bound. Outbox still uses the start option.
-    """
-    opts = dict(options or {})
-    install = opts.get("install")
-    ports_bound = bool(getattr(install, "start_ports_bound", lambda: False)())
-    has_drain = supervisor.get("work_drain") is not None
-    want_drain = has_drain and ports_bound
-    want_outbox = bool(opts.get("enable_outbox_background", False))
-    if not want_drain and not want_outbox:
-        if not has_drain:
-            skip = "structure_off:work_drain"
-        else:
-            skip = "ports_off:work_drain"
-        return BackgroundStartResult(started=[], skip_reason=skip)
-
-    has_outbox = supervisor.get("outbox") is not None
-    if not (want_drain or (want_outbox and has_outbox)):
-        return BackgroundStartResult(
-            started=[],
-            skip_reason="no_matching_supervised_services",
-        )
-
+    ready: list[str] = []
     started: list[str] = []
-    if want_drain:
-        started.extend(supervisor.start("work_drain"))
-    if want_outbox and has_outbox:
-        started.extend(supervisor.start("outbox"))
+    for name in names:
+        svc = supervisor.get(name)
+        if svc is None:
+            continue
+        if not _service_may_start(svc, start_ctx):
+            continue
+        ready.append(name)
+        started.extend(supervisor.start(name))
+    if not ready:
+        return BackgroundStartResult(started=[], skip_reason="none_ready")
     return BackgroundStartResult(started=started)
 
 
@@ -71,10 +68,15 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     sup = ctx.supervisor if ctx.supervisor is not None else shell.supervisor
     if sup is None:
         raise PhaseSkip("no_supervisor")
-    merged = dict(options)
-    if "install" not in merged:
-        merged["install"] = ctx.install if ctx.install is not None else shell.install
-    result = start_supervised_background(sup, merged)
+    install = options.get("install")
+    if install is None:
+        install = ctx.install if ctx.install is not None else shell.install
+    opts = dict(options)
+    opts.pop("install", None)
+    result = start_supervised_background(
+        sup,
+        ServiceStartContext(install=install, options=opts),
+    )
     if result.should_skip:
         raise PhaseSkip(result.skip_reason or "background_skip")
     get_system_log().info(
@@ -91,7 +93,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
 DEFINITION = PhaseDefinition(
     id="system.background.start",
     run=run,
-    description="Start supervised continuous services (work_drain, …)",
+    description="Start registered supervised continuous services",
 )
 
 __all__ = [

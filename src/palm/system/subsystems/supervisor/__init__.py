@@ -16,7 +16,11 @@ from palm.system.subsystems.supervisor.definition import (
     ContinuousWireContext,
 )
 from palm.system.subsystems.supervisor.outbox_loop import OutboxLoopService
-from palm.system.subsystems.supervisor.service import CallableSystemService, SystemService
+from palm.system.subsystems.supervisor.service import (
+    CallableSystemService,
+    ServiceStartContext,
+    SystemService,
+)
 from palm.system.subsystems.supervisor.supervisor import SystemSupervisor
 
 __all__ = [
@@ -25,6 +29,7 @@ __all__ = [
     "ContinuousWireContext",
     "DEFAULT_CONTINUOUS_DEFINITIONS",
     "OutboxLoopService",
+    "ServiceStartContext",
     "SystemService",
     "SystemSupervisor",
 ]

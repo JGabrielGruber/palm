@@ -22,6 +22,8 @@ class CapabilitySeats:
 
     supervisor: Any = None
     work_plane: Any = None
+    outbox_store: Any = None
+    outbox_processor: Any = None
 
 
 CapabilityHand = Callable[..., None]

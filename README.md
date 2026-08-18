@@ -2,7 +2,7 @@
 
 **Palm** is a lightweight, Python-first orchestration engine built on a clean **Behavior Tree** foundation. It coordinates interactive wizards, data pipelines, and—over time—compute-heavy workloads with explicit contracts, durable state, and human-first tooling.
 
-**Current release:** `0.64.0` — capacity closed · [VISION-0.62](docs/vision/closed/VISION-0.62.md) · vitality [VISION-0.61](docs/vision/closed/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
+**Current release:** `0.65.0` — capacity closed · [VISION-0.62](docs/vision/closed/VISION-0.62.md) · vitality [VISION-0.61](docs/vision/closed/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
 
 ### Experimental — no long-term support
 
@@ -10,7 +10,7 @@ Palm is **pre-1.0** and **experimental**. APIs, packages, and behaviors may brea
 
 Use Palm to explore, dogfood, and build. Pin versions deliberately. Read [STATUS.md](STATUS.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [MIGRATION](docs/migrations/) notes when you upgrade. Structure and honesty matter more than comfort paths while the organism is still growing.
 
-**0.64 closed** (`work_drain` copyable) — [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) Accepted. Next seed [VISION-0.65](docs/vision/VISION-0.65.md) (not open). Seed law [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md).  
+**0.65 open** (outbox proof) — [VISION-0.65](docs/vision/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) Proposed. Prior [VISION-0.64](docs/vision/closed/VISION-0.64.md) closed. Seed law [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md).  
 **Website:** [palmengine.org](https://palmengine.org) — [`website/`](website/) · build `just website-build` → **`website/dist`** (Cloudflare assets dir).
 
 ---

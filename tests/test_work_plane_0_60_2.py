@@ -71,7 +71,7 @@ def test_system_schedule_attaches_work_plane() -> None:
         assert "work_drain" not in rt.supervisor.names()
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.background.start"].outcome == "skip"
-        assert by_id["system.background.start"].reason == "structure_off:work_drain"
+        assert by_id["system.background.start"].reason == "none_registered"
     finally:
         rt.stop()
 

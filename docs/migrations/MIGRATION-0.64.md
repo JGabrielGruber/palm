@@ -25,4 +25,4 @@ Palm is pre-1.0. This theme made `work_drain` a real capability (name + hand + o
 
 Admission is still the business face. It does not yet sit on capability (assembly remainder). [SD-020](../../TECH-DEBT.md#sd-020) is not paid here.
 
-Next organ (outbox) is [VISION-0.65](../vision/VISION-0.65.md) — not open.
+Next organ (outbox) is [VISION-0.65](../vision/VISION-0.65.md) — **open**.

@@ -19,6 +19,7 @@ def test_outbox_registered_when_outbox_wired() -> None:
         assert rt.supervisor.status()["running_count"] == 0
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.background.start"].outcome == "skip"
+        assert by_id["system.background.start"].reason == "none_ready"
     finally:
         rt.stop()
 

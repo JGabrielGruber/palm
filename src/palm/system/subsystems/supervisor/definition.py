@@ -12,6 +12,8 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
+from palm.system.subsystems.supervisor.service import ServiceStartContext
+
 if TYPE_CHECKING:
     from palm.system.subsystems.supervisor.service import SystemService
     from palm.system.subsystems.supervisor.supervisor import SystemSupervisor
@@ -59,6 +61,13 @@ class ContinuousServiceDefinition:
     register: ContinuousRegisterFn
 
 
+def work_drain_may_start(ctx: ServiceStartContext) -> bool:
+    """Drain may start when install start ports are bound."""
+    install = ctx.install
+    bound = getattr(install, "start_ports_bound", None)
+    return bool(callable(bound) and bound())
+
+
 def register_work_drain(
     supervisor: SystemSupervisor,
     ctx: ContinuousWireContext,
@@ -73,6 +82,7 @@ def register_work_drain(
         start=plane.start_background,
         stop=plane.stop_background,
         status=plane.status,
+        may_start=work_drain_may_start,
     )
     supervisor.register(svc)
     return svc
@@ -108,9 +118,7 @@ OUTBOX_SERVICE = ContinuousServiceDefinition(
 
 # work_drain is listed on the structure definition. The capability hand registers it.
 # Wire must not freelance that organ.
-DEFAULT_CONTINUOUS_DEFINITIONS: tuple[ContinuousServiceDefinition, ...] = (
-    OUTBOX_SERVICE,
-)
+DEFAULT_CONTINUOUS_DEFINITIONS: tuple[ContinuousServiceDefinition, ...] = (OUTBOX_SERVICE,)
 
 
 __all__ = [
@@ -120,4 +128,5 @@ __all__ = [
     "OUTBOX_SERVICE",
     "register_outbox",
     "register_work_drain",
+    "work_drain_may_start",
 ]

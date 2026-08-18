@@ -2,8 +2,17 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
+
+
+@dataclass(frozen=True, slots=True)
+class ServiceStartContext:
+    """Install seats and start options. Not a shell bag."""
+
+    install: Any = None
+    options: Mapping[str, Any] = field(default_factory=dict)
 
 
 @runtime_checkable
@@ -27,6 +36,10 @@ class SystemService(Protocol):
         """Doctor-oriented snapshot for this service."""
         ...
 
+    def may_start(self, ctx: ServiceStartContext) -> bool:
+        """Whether this service may start given install seats and start options."""
+        ...
+
 
 class CallableSystemService:
     """Adapter: wrap start/stop/status callables as a :class:`SystemService`."""
@@ -38,6 +51,7 @@ class CallableSystemService:
         start: Callable[[], None] | None = None,
         stop: Callable[[], None] | None = None,
         status: Callable[[], dict[str, Any]] | None = None,
+        may_start: Callable[[ServiceStartContext], bool] | None = None,
     ) -> None:
         self._name = str(name or "").strip()
         if not self._name:
@@ -45,6 +59,7 @@ class CallableSystemService:
         self._start = start
         self._stop = stop
         self._status = status
+        self._may_start = may_start
         self._running = False
 
     @property
@@ -54,6 +69,11 @@ class CallableSystemService:
     @property
     def is_running(self) -> bool:
         return self._running
+
+    def may_start(self, ctx: ServiceStartContext) -> bool:
+        if self._may_start is None:
+            return True
+        return bool(self._may_start(ctx))
 
     def start(self) -> None:
         if self._running:
@@ -83,4 +103,4 @@ class CallableSystemService:
         return base
 
 
-__all__ = ["CallableSystemService", "SystemService"]
+__all__ = ["CallableSystemService", "ServiceStartContext", "SystemService"]

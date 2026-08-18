@@ -64,9 +64,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
         }
     else:
         # Pre-installed seat: upgrade default place hands / attach engine.
-        bind_report = bind_host_structure_to_seat(
-            seat, shell, bind_workload=bind_workload
-        )
+        bind_report = bind_host_structure_to_seat(seat, shell, bind_workload=bind_workload)
 
     definition = _resolve_definition(options)
     max_ticks = int(options.get("structure_max_ticks") or 32)
@@ -81,7 +79,17 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     board = ctx.install if ctx.install is not None else shell.install
     supervisor = ctx.supervisor if ctx.supervisor is not None else shell.supervisor
     plane = board.work_plane if board is not None else None
-    seat.materialize(CapabilitySeats(supervisor=supervisor, work_plane=plane))
+    outbox_store = board.outbox_store if board is not None else None
+    outbox_processor = board.outbox_processor if board is not None else None
+    seat.materialize(
+        CapabilitySeats(
+            supervisor=supervisor,
+            work_plane=plane,
+            outbox_store=outbox_store,
+            outbox_processor=outbox_processor,
+        )
+    )
+
     admission = seat.admission()
 
     ctx.publish(
