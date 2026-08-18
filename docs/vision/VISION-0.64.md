@@ -18,11 +18,11 @@
 
 Cleanup of `host.work_drain` as owner, coordinator bag scrape, and tests that freeze that past is **in** this theme. Alias-to-keep-green is out.
 
-**Admission and capability (José 2026-08-17).** Admission is the **business-rule face**: may this act run. Capability is the **structure fact**: is this organ here. The face should read the fact. It is not a second membership.
+**Admission and capability (José 2026-08-17).** Admission is the **business-rule face**: may this act run. Its goal is that the business-rule layer does **not** talk to system lower layers (engines, supervisor, structure seat). Capability is the **structure fact**: is this organ here. The face should read the fact. It is not a second membership.
 
 | Step | When | Meaning |
 |------|------|---------|
-| **1. Contract** | 0.63 (closed) | Map citizen edges. Fail closed. Learn the shape. |
+| **1. Contract** | 0.63 (closed) | Map citizen edges. Fail closed. Lift business off lower-layer digs. |
 | **2. Work** | **this theme** | Real control: name + hand. Omit means it does not run. |
 | **3. New contract** | after copyable | Admission still answers the business question. It sits on capabilities (and ready / refuse), not a wall that pretends to be membership. |
 | **4. Dependents** | after 3 | Change who still calls the old face (`able`, façades, surfaces, tests that freeze `may_run_business` as the organ list). [SD-020](../../TECH-DEBT.md#sd-020) lives here. |

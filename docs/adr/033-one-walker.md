@@ -22,7 +22,7 @@ José accepts. This record stays **Proposed** until he locks.
 
 **Code now (2026-08-17).** The host start window and the coordinator start/stop pair are **gone**. `system.background.start` is the one `work_drain` loop start. Host schedule ends at `host.ready`. Host shutdown freezes the supervisor seat, then `runtime.stop` stops it again.
 
-**Admission is not this delete target.** Admission is the business-rule face ([VISION-0.64](../vision/VISION-0.64.md)). Capability is the structure fact. 0.64 does the work (step 2). Changing that face (step 3) and its dependents (step 4 / [SD-020](../../TECH-DEBT.md#sd-020)) comes after copyable. Leaving the old face as a **second membership king** is old wiring. Deleting the face before the hands exist is a prettier soft lock.
+**Admission is not this delete target.** Admission is the business-rule face ([VISION-0.64](../vision/VISION-0.64.md)): business does not talk to system lower layers. Capability is the structure fact. 0.64 does the work (step 2). Changing that face (step 3) and its dependents (step 4 / [SD-020](../../TECH-DEBT.md#sd-020)) comes after copyable. Leaving the old face as a **second membership king** is old wiring. Product still digging engines is the old contract. Deleting the face before the hands exist is a prettier soft lock.
 
 ---
 
