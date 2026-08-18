@@ -12,6 +12,7 @@ Product present interprets raw. System does not curate.
 
 from __future__ import annotations
 
+import inspect
 from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
@@ -100,6 +101,13 @@ def prefer_native(
     return report
 
 
+def _observe_attr(value: Any) -> Any:
+    """Eyes may name a public method. They must not stash the bound object."""
+    if inspect.ismethod(value) or inspect.isfunction(value):
+        return {"callable": True, "name": getattr(value, "__name__", None)}
+    return value
+
+
 def _as_mapping(value: Any) -> dict[str, Any]:
     if value is None:
         return {}
@@ -184,11 +192,11 @@ def sample_attrs(
         try:
             for name in attrs:
                 if hasattr(seat, name):
-                    raw[name] = getattr(seat, name)
+                    raw[name] = _observe_attr(getattr(seat, name))
             if instance is not None:
                 for name in instance_attrs:
                     if hasattr(instance, name):
-                        raw[name] = getattr(instance, name)
+                        raw[name] = _observe_attr(getattr(instance, name))
             if extra_raw:
                 raw.update(dict(extra_raw))
         except Exception as exc:

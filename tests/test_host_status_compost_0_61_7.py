@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from palm.app.host.application_host import ApplicationHost
 from palm.app.host.observability import EYES_LAW, PACKAGING_ROLE
 from palm.app.host.roles import DeploymentProfile
@@ -75,5 +77,6 @@ def test_doctor_control_plane_is_host_packaging() -> None:
         assert report["kind"] == "legacy_doctor"
         if isinstance(cp, dict) and "eyes_law" in cp:
             assert cp["eyes_law"] == EYES_LAW
+        json.dumps(report)
     finally:
         host.shutdown()

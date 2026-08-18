@@ -61,7 +61,7 @@ def _report_execution(instance: Any, port: Any) -> SeatReport:
         port,
         seat_id=SEAT_EXECUTION,
         kind=KIND_PORT,
-        attrs=("invoke_resource", "start_workload"),
+        attrs=(),
         source="execution_port",
         instance=instance,
         instance_attrs=("is_started",),
