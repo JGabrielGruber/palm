@@ -2,7 +2,7 @@
 
 **Palm** is a lightweight, Python-first orchestration engine built on a clean **Behavior Tree** foundation. It coordinates interactive wizards, data pipelines, and—over time—compute-heavy workloads with explicit contracts, durable state, and human-first tooling.
 
-**Current release:** `0.63.0` — capacity closed · [VISION-0.62](docs/vision/closed/VISION-0.62.md) · vitality [VISION-0.61](docs/vision/closed/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
+**Current release:** `0.64.0` — capacity closed · [VISION-0.62](docs/vision/closed/VISION-0.62.md) · vitality [VISION-0.61](docs/vision/closed/VISION-0.61.md) · map [PALM.md](docs/PALM.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/MCP.md](docs/MCP.md)
 
 ### Experimental — no long-term support
 
@@ -10,7 +10,7 @@ Palm is **pre-1.0** and **experimental**. APIs, packages, and behaviors may brea
 
 Use Palm to explore, dogfood, and build. Pin versions deliberately. Read [STATUS.md](STATUS.md), [docs/VERSIONING.md](docs/VERSIONING.md), and [MIGRATION](docs/migrations/) notes when you upgrade. Structure and honesty matter more than comfort paths while the organism is still growing.
 
-**Active theme (0.64):** structure manager — [VISION-0.64](docs/vision/VISION-0.64.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md). **0.63 closed.**  
+**0.64 closed** (`work_drain` copyable) — [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) Accepted. Next seed [VISION-0.65](docs/vision/VISION-0.65.md) (not open). Seed law [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md).  
 **Website:** [palmengine.org](https://palmengine.org) — [`website/`](website/) · build `just website-build` → **`website/dist`** (Cloudflare assets dir).
 
 ---
@@ -54,7 +54,7 @@ Palm aims to be **simple at the core and powerful at the edges**:
 - **Extensible** — patterns, providers, storages, runners register at the edge; core stays pure
 - **Alive as a system** — boot, planes, supervisor, vitality, capacity (in-process multi-claimer)
 - **Two axes of scale** — **vertical** home and meaning; **horizontal** place registry (bodies across hosts)
-- **Horizon path** — [assembly](docs/vision/VISION-0.64.md) → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md)
+- **Horizon path** — [assembly](docs/vision/VISION-ASSEMBLY.md) → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md)
 - **Fit for living work** — datasets, training flows, TinyML and model bodies as places under one genome
 
 Behavior Trees are the control-flow foundation for **business**. Organism topology (assembly, home, places) is a different care — do not confuse the two. Org/realm speech means **recursive support**, not a second product. Cross-cutting concerns belong in system seats and thin surfaces — not buried in step JSON.
@@ -480,7 +480,7 @@ xychart
 | Document | Contents |
 |----------|----------|
 | [SCOPE.md](SCOPE.md) | Purpose, horizon, experimental honesty (not a frozen old roadmap) |
-| [docs/vision/VISION-0.64.md](docs/vision/VISION-0.64.md) | **Active** — structure manager |
+| [docs/vision/closed/VISION-0.64.md](docs/vision/closed/VISION-0.64.md) | **Closed** — first capability `work_drain` |
 | [docs/vision/VISION-ASSEMBLY.md](docs/vision/VISION-ASSEMBLY.md) | Seed essay — roles · ports · citizenship |
 | [PHILOSOPHY.md](PHILOSOPHY.md) | Spirit — grown, not built; glory and shackles |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers, BT control flow, middleware model, engines |

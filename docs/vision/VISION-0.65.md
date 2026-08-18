@@ -1,7 +1,7 @@
 # VISION 0.65 — Outbox as the proof cut
 
 **Status:** 📋 **Queue seed** — named **2026-08-18**. Not an open minor.  
-**Map:** [PALM.md](../PALM.md) · [VISION-0.64](VISION-0.64.md) (open) · [ADR-033](../adr/033-one-walker.md) **Proposed**  
+**Map:** [PALM.md](../PALM.md) · [VISION-0.64](closed/VISION-0.64.md) (**closed**) · [ADR-033](../adr/033-one-walker.md) **Accepted**  
 **Prior organ:** `work_drain` — first real capability.
 
 This file exists so a new session can catch up. It is not a slice table. It does not open 0.65.

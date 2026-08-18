@@ -1,9 +1,9 @@
-# VISION 0.64
+# VISION 0.64 — First capability (`work_drain`)
 
-**Status:** **Open** (2026-08-17). José closed **0.63**.  
-**Map:** [PALM.md](../PALM.md) · vault [architecture/](../architecture/README.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md)  
-**Prior:** [VISION-0.63](closed/VISION-0.63.md) (closed) · [ADR-032](../adr/032-organism-assembly.md)  
-**This theme:** [ADR-033](../adr/033-one-walker.md) **Proposed** — old wiring dies in the same cut. José accepts.
+**Status:** ✅ **Theme closed** (José 2026-08-18) at `0.64.0`. Next seed: [VISION-0.65](../VISION-0.65.md) (not open).  
+**Map:** [PALM.md](../../PALM.md) · vault [architecture/](../../architecture/README.md) · seed [VISION-ASSEMBLY](../VISION-ASSEMBLY.md)  
+**Prior:** [VISION-0.63](VISION-0.63.md) (closed) · [ADR-032](../../adr/032-organism-assembly.md)  
+**This theme:** [ADR-033](../../adr/033-one-walker.md) **Accepted** — old wiring dies in the same cut.
 
 **This minor is `work_drain` as the first real capability** — the shape every later organ copies. Not a slice queue. Not host-owned drain. Not a private `if`.
 
@@ -25,13 +25,13 @@ Cleanup of `host.work_drain` as owner, coordinator bag scrape, and tests that fr
 | **1. Contract** | 0.63 (closed) | Map citizen edges. Fail closed. Lift business off lower-layer digs. |
 | **2. Work** | **this theme** | Real control: name + hand. Omit means it does not run. |
 | **3. New contract** | after copyable | Admission still answers the business question. It sits on capabilities (and ready / refuse), not a wall that pretends to be membership. |
-| **4. Dependents** | after 3 | Change who still calls the old face (`able`, façades, surfaces, tests that freeze `may_run_business` as the organ list). [SD-020](../../TECH-DEBT.md#sd-020) lives here. |
+| **4. Dependents** | after 3 | Change who still calls the old face (`able`, façades, surfaces, tests that freeze `may_run_business` as the organ list). [SD-020](../../../TECH-DEBT.md#sd-020) lives here. |
 
 Do not swap 2 and 3. Do not open SD-020 as a mid-theme dump. Ready / refuse stay a short gate — not a fake capability named `ready`.
 
-No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-materialize-cut.md](../architecture/appendix/structure-materialize-cut.md).
+No slice table. Residual: [TECH-DEBT.md](../../../TECH-DEBT.md) · [structure-materialize-cut.md](../../architecture/appendix/structure-materialize-cut.md).
 
-**Exit:** José stamped **copyable** (2026-08-18). The home is name + hand + omit. Theme stays **open** until he closes it. [VISION-0.65](VISION-0.65.md) is not open.
+**Exit:** José stamped **copyable** and **closed** the theme (2026-08-18). The home is name + hand + omit. [VISION-0.65](../VISION-0.65.md) is not open.
 
 ### Horizons (catch-up · José 2026-08-18)
 
@@ -39,9 +39,9 @@ Themes **classify** the work. They are not theater. If a later cut shows the fir
 
 | Horizon | Status | What it is |
 |---------|--------|------------|
-| **0.64** | **open** · **copyable** (José 2026-08-18) | First organ `work_drain`. Next organ is name + hand. If a later cut shows costume, that work is still 0.64. |
-| **0.65** | [seed](VISION-0.65.md) — not open | Proof the home copies: **outbox**. Name + hand + kill the old walker in the same cut. |
-| **Assembly remainder** | stays on [VISION-ASSEMBLY](VISION-ASSEMBLY.md) | Steps 3–4: admission sits on capability; dependents stop digging. Not a 0.65 dump. |
+| **0.64** | **closed** (José 2026-08-18) · **copyable** | First organ `work_drain`. Next organ is name + hand. If a later cut shows costume, that work is still this theme's law. |
+| **0.65** | [seed](../VISION-0.65.md) — not open | Proof the home copies: **outbox**. Name + hand + kill the old walker in the same cut. |
+| **Assembly remainder** | stays on [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) | Steps 3–4: admission sits on capability; dependents stop digging. Not a 0.65 dump. |
 
 **Costume landed (no second organ):** composition does not type `work_drain`; assemble / seed / refuse no longer shovel a capabilities bag; `WORK_DRAIN_SERVICE` is gone. Hand still calls `register_work_drain`.
 
@@ -71,8 +71,8 @@ Dogfood (`analytics`, `neonroot`) and always-on engine (`workloads`) are not the
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
 | **B2** | **Landed** — refuse reads definition capabilities | Composition listing the name is not a refuse input. Omit is enough. |
 | **B3** | **Landed** — composition / flag do not write `work_drain` | Presets, seed-map row, and the settings/deployment fold are gone. Omit is enough. `refuse:background_drain` is not a live wall. |
-| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. No `enable_work_drain_service`. Outbox proof is [VISION-0.65](VISION-0.65.md). Definition `requires` — do not invent. |
+| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. No `enable_work_drain_service`. Outbox proof is [VISION-0.65](../VISION-0.65.md). Definition `requires` — do not invent. |
 
 A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.structure`; settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` (supervisor, execution, install, structure), `get_system_planes` (hub), and `first_resolver` for process log. Inventory `admission_inventory_snapshot` stays as eyes.
 
-**Start next session:** copyable is stamped. Theme still open. Outbox is [VISION-0.65](VISION-0.65.md) when José opens it — not a leftover afternoon. Admission contract is assembly remainder (steps 3–4).
+**After this close:** no open minor. Outbox is [VISION-0.65](../VISION-0.65.md) when José opens it. Admission contract is assembly remainder (steps 3–4).

@@ -2,7 +2,7 @@
 
 **Status:** Accepted  
 **Date:** 2026-08-08 · **Accepted:** 2026-08-17  
-**Theme:** [VISION-0.63](../vision/closed/VISION-0.63.md) (**closed**) · present [VISION-0.64](../vision/VISION-0.64.md)  
+**Theme:** [VISION-0.63](../vision/closed/VISION-0.63.md) (**closed**) · next [VISION-0.64](../vision/closed/VISION-0.64.md) (**closed**)  
 **Seed law:** [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)  
 **Map:** [PALM.md](../PALM.md)  
 **Migration:** [MIGRATION-0.63](../migrations/MIGRATION-0.63.md)  
@@ -27,7 +27,7 @@
 
 D5 below is the season’s package law. Code now is the table. Glossary: [architecture/glossary.md](../architecture/glossary.md).
 
-**Present (0.64).** D2 below is the **0.63 contract** — chronicle, not rewritten. Admission stays the business-rule face until José changes that contract after capabilities are real control. Sequence: [VISION-0.64](../vision/VISION-0.64.md). Do not treat D2 as a second membership catalog.
+**Present.** D2 below is the **0.63 contract** — chronicle, not rewritten. Admission stays the business-rule face until José changes that contract. Sequence: [VISION-0.64](../vision/closed/VISION-0.64.md). Do not treat D2 as a second membership catalog.
 
 ---
 

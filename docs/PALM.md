@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [architecture/](architecture/README.md) (**intended architecture** · C4 SE vault) · [VISION-0.62](vision/closed/VISION-0.62.md) (multi-claimer capacity **closed** `0.62.8`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Accepted** · [VISION-0.61](vision/closed/VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](vision/closed/VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](vision/closed/VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](vision/closed/VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-0.64](vision/VISION-0.64.md) (**open**) · [VISION-0.63](vision/closed/VISION-0.63.md) (assembly **closed**) · [ADR-032](adr/032-organism-assembly.md) **Accepted** · [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) (seed law) · [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](vision/closed/VISION-VITALITY.md) (seed essay) · [VISION-0.57](vision/closed/VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](vision/VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (mode router) · [src/palm/AGENTS.md](../src/palm/AGENTS.md) (development) · [architecture/AGENTS.md](architecture/AGENTS.md) (intended architecture) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [architecture/](architecture/README.md) (**intended architecture** · C4 SE vault) · [VISION-0.62](vision/closed/VISION-0.62.md) (multi-claimer capacity **closed** `0.62.8`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Accepted** · [VISION-0.61](vision/closed/VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](vision/closed/VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](vision/closed/VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](vision/closed/VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-0.64](vision/closed/VISION-0.64.md) (**closed**) · [VISION-0.63](vision/closed/VISION-0.63.md) (assembly **closed**) · [ADR-032](adr/032-organism-assembly.md) **Accepted** · [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) (seed law) · [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](vision/closed/VISION-VITALITY.md) (seed essay) · [VISION-0.57](vision/closed/VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](vision/VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (mode router) · [src/palm/AGENTS.md](../src/palm/AGENTS.md) (development) · [architecture/AGENTS.md](architecture/AGENTS.md) (intended architecture) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -117,9 +117,9 @@ These words are **stable**. Use them with one meaning only.
 | **Work place** | Place that executes work a light center will not carry. |
 | **Authority** | Author of desired structure (publishes structure definition). |
 | **Structure definition** | Declarative desired structure for this process. Code: `StructureDefinition` / `structure_definition_id`. Vision still says **assembly definition**. |
-| **Structure reconciler** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Code: `StructureEngine` (`palm.core.structure`) + manager (`palm.system.structure`). Vision still says **assembly** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). Theme: [VISION-0.64](vision/VISION-0.64.md). |
+| **Structure reconciler** | Desired-state **reconciler** for **organism ready** (after boot, before business pretends). Code: `StructureEngine` (`palm.core.structure`) + manager (`palm.system.structure`). Vision still says **assembly** — [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md). Theme: [VISION-0.64](vision/closed/VISION-0.64.md) (closed). |
 | **Structure status** | Local readiness under the current definition. Code: `StructureStatus`. Single readiness truth. Vision: assembly status. |
-| **Admission** | Read gate for work that needs a true organism (definition-ready). Business-rule face — business does not talk to system lower layers. Should sit on **capability**. Sequence: [VISION-0.64](vision/VISION-0.64.md). |
+| **Admission** | Read gate for work that needs a true organism (definition-ready). Business-rule face — business does not talk to system lower layers. Should sit on **capability**. Sequence: [VISION-0.64](vision/closed/VISION-0.64.md). |
 | **Effect intent** | Structure action the reconciler requests; system applies via `EffectPort`. |
 | **Tunnel** | Trusted path between places after home is known. Seed: [VISION-TUNNELS](vision/VISION-TUNNELS.md). |
 | **Vertical axis** | Authority and meaning climb the tree (home up, hop home, projection). |
@@ -511,7 +511,7 @@ boot (system)
 | [VISION-TUNNELS](vision/VISION-TUNNELS.md) | Reach and neighborhood after home is known; mesh *feel*, tree *law* |
 | [VISION-GROVE](vision/VISION-GROVE.md) | Multi-Palm organization crown; continuous interface |
 
-**Assembly:** authority issues definition; pure engine reconciles; system applies effect intents; **admission** gates business that needs ground; clients use ports; composition root only wires. New definition → reassemble. Theme: [VISION-0.64](vision/VISION-0.64.md) · law: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md).
+**Assembly:** authority issues definition; pure engine reconciles; system applies effect intents; **admission** gates business that needs ground; clients use ports; composition root only wires. New definition → reassemble. Theme: [VISION-0.64](vision/closed/VISION-0.64.md) (closed) · law: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md).
 
 **Tunnels do not own vertical/horizontal law.** They own **reach** on top of it.  
 **Grove does not invent recursion.** It grows org conversation once assembly and tunnels are boring.
@@ -584,7 +584,7 @@ From theme **0.57** onward:
 | Supervisor + work plane (closed) | [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted · residual host product wire |
 | System vitality (**0.61 closed**) | [VISION-0.61](vision/closed/VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted · package `palm.system.vitality` · schema `palm.seat_report/1` · inspect present · stamp `0.61.13` · seed [VISION-VITALITY](vision/closed/VISION-VITALITY.md) |
 | Multi-claimer capacity (**0.62 closed**) | [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · exclusive claim + multi-claimer + Queued pool · stamp `0.62.8` · residual multi-process CAS [SD-019](../TECH-DEBT.md#sd-019) |
-| Assembly (**0.64**) | [VISION-0.64](vision/VISION-0.64.md) · [ADR-032](adr/032-organism-assembly.md) Accepted · seed [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) · debt [SD-020](../TECH-DEBT.md#sd-020) / [SD-021](../TECH-DEBT.md#sd-021) |
+| Assembly (**0.63** closed) · first capability (**0.64** closed) | [VISION-0.64](vision/closed/VISION-0.64.md) · [ADR-033](adr/033-one-walker.md) Accepted · seed [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) · debt [SD-020](../TECH-DEBT.md#sd-020) / [SD-021](../TECH-DEBT.md#sd-021) |
 | Tunnels (queue seed) | [VISION-TUNNELS](vision/VISION-TUNNELS.md) — reach after assembly, before Grove; not open |
 | Multi-Palm horizon | [VISION-GROVE](vision/VISION-GROVE.md) — org crown; path: assembly → tunnels → Grove |
 | Dense layer detail | [ARCHITECTURE.md](../ARCHITECTURE.md) |
@@ -620,7 +620,7 @@ A map that only names **ideals** without today is also incomplete.
 | Supervisor + work plane (start) on system | **Theme closed** at `0.60.9` — [VISION-0.60](vision/closed/VISION-0.60.md) · [ADR-029](adr/029-system-supervisor.md) Accepted |
 | Living-kernel vitality | **Theme closed** at `0.61.13` — `palm.system.vitality` + Inspect present — [VISION-0.61](vision/closed/VISION-0.61.md) · [ADR-030](adr/030-system-vitality.md) Accepted |
 | Multi-claimer work drain | **Theme closed** at `0.62.8` — exclusive claim + drain N + exclusive drive + Queued pool — [VISION-0.62](vision/closed/VISION-0.62.md) · [ADR-031](adr/031-multi-claimer-work-drain.md) Accepted · residual [SD-019](../TECH-DEBT.md#sd-019) |
-| Assembly (organism truth) | **0.64** — [VISION-0.64](vision/VISION-0.64.md) · seed [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md); reconciler between boot and business |
+| Assembly (organism truth) | **0.63 / 0.64 closed** — [VISION-0.64](vision/closed/VISION-0.64.md) · seed [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md); remainder is admission reshape |
 | Grove multi-Palm | **Horizon** — tree path first; org crown later |
 
 **Incomplete structure is stated here on purpose.**  

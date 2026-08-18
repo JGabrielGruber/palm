@@ -1,10 +1,10 @@
 # VISION — Assembly (organism truth · tree scale)
 
-**Status:** 📗 **Seed essay (normative law)** — **[VISION-0.64](VISION-0.64.md)** open · [VISION-0.63](closed/VISION-0.63.md) closed · [ADR-032](../adr/032-organism-assembly.md) **Accepted**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08** · progress honesty **2026-08-08**.  
+**Status:** 📗 **Seed essay (normative law)** — [VISION-0.64](closed/VISION-0.64.md) closed · [VISION-0.63](closed/VISION-0.63.md) closed · [ADR-032](../adr/032-organism-assembly.md) **Accepted**. Named **2026-08-05** · refined **2026-08-07** · theme posture **2026-08-08** · progress honesty **2026-08-08**.  
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
 **Intended architecture:** [docs/architecture/](../architecture/README.md) (Palm-wide; structure management is one component).  
-**Active plan:** [VISION-0.64](VISION-0.64.md). This file keeps **roles · ports · citizenship · modules**.  
+**Active plan:** none (0.64 closed). This file keeps **roles · ports · citizenship · modules**. Remainder: admission reshape. Next seed [VISION-0.65](VISION-0.65.md).  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
 **Horizon order:** assembly → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
 **Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
@@ -27,7 +27,7 @@
 
 §7 layout below is **vision shape**. Paths there stay `*/assembly/` as the essay. Code homes are the table. Glossary: [architecture/glossary.md](../architecture/glossary.md).
 
-**Remainder (José 2026-08-18).** 0.63 mapped the citizen contract. 0.64 does the work (capabilities as structure fact). What this essay still holds for later: **reshape admission** so it reads capability (and ready / refuse), then change dependents that still dig lower layers. Sequence: [VISION-0.64](VISION-0.64.md). That is not [VISION-0.65](VISION-0.65.md) (outbox proof).
+**Remainder (José 2026-08-18).** 0.63 mapped the citizen contract. 0.64 did the work (capabilities as structure fact). What this essay still holds: **reshape admission** so it reads capability (and ready / refuse), then change dependents that still dig lower layers. Sequence: [VISION-0.64](closed/VISION-0.64.md). That is not [VISION-0.65](VISION-0.65.md) (outbox proof).
 
 ---
 
@@ -60,7 +60,7 @@ That glue multiplies when Palm scales past one process.
 
 This file names the **missing home** and the **reassembly of the organism** around it.  
 It names **roles**, **ports**, and **what every layer must change**.  
-**Theme open:** [VISION-0.64](VISION-0.64.md). This essay remains the deep law.  
+**Theme closed:** [VISION-0.64](closed/VISION-0.64.md). This essay remains the deep law.  
 It does **not** replace boot, orchestration, or the workload plane.
 
 **Duty:** write the structure Palm will grow into — realistic, named, honest about what we cannot do yet.  

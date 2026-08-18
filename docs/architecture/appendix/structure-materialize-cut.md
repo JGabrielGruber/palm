@@ -3,12 +3,12 @@
 **Status:** Standing engineering note. **Not** a theme plan. **Not** a VISION rewrite.  
 **Locked by José:** first unit and “no no-op.”  
 **Code (2026-08-17):** `StructureDefinition.capabilities` + manager materialize of `work_drain`; host/mode/composition are no longer peer kings for that unit.  
-**Stamp:** José closed **0.63** and opened **0.64** (2026-08-17).
+**Stamp:** José closed **0.64** (2026-08-18) at `0.64.0`.
 
-**Read after compact:** [VISION-0.64 after compact](../../vision/VISION-0.64.md#after-compact-2026-08-17) → **this file §1 + §7** → implement.  
+**Read after compact:** [VISION-0.64 after compact](../../vision/closed/VISION-0.64.md#after-compact-2026-08-17) → **this file §1 + §7** → implement.  
 Do not re-harvest the tree unless code contradicts this note.
 
-**Map:** [PALM.md](../../PALM.md) · [TECH-DEBT SD-020 / SD-021 / SD-016](../../../TECH-DEBT.md) · present [VISION-0.64](../../vision/VISION-0.64.md) · seed [VISION-ASSEMBLY §0](../../vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08)
+**Map:** [PALM.md](../../PALM.md) · [TECH-DEBT SD-020 / SD-021 / SD-016](../../../TECH-DEBT.md) · present [VISION-0.64](../../vision/closed/VISION-0.64.md) · seed [VISION-ASSEMBLY §0](../../vision/VISION-ASSEMBLY.md#0-progress-honesty-2026-08-08)
 
 ---
 
@@ -125,4 +125,4 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
 | **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Outbox / journal hands when José opens 0.65. No definition `requires`. |
 
-**Copyable** (José 2026-08-18) — [VISION-0.64 horizons](../../vision/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/VISION-0.65.md) (not open). Do not open [SD-020](../../../TECH-DEBT.md#sd-020) as a mid-theme dump.
+**Copyable and closed** (José 2026-08-18) — [VISION-0.64](../../vision/closed/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/VISION-0.65.md) (not open). Do not open [SD-020](../../../TECH-DEBT.md#sd-020) as a mid-theme dump.

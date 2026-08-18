@@ -4,18 +4,18 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
-### 0.64 — present (José 2026-08-17)
-- **0.63 closed.** Live path is [VISION-0.64](docs/vision/VISION-0.64.md). No slice table.
-- ADR-032 **Accepted**
-- Assemble fills `CapabilitySeats` from boot ctx + install board. Start reads the supervisor service the walker registered. Host listed bag gone. Tests and status learn `runtime.work_plane`.
-- Wire catalog does not freelance-register `work_drain`. The capability hand is the only register.
-- Drain refuse reads DNA capabilities, not the composition / `assembly_capabilities` bag.
-- Composition presets and the `enable_work_drain_service` fold do not write `work_drain`. Omit is enough.
-- `BootMode.allow_background_drain` and the seed twins (`dna_lists_work_drain`, `dna_refuses_background_drain`) are gone.
-- Host `start_plane` and coordinator `_start_plane` aliases gone. The start plane is `runtime.work_plane`. The boot window `host.background.start_plane` stays.
-- Assemble reads and writes `shell.assembly`. Settings and deployment no longer carry `enable_work_drain_service`.
-- Vitality assembly probe uses `attr_resolver("assembly")`, same as supervisor.
-- Vitality default probes share `attr_resolver` / `get_system_planes` / `first_resolver`. Duck-type execution fallback and dead install/log wrappers gone.
+## [0.64.0] — 2026-08-18
+
+### 0.64 — First capability (**theme closed** · José)
+
+Vision: [VISION-0.64](docs/vision/closed/VISION-0.64.md) · ADR: [033](docs/adr/033-one-walker.md) **Accepted** · Migration: [MIGRATION-0.64](docs/migrations/MIGRATION-0.64.md)
+
+- **`work_drain` is copyable.** Name + hand + omit. José closed the theme.
+- ADR-033 **Accepted** — old wiring dies in the same cut.
+- Spine: definition lists the name; walker loops `LOCAL_CAPABILITY_HANDS`; one start (`system.background.start`). Host does not start drain.
+- Costume gone: composition does not type the name; assemble/seed/refuse do not shovel a capabilities bag; `WORK_DRAIN_SERVICE` deleted.
+- Structure identifiers (DNA env, packages, `Structure*`) replace assembly names. No aliases.
+- Doctor JSON: vitality seat raw does not stash bound methods.
 
 ### 0.63.39 — work_drain materialize
 - `AssemblyDefinition.capabilities` — builtin DNA lists `work_drain` on cli/server/all_in_one/worker (not embedded/mcp)

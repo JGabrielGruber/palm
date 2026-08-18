@@ -3,7 +3,7 @@
 **Status:** Live open residual · **2026-08-05**.  
 **Paid/closed detail:** [docs/audit/TECH-DEBT-PAID.md](docs/audit/TECH-DEBT-PAID.md)  
 **PD-era archive:** [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
-**Map:** [docs/PALM.md](docs/PALM.md) · **Status:** [STATUS.md](STATUS.md) · **Active theme:** [VISION-0.64](docs/vision/VISION-0.64.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)  
+**Map:** [docs/PALM.md](docs/PALM.md) · **Status:** [STATUS.md](STATUS.md) · **Closed theme:** [VISION-0.64](docs/vision/closed/VISION-0.64.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md)  
 **Language:** ASD-STE100 (practical).
 
 Closed theme chronicles live under [docs/vision/closed/](docs/vision/closed/).  
@@ -164,7 +164,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-020"></a>
 
-**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · residual under [VISION-0.64](docs/vision/VISION-0.64.md)
+**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · residual under [VISION-0.64](docs/vision/closed/VISION-0.64.md)
 
 **Observation:** Business that needs ground can start without a single **admission** surface. Soft “definitions ready,” host flags, catalog order, and half-host tests act as peer readiness. Dual mode hides as green.
 
@@ -191,7 +191,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (0.63 walls up; residuals **named**). Not a 0.64 dump. José: pay by reshaping admission around capabilities after copyable, then change dependents. Sequence: [VISION-0.64](docs/vision/VISION-0.64.md).
+**Status:** open (0.63 walls up; residuals **named**). Not a 0.64 dump. José: pay by reshaping admission around capabilities after copyable, then change dependents. Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md).
 
 ---
 
@@ -200,7 +200,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-021"></a>
 
-**Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth (closed) · residual under [VISION-0.64](docs/vision/VISION-0.64.md)
+**Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth (closed) · residual under [VISION-0.64](docs/vision/closed/VISION-0.64.md)
 
 **Observation:** `CompositionProfile`, `DeploymentProfile`, `BootMode`, and some structure-shaped `PALM_*` toggles still act as **structure law** beside the structure definition. That is dual king after assembly lands.
 
@@ -553,7 +553,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | Seed | Debt | Spirit |
 |------|------|--------|
 | **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Closed 0.62** — [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) Accepted |
-| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63 closed** · present [VISION-0.64](docs/vision/VISION-0.64.md) · [ADR-032](docs/adr/032-organism-assembly.md) Accepted · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63 / 0.64 closed** · [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) Accepted · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |

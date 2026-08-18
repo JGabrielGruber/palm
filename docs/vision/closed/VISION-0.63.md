@@ -1,6 +1,6 @@
 # VISION 0.63 — Organism assembly (gate · DNA · single readiness)
 
-**Status:** ✅ **Theme closed** (José 2026-08-17). Present: [VISION-0.64](../VISION-0.64.md).  
+**Status:** ✅ **Theme closed** (José 2026-08-17). Next: [VISION-0.64](VISION-0.64.md) (also closed).  
 **Language:** ASD-STE100 Simplified Technical English (practical).  
 **Map:** [PALM.md](../../PALM.md) — read first.  
 **Seed essay (normative law):** [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) — roles · ports · citizenship · purge · modules.  
@@ -12,7 +12,7 @@
 **Queue later:** [VISION-TUNNELS](../VISION-TUNNELS.md) · [VISION-GROVE](../VISION-GROVE.md) · [VISION-SURFACE-DEFLATION](../VISION-SURFACE-DEFLATION.md) · workload remainder.  
 **North star:** [VISION-GROVE](../VISION-GROVE.md).
 
-**Exit judgment (2026-08-17):** José closed the theme. Admission floor is real. Present work is [VISION-0.64](../VISION-0.64.md).
+**Exit judgment (2026-08-17):** José closed the theme. Admission floor is real. [VISION-0.64](VISION-0.64.md) (first capability) is also closed.
 
 **Intended architecture (Palm-wide):** [docs/architecture/](../../architecture/README.md) — software engineering spine; not theme PM.
 

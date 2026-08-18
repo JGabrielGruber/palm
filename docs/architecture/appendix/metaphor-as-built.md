@@ -79,7 +79,7 @@ Inspect / MCP JSON already uses `admission`, `may_run_business`, `definition_id`
 |------|----------|
 | [VISION-ASSEMBLY.md](../../vision/VISION-ASSEMBLY.md) | Essay keeps assembly, citizen, household, DNA. **Code now** box + §4 / §6.4 pointers. |
 | [ADR-032](../../adr/032-organism-assembly.md) | Decision text stays. **Code now** box + status-note pointer. |
-| [PALM.md](../../PALM.md) · [WRITING.md](../../WRITING.md) · [STATUS.md](../../../STATUS.md) · [WORK-DRAIN.md](../../WORK-DRAIN.md) · [VISION-0.64](../../vision/VISION-0.64.md) · vault glossary / packages | Present tense: `palm.*.structure`, `StructureDefinition` / `StructureEngine`, place registry, `EffectPort`. Vision still says assembly. |
+| [PALM.md](../../PALM.md) · [WRITING.md](../../WRITING.md) · [STATUS.md](../../../STATUS.md) · [WORK-DRAIN.md](../../WORK-DRAIN.md) · [VISION-0.64](../../vision/closed/VISION-0.64.md) · vault glossary / packages | Present tense: `palm.*.structure`, `StructureDefinition` / `StructureEngine`, place registry, `EffectPort`. Vision still says assembly. |
 | [MIGRATION-0.63.md](../../migrations/MIGRATION-0.63.md) + CHANGELOG 0.63 | Chronicle — leave |
 
 **Allowed teaching (leave):**

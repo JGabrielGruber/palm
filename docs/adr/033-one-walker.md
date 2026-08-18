@@ -1,13 +1,13 @@
 # ADR-033 — Old wiring dies in the same cut
 
-**Status:** Proposed  
-**Date:** 2026-08-17  
-**Theme:** [VISION-0.64](../vision/VISION-0.64.md) (**open**)  
+**Status:** Accepted  
+**Date:** 2026-08-17 · **Accepted:** 2026-08-18  
+**Theme:** [VISION-0.64](../vision/closed/VISION-0.64.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Related:** [ADR-026](026-palm-system-layer.md) · [ADR-027](027-session-plane.md) · [ADR-028](028-system-boot.md) · [ADR-029](029-system-supervisor.md) · [ADR-032](032-organism-assembly.md)  
 **Vault:** [principles §10](../architecture/principles.md) · [glossary](../architecture/glossary.md)
 
-José accepts. This record stays **Proposed** until he locks.
+José accepted (2026-08-18). Theme closed.
 
 ---
 
@@ -22,7 +22,7 @@ José accepts. This record stays **Proposed** until he locks.
 
 **Code now (2026-08-17).** The host start window and the coordinator start/stop pair are **gone**. `system.background.start` is the one `work_drain` loop start. Host schedule ends at `host.ready`. Host shutdown freezes the supervisor seat, then `runtime.stop` stops it again.
 
-**Admission is not this delete target.** Admission is the business-rule face ([VISION-0.64](../vision/VISION-0.64.md)): business does not talk to system lower layers. Capability is the structure fact. 0.64 does the work (step 2). Changing that face (step 3) and its dependents (step 4 / [SD-020](../../TECH-DEBT.md#sd-020)) comes after copyable. Leaving the old face as a **second membership king** is old wiring. Product still digging engines is the old contract. Deleting the face before the hands exist is a prettier soft lock.
+**Admission is not this delete target.** Admission is the business-rule face ([VISION-0.64](../vision/closed/VISION-0.64.md)): business does not talk to system lower layers. Capability is the structure fact. 0.64 does the work (step 2). Changing that face (step 3) and its dependents (step 4 / [SD-020](../../TECH-DEBT.md#sd-020)) comes after copyable. Leaving the old face as a **second membership king** is old wiring. Product still digging engines is the old contract. Deleting the face before the hands exist is a prettier soft lock.
 
 ---
 
@@ -110,6 +110,6 @@ Lists exist only if something walks them.
 
 ## Links
 
-- [VISION-0.64](../vision/VISION-0.64.md)  
+- [VISION-0.64](../vision/closed/VISION-0.64.md)  
 - [WORK-DRAIN](../WORK-DRAIN.md)  
 - [structure-materialize-cut](../architecture/appendix/structure-materialize-cut.md)  
