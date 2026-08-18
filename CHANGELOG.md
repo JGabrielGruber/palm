@@ -4,6 +4,9 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+- **CLI doctor uses InspectService.doctor.** One bag with REST / assist / MCP. Host binds `application_host` at spawn; REST no longer assigns it per request.
+- CLI doctor `--format json` emits that bag. Anatomy / admission / neonroot / CS-002 tables render from it. Instance list and definition catalog stay as operator extras.
+
 ## [0.64.0] — 2026-08-18
 
 ### 0.64 — First capability (**theme closed** · José)

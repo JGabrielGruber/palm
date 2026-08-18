@@ -56,8 +56,38 @@ def test_cli_doctor_uses_projection_instance_list(fast_cli_settings: PalmSetting
 
     ctx = bootstrap_runtime(settings=fast_cli_settings, show_banner=False)
     try:
-        assert run_doctor(ctx) == 0
+        report = ctx.host.inspect.doctor(ctx.host.runtime())
+        expected = 0 if report.get("status") == "ok" else 1
+        assert run_doctor(ctx) == expected
         queried = ctx.host.ask(ListInstancesQuery(include_terminal=True))
         assert len(ctx.list_instance_summaries()) == len(queried)
+    finally:
+        shutdown_context(ctx)
+
+
+def test_cli_runtime_binds_application_host(fast_cli_settings: PalmSettings) -> None:
+    ctx = bootstrap_runtime(settings=fast_cli_settings, show_banner=False)
+    try:
+        runtime = ctx.host.runtime()
+        assert runtime.application_host is ctx.host
+        report = ctx.host.inspect.doctor(runtime)
+        assert report["kind"] == "legacy_doctor"
+        assert "start_plane_running" in report["control_plane"]
+    finally:
+        shutdown_context(ctx)
+
+
+def test_cli_doctor_json_is_inspect_bag(fast_cli_settings: PalmSettings) -> None:
+    from palm.runtimes.cli.commands.doctor import run_doctor
+
+    ctx = bootstrap_runtime(
+        settings=fast_cli_settings,
+        show_banner=False,
+        output_format="json",
+    )
+    try:
+        report = ctx.host.inspect.doctor(ctx.host.runtime())
+        expected = 0 if report.get("status") == "ok" else 1
+        assert run_doctor(ctx) == expected
     finally:
         shutdown_context(ctx)

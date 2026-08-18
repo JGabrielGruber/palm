@@ -31,7 +31,8 @@ Do **not** resume 0.63 slice rows. There is no open theme. If outbox shows first
 **Migration:** [MIGRATION-0.64](docs/migrations/MIGRATION-0.64.md)
 
 **`work_drain` is the first real capability.** Spine + costume cut. Copyable: next organ is name + hand + omit. Outbox is 0.65 (seed, not open). Admission contract stays assembly remainder.  
-**Exit:** José (2026-08-18).
+**Exit:** José (2026-08-18).  
+**After close:** CLI `palm doctor` renders `InspectService.doctor` (same bag as REST / assist).
 
 ## 0.63 — Organism assembly (**closed** · José 2026-08-17)
 
