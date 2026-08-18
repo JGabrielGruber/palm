@@ -31,7 +31,7 @@ Do not swap 2 and 3. Do not open SD-020 as a mid-theme dump. Ready / refuse stay
 
 No slice table. Residual: [TECH-DEBT.md](../../TECH-DEBT.md) · [structure-materialize-cut.md](../architecture/appendix/structure-materialize-cut.md).
 
-**Exit:** José, when this organ is a home someone can copy.
+**Exit:** José stamped **copyable** (2026-08-18). The home is name + hand + omit. Theme stays **open** until he closes it. [VISION-0.65](VISION-0.65.md) is not open.
 
 ### Horizons (catch-up · José 2026-08-18)
 
@@ -39,7 +39,7 @@ Themes **classify** the work. They are not theater. If a later cut shows the fir
 
 | Horizon | Status | What it is |
 |---------|--------|------------|
-| **0.64** | **open** | First organ `work_drain`. Costume cut landed. José stamps copyable. |
+| **0.64** | **open** · **copyable** (José 2026-08-18) | First organ `work_drain`. Next organ is name + hand. If a later cut shows costume, that work is still 0.64. |
 | **0.65** | [seed](VISION-0.65.md) — not open | Proof the home copies: **outbox**. Name + hand + kill the old walker in the same cut. |
 | **Assembly remainder** | stays on [VISION-ASSEMBLY](VISION-ASSEMBLY.md) | Steps 3–4: admission sits on capability; dependents stop digging. Not a 0.65 dump. |
 
@@ -59,7 +59,7 @@ Dogfood (`analytics`, `neonroot`) and always-on engine (`workloads`) are not the
 
 **Law that landed:** Structure definition lists the name. Walker loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from boot `ctx` + install `work_plane`. Drain start is `system.background.start`. It reads `supervisor.get("work_drain")` (walker effect), not the definition again, not `host._work_drain_listed`. Host schedule ends at ready. The host does not start the loop again. Coordinator, tests, and status read `runtime.work_plane`. Default wire catalog does not register `work_drain`. Composition / flag do not write the name. Omit is enough. No host `start_plane` alias.
 
-**Do not:** invent definition `requires` (the old DNA-requires idea); reuse VitalityRegistry for hands; open a 0.64 slice table; fan shared types across worktrees; start journal/outbox as a second organ until José says the home is copyable.
+**Do not:** invent definition `requires` (the old DNA-requires idea); reuse VitalityRegistry for hands; open a 0.64 slice table; fan shared types across worktrees; start journal/outbox until José opens 0.65.
 
 **Process:** parallel **read** (explore agents). One **writer** at a time. Parent keeps the contract short. `src/palm/AGENTS.md` §1.1 / §1.2.
 
@@ -71,8 +71,8 @@ Dogfood (`analytics`, `neonroot`) and always-on engine (`workloads`) are not the
 | **B1** | **Landed** — wire catalog does not freelance `work_drain` | Hand is the only register. Unregister-on-unlist stays for reassemble. |
 | **B2** | **Landed** — refuse reads definition capabilities | Composition listing the name is not a refuse input. Omit is enough. |
 | **B3** | **Landed** — composition / flag do not write `work_drain` | Presets, seed-map row, and the settings/deployment fold are gone. Omit is enough. `refuse:background_drain` is not a live wall. |
-| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. No `enable_work_drain_service`. Journal/outbox **hands** = exit proof, not cleanup. Definition `requires` — do not invent. |
+| **C** | **Landed** — no host/coordinator `start_plane` alias | Coordinator and status read `runtime.work_plane`. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. No `enable_work_drain_service`. Outbox proof is [VISION-0.65](VISION-0.65.md). Definition `requires` — do not invent. |
 
 A, B1–B3, C landed. Named leftovers paid: assemble uses `shell.structure`; settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` (supervisor, execution, install, structure), `get_system_planes` (hub), and `first_resolver` for process log. Inventory `admission_inventory_snapshot` stays as eyes.
 
-**Start next session:** costume is cut. José stamps copyable. Outbox is [VISION-0.65](VISION-0.65.md), not a leftover afternoon.
+**Start next session:** copyable is stamped. Theme still open. Outbox is [VISION-0.65](VISION-0.65.md) when José opens it — not a leftover afternoon. Admission contract is assembly remainder (steps 3–4).

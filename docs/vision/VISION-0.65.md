@@ -10,7 +10,7 @@ This file exists so a new session can catch up. It is not a slice table. It does
 
 ## What this names
 
-**Outbox** is the proof that the 0.64 home copies.
+**Outbox** is the proof that the 0.64 home copies. José stamped that home **copyable** (2026-08-18). This seed is still not an open minor.
 
 Today outbox still lives on `composition.has`, a freelance supervisor catalog, and host recover (plus a node-role AND). The cut is: definition lists the name → hand on seats → omit means it does not run → **delete those old walkers in the same cut**.
 
