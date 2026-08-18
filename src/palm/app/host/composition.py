@@ -38,7 +38,6 @@ Capability = Literal[
     "journal",
     "analytics",
     "projections",
-    "neonroot",  # 0.53.8 — hermetic runners available (provider optional at CLI)
     "workloads",  # 0.56 — WorkloadEngine plane (host OFF by default)
 ]
 
@@ -70,7 +69,6 @@ DEFAULT_CAPABILITIES: frozenset[Capability] = frozenset(
         "journal",
         "analytics",
         "projections",
-        "neonroot",
         "workloads",
     }
 )

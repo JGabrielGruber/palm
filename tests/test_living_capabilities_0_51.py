@@ -46,7 +46,6 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
             "journal",
             "analytics",
             "projections",
-            "neonroot",
             "workloads",
         }
     )
@@ -54,15 +53,10 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
 
 def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
     """for_tests default (full_recovery=False): compensation + outbox off, analytics on,
-    journal + projections always available; neonroot declared by default (0.53.8)."""
+    journal + projections always available."""
     assert _caps() == frozenset(
-        {"journal", "projections", "analytics", "neonroot", "workloads"}
+        {"journal", "projections", "analytics", "workloads"}
     )
-
-
-def test_neonroot_capability_toggles() -> None:
-    assert "neonroot" in _caps(enable_neonroot_runners=True)
-    assert "neonroot" not in _caps(enable_neonroot_runners=False)
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
@@ -106,7 +100,7 @@ def test_services_not_gated_by_capabilities_yet() -> None:
     try:
         # lean test settings derive {journal, projections, analytics} ...
         assert host.composition.capabilities == frozenset(
-            {"journal", "projections", "analytics", "neonroot", "workloads"}
+            {"journal", "projections", "analytics", "workloads"}
         )
         # ... yet every service is still built (services are a separate axis)
         for name in (

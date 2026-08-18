@@ -11,7 +11,6 @@ from palm.runners.neonroot.runtime import NeonrootWorkloadRuntime
 
 def neonroot_doctor_section(
     *,
-    composition_has_neonroot: bool | None = None,
     runtime: Any = None,
 ) -> dict[str, Any]:
     """Probe CLI + registry; prefer live bound runtime.health() when present."""
@@ -44,13 +43,6 @@ def neonroot_doctor_section(
             },
         }
 
-    issues: list[str] = []
-    if composition_has_neonroot and not health.get("available"):
-        issues.append(
-            "composition declares capability 'neonroot' but neonroot CLI is not available "
-            f"({(health.get('detail') or {}).get('error') or health.get('message') or 'not on PATH'})"
-        )
-
     return {
         "registered": registered,
         "available": bool(health.get("available")),
@@ -59,12 +51,11 @@ def neonroot_doctor_section(
         "version": (health.get("detail") or {}).get("version"),
         "error": (health.get("detail") or {}).get("error"),
         "health": health,
-        "composition_declares": composition_has_neonroot,
         "role": "workload_runtime",
         "trust": "hermetic",
         "kinds": ("run",),
         "images_hint": ("palm-ci", "palm-docs"),
-        "issues": issues,
+        "issues": [],
         "note": (
             "NeonRoot is a WorkloadRuntime. Map WorkloadSpec via spec_map; "
             "start via WorkloadEngine / step_kind=workload / execution.workloads."

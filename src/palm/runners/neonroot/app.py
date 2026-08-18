@@ -14,22 +14,8 @@ def _neonroot_doctor_contributor(runtime: Any) -> dict[str, Any]:
         neonroot_doctor_section,
     )
 
-    composition_has_neonroot: bool | None = None
-    for attr in ("application_host", "host_bridge", "_host_bridge", "host"):
-        host = getattr(runtime, attr, None)
-        if host is None:
-            continue
-        composition = getattr(host, "composition", None)
-        if composition is not None and hasattr(composition, "has"):
-            try:
-                composition_has_neonroot = bool(composition.has("neonroot"))
-            except Exception:
-                composition_has_neonroot = None
-            break
     try:
-        section = neonroot_doctor_section(
-            composition_has_neonroot=composition_has_neonroot,
-        )
+        section = neonroot_doctor_section(runtime=runtime)
         return {
             "section": {"neonroot": section},
             "issues": neonroot_doctor_issues(section),

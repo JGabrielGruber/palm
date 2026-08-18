@@ -6,6 +6,7 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 - **CLI doctor uses InspectService.doctor.** One bag with REST / assist / MCP. Host binds `application_host` at spawn; REST no longer assigns it per request.
 - CLI doctor `--format json` emits that bag. Anatomy / admission / neonroot / CS-002 tables render from it. Instance list and definition catalog stay as operator extras.
+- NeonRoot is a WorkloadRuntime only. Composition no longer lists `neonroot`. Settings drop `enable_neonroot_runners`. Doctor reports registered / available / health; it does not invent “declared but missing.”
 
 ## [0.64.0] — 2026-08-18
 

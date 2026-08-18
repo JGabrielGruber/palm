@@ -21,7 +21,6 @@ def test_membership_capability_seeds_catalog_complete() -> None:
         "outbox",
         "webhook",
         "analytics",
-        "neonroot",
     }
     assert "work_drain" not in caps
     assert "journal" not in caps  # always-on, no flag
@@ -44,7 +43,7 @@ def test_structure_seed_env_includes_all_membership_seeds() -> None:
     assert "PALM_ENABLE_EVENT_OUTBOX" in member_envs
     assert "PALM_ENABLE_WEBHOOK_DISPATCHER" in member_envs
     assert "PALM_ANALYTICS_ENABLED" in member_envs
-    assert "PALM_ENABLE_NEONROOT_RUNNERS" in member_envs
+    assert "PALM_ENABLE_NEONROOT_RUNNERS" not in member_envs
 
 
 def _lean_settings(**overrides: object) -> PalmSettings:
@@ -58,7 +57,6 @@ def _lean_settings(**overrides: object) -> PalmSettings:
         "enable_outbox_service": False,
         "enable_event_outbox": False,
         "enable_webhook_dispatcher": False,
-        "enable_neonroot_runners": True,
         "analytics_enabled": True,
     }
     base.update(overrides)
@@ -69,7 +67,7 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
     lean = _lean_settings()
     caps = membership_capabilities_from_settings(lean)
     assert ALWAYS_ON_MEMBERSHIP_CAPABILITIES <= caps
-    assert "neonroot" in caps
+    assert "neonroot" not in caps
     assert "analytics" in caps
     assert "compensation" not in caps
     assert "outbox" not in caps
@@ -98,7 +96,6 @@ def test_bootstrap_uses_membership_seed_map() -> None:
         enable_compensation=True,
         enable_event_outbox=False,
         enable_webhook_dispatcher=True,
-        enable_neonroot_runners=False,
         analytics_enabled=False,
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
@@ -108,7 +105,6 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     assert not profile.has("outbox")
     assert profile.has("webhook")
     assert not profile.has("work_drain")
-    assert not profile.has("neonroot")
     assert not profile.has("analytics")
     # Always-on on settings-composed path
     assert profile.has("journal")

@@ -13,20 +13,22 @@ def test_neonroot_doctor_section_available() -> None:
 
     present = NeonrootProbe(available=True, path="/bin/neonroot", version="NeonRoot 0.0.2")
     with patch("palm.runners.neonroot.doctor.probe_neonroot", return_value=present):
-        section = neonroot_doctor_section(composition_has_neonroot=True)
+        section = neonroot_doctor_section()
     assert section["registered"] is True
     assert section["available"] is True
     assert section["role"] == "workload_runtime"
     assert section["issues"] == []
+    assert "composition_declares" not in section
 
 
-def test_neonroot_doctor_soft_issue_when_declared_but_missing() -> None:
+def test_neonroot_doctor_missing_cli_is_unavailable_not_declared() -> None:
     missing = NeonrootProbe(available=False, error="neonroot not found on PATH")
     with patch("palm.runners.neonroot.doctor.probe_neonroot", return_value=missing):
-        section = neonroot_doctor_section(composition_has_neonroot=True)
+        section = neonroot_doctor_section()
+    assert section["registered"] is True
     assert section["available"] is False
-    issues = neonroot_doctor_issues(section)
-    assert any("neonroot" in i for i in issues)
+    assert "composition_declares" not in section
+    assert neonroot_doctor_issues(section) == []
 
 
 def test_build_doctor_report_includes_neonroot() -> None:

@@ -19,7 +19,6 @@ def _lean(**overrides: object) -> PalmSettings:
         "enable_outbox_service": False,
         "enable_event_outbox": True,  # settings want outbox seed
         "enable_webhook_dispatcher": False,
-        "enable_neonroot_runners": False,
         "analytics_enabled": False,
     }
     base.update(overrides)

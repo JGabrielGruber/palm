@@ -79,13 +79,6 @@ MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
         "role": "membership_seed",
         "note": "Feeds composition.analytics at resolve",
     },
-    {
-        "env": "PALM_ENABLE_NEONROOT_RUNNERS",
-        "settings": "enable_neonroot_runners",
-        "capability": "neonroot",
-        "role": "membership_seed",
-        "note": "Feeds composition.neonroot availability; does not install CLI binary",
-    },
 )
 
 # Capabilities always present on settings-composed hosts (no enable_* seed).

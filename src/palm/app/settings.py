@@ -75,9 +75,6 @@ class PalmSettings(BaseSettings):
     enable_compensation: bool = True
     # Membership *seed* (0.63.19) — feeds composition.webhook at resolve only.
     enable_webhook_dispatcher: bool = False
-    # 0.53.8 — membership *seed* for composition capability "neonroot" (0.63.19).
-    # Does not install the CLI; doctor soft-flags when declared but missing on PATH.
-    enable_neonroot_runners: bool = True
     # 0.56 — Workload plane: host subprocess runtime (default OFF; not multi-tenant safe)
     # Packaging / plane install, not composition membership seed.
     workload_host_enabled: bool = False
