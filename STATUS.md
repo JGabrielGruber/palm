@@ -11,7 +11,7 @@
 ### Agent resume (after compact)
 
 Read in order: **this STATUS** → [VISION-0.65](docs/vision/VISION-0.65.md) (**open** · after-compact scout — do not re-harvest) → [VISION-0.64](docs/vision/closed/VISION-0.64.md) (**closed**) → [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) (remainder) → [PALM.md](docs/PALM.md).  
-Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill). **0.65.3** leftover cleanup landed. Floor met. Theme still **open** — José has not exited. Next: exit (ADR-034 Accept) if José locks it. Do not open journal unless José switches. If outbox shows first-organ costume, that work is still 0.64 law.
+Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill). **0.65.3** leftover cleanup landed. **0.65.4** surface / comment costume landed. Floor met. Theme still **open** — José has not exited. Next: exit (ADR-034 Accept) if José locks it. Do not open journal unless José switches. If outbox shows first-organ costume, that work is still 0.64 law.
 
 | Spirit | Decision |
 |--------|----------|
@@ -38,6 +38,7 @@ Do **not** resume 0.63 slice rows. **0.65.2** landed (hand + DNA + walker kill).
 | **0.65.1** | ✅ invert `system.background.start` + grow `CapabilitySeats` |
 | **0.65.2+** | ✅ hand + DNA + kill old walkers |
 | **0.65.3** | ✅ leftover cleanup (`OUTBOX_SERVICE`, docs, dead kwargs) |
+| **0.65.4** | ✅ surface / comment costume (dead host outbox event, stale help) |
 
 **Floor:** invert + copy + omit. **Exit:** José.  
 **Not this theme:** admission / SD-020 · journal · inbound.

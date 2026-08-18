@@ -465,8 +465,6 @@ def _event_type_styled(event_type: str) -> str:
         return f"[red]{event_type}[/]"
     if event_type.startswith("host.command"):
         return f"[cyan]{event_type}[/]"
-    if event_type.startswith("host.outbox"):
-        return f"[yellow]{event_type}[/]"
     if event_type.startswith("host.webhook"):
         return f"[magenta]{event_type}[/]"
     return f"[dim]{event_type}[/]"

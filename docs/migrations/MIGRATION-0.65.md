@@ -17,7 +17,7 @@ Plan stamp `0.65.0` did not break runtime. **0.65.1** landed the skip-string bre
 
 ## Behavior / names that will break
 
-| Was | Now (when the slice lands) |
+| Was | Now |
 |-----|----------------------------|
 | `composition.has("outbox")` as membership | Definition list + omit |
 | `DEFAULT_CONTINUOUS_DEFINITIONS` freelance `outbox` | Hand register / unregister |

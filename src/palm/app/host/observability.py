@@ -96,8 +96,8 @@ class HostObservability:
         slog = get_system_log()
         domain_note = (
             "Orchestration events emit on runtime.event when the runtime is "
-            "started; host.event is coordination only (host.started, journal, "
-            "outbox). Internal inbound and work-drain subscribe to the "
+            "started; host.event is coordination only (host.started, journal). "
+            "Internal inbound and work-drain subscribe to the "
             "orchestration bus. system_log_* is process narrative (0.59.1a), "
             "not the domain event bus."
         )
@@ -213,8 +213,9 @@ class HostObservability:
         domain_note = (
             "0.59.7 mode dogfood: ApplicationHost.for_mode('test'|'safe'|shapes); "
             "server/prod CI use server_port=0. CompositionProfile seeds membership "
-            "except work_drain (definition capabilities after load). 0.63: structure "
-            "admission is law — see structure bag (not a soft dual of membership)."
+            "except work_drain and outbox (definition capabilities after load). "
+            "0.63: structure admission is law — see structure bag "
+            "(not a soft dual of membership)."
         )
         structure_bag = self._structure_packaging()
         return _with_packaging_markers(

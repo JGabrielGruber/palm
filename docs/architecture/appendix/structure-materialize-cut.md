@@ -20,7 +20,7 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 |-------|--------|----------|
 | Core structure | Reconciler + `StructureDefinition.capabilities`. Builtin definitions list `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No definition `requires` / start-fact vocabulary. |
 | System structure | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / inbound are not hands. |
-| Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Outbox still uses a start option. |
+| Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Bare `enable_event_outbox` is packaging. |
 | Host | Definition seed at spawn. Host schedule ends at ready. Host does not start drain. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.structure`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes structure as eyes. |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |
@@ -105,7 +105,7 @@ José stamped **0.64** (2026-08-17). The engineering cut in §3 does not change.
 - Full SD-016 sweep.
 - Provider / cache membership sources (local only).
 - Invent definition `requires` / install-port vocabulary.
-- Land journal / outbox as a second organ before pile B is honest.
+- Land journal as a second organ before pile B is honest.
 
 ---
 
@@ -122,7 +122,7 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **A** | **Landed.** `allow_background_drain` gone. Seed twins gone. | Do not put the field back. |
 | **B1** | **Landed.** Default catalog is empty. Hands register `work_drain` and `outbox`. Unregister-on-unlist stays. | Do not put those names back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
-| **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/outbox/projections. |
-| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Outbox / journal hands when José opens 0.65. No definition `requires`. |
+| **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. | Do not wipe `composition.has` for journal/projections. |
+| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Journal hand later. No definition `requires`. |
 
-**Copyable and closed** (José 2026-08-18) — [VISION-0.64](../../vision/closed/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/VISION-0.65.md) (not open). Do not open [SD-020](../../../TECH-DEBT.md#sd-020) as a mid-theme dump.
+**Copyable and closed** (José 2026-08-18) — [VISION-0.64](../../vision/closed/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/VISION-0.65.md) (**open**). Do not open [SD-020](../../../TECH-DEBT.md#sd-020) as a mid-theme dump.

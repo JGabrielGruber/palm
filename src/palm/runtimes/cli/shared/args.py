@@ -259,7 +259,7 @@ def build_parser() -> argparse.ArgumentParser:
         aliases=["all_in_one"],
         help="Collapsed master+worker process (default host profile)",
     )
-    host_sub.add_parser("master", help="Command acceptance and outbox processor")
+    host_sub.add_parser("master", help="Command acceptance")
     worker_p = host_sub.add_parser("worker", help="Background job-driving workers")
     worker_p.add_argument(
         "--workers",

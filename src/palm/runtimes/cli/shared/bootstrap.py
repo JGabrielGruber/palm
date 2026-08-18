@@ -28,7 +28,7 @@ def bootstrap_runtime(
     Open a CLI session backed by a started :class:`~palm.app.host.ApplicationHost`.
 
     Uses the collapsed ``all_in_one`` profile with CQRS buses, projections,
-    outbox recovery, and compensation wired via :func:`~palm.app.session.create_cli_host`.
+    and compensation via :func:`~palm.app.session.create_cli_host`.
     """
     console = create_console()
     resolved = settings_from_invocation(invocation) if invocation is not None else settings

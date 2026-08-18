@@ -116,7 +116,7 @@ def test_host_emits_lifecycle_events(settings: PalmSettings) -> None:
     assert HostEventType.RUNTIME_REGISTERED in events
 
 
-def test_outbox_service_drains_pending_entries(full_recovery_settings: PalmSettings) -> None:
+def test_supervisor_outbox_drains_pending_entries(full_recovery_settings: PalmSettings) -> None:
     host = ApplicationHost(settings=full_recovery_settings, profile=DeploymentProfile.master_only())
     host.start()
 

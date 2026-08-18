@@ -340,7 +340,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
             "catalog + bootstrap single source. work_drain install reads definition "
             "capabilities after load (not composition.has / BootMode)."
         ),
-        "intent": "paid catalog SD-021 — residual only named packaging duals (outbox start option)",
+        "intent": "paid catalog SD-021 — residual only named packaging duals (bare enable_event_outbox)",
         "status": "paid_catalog_0_63_19",
     },
     {

@@ -536,7 +536,7 @@ def test_walk_started_base_runtime_seats_present() -> None:
         assert by_id[SEAT_SYSTEM_LOG].lineage == LINEAGE_SAMPLED
         assert "capacity" in (by_id[SEAT_SYSTEM_LOG].meta.get("raw") or {})
 
-        # Dynamic supervisor services (work_drain, outbox with outbox flag).
+        # Dynamic supervisor services (work_drain, outbox when DNA lists them).
         service_ids = [
             r.seat_id for r in result.reports if r.seat_id.startswith("supervisor.")
         ]

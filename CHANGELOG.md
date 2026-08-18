@@ -37,6 +37,11 @@ Vision: [VISION-0.65](docs/vision/VISION-0.65.md) · ADR: [034](docs/adr/034-sup
 - Strip dead `enable_outbox_service=False` test kwargs
 - Appendix freelance catalog / B1: default catalog is empty
 
+#### 0.65.4 — surface / comment costume
+- CLI `palm host master` is command acceptance, not an outbox processor
+- Drop unused `host.outbox.processed` event name
+- Host notes and ARCHITECTURE no longer treat host as the outbox owner
+
 ## [0.64.0] — 2026-08-18
 
 ### 0.64 — First capability (**theme closed** · José)

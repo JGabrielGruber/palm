@@ -107,8 +107,8 @@ class PalmSettings(BaseSettings):
         """
         Lightweight settings for unit and integration tests.
 
-        ``full_recovery`` enables compensation, outbox, and projection rebuild
-        paths that dedicated recovery tests assert on.
+        ``full_recovery`` enables compensation, event-outbox store wire, and
+        projection rebuild paths that dedicated recovery tests assert on.
         """
         return cls(
             load_example_definitions=load_examples,

@@ -620,7 +620,7 @@ Wiring path: `PalmSettings` → `runtime_start_options()` → `palm.system.runti
 
 ## ApplicationHost, CQRS, and reliability (0.10)
 
-:class:`~palm.app.host.ApplicationHost` is the top-level orchestrator: role-based runtime spawning, command/query buses, projections, outbox drain, compensation, and startup recovery.
+:class:`~palm.app.host.ApplicationHost` is the top-level orchestrator: role-based runtime spawning, command/query buses, projections, compensation, and startup recovery. The outbox loop is a supervisor member when DNA lists ``outbox``.
 
 ```mermaid
 flowchart TB
@@ -628,6 +628,7 @@ flowchart TB
     cmd[CommandBus]
     qry[QueryBus]
     proj[ProjectionManager]
+    supervisor[SystemSupervisor]
     outbox[OutboxLoopService]
     comp[CompensationCoordinator]
     webhook[WebhookDispatcher]
@@ -635,9 +636,10 @@ flowchart TB
     host --> cmd
     host --> qry
     host --> proj
-    host --> outbox
+    host --> supervisor
+    supervisor --> outbox
     host --> comp
-    outbox --> webhook
+    host --> webhook
 ```
 
 ### Service layer (0.15)
@@ -752,7 +754,7 @@ Host settings:
 
 | Setting | Default | Meaning |
 |---------|---------|---------|
-| `enable_webhook_dispatcher` | `False` | Master outbox service calls webhook targets |
+| `enable_webhook_dispatcher` | `False` | Composition-gated dispatcher delivers outbox events |
 | `webhook_urls` | `[]` | Destination URLs (`PALM_WEBHOOK_URLS`) |
 | `webhook_event_types` | `[]` | Optional filter; empty = all outbox events |
 
