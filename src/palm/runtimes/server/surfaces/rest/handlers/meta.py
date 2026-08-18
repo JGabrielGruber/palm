@@ -35,14 +35,7 @@ def health(ctx: ServerContext, surface_names: list[str]) -> Any:
 
 
 def doctor(ctx: ServerContext, request: ServerRequest) -> Any:
-    # Prefer host-backed control_plane (0.40.3); ServerRuntime.host is bind address
-    runtime = ctx.runtime
-    if ctx.host is not None and not hasattr(runtime, "application_host"):
-        try:
-            runtime.application_host = ctx.host
-        except Exception:
-            pass
-    return ok(ctx.system.doctor(runtime))
+    return ok(ctx.system.doctor(ctx.runtime))
 
 
 def openapi(ctx: ServerContext, request: ServerRequest) -> Any:

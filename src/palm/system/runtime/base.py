@@ -111,6 +111,7 @@ class BaseRuntime:
         self._structure: StructureSeat | None = None
         self._last_boot_walk: list[Any] | None = None
         self._start_options: dict[str, Any] = {}
+        self.application_host: Any | None = None
 
     @property
     def is_started(self) -> bool:

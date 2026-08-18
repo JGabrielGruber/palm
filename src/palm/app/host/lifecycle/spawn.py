@@ -89,6 +89,8 @@ class RuntimeSpawner:
 
     def _emit_runtime_registered(self, name: str, kind: str, runtime: BaseRuntime) -> None:
         host = self._host
+        # One bind site — inspect/doctor packaging. Not a second lifecycle.
+        runtime.application_host = host
         if host._worker_coordinator is not None:
             host._worker_coordinator.note_runtime(name, kind)
         host._event.emit(
