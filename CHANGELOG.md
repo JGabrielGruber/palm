@@ -4,10 +4,13 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.3 — host start_ports.able is drain
+- Host `start_ports.able` is `started ∧ ready ∧ work_drain`. Wait uses a ready-only sibling (`install_admission_able`).
+- Spawn no longer shares one `_started` override onto both planes. Package stamp stays `0.66.0`.
+
 ### 0.67.2 — work-plane able is drain
 - Install-board `able` closes over `has_capability("work_drain")` after ready.
 - Wait / continue keeps the ready query (`admission_able`). Ready is not membership.
-- Host `start_ports.able` still `_started` only (not this slice). Package stamp stays `0.66.0`.
 
 ### 0.67.1 — require_capability
 - Sibling door `require_capability(source, name)` beside ready-only `require_business_admission`.

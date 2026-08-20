@@ -2,8 +2,9 @@
 WorkPlaneCoordinator — host packaging over system start plane + inbound + journal.
 
 Owns host slots (`_inbound` / `_event_journal`). The start plane is
-system-owned — read ``runtime.work_plane``. Host only binds product submit/able
-and reloads catalog. Public methods stay thin delegates.
+system-owned — read ``runtime.work_plane``. Host only binds product submit,
+drain able, ready admission_able, and catalog. Public methods stay thin
+delegates.
 """
 
 from __future__ import annotations
@@ -38,13 +39,14 @@ class WorkPlaneCoordinator:
 
     # ── wiring (called during host start) ────────────────────────────────────
 
-    def start_ports(self) -> tuple[Any, Any]:
-        """Product submit + host able. Seats, not hasattr soup."""
+    def start_ports(self) -> tuple[Any, Any, Any]:
+        """Product submit + drain able + ready admission_able."""
         host = self._host
         return product_start_ports(
             execution=host._execution,
             session=host.session,
             started=lambda: bool(host._started),
+            admission=lambda: host.admission,
         )
 
     def wire_start_ports(self) -> None:
@@ -60,8 +62,8 @@ class WorkPlaneCoordinator:
         install = runtime.install
         if plane is None or not getattr(plane, "is_attached", False) or install is None:
             return
-        submit, able = self.start_ports()
-        install.bind(submit=submit, able=able)
+        submit, able, admission_able = self.start_ports()
+        install.bind(submit=submit, able=able, admission_able=admission_able)
         self.reload_work_triggers()
 
     def wire_inbound(self) -> None:

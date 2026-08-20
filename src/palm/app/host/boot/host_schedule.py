@@ -84,13 +84,14 @@ def build_host_handlers(
                     str(merged.get("structure_definition_id") or "local.embedded")
                 )
             merged["enable_event_outbox"] = definition.has_capability(CAPABILITY_OUTBOX)
-        # Start ports on the install board from spawn — able is host._started
-        # (false until host.ready). System background start may start drain;
-        # the loop idles until able.
+        # Start ports on the install board from spawn — able is drain-shaped
+        # and false until host.ready. Wait uses a ready-only sibling.
+        # System background start may start drain; the loop idles until able.
         if "install_submit" not in options:
-            submit, able = host._workplane.start_ports()
+            submit, able, admission_able = host._workplane.start_ports()
             merged["install_submit"] = submit
             merged["install_able"] = able
+            merged["install_admission_able"] = admission_able
         host._spawner.spawn_runtimes(merged)
 
     def definitions_load(_ctx: BootContext) -> None:

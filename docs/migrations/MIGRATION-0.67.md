@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Execute `0.67.2` landed work-plane `able` as drain membership. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.3` landed host `start_ports.able` as drain membership. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 
@@ -24,4 +24,4 @@ Palm is pre-1.0. Execute `0.67.2` landed work-plane `able` as drain membership. 
 
 `require_business_admission` still fail-closes only on `may_run_business`. Existing call sites need no change.
 
-`able` on the install board stays zero-arg. From 0.67.2 the default closure also reads `work_drain`. Wait uses a ready-only closure. Host spawn may still inject `_started` only. Decorators are not added.
+`able` on the install board stays zero-arg. From 0.67.2 the default closure also reads `work_drain`. Wait uses a ready-only closure. From 0.67.3 host spawn injects drain `install_able` and ready `install_admission_able` (both include host `_started`). Decorators are not added.

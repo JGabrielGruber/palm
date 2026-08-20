@@ -245,8 +245,8 @@ class BaseRuntime:
         def _drain_able() -> bool:
             """Work-plane start port: ready **and** ``work_drain`` installed.
 
-            0.67.2 — ready is not membership. Host ``install_able`` still overrides
-            the board able when spawn injects start ports.
+            0.67.2 — ready is not membership. Host spawn may inject
+            ``install_able`` (drain) and ``install_admission_able`` (ready).
             """
             if not _able():
                 return False
@@ -255,8 +255,9 @@ class BaseRuntime:
         opts = self._start_options
         submit = opts.get("install_submit") or _submit
         override = opts.get("install_able")
+        admission_override = opts.get("install_admission_able")
         able = override or _drain_able
-        admission_able = override or _able
+        admission_able = admission_override or _able
         self._install.bind(
             orchestration=self.orchestration,
             event=self.event,
