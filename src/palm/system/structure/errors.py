@@ -116,6 +116,14 @@ def coerce_admission_snapshot(source: object) -> AdmissionSnapshot | None:
     return None
 
 
+def admission_as_dict(source: object) -> dict[str, Any] | None:
+    """Published snapshot as dict. Always includes ``capabilities`` (default empty)."""
+    snap = coerce_admission_snapshot(source)
+    if snap is None:
+        return None
+    return snap.to_dict()
+
+
 def require_business_admission(source: object) -> AdmissionSnapshot:
     """Fail closed unless *source* publishes ready admission.
 
@@ -135,6 +143,7 @@ def require_business_admission(source: object) -> AdmissionSnapshot:
 
 __all__ = [
     "AdmissionRefusedError",
+    "admission_as_dict",
     "coerce_admission_snapshot",
     "require_business_admission",
 ]

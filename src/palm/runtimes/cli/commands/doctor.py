@@ -202,6 +202,11 @@ def _render_structure(console: Any, report: dict[str, Any]) -> None:
     )
     table.add_row("phase", str(structure.get("phase") or "—"))
     table.add_row("definition_id", str(structure.get("definition_id") or "—"))
+    caps = structure.get("capabilities") or []
+    table.add_row(
+        "capabilities",
+        ", ".join(str(c) for c in caps) if caps else "—",
+    )
     table.add_row("gated paths", str(structure.get("gated_count", "—")))
     table.add_row("paid edges", str(structure.get("paid_edge_count", "—")))
     open_n = int(structure.get("open_residual_count") or 0)

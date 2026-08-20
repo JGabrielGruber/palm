@@ -148,33 +148,23 @@ def _filter_query(items: list[dict[str, Any]], query: str) -> list[dict[str, Any
 
 
 def _admission_present(assist: AssistService | None) -> dict[str, Any] | None:
-    """0.63.21 eyes · 0.63.22 via published admission_gate (not runtime dig)."""
+    """Eyes via published admission_gate (not runtime dig)."""
     if assist is None:
         return None
     try:
-        from palm.system.structure.errors import coerce_admission_snapshot
+        from palm.system.structure.errors import admission_as_dict
 
-        snap = coerce_admission_snapshot(assist.admission_gate())
+        bag = admission_as_dict(assist.admission_gate())
     except Exception:
         return None
-    if snap is None:
+    if bag is None:
         return {
             "may_run_business": False,
             "phase": "missing",
             "note": "no admission snapshot on gate",
+            "capabilities": [],
         }
-    if hasattr(snap, "to_dict"):
-        try:
-            bag = snap.to_dict()
-            if isinstance(bag, dict):
-                return bag
-        except Exception:
-            pass
-    return {
-        "may_run_business": bool(getattr(snap, "may_run_business", False)),
-        "phase": str(getattr(snap, "phase", "")),
-        "definition_id": getattr(snap, "definition_id", None),
-    }
+    return bag
 
 
 def build_menu_page(

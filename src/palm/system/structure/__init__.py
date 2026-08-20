@@ -4,6 +4,7 @@ from palm.system.structure.access import admission_source_from_runtime_resolver
 from palm.system.structure.effects import EffectPort, RecordingEffectPort
 from palm.system.structure.errors import (
     AdmissionRefusedError,
+    admission_as_dict,
     coerce_admission_snapshot,
     require_business_admission,
 )
@@ -105,6 +106,7 @@ __all__ = [
     "load_and_assemble",
     "membership_capabilities_from_settings",
     "admission_source_from_runtime_resolver",
+    "admission_as_dict",
     "coerce_admission_snapshot",
     "require_business_admission",
     "resolve_seed_definition",

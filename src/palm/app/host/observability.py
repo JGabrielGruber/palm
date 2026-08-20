@@ -256,15 +256,14 @@ class HostObservability:
             runtime = host._app.runtime()
             snap = admission_inventory_snapshot(runtime)
             live = snap.get("live") or {}
+            adm = live.get("admission") or {}
             return {
                 "role": "admission_pointer",
                 "eyes": "palm.system.vitality seat structure",
-                "may_run_business": (live.get("admission") or {}).get(
-                    "may_run_business"
-                ),
-                "definition_id": live.get("definition_id")
-                or (live.get("admission") or {}).get("definition_id"),
-                "phase": (live.get("admission") or {}).get("phase"),
+                "may_run_business": adm.get("may_run_business"),
+                "definition_id": live.get("definition_id") or adm.get("definition_id"),
+                "phase": adm.get("phase"),
+                "capabilities": list(adm.get("capabilities") or []),
                 "gated_count": snap.get("gated_count"),
                 "readiness_edge_count": snap.get("readiness_edge_count"),
                 # 0.63.38 exit residuals (cartography, not dual ready)

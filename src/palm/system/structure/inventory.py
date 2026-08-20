@@ -649,14 +649,11 @@ def admission_inventory_snapshot(runtime: Any | None = None) -> dict[str, Any]:
         "is_started": bool(getattr(runtime, "is_started", False)),
         "has_structure_seat": structure is not None,
     }
-    if admission is not None and hasattr(admission, "to_dict"):
-        live["admission"] = admission.to_dict()
-    elif admission is not None:
-        live["admission"] = {
-            "may_run_business": bool(getattr(admission, "may_run_business", False)),
-            "phase": str(getattr(admission, "phase", "")),
-            "definition_id": getattr(admission, "definition_id", None),
-        }
+    from palm.system.structure.errors import admission_as_dict
+
+    bag = admission_as_dict(admission) if admission is not None else None
+    if bag is not None:
+        live["admission"] = bag
     if structure is not None:
         definition = getattr(structure, "definition", None)
         live["definition_id"] = (

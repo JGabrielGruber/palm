@@ -131,6 +131,7 @@ def _report_structure(instance: Any, seat: Any) -> SeatReport:
             "may_run_business": may,
             "definition_id": def_id,
             "definition_version": def_ver,
+            "capabilities": list((admission or {}).get("capabilities") or []),
         },
         notes=notes,
         meta={
