@@ -257,7 +257,15 @@ class WorkPlaneService:
         return self._store.enqueue(intent)
 
     def tick_schedules(self) -> int:
+        """Enqueue due schedules when the plane is able (drain membership).
+
+        Same query as :meth:`tick`. Ready without ``work_drain`` does not
+        advance the schedule clock (0.67.5). Background poll already skipped
+        this when not able; the explicit path now matches.
+        """
         if self._schedules is None:
+            return 0
+        if not self.is_able():
             return 0
         return len(self._schedules.tick(limit=self._batch_size))
 

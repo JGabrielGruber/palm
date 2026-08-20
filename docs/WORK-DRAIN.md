@@ -69,6 +69,8 @@ Honesty: claim + drive pools improve **overlap** under I/O/wait — not all host
 host.tick_work(limit=10)  # also runs due schedules when schedules=True (default)
 ```
 
+`tick_work` / `tick_schedules` run when the work plane is able (`started ∧ ready ∧ work_drain`). Ready without the organ does not fire or advance `next_fire_at` (0.67.5).
+
 Example packs (todos, inbound tests) use this path so behavior stays deterministic.
 
 ## Ops visibility

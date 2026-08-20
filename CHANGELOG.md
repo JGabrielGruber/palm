@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.5 — schedule fire uses drain able
+- Work-plane `tick_schedules` uses the same able query as `tick` (`started ∧ ready ∧ work_drain`). Host `tick_work` follows. Ready without the organ does not advance the schedule clock.
+- Package stamp stays `0.66.0`.
+
 ### 0.67.4 — capability refused surface voice
 - Surfaces map `CapabilityRefusedError` to `capability_refused` (REST/MCP **409**, CLI/SSR/WS brand). Not a 500 and not `admission_refused`.
 - Existing start/continue handlers pick up REST/MCP via the current maybe-helpers. Package stamp stays `0.66.0`.

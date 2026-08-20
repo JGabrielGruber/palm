@@ -513,7 +513,7 @@ boot (system)
 | [VISION-TUNNELS](vision/VISION-TUNNELS.md) | Reach and neighborhood after home is known; mesh *feel*, tree *law* |
 | [VISION-GROVE](vision/VISION-GROVE.md) | Multi-Palm organization crown; continuous interface |
 
-**Assembly:** authority issues definition; pure engine reconciles; system applies effect intents; **admission** gates business that needs ground and publishes installed capabilities; an act that needs an organ uses `require_capability`; work-plane `able` (kernel and host start ports) is drain membership, wait stays ready; surfaces speak `capability_refused` for the organ door; clients use ports; composition root only wires. New definition → reassemble. Theme: [VISION-0.67](vision/VISION-0.67.md) (**open**) · prior [VISION-0.66](vision/closed/VISION-0.66.md) (**closed**) · law: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md).
+**Assembly:** authority issues definition; pure engine reconciles; system applies effect intents; **admission** gates business that needs ground and publishes installed capabilities; an act that needs an organ uses `require_capability`; work-plane `able` (kernel and host start ports) is drain membership, wait stays ready; surfaces speak `capability_refused` for the organ door; schedule fire uses the same able as tick; clients use ports; composition root only wires. New definition → reassemble. Theme: [VISION-0.67](vision/VISION-0.67.md) (**open**) · prior [VISION-0.66](vision/closed/VISION-0.66.md) (**closed**) · law: [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md).
 
 **Tunnels do not own vertical/horizontal law.** They own **reach** on top of it.  
 **Grove does not invent recursion.** It grows org conversation once assembly and tunnels are boring.

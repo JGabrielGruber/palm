@@ -16,6 +16,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "able = started ∧ ready ∧ work_drain (0.67.2); wait stays ready",
     },
     {
+        "id": "work_plane.tick_schedules",
+        "slice": "0.67.5",
+        "law": "tick_schedules uses the same able as tick (drain); host tick_work follows",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -613,6 +618,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid surface honest voice for missing organ",
         "status": "paid_0_67_4",
+    },
+    {
+        "id": "work_plane.tick_schedules_edge",
+        "note": (
+            "0.67.5: tick_schedules fail-closed on work-plane able (ready then "
+            "work_drain). Host tick_work follows. Background poll already skipped "
+            "when not able. ScheduleRegistry.tick stays a store helper."
+        ),
+        "intent": "paid schedule fire as drain query, not ready-as-membership",
+        "status": "paid_0_67_5",
     },
 )
 
