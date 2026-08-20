@@ -49,3 +49,14 @@ Record decisions in ADRs, [principles.md](../principles.md), or glossary when lo
 ## Package diagram (next SE step)
 
 - First diagram: package families only, or include `core.structure` / `system.structure` split in v1?
+
+---
+
+## Navigator (queue seed — not locked)
+
+Seed: [VISION-NAVIGATOR](../../vision/VISION-NAVIGATOR.md). José named the seed **2026-08-19**. Not an ADR.
+
+- Kit package name for the presentation adapter (`palm.kits…`)?
+- Default operator-guidance definition: catalog tag vs structure/settings seed?
+- When (if ever) does definition visibility become a system interface beside admission?
+- Surface as a separate OS process vs in-process adapter — first dogfood?

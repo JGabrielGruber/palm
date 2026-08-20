@@ -16,10 +16,25 @@
 - Do not rewrite all legacy docs only to meet STE.  
 - When you touch a section, improve that section.
 
+## Talk vs law (2026-08-19)
+
+Conversation with José is analogical. Do **not** treat spoken words as types.
+
+When you **translate** talk into project docs:
+
+1. **Law** (PALM.md, ADR, architecture vault, STATUS, migrations) uses **computer-science** terms: client, adapter, session, catalog, definition, entry point, process, facade.  
+2. **Teaching** may keep one spoken line (rails, navigator, Next) and then switch to the law term. Mark the spoken word as teaching.  
+3. **PHILOSOPHY.md** may keep living language. It is not ontology.  
+4. **STE** means short sentences and **one meaning per locked term**. STE is **not** a closed dictionary. Do not refuse a CS word because it is missing from the term list below. Do not keep a talk word because “same word.”
+
+**Clean old docs:** living files still treat metaphor and talk as types (Assist as the only operator, feudal/biology as law). That is **SD-022**. When you touch a law file for substance, replace talk-as-type with CS. Move leftover metaphor to [architecture/appendix/metaphor.md](architecture/appendix/metaphor.md) or PHILOSOPHY. No big-bang rewrite.
+
+Seed that uses this split: [VISION-NAVIGATOR](vision/VISION-NAVIGATOR.md).
+
 ## Style rules (practical)
 
 1. Prefer **short sentences**. Aim for one idea per sentence.  
-2. Use the **same word** for the same idea (port, plane, system, shared, product, surface).  
+2. Use the **same word** for the same **locked** idea (port, plane, system, shared, product, surface).  
 3. Prefer **active voice**.  
 4. Prefer **tables and lists** for structure.  
 5. Define a term once. Then reuse it.  

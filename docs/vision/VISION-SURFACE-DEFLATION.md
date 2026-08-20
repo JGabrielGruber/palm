@@ -4,6 +4,7 @@
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · session law [VISION-0.58](closed/VISION-0.58.md) (**closed**) · [ADR-027](../adr/027-session-plane.md)  
 **Debt:** [TECH-DEBT.md](../../TECH-DEBT.md) **SU-*** · **SI-002** / **SI-006** / **SI-010** · **SI-016** residual  
+**Grow (not compost):** [VISION-NAVIGATOR](VISION-NAVIGATOR.md) — operator-guidance definition + presentation adapter.  
 **North star:** [VISION-GROVE](VISION-GROVE.md)
 
 ---
@@ -73,7 +74,7 @@ Precision of file paths is not the point. **Intent** and **drag** are.
 | **Discovery** | Surfaces need an **envelope**, not only raw flow inspect. |
 | **Impact** | Product handles still named “session” for **instance** (SI-002). Still useful; still a vocabulary trap. |
 | **Dogfood today** | Assist walks under BoundSurface; system session is owner. |
-| **Later** | Thin **AssistWalk** (instance-true) or cut handle layer and rebuild from SessionService + instance verbs. |
+| **Later** | Thin **AssistWalk** (instance-true) or cut handle layer and rebuild from SessionService + instance verbs. Intended split: [VISION-NAVIGATOR](VISION-NAVIGATOR.md). |
 
 ### 3.3 CLI / REPL
 
@@ -152,6 +153,8 @@ SessionService                      ← product door
     ├─ Walk verbs (instance)        ← inspect/input/… (honest name)
     └─ Wait / work / workload       ← start & continue law unchanged
 ```
+
+**Grow beside this compost:** presentation adapter + operator-guidance definitions — [VISION-NAVIGATOR](VISION-NAVIGATOR.md).
 
 **Out of scope for surface deflation:** full user plane, Grove mesh, shared plane-store framework (SI-014).  
 **Boot phases (SD-014)** are paid under **[VISION-0.59](closed/VISION-0.59.md)** (open) — do not mix surface compost into boot slices.

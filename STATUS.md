@@ -1,10 +1,10 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.65.0` · **Active theme:** none · **Prior closed:** **`0.65` Outbox proof** · **`0.64` First capability** · **`0.63` Organism assembly** · **`0.62` Multi-claimer work drain** · **`0.61` Living-kernel vitality** · **`0.60` Supervisor + work plane** · **`0.59` System Boot** · **`0.58` Session** · **`0.57` System** · **`0.56` Workload** · **`0.55` Reactive**  
-**Last Updated:** August 18, 2026 · **Theme closed:** **0.65** at `0.65.0` (José 2026-08-18). No open minor.  
+**Last Updated:** August 19, 2026 · **Theme closed:** **0.65** at `0.65.0` (José 2026-08-18). No open minor. Seed **navigator** named (not a minor).  
 **System map:** [docs/PALM.md](docs/PALM.md) · closed [VISION-0.65](docs/vision/closed/VISION-0.65.md) · [ADR-034](docs/adr/034-supervised-start-walks-registration.md) **Accepted** · closed [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) **Accepted** · closed [VISION-0.63](docs/vision/closed/VISION-0.63.md) · [ADR-032](docs/adr/032-organism-assembly.md) **Accepted** · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) · closed [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) **Accepted**  
 **Migration / release:** [MIGRATION-0.65](docs/migrations/MIGRATION-0.65.md) · prior [MIGRATION-0.64](docs/migrations/MIGRATION-0.64.md) · [MIGRATION-0.63](docs/migrations/MIGRATION-0.63.md) · [MIGRATION-0.62](docs/migrations/MIGRATION-0.62.md) · [RELEASE-0.62.8](docs/releases/RELEASE-0.62.8.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** · **SD-021** · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-*** · surface seed [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · navigator seed [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) · archive [docs/audit/TECH-DEBT-ERA-0.45.md](docs/audit/TECH-DEBT-ERA-0.45.md)  
 **Library:** [docs/LIBRARY.md](docs/LIBRARY.md) · [docs/wiki/](docs/wiki/index.md)  
 **Maturity:** Wizard · MCP · Assist · composition · reactive law · workload place-registry scout · **system + kits** · **session plane** · **boot + modes** · **supervisor + work plane** · system log **live** · **vitality + Inspect** · **capacity / multi-claimer** · **assembly (0.63 closed)** · **first capability (0.64 closed)** · **outbox proof (0.65 closed)** → [tunnels](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md).
 
@@ -22,7 +22,8 @@ Do **not** resume 0.63 / 0.65 slice rows. **0.65 closed** (José 2026-08-18). Ou
 | **0.63 closed** | José (2026-08-17) — admission floor real; slice queue crushed |
 | **ADR-032** | [032](docs/adr/032-organism-assembly.md) **Accepted** |
 | **ADR-033** | [033](docs/adr/033-one-walker.md) **Accepted** — old wiring dies in the same cut |
-| **Later seeds** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · workload remainder |
+| **Navigator seed** | [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) named (José 2026-08-19). Not a minor. Talk vs law: [WRITING.md](docs/WRITING.md). **SD-022** |
+| **Later seeds** | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) · [SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) · [NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) · workload remainder |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 
 ## 0.65 — Outbox as the proof cut (**closed** · José 2026-08-18 · `0.65.0`)

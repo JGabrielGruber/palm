@@ -5,7 +5,7 @@
 **Role:** This file is the **map of Palm as a whole**. Use it first.  
 **Detail:** Link out. Do not replace this map with a second full copy.
 
-**Related:** [architecture/](architecture/README.md) (**intended architecture** · C4 SE vault) · [VISION-0.62](vision/closed/VISION-0.62.md) (multi-claimer capacity **closed** `0.62.8`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Accepted** · [VISION-0.61](vision/closed/VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](vision/closed/VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](vision/closed/VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](vision/closed/VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-0.64](vision/closed/VISION-0.64.md) (**closed**) · [VISION-0.63](vision/closed/VISION-0.63.md) (assembly **closed**) · [ADR-032](adr/032-organism-assembly.md) **Accepted** · [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) (seed law) · [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) (queue) · [VISION-VITALITY](vision/closed/VISION-VITALITY.md) (seed essay) · [VISION-0.57](vision/closed/VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](vision/VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (mode router) · [src/palm/AGENTS.md](../src/palm/AGENTS.md) (development) · [architecture/AGENTS.md](architecture/AGENTS.md) (intended architecture) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
+**Related:** [architecture/](architecture/README.md) (**intended architecture** · C4 SE vault) · [VISION-0.62](vision/closed/VISION-0.62.md) (multi-claimer capacity **closed** `0.62.8`) · [ADR-031](adr/031-multi-claimer-work-drain.md) **Accepted** · [VISION-0.61](vision/closed/VISION-0.61.md) (vitality **closed** `0.61.13`) · [ADR-030](adr/030-system-vitality.md) **Accepted** · [VISION-0.60](vision/closed/VISION-0.60.md) (supervisor + work plane **closed**) · [ADR-029](adr/029-system-supervisor.md) **Accepted** · [VISION-0.59](vision/closed/VISION-0.59.md) (boot **closed**) · [ADR-028](adr/028-system-boot.md) **Accepted** · [VISION-0.58](vision/closed/VISION-0.58.md) (session **closed**) · [ADR-027](adr/027-session-plane.md) **Accepted** · [VISION-0.64](vision/closed/VISION-0.64.md) (**closed**) · [VISION-0.63](vision/closed/VISION-0.63.md) (assembly **closed**) · [ADR-032](adr/032-organism-assembly.md) **Accepted** · [VISION-ASSEMBLY](vision/VISION-ASSEMBLY.md) (seed law) · [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md) (queue) · [VISION-NAVIGATOR](vision/VISION-NAVIGATOR.md) (queue) · [VISION-VITALITY](vision/closed/VISION-VITALITY.md) (seed essay) · [VISION-0.57](vision/closed/VISION-0.57.md) · [ADR-026](adr/026-palm-system-layer.md) · [WRITING.md](WRITING.md) · [VISION-GROVE](vision/VISION-GROVE.md) · [AGENTS.md](../AGENTS.md) (mode router) · [src/palm/AGENTS.md](../src/palm/AGENTS.md) (development) · [architecture/AGENTS.md](architecture/AGENTS.md) (intended architecture) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [STATUS.md](../STATUS.md)
 
 ---
 
@@ -330,7 +330,7 @@ Then call **system ports** (target). Today many paths call engines on a resolved
 | **Definitions** | Catalog read/write of definitions |
 | **Design** | Propose → impact → commit definition change |
 | **Execution** | Run flows, processes, provider invoke, workloads |
-| **Assist** | Meta-surface: discover, drive, present next step |
+| **Assist** | As-built operator conversation (discover, drive, present). Intended: guidance is a **catalog definition**; present/bind is a **presentation adapter** (kit). Seed: [VISION-NAVIGATOR](vision/VISION-NAVIGATOR.md). Compost: [VISION-SURFACE-DEFLATION](vision/VISION-SURFACE-DEFLATION.md). |
 | **Inspect** (product door) | Doctor / top / list / cancel present — **not** the kernel layer (**SD-007** paid 0.61.4) |
 | **Analytics** | Datasets and dashboards |
 
@@ -354,7 +354,7 @@ Stay thin.
 | Embedded | In-process library runtime |
 | Daemon | Long-lived worker |
 | Server | HTTP, Explorer SSR, WebSocket assist |
-| CLI | Terminal commands and REPL |
+| CLI | Stdio / REPL surface (command forest is compost — [VISION-NAVIGATOR](vision/VISION-NAVIGATOR.md)) |
 | MCP | Agent tools and resources |
 
 Surfaces must not invent a second semantic model.

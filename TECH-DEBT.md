@@ -51,6 +51,7 @@ This file holds **what still needs work** plus a **master index** of all IDs.
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
 | [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.63 closed; residual under 0.64) |
 | [SD-021](#sd-021) | Profile / composition / env as parallel structure king | S2 | L | **0.63** growth | open (seed map + purge) |
+| [SD-022](#sd-022) | Law docs treat talk/metaphor as types | S3 | L | ongoing | open (named 2026-08-19) |
 
 ### Surface debt (SU)
 
@@ -215,6 +216,25 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 ---
 
 
+### SD-022 — Law docs treat talk/metaphor as types
+
+<a id="sd-022"></a>
+
+**Severity:** S3 · **Effort:** L · **Theme:** standing docs (not a minor)
+
+**Observation:** Living law files treat **spoken and metaphorical words as types** (Assist as the only operator, feudal/biology as ontology, “Terminal” as if a package). STE “same word” cemented the leak. Architecture already splits metaphor vs engineering: [appendix/metaphor.md](docs/architecture/appendix/metaphor.md).
+
+This is **not** SD-010 (dense prose). This is **wrong ontology**.
+
+**Target:** When a law file is touched for substance, replace talk-as-type with computer-science terms. Move leftover metaphor to the appendix or [PHILOSOPHY.md](PHILOSOPHY.md). Rule: [WRITING.md](docs/WRITING.md) *Talk vs law*. Example split: [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md). No big-bang rewrite.
+
+**Do not:** Freeze a spoken word because it is familiar. Refuse a CS word because it is missing from the STE term list.
+
+**Status:** open (named 2026-08-19).
+
+---
+
+
 ### SD-010 — STE rewrite backlog
 
 **Severity:** S4 · **Effort:** L
@@ -223,6 +243,8 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 ARCHITECTURE, README, many VISION files remain dense legacy.
 
 **Target:** Rewrite when a file is touched for substance. No big-bang rewrite required for 0.57 exit.
+
+**Related:** [SD-022](#sd-022) is vocabulary/ontology, not density.
 
 ---
 
@@ -555,6 +577,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Closed 0.62** — [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) Accepted |
 | **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63 / 0.64 closed** · [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) Accepted · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
+| **Navigator** | SD-022 · Assist as product bag | Operator-guidance definition + presentation adapter — [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) (queue seed; not open) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
 | **User plane + session impersonation** | D11 · SI-015 bare residual | Principal **acts as** owning session — not dual-own |
 | **Delegate / team session membership** | growth | Shared walk under one owner session |
