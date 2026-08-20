@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any
 from palm.app.host.workplane.start_ports import product_start_ports
 from palm.common.events import wire_event_journal as _wire_event_journal
 from palm.common.events.consumers import consume_for_projections, consume_for_webhooks
+from palm.core.structure import CAPABILITY_JOURNAL
 from palm.system.subsystems.planes.work.inbound import InboundBindingService
 from palm.system.subsystems.supervisor import CallableSystemService
 
@@ -102,11 +103,8 @@ class WorkPlaneCoordinator:
 
     def wire_event_journal(self) -> None:
         host = self._host
-        # 0.51.4: gated by the "journal" capability. The resolver always derives it
-        # (journal has no settings flag), so this is behaviour-preserving for
-        # settings-composed hosts; an explicit lean composition (e.g. embedded()) that
-        # omits it correctly wires no journal.
-        if not host.composition.has("journal"):
+        # 0.67.7: DNA listing + hand is membership. Host attach follows the face.
+        if not host.admission.has_capability(CAPABILITY_JOURNAL):
             return
         if not host._app.storage.is_initialized:
             return

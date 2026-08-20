@@ -152,18 +152,18 @@ def _capabilities_from_settings(
     """Derive the *available* capabilities for membership (0.51.1 / 0.59.5).
 
     This is the composition axis — **membership seed**. Runtime gates for
-    capabilities other than ``work_drain`` and ``outbox`` still read
-    ``composition.has(...)``. They do not re-OR deployment flags.
+    capabilities other than ``work_drain``, ``outbox``, and ``journal`` still
+    read ``composition.has(...)``. They do not re-OR deployment flags.
 
-    ``work_drain`` and ``outbox`` are not written here. Structure definition
-    ``capabilities`` list them.
+    ``work_drain``, ``outbox``, and ``journal`` are not written here. Structure
+    definition ``capabilities`` list them.
 
     **0.64 / SD-021:** flag → capability map lives in
     ``palm.system.structure.seed.MEMBERSHIP_CAPABILITY_SEEDS``.
 
-    ``journal``, ``projections``, and ``workloads`` have no settings flag: they
-    are always available on a settings-composed host (a lean *explicit*
-    composition can still omit them). See VISION-0.51 / ADR-020 / ADR-028 D4.
+    ``projections`` and ``workloads`` have no settings flag: they are always
+    available on a settings-composed host (a lean *explicit* composition can
+    still omit them). See VISION-0.51 / ADR-020 / ADR-028 D4.
     """
     from palm.system.structure.seed import membership_capabilities_from_settings
 

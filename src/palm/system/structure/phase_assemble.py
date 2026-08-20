@@ -81,12 +81,20 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
     plane = board.work_plane if board is not None else None
     outbox_store = board.outbox_store if board is not None else None
     outbox_processor = board.outbox_processor if board is not None else None
+    event = board.event if board is not None else None
+    if event is None:
+        event = ctx.event
+    storage = board.storage if board is not None else None
+    if storage is None:
+        storage = ctx.storage
     seat.materialize(
         CapabilitySeats(
             supervisor=supervisor,
             work_plane=plane,
             outbox_store=outbox_store,
             outbox_processor=outbox_processor,
+            event=event,
+            storage=storage,
         )
     )
 

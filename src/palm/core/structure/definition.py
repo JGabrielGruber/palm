@@ -19,10 +19,13 @@ LOCAL_ALL_IN_ONE_ID = "local.all_in_one"
 LOCAL_WORKER_ID = "local.worker"
 LOCAL_MCP_ID = "local.mcp"
 
-# Local install names. Phenotypes that list drain also list outbox (0.65).
+# Local install names. Drain phenotypes list outbox (0.65). Journal is attach
+# (0.67.7): cli/server/all_in_one/mcp list; embedded/worker omit.
 CAPABILITY_WORK_DRAIN = "work_drain"
 CAPABILITY_OUTBOX = "outbox"
+CAPABILITY_JOURNAL = "journal"
 _DRAIN_AND_OUTBOX = frozenset({CAPABILITY_WORK_DRAIN, CAPABILITY_OUTBOX})
+_DRAIN_OUTBOX_JOURNAL = _DRAIN_AND_OUTBOX | {CAPABILITY_JOURNAL}
 
 
 @dataclass(frozen=True, slots=True)
@@ -95,7 +98,7 @@ def local_cli(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="cli",
         refuse=frozenset({"server_surfaces"}),
-        capabilities=_DRAIN_AND_OUTBOX,
+        capabilities=_DRAIN_OUTBOX_JOURNAL,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -108,7 +111,7 @@ def local_server(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="server",
         refuse=frozenset(),
-        capabilities=_DRAIN_AND_OUTBOX,
+        capabilities=_DRAIN_OUTBOX_JOURNAL,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -121,7 +124,7 @@ def local_all_in_one(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="all_in_one",
         refuse=frozenset(),
-        capabilities=_DRAIN_AND_OUTBOX,
+        capabilities=_DRAIN_OUTBOX_JOURNAL,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -147,7 +150,7 @@ def local_mcp(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="mcp",
         refuse=frozenset({"http_server_surfaces"}),
-        capabilities=frozenset(),
+        capabilities=frozenset({CAPABILITY_JOURNAL}),
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -184,6 +187,7 @@ def resolve_builtin_definition(definition_id: str, *, version: str = "1") -> Str
 
 
 __all__ = [
+    "CAPABILITY_JOURNAL",
     "CAPABILITY_OUTBOX",
     "CAPABILITY_WORK_DRAIN",
     "LOCAL_ALL_IN_ONE_ID",

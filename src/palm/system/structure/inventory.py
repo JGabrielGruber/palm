@@ -26,6 +26,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "work_cycle drain uses plane tick able; ready without work_drain does not process",
     },
     {
+        "id": "structure.journal_materialize",
+        "slice": "0.67.7",
+        "law": "journal is DNA list + attach hand; composition.has is not membership",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -174,10 +179,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
     {
         "id": "execution.resume_job",
         "slice": "0.63.25",
-        "law": (
-            "ExecutionPort.resume_job requires admission · product re-drive "
-            "fail closed"
-        ),
+        "law": ("ExecutionPort.resume_job requires admission · product re-drive " "fail closed"),
     },
     {
         "id": "runtime.provide_input",
@@ -381,7 +383,6 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "intent": "name residual — packaging seed for bare start, not dual on host path",
         "status": "named_0_63_28",
     },
-
     {
         "id": "place_registry.os_spawn",
         "note": (
@@ -429,7 +430,6 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "intent": "name residual — control path, not business start; revisit if product misuses",
         "status": "named_0_63_27",
     },
-
     {
         "id": "execution.resource_engine_dig",
         "note": (
@@ -644,6 +644,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "intent": "paid vitality work_cycle freeze as drain membership",
         "status": "paid_0_67_6",
     },
+    {
+        "id": "structure.journal_composition_king",
+        "note": (
+            "0.67.7: journal is name + attach hand + omit. DNA lists it on "
+            "cli/server/all_in_one/mcp; embedded/worker omit. Host attach "
+            "reads has_capability, not composition.has. Not a no-op organ."
+        ),
+        "intent": "paid journal composition king as copyable DNA + hand",
+        "status": "paid_0_67_7",
+    },
 )
 
 
@@ -705,12 +715,8 @@ def admission_inventory_snapshot(runtime: Any | None = None) -> dict[str, Any]:
         live["admission"] = bag
     if structure is not None:
         definition = getattr(structure, "definition", None)
-        live["definition_id"] = (
-            getattr(definition, "id", None) if definition is not None else None
-        )
-        live["refuse"] = (
-            sorted(getattr(definition, "refuse", ())) if definition is not None else []
-        )
+        live["definition_id"] = getattr(definition, "id", None) if definition is not None else None
+        live["refuse"] = sorted(getattr(definition, "refuse", ())) if definition is not None else []
     body["live"] = live
     return body
 

@@ -4,6 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.7 — journal DNA + attach hand
+- `journal` is name + attach hand + omit. DNA lists it on `local.cli` / `server` / `all_in_one` / `mcp`; `embedded` / `worker` omit.
+- Host attach reads `has_capability("journal")`, not `composition.has`. Composition/seed no longer write the name.
+- Not a no-op organ. Not all of SD-021. Package stamp stays `0.66.0`.
+
 ### 0.67.6 — vitality work_cycle drain proofs
 - Vitality `work_cycle` drain proofs pin `local.cli`. Embedded ready still enqueues; tick does not process.
 - Package stamp stays `0.66.0`.

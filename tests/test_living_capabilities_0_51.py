@@ -35,14 +35,14 @@ def _caps(**overrides: object) -> frozenset[str]:
 
 
 def test_full_recovery_derives_exactly_default_capabilities() -> None:
-    """full_recovery turns on compensation; with analytics + the always-on journal
-    and projections that is exactly DEFAULT_CAPABILITIES — the production-default shape."""
+    """full_recovery turns on compensation; with analytics + always-on
+    projections that is exactly DEFAULT_CAPABILITIES — the production-default shape.
+    journal is DNA, not a composition seed (0.67.7)."""
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
         {
             "compensation",
-            "journal",
             "analytics",
             "projections",
             "workloads",
@@ -52,10 +52,8 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
 
 def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
     """for_tests default (full_recovery=False): compensation + outbox off, analytics on,
-    journal + projections always available."""
-    assert _caps() == frozenset(
-        {"journal", "projections", "analytics", "workloads"}
-    )
+    projections always available. journal is DNA, not composition."""
+    assert _caps() == frozenset({"projections", "analytics", "workloads"})
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
@@ -70,11 +68,10 @@ def test_each_flag_toggles_exactly_its_capability() -> None:
     assert "analytics" not in _caps(analytics_enabled=False)
 
 
-def test_journal_is_always_available_no_flag() -> None:
-    """journal has no enable_* flag — it is wired on infra-readiness, so it is always
-    part of a settings-derived composition."""
-    assert "journal" in _caps()
-    assert "journal" in _caps(
+def test_journal_is_not_a_composition_seed() -> None:
+    """journal has no enable_* flag and is not a composition seed (0.67.7 DNA + hand)."""
+    assert "journal" not in _caps()
+    assert "journal" not in _caps(
         enable_compensation=False,
         enable_event_outbox=False,
         analytics_enabled=False,
@@ -97,10 +94,8 @@ def test_services_not_gated_by_capabilities_yet() -> None:
     host = ApplicationHost(settings=PalmSettings.for_tests(load_examples=False))
     host.start()
     try:
-        # lean test settings derive {journal, projections, analytics} ...
-        assert host.composition.capabilities == frozenset(
-            {"journal", "projections", "analytics", "workloads"}
-        )
+        # lean test settings derive {projections, analytics, workloads} ...
+        assert host.composition.capabilities == frozenset({"projections", "analytics", "workloads"})
         # ... yet every service is still built (services are a separate axis)
         for name in (
             "inspect",
@@ -263,13 +258,14 @@ def test_work_drain_settings_side_routes_through_the_capability() -> None:
 
 
 def test_journal_gated_by_capability() -> None:
-    """Journal wiring is gated by composition.has('journal'). The resolver always derives
-    it (no settings flag), so default hosts keep their journal; an explicit lean
-    composition that omits it wires none."""
+    """Journal wiring is gated by DNA ``has_capability('journal')`` (0.67.7).
+    Default hosts list it on server/cli DNA; embedded omits it."""
+    from palm.core.structure import CAPABILITY_JOURNAL
+
     default = ApplicationHost(settings=PalmSettings.for_tests(load_examples=False))
     default.start()
     try:
-        assert "journal" in default.composition.capabilities
+        assert default.admission.has_capability(CAPABILITY_JOURNAL)
         assert default.event_journal is not None
     finally:
         default.shutdown()
@@ -278,9 +274,9 @@ def test_journal_gated_by_capability() -> None:
         settings=PalmSettings.for_tests(load_examples=False),
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    lean.start()
+    lean.start(structure_definition_id="local.embedded")
     try:
-        assert lean.event_journal is None  # capability omitted → no journal
+        assert lean.event_journal is None  # DNA omit → no journal
     finally:
         lean.shutdown()
 

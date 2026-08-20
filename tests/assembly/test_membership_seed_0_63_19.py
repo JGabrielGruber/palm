@@ -23,7 +23,7 @@ def test_membership_capability_seeds_catalog_complete() -> None:
     }
     assert "outbox" not in caps
     assert "work_drain" not in caps
-    assert "journal" not in caps  # always-on, no flag
+    assert "journal" not in caps  # DNA + hand, not a composition seed
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert "enable_compensation" in settings_fields
     assert "enable_work_drain_service" not in settings_fields
@@ -35,9 +35,7 @@ def test_structure_seed_env_includes_all_membership_seeds() -> None:
     assert "explicit_definition_seed" in roles
     assert "membership_seed" in roles
     assert "deployment_seed" in roles
-    member_envs = {
-        row["env"] for row in STRUCTURE_SEED_ENV if row["role"] == "membership_seed"
-    }
+    member_envs = {row["env"] for row in STRUCTURE_SEED_ENV if row["role"] == "membership_seed"}
     assert "PALM_ENABLE_COMPENSATION" in member_envs
     assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in member_envs
     assert "PALM_ENABLE_EVENT_OUTBOX" not in member_envs
@@ -105,8 +103,8 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     assert profile.has("webhook")
     assert not profile.has("work_drain")
     assert not profile.has("analytics")
-    # Always-on on settings-composed path
-    assert profile.has("journal")
+    # Always-on on settings-composed path (journal is DNA, not composition)
+    assert not profile.has("journal")
     assert profile.has("projections")
     assert profile.has("workloads")
 

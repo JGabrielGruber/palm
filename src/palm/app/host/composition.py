@@ -5,8 +5,8 @@ The composition axis, twin of ``DeploymentProfile`` (the deployment axis, in
 ``roles.py``). A running app is assembled from one ``CompositionProfile`` and one
 ``DeploymentProfile``; the two are orthogonal and never merge.
 
-**0.59.5 / 0.64 membership:** this profile seeds product services, surfaces, and
-capabilities other than ``work_drain`` and ``outbox``. Those names are not
+**0.59.5 / 0.64 / 0.67.7 membership:** this profile seeds product services, surfaces, and
+capabilities other than ``work_drain``, ``outbox``, and ``journal``. Those names are not
 composition members — after structure definition load, install is definition
 ``capabilities``.
 Deployment may feed the settings resolver but does not OR at phase time.
@@ -35,7 +35,6 @@ SurfaceName = Literal["rest", "websocket", "mcp", "explorer", "studio"]
 Capability = Literal[
     "compensation",
     "webhook",
-    "journal",
     "analytics",
     "projections",
     "workloads",  # 0.56 — WorkloadEngine plane (host OFF by default)
@@ -65,7 +64,6 @@ SERVER_SURFACES: tuple[SurfaceName, ...] = ("rest", "websocket", "mcp", "explore
 DEFAULT_CAPABILITIES: frozenset[Capability] = frozenset(
     {
         "compensation",
-        "journal",
         "analytics",
         "projections",
         "workloads",

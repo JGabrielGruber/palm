@@ -5,6 +5,7 @@ System applies effect intents; clients use :class:`AdmissionSnapshot`.
 """
 
 from palm.core.structure.definition import (
+    CAPABILITY_JOURNAL,
     CAPABILITY_OUTBOX,
     CAPABILITY_WORK_DRAIN,
     LOCAL_ALL_IN_ONE_ID,
@@ -44,6 +45,7 @@ from palm.core.structure.status import (
 )
 
 __all__ = [
+    "CAPABILITY_JOURNAL",
     "CAPABILITY_OUTBOX",
     "CAPABILITY_WORK_DRAIN",
     "LOCAL_ALL_IN_ONE_ID",

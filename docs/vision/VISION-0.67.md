@@ -1,6 +1,6 @@
 # VISION 0.67 — Dependents require the organ
 
-**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.6` landed. Package stamp stays `0.66.0` until exit.  
+**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.7` landed. Package stamp stays `0.66.0` until exit.  
 **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Migration:** [MIGRATION-0.67](../migrations/MIGRATION-0.67.md)  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.66](closed/VISION-0.66.md) (**closed**) · sequence [VISION-0.64](closed/VISION-0.64.md) step 4  
@@ -32,9 +32,9 @@ An act that needs an organ **requires that organ** on the published gate. Busine
 
 ## Growth
 
-Façades and tests that freeze `may_run_business` as the organ list. Work-plane `able` that should mean drain is here. Host `start_ports.able` (drain + ready; wait stays ready) landed 0.67.3. Surface voice for `CapabilityRefusedError` landed 0.67.4. Schedule fire (`tick_schedules` / host `tick_work`) landed 0.67.5. Vitality `work_cycle` drain proofs pin `local.cli` (0.67.6).
+Façades and tests that freeze `may_run_business` as the organ list. Work-plane `able` that should mean drain is here. Host `start_ports.able` (drain + ready; wait stays ready) landed 0.67.3. Surface voice for `CapabilityRefusedError` landed 0.67.4. Schedule fire (`tick_schedules` / host `tick_work`) landed 0.67.5. Vitality `work_cycle` drain proofs pin `local.cli` (0.67.6). First remaining composition king **journal** landed 0.67.7 (DNA list + attach hand; `composition.has` dies on that unit).
 
-**Not floor:** retune every `require_business_admission` site. Optional organ arg on that function. [SD-021](../../TECH-DEBT.md#sd-021) remaining `composition.has` kings.
+**Not floor:** retune every `require_business_admission` site. Optional organ arg on that function. Remaining [SD-021](../../TECH-DEBT.md#sd-021) kings (projections, webhook, compensation, analytics).
 
 ## Locks (José 2026-08-20)
 
@@ -43,6 +43,7 @@ Façades and tests that freeze `may_run_business` as the organ list. Work-plane 
 | **1** | **Two doors.** `require_business_admission` = ready. `require_capability` = ready **then** installed name. Do not add an organ argument to the first function. |
 | **2** | **No decorators.** Inject a gate, then require. A wrapper may close over a name. |
 | **3** | Field names stay **`capabilities`** / **`has_capability`**. |
+| **4** | Remaining composition kings start **in 0.67** (0.67.7+). Do not open 0.68 for this pile. |
 
 Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two questions were named. Override if the one-door optional arg is preferred.
 
@@ -57,7 +58,7 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 
 ## Not this theme
 
-- Remaining `composition.has` kings (journal, projections, webhook, compensation, analytics) — [SD-021](../../TECH-DEBT.md#sd-021).  
+- Remaining `composition.has` kings (projections, webhook, compensation, analytics) unless José includes them in 0.67.8+.  
 - Engine as walker. Places. Surface compost. Navigator. Tunnels. Grove.  
 - If drain/outbox still show first-organ costume, that work is still **0.64** / **0.65** law.
 
@@ -72,7 +73,8 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 | **0.67.4** | Surface voice for `CapabilityRefusedError` (`capability_refused`). ✅ |
 | **0.67.5** | Schedule fire uses the same able as tick (drain). ✅ |
 | **0.67.6** | Vitality `work_cycle` drain proofs pin `local.cli`. ✅ |
-| **0.67.7+** | Leftover façades if José includes them. |
+| **0.67.7** | Journal: DNA list + attach hand + `composition.has` dies on that unit. ✅ |
+| **0.67.8+** | More composition kings if José includes them. |
 | **exit** | José · ADR-036 Accepted · stamp `0.67.0`. |
 
 *The face reads the fact. Dependents ask the face.*

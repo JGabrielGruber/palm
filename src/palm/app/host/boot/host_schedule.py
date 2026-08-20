@@ -6,8 +6,9 @@ comes up. Handlers here are the rules. Collaborators (kernel, spawner, CQRS
 wire, recovery, workplane) are tools — they do not own boot order.
 
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
-capabilities other than ``work_drain`` and ``outbox``. Those loops start on
-the system schedule (``system.background.start``) after assemble. The host
+capabilities other than ``work_drain``, ``outbox``, and ``journal``. Those
+organs follow definition ``capabilities``. Drain/outbox loops start on the
+system schedule (``system.background.start``) after assemble. The host
 does not start them again.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
@@ -101,9 +102,7 @@ def build_host_handlers(
         host._wire_cqrs()
         # Membership truth narrative (0.59.5) — what services the schedule built.
         built = [
-            name
-            for name in host.composition.services
-            if getattr(host, name, None) is not None
+            name for name in host.composition.services if getattr(host, name, None) is not None
         ]
         get_system_log().system(
             "product.wire",
