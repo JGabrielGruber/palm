@@ -7,8 +7,8 @@ Palm runs **two** in-process `EventEngine` instances when `ApplicationHost` is s
 
 | Bus | Property | Emits | Subscribers |
 |-----|----------|-------|-------------|
-| **Orchestration** | `runtime.event` | `job.*`, `flow.session.*`, `resource.changed`, `workload.*` (stub), … | Wait matcher, inbound, work-drain triggers, projections |
-| **Host coordination** | `host.event` | `host.started`, `host.shutdown`, `host.webhook.delivered`, … | Event journal (durable append), host recorder, worker coordinator |
+| **Orchestration** | `runtime.event` | `job.*`, `flow.session.*`, `resource.changed`, `workload.*` (stub), … | Wait matcher, inbound, work-drain triggers, event journal, projections |
+| **Host coordination** | `host.event` | `host.started`, `host.shutdown`, `host.webhook.delivered`, … | Host recorder, worker coordinator |
 
 ## Rule of thumb
 
@@ -58,7 +58,7 @@ Same event type may feed **both** paths (e.g. `flow.session.succeeded` can start
 - Work plane trigger subscriptions → system event engine / host rebind
 - `OrchestrationEngine` → `runtime.event` (set at runtime bootstrap)
 - **`WaitPlaneService`** → `runtime.event` via `BaseRuntime` (**always** wired; sole continue path; public door **0.55.15**) — [ADR-025](adr/025-reactive-interests.md)
-- Event journal + outbox reliable delivery → `host.event`
+- Event journal attach + outbox reliable delivery → `runtime.event` (host slot reads the journal object; does not intercept `host.event`)
 
 When the runtime is not started, `_runtime_event_engine()` falls back to `host.event` (embedded/tests without full server profile).
 

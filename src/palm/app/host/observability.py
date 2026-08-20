@@ -96,8 +96,8 @@ class HostObservability:
         slog = get_system_log()
         domain_note = (
             "Orchestration events emit on runtime.event when the runtime is "
-            "started; host.event is coordination only (host.started, journal). "
-            "Internal inbound and work-drain subscribe to the "
+            "started; host.event is coordination only (host.started). "
+            "Journal, internal inbound, and work-drain subscribe to the "
             "orchestration bus. system_log_* is process narrative (0.59.1a), "
             "not the domain event bus."
         )
@@ -107,7 +107,7 @@ class HostObservability:
                 "host_coordination_bus": "host",
                 "inbound_internal_bus": orchestration_bus,
                 "work_drain_bus": orchestration_bus,
-                "journal_bus": "host",
+                "journal_bus": orchestration_bus,
                 "internal_inbound_bindings": internal_bindings,
                 "orchestration_event_types": [
                     "job.completed",

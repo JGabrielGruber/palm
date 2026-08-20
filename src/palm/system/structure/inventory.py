@@ -31,6 +31,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "journal is DNA list + attach hand; composition.has is not membership",
     },
     {
+        "id": "structure.journal_one_organ",
+        "slice": "0.67.8",
+        "law": "one journal attach on the runtime bus; host slot reads that object; not a supervisor loop",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -653,6 +658,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid journal composition king as copyable DNA + hand",
         "status": "paid_0_67_7",
+    },
+    {
+        "id": "structure.journal_supervisor_costume",
+        "note": (
+            "0.67.8: journal leftover — one attach on the runtime bus, host "
+            "slot aliases the install journal, drop-on-omit unsubscribes. "
+            "Not a CallableSystemService. Not a second interceptor on host.event."
+        ),
+        "intent": "paid journal leftover costume as one organ",
+        "status": "paid_0_67_8",
     },
 )
 

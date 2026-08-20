@@ -8,7 +8,8 @@ wire, recovery, workplane) are tools — they do not own boot order.
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
 capabilities other than ``work_drain``, ``outbox``, and ``journal``. Those
 organs follow definition ``capabilities``. Drain/outbox loops start on the
-system schedule (``system.background.start``) after assemble. The host
+system schedule (``system.background.start``) after assemble. Journal is
+attach, not a loop — the host slot reads the seated journal. The host
 does not start them again.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip

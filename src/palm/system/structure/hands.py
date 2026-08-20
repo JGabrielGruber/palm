@@ -16,7 +16,6 @@ from palm.system.subsystems.supervisor.definition import (
     register_outbox,
     register_work_drain,
 )
-from palm.system.subsystems.supervisor.service import CallableSystemService
 
 
 @dataclass(frozen=True, slots=True)
@@ -29,6 +28,7 @@ class CapabilitySeats:
     outbox_processor: Any = None
     event: Any = None
     storage: Any = None
+    install: Any = None
 
 
 CapabilityHand = Callable[..., None]
@@ -68,50 +68,31 @@ def apply_outbox(seats: CapabilitySeats, *, listed: bool) -> None:
     )
 
 
+def _drop_journal(install: Any) -> None:
+    if install is None:
+        return
+    sub = getattr(install, "event_journal_sub", None)
+    if sub is not None:
+        sub.unsubscribe()
+    bind = getattr(install, "bind", None)
+    if callable(bind):
+        bind(event_journal=None, event_journal_sub=None)
+
+
 def apply_journal(seats: CapabilitySeats, *, listed: bool) -> None:
     """Attach event journal when listed; drop it otherwise. Attach, not a loop."""
-    supervisor = seats.supervisor
+    install = seats.install
     if not listed:
-        if supervisor is not None:
-            existing = supervisor.get("journal")
-            if existing is not None:
-                existing.stop()
-            supervisor.unregister("journal")
+        _drop_journal(install)
         return
-    if supervisor is None or supervisor.get("journal") is not None:
+    if install is None or getattr(install, "event_journal", None) is not None:
         return
     event = seats.event
     storage = seats.storage
     if event is None or storage is None:
         return
-
-    holder: dict[str, Any] = {}
-
-    def start() -> None:
-        if holder.get("sub") is not None:
-            return
-        _journal, sub = wire_event_journal(event, storage)
-        holder["journal"] = _journal
-        holder["sub"] = sub
-
-    def stop() -> None:
-        sub = holder.pop("sub", None)
-        if sub is not None:
-            sub.unsubscribe()
-        holder.pop("journal", None)
-
-    def status() -> dict[str, Any]:
-        return {"name": "journal", "attached": holder.get("sub") is not None}
-
-    svc = CallableSystemService(
-        "journal",
-        start=start,
-        stop=stop,
-        status=status,
-        may_start=lambda _ctx: True,
-    )
-    supervisor.register(svc)
-    svc.start()
+    journal, sub = wire_event_journal(event, storage)
+    install.bind(event_journal=journal, event_journal_sub=sub)
 
 
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {

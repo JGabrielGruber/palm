@@ -61,6 +61,9 @@ class InstallInterface(Protocol):
     @property
     def work_plane(self) -> Any: ...
 
+    @property
+    def event_journal(self) -> Any: ...
+
 
 class SystemInstall:
     """
@@ -81,6 +84,8 @@ class SystemInstall:
         "_outbox_store",
         "_outbox_processor",
         "_work_plane",
+        "_event_journal",
+        "_event_journal_sub",
     )
 
     def __init__(self) -> None:
@@ -95,6 +100,8 @@ class SystemInstall:
         self._outbox_store: Any = None
         self._outbox_processor: Any = None
         self._work_plane: Any = None
+        self._event_journal: Any = None
+        self._event_journal_sub: Any = None
 
     # ── read surface (InstallInterface) ─────────────────────────────────────
 
@@ -143,6 +150,16 @@ class SystemInstall:
     def work_plane(self) -> Any:
         return self._work_plane
 
+    @property
+    def event_journal(self) -> Any:
+        """Append-only journal attached by the journal hand. Not a loop."""
+        return self._event_journal
+
+    @property
+    def event_journal_sub(self) -> Any:
+        """Interceptor subscription for drop-on-omit. Not a product slot."""
+        return self._event_journal_sub
+
     # ── explicit bind ────────────────────────────────────────────────────────
 
     def bind(
@@ -159,6 +176,8 @@ class SystemInstall:
         outbox_store: Any = _UNSET,
         outbox_processor: Any = _UNSET,
         work_plane: Any = _UNSET,
+        event_journal: Any = _UNSET,
+        event_journal_sub: Any = _UNSET,
     ) -> SystemInstall:
         """
         Bind named ports. Omitted kwargs are left unchanged.
@@ -187,6 +206,10 @@ class SystemInstall:
             self._outbox_processor = outbox_processor
         if work_plane is not _UNSET:
             self._work_plane = work_plane
+        if event_journal is not _UNSET:
+            self._event_journal = event_journal
+        if event_journal_sub is not _UNSET:
+            self._event_journal_sub = event_journal_sub
         self._push_start_ports()
         return self
 
@@ -223,6 +246,7 @@ class SystemInstall:
             "outbox_store": self._outbox_store is not None,
             "outbox_processor": self._outbox_processor is not None,
             "work_plane": self._work_plane is not None,
+            "event_journal": self._event_journal is not None,
             "start_ports": self.start_ports_bound(),
         }
 

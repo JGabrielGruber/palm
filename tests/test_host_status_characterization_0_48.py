@@ -71,9 +71,9 @@ def test_event_plane_status_full_contract(host: ApplicationHost) -> None:
     assert EVENT_PLANE_KEYS <= set(ep)
     assert DEMOTION_KEYS <= set(ep)
     _assert_packaging_demotion(ep)
-    # Stable literals — coordination/journal always ride the host bus.
+    # Coordination stays on the host bus; journal rides the orchestration bus.
     assert ep["host_coordination_bus"] == "host"
-    assert ep["journal_bus"] == "host"
+    assert ep["journal_bus"] == ep["orchestration_bus"]
     assert ep["orchestration_event_types"] == [
         "job.completed",
         "flow.session.succeeded",

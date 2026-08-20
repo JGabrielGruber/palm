@@ -45,11 +45,8 @@ def test_events_catalog_and_journal_http() -> None:
         settings=PalmSettings.for_tests(load_examples=False),
         profile=DeploymentProfile.server_only(host="127.0.0.1", port=0),
     ) as host:
-        # ensure journal
-        if host.event_journal is None:
-            host.event.emit("resource.changed", resource_ref="x", action="put")
-        # wire may need emit after start
-        host.event.emit(
+        assert host.event_journal is not None
+        host.app.runtime().event.emit(
             "resource.changed",
             resource_ref="palm-todos",
             action="put",

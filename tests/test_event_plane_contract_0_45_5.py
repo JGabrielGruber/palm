@@ -16,7 +16,7 @@ def test_event_plane_status_on_host() -> None:
         ep = host.event_plane_status()
         assert ep["orchestration_bus"] == "runtime"
         assert ep["inbound_internal_bus"] == "runtime"
-        assert ep["journal_bus"] == "host"
+        assert ep["journal_bus"] == "runtime"
         assert "flow.session.succeeded" in ep["orchestration_event_types"]
 
         cp = host.control_plane_status()
@@ -72,7 +72,9 @@ def test_watch_records_flow_session_succeeded() -> None:
         result = host.invoke_resource("palm-system-event-log", action="get")
         value = (result.data or {}).get("value")
         assert isinstance(value, list)
-        assert any(row.get("type") == "flow.session.succeeded" for row in value if isinstance(row, dict))
+        assert any(
+            row.get("type") == "flow.session.succeeded" for row in value if isinstance(row, dict)
+        )
     finally:
         host.shutdown()
 

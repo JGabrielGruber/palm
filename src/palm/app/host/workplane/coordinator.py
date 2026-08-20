@@ -12,7 +12,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from palm.app.host.workplane.start_ports import product_start_ports
-from palm.common.events import wire_event_journal as _wire_event_journal
 from palm.common.events.consumers import consume_for_projections, consume_for_webhooks
 from palm.core.structure import CAPABILITY_JOURNAL
 from palm.system.subsystems.planes.work.inbound import InboundBindingService
@@ -103,15 +102,14 @@ class WorkPlaneCoordinator:
 
     def wire_event_journal(self) -> None:
         host = self._host
-        # 0.67.7: DNA listing + hand is membership. Host attach follows the face.
+        # 0.67.8: host slot reads the hand's journal. Do not attach again.
         if not host.admission.has_capability(CAPABILITY_JOURNAL):
+            self._event_journal = None
             return
-        if not host._app.storage.is_initialized:
-            return
-        if not host._event.is_initialized:
-            return
-        journal, _sub = _wire_event_journal(host._event, host._app.storage)
-        self._event_journal = journal
+        try:
+            self._event_journal = host.runtime().install.event_journal
+        except Exception:
+            self._event_journal = None
 
     # ── reload / tick / drain (public host API delegates here) ───────────────
 

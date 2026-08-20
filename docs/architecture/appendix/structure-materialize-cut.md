@@ -19,7 +19,7 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 | Layer | Built | Residual |
 |-------|--------|----------|
 | Core structure | Reconciler + `StructureDefinition.capabilities`. Builtin definitions list `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No definition `requires` / start-fact vocabulary. |
-| System structure | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install `work_plane`. | Journal / inbound are not hands. |
+| System structure | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install board. Journal is an attach hand (not a loop). | Inbound still freelance. |
 | Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Bare `enable_event_outbox` is packaging. |
 | Host | Definition seed at spawn. Host schedule ends at ready. Host does not start drain. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.structure`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes structure as eyes. |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
@@ -123,6 +123,6 @@ José locked this order (2026-08-17). Not a slice table. Not patch stamps.
 | **B1** | **Landed.** Default catalog is empty. Hands register `work_drain` and `outbox`. Unregister-on-unlist stays. | Do not put those names back on `DEFAULT_CONTINUOUS_DEFINITIONS`. |
 | **B2** | **Landed.** `refuse_violations` reads `definition.has_capability("work_drain")`. Token stays `background_drain`. | Do not invent a new refuse vocabulary. |
 | **B3** | **Landed.** Presets and seed fold do not write `"work_drain"`. Embedded definition no longer refuses `background_drain`. Omit is enough. Journal composition king paid 0.67.7. | Do not wipe `composition.has` for projections without the 0.64 shape. |
-| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. Journal attach hand landed 0.67.7. | No definition `requires`. |
+| **C** | **Landed.** Coordinator and host read `runtime.work_plane`. `host.start_plane` / `_start_plane` gone. Host schedule ends at ready. Drain start is `system.background.start`. Assemble uses `shell.structure`. Settings/deployment have no `enable_work_drain_service`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. Journal attach hand landed 0.67.7; leftover costume paid 0.67.8 (one organ on the runtime bus). | No definition `requires`. |
 
 **Copyable and closed** (José 2026-08-18) — [VISION-0.64](../../vision/closed/VISION-0.64.md). Outbox is [VISION-0.65](../../vision/closed/VISION-0.65.md) (**closed**). Admission face is [VISION-0.66](../../vision/closed/VISION-0.66.md) (**closed**). Step 4 dependents: [VISION-0.67](../../vision/VISION-0.67.md) (**open**).

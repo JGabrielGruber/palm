@@ -95,6 +95,7 @@ def run(ctx: BootContext, options: Mapping[str, Any]) -> None:
             outbox_processor=outbox_processor,
             event=event,
             storage=storage,
+            install=board,
         )
     )
 

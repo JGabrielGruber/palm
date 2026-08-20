@@ -82,7 +82,7 @@ def test_host_control_plane_status() -> None:
         profile=DeploymentProfile.all_in_one(),
     ) as host:
         assert host.event_journal is not None
-        host.event.emit("resource.changed", resource_ref="x", action="put")
+        host.app.runtime().event.emit("resource.changed", resource_ref="x", action="put")
         status = host.control_plane_status()
         assert "work_pending" in status
         assert status["journal"]["latest_offset"] >= 1

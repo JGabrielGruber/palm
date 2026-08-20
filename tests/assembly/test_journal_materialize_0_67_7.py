@@ -55,7 +55,9 @@ def _journal_seats(supervisor: SystemSupervisor) -> CapabilitySeats:
     storage = StorageEngine()
     storage.initialize()
     storage.select("memory")
-    return CapabilitySeats(supervisor=supervisor, event=event, storage=storage)
+    board = SystemInstall()
+    board.bind(event=event, storage=storage)
+    return CapabilitySeats(supervisor=supervisor, event=event, storage=storage, install=board)
 
 
 def test_walker_table_owns_journal_not_a_private_if() -> None:
@@ -83,15 +85,14 @@ def test_materialize_attaches_journal_only_when_listed() -> None:
     seats = _journal_seats(sup)
     applied = apply_local_capabilities(local_cli(), seats)
     assert CAPABILITY_JOURNAL in applied
-    assert "journal" in sup.names()
+    assert seats.install.event_journal is not None
+    assert "journal" not in sup.names()
     seats.event.emit("resource.changed", resource_ref="x", action="put")
-    from palm.common.events import EventJournal
-
-    journal = EventJournal(seats.storage)
-    assert journal.latest_offset() >= 1
+    assert seats.install.event_journal.latest_offset() >= 1
 
     dropped = apply_local_capabilities(local_embedded(), seats)
     assert CAPABILITY_JOURNAL not in dropped
+    assert seats.install.event_journal is None
     assert "journal" not in sup.names()
 
 
@@ -107,8 +108,10 @@ def test_wire_catalog_does_not_freelance_register_journal() -> None:
     sup.install(board)
     assert "journal" not in {d.name for d in sup.definitions()}
     assert "journal" not in sup.names()
-    apply_local_capabilities(local_cli(), _journal_seats(sup))
-    assert "journal" in sup.names()
+    seats = _journal_seats(sup)
+    apply_local_capabilities(local_cli(), seats)
+    assert "journal" not in sup.names()
+    assert seats.install.event_journal is not None
 
 
 class _LeanShell:
@@ -118,7 +121,9 @@ class _LeanShell:
         self.supervisor = None
 
 
-def _assemble_from_ctx_seats(*, definition_id: str) -> tuple[BootContext, SystemSupervisor]:
+def _assemble_from_ctx_seats(
+    *, definition_id: str
+) -> tuple[BootContext, SystemSupervisor, SystemInstall]:
     reset_system_log_for_tests()
     event = EventEngine()
     event.initialize()
@@ -137,18 +142,20 @@ def _assemble_from_ctx_seats(*, definition_id: str) -> tuple[BootContext, System
         storage=storage,
     )
     assemble_run(ctx, {"structure_definition_id": definition_id})
-    return ctx, supervisor
+    return ctx, supervisor, board
 
 
 def test_phase_assemble_materializes_journal_from_ctx_board() -> None:
-    ctx, supervisor = _assemble_from_ctx_seats(definition_id=LOCAL_CLI_ID)
-    assert "journal" in supervisor.names()
+    ctx, supervisor, board = _assemble_from_ctx_seats(definition_id=LOCAL_CLI_ID)
+    assert board.event_journal is not None
+    assert "journal" not in supervisor.names()
     assert ctx.structure is not None
     assert CAPABILITY_JOURNAL in ctx.structure.materialized_capabilities
 
 
 def test_phase_assemble_embedded_does_not_register_journal() -> None:
-    ctx, supervisor = _assemble_from_ctx_seats(definition_id=LOCAL_EMBEDDED_ID)
+    ctx, supervisor, board = _assemble_from_ctx_seats(definition_id=LOCAL_EMBEDDED_ID)
+    assert board.event_journal is None
     assert "journal" not in supervisor.names()
     assert ctx.structure is not None
     assert CAPABILITY_JOURNAL not in ctx.structure.materialized_capabilities
@@ -187,7 +194,8 @@ def test_cli_host_wires_journal_even_when_composition_omits_it() -> None:
         assert host.admission.has_capability(CAPABILITY_JOURNAL)
         rt = host.runtime()
         assert CAPABILITY_JOURNAL in rt.structure.materialized_capabilities
-        assert "journal" in rt.supervisor.names()
+        assert "journal" not in rt.supervisor.names()
+        assert host.event_journal is rt.install.event_journal
         assert host.event_journal is not None
     finally:
         host.shutdown()
@@ -202,6 +210,7 @@ def test_mcp_dna_lists_and_wires_journal() -> None:
         assert host.admission.has_capability(CAPABILITY_JOURNAL)
         rt = host.runtime()
         assert CAPABILITY_JOURNAL in rt.structure.materialized_capabilities
+        assert host.event_journal is rt.install.event_journal
         assert host.event_journal is not None
     finally:
         host.shutdown()
