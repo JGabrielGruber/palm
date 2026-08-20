@@ -77,6 +77,7 @@ class SystemInstall:
         "_get_job",
         "_submit",
         "_able",
+        "_admission_able",
         "_outbox_store",
         "_outbox_processor",
         "_work_plane",
@@ -90,6 +91,7 @@ class SystemInstall:
         self._get_job: Callable[[str], Any | None] | None = None
         self._submit: Callable[..., Any] | None = None
         self._able: Callable[[], bool] | None = None
+        self._admission_able: Callable[[], bool] | None = None
         self._outbox_store: Any = None
         self._outbox_processor: Any = None
         self._work_plane: Any = None
@@ -125,6 +127,11 @@ class SystemInstall:
         return self._able
 
     @property
+    def admission_able(self) -> Callable[[], bool] | None:
+        """Ready query for continue (wait plane). Not work-drain membership."""
+        return self._admission_able
+
+    @property
     def outbox_store(self) -> Any:
         return self._outbox_store
 
@@ -148,6 +155,7 @@ class SystemInstall:
         get_job: Callable[[str], Any | None] | None | object = _UNSET,
         submit: Callable[..., Any] | None | object = _UNSET,
         able: Callable[[], bool] | None | object = _UNSET,
+        admission_able: Callable[[], bool] | None | object = _UNSET,
         outbox_store: Any = _UNSET,
         outbox_processor: Any = _UNSET,
         work_plane: Any = _UNSET,
@@ -171,6 +179,8 @@ class SystemInstall:
             self._submit = submit  # type: ignore[assignment]
         if able is not _UNSET:
             self._able = able  # type: ignore[assignment]
+        if admission_able is not _UNSET:
+            self._admission_able = admission_able  # type: ignore[assignment]
         if outbox_store is not _UNSET:
             self._outbox_store = outbox_store
         if outbox_processor is not _UNSET:
@@ -182,11 +192,7 @@ class SystemInstall:
 
     def start_ports_bound(self) -> bool:
         """True when work_drain start ports are on this board."""
-        return (
-            self._work_plane is not None
-            and self._submit is not None
-            and self._able is not None
-        )
+        return self._work_plane is not None and self._submit is not None and self._able is not None
 
     def _push_start_ports(self) -> None:
         """Plane reads submit/able from this board — bind is the only writer."""
@@ -213,6 +219,7 @@ class SystemInstall:
             "get_job": self._get_job is not None,
             "submit": self._submit is not None,
             "able": self._able is not None,
+            "admission_able": self._admission_able is not None,
             "outbox_store": self._outbox_store is not None,
             "outbox_processor": self._outbox_processor is not None,
             "work_plane": self._work_plane is not None,

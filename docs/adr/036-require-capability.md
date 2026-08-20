@@ -46,7 +46,7 @@ Do not add `capability=` to `require_business_admission`. Mixing the questions i
 ### Negative / residual
 
 - Two functions to teach.  
-- Host `start_ports.able` may still be `_started` only until a growth slice.  
+- Host `start_ports.able` may still be `_started` only until a later slice (0.67.2 paid kernel work-plane `able`).  
 - Remaining `composition.has` kings stay [SD-021](../../TECH-DEBT.md#sd-021).
 
 ### Forbidden

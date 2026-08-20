@@ -135,7 +135,7 @@ class WorkPlaneService:
         self._submit_flow = submit_flow
 
     def set_able(self, able: Callable[[], bool] | None) -> None:
-        """Replace able gate (started + admission on the shell after 0.63.3).
+        """Replace able gate (kernel: started ∧ ready ∧ work_drain after 0.67.2).
 
         ``None`` clears to fail-closed (0.63.23) — not soft-open True.
         """

@@ -24,7 +24,7 @@ def install_work_plane(
     submit_flow = ctx.submit_flow
     if submit_flow is None:
         raise RuntimeError("no submit_flow port for work plane")
-    # 0.63.23 — missing able fails closed (runtime binds admission+started).
+    # 0.63.23 — missing able fails closed. 0.67.2 — kernel able is drain-shaped.
     able = ctx.able if ctx.able is not None else (lambda: False)
     max_depth = int(opts.get("work_plane_max_depth", 8) or 8)
     batch_size = int(opts.get("work_plane_batch_size", 10) or 10)

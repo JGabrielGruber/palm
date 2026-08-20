@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Execute `0.67.1` landed the sibling door. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.2` landed work-plane `able` as drain membership. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 
@@ -11,7 +11,9 @@ Palm is pre-1.0. Execute `0.67.1` landed the sibling door. Package stays `0.66.0
 |------|-----|
 | May business that needs ground run? | `require_business_admission(source)` (unchanged) |
 | Is this organ here (and is the organism ready)? | `require_capability(source, name)` |
-| Query without raise | `admission.has_capability(name)` / zero-arg `able()` |
+| Query without raise | `admission.has_capability(name)` |
+| Work-plane drain query | install-board `able()` (ready then `work_drain`) |
+| Wait / continue query | `admission_able()` / `may_run_business` |
 
 ## Behavior / names that will change
 
@@ -22,4 +24,4 @@ Palm is pre-1.0. Execute `0.67.1` landed the sibling door. Package stays `0.66.0
 
 `require_business_admission` still fail-closes only on `may_run_business`. Existing call sites need no change.
 
-`able` on the install board stays zero-arg. Closures may read a name. Decorators are not added.
+`able` on the install board stays zero-arg. From 0.67.2 the default closure also reads `work_drain`. Wait uses a ready-only closure. Host spawn may still inject `_started` only. Decorators are not added.

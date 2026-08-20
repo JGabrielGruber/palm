@@ -29,7 +29,7 @@ from palm.core import (
     ResourceEngine,
     StorageEngine,
 )
-from palm.core.structure import AdmissionSnapshot
+from palm.core.structure import CAPABILITY_WORK_DRAIN, AdmissionSnapshot
 from palm.core.workload import WorkloadEngine
 from palm.core.workload.owner import WorkloadOwner
 from palm.core.workload.spec import WorkloadSpec
@@ -234,18 +234,29 @@ class BaseRuntime:
             return self.submit_flow(flow_id, metadata=metadata, state=state)
 
         def _able() -> bool:
-            """Machine ready **and** admission allows business that needs ground.
+            """Started and organism-ready. Wait / continue uses this query.
 
-            0.63.3 — work-plane / drain business path that needs admission is fail-closed.
             Live check: structure assemble may complete after planes attach.
             """
             if not self._started:
                 return False
             return bool(self.admission.may_run_business)
 
+        def _drain_able() -> bool:
+            """Work-plane start port: ready **and** ``work_drain`` installed.
+
+            0.67.2 — ready is not membership. Host ``install_able`` still overrides
+            the board able when spawn injects start ports.
+            """
+            if not _able():
+                return False
+            return bool(self.admission.has_capability(CAPABILITY_WORK_DRAIN))
+
         opts = self._start_options
         submit = opts.get("install_submit") or _submit
-        able = opts.get("install_able") or _able
+        override = opts.get("install_able")
+        able = override or _drain_able
+        admission_able = override or _able
         self._install.bind(
             orchestration=self.orchestration,
             event=self.event,
@@ -254,6 +265,7 @@ class BaseRuntime:
             get_job=_get_job,
             submit=submit,
             able=able,
+            admission_able=admission_able,
             outbox_store=self._outbox_store,
             outbox_processor=self._outbox_processor,
             work_plane=self.work_plane,

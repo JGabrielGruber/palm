@@ -39,7 +39,8 @@ class WaitPlaneService:
 
     **0.63.26:** *able* gates **resume** (product continue). Default fail closed.
     Target **fail** still applies (honest completer failure). Install wires the
-    same ``started ∧ admission`` able as the work plane.
+    ready query (``started ∧ may_run_business``). Work-plane able may also
+    require ``work_drain`` (0.67.2) — continue does not.
     """
 
     def __init__(self) -> None:

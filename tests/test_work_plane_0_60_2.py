@@ -13,7 +13,11 @@ def test_work_plane_attach_enqueue_tick_hostless() -> None:
     submitted: list[tuple[str, dict]] = []
 
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        structure_definition_id="local.cli",
+    )
     try:
         plane = rt.work_plane
         assert isinstance(plane, WorkPlaneService)

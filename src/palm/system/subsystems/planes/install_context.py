@@ -62,6 +62,7 @@ class InstallContext:
     get_job: Callable[[str], Any | None] | None = None
     submit_flow: Callable[[str, dict[str, Any]], Any] | None = None
     able: Callable[[], bool] | None = None
+    admission_able: Callable[[], bool] | None = None
 
     @classmethod
     def from_install(
@@ -108,6 +109,9 @@ class InstallContext:
             get_session_plane=get_session_plane,
         )
         able = install.able if install.able is not None else (lambda: False)
+        admission_able = getattr(install, "admission_able", None)
+        if admission_able is None:
+            admission_able = able
 
         return cls(
             options=dict(options or {}),
@@ -119,6 +123,7 @@ class InstallContext:
             get_job=get_job,
             submit_flow=submit_flow,
             able=able,
+            admission_able=admission_able,
         )
 
     # temporary alias

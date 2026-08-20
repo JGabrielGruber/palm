@@ -59,7 +59,11 @@ def test_work_plane_tick_attributes_session_on_system_submit() -> None:
     """Default system submit stamps service session without product SessionService."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        structure_definition_id="local.cli",
+    )
     try:
         plane = rt.work_plane
         assert plane is not None

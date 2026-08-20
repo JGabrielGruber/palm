@@ -1,6 +1,6 @@
 # VISION 0.67 — Dependents require the organ
 
-**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.1` landed. Package stamp stays `0.66.0` until exit.  
+**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.2` landed. Package stamp stays `0.66.0` until exit.  
 **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Migration:** [MIGRATION-0.67](../migrations/MIGRATION-0.67.md)  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.66](closed/VISION-0.66.md) (**closed**) · sequence [VISION-0.64](closed/VISION-0.64.md) step 4  
@@ -67,7 +67,8 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 |-------|--------|
 | **0.67.0** | Plan + ADR-036 Proposed + locks. ✅ |
 | **0.67.1** | `require_capability` + `CapabilityRefusedError` + drain-shaped proof. ✅ |
-| **0.67.2+** | `able` / façades / tests that freeze ready as membership. |
+| **0.67.2** | Work-plane `able` closes over `work_drain`. Wait stays ready. ✅ |
+| **0.67.3+** | Host `start_ports.able` if José includes it. Leftover façades. |
 | **exit** | José · ADR-036 Accepted · stamp `0.67.0`. |
 
 *The face reads the fact. Dependents ask the face.*

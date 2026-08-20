@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from palm.core.structure import Observation, ObservationKind, StructurePhase
+from palm.core.structure import (
+    CAPABILITY_WORK_DRAIN,
+    Observation,
+    ObservationKind,
+    StructurePhase,
+)
 from palm.core.work import WorkIntent
 from palm.system.log import reset_system_log_for_tests
 from palm.system.runtime.base import BaseRuntime
@@ -13,9 +18,14 @@ def test_work_plane_tick_when_admission_ready() -> None:
     reset_system_log_for_tests()
     submitted: list[str] = []
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        structure_definition_id="local.cli",
+    )
     try:
         assert rt.admission.may_run_business is True
+        assert rt.admission.has_capability(CAPABILITY_WORK_DRAIN) is True
         plane = rt.work_plane
         assert isinstance(plane, WorkPlaneService)
         assert plane.is_able() is True
@@ -44,9 +54,7 @@ def test_work_plane_fail_closed_when_assembly_skipped() -> None:
         assert plane is not None
         assert plane.is_able() is False
         plane._submit_flow = lambda fid, _p: submitted.append(fid)
-        intent_id = plane.enqueue(
-            WorkIntent(kind="run_flow", target="should-wait")
-        )
+        intent_id = plane.enqueue(WorkIntent(kind="run_flow", target="should-wait"))
         assert intent_id  # enqueue still allowed (deferred)
         assert plane.tick(limit=10) == 0
         assert submitted == []
@@ -61,7 +69,11 @@ def test_work_plane_fail_closed_when_truth_home_down() -> None:
     reset_system_log_for_tests()
     submitted: list[str] = []
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(
+        storage_backend="memory",
+        enable_event_outbox=False,
+        structure_definition_id="local.cli",
+    )
     try:
         plane = rt.work_plane
         assert plane is not None
@@ -69,17 +81,13 @@ def test_work_plane_fail_closed_when_truth_home_down() -> None:
         plane.enqueue(WorkIntent(kind="run_flow", target="blocked-flow"))
 
         assert rt.structure is not None
-        rt.structure.engine.observe(
-            Observation(kind=ObservationKind.TRUTH_HOME_DOWN)
-        )
+        rt.structure.engine.observe(Observation(kind=ObservationKind.TRUTH_HOME_DOWN))
         assert rt.admission.may_run_business is False
         assert plane.is_able() is False
         assert plane.tick(limit=10) == 0
         assert submitted == []
 
-        rt.structure.engine.observe(
-            Observation(kind=ObservationKind.TRUTH_HOME_UP)
-        )
+        rt.structure.engine.observe(Observation(kind=ObservationKind.TRUTH_HOME_UP))
         # Need a tick of the engine to leave BLOCKED → READY
         rt.structure.engine.tick()
         assert rt.admission.may_run_business is True
@@ -90,14 +98,16 @@ def test_work_plane_fail_closed_when_truth_home_down() -> None:
         rt.stop()
 
 
-def test_install_able_matches_admission() -> None:
+def test_install_able_matches_drain_not_ready() -> None:
+    """0.67.2 — board able is work_drain membership, not may_run_business."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
     rt.start(storage_backend="memory", enable_event_outbox=False)
     try:
         able = rt.install.able
         assert able is not None
-        assert able() is True
-        assert able() is rt.admission.may_run_business
+        assert rt.admission.may_run_business is True
+        assert able() is rt.admission.has_capability(CAPABILITY_WORK_DRAIN)
+        assert able() is False
     finally:
         rt.stop()
