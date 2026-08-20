@@ -639,18 +639,9 @@ def _handle_dispatch(
             InstanceNotOwnedError,
             SessionAttributionError,
         )
-        from palm.system.structure.errors import AdmissionRefusedError
-
-        if isinstance(exc, AdmissionRefusedError):
-            # 0.63.36 — honest gate voice (not "internal")
-            return {
-                "op": "error",
-                "id": msg_id,
-                "error": {
-                    "code": "admission_refused",
-                    "message": str(exc),
-                },
-            }
+        refused = structure_refuse_voice(msg_id, exc)
+        if refused is not None:
+            return refused
         if isinstance(exc, InstanceNotOwnedError):
             return {
                 "op": "error",
@@ -689,9 +680,30 @@ def _palm_version() -> str:
         return "unknown"
 
 
+def structure_refuse_voice(msg_id: str, exc: BaseException) -> dict[str, Any] | None:
+    """Map ready / organ refuse to Assist WS error payload; else ``None``."""
+    from palm.system.structure.errors import (
+        AdmissionRefusedError,
+        CapabilityRefusedError,
+    )
+
+    if isinstance(exc, AdmissionRefusedError):
+        code = "admission_refused"
+    elif isinstance(exc, CapabilityRefusedError):
+        code = "capability_refused"
+    else:
+        return None
+    return {
+        "op": "error",
+        "id": msg_id,
+        "error": {"code": code, "message": str(exc)},
+    }
+
+
 __all__ = [
     "ASSIST_WS_PATH",
     "PROTOCOL_VERSION",
     "handle_client_message",
     "run_assist_websocket",
+    "structure_refuse_voice",
 ]

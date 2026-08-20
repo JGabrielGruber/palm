@@ -83,12 +83,31 @@ def admission_refused(detail: str) -> ServerResponse:
     return error_response(503, "admission_refused", detail)
 
 
+def capability_refused(detail: str) -> ServerResponse:
+    """Organ missing after ready — not a 500 bug and not admission_refused.
+
+    Status **409** = membership conflict (organism ready, organ not installed).
+    Code **capability_refused** so clients do not mix the two questions.
+    """
+    return error_response(409, "capability_refused", detail)
+
+
 def maybe_admission_refused(exc: BaseException) -> ServerResponse | None:
-    """Map :class:`AdmissionRefusedError` to honest REST voice; else ``None``."""
-    from palm.system.structure.errors import AdmissionRefusedError
+    """Map ready / organ refuse to honest REST voice; else ``None``.
+
+    :class:`AdmissionRefusedError` → 503 ``admission_refused``.
+    :class:`CapabilityRefusedError` → 409 ``capability_refused`` (0.67.4).
+    Existing start/continue handlers already call this helper.
+    """
+    from palm.system.structure.errors import (
+        AdmissionRefusedError,
+        CapabilityRefusedError,
+    )
 
     if isinstance(exc, AdmissionRefusedError):
         return admission_refused(str(exc))
+    if isinstance(exc, CapabilityRefusedError):
+        return capability_refused(str(exc))
     return None
 
 

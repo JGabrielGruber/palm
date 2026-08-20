@@ -1,6 +1,6 @@
 # VISION 0.67 — Dependents require the organ
 
-**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.3` landed. Package stamp stays `0.66.0` until exit.  
+**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.4` landed. Package stamp stays `0.66.0` until exit.  
 **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Migration:** [MIGRATION-0.67](../migrations/MIGRATION-0.67.md)  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.66](closed/VISION-0.66.md) (**closed**) · sequence [VISION-0.64](closed/VISION-0.64.md) step 4  
@@ -32,7 +32,7 @@ An act that needs an organ **requires that organ** on the published gate. Busine
 
 ## Growth
 
-Façades and tests that freeze `may_run_business` as the organ list. Work-plane `able` that should mean drain is here. Host `start_ports.able` (drain + ready; wait stays ready) landed 0.67.3.
+Façades and tests that freeze `may_run_business` as the organ list. Work-plane `able` that should mean drain is here. Host `start_ports.able` (drain + ready; wait stays ready) landed 0.67.3. Surface voice for `CapabilityRefusedError` landed 0.67.4.
 
 **Not floor:** retune every `require_business_admission` site. Optional organ arg on that function. [SD-021](../../TECH-DEBT.md#sd-021) remaining `composition.has` kings.
 
@@ -69,7 +69,8 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 | **0.67.1** | `require_capability` + `CapabilityRefusedError` + drain-shaped proof. ✅ |
 | **0.67.2** | Work-plane `able` closes over `work_drain`. Wait stays ready. ✅ |
 | **0.67.3** | Host `start_ports.able` is drain; wait stays ready. ✅ |
-| **0.67.4+** | Leftover façades if José includes them. |
+| **0.67.4** | Surface voice for `CapabilityRefusedError` (`capability_refused`). ✅ |
+| **0.67.5+** | Leftover façades if José includes them. |
 | **exit** | José · ADR-036 Accepted · stamp `0.67.0`. |
 
 *The face reads the fact. Dependents ask the face.*

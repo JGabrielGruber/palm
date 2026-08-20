@@ -37,12 +37,33 @@ def admission_refused_error(detail: str) -> PalmRestError:
     )
 
 
+def capability_refused_error(detail: str) -> PalmRestError:
+    """Organ missing after ready — honest MCP/in-process voice (0.67.4).
+
+    Matches REST ``409 capability_refused`` so clients do not treat missing
+    organ as a generic 500 or as closed admission.
+    """
+    return PalmRestError(
+        409,
+        {
+            "error": "capability_refused",
+            "message": detail,
+            "detail": detail,
+        },
+    )
+
+
 def maybe_admission_refused_error(exc: BaseException) -> PalmRestError | None:
-    """Map :class:`AdmissionRefusedError` to PalmRestError; else ``None``."""
-    from palm.system.structure.errors import AdmissionRefusedError
+    """Map ready / organ refuse to PalmRestError; else ``None``."""
+    from palm.system.structure.errors import (
+        AdmissionRefusedError,
+        CapabilityRefusedError,
+    )
 
     if isinstance(exc, AdmissionRefusedError):
         return admission_refused_error(str(exc))
+    if isinstance(exc, CapabilityRefusedError):
+        return capability_refused_error(str(exc))
     return None
 
 
@@ -480,5 +501,6 @@ __all__ = [
     "PalmRestClient",
     "PalmRestError",
     "admission_refused_error",
+    "capability_refused_error",
     "maybe_admission_refused_error",
 ]

@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.4 — capability refused surface voice
+- Surfaces map `CapabilityRefusedError` to `capability_refused` (REST/MCP **409**, CLI/SSR/WS brand). Not a 500 and not `admission_refused`.
+- Existing start/continue handlers pick up REST/MCP via the current maybe-helpers. Package stamp stays `0.66.0`.
+
 ### 0.67.3 — host start_ports.able is drain
 - Host `start_ports.able` is `started ∧ ready ∧ work_drain`. Wait uses a ready-only sibling (`install_admission_able`).
 - Spawn no longer shares one `_started` override onto both planes. Package stamp stays `0.66.0`.

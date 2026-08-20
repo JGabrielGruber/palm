@@ -13,7 +13,7 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
     {
         "id": "work_plane.tick",
         "slice": "0.63.3",
-        "law": "able = started ∧ admission.may_run_business",
+        "law": "able = started ∧ ready ∧ work_drain (0.67.2); wait stays ready",
     },
     {
         "id": "work_plane.drain",
@@ -307,6 +307,14 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
             "exit judgment (not dual readiness)"
         ),
     },
+    {
+        "id": "surface.capability_voice",
+        "slice": "0.67.4",
+        "law": (
+            "REST 409 capability_refused + MCP/WS/CLI/SSR label the organ "
+            "door (not 500 / admission_refused / generic RuntimeError)"
+        ),
+    },
 )
 
 # Known open edges — purge or kill-date; not permanent dual.
@@ -377,7 +385,7 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         "id": "work_plane.able_default_open",
         "note": (
             "0.63.23: able default / attach omit / set_able(None) / install missing "
-            "able all fail closed (False). Runtime still binds started∧admission."
+            "able all fail closed (False). 0.67.2: work-plane able also needs work_drain."
         ),
         "intent": "paid",
         "status": "paid_0_63_23",
@@ -594,6 +602,17 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid exit residual cartography",
         "status": "paid_0_63_38",
+    },
+    {
+        "id": "surface.capability_voice_edge",
+        "note": (
+            "0.67.4: REST maybe_admission_refused maps CapabilityRefusedError "
+            "to 409 capability_refused; MCP PalmRestError 409; CLI/SSR brand "
+            "capability_refused; Assist WS structure_refuse_voice. Ready-false "
+            "stays 503 admission_refused."
+        ),
+        "intent": "paid surface honest voice for missing organ",
+        "status": "paid_0_67_4",
     },
 )
 

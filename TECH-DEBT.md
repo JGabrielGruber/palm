@@ -49,7 +49,7 @@ This file holds **what still needs work** plus a **master index** of all IDs.
 | [SD-017](docs/audit/TECH-DEBT-PAID.md#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.3** | ✅ paid (exclusive claim + reclaim + plane claimer) |
 | [SD-018](docs/audit/TECH-DEBT-PAID.md#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.7** | ✅ drain N + Queued pool + exclusive drive |
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
-| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.66 face; 0.67.1 require; 0.67.2 work-plane able; 0.67.3 host start_ports [VISION-0.67](docs/vision/VISION-0.67.md)) |
+| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.66 face; 0.67.1 require; 0.67.2 work-plane able; 0.67.3 host start_ports; 0.67.4 capability voice [VISION-0.67](docs/vision/VISION-0.67.md)) |
 | [SD-021](#sd-021) | Profile / composition / env as parallel structure king | S2 | L | **0.63** growth | open (seed map + purge) |
 | [SD-022](#sd-022) | Law docs treat talk/metaphor as types | S3 | L | ongoing | open (named 2026-08-19) |
 
@@ -192,7 +192,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (0.63 walls up; residuals **named**). **0.66** paid the face (installed names on the snapshot). **0.67.1** paid the organ door (`require_capability`). **0.67.2** paid work-plane `able` (drain membership; wait stays ready). **0.67.3** paid host `start_ports.able` (drain; wait stays ready). Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md).
+**Status:** open (0.63 walls up; residuals **named**). **0.66** paid the face (installed names on the snapshot). **0.67.1** paid the organ door (`require_capability`). **0.67.2** paid work-plane `able` (drain membership; wait stays ready). **0.67.3** paid host `start_ports.able` (drain; wait stays ready). **0.67.4** paid surface `capability_refused` voice. Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md).
 
 ---
 
