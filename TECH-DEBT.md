@@ -49,7 +49,7 @@ This file holds **what still needs work** plus a **master index** of all IDs.
 | [SD-017](docs/audit/TECH-DEBT-PAID.md#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.3** | ✅ paid (exclusive claim + reclaim + plane claimer) |
 | [SD-018](docs/audit/TECH-DEBT-PAID.md#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.7** | ✅ drain N + Queued pool + exclusive drive |
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
-| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.66 face paid; dependents later) |
+| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.66 face paid; dependents [VISION-0.67](docs/vision/VISION-0.67.md)) |
 | [SD-021](#sd-021) | Profile / composition / env as parallel structure king | S2 | L | **0.63** growth | open (seed map + purge) |
 | [SD-022](#sd-022) | Law docs treat talk/metaphor as types | S3 | L | ongoing | open (named 2026-08-19) |
 
@@ -165,7 +165,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-020"></a>
 
-**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · face [VISION-0.66](docs/vision/closed/VISION-0.66.md) (**closed**) · dependents after the face
+**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · face [VISION-0.66](docs/vision/closed/VISION-0.66.md) (**closed**) · dependents [VISION-0.67](docs/vision/VISION-0.67.md) (**open**)
 
 **Observation:** Business that needs ground can start without a single **admission** surface. Soft “definitions ready,” host flags, catalog order, and half-host tests act as peer readiness. Dual mode hides as green.
 
@@ -192,7 +192,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (0.63 walls up; residuals **named**). **0.66** paid the face (installed names on the snapshot). Dependents (`able`, façades) stay. Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [VISION-0.66](docs/vision/closed/VISION-0.66.md).
+**Status:** open (0.63 walls up; residuals **named**). **0.66** paid the face (installed names on the snapshot). Dependents (`able`, `require_capability`, façades) are [VISION-0.67](docs/vision/VISION-0.67.md). Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md).
 
 ---
 
@@ -575,7 +575,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | Seed | Debt | Spirit |
 |------|------|--------|
 | **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Closed 0.62** — [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) Accepted |
-| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63–0.66 closed** · remainder step 4 dependents — [VISION-0.66](docs/vision/closed/VISION-0.66.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63–0.66 closed** · **0.67 open** (step 4 dependents) — [VISION-0.67](docs/vision/VISION-0.67.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | **Navigator** | SD-022 · Assist as product bag | Operator-guidance definition + presentation adapter — [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) (queue seed; not open) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |

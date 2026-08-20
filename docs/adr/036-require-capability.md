@@ -1,0 +1,70 @@
+# ADR-036 — Require capability (dependents of the admission face)
+
+**Status:** Proposed  
+**Date:** 2026-08-20  
+**Theme:** [VISION-0.67](../vision/VISION-0.67.md)  
+**Map:** [PALM.md](../PALM.md)  
+**Related:** [ADR-032](032-organism-assembly.md) **Accepted** · [ADR-033](033-one-walker.md) **Accepted** · [ADR-035](035-admission-sits-on-capabilities.md) **Accepted**  
+**Sequence:** [VISION-0.64](../vision/closed/VISION-0.64.md) step 4 · [SD-020](../../TECH-DEBT.md#sd-020)
+
+---
+
+## Context
+
+1. Admission is the **business-rule face**: may this act run. Capability is the **structure fact**: is this organ here. [VISION-0.64](../vision/closed/VISION-0.64.md).  
+2. [ADR-035](035-admission-sits-on-capabilities.md) published installed names on `AdmissionSnapshot`. `require_business_admission` still fail-closes only on `may_run_business`.  
+3. Dependents (`able`, façades, tests) still treat the ready wall as the organ list. That is the old face as a second membership king.  
+4. The two questions must stay two questions. Ready false is not “organ missing.” Organ missing on a ready organism is not a corridor around the wall.  
+5. A decorator would hide the gate and hunt `admission` on `self` — the dig 0.66 stopped.
+
+## Decision
+
+### D1 — Two doors, same source
+
+`require_business_admission(source)` stays ready-only.
+
+`require_capability(source, name)` lives beside it. Same coerce. Fail closed if the snapshot is missing or `may_run_business` is false (`AdmissionRefusedError`). Then fail closed if `has_capability(name)` is false (`CapabilityRefusedError`, snapshot + name).
+
+Callers that only need “organism up” keep the first door. Callers that need an organ use the second. The second door always includes the wall.
+
+### D2 — `able` stays a query
+
+Zero-arg `able()` remains `started ∧ may_run_business`. A closure may also read `has_capability`. The install-board type stays `Callable[[], bool]`. No `@able`. No `@require`.
+
+### D3 — No organ argument on the ready door
+
+Do not add `capability=` to `require_business_admission`. Mixing the questions in one signature makes “admission” mean two things and invites every submit path to pass a name.
+
+## Consequences
+
+### Positive
+
+- Submit / CQRS / Assist keep a ready-only oath.  
+- Drain-shaped acts can require `work_drain` without digging structure.  
+- Tests can freeze membership as `has_capability`, not as `may_run_business`.
+
+### Negative / residual
+
+- Two functions to teach.  
+- Host `start_ports.able` may still be `_started` only until a growth slice.  
+- Remaining `composition.has` kings stay [SD-021](../../TECH-DEBT.md#sd-021).
+
+### Forbidden
+
+- Skip ready inside `require_capability`.  
+- Decorators on the wall.  
+- Definition `requires`.  
+- A fake capability named `ready`.
+
+## Alternatives considered
+
+- Optional organ arg on `require_business_admission` — rejected as the default. Same home, but one name for two questions. José may override (VISION lock 1).  
+- `require_capability` that does not check ready — rejected. Capability true on a closed organism is a corridor.  
+- Decorators — rejected. They hide the published gate.
+
+## Links
+
+- [VISION-0.67](../vision/VISION-0.67.md)  
+- [VISION-0.66](../vision/closed/VISION-0.66.md)  
+- [VISION-0.64](../vision/closed/VISION-0.64.md)  
+- [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)

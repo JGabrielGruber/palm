@@ -6,7 +6,7 @@
 **Map:** [PALM.md](../../PALM.md) · seed [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) · prior [VISION-0.65](VISION-0.65.md) (**closed**) · [VISION-0.64](VISION-0.64.md) (**closed**)  
 **Debt:** [SD-020](../../../TECH-DEBT.md#sd-020) (face paid; dependents later)
 
-**Exit:** José closed the theme (2026-08-20). The face publishes installed names. Step 4 dependents wait.
+**Exit:** José closed the theme (2026-08-20). The face publishes installed names. Step 4 dependents: [VISION-0.67](../VISION-0.67.md) (**open**).
 
 This minor is **assembly remainder step 3**: the admission face still answers “may this act run.” It **reads installed capabilities**. It is not a second walker.
 
@@ -56,7 +56,7 @@ Eyes that nest `to_dict()` (inspect, menu, vitality raw) pick up keys for free. 
 
 ## Not this theme
 
-- Step 4 dependents (`able`, façades, tests that freeze `may_run_business` as the organ list) — [SD-020](../../../TECH-DEBT.md#sd-020) after the face exists.  
+- Step 4 dependents (`able`, façades, tests that freeze `may_run_business` as the organ list) — [VISION-0.67](../VISION-0.67.md) (**open**).  
 - Remaining `composition.has` kings (journal, projections, webhook, compensation, analytics).  
 - Places, surface compost, navigator, tunnels, Grove.  
 - If drain/outbox still show first-organ costume, that work is still **0.64** / **0.65** law.
