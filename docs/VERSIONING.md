@@ -117,6 +117,22 @@ Agents do not invent `if`s to protect a patch number. José decides whether to b
 
 **Rhythm per theme:** `0.X.0` plan → `0.X.1 … 0.X.N` execute → **exit when José judges proper** → open `0.(X+1).0` when the next arc starts.
 
+### Present vs archive (José 2026-08-20)
+
+[STATUS.md](../STATUS.md) is the **present**. Closed seasons do not stay as slice tables in STATUS.
+
+Do not copy the same season into PALM, closed VISION, MIGRATION, glossary, and TECH-DEBT on every slice. **Link** the home. [WRITING.md](WRITING.md): do not copy PALM.
+
+| When | Touch |
+|------|--------|
+| **Slice** | Code + tests. STATUS: slice row + resume line. Open VISION: checkmark. Stop. |
+| **Theme open** | New VISION, ADR **Proposed**, MIGRATION stub if contracts will change, STATUS theme block. PALM: **one** open-theme pointer. |
+| **Theme close** | Move VISION to [closed/](vision/closed/). Fold any STATUS-only notes into that closed VISION. Accept ADR. Finish MIGRATION. STATUS drops the closed block; keep a one-line prior-closed link. PALM one line. Package stamp. |
+
+**Archive home** for a closed theme is the **closed VISION** (and its ADR / MIGRATION). Do not add a second STATUS graveyard.
+
+Compact reads STATUS → open VISION. That is enough.
+
 ---
 
 ## Artifacts by level
@@ -125,11 +141,13 @@ Agents do not invent `if`s to protect a patch number. José decides whether to b
 - `docs/VISION-0.X.md` — **required** (the plan; floor + growth + exit judgment)
 - `MIGRATION-0.X.md` — **required iff** the theme breaks API/contracts
 - ADR(s) for significant structural decisions
-- `STATUS.md` updated; `CHANGELOG.md` section
+- `STATUS.md` **present** only (open theme + resume). Closed slice tables live in the closed VISION.
+- `CHANGELOG.md` section at embedded release / close
 
 **Per slice-commit**
 - Commit `feat(0.X.N): <summary>` (or `fix(0.X.N):` / `refactor(0.X.N):`) — **keep the patch id** as the logical slice label; a `b`/`c` suffix is fine for sub-slices (e.g. `0.47.5c`). One focused change when possible; cite the tracked item. **No `just bump-version`** — the codebase version advances only at the embedded release.
 - **Green `just check`** / `just ci` (lint + test + guards) — enforced in CI for the declared green bar of that slice.
+- Docs: STATUS row + VISION checkmark. Do not restamp PALM, glossary, closed visions, or TECH-DEBT unless that file’s **meaning** changed.
 
 **Per embedded release (a minor or a patch-group)**
 - `just bump-version 0.X.N` — once, covering the grouped slice-commits (version + doc-surface sync).
