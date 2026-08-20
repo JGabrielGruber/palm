@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.6 — vitality work_cycle drain proofs
+- Vitality `work_cycle` drain proofs pin `local.cli`. Embedded ready still enqueues; tick does not process.
+- Package stamp stays `0.66.0`.
+
 ### 0.67.5 — schedule fire uses drain able
 - Work-plane `tick_schedules` uses the same able query as `tick` (`started ∧ ready ∧ work_drain`). Host `tick_work` follows. Ready without the organ does not advance the schedule clock.
 - Package stamp stays `0.66.0`.

@@ -21,6 +21,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "tick_schedules uses the same able as tick (drain); host tick_work follows",
     },
     {
+        "id": "vitality.work_cycle",
+        "slice": "0.67.6",
+        "law": "work_cycle drain uses plane tick able; ready without work_drain does not process",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -628,6 +633,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid schedule fire as drain query, not ready-as-membership",
         "status": "paid_0_67_5",
+    },
+    {
+        "id": "vitality.work_cycle_edge",
+        "note": (
+            "0.67.6: vitality work_cycle drain proofs pin local.cli. "
+            "Embedded ready still enqueues; tick does not process. "
+            "Ready is not membership."
+        ),
+        "intent": "paid vitality work_cycle freeze as drain membership",
+        "status": "paid_0_67_6",
     },
 )
 

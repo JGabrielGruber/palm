@@ -49,6 +49,7 @@ Do not add `capability=` to `require_business_admission`. Mixing the questions i
 - Host `start_ports.able` is drain-shaped from 0.67.3; wait uses `install_admission_able` (ready + host `_started`).  
 - Surfaces speak `capability_refused` from 0.67.4 (REST/MCP 409). Ready-false stays `admission_refused`.  
 - Schedule fire (`tick_schedules` / host `tick_work`) uses drain able from 0.67.5.  
+- Vitality `work_cycle` drain proofs pin `local.cli` from 0.67.6. Embedded ready is not membership.  
 - Remaining `composition.has` kings stay [SD-021](../../TECH-DEBT.md#sd-021).
 
 ### Forbidden
