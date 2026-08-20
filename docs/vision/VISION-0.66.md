@@ -1,6 +1,6 @@
 # VISION 0.66 — Admission sits on capabilities
 
-**Status:** 📋 **Theme open** (José 2026-08-20) · plan stamp `0.66.0`  
+**Status:** 📋 **Theme open** (José 2026-08-20) · plan stamp `0.66.0` · floor `0.66.1` landed  
 **ADR:** [035](../adr/035-admission-sits-on-capabilities.md) **Proposed**  
 **Migration:** [MIGRATION-0.66](../migrations/MIGRATION-0.66.md)  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.65](closed/VISION-0.65.md) (**closed**) · [VISION-0.64](closed/VISION-0.64.md) (**closed**)  
@@ -61,8 +61,8 @@ Eyes that nest `to_dict()` (inspect, menu, vitality raw) pick up keys for free. 
 
 | Slice | Intent |
 |-------|--------|
-| **0.66.0** | Plan + ADR-035 Proposed + locks. |
-| **0.66.1** | Snapshot + coerce + seat publish + proof test. |
+| **0.66.0** | Plan + ADR-035 Proposed + locks. ✅ |
+| **0.66.1** | Snapshot + coerce + seat publish + proof test. ✅ |
 | **0.66.2+** | Eyes columns if the nested dict is not enough. |
 | **exit** | José · ADR-035 Accepted · stamp `0.66.0` |
 

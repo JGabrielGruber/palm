@@ -35,6 +35,9 @@ class AdmissionSnapshot:
 
     Fail closed: ``may_run_business`` is True only when phase is READY and
     no blocking reasons remain.
+
+    ``capabilities`` are **installed** names (after materialize), not DNA listed
+    without a hand. ``has_capability`` is the same word as on the definition.
     """
 
     may_run_business: bool
@@ -42,6 +45,11 @@ class AdmissionSnapshot:
     definition_id: str | None = None
     definition_version: str | None = None
     reasons: tuple[str, ...] = ()
+    capabilities: frozenset[str] = frozenset()
+
+    def has_capability(self, name: str) -> bool:
+        """Whether *name* is installed on this organism."""
+        return name in self.capabilities
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -50,6 +58,7 @@ class AdmissionSnapshot:
             "definition_id": self.definition_id,
             "definition_version": self.definition_version,
             "reasons": list(self.reasons),
+            "capabilities": sorted(self.capabilities),
         }
 
     @classmethod

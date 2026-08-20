@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.66](../vision/VISION-0.66.md) · **ADR:** [035](../adr/035-admission-sits-on-capabilities.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Plan stamp `0.66.0` does not break runtime. **0.66.1** adds snapshot fields with defaults.
+Palm is pre-1.0. Plan stamp `0.66.0` does not break runtime. **0.66.1** landed: snapshot fields with defaults. Package stays `0.65.0` until theme exit.
 
 ## Prefer
 

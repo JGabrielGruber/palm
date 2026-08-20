@@ -27,6 +27,18 @@ class AdmissionRefusedError(RuntimeError):
         super().__init__(msg)
 
 
+def _capabilities_of(obj: Any) -> frozenset[str]:
+    raw = getattr(obj, "capabilities", None)
+    if raw is None:
+        return frozenset()
+    if isinstance(raw, str):
+        return frozenset((raw,))
+    try:
+        return frozenset(str(x) for x in raw)
+    except TypeError:
+        return frozenset()
+
+
 def _from_duck(obj: Any) -> AdmissionSnapshot | None:
     """Structural admission-like object → snapshot (test doubles)."""
     if obj is None:
@@ -35,12 +47,14 @@ def _from_duck(obj: Any) -> AdmissionSnapshot | None:
     phase = getattr(obj, "phase", None)
     if not isinstance(phase, StructurePhase):
         phase = StructurePhase.READY if may else StructurePhase.EMPTY
+    caps = _capabilities_of(obj)
     if may:
         return AdmissionSnapshot(
             may_run_business=True,
             phase=phase,
             definition_id=getattr(obj, "definition_id", None),
             definition_version=getattr(obj, "definition_version", None),
+            capabilities=caps,
         )
     reasons = getattr(obj, "reasons", ()) or ()
     if isinstance(reasons, str):
@@ -53,6 +67,7 @@ def _from_duck(obj: Any) -> AdmissionSnapshot | None:
         definition_id=getattr(obj, "definition_id", None),
         definition_version=getattr(obj, "definition_version", None),
         reasons=reason_t,
+        capabilities=caps,
     )
 
 

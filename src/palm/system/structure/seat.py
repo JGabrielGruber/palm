@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from palm.core.structure import (
     AdmissionSnapshot,
@@ -40,7 +40,11 @@ class StructureSeat:
             self.engine.initialize()
 
     def admission(self) -> AdmissionSnapshot:
-        return self.engine.admission()
+        snap = self.engine.admission()
+        caps = self.materialized_capabilities
+        if snap.capabilities == caps:
+            return snap
+        return replace(snap, capabilities=caps)
 
     def status(self) -> StructureStatus:
         return self.engine.status()
