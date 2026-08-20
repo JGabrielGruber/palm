@@ -1,4 +1,4 @@
-"""System structure errors — admission gate (0.63)."""
+"""System structure errors — admission gate (0.63) and capability require (0.67)."""
 
 from __future__ import annotations
 
@@ -24,6 +24,23 @@ class AdmissionRefusedError(RuntimeError):
                 f"admission refused: {reasons} "
                 f"(phase={snapshot.phase}, definition={snapshot.definition_id!r})"
             )
+        super().__init__(msg)
+
+
+class CapabilityRefusedError(RuntimeError):
+    """Organ required by this act is not installed — fail closed after ready.
+
+    Raised when the organism is ready but ``has_capability(name)`` is false.
+    Ready-false is :class:`AdmissionRefusedError`, not this error.
+    """
+
+    def __init__(self, snapshot: AdmissionSnapshot, name: str) -> None:
+        self.snapshot = snapshot
+        self.name = name
+        msg = (
+            f"capability refused: {name!r} not installed "
+            f"(phase={snapshot.phase}, definition={snapshot.definition_id!r})"
+        )
         super().__init__(msg)
 
 
@@ -132,6 +149,8 @@ def require_business_admission(source: object) -> AdmissionSnapshot:
     these rather than dig the composition root for readiness (VISION-ASSEMBLY §3).
     Hosts without an ``admission`` attribute (test doubles) must expose one
     that reflects readiness — there is no silent bypass.
+
+    Ready only. An act that needs an organ uses :func:`require_capability`.
     """
     snap = coerce_admission_snapshot(source)
     if snap is None:
@@ -141,9 +160,24 @@ def require_business_admission(source: object) -> AdmissionSnapshot:
     return snap
 
 
+def require_capability(source: object, name: str) -> AdmissionSnapshot:
+    """Fail closed unless *source* is ready and *name* is installed.
+
+    Same published *source* as :func:`require_business_admission`. Coerce once
+    via the ready door. Not ready → :class:`AdmissionRefusedError`. Ready but
+    ``has_capability(name)`` is false → :class:`CapabilityRefusedError`.
+    """
+    snap = require_business_admission(source)
+    if not snap.has_capability(name):
+        raise CapabilityRefusedError(snap, name)
+    return snap
+
+
 __all__ = [
     "AdmissionRefusedError",
+    "CapabilityRefusedError",
     "admission_as_dict",
     "coerce_admission_snapshot",
     "require_business_admission",
+    "require_capability",
 ]

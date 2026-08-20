@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Plan stamp `0.67.0`. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.1` landed the sibling door. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 

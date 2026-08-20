@@ -4,9 +4,11 @@ from palm.system.structure.access import admission_source_from_runtime_resolver
 from palm.system.structure.effects import EffectPort, RecordingEffectPort
 from palm.system.structure.errors import (
     AdmissionRefusedError,
+    CapabilityRefusedError,
     admission_as_dict,
     coerce_admission_snapshot,
     require_business_admission,
+    require_capability,
 )
 from palm.system.structure.hands import LOCAL_CAPABILITY_HANDS, CapabilitySeats
 from palm.system.structure.host_bind import (
@@ -72,6 +74,7 @@ __all__ = [
     "STRUCTURE_SEED_ENV",
     "CapabilitySeats",
     "AdmissionRefusedError",
+    "CapabilityRefusedError",
     "AssembleLoopResult",
     "EffectPort",
     "StructureSeat",
@@ -109,6 +112,7 @@ __all__ = [
     "admission_as_dict",
     "coerce_admission_snapshot",
     "require_business_admission",
+    "require_capability",
     "resolve_seed_definition",
     "seed_structure_options_from_host",
 ]

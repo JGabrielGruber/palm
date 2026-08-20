@@ -1,6 +1,6 @@
 # VISION 0.67 — Dependents require the organ
 
-**Status:** 📗 **Theme open** (José 2026-08-20) at plan `0.67.0`. Package stamp stays `0.66.0` until exit.  
+**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.1` landed. Package stamp stays `0.66.0` until exit.  
 **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Migration:** [MIGRATION-0.67](../migrations/MIGRATION-0.67.md)  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.66](closed/VISION-0.66.md) (**closed**) · sequence [VISION-0.64](closed/VISION-0.64.md) step 4  
@@ -27,6 +27,8 @@ An act that needs an organ **requires that organ** on the published gate. Busine
 - `able` may close over a name. The install-board type stays `Callable[[], bool]`. Do not add `@require` / `@able`.
 
 **Ready / refuse** stay a short gate. Do not invent a capability named `ready`.
+
+**Floor function:** `require_capability` + `CapabilityRefusedError` + drain-shaped proof (0.67.1). Ready without the organ is not membership.
 
 ## Growth
 
@@ -63,8 +65,8 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 
 | Slice | Intent |
 |-------|--------|
-| **0.67.0** | Plan + ADR-036 Proposed + locks. |
-| **0.67.1** | `require_capability` + `CapabilityRefusedError` + proof test. |
+| **0.67.0** | Plan + ADR-036 Proposed + locks. ✅ |
+| **0.67.1** | `require_capability` + `CapabilityRefusedError` + drain-shaped proof. ✅ |
 | **0.67.2+** | `able` / façades / tests that freeze ready as membership. |
 | **exit** | José · ADR-036 Accepted · stamp `0.67.0`. |
 

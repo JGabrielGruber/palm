@@ -4,6 +4,12 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.1 — require_capability
+- Sibling door `require_capability(source, name)` beside ready-only `require_business_admission`.
+- Not ready → `AdmissionRefusedError`. Ready but organ missing → `CapabilityRefusedError` (snapshot + name).
+- Drain-shaped proof: require `work_drain`; ready without the organ is not membership.
+- `able` / façades still 0.67.2+. Package stamp stays `0.66.0`.
+
 - **CLI doctor uses InspectService.doctor.** One bag with REST / assist / MCP. Host binds `application_host` at spawn; REST no longer assigns it per request.
 - CLI doctor `--format json` emits that bag. Anatomy / admission / neonroot / CS-002 tables render from it. Instance list and definition catalog stay as operator extras.
 - NeonRoot is a WorkloadRuntime only. Composition no longer lists `neonroot`. Settings drop `enable_neonroot_runners`. Doctor reports registered / available / health; it does not invent “declared but missing.”
