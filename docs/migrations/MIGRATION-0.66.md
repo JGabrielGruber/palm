@@ -1,9 +1,9 @@
 # Migration — 0.66 Admission sits on capabilities
 
-**Theme:** [VISION-0.66](../vision/VISION-0.66.md) · **ADR:** [035](../adr/035-admission-sits-on-capabilities.md) **Proposed**  
+**Theme:** [VISION-0.66](../vision/closed/VISION-0.66.md) (**closed**) · **ADR:** [035](../adr/035-admission-sits-on-capabilities.md) **Accepted**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Plan stamp `0.66.0` does not break runtime. **0.66.1** landed: snapshot fields with defaults. **0.66.2** landed: packaging / doctor / vitality load show `capabilities`. Package stays `0.65.0` until theme exit.
+Palm is pre-1.0. Theme closed at stamp `0.66.0`. Snapshot fields have defaults. Eyes copy `capabilities`. `require_business_admission` still fail-closes only on `may_run_business`.
 
 ## Prefer
 

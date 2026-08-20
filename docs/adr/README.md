@@ -49,12 +49,12 @@ Process: [AGENTS.md](../../AGENTS.md) §5 · template: [`.github/ISSUE_TEMPLATE/
 | [032](032-organism-assembly.md) | Organism assembly — DNA · admission · single readiness (0.63) | Accepted |
 | [033](033-one-walker.md) | Old wiring dies in the same cut (0.64) | Accepted |
 | [034](034-supervised-start-walks-registration.md) | Supervised start walks registration (0.65) | Accepted |
-| [035](035-admission-sits-on-capabilities.md) | Admission sits on installed capabilities (0.66) | Proposed |
+| [035](035-admission-sits-on-capabilities.md) | Admission sits on installed capabilities (0.66) | Accepted |
 
 \*ADR-005 may be promoted to Accepted in a docs pass; shipped reality is the service domain API.
 
-**Next free number:** 035.  
-**Note:** System **0.57** · session **0.58** · boot **0.59** · supervisor **0.60** · vitality **0.61** · capacity **0.62** · assembly **0.63** · first capability **0.64** · outbox proof **0.65** all **closed** (ADR-026…034 Accepted). **Open:** **0.66** admission on capabilities — [VISION-0.66](../vision/VISION-0.66.md) · ADR-035 **Proposed**. Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-TUNNELS](../vision/VISION-TUNNELS.md) · [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md).
+**Next free number:** 036.  
+**Note:** System **0.57** through admission face **0.66** all **closed** (ADR-026…035 Accepted). No open minor. Remainder: step 4 dependents / [SD-020](../../TECH-DEBT.md#sd-020). Residual multi-process claim: [SD-019](../../TECH-DEBT.md#sd-019). Queue seeds: [VISION-TUNNELS](../vision/VISION-TUNNELS.md) · [VISION-SURFACE-DEFLATION](../vision/VISION-SURFACE-DEFLATION.md) · seed essay [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md).
 
 ## How to add an ADR
 

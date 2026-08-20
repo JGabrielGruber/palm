@@ -4,7 +4,7 @@
 **Language:** ASD-STE100 (practical).  
 **Map:** [PALM.md](../PALM.md) · [VERSIONING.md](../VERSIONING.md) (floor · growth · exit · **José** decides)  
 **Intended architecture:** [docs/architecture/](../architecture/README.md) (Palm-wide; structure management is one component).  
-**Active plan:** [VISION-0.66](VISION-0.66.md) (admission sits on installed capabilities). This file keeps **roles · ports · citizenship · modules**. Outbox proof [VISION-0.65](closed/VISION-0.65.md) is closed.  
+**Active plan:** none. Admission face [VISION-0.66](closed/VISION-0.66.md) is **closed**. This file keeps **roles · ports · citizenship · modules**. Remainder: step 4 dependents.  
 **Spine we keep:** [VISION-0.57](closed/VISION-0.57.md)+ system · [VISION-0.56](VISION-0.56.md) workload scout · [VISION-0.55](closed/VISION-0.55.md) reactive · [VISION-0.62](closed/VISION-0.62.md) capacity  
 **Horizon order:** assembly → [VISION-TUNNELS](VISION-TUNNELS.md) → [VISION-GROVE](VISION-GROVE.md). Surface compost [VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) may interleave.  
 **Debt:** [SD-020](../../TECH-DEBT.md#sd-020) · [SD-021](../../TECH-DEBT.md#sd-021) · [SD-019](../../TECH-DEBT.md#sd-019) · [SD-016](../../TECH-DEBT.md#sd-016)
@@ -27,7 +27,7 @@
 
 §7 layout below is **vision shape**. Paths there stay `*/assembly/` as the essay. Code homes are the table. Glossary: [architecture/glossary.md](../architecture/glossary.md).
 
-**Remainder.** 0.63 mapped the citizen contract. 0.64 / 0.65 did the work (capabilities as structure fact). **Step 3** is [VISION-0.66](VISION-0.66.md): admission reads installed capabilities. **Step 4** (dependents / [SD-020](../../TECH-DEBT.md#sd-020)) waits until the face exists. Sequence: [VISION-0.64](closed/VISION-0.64.md).
+**Remainder.** 0.63 mapped the citizen contract. 0.64 / 0.65 did the work. **Step 3** is [VISION-0.66](closed/VISION-0.66.md) (**closed**): admission reads installed capabilities. **Step 4** (dependents / [SD-020](../../TECH-DEBT.md#sd-020)) waits. Sequence: [VISION-0.64](closed/VISION-0.64.md).
 
 ---
 

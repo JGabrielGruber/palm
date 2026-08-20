@@ -1,13 +1,13 @@
 # ADR-035 — Admission sits on installed capabilities
 
-**Status:** Proposed  
-**Date:** 2026-08-20  
-**Theme:** [VISION-0.66](../vision/VISION-0.66.md)  
+**Status:** Accepted  
+**Date:** 2026-08-20 · **Accepted:** 2026-08-20  
+**Theme:** [VISION-0.66](../vision/closed/VISION-0.66.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Related:** [ADR-032](032-organism-assembly.md) **Accepted** · [ADR-033](033-one-walker.md) **Accepted** · [ADR-034](034-supervised-start-walks-registration.md) **Accepted**  
 **Sequence:** [VISION-0.64](../vision/closed/VISION-0.64.md) steps 3–4
 
-José opened the theme (2026-08-20). Accept at exit.
+José accepted (2026-08-20). Theme closed. Snapshot publishes installed names. Step 4 dependents wait.
 
 ---
 
@@ -74,7 +74,7 @@ A product-shaped caller can ask `has_capability("work_drain")` on the gate (`run
 
 ## Links
 
-- [VISION-0.66](../vision/VISION-0.66.md)  
+- [VISION-0.66](../vision/closed/VISION-0.66.md)  
 - [VISION-0.64](../vision/closed/VISION-0.64.md)  
 - [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)  
 - [glossary](../architecture/glossary.md) — admission · capability

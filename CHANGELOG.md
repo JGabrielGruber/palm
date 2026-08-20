@@ -8,6 +8,17 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 - CLI doctor `--format json` emits that bag. Anatomy / admission / neonroot / CS-002 tables render from it. Instance list and definition catalog stay as operator extras.
 - NeonRoot is a WorkloadRuntime only. Composition no longer lists `neonroot`. Settings drop `enable_neonroot_runners`. Doctor reports registered / available / health; it does not invent “declared but missing.”
 
+## [0.66.0] — 2026-08-20
+
+### 0.66 — Admission sits on capabilities (**theme closed** · José)
+
+Vision: [VISION-0.66](docs/vision/closed/VISION-0.66.md) · ADR: [035](docs/adr/035-admission-sits-on-capabilities.md) **Accepted** · Migration: [MIGRATION-0.66](docs/migrations/MIGRATION-0.66.md)
+
+- `AdmissionSnapshot` publishes installed `capabilities` / `has_capability`.
+- Seat overlays materialized names after assemble. Engine does not walk.
+- Eyes (packaging, doctor, vitality load) show the list. `admission_as_dict` replaces 3-key remain menus.
+- Ready stays the short wall. Step 4 dependents (`able`, `require(organ)`) wait.
+
 ## [0.65.0] — 2026-08-18
 
 ### 0.65 — Outbox as the proof cut (**theme closed** · José)
