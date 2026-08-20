@@ -165,7 +165,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-020"></a>
 
-**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · residual under [VISION-0.64](docs/vision/closed/VISION-0.64.md)
+**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · face reshape [VISION-0.66](docs/vision/VISION-0.66.md) · dependents after the face
 
 **Observation:** Business that needs ground can start without a single **admission** surface. Soft “definitions ready,” host flags, catalog order, and half-host tests act as peer readiness. Dual mode hides as green.
 
@@ -192,7 +192,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (0.63 walls up; residuals **named**). Not a 0.64 dump. José: pay by reshaping admission around capabilities after copyable, then change dependents. Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md).
+**Status:** open (0.63 walls up; residuals **named**). **0.66** pays the face (installed names on the snapshot). Dependents (`able`, façades) stay after the face. Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [VISION-0.66](docs/vision/VISION-0.66.md).
 
 ---
 
@@ -575,7 +575,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | Seed | Debt | Spirit |
 |------|------|--------|
 | **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Closed 0.62** — [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) Accepted |
-| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63 / 0.64 closed** · [VISION-0.64](docs/vision/closed/VISION-0.64.md) · [ADR-033](docs/adr/033-one-walker.md) Accepted · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63 / 0.64 / 0.65 closed** · **0.66 open** (admission face) — [VISION-0.66](docs/vision/VISION-0.66.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | **Navigator** | SD-022 · Assist as product bag | Operator-guidance definition + presentation adapter — [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) (queue seed; not open) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |
