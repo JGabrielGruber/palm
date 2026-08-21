@@ -64,6 +64,9 @@ class InstallInterface(Protocol):
     @property
     def event_journal(self) -> Any: ...
 
+    @property
+    def projections(self) -> Any: ...
+
 
 class SystemInstall:
     """
@@ -86,6 +89,7 @@ class SystemInstall:
         "_work_plane",
         "_event_journal",
         "_event_journal_sub",
+        "_projections",
     )
 
     def __init__(self) -> None:
@@ -102,6 +106,7 @@ class SystemInstall:
         self._work_plane: Any = None
         self._event_journal: Any = None
         self._event_journal_sub: Any = None
+        self._projections: Any = None
 
     # ── read surface (InstallInterface) ─────────────────────────────────────
 
@@ -160,6 +165,11 @@ class SystemInstall:
         """Interceptor subscription for drop-on-omit. Not a product slot."""
         return self._event_journal_sub
 
+    @property
+    def projections(self) -> Any:
+        """Core projections attached by the projections hand. Not a loop."""
+        return self._projections
+
     # ── explicit bind ────────────────────────────────────────────────────────
 
     def bind(
@@ -178,6 +188,7 @@ class SystemInstall:
         work_plane: Any = _UNSET,
         event_journal: Any = _UNSET,
         event_journal_sub: Any = _UNSET,
+        projections: Any = _UNSET,
     ) -> SystemInstall:
         """
         Bind named ports. Omitted kwargs are left unchanged.
@@ -210,6 +221,8 @@ class SystemInstall:
             self._event_journal = event_journal
         if event_journal_sub is not _UNSET:
             self._event_journal_sub = event_journal_sub
+        if projections is not _UNSET:
+            self._projections = projections
         self._push_start_ports()
         return self
 
@@ -247,6 +260,7 @@ class SystemInstall:
             "outbox_processor": self._outbox_processor is not None,
             "work_plane": self._work_plane is not None,
             "event_journal": self._event_journal is not None,
+            "projections": self._projections is not None,
             "start_ports": self.start_ports_bound(),
         }
 

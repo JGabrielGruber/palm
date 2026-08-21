@@ -4,6 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.9 — projections DNA + attach hand
+- `projections` is name + attach hand + omit. DNA lists it on `local.cli` / `server` / `all_in_one` / `mcp`; `embedded` / `worker` omit.
+- Host attach reads `has_capability("projections")`, not `composition.has`. Composition/seed no longer write the name.
+- Not a no-op organ. Dual-attach of `host.event` vs runtimes is leftover. Not all of SD-021. Package stamp stays `0.66.0`.
+
 ### 0.67.8 — journal leftover (one organ)
 - Journal is one attach on the runtime bus. The host slot reads that object. Drop-on-omit unsubscribes. Not a supervisor loop and not a second interceptor on `host.event`.
 - Package stamp stays `0.66.0`.

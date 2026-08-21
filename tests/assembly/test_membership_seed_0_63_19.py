@@ -24,6 +24,7 @@ def test_membership_capability_seeds_catalog_complete() -> None:
     assert "outbox" not in caps
     assert "work_drain" not in caps
     assert "journal" not in caps  # DNA + hand, not a composition seed
+    assert "projections" not in caps  # DNA + hand (0.67.9)
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert "enable_compensation" in settings_fields
     assert "enable_work_drain_service" not in settings_fields
@@ -103,9 +104,9 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     assert profile.has("webhook")
     assert not profile.has("work_drain")
     assert not profile.has("analytics")
-    # Always-on on settings-composed path (journal is DNA, not composition)
+    # Always-on on settings-composed path (journal/projections are DNA, not composition)
     assert not profile.has("journal")
-    assert profile.has("projections")
+    assert not profile.has("projections")
     assert profile.has("workloads")
 
 

@@ -91,22 +91,16 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
             assert by_id["host.surfaces.mount"]["outcome"] == "skip"
             assert by_id["host.surfaces.mount"]["reason"] == "composition_off:surfaces"
 
-        # Projections capability.
-        if expected.composition.has("projections"):
+        # Projections capability is DNA, not composition.has.
+        if host.admission.has_capability("projections"):
             assert by_id["host.projections.attach"]["outcome"] == "ok"
         else:
             assert by_id["host.projections.attach"]["outcome"] == "skip"
-            assert (
-                by_id["host.projections.attach"]["reason"]
-                == "composition_off:projections"
-            )
+            assert by_id["host.projections.attach"]["reason"] == "capability_off:projections"
 
         # Background work drain: DNA capabilities list (not composition.has).
         rt = host.runtime()
-        if (
-            rt.structure is not None
-            and "work_drain" in rt.structure.materialized_capabilities
-        ):
+        if rt.structure is not None and "work_drain" in rt.structure.materialized_capabilities:
             plane = rt.work_plane
             assert plane is not None
             assert plane.is_running is True

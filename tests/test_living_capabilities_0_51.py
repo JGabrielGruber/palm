@@ -22,7 +22,7 @@ from palm.app.host.composition import (
 from palm.app.host.composition import CompositionProfile as CP
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
-from palm.core.structure import CAPABILITY_OUTBOX, CAPABILITY_WORK_DRAIN
+from palm.core.structure import CAPABILITY_OUTBOX, CAPABILITY_PROJECTIONS, CAPABILITY_WORK_DRAIN
 
 
 def _caps(**overrides: object) -> frozenset[str]:
@@ -36,15 +36,14 @@ def _caps(**overrides: object) -> frozenset[str]:
 
 def test_full_recovery_derives_exactly_default_capabilities() -> None:
     """full_recovery turns on compensation; with analytics + always-on
-    projections that is exactly DEFAULT_CAPABILITIES — the production-default shape.
-    journal is DNA, not a composition seed (0.67.7)."""
+    workloads that is exactly DEFAULT_CAPABILITIES — the production-default shape.
+    journal and projections are DNA, not composition seeds."""
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
         {
             "compensation",
             "analytics",
-            "projections",
             "workloads",
         }
     )
@@ -52,8 +51,8 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
 
 def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
     """for_tests default (full_recovery=False): compensation + outbox off, analytics on,
-    projections always available. journal is DNA, not composition."""
-    assert _caps() == frozenset({"projections", "analytics", "workloads"})
+    workloads always-on. journal and projections are DNA, not composition."""
+    assert _caps() == frozenset({"analytics", "workloads"})
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
@@ -78,6 +77,16 @@ def test_journal_is_not_a_composition_seed() -> None:
     )
 
 
+def test_projections_is_not_a_composition_seed() -> None:
+    """projections has no enable_* flag and is not a composition seed (0.67.9 DNA + hand)."""
+    assert "projections" not in _caps()
+    assert "projections" not in _caps(
+        enable_compensation=False,
+        enable_event_outbox=False,
+        analytics_enabled=False,
+    )
+
+
 # ── behaviour preservation ───────────────────────────────────────────────────
 
 
@@ -94,8 +103,8 @@ def test_services_not_gated_by_capabilities_yet() -> None:
     host = ApplicationHost(settings=PalmSettings.for_tests(load_examples=False))
     host.start()
     try:
-        # lean test settings derive {projections, analytics, workloads} ...
-        assert host.composition.capabilities == frozenset({"projections", "analytics", "workloads"})
+        # lean test settings derive {analytics, workloads} ...
+        assert host.composition.capabilities == frozenset({"analytics", "workloads"})
         # ... yet every service is still built (services are a separate axis)
         for name in (
             "inspect",
@@ -285,13 +294,13 @@ def test_journal_gated_by_capability() -> None:
 
 
 def test_projections_are_a_capability_lean_host_starts_without_them() -> None:
-    """The projection layer is gated by composition.has('projections'). A default host has
-    it (derived always); a lean composition that omits it starts cleanly with NO projection
-    layer — the projection-less shape ApplicationHost could not express before (0.50.5f)."""
+    """The projection layer is gated by DNA has_capability('projections'). Default hosts
+    list it; lean “no projections” is embedded DNA, not empty composition on a server
+    shape."""
     default = ApplicationHost(settings=PalmSettings.for_tests(load_examples=False))
     default.start()
     try:
-        assert "projections" in default.composition.capabilities
+        assert default.admission.has_capability(CAPABILITY_PROJECTIONS)
         assert default._instance_projection is not None
     finally:
         default.shutdown()
@@ -300,9 +309,10 @@ def test_projections_are_a_capability_lean_host_starts_without_them() -> None:
         settings=PalmSettings.for_tests(load_examples=False),
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    lean.start()
+    lean.start(structure_definition_id="local.embedded")
     try:
         assert lean.is_started is True  # it assembles — the payoff of the theme
+        assert not lean.admission.has_capability(CAPABILITY_PROJECTIONS)
         assert lean._instance_projection is None
         assert lean._job_board_projection is None
         assert lean._resource_projection is None
@@ -322,7 +332,7 @@ def test_lean_host_serves_reads_direct_from_runtime() -> None:
         settings=PalmSettings.for_tests(load_examples=False),
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    lean.start()
+    lean.start(structure_definition_id="local.embedded")
     try:
         assert lean._instance_projection is None  # no projection layer ...
         # ... yet the read side works, served direct-from-runtime

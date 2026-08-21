@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Execute `0.67.8` landed journal leftover as one organ on the runtime bus. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.9` landed projections as DNA + attach hand. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 
@@ -36,3 +36,5 @@ From 0.67.6 vitality `work_cycle` drain proofs use `local.cli`. Embedded ready s
 From 0.67.7 `journal` membership is the structure definition list. Host attach follows `has_capability("journal")`. Composition omit does not hide a listed name. `local.embedded` and `local.worker` omit the organ. Do not treat `composition.has("journal")` as membership.
 
 From 0.67.8 the journal organ is the attach on `runtime.event`. `host.event_journal` is that object. Catch-up and redrive see orchestration events (`job.completed`, `resource.changed`). Emitting only on `host.event` does not append. Journal is not a supervised loop.
+
+From 0.67.9 `projections` membership is the structure definition list. Host attach follows `has_capability("projections")`. Composition omit does not hide a listed name. `local.embedded` and `local.worker` omit the organ. Do not treat `composition.has("projections")` as membership. Dual-attach (`host.event` and runtimes) is leftover.

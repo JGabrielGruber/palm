@@ -60,6 +60,7 @@ from palm.common.cqrs.schemas import build_schema_registry
 from palm.common.events.external import WebhookDispatcher
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
+from palm.core.structure import CAPABILITY_PROJECTIONS
 from palm.kits.server.cqrs import wire_standalone_query_bus
 from palm.patterns.wizard.bindings.cqrs.projection import (
     WizardProgressReadModel,
@@ -377,9 +378,7 @@ class ApplicationHost:
             )
         plane = self.session_plane
         if plane is None:
-            raise RuntimeError(
-                "ApplicationHost has no session plane; primary runtime not ready"
-            )
+            raise RuntimeError("ApplicationHost has no session plane; primary runtime not ready")
         return plane.bind(
             session_id,
             create=create,
@@ -394,9 +393,7 @@ class ApplicationHost:
             return self._session.inspect(session_id)
         plane = self.session_plane
         if plane is None:
-            raise RuntimeError(
-                "ApplicationHost has no session plane; primary runtime not ready"
-            )
+            raise RuntimeError("ApplicationHost has no session plane; primary runtime not ready")
         return plane.inspect(session_id)
 
     def resolve_session_continue(self, session_id: str) -> str | None:
@@ -406,23 +403,17 @@ class ApplicationHost:
             return self._session.resolve_continue_instance(session_id)
         plane = self.session_plane
         if plane is None:
-            raise RuntimeError(
-                "ApplicationHost has no session plane; primary runtime not ready"
-            )
+            raise RuntimeError("ApplicationHost has no session plane; primary runtime not ready")
         return plane.resolve_continue_instance(session_id)
 
-    def require_session_owns_instance(
-        self, session_id: str, instance_id: str
-    ) -> Any:
+    def require_session_owns_instance(self, session_id: str, instance_id: str) -> Any:
         """SI-015 owner gate (0.58.11): bound session must own instance."""
         self._require_started()
         if self._session is not None:
             return self._session.require_owned_instance(session_id, instance_id)
         plane = self.session_plane
         if plane is None:
-            raise RuntimeError(
-                "ApplicationHost has no session plane; primary runtime not ready"
-            )
+            raise RuntimeError("ApplicationHost has no session plane; primary runtime not ready")
         return plane.require_owned_instance(session_id, instance_id)
 
     def session_event_matches(self, session_id: str, event: Any) -> bool:
@@ -432,9 +423,7 @@ class ApplicationHost:
             return self._session.event_matches(session_id, event=event)
         plane = self.session_plane
         if plane is None:
-            raise RuntimeError(
-                "ApplicationHost has no session plane; primary runtime not ready"
-            )
+            raise RuntimeError("ApplicationHost has no session plane; primary runtime not ready")
         return bool(plane.event_matches(session_id, event=event))
 
     def start(self, **options: Any) -> Self:
@@ -693,7 +682,7 @@ class ApplicationHost:
         """
         self._require_business_admission()
         meta = dict(metadata or {})
-        sid = (session_id or meta.get("session_id") or "")
+        sid = session_id or meta.get("session_id") or ""
         sid = str(sid).strip() if sid else ""
         if sid:
             meta["session_id"] = sid
@@ -799,12 +788,9 @@ class ApplicationHost:
 
     def _wire_cqrs(self) -> None:
         wire_command_bus(self._command_bus, self._app, self._router)
-        # 0.51.5: the projection layer is a capability. Default hosts derive "projections"
-        # (always), so this is behaviour-preserving; a lean composition that omits it wires
-        # no projections and no projection-backed query handlers — the projection-less shape
-        # ApplicationHost could not express before. Its read side (direct-from-runtime) is
-        # the composition-root fold-in (0.51.6); a projection-less host is submit-complete.
-        if self.composition.has("projections"):
+        # 0.67.9: the projection layer is DNA + attach hand. Host wire reads
+        # has_capability, not composition.has. Omit is embedded/worker DNA.
+        if self.admission.has_capability(CAPABILITY_PROJECTIONS):
             projections = build_host_projections(self._app.storage, self._app.instance_manager)
             register_host_projections(self._projection_manager, projections)
             self._instance_projection = projections.instance
@@ -863,7 +849,7 @@ class ApplicationHost:
         self._workplane.wire_inbound()
 
     def _attach_projections(self) -> None:
-        if not self.composition.has("projections"):
+        if not self.admission.has_capability(CAPABILITY_PROJECTIONS):
             return
         self._projection_manager.attach(self._event)
         self._projection_manager.attach_runtimes(self._app)
@@ -964,7 +950,11 @@ def run_host(
     definition via host spawn (server → ``local.server``, worker → ``local.worker``, …).
     Pass *boot_mode* to pin a BootMode seed explicitly.
     """
-    resolved = profile if isinstance(profile, DeploymentProfile) else DeploymentProfile.from_preset(profile)
+    resolved = (
+        profile
+        if isinstance(profile, DeploymentProfile)
+        else DeploymentProfile.from_preset(profile)
+    )
     host = ApplicationHost(settings=settings, profile=resolved, boot_mode=boot_mode)
     host.start(**start_options)
     try:

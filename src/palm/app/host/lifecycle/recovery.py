@@ -15,6 +15,7 @@ from palm.app.host.workers import WorkerCoordinator
 from palm.common.compensation import CompensationCoordinator, default_compensation_registry
 from palm.common.cqrs.rebuild import ProjectionRebuildPolicy
 from palm.common.events.external import WebhookDispatcher, webhook_targets_from_urls
+from palm.core.structure import CAPABILITY_PROJECTIONS
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
@@ -76,8 +77,11 @@ class RecoveryCoordinator:
             # Documented ignore: pending count is status-only (CS-005).
             _log.debug("outbox pending count failed", exc_info=True)
 
-        # 0.51.5: no projection layer (lean composition) → nothing to rebuild.
-        if host.composition.has("projections") and host.settings.rebuild_projections_on_startup:
+        # 0.67.9: no projection layer (DNA omit) → nothing to rebuild.
+        if (
+            host.admission.has_capability(CAPABILITY_PROJECTIONS)
+            and host.settings.rebuild_projections_on_startup
+        ):
             report = host._projection_manager.rebuild_all(
                 policy=ProjectionRebuildPolicy(
                     batch_size=host.settings.projection_rebuild_batch_size,

@@ -132,7 +132,7 @@ def test_spine_host_post_start_contracts(spine_settings: PalmSettings) -> None:
         # Composition membership truth (0.59.5).
         assert "inspect" in host.composition.services
         assert "session" in host.composition.services
-        assert host.composition.has("projections")
+        assert host.admission.has_capability("projections")
         assert host.membership_snapshot()["services"]
     finally:
         host.shutdown()

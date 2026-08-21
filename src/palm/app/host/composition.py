@@ -5,10 +5,10 @@ The composition axis, twin of ``DeploymentProfile`` (the deployment axis, in
 ``roles.py``). A running app is assembled from one ``CompositionProfile`` and one
 ``DeploymentProfile``; the two are orthogonal and never merge.
 
-**0.59.5 / 0.64 / 0.67.7 membership:** this profile seeds product services, surfaces, and
-capabilities other than ``work_drain``, ``outbox``, and ``journal``. Those names are not
-composition members — after structure definition load, install is definition
-``capabilities``.
+**0.59.5 / 0.64 / 0.67.7 / 0.67.9 membership:** this profile seeds product services,
+surfaces, and capabilities other than ``work_drain``, ``outbox``, ``journal``, and
+``projections``. Those names are not composition members — after structure
+definition load, install is definition ``capabilities``.
 Deployment may feed the settings resolver but does not OR at phase time.
 See ADR-028 D4, VISION-0.64, and ``composition_profile_from_settings``.
 
@@ -36,7 +36,6 @@ Capability = Literal[
     "compensation",
     "webhook",
     "analytics",
-    "projections",
     "workloads",  # 0.56 — WorkloadEngine plane (host OFF by default)
 ]
 
@@ -65,7 +64,6 @@ DEFAULT_CAPABILITIES: frozenset[Capability] = frozenset(
     {
         "compensation",
         "analytics",
-        "projections",
         "workloads",
     }
 )

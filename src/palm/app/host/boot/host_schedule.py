@@ -6,11 +6,11 @@ comes up. Handlers here are the rules. Collaborators (kernel, spawner, CQRS
 wire, recovery, workplane) are tools — they do not own boot order.
 
 **Membership:** ``CompositionProfile`` still switches services, surfaces, and
-capabilities other than ``work_drain``, ``outbox``, and ``journal``. Those
-organs follow definition ``capabilities``. Drain/outbox loops start on the
-system schedule (``system.background.start``) after assemble. Journal is
-attach, not a loop — the host slot reads the seated journal. The host
-does not start them again.
+capabilities other than ``work_drain``, ``outbox``, ``journal``, and
+``projections``. Those organs follow definition ``capabilities``. Drain/outbox
+loops start on the system schedule (``system.background.start``) after assemble.
+Journal and projections are attach, not loops — the host slot reads the seated
+organ. The host does not start them again.
 
 **Break / harvest:** mid-theme breakage is expected. BootMode and PhaseSkip
 are the switches. Do not restore import-order magic.
@@ -32,6 +32,7 @@ from palm.app.bootstrap import runtime_start_options
 from palm.app.host.boot.system_log_phase import make_host_system_log_handler
 from palm.app.host.events import HostEventType
 from palm.app.host.workers import WorkerCoordinator
+from palm.core.structure import CAPABILITY_PROJECTIONS
 from palm.system.boot.context import BootContext
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
@@ -129,8 +130,8 @@ def build_host_handlers(
         )
 
     def projections_attach(_ctx: BootContext) -> None:
-        if not host.composition.has("projections"):
-            raise PhaseSkip("composition_off:projections")
+        if not host.admission.has_capability(CAPABILITY_PROJECTIONS):
+            raise PhaseSkip("capability_off:projections")
         host._attach_projections()
 
     def recover(_ctx: BootContext) -> None:

@@ -21,11 +21,14 @@ LOCAL_MCP_ID = "local.mcp"
 
 # Local install names. Drain phenotypes list outbox (0.65). Journal is attach
 # (0.67.7): cli/server/all_in_one/mcp list; embedded/worker omit.
+# Projections is attach (0.67.9): same list as journal; embedded/worker omit.
 CAPABILITY_WORK_DRAIN = "work_drain"
 CAPABILITY_OUTBOX = "outbox"
 CAPABILITY_JOURNAL = "journal"
+CAPABILITY_PROJECTIONS = "projections"
 _DRAIN_AND_OUTBOX = frozenset({CAPABILITY_WORK_DRAIN, CAPABILITY_OUTBOX})
 _DRAIN_OUTBOX_JOURNAL = _DRAIN_AND_OUTBOX | {CAPABILITY_JOURNAL}
+_DRAIN_OUTBOX_JOURNAL_PROJECTIONS = _DRAIN_OUTBOX_JOURNAL | {CAPABILITY_PROJECTIONS}
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,7 +101,7 @@ def local_cli(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="cli",
         refuse=frozenset({"server_surfaces"}),
-        capabilities=_DRAIN_OUTBOX_JOURNAL,
+        capabilities=_DRAIN_OUTBOX_JOURNAL_PROJECTIONS,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -111,7 +114,7 @@ def local_server(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="server",
         refuse=frozenset(),
-        capabilities=_DRAIN_OUTBOX_JOURNAL,
+        capabilities=_DRAIN_OUTBOX_JOURNAL_PROJECTIONS,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -124,7 +127,7 @@ def local_all_in_one(*, version: str = "1") -> StructureDefinition:
         version=version,
         role_intent="all_in_one",
         refuse=frozenset(),
-        capabilities=_DRAIN_OUTBOX_JOURNAL,
+        capabilities=_DRAIN_OUTBOX_JOURNAL_PROJECTIONS,
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )
@@ -144,13 +147,16 @@ def local_worker(*, version: str = "1") -> StructureDefinition:
 
 
 def local_mcp(*, version: str = "1") -> StructureDefinition:
-    """MCP operator surface — full services, MCP surface only (no drain)."""
+    """MCP operator surface — full services, MCP surface only (no drain).
+
+    Lists journal and projections (attach), not drain/outbox (loops).
+    """
     return StructureDefinition(
         id=LOCAL_MCP_ID,
         version=version,
         role_intent="mcp",
         refuse=frozenset({"http_server_surfaces"}),
-        capabilities=frozenset({CAPABILITY_JOURNAL}),
+        capabilities=frozenset({CAPABILITY_JOURNAL, CAPABILITY_PROJECTIONS}),
         places_required=(),
         meta={"builtin": True, "source": "seed"},
     )

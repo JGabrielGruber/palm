@@ -48,19 +48,26 @@ def test_host_full_product_packaging() -> None:
 
 
 def test_host_lean_product_packaging() -> None:
-    """Lean host: no projections capability — still full product services + packaging."""
+    """Lean host: no projections capability — still full product services + packaging.
+
+    Lean omit is embedded DNA (0.67.9), not empty composition on an all_in_one profile.
+    """
     composition = CompositionProfile(
         services=CompositionProfile.all_in_one().services,
         surfaces=(),
-        capabilities=frozenset(),  # no projections / work_drain
+        capabilities=frozenset(),
+    )
+    settings = PalmSettings.for_tests().model_copy(
+        update={"structure_definition_id": "local.embedded"}
     )
     with ApplicationHost(
-        settings=PalmSettings.for_tests(),
+        settings=settings,
         profile=DeploymentProfile.all_in_one(),
         composition=composition,
     ) as host:
         _assert_product_doors(host)
         assert not host.composition.has("projections")
+        assert not host.admission.has_capability("projections")
 
 
 def test_hostless_server_context_product_packaging() -> None:

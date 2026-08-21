@@ -96,7 +96,7 @@ HOST_PHASES: tuple[PhaseSpec, ...] = (
         "host.projections.attach",
         "host",
         "implemented",
-        "Attach projections when composition has projections",
+        "Attach projections when DNA lists projections",
         optional=True,
     ),
     PhaseSpec(

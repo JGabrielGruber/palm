@@ -136,17 +136,17 @@ def test_surfaces_skip_when_composition_has_none() -> None:
         host.shutdown()
 
 
-def test_projections_skip_reason_composition_off() -> None:
+def test_projections_skip_reason_capability_off() -> None:
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(
         settings=settings,
         composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    host.start()
+    host.start(structure_definition_id="local.embedded")
     try:
         by_id = {w.phase: w for w in (host._last_boot_walk or [])}
         assert by_id["host.projections.attach"].outcome == "skip"
-        assert by_id["host.projections.attach"].reason == "composition_off:projections"
+        assert by_id["host.projections.attach"].reason == "capability_off:projections"
     finally:
         host.shutdown()
 

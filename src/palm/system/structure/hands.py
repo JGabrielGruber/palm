@@ -10,6 +10,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from palm.common.cqrs.projections.wire import wire_install_projections
 from palm.common.events import wire_event_journal
 from palm.system.subsystems.supervisor.definition import (
     ContinuousWireContext,
@@ -95,10 +96,34 @@ def apply_journal(seats: CapabilitySeats, *, listed: bool) -> None:
     install.bind(event_journal=journal, event_journal_sub=sub)
 
 
+def _drop_projections(install: Any) -> None:
+    if install is None:
+        return
+    bind = getattr(install, "bind", None)
+    if callable(bind):
+        bind(projections=None)
+
+
+def apply_projections(seats: CapabilitySeats, *, listed: bool) -> None:
+    """Attach core projections when listed; drop them otherwise. Attach, not a loop."""
+    install = seats.install
+    if not listed:
+        _drop_projections(install)
+        return
+    if install is None or getattr(install, "projections", None) is not None:
+        return
+    storage = seats.storage
+    instance_manager = getattr(install, "instance_manager", None)
+    if storage is None or instance_manager is None:
+        return
+    install.bind(projections=wire_install_projections(storage, instance_manager))
+
+
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {
     "work_drain": apply_work_drain,
     "outbox": apply_outbox,
     "journal": apply_journal,
+    "projections": apply_projections,
 }
 
 __all__ = [
@@ -106,5 +131,6 @@ __all__ = [
     "LOCAL_CAPABILITY_HANDS",
     "apply_journal",
     "apply_outbox",
+    "apply_projections",
     "apply_work_drain",
 ]

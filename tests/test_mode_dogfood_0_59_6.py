@@ -48,7 +48,7 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         # Embedded: no surfaces, no projections capability.
         assert by_id["host.surfaces.mount"]["outcome"] == "skip"
         assert by_id["host.projections.attach"]["outcome"] == "skip"
-        assert by_id["host.projections.attach"]["reason"] == "composition_off:projections"
+        assert by_id["host.projections.attach"]["reason"] == "capability_off:projections"
 
         # Core product doors only (no assist/design/analytics chrome).
         assert host.system is not None
