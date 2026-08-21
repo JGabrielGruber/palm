@@ -25,8 +25,7 @@ from palm.app.host.router import RuntimeRouter
 from palm.app.host.services import HostServiceContext, core_service_registry
 from palm.app.host.services.packaging import apply_product_packaging
 from palm.app.host.wiring import (
-    build_host_projections,
-    register_host_projections,
+    build_pattern_projections,
     wire_command_bus,
     wire_query_bus,
 )
@@ -788,24 +787,35 @@ class ApplicationHost:
 
     def _wire_cqrs(self) -> None:
         wire_command_bus(self._command_bus, self._app, self._router)
-        # 0.67.9: the projection layer is DNA + attach hand. Host wire reads
-        # has_capability, not composition.has. Omit is embedded/worker DNA.
+        # 0.67.10: host slots alias the install organ. Membership is DNA
+        # (has_capability). Omit is embedded/worker DNA. Pattern extras stay host.
         if self.admission.has_capability(CAPABILITY_PROJECTIONS):
-            projections = build_host_projections(self._app.storage, self._app.instance_manager)
-            register_host_projections(self._projection_manager, projections)
-            self._instance_projection = projections.instance
-            self._resource_projection = projections.resource
-            self._job_board_projection = projections.job_board
-            self._pattern_projections = projections.patterns
-            wire_query_bus(
-                self._query_bus,
-                app=self._app,
-                instances=self._instance_projection,
-                pattern_projections=self._pattern_projections,
-                resource_invocations=self._resource_projection,
-                job_board=self._job_board_projection,
-                instance_manager=self._app.instance_manager,
-            )
+            # 0.67.10: host slots alias the install organ. Do not rebuild core.
+            try:
+                bag = self.runtime().install.projections
+            except Exception:
+                bag = None
+            if bag is None:
+                wire_standalone_query_bus(self._query_bus, self.runtime())
+            else:
+                manager = getattr(bag, "manager", None)
+                if manager is not None:
+                    self._projection_manager = manager
+                self._instance_projection = bag.instance
+                self._resource_projection = bag.resource
+                self._job_board_projection = bag.job_board
+                self._pattern_projections = build_pattern_projections(self._app.storage)
+                for projection in self._pattern_projections.values():
+                    self._projection_manager.register(projection)
+                wire_query_bus(
+                    self._query_bus,
+                    app=self._app,
+                    instances=self._instance_projection,
+                    pattern_projections=self._pattern_projections,
+                    resource_invocations=self._resource_projection,
+                    job_board=self._job_board_projection,
+                    instance_manager=self._app.instance_manager,
+                )
         else:
             # 0.51.6: projection-less (lean) shape — serve reads direct-from-runtime,
             # reusing the standalone read handlers over the host's primary runtime, so a
@@ -849,10 +859,10 @@ class ApplicationHost:
         self._workplane.wire_inbound()
 
     def _attach_projections(self) -> None:
+        # 0.67.10: the hand already attached to the runtime bus. Host slots
+        # alias that organ. Do not subscribe host.event and do not attach again.
         if not self.admission.has_capability(CAPABILITY_PROJECTIONS):
             return
-        self._projection_manager.attach(self._event)
-        self._projection_manager.attach_runtimes(self._app)
 
     def reload_work_triggers(self) -> int:
         """Reload definition triggers into the work drain (after design/example load)."""

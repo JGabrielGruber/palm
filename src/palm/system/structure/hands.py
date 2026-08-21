@@ -99,6 +99,12 @@ def apply_journal(seats: CapabilitySeats, *, listed: bool) -> None:
 def _drop_projections(install: Any) -> None:
     if install is None:
         return
+    bag = getattr(install, "projections", None)
+    manager = getattr(bag, "manager", None) if bag is not None else None
+    if manager is not None:
+        shutdown = getattr(manager, "shutdown", None)
+        if callable(shutdown):
+            shutdown()
     bind = getattr(install, "bind", None)
     if callable(bind):
         bind(projections=None)
@@ -113,10 +119,11 @@ def apply_projections(seats: CapabilitySeats, *, listed: bool) -> None:
     if install is None or getattr(install, "projections", None) is not None:
         return
     storage = seats.storage
+    event = seats.event
     instance_manager = getattr(install, "instance_manager", None)
-    if storage is None or instance_manager is None:
+    if storage is None or instance_manager is None or event is None:
         return
-    install.bind(projections=wire_install_projections(storage, instance_manager))
+    install.bind(projections=wire_install_projections(storage, instance_manager, event))
 
 
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {

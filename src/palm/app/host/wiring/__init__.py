@@ -17,12 +17,14 @@ from palm.app.host.wiring.cqrs import (
 from palm.app.host.wiring.projections import (
     HostProjections,
     build_host_projections,
+    build_pattern_projections,
     register_host_projections,
 )
 
 __all__ = [
     "HostProjections",
     "build_host_projections",
+    "build_pattern_projections",
     "collect_cqrs_command_types",
     "collect_cqrs_query_types",
     "register_host_projections",

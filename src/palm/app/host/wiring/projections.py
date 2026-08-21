@@ -28,8 +28,8 @@ class HostProjections:
     patterns: dict[str, Any] = field(default_factory=dict)
 
 
-def build_host_projections(storage: Any, instance_manager: Any) -> HostProjections:
-    """Construct the core + pattern projections over ``storage``."""
+def build_pattern_projections(storage: Any) -> dict[str, Any]:
+    """Construct pattern extras. Core read models live on the install board."""
     import palm.patterns  # noqa: F401 — ensure pattern projection factories are registered
 
     patterns: dict[str, Any] = {}
@@ -37,11 +37,16 @@ def build_host_projections(storage: Any, instance_manager: Any) -> HostProjectio
         factory = get_projection_factory(pattern_name)
         if factory is not None:
             patterns[pattern_name] = factory(storage)
+    return patterns
+
+
+def build_host_projections(storage: Any, instance_manager: Any) -> HostProjections:
+    """Construct the core + pattern projections over ``storage``."""
     return HostProjections(
         instance=InstanceIndexProjection(storage, instance_manager),
         resource=ResourceInvocationProjection(storage),
         job_board=JobStatusBoardProjection(storage),
-        patterns=patterns,
+        patterns=build_pattern_projections(storage),
     )
 
 
@@ -57,5 +62,6 @@ def register_host_projections(manager: ProjectionManager, projections: HostProje
 __all__ = [
     "HostProjections",
     "build_host_projections",
+    "build_pattern_projections",
     "register_host_projections",
 ]
