@@ -56,6 +56,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "one compensation attach on the runtime bus; host slot reads that object; not a supervisor loop",
     },
     {
+        "id": "structure.webhook_materialize",
+        "slice": "0.67.13",
+        "law": "webhook is DNA list + attach hand; composition.has is not membership",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -728,6 +733,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid compensation leftover costume as one organ",
         "status": "paid_0_67_12",
+    },
+    {
+        "id": "structure.webhook_composition_king",
+        "note": (
+            "0.67.13: webhook is name + attach hand + omit. DNA lists it on "
+            "cli/server/all_in_one/mcp; embedded/worker omit. Recover "
+            "reads has_capability, not composition.has. Not a no-op organ."
+        ),
+        "intent": "paid webhook composition king as copyable DNA + hand",
+        "status": "paid_0_67_13",
     },
 )
 

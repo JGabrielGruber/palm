@@ -13,6 +13,7 @@ from typing import Any
 from palm.common.compensation.wire import wire_install_compensation
 from palm.common.cqrs.projections.wire import wire_install_projections
 from palm.common.events import wire_event_journal
+from palm.common.events.webhook_wire import wire_install_webhook
 from palm.system.subsystems.supervisor.definition import (
     ContinuousWireContext,
     register_outbox,
@@ -154,12 +155,32 @@ def apply_compensation(seats: CapabilitySeats, *, listed: bool) -> None:
     install.bind(compensation=wire_install_compensation(event))
 
 
+def _drop_webhook(install: Any) -> None:
+    if install is None:
+        return
+    bind = getattr(install, "bind", None)
+    if callable(bind):
+        bind(webhook=None)
+
+
+def apply_webhook(seats: CapabilitySeats, *, listed: bool) -> None:
+    """Attach webhook dispatcher when listed; drop it otherwise. Attach, not a loop."""
+    install = seats.install
+    if not listed:
+        _drop_webhook(install)
+        return
+    if install is None or getattr(install, "webhook", None) is not None:
+        return
+    install.bind(webhook=wire_install_webhook())
+
+
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {
     "work_drain": apply_work_drain,
     "outbox": apply_outbox,
     "journal": apply_journal,
     "projections": apply_projections,
     "compensation": apply_compensation,
+    "webhook": apply_webhook,
 }
 
 __all__ = [
@@ -169,5 +190,6 @@ __all__ = [
     "apply_journal",
     "apply_outbox",
     "apply_projections",
+    "apply_webhook",
     "apply_work_drain",
 ]

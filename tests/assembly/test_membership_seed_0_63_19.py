@@ -17,7 +17,6 @@ from palm.system.structure import (
 def test_membership_capability_seeds_catalog_complete() -> None:
     caps = {row["capability"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert caps == {
-        "webhook",
         "analytics",
     }
     assert "outbox" not in caps
@@ -25,6 +24,7 @@ def test_membership_capability_seeds_catalog_complete() -> None:
     assert "journal" not in caps  # DNA + hand, not a composition seed
     assert "projections" not in caps  # DNA + hand (0.67.9)
     assert "compensation" not in caps  # DNA + hand (0.67.11)
+    assert "webhook" not in caps  # DNA + hand (0.67.13)
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert "enable_compensation" not in settings_fields
     assert "enable_work_drain_service" not in settings_fields
@@ -40,7 +40,7 @@ def test_structure_seed_env_includes_all_membership_seeds() -> None:
     assert "PALM_ENABLE_COMPENSATION" not in member_envs
     assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in member_envs
     assert "PALM_ENABLE_EVENT_OUTBOX" not in member_envs
-    assert "PALM_ENABLE_WEBHOOK_DISPATCHER" in member_envs
+    assert "PALM_ENABLE_WEBHOOK_DISPATCHER" not in member_envs
     assert "PALM_ANALYTICS_ENABLED" in member_envs
     assert "PALM_ENABLE_NEONROOT_RUNNERS" not in member_envs
 
@@ -101,7 +101,7 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     profile = composition_profile_from_settings(settings)
     assert not profile.has("compensation")
     assert not profile.has("outbox")
-    assert profile.has("webhook")
+    assert not profile.has("webhook")
     assert not profile.has("work_drain")
     assert not profile.has("analytics")
     # Always-on on settings-composed path (journal/projections are DNA, not composition)

@@ -4,9 +4,9 @@ External event consumers — webhook dispatch from the transactional outbox.
 **Add a webhook consumer**
 
 1. Configure targets via :class:`WebhookTarget` (URL + optional event filter).
-2. Pass targets to :class:`WebhookDispatcher` and attach on recover when
-   composition lists ``webhook``. Or set ``PALM_WEBHOOK_URLS`` /
-   ``PALM_ENABLE_WEBHOOK_DISPATCHER`` on the host.
+2. Pass targets to :class:`WebhookDispatcher`. Structure DNA lists ``webhook``
+   (``has_capability("webhook")``); recover still refines targets from
+   ``PALM_WEBHOOK_URLS``. ``PALM_ENABLE_WEBHOOK_DISPATCHER`` is leftover packaging.
 
 3. For tests, inject :class:`RecordingWebhookDeliverer` to capture deliveries
    without network I/O.

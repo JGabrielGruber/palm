@@ -23,16 +23,23 @@ LOCAL_MCP_ID = "local.mcp"
 # (0.67.7): cli/server/all_in_one/mcp list; embedded/worker omit.
 # Projections is attach (0.67.9): same list as journal; embedded/worker omit.
 # Compensation is attach (0.67.11): same list as journal; embedded/worker omit.
+# Webhook is attach (0.67.13): same list as journal; embedded/worker omit.
 CAPABILITY_WORK_DRAIN = "work_drain"
 CAPABILITY_OUTBOX = "outbox"
 CAPABILITY_JOURNAL = "journal"
 CAPABILITY_PROJECTIONS = "projections"
 CAPABILITY_COMPENSATION = "compensation"
+CAPABILITY_WEBHOOK = "webhook"
 _DRAIN_AND_OUTBOX = frozenset({CAPABILITY_WORK_DRAIN, CAPABILITY_OUTBOX})
 _DRAIN_OUTBOX_JOURNAL = _DRAIN_AND_OUTBOX | {CAPABILITY_JOURNAL}
 _DRAIN_OUTBOX_JOURNAL_PROJECTIONS = _DRAIN_OUTBOX_JOURNAL | {CAPABILITY_PROJECTIONS}
-_DRAIN_OUTBOX_ATTACH = _DRAIN_OUTBOX_JOURNAL_PROJECTIONS | {CAPABILITY_COMPENSATION}
-_ATTACH_NO_DRAIN = frozenset({CAPABILITY_JOURNAL, CAPABILITY_PROJECTIONS, CAPABILITY_COMPENSATION})
+_DRAIN_OUTBOX_ATTACH = _DRAIN_OUTBOX_JOURNAL_PROJECTIONS | {
+    CAPABILITY_COMPENSATION,
+    CAPABILITY_WEBHOOK,
+}
+_ATTACH_NO_DRAIN = frozenset(
+    {CAPABILITY_JOURNAL, CAPABILITY_PROJECTIONS, CAPABILITY_COMPENSATION, CAPABILITY_WEBHOOK}
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -153,7 +160,7 @@ def local_worker(*, version: str = "1") -> StructureDefinition:
 def local_mcp(*, version: str = "1") -> StructureDefinition:
     """MCP operator surface — full services, MCP surface only (no drain).
 
-    Lists journal, projections, and compensation (attach), not drain/outbox (loops).
+    Lists journal, projections, compensation, and webhook (attach), not drain/outbox (loops).
     """
     return StructureDefinition(
         id=LOCAL_MCP_ID,
@@ -201,6 +208,7 @@ __all__ = [
     "CAPABILITY_JOURNAL",
     "CAPABILITY_OUTBOX",
     "CAPABILITY_PROJECTIONS",
+    "CAPABILITY_WEBHOOK",
     "CAPABILITY_WORK_DRAIN",
     "LOCAL_ALL_IN_ONE_ID",
     "LOCAL_CLI_ID",

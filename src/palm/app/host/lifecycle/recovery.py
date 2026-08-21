@@ -15,7 +15,11 @@ from palm.app.host.workers import WorkerCoordinator
 from palm.common.compensation import CompensationCoordinator
 from palm.common.cqrs.rebuild import ProjectionRebuildPolicy
 from palm.common.events.external import WebhookDispatcher, webhook_targets_from_urls
-from palm.core.structure import CAPABILITY_COMPENSATION, CAPABILITY_PROJECTIONS
+from palm.core.structure import (
+    CAPABILITY_COMPENSATION,
+    CAPABILITY_PROJECTIONS,
+    CAPABILITY_WEBHOOK,
+)
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
@@ -93,10 +97,9 @@ class RecoveryCoordinator:
 
     def _build_webhook_dispatcher(self) -> WebhookDispatcher | None:
         host = self._host
-        # 0.51.2: the "webhook" capability gates availability (derived from
-        # settings.enable_webhook_dispatcher on the default path); settings.webhook_urls
+        # 0.67.13: webhook membership is DNA has_capability. settings.webhook_urls
         # still configure the targets — settings refine within the capability, never bypass it.
-        if not host.composition.has("webhook"):
+        if not host.admission.has_capability(CAPABILITY_WEBHOOK):
             return None
         if not host.settings.webhook_urls:
             return None

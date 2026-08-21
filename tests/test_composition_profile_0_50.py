@@ -47,11 +47,11 @@ def test_default_resolver_matches_all_in_one_services_and_surfaces() -> None:
 
 
 def test_presets_declare_the_shapes_palm_ships() -> None:
-    # all_in_one has every surface available (the server deployment mounts them);
-    # server adds webhook dispatch on top.
+    # all_in_one has every surface available (the server deployment mounts them).
+    # webhook membership is DNA (0.67.13), not a composition preset.
     assert CP.server().surfaces == SERVER_SURFACES
     assert CP.all_in_one().surfaces == SERVER_SURFACES
-    assert CP.server().has("webhook")
+    assert not CP.server().has("webhook")
     assert not CP.all_in_one().has("webhook")
 
     # embedded (palmengine-django) is minimal: core services, no surfaces, no background
@@ -81,7 +81,7 @@ def test_profile_is_frozen_and_hashable() -> None:
 def test_helpers() -> None:
     server = CP.server()
     assert server.exposes("rest") and not server.exposes("nope")
-    assert server.has("webhook") and not server.has("nope")
+    assert server.has("analytics") and not server.has("nope")
 
 
 # ── 0.50.2: the host reads its composition ───────────────────────────────────

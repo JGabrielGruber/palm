@@ -72,7 +72,7 @@ class PalmSettings(BaseSettings):
     projection_rebuild_skip_if_fresh: bool = True
     # Residual packaging flag (0.67.11) — compensation is DNA, not a composition seed.
     enable_compensation: bool = True
-    # Membership *seed* (0.63.19) — feeds composition.webhook at resolve only.
+    # Residual packaging flag (0.67.13) — webhook is DNA, not a composition seed.
     enable_webhook_dispatcher: bool = False
     # 0.56 — Workload plane: host subprocess runtime (default OFF; not multi-tenant safe)
     # Packaging / plane install, not composition membership seed.

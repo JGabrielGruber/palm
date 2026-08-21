@@ -70,6 +70,9 @@ class InstallInterface(Protocol):
     @property
     def compensation(self) -> Any: ...
 
+    @property
+    def webhook(self) -> Any: ...
+
 
 class SystemInstall:
     """
@@ -94,6 +97,7 @@ class SystemInstall:
         "_event_journal_sub",
         "_projections",
         "_compensation",
+        "_webhook",
     )
 
     def __init__(self) -> None:
@@ -112,6 +116,7 @@ class SystemInstall:
         self._event_journal_sub: Any = None
         self._projections: Any = None
         self._compensation: Any = None
+        self._webhook: Any = None
 
     # ── read surface (InstallInterface) ─────────────────────────────────────
 
@@ -180,6 +185,11 @@ class SystemInstall:
         """Compensation coordinator bound by the compensation hand. Not a loop."""
         return self._compensation
 
+    @property
+    def webhook(self) -> Any:
+        """Webhook dispatcher bound by the webhook hand. Not a loop."""
+        return self._webhook
+
     # ── explicit bind ────────────────────────────────────────────────────────
 
     def bind(
@@ -200,6 +210,7 @@ class SystemInstall:
         event_journal_sub: Any = _UNSET,
         projections: Any = _UNSET,
         compensation: Any = _UNSET,
+        webhook: Any = _UNSET,
     ) -> SystemInstall:
         """
         Bind named ports. Omitted kwargs are left unchanged.
@@ -236,6 +247,8 @@ class SystemInstall:
             self._projections = projections
         if compensation is not _UNSET:
             self._compensation = compensation
+        if webhook is not _UNSET:
+            self._webhook = webhook
         self._push_start_ports()
         return self
 
@@ -275,6 +288,7 @@ class SystemInstall:
             "event_journal": self._event_journal is not None,
             "projections": self._projections is not None,
             "compensation": self._compensation is not None,
+            "webhook": self._webhook is not None,
             "start_ports": self.start_ports_bound(),
         }
 

@@ -14,6 +14,7 @@ from dataclasses import replace
 
 from palm.app import ApplicationHost
 from palm.app.bootstrap import composition_profile_from_settings
+from palm.app.host.boot.modes import BootMode
 from palm.app.host.composition import (
     ALL_SERVICES,
     DEFAULT_CAPABILITIES,
@@ -26,6 +27,7 @@ from palm.core.structure import (
     CAPABILITY_COMPENSATION,
     CAPABILITY_OUTBOX,
     CAPABILITY_PROJECTIONS,
+    CAPABILITY_WEBHOOK,
     CAPABILITY_WORK_DRAIN,
 )
 
@@ -42,7 +44,7 @@ def _caps(**overrides: object) -> frozenset[str]:
 def test_full_recovery_derives_exactly_default_capabilities() -> None:
     """full_recovery no longer seeds compensation (0.67.11 DNA). Analytics +
     always-on workloads is DEFAULT_CAPABILITIES. journal / projections /
-    compensation are DNA, not composition seeds."""
+    compensation / webhook are DNA, not composition seeds."""
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
@@ -55,7 +57,7 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
 
 def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
     """for_tests default (full_recovery=False): analytics on, workloads always-on.
-    journal, projections, and compensation are DNA, not composition."""
+    journal, projections, compensation, and webhook are DNA, not composition."""
     assert _caps() == frozenset({"analytics", "workloads"})
 
 
@@ -64,7 +66,7 @@ def test_each_flag_toggles_exactly_its_capability() -> None:
     assert "compensation" not in _caps(enable_compensation=False)
     assert "outbox" not in _caps(enable_event_outbox=True)
     assert "outbox" not in _caps(enable_event_outbox=False)
-    assert "webhook" in _caps(enable_webhook_dispatcher=True)
+    assert "webhook" not in _caps(enable_webhook_dispatcher=True)
     assert "webhook" not in _caps(enable_webhook_dispatcher=False)
     assert "work_drain" not in _caps()
     assert "analytics" in _caps(analytics_enabled=True)
@@ -98,6 +100,18 @@ def test_compensation_is_not_a_composition_seed() -> None:
     assert "compensation" not in _caps(
         enable_compensation=False,
         enable_event_outbox=False,
+        analytics_enabled=False,
+    )
+
+
+def test_webhook_is_not_a_composition_seed() -> None:
+    """webhook is DNA + hand (0.67.13); enable_webhook_dispatcher does not seed composition."""
+    assert "webhook" not in _caps()
+    assert "webhook" not in _caps(enable_webhook_dispatcher=True)
+    assert "webhook" not in _caps(
+        enable_compensation=False,
+        enable_event_outbox=False,
+        enable_webhook_dispatcher=False,
         analytics_enabled=False,
     )
 
@@ -166,10 +180,10 @@ def test_compensation_gate_reads_dna_not_composition() -> None:
         lean.shutdown()
 
 
-def test_webhook_gate_reads_composition_not_settings() -> None:
-    """The webhook dispatcher is gated by composition.has('webhook'); settings.webhook_urls
-    still configure it (refine, not bypass). Composition omitting 'webhook' wins over
-    settings.enable_webhook_dispatcher."""
+def test_webhook_gate_reads_dna_not_composition() -> None:
+    """RecoveryCoordinator gates webhook on DNA has_capability (0.67.13).
+    URLs still refine targets. Composition omit on a listed phenotype does not hide it.
+    Lean omit is embedded DNA."""
     settings = PalmSettings.for_tests(full_recovery=True).model_copy(
         update={
             "enable_webhook_dispatcher": True,
@@ -177,25 +191,23 @@ def test_webhook_gate_reads_composition_not_settings() -> None:
         }
     )
 
-    with_cap = ApplicationHost(
-        settings=settings,
-        composition=replace(CP.all_in_one(), capabilities=frozenset({"webhook"})),
-    )
-    with_cap.start()
+    listed = ApplicationHost.for_mode(BootMode.cli(), settings=settings)
+    listed.start()
     try:
-        assert with_cap._recovery._build_webhook_dispatcher() is not None
+        assert listed.admission.has_capability(CAPABILITY_WEBHOOK)
+        assert listed._recovery._build_webhook_dispatcher() is not None
+        assert listed.runtime().install.webhook is not None
     finally:
-        with_cap.shutdown()
+        listed.shutdown()
 
-    without_cap = ApplicationHost(
-        settings=settings,  # settings still enable the dispatcher + provide urls ...
-        composition=replace(CP.all_in_one(), capabilities=frozenset()),  # ... composition omits it
-    )
-    without_cap.start()
+    lean = ApplicationHost.for_mode(BootMode.safe(), settings=settings)
+    lean.start()
     try:
-        assert without_cap._recovery._build_webhook_dispatcher() is None  # capability axis wins
+        assert not lean.admission.has_capability(CAPABILITY_WEBHOOK)
+        assert lean._recovery._build_webhook_dispatcher() is None
+        assert lean.runtime().install.webhook is None
     finally:
-        without_cap.shutdown()
+        lean.shutdown()
 
 
 # ── 0.51.3: available (composition) and activated (deployment) ───────────────
