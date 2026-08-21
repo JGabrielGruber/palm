@@ -4,6 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.16 — analytics DNA + attach hand
+- `analytics` is name + attach hand + omit. DNA lists it on `local.cli` / `server` / `all_in_one` / `mcp`; `embedded` / `worker` omit.
+- Admission reads `has_capability("analytics")`, not `composition.has`. Composition/seed no longer write the name.
+- Not a no-op organ. Product `AnalyticsService` vs install-board attach is leftover. `analytics_enabled` stays product packaging. Not all of SD-021. Package stamp stays `0.66.0`.
+
 ### 0.67.15 — unread-flag compost
 - `PalmSettings` drops unread `enable_compensation` and `enable_webhook_dispatcher`. Membership is DNA.
 - Dead `attach_runtimes` on compensation and projections is gone. Living docs no longer wire those organs from a flag.

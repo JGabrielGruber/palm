@@ -10,6 +10,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from palm.common.analytics.wire import wire_install_analytics
 from palm.common.compensation.wire import wire_install_compensation
 from palm.common.cqrs.projections.wire import wire_install_projections
 from palm.common.events import wire_event_journal
@@ -174,6 +175,25 @@ def apply_webhook(seats: CapabilitySeats, *, listed: bool) -> None:
     install.bind(webhook=wire_install_webhook())
 
 
+def _drop_analytics(install: Any) -> None:
+    if install is None:
+        return
+    bind = getattr(install, "bind", None)
+    if callable(bind):
+        bind(analytics=None)
+
+
+def apply_analytics(seats: CapabilitySeats, *, listed: bool) -> None:
+    """Attach analytics when listed; drop it otherwise. Attach, not a loop."""
+    install = seats.install
+    if not listed:
+        _drop_analytics(install)
+        return
+    if install is None or getattr(install, "analytics", None) is not None:
+        return
+    install.bind(analytics=wire_install_analytics())
+
+
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {
     "work_drain": apply_work_drain,
     "outbox": apply_outbox,
@@ -181,11 +201,13 @@ LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {
     "projections": apply_projections,
     "compensation": apply_compensation,
     "webhook": apply_webhook,
+    "analytics": apply_analytics,
 }
 
 __all__ = [
     "CapabilitySeats",
     "LOCAL_CAPABILITY_HANDS",
+    "apply_analytics",
     "apply_compensation",
     "apply_journal",
     "apply_outbox",

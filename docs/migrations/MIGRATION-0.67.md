@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Execute `0.67.15` landed unread-flag compost. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.16` landed analytics DNA + attach hand. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 
@@ -50,3 +50,5 @@ From 0.67.13 `webhook` membership is the structure definition list. Recover foll
 From 0.67.14 the webhook organ is the install dispatcher. `host.webhook_dispatcher` is that object. Recover aliases it and refines URLs on it. Empty URLs keep empty targets. Webhook is not a supervised loop. Production outbox drain does not POST.
 
 From 0.67.15 `PalmSettings` has no `enable_compensation` or `enable_webhook_dispatcher`. Membership is DNA. Those env names do not seed.
+
+From 0.67.16 `analytics` membership is the structure definition list. Admission follows `has_capability("analytics")`. Composition omit does not hide a listed name. `local.embedded` and `local.worker` omit the organ. Do not treat `composition.has("analytics")` as membership. `analytics_enabled` still packages the product service.

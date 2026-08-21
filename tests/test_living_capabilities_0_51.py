@@ -42,30 +42,29 @@ def _caps(**overrides: object) -> frozenset[str]:
 
 
 def test_full_recovery_derives_exactly_default_capabilities() -> None:
-    """full_recovery no longer seeds compensation (0.67.11 DNA). Analytics +
-    always-on workloads is DEFAULT_CAPABILITIES. journal / projections /
-    compensation / webhook are DNA, not composition seeds."""
+    """full_recovery no longer seeds compensation (0.67.11 DNA). Always-on
+    workloads is DEFAULT_CAPABILITIES. journal / projections / compensation /
+    webhook / analytics are DNA, not composition seeds."""
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
         {
-            "analytics",
             "workloads",
         }
     )
 
 
-def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
-    """for_tests default (full_recovery=False): analytics on, workloads always-on.
-    journal, projections, compensation, and webhook are DNA, not composition."""
-    assert _caps() == frozenset({"analytics", "workloads"})
+def test_lean_test_settings_derive_the_always_on_capabilities() -> None:
+    """for_tests default (full_recovery=False): workloads always-on.
+    journal, projections, compensation, webhook, and analytics are DNA."""
+    assert _caps() == frozenset({"workloads"})
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
     assert "outbox" not in _caps(enable_event_outbox=True)
     assert "outbox" not in _caps(enable_event_outbox=False)
     assert "work_drain" not in _caps()
-    assert "analytics" in _caps(analytics_enabled=True)
+    assert "analytics" not in _caps(analytics_enabled=True)
     assert "analytics" not in _caps(analytics_enabled=False)
 
 
@@ -105,6 +104,16 @@ def test_webhook_is_not_a_composition_seed() -> None:
     )
 
 
+def test_analytics_is_not_a_composition_seed() -> None:
+    """analytics is DNA + hand (0.67.16); not a composition seed."""
+    assert "analytics" not in _caps()
+    assert "analytics" not in _caps(
+        enable_event_outbox=False,
+        analytics_enabled=True,
+    )
+    assert "analytics" not in _caps(analytics_enabled=False)
+
+
 # ── behaviour preservation ───────────────────────────────────────────────────
 
 
@@ -121,8 +130,8 @@ def test_services_not_gated_by_capabilities_yet() -> None:
     host = ApplicationHost(settings=PalmSettings.for_tests(load_examples=False))
     host.start()
     try:
-        # lean test settings derive {analytics, workloads} ...
-        assert host.composition.capabilities == frozenset({"analytics", "workloads"})
+        # lean test settings derive {workloads} ...
+        assert host.composition.capabilities == frozenset({"workloads"})
         # ... yet every service is still built (services are a separate axis)
         for name in (
             "inspect",
@@ -165,6 +174,29 @@ def test_compensation_gate_reads_dna_not_composition() -> None:
     try:
         assert not lean.admission.has_capability(CAPABILITY_COMPENSATION)
         assert lean._recovery.compensation is None
+    finally:
+        lean.shutdown()
+
+
+def test_analytics_gate_reads_dna_not_composition() -> None:
+    """Admission gates analytics on DNA has_capability (0.67.16).
+    Composition omit on a listed phenotype does not hide it.
+    Lean omit is embedded DNA. Product AnalyticsService leftover stays on services."""
+    from palm.core.structure import CAPABILITY_ANALYTICS
+
+    listed = ApplicationHost.for_mode(BootMode.cli(), settings=PalmSettings.for_tests(load_examples=False))
+    listed.start()
+    try:
+        assert listed.admission.has_capability(CAPABILITY_ANALYTICS)
+        assert listed.runtime().install.analytics is not None
+    finally:
+        listed.shutdown()
+
+    lean = ApplicationHost.for_mode(BootMode.safe(), settings=PalmSettings.for_tests(load_examples=False))
+    lean.start()
+    try:
+        assert not lean.admission.has_capability(CAPABILITY_ANALYTICS)
+        assert lean.runtime().install.analytics is None
     finally:
         lean.shutdown()
 

@@ -152,11 +152,11 @@ def _capabilities_from_settings(
     """Derive the *available* capabilities for membership (0.51.1 / 0.59.5).
 
     This is the composition axis — **membership seed**. They do not re-OR
-    deployment flags. Analytics still seeds composition at resolve.
+    deployment flags.
 
     ``work_drain``, ``outbox``, ``journal``, ``projections``, ``compensation``,
-    and ``webhook`` are not written here. Structure definition ``capabilities``
-    list them.
+    ``webhook``, and ``analytics`` are not written here. Structure definition
+    ``capabilities`` list them.
 
     **0.64 / SD-021:** flag → capability map lives in
     ``palm.system.structure.seed.MEMBERSHIP_CAPABILITY_SEEDS``.

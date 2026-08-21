@@ -24,21 +24,30 @@ LOCAL_MCP_ID = "local.mcp"
 # Projections is attach (0.67.9): same list as journal; embedded/worker omit.
 # Compensation is attach (0.67.11): same list as journal; embedded/worker omit.
 # Webhook is attach (0.67.13): same list as journal; embedded/worker omit.
+# Analytics is attach (0.67.16): same list as journal; embedded/worker omit.
 CAPABILITY_WORK_DRAIN = "work_drain"
 CAPABILITY_OUTBOX = "outbox"
 CAPABILITY_JOURNAL = "journal"
 CAPABILITY_PROJECTIONS = "projections"
 CAPABILITY_COMPENSATION = "compensation"
 CAPABILITY_WEBHOOK = "webhook"
+CAPABILITY_ANALYTICS = "analytics"
 _DRAIN_AND_OUTBOX = frozenset({CAPABILITY_WORK_DRAIN, CAPABILITY_OUTBOX})
 _DRAIN_OUTBOX_JOURNAL = _DRAIN_AND_OUTBOX | {CAPABILITY_JOURNAL}
 _DRAIN_OUTBOX_JOURNAL_PROJECTIONS = _DRAIN_OUTBOX_JOURNAL | {CAPABILITY_PROJECTIONS}
 _DRAIN_OUTBOX_ATTACH = _DRAIN_OUTBOX_JOURNAL_PROJECTIONS | {
     CAPABILITY_COMPENSATION,
     CAPABILITY_WEBHOOK,
+    CAPABILITY_ANALYTICS,
 }
 _ATTACH_NO_DRAIN = frozenset(
-    {CAPABILITY_JOURNAL, CAPABILITY_PROJECTIONS, CAPABILITY_COMPENSATION, CAPABILITY_WEBHOOK}
+    {
+        CAPABILITY_JOURNAL,
+        CAPABILITY_PROJECTIONS,
+        CAPABILITY_COMPENSATION,
+        CAPABILITY_WEBHOOK,
+        CAPABILITY_ANALYTICS,
+    }
 )
 
 
@@ -160,7 +169,7 @@ def local_worker(*, version: str = "1") -> StructureDefinition:
 def local_mcp(*, version: str = "1") -> StructureDefinition:
     """MCP operator surface — full services, MCP surface only (no drain).
 
-    Lists journal, projections, compensation, and webhook (attach), not drain/outbox (loops).
+    Lists journal, projections, compensation, webhook, and analytics (attach), not drain/outbox (loops).
     """
     return StructureDefinition(
         id=LOCAL_MCP_ID,
@@ -204,6 +213,7 @@ def resolve_builtin_definition(definition_id: str, *, version: str = "1") -> Str
 
 
 __all__ = [
+    "CAPABILITY_ANALYTICS",
     "CAPABILITY_COMPENSATION",
     "CAPABILITY_JOURNAL",
     "CAPABILITY_OUTBOX",

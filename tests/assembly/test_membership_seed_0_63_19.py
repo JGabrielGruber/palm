@@ -16,33 +16,32 @@ from palm.system.structure import (
 
 def test_membership_capability_seeds_catalog_complete() -> None:
     caps = {row["capability"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
-    assert caps == {
-        "analytics",
-    }
+    assert caps == set()
     assert "outbox" not in caps
     assert "work_drain" not in caps
     assert "journal" not in caps  # DNA + hand, not a composition seed
     assert "projections" not in caps  # DNA + hand (0.67.9)
     assert "compensation" not in caps  # DNA + hand (0.67.11)
     assert "webhook" not in caps  # DNA + hand (0.67.13)
+    assert "analytics" not in caps  # DNA + hand (0.67.16)
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert "enable_compensation" not in settings_fields
     assert "enable_webhook_dispatcher" not in settings_fields
     assert "enable_work_drain_service" not in settings_fields
-    assert "analytics_enabled" in settings_fields
+    assert "analytics_enabled" not in settings_fields
 
 
 def test_structure_seed_env_includes_all_membership_seeds() -> None:
     roles = {row["role"] for row in STRUCTURE_SEED_ENV}
     assert "explicit_definition_seed" in roles
-    assert "membership_seed" in roles
+    assert "membership_seed" not in roles
     assert "deployment_seed" in roles
     member_envs = {row["env"] for row in STRUCTURE_SEED_ENV if row["role"] == "membership_seed"}
     assert "PALM_ENABLE_COMPENSATION" not in member_envs
     assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in member_envs
     assert "PALM_ENABLE_EVENT_OUTBOX" not in member_envs
     assert "PALM_ENABLE_WEBHOOK_DISPATCHER" not in member_envs
-    assert "PALM_ANALYTICS_ENABLED" in member_envs
+    assert "PALM_ANALYTICS_ENABLED" not in member_envs
     assert "PALM_ENABLE_NEONROOT_RUNNERS" not in member_envs
 
 
@@ -65,7 +64,7 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
     caps = membership_capabilities_from_settings(lean)
     assert ALWAYS_ON_MEMBERSHIP_CAPABILITIES <= caps
     assert "neonroot" not in caps
-    assert "analytics" in caps
+    assert "analytics" not in caps
     assert "compensation" not in caps
     assert "outbox" not in caps
     assert "work_drain" not in caps

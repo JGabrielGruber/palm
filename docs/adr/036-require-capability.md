@@ -50,7 +50,7 @@ Do not add `capability=` to `require_business_admission`. Mixing the questions i
 - Surfaces speak `capability_refused` from 0.67.4 (REST/MCP 409). Ready-false stays `admission_refused`.  
 - Schedule fire (`tick_schedules` / host `tick_work`) uses drain able from 0.67.5.  
 - Vitality `work_cycle` drain proofs pin `local.cli` from 0.67.6. Embedded ready is not membership.  
-- Journal is DNA + attach hand from 0.67.7. Projections is DNA + attach hand from 0.67.9. Compensation is DNA + attach hand from 0.67.11. Webhook is DNA + attach hand from 0.67.13. Remaining `composition.has` kings (analytics) stay [SD-021](../../TECH-DEBT.md#sd-021).
+- Journal is DNA + attach hand from 0.67.7. Projections is DNA + attach hand from 0.67.9. Compensation is DNA + attach hand from 0.67.11. Webhook is DNA + attach hand from 0.67.13. Analytics is DNA + attach hand from 0.67.16. Remaining leftover (product analytics service vs install organ) stays [SD-021](../../TECH-DEBT.md#sd-021).
 
 ### Forbidden
 

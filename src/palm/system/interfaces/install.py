@@ -73,6 +73,9 @@ class InstallInterface(Protocol):
     @property
     def webhook(self) -> Any: ...
 
+    @property
+    def analytics(self) -> Any: ...
+
 
 class SystemInstall:
     """
@@ -98,6 +101,7 @@ class SystemInstall:
         "_projections",
         "_compensation",
         "_webhook",
+        "_analytics",
     )
 
     def __init__(self) -> None:
@@ -117,6 +121,7 @@ class SystemInstall:
         self._projections: Any = None
         self._compensation: Any = None
         self._webhook: Any = None
+        self._analytics: Any = None
 
     # ── read surface (InstallInterface) ─────────────────────────────────────
 
@@ -190,6 +195,11 @@ class SystemInstall:
         """Webhook dispatcher bound by the webhook hand. Not a loop."""
         return self._webhook
 
+    @property
+    def analytics(self) -> Any:
+        """Analytics organ bound by the analytics hand. Not a loop."""
+        return self._analytics
+
     # ── explicit bind ────────────────────────────────────────────────────────
 
     def bind(
@@ -211,6 +221,7 @@ class SystemInstall:
         projections: Any = _UNSET,
         compensation: Any = _UNSET,
         webhook: Any = _UNSET,
+        analytics: Any = _UNSET,
     ) -> SystemInstall:
         """
         Bind named ports. Omitted kwargs are left unchanged.
@@ -249,6 +260,8 @@ class SystemInstall:
             self._compensation = compensation
         if webhook is not _UNSET:
             self._webhook = webhook
+        if analytics is not _UNSET:
+            self._analytics = analytics
         self._push_start_ports()
         return self
 
@@ -289,6 +302,7 @@ class SystemInstall:
             "projections": self._projections is not None,
             "compensation": self._compensation is not None,
             "webhook": self._webhook is not None,
+            "analytics": self._analytics is not None,
             "start_ports": self.start_ports_bound(),
         }
 

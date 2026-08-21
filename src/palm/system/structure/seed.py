@@ -12,8 +12,8 @@ parallel law. After load, structure status under the definition is truth.
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
 - Bootstrap derives capabilities from this map — one truth for seed resolve.
 - ``work_drain``, ``outbox``, ``journal``, ``projections``, ``compensation``,
-  and ``webhook`` install read definition ``capabilities``. Other capabilities
-  still seed composition at resolve.
+  ``webhook``, and ``analytics`` install read definition ``capabilities``.
+  Remaining capabilities still seed composition at resolve.
 """
 
 from __future__ import annotations
@@ -47,16 +47,8 @@ _MODE_TO_DEFINITION: dict[str, str] = {
 # 0.63.19 — settings field → composition capability at resolve only.
 # Single source for bootstrap ``_capabilities_from_settings`` and cartography.
 # Always-on membership (workloads) has no flag — not listed.
-# compensation / webhook are DNA (0.67.11 / 0.67.13).
-MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
-    {
-        "env": "PALM_ANALYTICS_ENABLED",
-        "settings": "analytics_enabled",
-        "capability": "analytics",
-        "role": "membership_seed",
-        "note": "Feeds composition.analytics at resolve",
-    },
-)
+# compensation / webhook / analytics are DNA (0.67.11 / 0.67.13 / 0.67.16).
+MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = ()
 
 # Capabilities always present on settings-composed hosts (no enable_* seed).
 ALWAYS_ON_MEMBERSHIP_CAPABILITIES: frozenset[str] = frozenset({"workloads"})
@@ -150,7 +142,8 @@ def membership_capabilities_from_settings(
 
     Settings ``enable_*`` / analytics flags seed membership **at resolve only**.
     ``work_drain``, ``outbox``, ``journal``, ``projections``, ``compensation``,
-    and ``webhook`` are not composition seeds — definition ``capabilities`` list them.
+    ``webhook``, and ``analytics`` are not composition seeds — definition
+    ``capabilities`` list them.
     """
     capabilities: set[str] = set(ALWAYS_ON_MEMBERSHIP_CAPABILITIES)
     if settings is not None:

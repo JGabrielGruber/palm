@@ -66,6 +66,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "one webhook dispatcher; host slot reads that object; URLs refine it; not a supervisor loop",
     },
     {
+        "id": "structure.analytics_materialize",
+        "slice": "0.67.16",
+        "law": "analytics is DNA list + attach hand; composition.has is not membership",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -759,6 +764,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid webhook leftover costume as one organ",
         "status": "paid_0_67_14",
+    },
+    {
+        "id": "structure.analytics_composition_king",
+        "note": (
+            "0.67.16: analytics is name + attach hand + omit. DNA lists it on "
+            "cli/server/all_in_one/mcp; embedded/worker omit. Admission "
+            "reads has_capability, not composition.has. Not a no-op organ."
+        ),
+        "intent": "paid analytics composition king as copyable DNA + hand",
+        "status": "paid_0_67_16",
     },
 )
 
