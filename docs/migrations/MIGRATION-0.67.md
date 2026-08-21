@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Execute `0.67.14` landed webhook leftover as one dispatcher. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.15` landed unread-flag compost. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 
@@ -48,3 +48,5 @@ From 0.67.12 the compensation organ is the attach on `runtime.event`. `host._rec
 From 0.67.13 `webhook` membership is the structure definition list. Recover follows `has_capability("webhook")`. Composition omit does not hide a listed name. `local.embedded` and `local.worker` omit the organ. Do not treat `composition.has("webhook")` as membership. Settings URLs still refine targets.
 
 From 0.67.14 the webhook organ is the install dispatcher. `host.webhook_dispatcher` is that object. Recover aliases it and refines URLs on it. Empty URLs keep empty targets. Webhook is not a supervised loop. Production outbox drain does not POST.
+
+From 0.67.15 `PalmSettings` has no `enable_compensation` or `enable_webhook_dispatcher`. Membership is DNA. Those env names do not seed.

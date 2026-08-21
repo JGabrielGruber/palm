@@ -70,10 +70,6 @@ class PalmSettings(BaseSettings):
     projection_rebuild_batch_size: int = 100
     projection_rebuild_max_instances: int = 5000
     projection_rebuild_skip_if_fresh: bool = True
-    # Residual packaging flag (0.67.11) — compensation is DNA, not a composition seed.
-    enable_compensation: bool = True
-    # Residual packaging flag (0.67.13) — webhook is DNA, not a composition seed.
-    enable_webhook_dispatcher: bool = False
     # 0.56 — Workload plane: host subprocess runtime (default OFF; not multi-tenant safe)
     # Packaging / plane install, not composition membership seed.
     workload_host_enabled: bool = False
@@ -107,8 +103,8 @@ class PalmSettings(BaseSettings):
         """
         Lightweight settings for unit and integration tests.
 
-        ``full_recovery`` enables compensation, event-outbox store wire, and
-        projection rebuild paths that dedicated recovery tests assert on.
+        ``full_recovery`` enables event-outbox store wire and projection
+        rebuild paths that dedicated recovery tests assert on.
         """
         return cls(
             load_example_definitions=load_examples,
@@ -117,7 +113,6 @@ class PalmSettings(BaseSettings):
             projection_rebuild_skip_if_fresh=True,
             projection_rebuild_batch_size=50,
             projection_rebuild_max_instances=200,
-            enable_compensation=full_recovery,
             enable_event_outbox=full_recovery,
             worker_ready_timeout=0.5,
             outbox_poll_interval=5.0,

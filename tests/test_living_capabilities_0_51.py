@@ -62,12 +62,8 @@ def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
-    assert "compensation" not in _caps(enable_compensation=True)
-    assert "compensation" not in _caps(enable_compensation=False)
     assert "outbox" not in _caps(enable_event_outbox=True)
     assert "outbox" not in _caps(enable_event_outbox=False)
-    assert "webhook" not in _caps(enable_webhook_dispatcher=True)
-    assert "webhook" not in _caps(enable_webhook_dispatcher=False)
     assert "work_drain" not in _caps()
     assert "analytics" in _caps(analytics_enabled=True)
     assert "analytics" not in _caps(analytics_enabled=False)
@@ -77,7 +73,6 @@ def test_journal_is_not_a_composition_seed() -> None:
     """journal has no enable_* flag and is not a composition seed (0.67.7 DNA + hand)."""
     assert "journal" not in _caps()
     assert "journal" not in _caps(
-        enable_compensation=False,
         enable_event_outbox=False,
         analytics_enabled=False,
     )
@@ -87,31 +82,25 @@ def test_projections_is_not_a_composition_seed() -> None:
     """projections has no enable_* flag and is not a composition seed (0.67.9 DNA + hand)."""
     assert "projections" not in _caps()
     assert "projections" not in _caps(
-        enable_compensation=False,
         enable_event_outbox=False,
         analytics_enabled=False,
     )
 
 
 def test_compensation_is_not_a_composition_seed() -> None:
-    """compensation is DNA + hand (0.67.11); enable_compensation does not seed composition."""
+    """compensation is DNA + hand (0.67.11); not a composition seed."""
     assert "compensation" not in _caps()
-    assert "compensation" not in _caps(enable_compensation=True)
     assert "compensation" not in _caps(
-        enable_compensation=False,
         enable_event_outbox=False,
         analytics_enabled=False,
     )
 
 
 def test_webhook_is_not_a_composition_seed() -> None:
-    """webhook is DNA + hand (0.67.13); enable_webhook_dispatcher does not seed composition."""
+    """webhook is DNA + hand (0.67.13); not a composition seed."""
     assert "webhook" not in _caps()
-    assert "webhook" not in _caps(enable_webhook_dispatcher=True)
     assert "webhook" not in _caps(
-        enable_compensation=False,
         enable_event_outbox=False,
-        enable_webhook_dispatcher=False,
         analytics_enabled=False,
     )
 
@@ -187,7 +176,6 @@ def test_webhook_gate_reads_dna_not_composition() -> None:
     Lean omit is embedded DNA."""
     settings = PalmSettings.for_tests(full_recovery=True).model_copy(
         update={
-            "enable_webhook_dispatcher": True,
             "webhook_urls": ["https://example.test/hook"],
         }
     )

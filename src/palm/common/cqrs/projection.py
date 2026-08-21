@@ -91,15 +91,6 @@ class ProjectionManager:
         with self._lock:
             self._subscriptions.append((event_engine, subscription))
 
-    def attach_runtimes(self, app: object) -> None:
-        """Attach to every started runtime event bus on a PalmKernel."""
-        runtimes = getattr(app, "_runtimes", None)
-        if runtimes is None:
-            return
-        for handle in runtimes.items():
-            if handle.is_started:
-                self.attach(handle.runtime.event)
-
     def rebuild_all(
         self,
         *,

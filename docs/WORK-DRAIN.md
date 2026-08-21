@@ -124,6 +124,5 @@ Explicit / server drain should call `host.tick_work()` — it flushes deferred i
 ## Not the same as
 
 - **Outbox** — reliable external delivery of events
-- **`enable_webhook_dispatcher`** — unread packaging. DNA lists `webhook`. Recover refines URLs on the install dispatcher. Production drain does not POST.
 - **Inbound REST** — ingress that *enqueues* work; drain *executes* it
 - **Wait matcher** — continue/unpark parked jobs; does not enqueue WorkIntents ([EVENT-PLANE](EVENT-PLANE.md), `palm.common.wait`)

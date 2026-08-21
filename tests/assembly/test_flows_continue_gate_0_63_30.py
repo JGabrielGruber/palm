@@ -24,7 +24,6 @@ def _settings() -> PalmSettings:
         storage_backend="memory",
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
-        enable_compensation=False,
         enable_event_outbox=False,
     )
 

@@ -4,6 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.15 — unread-flag compost
+- `PalmSettings` drops unread `enable_compensation` and `enable_webhook_dispatcher`. Membership is DNA.
+- Dead `attach_runtimes` on compensation and projections is gone. Living docs no longer wire those organs from a flag.
+- Package stamp stays `0.66.0`.
+
 ### 0.67.14 — webhook leftover (one dispatcher)
 - Webhook is one install dispatcher. The host slot reads that object. Recover refines URLs on it. Empty URLs keep empty targets. Not a supervisor loop and not a recover twin.
 - Production outbox drain does not POST. Package stamp stays `0.66.0`.

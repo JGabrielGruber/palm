@@ -6,7 +6,6 @@ External event consumers — webhook dispatcher organ.
 1. Configure targets via :class:`WebhookTarget` (URL + optional event filter).
 2. Structure DNA lists ``webhook`` (``has_capability("webhook")``). Recover
    refines the install dispatcher from ``PALM_WEBHOOK_URLS``.
-   ``PALM_ENABLE_WEBHOOK_DISPATCHER`` is unread packaging.
 3. For tests, inject :class:`RecordingWebhookDeliverer` to capture deliveries
    without network I/O.
 

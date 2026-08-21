@@ -733,7 +733,7 @@ default_compensation_registry().register_for_commit_hook("save_profile", undo_sa
 | `wizard.commit.failed` | By `hook` payload field → `register_for_commit_hook` |
 | `wizard.backtrack.executed` | `register_for_event` (saga-style extensions) |
 
-`CompensationCoordinator` subscribes on the host bus and every runtime `EventEngine` when `enable_compensation=True` (default). Observability: `compensation.executed`, `compensation.failed`, `compensation.skipped`.
+`CompensationCoordinator` attaches when DNA lists `compensation`. The recovery slot reads that object. Observability: `compensation.executed`, `compensation.failed`, `compensation.skipped`.
 
 Wizard commit events (`wizard.commit.*`) are in `CRITICAL_EVENT_TYPES` and tracked on `WizardProgressProjection` (`commit_status`, `commit_hook`, `commit_error`).
 
@@ -754,7 +754,6 @@ Host settings:
 
 | Setting | Default | Meaning |
 |---------|---------|---------|
-| `enable_webhook_dispatcher` | `False` | Unread packaging. Membership is DNA `webhook`. |
 | `webhook_urls` | `[]` | Refine the install dispatcher (`PALM_WEBHOOK_URLS`) |
 | `webhook_event_types` | `[]` | Optional filter on those URLs; empty = all types |
 

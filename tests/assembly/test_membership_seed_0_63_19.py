@@ -27,6 +27,7 @@ def test_membership_capability_seeds_catalog_complete() -> None:
     assert "webhook" not in caps  # DNA + hand (0.67.13)
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert "enable_compensation" not in settings_fields
+    assert "enable_webhook_dispatcher" not in settings_fields
     assert "enable_work_drain_service" not in settings_fields
     assert "analytics_enabled" in settings_fields
 
@@ -52,9 +53,7 @@ def _lean_settings(**overrides: object) -> PalmSettings:
         "storage_backend": "memory",
         "rebuild_projections_on_startup": False,
         "reconcile_instances_on_startup": False,
-        "enable_compensation": False,
         "enable_event_outbox": False,
-        "enable_webhook_dispatcher": False,
         "analytics_enabled": True,
     }
     base.update(overrides)
@@ -71,7 +70,7 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
     assert "outbox" not in caps
     assert "work_drain" not in caps
 
-    full = _lean_settings(enable_compensation=True, enable_event_outbox=True)
+    full = _lean_settings(enable_event_outbox=True)
     full_caps = membership_capabilities_from_settings(full)
     assert "compensation" not in full_caps
     assert "outbox" not in full_caps
@@ -91,9 +90,7 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     settings = PalmSettings(
         load_example_definitions=False,
         storage_backend="memory",
-        enable_compensation=True,
         enable_event_outbox=False,
-        enable_webhook_dispatcher=True,
         analytics_enabled=False,
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,

@@ -59,15 +59,6 @@ class CompensationCoordinator:
         self._subscription = engine.subscribe("*", on_event)
         return self._subscription
 
-    def attach_runtimes(self, app: object) -> None:
-        """Attach to every started runtime event bus on a PalmKernel."""
-        runtimes = getattr(app, "_runtimes", None)
-        if runtimes is None:
-            return
-        for handle in runtimes.items():
-            if handle.is_started:
-                self.attach(handle.runtime.event)
-
     def handle(self, event: Event) -> list[CompensationResult]:
         """Run compensation for a single trigger event."""
         context = _context_from_event(event)
