@@ -11,8 +11,9 @@ parallel law. After load, structure status under the definition is truth.
 **0.63.19 — full membership seed cartography (SD-021 residual):**
 - Every ``enable_*`` / analytics flag that feeds composition is catalogued here.
 - Bootstrap derives capabilities from this map — one truth for seed resolve.
-- ``work_drain``, ``outbox``, ``journal``, and ``projections`` install read
-  definition ``capabilities``. Other capabilities still seed composition at resolve.
+- ``work_drain``, ``outbox``, ``journal``, ``projections``, and ``compensation``
+  install read definition ``capabilities``. Other capabilities still seed
+  composition at resolve.
 """
 
 from __future__ import annotations
@@ -45,15 +46,8 @@ _MODE_TO_DEFINITION: dict[str, str] = {
 
 # 0.63.19 — settings field → composition capability at resolve only.
 # Single source for bootstrap ``_capabilities_from_settings`` and cartography.
-# Always-on membership (workloads) has no flag — not listed. projections is DNA.
+# Always-on membership (workloads) has no flag — not listed. compensation is DNA.
 MEMBERSHIP_CAPABILITY_SEEDS: tuple[dict[str, str], ...] = (
-    {
-        "env": "PALM_ENABLE_COMPENSATION",
-        "settings": "enable_compensation",
-        "capability": "compensation",
-        "role": "membership_seed",
-        "note": "Feeds composition.compensation at resolve; host wires via composition.has",
-    },
     {
         "env": "PALM_ENABLE_WEBHOOK_DISPATCHER",
         "settings": "enable_webhook_dispatcher",
@@ -161,8 +155,8 @@ def membership_capabilities_from_settings(
     """Derive composition capabilities from membership *seeds* (0.63.19).
 
     Settings ``enable_*`` / analytics flags seed membership **at resolve only**.
-    ``work_drain``, ``outbox``, ``journal``, and ``projections`` are not
-    composition seeds — definition ``capabilities`` list them.
+    ``work_drain``, ``outbox``, ``journal``, ``projections``, and ``compensation``
+    are not composition seeds — definition ``capabilities`` list them.
     """
     capabilities: set[str] = set(ALWAYS_ON_MEMBERSHIP_CAPABILITIES)
     if settings is not None:

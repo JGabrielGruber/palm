@@ -46,6 +46,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "one projections attach on the runtime bus; host slot reads that object; not a supervisor loop",
     },
     {
+        "id": "structure.compensation_materialize",
+        "slice": "0.67.11",
+        "law": "compensation is DNA list + attach hand; composition.has is not membership",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -698,6 +703,16 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid projections leftover costume as one organ",
         "status": "paid_0_67_10",
+    },
+    {
+        "id": "structure.compensation_composition_king",
+        "note": (
+            "0.67.11: compensation is name + attach hand + omit. DNA lists it on "
+            "cli/server/all_in_one/mcp; embedded/worker omit. Recover "
+            "reads has_capability, not composition.has. Not a no-op organ."
+        ),
+        "intent": "paid compensation composition king as copyable DNA + hand",
+        "status": "paid_0_67_11",
     },
 )
 

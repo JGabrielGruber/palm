@@ -22,7 +22,12 @@ from palm.app.host.composition import (
 from palm.app.host.composition import CompositionProfile as CP
 from palm.app.host.roles import DeploymentProfile
 from palm.app.settings import PalmSettings
-from palm.core.structure import CAPABILITY_OUTBOX, CAPABILITY_PROJECTIONS, CAPABILITY_WORK_DRAIN
+from palm.core.structure import (
+    CAPABILITY_COMPENSATION,
+    CAPABILITY_OUTBOX,
+    CAPABILITY_PROJECTIONS,
+    CAPABILITY_WORK_DRAIN,
+)
 
 
 def _caps(**overrides: object) -> frozenset[str]:
@@ -35,14 +40,13 @@ def _caps(**overrides: object) -> frozenset[str]:
 
 
 def test_full_recovery_derives_exactly_default_capabilities() -> None:
-    """full_recovery turns on compensation; with analytics + always-on
-    workloads that is exactly DEFAULT_CAPABILITIES — the production-default shape.
-    journal and projections are DNA, not composition seeds."""
+    """full_recovery no longer seeds compensation (0.67.11 DNA). Analytics +
+    always-on workloads is DEFAULT_CAPABILITIES. journal / projections /
+    compensation are DNA, not composition seeds."""
     profile = composition_profile_from_settings(PalmSettings.for_tests(full_recovery=True))
     assert profile.capabilities == DEFAULT_CAPABILITIES
     assert DEFAULT_CAPABILITIES == frozenset(
         {
-            "compensation",
             "analytics",
             "workloads",
         }
@@ -50,13 +54,13 @@ def test_full_recovery_derives_exactly_default_capabilities() -> None:
 
 
 def test_lean_test_settings_derive_the_always_on_capabilities_plus_analytics() -> None:
-    """for_tests default (full_recovery=False): compensation + outbox off, analytics on,
-    workloads always-on. journal and projections are DNA, not composition."""
+    """for_tests default (full_recovery=False): analytics on, workloads always-on.
+    journal, projections, and compensation are DNA, not composition."""
     assert _caps() == frozenset({"analytics", "workloads"})
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
-    assert "compensation" in _caps(enable_compensation=True)
+    assert "compensation" not in _caps(enable_compensation=True)
     assert "compensation" not in _caps(enable_compensation=False)
     assert "outbox" not in _caps(enable_event_outbox=True)
     assert "outbox" not in _caps(enable_event_outbox=False)
@@ -81,6 +85,17 @@ def test_projections_is_not_a_composition_seed() -> None:
     """projections has no enable_* flag and is not a composition seed (0.67.9 DNA + hand)."""
     assert "projections" not in _caps()
     assert "projections" not in _caps(
+        enable_compensation=False,
+        enable_event_outbox=False,
+        analytics_enabled=False,
+    )
+
+
+def test_compensation_is_not_a_composition_seed() -> None:
+    """compensation is DNA + hand (0.67.11); enable_compensation does not seed composition."""
+    assert "compensation" not in _caps()
+    assert "compensation" not in _caps(enable_compensation=True)
+    assert "compensation" not in _caps(
         enable_compensation=False,
         enable_event_outbox=False,
         analytics_enabled=False,
@@ -123,30 +138,32 @@ def test_services_not_gated_by_capabilities_yet() -> None:
 # ── 0.51.2: the first gates read the composition, not scattered flags ─────────
 
 
-def test_compensation_gate_reads_composition_not_settings() -> None:
-    """RecoveryCoordinator gates compensation on composition.has('compensation'); an
-    explicit composition wins over settings.enable_compensation (which full_recovery sets)."""
-    settings = PalmSettings.for_tests(full_recovery=True)  # enable_compensation=True
+def test_compensation_gate_reads_dna_not_composition() -> None:
+    """RecoveryCoordinator gates compensation on DNA has_capability (0.67.11).
+    Composition omit on a listed phenotype does not hide it. Lean omit is embedded DNA."""
+    settings = PalmSettings.for_tests(full_recovery=True)
 
-    with_cap = ApplicationHost(
+    listed = ApplicationHost(
         settings=settings,
-        composition=replace(CP.all_in_one(), capabilities=frozenset({"compensation"})),
+        composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    with_cap.start()
+    listed.start()
     try:
-        assert with_cap._recovery.compensation is not None
+        assert listed.admission.has_capability(CAPABILITY_COMPENSATION)
+        assert listed._recovery.compensation is not None
     finally:
-        with_cap.shutdown()
+        listed.shutdown()
 
-    without_cap = ApplicationHost(
-        settings=settings,  # settings still enable compensation ...
-        composition=replace(CP.all_in_one(), capabilities=frozenset()),  # ... composition omits it
+    lean = ApplicationHost(
+        settings=settings,
+        composition=replace(CP.all_in_one(), capabilities=frozenset()),
     )
-    without_cap.start()
+    lean.start(structure_definition_id="local.embedded")
     try:
-        assert without_cap._recovery.compensation is None  # capability axis wins
+        assert not lean.admission.has_capability(CAPABILITY_COMPENSATION)
+        assert lean._recovery.compensation is None
     finally:
-        without_cap.shutdown()
+        lean.shutdown()
 
 
 def test_webhook_gate_reads_composition_not_settings() -> None:

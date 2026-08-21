@@ -81,7 +81,7 @@ def test_profile_is_frozen_and_hashable() -> None:
 def test_helpers() -> None:
     server = CP.server()
     assert server.exposes("rest") and not server.exposes("nope")
-    assert server.has("compensation") and not server.has("nope")
+    assert server.has("webhook") and not server.has("nope")
 
 
 # ── 0.50.2: the host reads its composition ───────────────────────────────────

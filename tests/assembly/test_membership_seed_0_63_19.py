@@ -17,7 +17,6 @@ from palm.system.structure import (
 def test_membership_capability_seeds_catalog_complete() -> None:
     caps = {row["capability"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
     assert caps == {
-        "compensation",
         "webhook",
         "analytics",
     }
@@ -25,8 +24,9 @@ def test_membership_capability_seeds_catalog_complete() -> None:
     assert "work_drain" not in caps
     assert "journal" not in caps  # DNA + hand, not a composition seed
     assert "projections" not in caps  # DNA + hand (0.67.9)
+    assert "compensation" not in caps  # DNA + hand (0.67.11)
     settings_fields = {row["settings"] for row in MEMBERSHIP_CAPABILITY_SEEDS}
-    assert "enable_compensation" in settings_fields
+    assert "enable_compensation" not in settings_fields
     assert "enable_work_drain_service" not in settings_fields
     assert "analytics_enabled" in settings_fields
 
@@ -37,7 +37,7 @@ def test_structure_seed_env_includes_all_membership_seeds() -> None:
     assert "membership_seed" in roles
     assert "deployment_seed" in roles
     member_envs = {row["env"] for row in STRUCTURE_SEED_ENV if row["role"] == "membership_seed"}
-    assert "PALM_ENABLE_COMPENSATION" in member_envs
+    assert "PALM_ENABLE_COMPENSATION" not in member_envs
     assert "PALM_ENABLE_WORK_DRAIN_SERVICE" not in member_envs
     assert "PALM_ENABLE_EVENT_OUTBOX" not in member_envs
     assert "PALM_ENABLE_WEBHOOK_DISPATCHER" in member_envs
@@ -73,7 +73,7 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
 
     full = _lean_settings(enable_compensation=True, enable_event_outbox=True)
     full_caps = membership_capabilities_from_settings(full)
-    assert "compensation" in full_caps
+    assert "compensation" not in full_caps
     assert "outbox" not in full_caps
 
 
@@ -99,7 +99,7 @@ def test_bootstrap_uses_membership_seed_map() -> None:
         reconcile_instances_on_startup=False,
     )
     profile = composition_profile_from_settings(settings)
-    assert profile.has("compensation")
+    assert not profile.has("compensation")
     assert not profile.has("outbox")
     assert profile.has("webhook")
     assert not profile.has("work_drain")

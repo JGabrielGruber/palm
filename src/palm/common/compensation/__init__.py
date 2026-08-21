@@ -29,7 +29,7 @@ Compensation — optional saga-style undo hooks for failed commits and backtrack
 
 4. :class:`~palm.app.host.ApplicationHost` wires
    :class:`~palm.common.compensation.coordinator.CompensationCoordinator` on start
-   when ``enable_compensation=True`` (default).
+   when DNA lists ``compensation`` (``has_capability("compensation")``).
 """
 
 from palm.common.compensation.context import CompensationContext, CompensationResult

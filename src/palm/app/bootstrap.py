@@ -152,12 +152,12 @@ def _capabilities_from_settings(
     """Derive the *available* capabilities for membership (0.51.1 / 0.59.5).
 
     This is the composition axis — **membership seed**. Runtime gates for
-    capabilities other than ``work_drain``, ``outbox``, ``journal``, and
-    ``projections`` still read ``composition.has(...)``. They do not re-OR
-    deployment flags.
+    capabilities other than ``work_drain``, ``outbox``, ``journal``,
+    ``projections``, and ``compensation`` still read ``composition.has(...)``.
+    They do not re-OR deployment flags.
 
-    ``work_drain``, ``outbox``, ``journal``, and ``projections`` are not
-    written here. Structure definition ``capabilities`` list them.
+    ``work_drain``, ``outbox``, ``journal``, ``projections``, and ``compensation``
+    are not written here. Structure definition ``capabilities`` list them.
 
     **0.64 / SD-021:** flag → capability map lives in
     ``palm.system.structure.seed.MEMBERSHIP_CAPABILITY_SEEDS``.

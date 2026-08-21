@@ -70,7 +70,7 @@ class PalmSettings(BaseSettings):
     projection_rebuild_batch_size: int = 100
     projection_rebuild_max_instances: int = 5000
     projection_rebuild_skip_if_fresh: bool = True
-    # Membership *seed* (0.63.19) — feeds composition.compensation at resolve only.
+    # Residual packaging flag (0.67.11) — compensation is DNA, not a composition seed.
     enable_compensation: bool = True
     # Membership *seed* (0.63.19) — feeds composition.webhook at resolve only.
     enable_webhook_dispatcher: bool = False

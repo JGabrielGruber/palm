@@ -10,6 +10,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from palm.common.compensation.wire import wire_install_compensation
 from palm.common.cqrs.projections.wire import wire_install_projections
 from palm.common.events import wire_event_journal
 from palm.system.subsystems.supervisor.definition import (
@@ -126,16 +127,45 @@ def apply_projections(seats: CapabilitySeats, *, listed: bool) -> None:
     install.bind(projections=wire_install_projections(storage, instance_manager, event))
 
 
+def _drop_compensation(install: Any) -> None:
+    if install is None:
+        return
+    bag = getattr(install, "compensation", None)
+    if bag is not None:
+        shutdown = getattr(bag, "shutdown", None)
+        if callable(shutdown):
+            shutdown()
+    bind = getattr(install, "bind", None)
+    if callable(bind):
+        bind(compensation=None)
+
+
+def apply_compensation(seats: CapabilitySeats, *, listed: bool) -> None:
+    """Bind compensation when listed; drop it otherwise. Attach, not a loop."""
+    install = seats.install
+    if not listed:
+        _drop_compensation(install)
+        return
+    if install is None or getattr(install, "compensation", None) is not None:
+        return
+    event = seats.event
+    if event is None:
+        return
+    install.bind(compensation=wire_install_compensation(event))
+
+
 LOCAL_CAPABILITY_HANDS: dict[str, CapabilityHand] = {
     "work_drain": apply_work_drain,
     "outbox": apply_outbox,
     "journal": apply_journal,
     "projections": apply_projections,
+    "compensation": apply_compensation,
 }
 
 __all__ = [
     "CapabilitySeats",
     "LOCAL_CAPABILITY_HANDS",
+    "apply_compensation",
     "apply_journal",
     "apply_outbox",
     "apply_projections",

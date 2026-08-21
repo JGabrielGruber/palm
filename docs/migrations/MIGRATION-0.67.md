@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.67](../vision/VISION-0.67.md) · **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Execute `0.67.10` landed the projections leftover as one organ. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
+Palm is pre-1.0. Execute `0.67.11` landed compensation as DNA + attach hand. Package stays `0.66.0` until José exits. Additive: a new require beside the ready door.
 
 ## Prefer
 
@@ -40,3 +40,5 @@ From 0.67.8 the journal organ is the attach on `runtime.event`. `host.event_jour
 From 0.67.9 `projections` membership is the structure definition list. Host attach follows `has_capability("projections")`. Composition omit does not hide a listed name. `local.embedded` and `local.worker` omit the organ. Do not treat `composition.has("projections")` as membership.
 
 From 0.67.10 the projections organ is the attach on `runtime.event`. Host query slots are that object. Live reads see orchestration events (`job.completed`, `instance.status_changed`). Emitting only on `host.event` does not update the read models. Projections is not a supervised loop.
+
+From 0.67.11 `compensation` membership is the structure definition list. Recover follows `has_capability("compensation")`. Composition omit does not hide a listed name. `local.embedded` and `local.worker` omit the organ. Do not treat `composition.has("compensation")` as membership. Dual-attach (`host.event` + runtimes) is leftover.

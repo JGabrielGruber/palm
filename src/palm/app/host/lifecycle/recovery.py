@@ -15,7 +15,7 @@ from palm.app.host.workers import WorkerCoordinator
 from palm.common.compensation import CompensationCoordinator, default_compensation_registry
 from palm.common.cqrs.rebuild import ProjectionRebuildPolicy
 from palm.common.events.external import WebhookDispatcher, webhook_targets_from_urls
-from palm.core.structure import CAPABILITY_PROJECTIONS
+from palm.core.structure import CAPABILITY_COMPENSATION, CAPABILITY_PROJECTIONS
 
 if TYPE_CHECKING:
     from palm.app.host.application_host import ApplicationHost
@@ -57,10 +57,9 @@ class RecoveryCoordinator:
         recovery["workers_ready"] = workers_ready
         recovery["workers"] = list(coordinator.registered_workers)
 
-        # 0.51.2: gated by the composition's capability axis. On the default path this
-        # equals settings.enable_compensation (the resolver derives it from that flag);
-        # an explicit composition that omits "compensation" wins (capabilities authoritative).
-        if host.composition.has("compensation"):
+        # 0.67.11: DNA lists compensation; composition.has is not membership.
+        # Dual-attach (host.event + attach_runtimes) stays leftover.
+        if host.admission.has_capability(CAPABILITY_COMPENSATION):
             self._compensation = CompensationCoordinator(
                 default_compensation_registry(),
                 host._event,

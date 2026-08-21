@@ -67,6 +67,9 @@ class InstallInterface(Protocol):
     @property
     def projections(self) -> Any: ...
 
+    @property
+    def compensation(self) -> Any: ...
+
 
 class SystemInstall:
     """
@@ -90,6 +93,7 @@ class SystemInstall:
         "_event_journal",
         "_event_journal_sub",
         "_projections",
+        "_compensation",
     )
 
     def __init__(self) -> None:
@@ -107,6 +111,7 @@ class SystemInstall:
         self._event_journal: Any = None
         self._event_journal_sub: Any = None
         self._projections: Any = None
+        self._compensation: Any = None
 
     # ── read surface (InstallInterface) ─────────────────────────────────────
 
@@ -170,6 +175,11 @@ class SystemInstall:
         """Core projections attached by the projections hand. Not a loop."""
         return self._projections
 
+    @property
+    def compensation(self) -> Any:
+        """Compensation coordinator bound by the compensation hand. Not a loop."""
+        return self._compensation
+
     # ── explicit bind ────────────────────────────────────────────────────────
 
     def bind(
@@ -189,6 +199,7 @@ class SystemInstall:
         event_journal: Any = _UNSET,
         event_journal_sub: Any = _UNSET,
         projections: Any = _UNSET,
+        compensation: Any = _UNSET,
     ) -> SystemInstall:
         """
         Bind named ports. Omitted kwargs are left unchanged.
@@ -223,6 +234,8 @@ class SystemInstall:
             self._event_journal_sub = event_journal_sub
         if projections is not _UNSET:
             self._projections = projections
+        if compensation is not _UNSET:
+            self._compensation = compensation
         self._push_start_ports()
         return self
 
@@ -261,6 +274,7 @@ class SystemInstall:
             "work_plane": self._work_plane is not None,
             "event_journal": self._event_journal is not None,
             "projections": self._projections is not None,
+            "compensation": self._compensation is not None,
             "start_ports": self.start_ports_bound(),
         }
 
