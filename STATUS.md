@@ -15,7 +15,7 @@ José opened 0.67 (2026-08-20). **0.67.13** landed: webhook is DNA + attach hand
 |--------|----------|
 | **0.67 open** | Two doors: ready vs capability. Dependents ask the published face. |
 | **ADR-036** | **Proposed** — sibling `require_capability`; no organ arg on `require_business_admission` |
-| **Locks** | Two doors · no decorators · names stay `capabilities` / `has_capability` |
+| **Locks** | Two doors · no decorators · names stay `capabilities` / `has_capability` · **roles, not a shared drain** (lock 5) · **no outside callers** (lock 6) |
 | **Later** | [SD-021](TECH-DEBT.md#sd-021) remaining composition kings (analytics) · [VISION-0.56](docs/vision/VISION-0.56.md) · [NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) · [TUNNELS](docs/vision/VISION-TUNNELS.md) → [Grove](docs/vision/VISION-GROVE.md) |
 | **Experimental** | Pre-1.0 · **no LTS** — [README](README.md) |
 

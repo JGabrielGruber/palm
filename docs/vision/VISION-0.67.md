@@ -44,8 +44,10 @@ Façades and tests that freeze `may_run_business` as the organ list. Work-plane 
 | **2** | **No decorators.** Inject a gate, then require. A wrapper may close over a name. |
 | **3** | Field names stay **`capabilities`** / **`has_capability`**. |
 | **4** | Remaining composition kings start **in 0.67** (0.67.7+). Do not open 0.68 for this pile. |
+| **5** | **Roles, not a shared drain** (José 2026-08-21). Do not pay webhook leftover or delivery as two processes polling one `OutboxStore`. Do not add a cross-process file lock as the scale story. Scale home is [VISION-0.56](VISION-0.56.md): a parent process starts child runtimes and assigns place/storage. Spoken names: orchestrator, supporter, worker → law: control home / [support place](../PALM.md) / [work place](../PALM.md). Each role owns its work. They do not race one pending index. Recursion is the [Palm provider](../PROVIDER-APPS.md) (Palm calling Palm), not a fight for a data-dir file. |
+| **6** | **No outside callers** (José 2026-08-21). Current use is dogfood and examples. Do not keep unread flags, twin seats, or living docs that promise POST in order to protect a missing operator. Trim the costume. Closed chronicles stay history. |
 
-Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two questions were named. Override if the one-door optional arg is preferred.
+Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two questions were named. Override if the one-door optional arg is preferred. Lock 5 is the fork from leftover option B as “whoever drains the shared store POSTs.” Lock 6 is the fork from preserving webhook packaging for legacy.
 
 ## Forbidden always
 
@@ -54,12 +56,15 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 - A fake capability named `ready`.  
 - `require_capability` that skips the ready wall.  
 - Land journal as a no-op organ.  
-- Hide the gate in a decorator stack.
+- Hide the gate in a decorator stack.  
+- Pay webhook leftover as two drainers on one `OutboxStore` (flock / first-ACK-wins).  
+- Keep unread packaging or a recover twin “for operators” that do not exist.
 
 ## Not this theme
 
 - Remaining `composition.has` kings (analytics) unless José includes them in 0.67.14+.  
 - Engine as walker. Places. Surface compost. Navigator. Tunnels. Grove.  
+- Workload spawn of support / work processes (lock 5). That is [VISION-0.56](VISION-0.56.md), not a 0.67 leftover.  
 - If drain/outbox still show first-organ costume, that work is still **0.64** / **0.65** law.
 
 ## Guide slices (not a sealed contract)
