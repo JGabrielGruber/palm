@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 
 from palm.app.host.events import HostEventType
 from palm.app.host.workers import WorkerCoordinator
-from palm.common.compensation import CompensationCoordinator, default_compensation_registry
+from palm.common.compensation import CompensationCoordinator
 from palm.common.cqrs.rebuild import ProjectionRebuildPolicy
 from palm.common.events.external import WebhookDispatcher, webhook_targets_from_urls
 from palm.core.structure import CAPABILITY_COMPENSATION, CAPABILITY_PROJECTIONS
@@ -57,15 +57,12 @@ class RecoveryCoordinator:
         recovery["workers_ready"] = workers_ready
         recovery["workers"] = list(coordinator.registered_workers)
 
-        # 0.67.11: DNA lists compensation; composition.has is not membership.
-        # Dual-attach (host.event + attach_runtimes) stays leftover.
+        # 0.67.12: recovery slot aliases the install organ. Do not rebuild a twin.
         if host.admission.has_capability(CAPABILITY_COMPENSATION):
-            self._compensation = CompensationCoordinator(
-                default_compensation_registry(),
-                host._event,
-            )
-            self._compensation.attach(host._event)
-            self._compensation.attach_runtimes(host._app)
+            try:
+                self._compensation = host.runtime().install.compensation
+            except Exception:
+                self._compensation = None
 
         self._build_webhook_dispatcher()
         try:

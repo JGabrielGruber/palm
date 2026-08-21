@@ -9,11 +9,10 @@ from palm.common.compensation.registry import default_compensation_registry
 
 
 def wire_install_compensation(event: Any) -> CompensationCoordinator:
-    """Construct the compensation coordinator for the install board.
-
-    Dual-attach (host.event + attach_runtimes) stays a host leftover.
-    """
-    return CompensationCoordinator(default_compensation_registry(), event)
+    """Construct the compensation coordinator and attach it to the runtime bus."""
+    coordinator = CompensationCoordinator(default_compensation_registry(), event)
+    coordinator.attach(event)
+    return coordinator
 
 
 __all__ = ["wire_install_compensation"]

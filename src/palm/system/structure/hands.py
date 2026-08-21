@@ -141,7 +141,7 @@ def _drop_compensation(install: Any) -> None:
 
 
 def apply_compensation(seats: CapabilitySeats, *, listed: bool) -> None:
-    """Bind compensation when listed; drop it otherwise. Attach, not a loop."""
+    """Attach compensation when listed; drop it otherwise. Attach, not a loop."""
     install = seats.install
     if not listed:
         _drop_compensation(install)

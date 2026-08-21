@@ -27,9 +27,10 @@ Compensation — optional saga-style undo hooks for failed commits and backtrack
 
        registry.register_for_event("wizard.backtrack.executed", my_handler)
 
-4. :class:`~palm.app.host.ApplicationHost` wires
-   :class:`~palm.common.compensation.coordinator.CompensationCoordinator` on start
-   when DNA lists ``compensation`` (``has_capability("compensation")``).
+4. The structure hand attaches
+   :class:`~palm.common.compensation.coordinator.CompensationCoordinator`
+   to the runtime bus when DNA lists ``compensation``
+   (``has_capability("compensation")``). The host recovery slot aliases that object.
 """
 
 from palm.common.compensation.context import CompensationContext, CompensationResult
