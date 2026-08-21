@@ -85,7 +85,7 @@ class PalmSettings(BaseSettings):
     resource_cache_results: bool = False
     resource_cache_ttl_seconds: float = 60.0
     resource_cache_max_entries: int = 256
-    # Product packaging for AnalyticsService.enabled (0.67.16). Not a composition seed.
+    # Refines the install analytics organ (0.67.17). Not a composition seed.
     analytics_enabled: bool = True
     analytics_allow_unpublished: bool = False
     analytics_allow_unpublished_with_server: bool = False

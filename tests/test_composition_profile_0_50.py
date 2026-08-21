@@ -131,7 +131,13 @@ def test_host_embedded_composition_builds_core_only() -> None:
         assert host.execution is not None
         assert host.assist is None
         assert host.design is None
-        assert host.analytics is None
+        # 0.67.17: host.analytics is the install organ. Embedded composition
+        # infers cli DNA, which lists analytics; product service is still omitted.
+        from palm.services.analytics import AnalyticsService
+
+        assert host.analytics is host.runtime().install.analytics
+        assert host.analytics is not None
+        assert not isinstance(host.analytics, AnalyticsService)
     finally:
         host.shutdown()
 

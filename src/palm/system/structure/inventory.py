@@ -71,6 +71,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "analytics is DNA list + attach hand; composition.has is not membership",
     },
     {
+        "id": "structure.analytics_one_organ",
+        "slice": "0.67.17",
+        "law": "one analytics organ on the install board; host slot reads that object; analytics_enabled refines it; not a supervisor loop",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -774,6 +779,17 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid analytics composition king as copyable DNA + hand",
         "status": "paid_0_67_16",
+    },
+    {
+        "id": "structure.analytics_product_twin",
+        "note": (
+            "0.67.17: analytics leftover — one organ on the install board, "
+            "host slot aliases it, analytics_enabled refines that object. "
+            "Composition services do not keep a twin when DNA omits. "
+            "Not a CallableSystemService."
+        ),
+        "intent": "paid analytics leftover costume as one organ",
+        "status": "paid_0_67_17",
     },
 )
 

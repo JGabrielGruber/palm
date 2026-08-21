@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.17 — analytics leftover (one organ)
+- Analytics is one organ on the install board. The host slot reads that object. `analytics_enabled` refines it. Composition services do not keep a twin when DNA omits. Not a supervisor loop.
+- Package stamp stays `0.66.0`.
+
 ### 0.67.16 — analytics DNA + attach hand
 - `analytics` is name + attach hand + omit. DNA lists it on `local.cli` / `server` / `all_in_one` / `mcp`; `embedded` / `worker` omit.
 - Admission reads `has_capability("analytics")`, not `composition.has`. Composition/seed no longer write the name.

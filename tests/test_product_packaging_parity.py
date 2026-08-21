@@ -48,9 +48,10 @@ def test_host_full_product_packaging() -> None:
 
 
 def test_host_lean_product_packaging() -> None:
-    """Lean host: no projections capability — still full product services + packaging.
+    """Lean host: DNA omit still builds other product services.
 
-    Lean omit is embedded DNA (0.67.9), not empty composition on an all_in_one profile.
+    Lean omit is embedded DNA (0.67.9). Analytics leftover (0.67.17): DNA omit
+    drops the host slot even when composition.services includes analytics.
     """
     composition = CompositionProfile(
         services=CompositionProfile.all_in_one().services,
@@ -65,9 +66,16 @@ def test_host_lean_product_packaging() -> None:
         profile=DeploymentProfile.all_in_one(),
         composition=composition,
     ) as host:
-        _assert_product_doors(host)
+        assert isinstance(host.inspect, InspectService)
+        assert isinstance(host.assist, AssistService)
+        assert isinstance(host.definitions, object)
+        assert isinstance(host.execution, object)
+        assert isinstance(host.design, object)
+        assert host.analytics is None
+        assert host.assist.analytics is None
         assert not host.composition.has("projections")
         assert not host.admission.has_capability("projections")
+        assert not host.admission.has_capability("analytics")
 
 
 def test_hostless_server_context_product_packaging() -> None:

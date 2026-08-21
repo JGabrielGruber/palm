@@ -6,8 +6,8 @@ from __future__ import annotations
 class AnalyticsOrgan:
     """Analytics membership on the install board. Not a supervisor loop.
 
-    Product ``AnalyticsService`` leftover may alias or refine this object.
-    ``replace_enabled`` is the public write for that leftover.
+    Product ``AnalyticsService`` leftover aliases this slot when DNA lists
+    it. ``replace_enabled`` is the public write for ``analytics_enabled``.
     """
 
     __slots__ = ("_enabled",)

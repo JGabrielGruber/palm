@@ -181,14 +181,16 @@ def test_compensation_gate_reads_dna_not_composition() -> None:
 def test_analytics_gate_reads_dna_not_composition() -> None:
     """Admission gates analytics on DNA has_capability (0.67.16).
     Composition omit on a listed phenotype does not hide it.
-    Lean omit is embedded DNA. Product AnalyticsService leftover stays on services."""
+    Lean omit is embedded DNA. Host product slot aliases the install organ (0.67.17)."""
     from palm.core.structure import CAPABILITY_ANALYTICS
 
     listed = ApplicationHost.for_mode(BootMode.cli(), settings=PalmSettings.for_tests(load_examples=False))
     listed.start()
     try:
         assert listed.admission.has_capability(CAPABILITY_ANALYTICS)
-        assert listed.runtime().install.analytics is not None
+        organ = listed.runtime().install.analytics
+        assert organ is not None
+        assert listed.analytics is organ
     finally:
         listed.shutdown()
 
@@ -196,6 +198,7 @@ def test_analytics_gate_reads_dna_not_composition() -> None:
     lean.start()
     try:
         assert not lean.admission.has_capability(CAPABILITY_ANALYTICS)
+        assert lean.analytics is None
         assert lean.runtime().install.analytics is None
     finally:
         lean.shutdown()

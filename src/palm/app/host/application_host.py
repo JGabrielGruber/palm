@@ -59,7 +59,7 @@ from palm.common.cqrs.schemas import build_schema_registry
 from palm.common.events.external import WebhookDispatcher
 from palm.core.event import EventEngine
 from palm.core.storage import StorageEngine
-from palm.core.structure import CAPABILITY_PROJECTIONS
+from palm.core.structure import CAPABILITY_ANALYTICS, CAPABILITY_PROJECTIONS
 from palm.kits.server.cqrs import wire_standalone_query_bus
 from palm.patterns.wizard.bindings.cqrs.projection import (
     WizardProgressReadModel,
@@ -289,8 +289,11 @@ class ApplicationHost:
 
     @property
     def analytics(self):
-        """Analytics service API — BI describe/query (0.35)."""
-        return self._analytics
+        """Analytics organ — live install read (0.67.17)."""
+        try:
+            return self.runtime().install.analytics
+        except Exception:
+            return None
 
     @property
     def event_journal(self):
@@ -856,11 +859,37 @@ class ApplicationHost:
         self._execution = bag.execution
         self._assist = bag.assist
         self._design = bag.design
-        self._analytics = bag.analytics
+        # 0.67.17: product slot aliases the install organ. Do not keep a twin.
+        self._alias_analytics(bag)
         # Host-only packaging: workplane seats (not product service identity).
         self._workplane.wire_start_ports()
         self._workplane.wire_event_journal()
         self._workplane.wire_inbound()
+
+    def _alias_analytics(self, bag: Any) -> None:
+        """Bind the product service onto the install organ when DNA lists it.
+
+        ``analytics_enabled`` refines that object. DNA omit drops the host
+        slot — composition.services must not keep a twin.
+        """
+        try:
+            install = self.runtime().install
+        except Exception:
+            install = None
+        if not self.admission.has_capability(CAPABILITY_ANALYTICS) or install is None:
+            if self._assist is not None:
+                self._assist.bind_analytics(None)
+            self._analytics = None
+            return
+        service = bag.analytics
+        organ = service if service is not None else install.analytics
+        if service is not None:
+            install.bind(analytics=service)
+        if organ is not None:
+            organ.replace_enabled(bool(self.settings.analytics_enabled))
+        if self._assist is not None:
+            self._assist.bind_analytics(organ)
+        self._analytics = organ
 
     def _attach_projections(self) -> None:
         # 0.67.10: the hand already attached to the runtime bus. Host slots

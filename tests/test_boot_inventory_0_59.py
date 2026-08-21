@@ -7,7 +7,6 @@ cannot drift silently. Not the future phase API — see docs/BOOT-INVENTORY.md.
 from __future__ import annotations
 
 from typing import Any
-from unittest.mock import patch
 
 import pytest
 
@@ -195,10 +194,16 @@ def test_composition_services_gate_build(spine_settings: PalmSettings) -> None:
         assert host.session is not None
         assert host.definitions is not None
         assert host.execution is not None
-        # embedded CORE_SERVICES — no assist/design/analytics chrome
+        # embedded CORE_SERVICES — no assist/design chrome
         assert host.assist is None
         assert host.design is None
-        assert host.analytics is None
+        # 0.67.17: host.analytics is the install organ. Default all_in_one DNA
+        # lists it; composition omit of AnalyticsService does not hide the organ.
+        from palm.services.analytics import AnalyticsService
+
+        assert host.analytics is host.runtime().install.analytics
+        assert host.analytics is not None
+        assert not isinstance(host.analytics, AnalyticsService)
     finally:
         host.shutdown()
 

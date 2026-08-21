@@ -54,6 +54,14 @@ class AnalyticsService(BaseService):
         self._max_response_bytes = max_response_bytes
         self._enabled = enabled
 
+    @property
+    def enabled(self) -> bool:
+        return self._enabled
+
+    def replace_enabled(self, enabled: bool) -> None:
+        """Refine enabled on this service. Do not mint a second seat."""
+        self._enabled = bool(enabled)
+
     def list_datasets(self, *, published_only: bool = True) -> list[dict[str, Any]]:
         self._require_enabled()
         return list_datasets(self._definitions, published_only=published_only)
