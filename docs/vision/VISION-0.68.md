@@ -1,0 +1,82 @@
+# VISION 0.68 — The great cleansing
+
+**Status:** 📗 **Theme open** (José 2026-08-21). Plan `0.68.0`. Package stamp stays `0.67.0` until exit.  
+**ADR:** none (costume compost; no new door)  
+**Migration:** [MIGRATION-0.68](../migrations/MIGRATION-0.68.md)  
+**Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.67](closed/VISION-0.67.md) (**closed**) · [ADR-036](../adr/036-require-capability.md) **Accepted**  
+**Debt:** [SD-021](../../TECH-DEBT.md#sd-021) residual packaging duals · empty boot phases after leftover
+
+Teaching name: **the great cleansing**. Law: compost remaining **costume** after assembly dependents. Do not invent a new organ. Do not pay delivery.
+
+---
+
+## Goal
+
+0.67 paid the organ door and the remaining composition kings. Leftover made one object per organ. What still sits is **empty work**, **start-option duals**, and **living docs that lie**.
+
+Delete costume. Keep honest packaging. Leave closed chronicles as history.
+
+## Floor
+
+- Name the remaining pile in this file (this slice).  
+- First execute (`0.68.1`) composts **one** costume unit that does no work: empty boot phase, unread dual, or a living lie.  
+- Proof: a test or inventory pin that used to freeze empty work now matches the deleted costume, or names the honest skip.  
+- Do not add a capability. Do not add a require. Do not POST.
+
+**Floor function:** one compost of costume. Not a new membership name.
+
+## Named remaining (José 2026-08-21)
+
+These still live after 0.67.17. They are **not** unpaid leftover organs.
+
+| Thing | What it is | Why it still lives | 0.68 motion |
+|-------|------------|--------------------|-------------|
+| `host.projections.attach` / `_attach_projections` | Boot-schedule step whose body is empty | Leftover already attached on the runtime bus. 0.59 dogfood pins this **phase id** (`ok` vs `skip` / `capability_off:projections`). | Compost the empty phase. Retune inventory pins. Closed 0.59 chronicle stays. |
+| Bare `enable_event_outbox` | Start option still **read** | Host spawn **writes** it from DNA. `system.outbox.wire` skips on `enable_event_outbox_off`. Bare `BaseRuntime.start(enable_event_outbox=…)` is named [SD-021](../../TECH-DEBT.md#sd-021). | Pay the dual or name it again. Do not drop the skip with no replacement. |
+| Living docs that promise POST | Lie | Lock 6. Production never HTTP POSTs. `on_before_publish` is a test hook. | Trim the lie. Do not wire production POST. |
+| Twin seats / inventory ids that pin empty work | Costume after leftover | Same class as unread `enable_compensation` (paid 0.67.15). | Compost when the seat does no work. |
+| `enable_state_snapshot` | **Read** packaging | Installs `StateSnapshotHook`. CLI and settings pass it. Not a membership seed. | **Keep** as packaging unless José later says it is a membership lie. |
+
+Honest packaging that **stays** unless José includes it:
+
+- `analytics_enabled` / `webhook_urls` refine the install organ.  
+- Host-less `ServerContext` is a second composition root (ADR-019). Do not dissolve it to fake one leftover path.  
+- DNA lists on `local.cli` vs `local.embedded` — José has not locked phenotypes.
+
+## Locks (José 2026-08-21)
+
+| # | Lock |
+|---|------|
+| **1** | **Costume, not a new organ.** Delete empty work. Do not add `require_*`. Do not add a capability name to prove the theme. |
+| **2** | **Roles, not a shared drain** (carried from 0.67 lock 5). Do not pay outbox POST as two processes polling one `OutboxStore`. Scale home is [VISION-0.56](VISION-0.56.md). |
+| **3** | **Closed chronicles stay history.** Retune tests that pin empty phases. Do not rewrite 0.59 as if the phase never existed. |
+| **4** | Remaining compost stays **in 0.68**. Do not open 0.69 for this pile. |
+| **5** | **Read flags are not unread flags.** Compost `enable_event_outbox` only with a DNA-shaped skip. Do not delete `enable_state_snapshot` because it looks like a flag. |
+
+Lock 2 is the fork from leftover option B as “whoever drains the shared store POSTs.” Lock 5 is the fork from treating every `enable_*` as 0.67.15 compost.
+
+## Forbidden always
+
+- Pay webhook delivery as two drainers on one `OutboxStore` (flock / first-ACK-wins).  
+- HTTP POST from production recover.  
+- Dissolve `ServerContext` to force host leftover onto MCP.  
+- Definition `requires`.  
+- A fake capability named `ready`.  
+- Restamp ADR-036 residual bullets as if leftover slices were kings.
+
+## Not this theme
+
+- Workload spawn of support / work processes. That is [VISION-0.56](VISION-0.56.md).  
+- DNA phenotype retune (`local.cli` vs `local.embedded` lists) unless José names that cut.  
+- Navigator. Tunnels. Grove. Surface compost ([VISION-SURFACE-DEFLATION](VISION-SURFACE-DEFLATION.md) is a different pile).  
+- Engine as walker. Two doors stay as 0.67 law.
+
+## Guide slices (not a sealed contract)
+
+| Slice | Intent |
+|-------|--------|
+| **0.68.0** | Plan + named remaining. ✅ |
+| **0.68.1+** | Compost units José includes (empty boot phase, SD-021 dual, living lie). |
+| **exit** | José · stamp `0.68.0`. |
+
+*Delete the empty work. Keep the honest knob.*

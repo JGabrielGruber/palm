@@ -1,0 +1,33 @@
+# Migration — 0.68 The great cleansing
+
+**Theme:** [VISION-0.68](../vision/VISION-0.68.md) · **ADR:** none  
+**Map:** [PALM.md](../PALM.md)
+
+Palm is pre-1.0. Plan `0.68.0`. Package stays `0.67.0` until José exits. Execute starts at `0.68.1`. Costume compost may drop boot phase ids and start-option kwargs.
+
+## Prefer
+
+| Goal | Use |
+|------|-----|
+| Is this organ here (and is the organism ready)? | `require_capability(source, name)` ([MIGRATION-0.67](MIGRATION-0.67.md)) |
+| May business that needs ground run? | `require_business_admission(source)` |
+| Outbox store on the host path | DNA `has_capability("outbox")` — host spawn already aligns |
+| Snapshot history on a job | `enable_state_snapshot` (packaging, still read) |
+
+## Behavior / names that may change (from 0.68.1)
+
+Execute will name the cut. Likely:
+
+| Was | May become |
+|-----|------------|
+| Boot phase `host.projections.attach` | Gone. Membership attach is the DNA hand (0.67.9–0.67.10). Inventory retunes. |
+| Bare `BaseRuntime.start(enable_event_outbox=…)` | DNA-shaped skip, or remains named [SD-021](../../TECH-DEBT.md#sd-021) if José leaves it. |
+| Living docs that promise webhook POST | Honest: production does not POST. |
+
+`enable_state_snapshot` stays packaging unless José includes it.
+
+## Not this migration
+
+- Outbox `on_before_publish` as production POST.  
+- Workload spawn ([VISION-0.56](../vision/VISION-0.56.md)).  
+- Host-less `ServerContext` dissolve.

@@ -7,7 +7,7 @@
 **Related:** [ADR-032](032-organism-assembly.md) **Accepted** · [ADR-033](033-one-walker.md) **Accepted** · [ADR-034](034-supervised-start-walks-registration.md) **Accepted**  
 **Sequence:** [VISION-0.64](../vision/closed/VISION-0.64.md) steps 3–4
 
-José accepted (2026-08-20). Theme closed. Snapshot publishes installed names. Step 4 dependents: [VISION-0.67](../vision/VISION-0.67.md).
+José accepted (2026-08-20). Theme closed. Snapshot publishes installed names. Step 4 dependents: [VISION-0.67](../vision/closed/VISION-0.67.md) (**closed**).
 
 ---
 

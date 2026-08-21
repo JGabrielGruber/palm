@@ -1,11 +1,13 @@
 # ADR-036 — Require capability (dependents of the admission face)
 
-**Status:** Proposed  
-**Date:** 2026-08-20  
-**Theme:** [VISION-0.67](../vision/VISION-0.67.md)  
+**Status:** Accepted  
+**Date:** 2026-08-20 · **Accepted:** 2026-08-21  
+**Theme:** [VISION-0.67](../vision/closed/VISION-0.67.md) (**closed**)  
 **Map:** [PALM.md](../PALM.md)  
 **Related:** [ADR-032](032-organism-assembly.md) **Accepted** · [ADR-033](033-one-walker.md) **Accepted** · [ADR-035](035-admission-sits-on-capabilities.md) **Accepted**  
 **Sequence:** [VISION-0.64](../vision/closed/VISION-0.64.md) step 4 · [SD-020](../../TECH-DEBT.md#sd-020)
+
+José accepted (2026-08-21). Theme closed. Dependents ask the published face. Remaining costume: [VISION-0.68](../vision/VISION-0.68.md).
 
 ---
 
@@ -50,7 +52,7 @@ Do not add `capability=` to `require_business_admission`. Mixing the questions i
 - Surfaces speak `capability_refused` from 0.67.4 (REST/MCP 409). Ready-false stays `admission_refused`.  
 - Schedule fire (`tick_schedules` / host `tick_work`) uses drain able from 0.67.5.  
 - Vitality `work_cycle` drain proofs pin `local.cli` from 0.67.6. Embedded ready is not membership.  
-- Journal is DNA + attach hand from 0.67.7. Projections is DNA + attach hand from 0.67.9. Compensation is DNA + attach hand from 0.67.11. Webhook is DNA + attach hand from 0.67.13. Analytics is DNA + attach hand from 0.67.16. Analytics leftover paid 0.67.17 (host slot aliases the install organ; `analytics_enabled` refines that object). Remaining [SD-021](../../TECH-DEBT.md#sd-021) is bare `enable_event_outbox` packaging.
+- Journal is DNA + attach hand from 0.67.7. Projections is DNA + attach hand from 0.67.9. Compensation is DNA + attach hand from 0.67.11. Webhook is DNA + attach hand from 0.67.13. Analytics is DNA + attach hand from 0.67.16. Analytics leftover paid 0.67.17 (host slot aliases the install organ; `analytics_enabled` refines that object). Remaining [SD-021](../../TECH-DEBT.md#sd-021) packaging duals and empty boot phases: [VISION-0.68](../vision/VISION-0.68.md).
 
 ### Forbidden
 
@@ -67,7 +69,8 @@ Do not add `capability=` to `require_business_admission`. Mixing the questions i
 
 ## Links
 
-- [VISION-0.67](../vision/VISION-0.67.md)  
+- [VISION-0.67](../vision/closed/VISION-0.67.md)  
+- [VISION-0.68](../vision/VISION-0.68.md)  
 - [VISION-0.66](../vision/closed/VISION-0.66.md)  
 - [VISION-0.64](../vision/closed/VISION-0.64.md)  
 - [VISION-ASSEMBLY](../vision/VISION-ASSEMBLY.md)

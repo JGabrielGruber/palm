@@ -4,9 +4,26 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.0 — the great cleansing (plan)
+- José closed 0.67 and opened 0.68: compost remaining costume after assembly dependents.
+- Named remaining: empty `host.projections.attach`, bare `enable_event_outbox`, living POST lies, twin seats that pin empty work.
+- Not delivery POST. Not 0.56 spawn. `enable_state_snapshot` stays read packaging.
+- Package stamp stays `0.67.0` until 0.68 exit.
+
+## [0.67.0] — 2026-08-21
+
+### 0.67 — Dependents require the organ (**theme closed** · José)
+
+Vision: [VISION-0.67](docs/vision/closed/VISION-0.67.md) · ADR: [036](docs/adr/036-require-capability.md) **Accepted** · Migration: [MIGRATION-0.67](docs/migrations/MIGRATION-0.67.md)
+
+- Two doors: `require_business_admission` (ready) and `require_capability` (ready then installed name).
+- Work-plane / host `able` is drain membership; wait stays ready. Surfaces speak `capability_refused`.
+- Journal, projections, compensation, webhook, analytics: DNA list + attach hand + leftover one object.
+- Unread `enable_compensation` / `enable_webhook_dispatcher` composted.
+- Remaining costume (empty boot phases, bare `enable_event_outbox`) waits in 0.68.
+
 ### 0.67.17 — analytics leftover (one organ)
 - Analytics is one organ on the install board. The host slot reads that object. `analytics_enabled` refines it. Composition services do not keep a twin when DNA omits. Not a supervisor loop.
-- Package stamp stays `0.66.0`.
 
 ### 0.67.16 — analytics DNA + attach hand
 - `analytics` is name + attach hand + omit. DNA lists it on `local.cli` / `server` / `all_in_one` / `mcp`; `embedded` / `worker` omit.

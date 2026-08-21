@@ -49,7 +49,7 @@ This file holds **what still needs work** plus a **master index** of all IDs.
 | [SD-017](docs/audit/TECH-DEBT-PAID.md#sd-017) | WorkIntent claim not exclusive (no claimer/lease) | S1 | M | **0.62.1–0.62.3** | ✅ paid (exclusive claim + reclaim + plane claimer) |
 | [SD-018](docs/audit/TECH-DEBT-PAID.md#sd-018) | Work drain single-claimer by construction | S2 | M | **0.62.4–0.62.7** | ✅ drain N + Queued pool + exclusive drive |
 | [SD-019](#sd-019) | Multi-process / multi-runtime shared claim needs storage CAS | S2 | L | later | open residual (not 0.62 floor) |
-| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.66 face; 0.67.1 require; 0.67.2 work-plane able; 0.67.3 host start_ports; 0.67.4 capability voice; 0.67.5 schedule fire; 0.67.6 vitality work_cycle [VISION-0.67](docs/vision/VISION-0.67.md)) |
+| [SD-020](#sd-020) | Dual readiness / residual edges (no single admission gate) | S1 | L | **0.63** floor | open (0.66 face; 0.67 dependents paid [VISION-0.67](docs/vision/closed/VISION-0.67.md); residual edges named) |
 | [SD-021](#sd-021) | Profile / composition / env as parallel structure king | S2 | L | **0.63** growth | open (seed map + purge) |
 | [SD-022](#sd-022) | Law docs treat talk/metaphor as types | S3 | L | ongoing | open (named 2026-08-19) |
 
@@ -165,7 +165,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-020"></a>
 
-**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · face [VISION-0.66](docs/vision/closed/VISION-0.66.md) (**closed**) · dependents [VISION-0.67](docs/vision/VISION-0.67.md) (**open**)
+**Severity:** S1 · **Effort:** L · **Theme:** **0.63** floor (closed) · face [VISION-0.66](docs/vision/closed/VISION-0.66.md) (**closed**) · dependents [VISION-0.67](docs/vision/closed/VISION-0.67.md) (**closed**)
 
 **Observation:** Business that needs ground can start without a single **admission** surface. Soft “definitions ready,” host flags, catalog order, and half-host tests act as peer readiness. Dual mode hides as green.
 
@@ -192,7 +192,7 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 **Do not:** Soft-open the gate for CI. Permanent corridor guards instead of one gate. Fake green that encodes dual mode. Leave “not this door” **unnamed** so digs become lifestyle.
 
-**Status:** open (0.63 walls up; residuals **named**). **0.66** paid the face (installed names on the snapshot). **0.67.1** paid the organ door (`require_capability`). **0.67.2** paid work-plane `able` (drain membership; wait stays ready). **0.67.3** paid host `start_ports.able` (drain; wait stays ready). **0.67.4** paid surface `capability_refused` voice. **0.67.5** paid schedule fire (`tick_schedules` / host `tick_work`) on drain able. **0.67.6** paid vitality `work_cycle` drain proofs (`local.cli`). Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md).
+**Status:** open (0.63 walls up; residuals **named**). **0.66** paid the face. **0.67** paid dependents (require door, drain able, composition kings + leftover). Sequence: [VISION-0.64](docs/vision/closed/VISION-0.64.md). Remaining costume: [VISION-0.68](docs/vision/VISION-0.68.md).
 
 ---
 
@@ -201,13 +201,13 @@ Shape 0.62 claimer/lease fields so CAS is a plug-in, not a rewrite.
 
 <a id="sd-021"></a>
 
-**Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth (closed) · residual under [VISION-0.64](docs/vision/closed/VISION-0.64.md)
+**Severity:** S2 · **Effort:** L · **Theme:** **0.63** growth (closed) · residual under [VISION-0.68](docs/vision/VISION-0.68.md)
 
 **Observation:** `CompositionProfile`, `DeploymentProfile`, `BootMode`, and some structure-shaped `PALM_*` toggles still act as **structure law** beside the structure definition. That is dual king after assembly lands.
 
 **Pay in 0.63 growth:** Map entry/mode/env into **definition seed**; after load, assembly status is structure truth; packaging env stays; structure dual toggles purge or residual kill-date. First definition: **embedded**; dogfood: cli / server.
 
-**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only). **0.63.39** — DNA `capabilities` lists `work_drain`; manager materializes (register/start) only when listed; `composition.has` / `BootMode.allow_background_drain` no longer peer-gate that unit. **0.65.2** — host outbox store wire follows DNA `has_capability("outbox")`; the 0.63.28 composition king is paid. **0.67.7** — journal is DNA list + attach hand; `composition.has("journal")` dies on that unit. **0.67.8** — journal leftover costume paid (one attach on the runtime bus; host slot aliases it; not a loop). **0.67.9** — projections is DNA list + attach hand; `composition.has("projections")` dies on that unit. **0.67.10** — projections leftover costume paid (one attach on the runtime bus; host slots alias it; not a loop). **0.67.11** — compensation is DNA list + attach hand; `composition.has("compensation")` dies on that unit. **0.67.12** — compensation leftover costume paid (one attach on the runtime bus; host slot aliases it; not a loop). **0.67.13** — webhook is DNA list + attach hand; `composition.has("webhook")` dies on that unit. **0.67.14** — webhook leftover costume paid (one dispatcher; host slot aliases it; URLs refine that object; not a loop). **0.67.15** — unread `enable_compensation` / `enable_webhook_dispatcher` composted; dead `attach_runtimes` gone. **0.67.16** — analytics is DNA list + attach hand; `composition.has("analytics")` dies on that unit. **0.67.17** — analytics leftover costume paid (one organ; host slot aliases it; `analytics_enabled` refines that object; not a loop). Residual: bare `enable_event_outbox` packaging; SD-020 soft-ready neighbors.
+**Progress:** **0.63.5** seed map + builtin DNA catalog on host spawn. **0.63.13** — `PALM_ASSEMBLY_DNA_ID` explicit seed; membership always for refuse; continuous drain DNA king; `STRUCTURE_SEED_ENV` cartography. **0.63.19** — full `MEMBERSHIP_CAPABILITY_SEEDS` catalog; bootstrap single source. **0.63.28** — host outbox store wire from `composition.has("outbox")` (settings seed only). **0.63.39** — DNA `capabilities` lists `work_drain`; manager materializes (register/start) only when listed; `composition.has` / `BootMode.allow_background_drain` no longer peer-gate that unit. **0.65.2** — host outbox store wire follows DNA `has_capability("outbox")`; the 0.63.28 composition king is paid. **0.67.7** — journal is DNA list + attach hand; `composition.has("journal")` dies on that unit. **0.67.8** — journal leftover costume paid (one attach on the runtime bus; host slot aliases it; not a loop). **0.67.9** — projections is DNA list + attach hand; `composition.has("projections")` dies on that unit. **0.67.10** — projections leftover costume paid (one attach on the runtime bus; host slots alias it; not a loop). **0.67.11** — compensation is DNA list + attach hand; `composition.has("compensation")` dies on that unit. **0.67.12** — compensation leftover costume paid (one attach on the runtime bus; host slot aliases it; not a loop). **0.67.13** — webhook is DNA list + attach hand; `composition.has("webhook")` dies on that unit. **0.67.14** — webhook leftover costume paid (one dispatcher; host slot aliases it; URLs refine that object; not a loop). **0.67.15** — unread `enable_compensation` / `enable_webhook_dispatcher` composted; dead `attach_runtimes` gone. **0.67.16** — analytics is DNA list + attach hand; `composition.has("analytics")` dies on that unit. **0.67.17** — analytics leftover costume paid (one organ; host slot aliases it; `analytics_enabled` refines that object; not a loop). Residual: bare `enable_event_outbox` packaging and empty boot phases — [VISION-0.68](docs/vision/VISION-0.68.md); SD-020 soft-ready neighbors.
 
 **Do not:** Leave profiles as public dual structure forever “for compatibility.” Remove packaging env wholesale.
 
@@ -575,7 +575,7 @@ Fill concrete rows when breaks appear. Note **rule**, **true owner**, **parked t
 | Seed | Debt | Spirit |
 |------|------|--------|
 | **Multi-claimer / capacity** | SD-017 · SD-018 · residual SD-019 | **Closed 0.62** — [VISION-0.62](docs/vision/closed/VISION-0.62.md) · [ADR-031](docs/adr/031-multi-claimer-work-drain.md) Accepted |
-| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63–0.66 closed** · **0.67 open** (step 4 dependents) — [VISION-0.67](docs/vision/VISION-0.67.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
+| **Assembly / organism truth** | SD-020 · SD-021 · host/profile glue · catalog wire · product dig into composition root | **0.63–0.67 closed** · **0.68 open** (costume compost) — [VISION-0.68](docs/vision/VISION-0.68.md) · seed [VISION-ASSEMBLY](docs/vision/VISION-ASSEMBLY.md) |
 | **Surface deflation** | SU-* · SI-002/006/010 | Compost with evidence after eyes — [VISION-SURFACE-DEFLATION](docs/vision/VISION-SURFACE-DEFLATION.md) |
 | **Navigator** | SD-022 · Assist as product bag | Operator-guidance definition + presentation adapter — [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) (queue seed; not open) |
 | **Plane-store framework** | SI-014 | Ponder only; per-plane stores first |

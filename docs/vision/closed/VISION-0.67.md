@@ -1,10 +1,12 @@
 # VISION 0.67 — Dependents require the organ
 
-**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.17` landed. Package stamp stays `0.66.0` until exit.  
-**ADR:** [036](../adr/036-require-capability.md) **Proposed**  
-**Migration:** [MIGRATION-0.67](../migrations/MIGRATION-0.67.md)  
-**Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.66](closed/VISION-0.66.md) (**closed**) · sequence [VISION-0.64](closed/VISION-0.64.md) step 4  
-**Debt:** [SD-020](../../TECH-DEBT.md#sd-020) (face paid; this theme pays dependents)
+**Status:** ✅ **Theme closed** (José 2026-08-21) at `0.67.0`.  
+**ADR:** [036](../../adr/036-require-capability.md) **Accepted**  
+**Migration:** [MIGRATION-0.67](../../migrations/MIGRATION-0.67.md)  
+**Map:** [PALM.md](../../PALM.md) · seed [VISION-ASSEMBLY](../VISION-ASSEMBLY.md) · prior [VISION-0.66](VISION-0.66.md) (**closed**) · sequence [VISION-0.64](VISION-0.64.md) step 4  
+**Debt:** [SD-020](../../../TECH-DEBT.md#sd-020) (face paid; dependents paid)
+
+**Exit:** José closed the theme (2026-08-21). Dependents ask the published face. Remaining costume: [VISION-0.68](../VISION-0.68.md) (**open**).
 
 This minor is **assembly remainder step 4**: callers that still treat `may_run_business` as the organ list now ask the published face. The face already publishes installed names. Dependents must use them.
 
@@ -44,7 +46,7 @@ Façades and tests that freeze `may_run_business` as the organ list. Work-plane 
 | **2** | **No decorators.** Inject a gate, then require. A wrapper may close over a name. |
 | **3** | Field names stay **`capabilities`** / **`has_capability`**. |
 | **4** | Remaining composition kings start **in 0.67** (0.67.7+). Do not open 0.68 for this pile. |
-| **5** | **Roles, not a shared drain** (José 2026-08-21). Do not pay webhook leftover or delivery as two processes polling one `OutboxStore`. Do not add a cross-process file lock as the scale story. Scale home is [VISION-0.56](VISION-0.56.md): a parent process starts child runtimes and assigns place/storage. Spoken names: orchestrator, supporter, worker → law: control home / [support place](../PALM.md) / [work place](../PALM.md). Each role owns its work. They do not race one pending index. Recursion is the [Palm provider](../PROVIDER-APPS.md) (Palm calling Palm), not a fight for a data-dir file. |
+| **5** | **Roles, not a shared drain** (José 2026-08-21). Do not pay webhook leftover or delivery as two processes polling one `OutboxStore`. Do not add a cross-process file lock as the scale story. Scale home is [VISION-0.56](../VISION-0.56.md): a parent process starts child runtimes and assigns place/storage. Spoken names: orchestrator, supporter, worker → law: control home / [support place](../../PALM.md) / [work place](../../PALM.md). Each role owns its work. They do not race one pending index. Recursion is the [Palm provider](../../PROVIDER-APPS.md) (Palm calling Palm), not a fight for a data-dir file. |
 | **6** | **No outside callers** (José 2026-08-21). Current use is dogfood and examples. Do not keep unread flags, twin seats, or living docs that promise POST in order to protect a missing operator. Trim the costume. Closed chronicles stay history. |
 
 Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two questions were named. Override if the one-door optional arg is preferred. Lock 5 is the fork from leftover option B as “whoever drains the shared store POSTs.” Lock 6 is the fork from preserving webhook packaging for legacy.
@@ -63,8 +65,9 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 ## Not this theme
 
 - Engine as walker. Places. Surface compost. Navigator. Tunnels. Grove.  
-- Workload spawn of support / work processes (lock 5). That is [VISION-0.56](VISION-0.56.md), not a 0.67 leftover.  
-- If drain/outbox still show first-organ costume, that work is still **0.64** / **0.65** law.
+- Workload spawn of support / work processes (lock 5). That is [VISION-0.56](../VISION-0.56.md), not a 0.67 leftover.  
+- If drain/outbox still show first-organ costume, that work is still **0.64** / **0.65** law.  
+- Remaining costume after leftover (empty boot phases, bare `enable_event_outbox`, living POST lies) — [VISION-0.68](../VISION-0.68.md).
 
 ## Guide slices (not a sealed contract)
 
@@ -88,7 +91,7 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 | **0.67.15** | Unread-flag compost: settings drop `enable_compensation` / `enable_webhook_dispatcher`; dead `attach_runtimes` gone. ✅ |
 | **0.67.16** | Analytics: DNA list + attach hand + `composition.has` dies on that unit. ✅ |
 | **0.67.17** | Analytics leftover: one organ; host slot aliases it; `analytics_enabled` refines that object; not a loop. ✅ |
-| **0.67.18+** | More composition if José includes it. |
-| **exit** | José · ADR-036 Accepted · stamp `0.67.0`. |
+| **0.67.18+** | Not opened. José exited; remaining costume is [VISION-0.68](../VISION-0.68.md). |
+| **exit** | José · ADR-036 Accepted · stamp `0.67.0`. ✅ |
 
 *The face reads the fact. Dependents ask the face.*
