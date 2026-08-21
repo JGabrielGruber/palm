@@ -739,7 +739,7 @@ Wizard commit events (`wizard.commit.*`) are in `CRITICAL_EVENT_TYPES` and track
 
 ### External webhook consumers
 
-Webhooks dispatch **from the outbox** before an entry is marked published — durable delivery aligned with internal handlers.
+DNA lists ``webhook``. Recover refines URLs on the install dispatcher. Production outbox drain does not POST.
 
 ```python
 from palm.common.events import WebhookDispatcher, WebhookTarget, RecordingWebhookDeliverer
@@ -754,9 +754,9 @@ Host settings:
 
 | Setting | Default | Meaning |
 |---------|---------|---------|
-| `enable_webhook_dispatcher` | `False` | Composition-gated dispatcher delivers outbox events |
-| `webhook_urls` | `[]` | Destination URLs (`PALM_WEBHOOK_URLS`) |
-| `webhook_event_types` | `[]` | Optional filter; empty = all outbox events |
+| `enable_webhook_dispatcher` | `False` | Unread packaging. Membership is DNA `webhook`. |
+| `webhook_urls` | `[]` | Refine the install dispatcher (`PALM_WEBHOOK_URLS`) |
+| `webhook_event_types` | `[]` | Optional filter on those URLs; empty = all types |
 
 Observability: `host.webhook.delivered`, `host.webhook.failed`.
 

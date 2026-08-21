@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.67.14 — webhook leftover (one dispatcher)
+- Webhook is one install dispatcher. The host slot reads that object. Recover refines URLs on it. Empty URLs keep empty targets. Not a supervisor loop and not a recover twin.
+- Production outbox drain does not POST. Package stamp stays `0.66.0`.
+
 ### 0.67.13 — webhook DNA + attach hand
 - `webhook` is name + attach hand + omit. DNA lists it on `local.cli` / `server` / `all_in_one` / `mcp`; `embedded` / `worker` omit.
 - Recover reads `has_capability("webhook")`, not `composition.has`. Composition/seed no longer write the name.

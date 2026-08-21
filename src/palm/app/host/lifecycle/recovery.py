@@ -68,7 +68,9 @@ class RecoveryCoordinator:
             except Exception:
                 self._compensation = None
 
-        self._build_webhook_dispatcher()
+        # 0.67.14: recovery slot aliases the install dispatcher. URLs refine
+        # that object. Empty URLs keep empty targets — do not mint a twin.
+        self._alias_webhook_dispatcher()
         try:
             store = host._app.runtime().outbox_store
             if store is not None:
@@ -95,21 +97,30 @@ class RecoveryCoordinator:
             self._last_recovery = dict(recovery)
             host._event.emit(HostEventType.RECOVERED, **recovery)
 
-    def _build_webhook_dispatcher(self) -> WebhookDispatcher | None:
+    def _alias_webhook_dispatcher(self) -> WebhookDispatcher | None:
         host = self._host
-        # 0.67.13: webhook membership is DNA has_capability. settings.webhook_urls
-        # still configure the targets — settings refine within the capability, never bypass it.
+        # 0.67.13: membership is DNA has_capability. 0.67.14: settings URLs
+        # refine the install organ. Settings never bypass membership.
         if not host.admission.has_capability(CAPABILITY_WEBHOOK):
+            self._webhook_dispatcher = None
             return None
-        if not host.settings.webhook_urls:
+        try:
+            dispatcher = host.runtime().install.webhook
+        except Exception:
+            dispatcher = None
+        if dispatcher is None:
+            self._webhook_dispatcher = None
             return None
-        self._webhook_dispatcher = WebhookDispatcher(
-            webhook_targets_from_urls(
-                host.settings.webhook_urls,
-                event_types=host.settings.webhook_event_types or None,
+        urls = host.settings.webhook_urls
+        if urls:
+            dispatcher.replace_targets(
+                webhook_targets_from_urls(
+                    urls,
+                    event_types=host.settings.webhook_event_types or None,
+                )
             )
-        )
-        return self._webhook_dispatcher
+        self._webhook_dispatcher = dispatcher
+        return dispatcher
 
     def stop(self) -> None:
         if self._compensation is not None:

@@ -1,6 +1,6 @@
 # VISION 0.67 — Dependents require the organ
 
-**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.13` landed. Package stamp stays `0.66.0` until exit.  
+**Status:** 📗 **Theme open** (José 2026-08-20). Execute `0.67.14` landed. Package stamp stays `0.66.0` until exit.  
 **ADR:** [036](../adr/036-require-capability.md) **Proposed**  
 **Migration:** [MIGRATION-0.67](../migrations/MIGRATION-0.67.md)  
 **Map:** [PALM.md](../PALM.md) · seed [VISION-ASSEMBLY](VISION-ASSEMBLY.md) · prior [VISION-0.66](closed/VISION-0.66.md) (**closed**) · sequence [VISION-0.64](closed/VISION-0.64.md) step 4  
@@ -32,7 +32,7 @@ An act that needs an organ **requires that organ** on the published gate. Busine
 
 ## Growth
 
-Façades and tests that freeze `may_run_business` as the organ list. Work-plane `able` that should mean drain is here. Host `start_ports.able` (drain + ready; wait stays ready) landed 0.67.3. Surface voice for `CapabilityRefusedError` landed 0.67.4. Schedule fire (`tick_schedules` / host `tick_work`) landed 0.67.5. Vitality `work_cycle` drain proofs pin `local.cli` (0.67.6). First remaining composition king **journal** landed 0.67.7 (DNA list + attach hand; `composition.has` dies on that unit). Journal leftover (one attach, one host object, not a fake loop) landed 0.67.8. Next remaining composition king **projections** landed 0.67.9 (DNA list + attach hand; `composition.has` dies on that unit). Projections leftover (one attach, one host object, not a fake loop) landed 0.67.10. Next remaining composition king **compensation** landed 0.67.11 (DNA list + attach hand; `composition.has` dies on that unit). Compensation leftover (one attach, one host object, not a fake loop) landed 0.67.12. Next remaining composition king **webhook** landed 0.67.13 (DNA list + attach hand; `composition.has` dies on that unit).
+Façades and tests that freeze `may_run_business` as the organ list. Work-plane `able` that should mean drain is here. Host `start_ports.able` (drain + ready; wait stays ready) landed 0.67.3. Surface voice for `CapabilityRefusedError` landed 0.67.4. Schedule fire (`tick_schedules` / host `tick_work`) landed 0.67.5. Vitality `work_cycle` drain proofs pin `local.cli` (0.67.6). First remaining composition king **journal** landed 0.67.7 (DNA list + attach hand; `composition.has` dies on that unit). Journal leftover (one attach, one host object, not a fake loop) landed 0.67.8. Next remaining composition king **projections** landed 0.67.9 (DNA list + attach hand; `composition.has` dies on that unit). Projections leftover (one attach, one host object, not a fake loop) landed 0.67.10. Next remaining composition king **compensation** landed 0.67.11 (DNA list + attach hand; `composition.has` dies on that unit). Compensation leftover (one attach, one host object, not a fake loop) landed 0.67.12. Next remaining composition king **webhook** landed 0.67.13 (DNA list + attach hand; `composition.has` dies on that unit). Webhook leftover (one dispatcher; host slot aliases it; URLs refine that object; not a fake loop) landed 0.67.14.
 
 **Not floor:** retune every `require_business_admission` site. Optional organ arg on that function. Remaining [SD-021](../../TECH-DEBT.md#sd-021) kings (analytics).
 
@@ -62,7 +62,7 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 
 ## Not this theme
 
-- Remaining `composition.has` kings (analytics) unless José includes them in 0.67.14+.  
+- Remaining `composition.has` kings (analytics) unless José includes them in 0.67.15+.  
 - Engine as walker. Places. Surface compost. Navigator. Tunnels. Grove.  
 - Workload spawn of support / work processes (lock 5). That is [VISION-0.56](VISION-0.56.md), not a 0.67 leftover.  
 - If drain/outbox still show first-organ costume, that work is still **0.64** / **0.65** law.
@@ -85,7 +85,8 @@ Lock 1 is the fork from the 0.66 close sitting. José opened 0.67 after the two 
 | **0.67.11** | Compensation: DNA list + attach hand + `composition.has` dies on that unit. ✅ |
 | **0.67.12** | Compensation leftover: one organ on the runtime bus; host slot aliases it; not a loop. ✅ |
 | **0.67.13** | Webhook: DNA list + attach hand + `composition.has` dies on that unit. ✅ |
-| **0.67.14+** | More composition kings if José includes them. |
+| **0.67.14** | Webhook leftover: one dispatcher; host slot aliases it; URLs refine that object; not a loop. ✅ |
+| **0.67.15+** | More composition kings if José includes them. |
 | **exit** | José · ADR-036 Accepted · stamp `0.67.0`. |
 
 *The face reads the fact. Dependents ask the face.*

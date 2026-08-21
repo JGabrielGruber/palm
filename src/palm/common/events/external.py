@@ -1,18 +1,17 @@
 """
-External event consumers — webhook dispatch from the transactional outbox.
+External event consumers — webhook dispatcher organ.
 
 **Add a webhook consumer**
 
 1. Configure targets via :class:`WebhookTarget` (URL + optional event filter).
-2. Pass targets to :class:`WebhookDispatcher`. Structure DNA lists ``webhook``
-   (``has_capability("webhook")``); recover still refines targets from
-   ``PALM_WEBHOOK_URLS``. ``PALM_ENABLE_WEBHOOK_DISPATCHER`` is leftover packaging.
-
+2. Structure DNA lists ``webhook`` (``has_capability("webhook")``). Recover
+   refines the install dispatcher from ``PALM_WEBHOOK_URLS``.
+   ``PALM_ENABLE_WEBHOOK_DISPATCHER`` is unread packaging.
 3. For tests, inject :class:`RecordingWebhookDeliverer` to capture deliveries
    without network I/O.
 
-Events are delivered as JSON POST bodies with ``type``, ``payload``, ``context``,
-and ``timestamp`` before the outbox entry is marked published.
+``dispatch`` POSTs JSON with ``type``, ``payload``, ``context``, and
+``timestamp``. Production outbox drain does not call it.
 """
 
 from __future__ import annotations
@@ -93,11 +92,10 @@ class RecordingWebhookDeliverer:
 
 
 class WebhookDispatcher:
-    """
-    Delivers outbox events to configured webhook targets.
+    """Delivers events to configured webhook targets.
 
-    Called by :class:`~palm.common.events.outbox.OutboxProcessor` before an entry
-    is marked published.
+    Membership is DNA ``has_capability("webhook")``. Recover refines this
+    object in place. Production outbox drain does not call ``dispatch``.
     """
 
     def __init__(
@@ -113,6 +111,10 @@ class WebhookDispatcher:
     @property
     def targets(self) -> tuple[WebhookTarget, ...]:
         return tuple(self._targets)
+
+    def replace_targets(self, targets: list[WebhookTarget]) -> None:
+        """Replace destinations on this dispatcher. Does not construct a twin."""
+        self._targets = list(targets)
 
     @property
     def deliveries(self) -> tuple[WebhookDelivery, ...]:

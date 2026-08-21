@@ -6,7 +6,7 @@ from palm.common.events.external import WebhookDispatcher
 
 
 def wire_install_webhook() -> WebhookDispatcher:
-    """Construct the webhook dispatcher. Settings URLs refine targets on recover."""
+    """Construct the webhook dispatcher. Recover refines targets on this object."""
     return WebhookDispatcher([])
 
 

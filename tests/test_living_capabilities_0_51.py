@@ -182,7 +182,8 @@ def test_compensation_gate_reads_dna_not_composition() -> None:
 
 def test_webhook_gate_reads_dna_not_composition() -> None:
     """RecoveryCoordinator gates webhook on DNA has_capability (0.67.13).
-    URLs still refine targets. Composition omit on a listed phenotype does not hide it.
+    URLs refine the install dispatcher (0.67.14). Do not mint a recover twin.
+    Composition omit on a listed phenotype does not hide it.
     Lean omit is embedded DNA."""
     settings = PalmSettings.for_tests(full_recovery=True).model_copy(
         update={
@@ -195,8 +196,11 @@ def test_webhook_gate_reads_dna_not_composition() -> None:
     listed.start()
     try:
         assert listed.admission.has_capability(CAPABILITY_WEBHOOK)
-        assert listed._recovery._build_webhook_dispatcher() is not None
-        assert listed.runtime().install.webhook is not None
+        organ = listed.runtime().install.webhook
+        assert organ is not None
+        assert listed.webhook_dispatcher is organ
+        assert listed._recovery.webhook_dispatcher is organ
+        assert [t.url for t in organ.targets] == ["https://example.test/hook"]
     finally:
         listed.shutdown()
 
@@ -204,7 +208,8 @@ def test_webhook_gate_reads_dna_not_composition() -> None:
     lean.start()
     try:
         assert not lean.admission.has_capability(CAPABILITY_WEBHOOK)
-        assert lean._recovery._build_webhook_dispatcher() is None
+        assert lean.webhook_dispatcher is None
+        assert lean._recovery.webhook_dispatcher is None
         assert lean.runtime().install.webhook is None
     finally:
         lean.shutdown()

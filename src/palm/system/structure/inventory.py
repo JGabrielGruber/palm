@@ -61,6 +61,11 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "law": "webhook is DNA list + attach hand; composition.has is not membership",
     },
     {
+        "id": "structure.webhook_one_organ",
+        "slice": "0.67.14",
+        "law": "one webhook dispatcher; host slot reads that object; URLs refine it; not a supervisor loop",
+    },
+    {
         "id": "work_plane.drain",
         "slice": "0.63.3",
         "law": "continuous poll checks is_able()",
@@ -743,6 +748,17 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
         ),
         "intent": "paid webhook composition king as copyable DNA + hand",
         "status": "paid_0_67_13",
+    },
+    {
+        "id": "structure.webhook_recover_twin",
+        "note": (
+            "0.67.14: webhook leftover — one dispatcher on the install board, "
+            "host slot aliases it, recover refines URLs on that object. "
+            "Empty URLs keep empty targets. Not a CallableSystemService. "
+            "Not a recover twin. Production outbox drain does not POST."
+        ),
+        "intent": "paid webhook leftover costume as one organ",
+        "status": "paid_0_67_14",
     },
 )
 

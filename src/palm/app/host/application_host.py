@@ -324,7 +324,11 @@ class ApplicationHost:
 
     @property
     def webhook_dispatcher(self) -> WebhookDispatcher | None:
-        return self._recovery.webhook_dispatcher
+        # 0.67.14: live install read so mount/omit/health see the same object.
+        try:
+            return self.runtime().install.webhook
+        except Exception:
+            return None
 
     @property
     def last_recovery(self) -> dict[str, Any] | None:
