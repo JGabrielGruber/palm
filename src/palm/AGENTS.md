@@ -19,6 +19,7 @@ Not the system map. Not the theme history. Not the intended-architecture vault. 
 | **Where we are / what is next** | **[STATUS.md](../../STATUS.md)** |
 | **Spirit** | [PHILOSOPHY.md](../../PHILOSOPHY.md) |
 | **Theme discipline** | [docs/VERSIONING.md](../../docs/VERSIONING.md) — floor · growth · exit; **José** decides |
+| **Compost / delete** | Same VERSIONING — costume scout + affected dead code (two reads, one execute) |
 | **Live debt** | [TECH-DEBT.md](../../TECH-DEBT.md) · intentions [docs/STUBS.md](../../docs/STUBS.md) |
 | **Vision (current)** | [docs/vision/](../../docs/vision/README.md) |
 | **Vision (closed)** | [docs/vision/closed/](../../docs/vision/closed/) |

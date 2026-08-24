@@ -106,6 +106,21 @@ Agents do not invent `if`s to protect a patch number. José decides whether to b
 - **Extend** the theme with `0.X.N+` growth slices without reopening a seed file if the home is the same.  
 - Numbered tables in VISION are **ordered intent**, not a death clock.
 
+### Compost scouts (delete slices)
+
+When a slice **deletes costume** (empty phase, unread flag, side-effect register, living lie): **two reads**, then **one execute**.
+
+| Scout | Question |
+|-------|----------|
+| **Costume** | What does no work? Proof. |
+| **Affected dead code** | What exists only to feed that work? |
+
+The second scout names the delete set **before** execute: callers, builders, exports, extra bags, renderers, helper modules, tests that freeze the old bag.
+
+Empty body is not done. Adapters that only fed it die in the same slice.  
+Do not relocate the costume into a cleaner wire.  
+Do not swallow a leftover on a **different** path — name it; leave it.
+
 ### The `X.0` planning release
 
 `0.X.0` **opens** a minor. It carries the *plan*, not features:
