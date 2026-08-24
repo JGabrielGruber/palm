@@ -5,7 +5,6 @@ from __future__ import annotations
 import importlib.util
 
 from palm.kits.server.diagnostics import build_doctor_report
-from palm.runners.app import RunnerApp
 from palm.runners.host.app import HostRunnerApp
 from palm.runners.neonroot.app import NeonrootRunnerApp
 
@@ -21,8 +20,8 @@ def test_doctor_contributor_registry_is_gone() -> None:
 
 
 def test_host_and_neonroot_ready_are_not_doctor_registers() -> None:
-    assert HostRunnerApp.ready is RunnerApp.ready
-    assert NeonrootRunnerApp.ready is RunnerApp.ready
+    assert not hasattr(HostRunnerApp, "ready")
+    assert not hasattr(NeonrootRunnerApp, "ready")
 
 
 def test_anatomy_doctor_has_no_contributor_bags() -> None:

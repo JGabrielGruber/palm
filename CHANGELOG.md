@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.6 — runner ready() call
+- Drop `RunnerApp.ready()` and the call from `register()`. Runner autoload stores the manifest only.
+- Pattern and provider `ready()` stay. Do not dissolve the write-only runner app bag. Package stamp stays `0.67.0`.
+
 ### 0.68.5 — empty local runner ready()
 - Drop `LocalRunnerApp.ready()` empty override. All runner apps inherit the optional `RunnerApp.ready()` hook.
 - Do not delete the hook. Do not add a Vitality runner probe. Package stamp stays `0.67.0`.
