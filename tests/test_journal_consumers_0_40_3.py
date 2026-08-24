@@ -5,15 +5,14 @@ from __future__ import annotations
 from palm.common.events.consumers import (
     DEFAULT_JOURNAL_CONSUMERS,
     JOURNAL_CONSUMER_PROJECTIONS,
-    JOURNAL_CONSUMER_WEBHOOKS,
+    JOURNAL_CONSUMER_WORK_DRAIN,
     consume_for_projections,
-    consume_for_webhooks,
     journal_consumer_status,
     mark_work_drain_caught_up,
 )
 from palm.common.events.journal import EventJournal
-from palm.kits.server.diagnostics import build_doctor_report
 from palm.core.storage import StorageEngine
+from palm.kits.server.diagnostics import build_doctor_report
 
 
 def _journal() -> EventJournal:
@@ -29,16 +28,13 @@ def test_named_consumers_independent_offsets() -> None:
     j.append("job.completed", {"job_id": "j1"})
     j.append("resource.changed", {"resource_ref": "x", "action": "put"})
 
-    seen_w: list[str] = []
-    consume_for_webhooks(j, lambda e: seen_w.append(e.event_type), limit=10)
-    assert "resource.changed" in seen_w
-    assert j.get_consumer_offset(JOURNAL_CONSUMER_WEBHOOKS) > 0
-
-    # projections start at 0 independently
-    assert j.get_consumer_offset(JOURNAL_CONSUMER_PROJECTIONS) == 0
     seen_p: list[str] = []
     consume_for_projections(j, lambda e: seen_p.append(e.event_type), limit=10)
-    assert len(seen_p) >= 2
+    assert "resource.changed" in seen_p
+    assert j.get_consumer_offset(JOURNAL_CONSUMER_PROJECTIONS) > 0
+
+    # work_drain starts at 0 independently
+    assert j.get_consumer_offset(JOURNAL_CONSUMER_WORK_DRAIN) == 0
 
     status = journal_consumer_status(j)
     assert status["latest_offset"] >= 3
@@ -72,7 +68,6 @@ def test_doctor_embeds_control_plane() -> None:
                 "journal": {
                     "latest_offset": 2,
                     "consumers": {
-                        "webhooks": {"offset": 0, "lag": 2},
                         "projections": {"offset": 0, "lag": 2},
                         "work_drain": {"offset": 2, "lag": 0},
                     },

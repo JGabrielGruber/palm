@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.11 — unused webhook journal facade
+- Drop `drain_journal_webhooks`, `consume_for_webhooks`, and the doctor consumer name `"webhooks"`. Nothing in product called the host method. The body counted journal entries; it did not POST.
+- Do not wire `dispatch`. Projection journal drain stays. `HttpWebhookDeliverer` stays. Package stamp stays `0.67.0`.
+
 ### 0.68.10 — unused host webhook events
 - Drop unused `HostEventType.WEBHOOK_DELIVERED` / `WEBHOOK_FAILED` and dashboard paint for those names. Nothing emitted them.
 - Do not wire production POST. `HttpWebhookDeliverer` stays. Package stamp stays `0.67.0`.
