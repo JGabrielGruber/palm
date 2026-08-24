@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.5 — empty local runner ready()
+- Drop `LocalRunnerApp.ready()` empty override. All runner apps inherit the optional `RunnerApp.ready()` hook.
+- Do not delete the hook. Do not add a Vitality runner probe. Package stamp stays `0.67.0`.
+
 ### 0.68.4 — DNA-shaped outbox skip
 - `system.outbox.wire` skips `capability_off:outbox` when DNA omits `outbox`. Drop `enable_event_outbox` from settings, start options, and host spawn.
 - Explicit `host.start(enable_event_outbox=…)` no longer overrides DNA. Keep `enable_state_snapshot`. Package stamp stays `0.67.0`.

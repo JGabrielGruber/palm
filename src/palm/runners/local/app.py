@@ -10,9 +10,6 @@ class LocalRunnerApp(RunnerApp):
     label = "Palm local process WorkloadRuntime (always on)"
     default_enabled = True
 
-    def ready(self) -> None:
-        return None
-
 
 local_runner_app = LocalRunnerApp()
 

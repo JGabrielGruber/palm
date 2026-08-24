@@ -35,7 +35,7 @@ These still live after 0.67.17. They are **not** unpaid leftover organs.
 | Bare `enable_event_outbox` | Start option still **read** | Host spawn **wrote** it from DNA. `system.outbox.wire` skipped on `enable_event_outbox_off`. | ✅ **0.68.4** composted. Wire skips `capability_off:outbox` when DNA omits. Flag gone. Keep the skip. |
 | Runner `ready()` doctor callbacks | Side-effect boot hook | `HostRunnerApp.ready()` registered `DoctorContributor` side-effects. `WorkloadEngine` already samples runner seats. Vitality does not. | ✅ **0.68.2** composted. Anatomy doctor uses `workloads` from the engine. No Vitality runner probe. |
 | Living docs that promise POST | Lie | Production never HTTP POSTs. `on_before_publish` is a test hook. | ✅ **0.68.3** trimmed. Living tables no longer promise POST. Do not wire production POST. Closed 0.10 chronicle stays. |
-| Twin seats / inventory ids that pin empty work | Costume after leftover | Same class as unread `enable_compensation` (paid 0.67.15). | Compost when the seat does no work. |
+| Twin seats / inventory ids that pin empty work | Costume after leftover | `LocalRunnerApp.ready()` was an empty override after 0.68.2. Same class as unread `enable_compensation` (paid 0.67.15). | ✅ **0.68.5** composted. All three runner apps inherit `RunnerApp.ready()`. Keep the optional hook. |
 | `enable_state_snapshot` | **Read** packaging | Installs `StateSnapshotHook`. CLI and settings pass it. Not a membership seed. | **Keep** as packaging unless José later says it is a membership lie. |
 
 Honest packaging that **stays** unless José includes it:
@@ -81,7 +81,8 @@ Lock 2 is the fork from leftover option B as “whoever drains the shared store 
 | **0.68.2** | Compost runner `ready()` doctor register. ✅ |
 | **0.68.3** | Trim living POST lies. ✅ |
 | **0.68.4** | Compost bare `enable_event_outbox` to DNA skip. ✅ |
-| **0.68.5+** | Compost units José includes (twin seats). |
+| **0.68.5** | Compost empty `LocalRunnerApp.ready()`. ✅ |
+| **0.68.6+** | Compost units José includes. |
 | **exit** | José · stamp `0.68.0`. |
 
 *Delete the empty work. Keep the honest knob.*
