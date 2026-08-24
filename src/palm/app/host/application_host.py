@@ -891,12 +891,6 @@ class ApplicationHost:
             self._assist.bind_analytics(organ)
         self._analytics = organ
 
-    def _attach_projections(self) -> None:
-        # 0.67.10: the hand already attached to the runtime bus. Host slots
-        # alias that organ. Do not subscribe host.event and do not attach again.
-        if not self.admission.has_capability(CAPABILITY_PROJECTIONS):
-            return
-
     def reload_work_triggers(self) -> int:
         """Reload definition triggers into the work drain (after design/example load)."""
         return self._workplane.reload_work_triggers()

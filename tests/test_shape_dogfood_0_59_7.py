@@ -91,12 +91,8 @@ def test_shape_boots_phenotype(mode_name: str) -> None:
             assert by_id["host.surfaces.mount"]["outcome"] == "skip"
             assert by_id["host.surfaces.mount"]["reason"] == "composition_off:surfaces"
 
-        # Projections capability is DNA, not composition.has.
-        if host.admission.has_capability("projections"):
-            assert by_id["host.projections.attach"]["outcome"] == "ok"
-        else:
-            assert by_id["host.projections.attach"]["outcome"] == "skip"
-            assert by_id["host.projections.attach"]["reason"] == "capability_off:projections"
+        # Projections capability is DNA, not a host boot phase (0.68.1).
+        assert "host.projections.attach" not in by_id
 
         # Background work drain: DNA capabilities list (not composition.has).
         rt = host.runtime()

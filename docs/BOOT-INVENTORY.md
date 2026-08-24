@@ -54,7 +54,7 @@ Source: `ApplicationHost.start` + collaborators.
 | H5 | `definitions.load` | `PalmKernel.load_definitions()` | After system instances exist |
 | H6 | `product.wire` | `_wire_cqrs()` | Commands, projections/capability, **services from composition**, workplane wire, service CQRS |
 | H7 | `surfaces.mount` | `_start_server_surface()` if `profile.server` | attach_host + start_http |
-| H8 | `projections.attach` | `_attach_projections()` if capability | Host + runtime event attach |
+| H8 | *(composted 0.68.1)* | — | Empty `host.projections.attach` dropped. DNA hand attaches; host slots alias in H6. Not in `HOST_PHASES`. |
 | H9 | `recover` | `RecoveryCoordinator.recover()` | workers_ready, compensation, outbox, projection rebuild |
 | H10 | `host.ready` | emit STARTED; `_started = True` | |
 | H11 | `background.work_drain` | optional `workplane.start_background()` | composition **or** deployment OR (BI-006) |
@@ -73,7 +73,7 @@ Each created runtime with `autostart=True` runs the **full system schedule** bef
 ### H6 product wire detail (`_wire_cqrs`)
 
 1. `wire_command_bus`  
-2. If `composition.has("projections")`: build/register projections + `wire_query_bus`; else `wire_standalone_query_bus` on primary  
+2. If DNA `has_capability("projections")`: host slots alias the install organ + pattern extras + `wire_query_bus`; else `wire_standalone_query_bus` on primary  
 3. `core_service_registry().build_all(..., only=composition.services)`  
 4. Assign system/session/definitions/execution/assist/design/analytics  
 5. assist↔analytics bind; dashboard store; workplane: work_drain, journal, inbound  
@@ -182,7 +182,7 @@ Spine regressions fix in-slice.
 | Host: definitions | H5 |
 | Host: product services | H6 (services part) |
 | Host: surfaces | H7 (+ composition.surfaces truth later) |
-| Host: projections/outbox | H6 partial + H8 + H9 |
+| Host: projections/outbox | H6 (host slot alias) + H9 recover rebuild |
 | Host: recover/drain | H9 + H11 |
 | System: plugins | S1 |
 | System: engines/storage | S2–S6 |

@@ -1,15 +1,15 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.67.0` · **Active theme:** **`0.68` The great cleansing** · **Prior closed:** [**0.67** Dependents require the organ](docs/vision/closed/VISION-0.67.md)  
-**Last Updated:** August 21, 2026 · 0.67 closed (José). 0.68.0 names remaining costume. Package stays `0.67.0` until 0.68 exit.  
+**Last Updated:** August 24, 2026 · 0.68.1 composts empty `host.projections.attach`. Package stays `0.67.0` until 0.68 exit.  
 **Map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.68](docs/vision/VISION-0.68.md) · closed [VISION-0.67](docs/vision/closed/VISION-0.67.md) · [ADR-036](docs/adr/036-require-capability.md) **Accepted** · [MIGRATION-0.68](docs/migrations/MIGRATION-0.68.md) · [MIGRATION-0.67](docs/migrations/MIGRATION-0.67.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** (face paid; dependents paid) · **SD-021** (bare `enable_event_outbox`; empty boot phases) · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-***  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** (face paid; dependents paid) · **SD-021** (bare `enable_event_outbox`) · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-***  
 **Closed seasons:** [docs/vision/closed/](docs/vision/closed/) · [VERSIONING.md](docs/VERSIONING.md) (STATUS is the present)
 
 ### Agent resume (after compact)
 
 Read: **this STATUS** → [VISION-0.68](docs/vision/VISION-0.68.md) → [ADR-036](docs/adr/036-require-capability.md) **Accepted**.  
-José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. Execute starts at **0.68.1** only when José names a unit.
+José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.1** composts empty `host.projections.attach`. Further units when José names them.
 
 | Spirit | Decision |
 |--------|----------|
@@ -29,10 +29,11 @@ Delete empty work after assembly dependents. Keep honest packaging.
 | Patch | Status |
 |-------|--------|
 | **0.68.0** | ✅ plan + named remaining |
-| **0.68.1+** | 📋 compost units José includes |
+| **0.68.1** | ✅ empty `host.projections.attach` composted |
+| **0.68.2+** | 📋 compost units José includes |
 | **exit** | stamp `0.68.0` · José |
 
-**Named remaining:** empty `host.projections.attach` · bare `enable_event_outbox` · living POST lies · twin seats that pin empty work. `enable_state_snapshot` stays read packaging.
+**Named remaining:** bare `enable_event_outbox` · runner `ready()` doctor callbacks · living POST lies · twin seats that pin empty work. `enable_state_snapshot` stays read packaging.
 
 **Floor:** one compost of costume. **Not this theme:** outbox POST (B), [VISION-0.56](docs/vision/VISION-0.56.md) spawn, DNA phenotype retune, dissolve `ServerContext`.
 

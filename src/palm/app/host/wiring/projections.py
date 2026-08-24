@@ -1,31 +1,14 @@
-"""
-Projection wiring (T2 / 0.48.5, seam 2) — build + register the host's read models.
+"""Pattern projection extras for host query wire.
 
-Parameter-based (root-agnostic): takes storage / instance-manager / projection
-manager, not a host — so the second composition root (``ServerContext``, seam 6)
-can share it. Extracted verbatim from ``ApplicationHost._wire_cqrs``.
+Core read models live on the install board (DNA hand). This module only
+builds pattern extras registered onto that same manager.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from typing import Any
 
-from palm.common.cqrs.projection import ProjectionManager
-from palm.common.cqrs.projections.instance_index import InstanceIndexProjection
-from palm.common.cqrs.projections.job_status_board import JobStatusBoardProjection
-from palm.common.cqrs.projections.resource_invocation import ResourceInvocationProjection
 from palm.common.patterns._registry import get_projection_factory, registered_projection_factories
-
-
-@dataclass
-class HostProjections:
-    """The read-model projections a host builds and serves queries from."""
-
-    instance: InstanceIndexProjection
-    resource: ResourceInvocationProjection
-    job_board: JobStatusBoardProjection
-    patterns: dict[str, Any] = field(default_factory=dict)
 
 
 def build_pattern_projections(storage: Any) -> dict[str, Any]:
@@ -40,28 +23,6 @@ def build_pattern_projections(storage: Any) -> dict[str, Any]:
     return patterns
 
 
-def build_host_projections(storage: Any, instance_manager: Any) -> HostProjections:
-    """Construct the core + pattern projections over ``storage``."""
-    return HostProjections(
-        instance=InstanceIndexProjection(storage, instance_manager),
-        resource=ResourceInvocationProjection(storage),
-        job_board=JobStatusBoardProjection(storage),
-        patterns=build_pattern_projections(storage),
-    )
-
-
-def register_host_projections(manager: ProjectionManager, projections: HostProjections) -> None:
-    """Register the projections into ``manager`` (order matches legacy wiring)."""
-    manager.register(projections.instance)
-    for projection in projections.patterns.values():
-        manager.register(projection)
-    manager.register(projections.resource)
-    manager.register(projections.job_board)
-
-
 __all__ = [
-    "HostProjections",
-    "build_host_projections",
     "build_pattern_projections",
-    "register_host_projections",
 ]

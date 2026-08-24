@@ -93,13 +93,6 @@ HOST_PHASES: tuple[PhaseSpec, ...] = (
         optional=True,
     ),
     PhaseSpec(
-        "host.projections.attach",
-        "host",
-        "implemented",
-        "Host aliases install projections when DNA lists projections",
-        optional=True,
-    ),
-    PhaseSpec(
         "host.recover",
         "host",
         "implemented",

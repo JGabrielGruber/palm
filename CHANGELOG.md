@@ -4,9 +4,15 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.1 — empty projections boot phase
+- Drop `host.projections.attach` and `_attach_projections`. The DNA hand already attaches; host slots alias in product wire.
+- Drop unread `build_host_projections` / `register_host_projections` / `HostProjections`. Pattern extras stay `build_pattern_projections`.
+- Inventory and 0.59 dogfood pins retune onto `admission.has_capability("projections")`. Closed 0.59 chronicle stays.
+- Package stamp stays `0.67.0`.
+
 ### 0.68.0 — the great cleansing (plan)
 - José closed 0.67 and opened 0.68: compost remaining costume after assembly dependents.
-- Named remaining: empty `host.projections.attach`, bare `enable_event_outbox`, living POST lies, twin seats that pin empty work.
+- Named remaining: empty `host.projections.attach`, bare `enable_event_outbox`, runner `ready()` doctor callbacks, living POST lies, twin seats that pin empty work.
 - Not delivery POST. Not 0.56 spawn. `enable_state_snapshot` stays read packaging.
 - Package stamp stays `0.67.0` until 0.68 exit.
 

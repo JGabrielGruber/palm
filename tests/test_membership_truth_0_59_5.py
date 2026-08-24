@@ -136,7 +136,8 @@ def test_surfaces_skip_when_composition_has_none() -> None:
         host.shutdown()
 
 
-def test_projections_skip_reason_capability_off() -> None:
+def test_projections_omit_is_admission_not_a_boot_phase() -> None:
+    """0.68.1: DNA omit is admission. Empty host.projections.attach is gone."""
     settings = PalmSettings.for_tests(load_examples=False)
     host = ApplicationHost(
         settings=settings,
@@ -144,9 +145,9 @@ def test_projections_skip_reason_capability_off() -> None:
     )
     host.start(structure_definition_id="local.embedded")
     try:
-        by_id = {w.phase: w for w in (host._last_boot_walk or [])}
-        assert by_id["host.projections.attach"].outcome == "skip"
-        assert by_id["host.projections.attach"].reason == "capability_off:projections"
+        assert not host.admission.has_capability("projections")
+        walked = [w.phase for w in (host._last_boot_walk or [])]
+        assert "host.projections.attach" not in walked
     finally:
         host.shutdown()
 

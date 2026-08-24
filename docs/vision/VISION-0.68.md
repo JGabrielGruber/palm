@@ -31,8 +31,9 @@ These still live after 0.67.17. They are **not** unpaid leftover organs.
 
 | Thing | What it is | Why it still lives | 0.68 motion |
 |-------|------------|--------------------|-------------|
-| `host.projections.attach` / `_attach_projections` | Boot-schedule step whose body is empty | Leftover already attached on the runtime bus. 0.59 dogfood pins this **phase id** (`ok` vs `skip` / `capability_off:projections`). | Compost the empty phase. Retune inventory pins. Closed 0.59 chronicle stays. |
+| `host.projections.attach` / `_attach_projections` | Boot-schedule step whose body is empty | Leftover already attached on the runtime bus. 0.59 dogfood pinned this **phase id**. | ✅ **0.68.1** composted. Inventory pins retuned onto admission. Closed 0.59 chronicle stays. |
 | Bare `enable_event_outbox` | Start option still **read** | Host spawn **writes** it from DNA. `system.outbox.wire` skips on `enable_event_outbox_off`. Bare `BaseRuntime.start(enable_event_outbox=…)` is named [SD-021](../../TECH-DEBT.md#sd-021). | Pay the dual or name it again. Do not drop the skip with no replacement. |
+| Runner `ready()` doctor callbacks | Side-effect boot hook | `HostRunnerApp.ready()` registers `DoctorContributor` side-effects. `WorkloadEngine` already samples runner seats. Vitality does not. | Purge the boot register. Do not invent a Vitality runner probe in the same compost. |
 | Living docs that promise POST | Lie | Lock 6. Production never HTTP POSTs. `on_before_publish` is a test hook. | Trim the lie. Do not wire production POST. |
 | Twin seats / inventory ids that pin empty work | Costume after leftover | Same class as unread `enable_compensation` (paid 0.67.15). | Compost when the seat does no work. |
 | `enable_state_snapshot` | **Read** packaging | Installs `StateSnapshotHook`. CLI and settings pass it. Not a membership seed. | **Keep** as packaging unless José later says it is a membership lie. |
@@ -76,7 +77,8 @@ Lock 2 is the fork from leftover option B as “whoever drains the shared store 
 | Slice | Intent |
 |-------|--------|
 | **0.68.0** | Plan + named remaining. ✅ |
-| **0.68.1+** | Compost units José includes (empty boot phase, SD-021 dual, living lie). |
+| **0.68.1** | Compost empty `host.projections.attach`. ✅ |
+| **0.68.2+** | Compost units José includes (SD-021 dual, `ready()` doctor, living lie). |
 | **exit** | José · stamp `0.68.0`. |
 
 *Delete the empty work. Keep the honest knob.*

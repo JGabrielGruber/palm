@@ -30,7 +30,7 @@ def test_host_start_walks_full_phase_table() -> None:
         # all_in_one collapsed: no server surface
         assert by_id["host.surfaces.mount"].outcome == "skip"
         assert by_id["host.surfaces.mount"].reason == "deployment.server_off"
-        assert by_id["host.projections.attach"].outcome == "ok"
+        assert "host.projections.attach" not in by_id
         assert by_id["host.recover"].outcome == "ok"
         assert by_id["host.ready"].outcome == "ok"
 

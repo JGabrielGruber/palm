@@ -45,10 +45,10 @@ def test_for_mode_boots_phenotype(mode_name: str) -> None:
         assert by_id["host.ready"]["outcome"] == "ok"
         assert by_id["host.recover"]["outcome"] == "skip"
         assert by_id["host.recover"]["reason"] == "mode_recover_off"
-        # Embedded: no surfaces, no projections capability.
+        # Embedded: no surfaces. Projections omit is admission, not a boot skip.
         assert by_id["host.surfaces.mount"]["outcome"] == "skip"
-        assert by_id["host.projections.attach"]["outcome"] == "skip"
-        assert by_id["host.projections.attach"]["reason"] == "capability_off:projections"
+        assert not host.admission.has_capability("projections")
+        assert "host.projections.attach" not in by_id
 
         # Core product doors only (no assist/design/analytics chrome).
         assert host.system is not None

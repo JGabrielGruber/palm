@@ -26,11 +26,11 @@ HOST_START_PHASE_ORDER: tuple[str, ...] = (
     "system.spawn",
     "definitions.load",
     "product.wire",
-    "projections.attach",
     "recover",
 )
 
 # Full schedule seat ids (walker always visits; optional seats may skip).
+# 0.68.1: empty host.projections.attach composted — DNA hand already attached.
 HOST_WALK_PHASE_IDS: tuple[str, ...] = (
     "host.system_log",
     "host.kernel.bootstrap",
@@ -40,7 +40,6 @@ HOST_WALK_PHASE_IDS: tuple[str, ...] = (
     "host.definitions.load",
     "host.product.wire",
     "host.surfaces.mount",
-    "host.projections.attach",
     "host.recover",
     "host.ready",
 )
@@ -65,7 +64,6 @@ def test_host_start_phase_order_all_in_one(spine_settings: PalmSettings) -> None
     real_load = host._app.load_definitions
     real_wire = host._wire_cqrs
     real_surface = host._start_server_surface
-    real_proj = host._attach_projections
     real_recover = host._recovery.recover
 
     def track(name: str, fn: Any) -> Any:
@@ -80,7 +78,6 @@ def test_host_start_phase_order_all_in_one(spine_settings: PalmSettings) -> None
     host._app.load_definitions = track("definitions.load", real_load)  # type: ignore[method-assign]
     host._wire_cqrs = track("product.wire", real_wire)  # type: ignore[method-assign]
     host._start_server_surface = track("surfaces.mount", real_surface)  # type: ignore[method-assign]
-    host._attach_projections = track("projections.attach", real_proj)  # type: ignore[method-assign]
     host._recovery.recover = track("recover", real_recover)  # type: ignore[method-assign]
 
     orig_event_init = host._event.initialize
@@ -211,9 +208,11 @@ def test_composition_services_gate_build(spine_settings: PalmSettings) -> None:
 def test_inventory_constants_match_documented_count() -> None:
     """Guard: collaborator order + full walk table stay aligned with inventory."""
     # Collaborators on collapsed profile (no surfaces.mount call).
-    assert len(HOST_START_PHASE_ORDER) == 7
+    assert len(HOST_START_PHASE_ORDER) == 6
     assert HOST_START_PHASE_ORDER[0] == "kernel.bootstrap"
     assert HOST_START_PHASE_ORDER[-1] == "recover"
-    assert len(HOST_WALK_PHASE_IDS) == 11
+    assert "projections.attach" not in HOST_START_PHASE_ORDER
+    assert len(HOST_WALK_PHASE_IDS) == 10
     assert HOST_WALK_PHASE_IDS[0] == "host.system_log"
     assert HOST_WALK_PHASE_IDS[-1] == "host.ready"
+    assert "host.projections.attach" not in HOST_WALK_PHASE_IDS

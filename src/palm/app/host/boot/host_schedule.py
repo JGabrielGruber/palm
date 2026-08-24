@@ -32,7 +32,6 @@ from palm.app.bootstrap import runtime_start_options
 from palm.app.host.boot.system_log_phase import make_host_system_log_handler
 from palm.app.host.events import HostEventType
 from palm.app.host.workers import WorkerCoordinator
-from palm.core.structure import CAPABILITY_PROJECTIONS
 from palm.system.boot.context import BootContext
 from palm.system.boot.skip import PhaseSkip
 from palm.system.boot.walker import PhaseHandler
@@ -129,11 +128,6 @@ def build_host_handlers(
             surfaces=",".join(host.composition.surfaces),
         )
 
-    def projections_attach(_ctx: BootContext) -> None:
-        if not host.admission.has_capability(CAPABILITY_PROJECTIONS):
-            raise PhaseSkip("capability_off:projections")
-        host._attach_projections()
-
     def recover(_ctx: BootContext) -> None:
         if host.boot_mode is not None and not host.boot_mode.recover_on_start:
             raise PhaseSkip("mode_recover_off")
@@ -165,7 +159,6 @@ def build_host_handlers(
         "host.definitions.load": definitions_load,
         "host.product.wire": product_wire,
         "host.surfaces.mount": surfaces_mount,
-        "host.projections.attach": projections_attach,
         "host.recover": recover,
         "host.ready": ready,
     }
