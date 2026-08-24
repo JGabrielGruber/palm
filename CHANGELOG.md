@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.3 — living POST lies
+- Trim living docs that promised webhook POST (`ARCHITECTURE.md` capability table, README / llms “what works today”). Production outbox drain still ACKs without HTTP.
+- Retune the `on_before_publish` test as a hook, not a drain. Do not wire production POST. Package stamp stays `0.67.0`.
+
 ### 0.68.2 — runner ready() doctor register
 - Drop `HostRunnerApp` / `NeonrootRunnerApp.ready()` doctor side-effects. `WorkloadEngine.doctor()` already samples runner seats.
 - Drop `palm.common.runtimes.doctor_contributors`, runner `doctor.py` helpers, and anatomy bags `neonroot` / `workload_host`. CLI doctor reads neonroot from `workloads`.

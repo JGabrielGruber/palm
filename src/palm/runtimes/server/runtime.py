@@ -79,7 +79,7 @@ class ServerRuntime(BaseRuntime):
         return self._transport
 
     def attach_host(self, host: ApplicationHost) -> None:
-        """Bind an ApplicationHost for CQRS, projections, and webhook dispatch."""
+        """Bind an ApplicationHost for CQRS and projections."""
         self._host_bridge = host
         if self._server_app is not None:
             self._server_app.context.attach_host(host)

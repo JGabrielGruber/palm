@@ -183,7 +183,7 @@ def test_webhook_dispatcher_records_delivery() -> None:
     assert deliverer.deliveries[0]["body"]["type"] == "wizard.commit.failed"
 
 
-def test_outbox_processor_dispatches_webhooks_before_publish() -> None:
+def test_outbox_processor_on_before_publish_is_a_hook() -> None:
     from palm.common.events import OutboxProcessor
 
     storage = _storage()

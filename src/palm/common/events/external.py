@@ -1,16 +1,13 @@
 """
 External event consumers — webhook dispatcher organ.
 
-**Add a webhook consumer**
+**Webhook dispatcher library**
 
-1. Configure targets via :class:`WebhookTarget` (URL + optional event filter).
-2. Structure DNA lists ``webhook`` (``has_capability("webhook")``). Recover
-   refines the install dispatcher from ``PALM_WEBHOOK_URLS``.
-3. For tests, inject :class:`RecordingWebhookDeliverer` to capture deliveries
-   without network I/O.
-
-``dispatch`` POSTs JSON with ``type``, ``payload``, ``context``, and
-``timestamp``. Production outbox drain does not call it.
+DNA lists ``webhook`` (``has_capability("webhook")``). Recover refines the
+install dispatcher from ``PALM_WEBHOOK_URLS``. ``dispatch`` POSTs JSON with
+``type``, ``payload``, ``context``, and ``timestamp``. Production outbox drain
+does not call it. Tests inject :class:`RecordingWebhookDeliverer` or pass
+``dispatch`` as ``on_before_publish`` (test hook).
 """
 
 from __future__ import annotations
@@ -34,7 +31,7 @@ class WebhookDeliverer(Protocol):
 
 @dataclass(frozen=True)
 class WebhookTarget:
-    """Destination for outbox-driven webhook dispatch."""
+    """Destination URL and optional event filter for :class:`WebhookDispatcher`."""
 
     url: str
     name: str = ""

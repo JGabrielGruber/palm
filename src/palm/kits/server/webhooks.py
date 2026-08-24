@@ -1,5 +1,5 @@
 """
-Webhook integration — connect server lifecycle to outbox-driven dispatch.
+Webhook health snapshot from the host dispatcher.
 """
 
 from __future__ import annotations
@@ -19,8 +19,8 @@ class ServerWebhookBridge:
     Optional bridge between a server context and a :class:`WebhookDispatcher`.
 
     When an :class:`~palm.app.host.ApplicationHost` owns the dispatcher, the
-    server surface reads it from the host. Standalone servers can attach a
-    dispatcher directly for outbound notifications.
+    server surface reads it from the host (target counts for health). Production
+    outbox drain does not POST.
     """
 
     dispatcher: WebhookDispatcher | None = None

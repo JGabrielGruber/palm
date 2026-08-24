@@ -59,7 +59,7 @@ palm/core/         PURE engines — Behavior Tree, Orchestration, Context, Stora
 | **State** | `DictStateSchema`, scoped blackboards, schema-aware snapshots (`__palm:meta`) |
 | **Persistence** | Durable `ProcessInstance` records; resume across restarts |
 | **CQRS** | Command/query buses; host projections (`instance_index`, `job_status_board`); wizard CQRS in `patterns/wizard/bindings/cqrs/` |
-| **Reliability** | Transactional outbox, compensation handlers, optional webhook dispatch |
+| **Reliability** | Transactional outbox, compensation handlers. Webhook organ does not POST |
 | **Runtimes** | Embedded, Daemon, Server (HTTP), CLI + REPL (host-backed) |
 | **Resources (0.12)** | `ResourceDefinition`, `ResourceEngine.invoke()`, `ResourceLeaf`, `ResourceCatalog`, `palm` provider |
 | **Flow REST (0.58.19 paths)** | `/v1/api/flows/{flow_id}/instance/{instance_id}/…` — create, inspect, input, backtrack (legacy segment `session` may parse) |

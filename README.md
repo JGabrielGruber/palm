@@ -71,7 +71,7 @@ Behavior Trees are the control-flow foundation for **business**. Organism topolo
 | **`palm` provider** | Palm calling Palm — local `submit_flow` / `invoke_resource` or remote HTTP; recursion guardrails |
 | **ApplicationHost** | Top-level orchestrator — role profiles (`all_in_one`, `master`, `worker`, `server`), startup recovery |
 | **CQRS** | Command/query buses; host projections (`instance_index`, `job_status_board`, `resource_invocations`); wizard projection registered by `WizardApp` |
-| **Reliability** | Transactional outbox, compensation handlers (including resource undo), optional webhook dispatch |
+| **Reliability** | Transactional outbox, compensation handlers (including resource undo). Webhook organ does not POST |
 | **Core** | Behavior tree, orchestration, context, storage, resource, event, auth, **TransformEngine** |
 | **State** | `DictStateSchema`, scoped state, schema-aware snapshots (`__palm:meta`) |
 | **Transforms** | **22 built-in rules** — field shaping, JSONPath, dates, conditionals, serialization, `enrich_resource` |

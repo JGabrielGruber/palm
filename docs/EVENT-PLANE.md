@@ -8,7 +8,7 @@ Palm runs **two** in-process `EventEngine` instances when `ApplicationHost` is s
 | Bus | Property | Emits | Subscribers |
 |-----|----------|-------|-------------|
 | **Orchestration** | `runtime.event` | `job.*`, `flow.session.*`, `resource.changed`, `workload.*` (stub), … | Wait matcher, inbound, work-drain triggers, event journal, projections |
-| **Host coordination** | `host.event` | `host.started`, `host.shutdown`, `host.webhook.delivered`, … | Host recorder, worker coordinator |
+| **Host coordination** | `host.event` | `host.started`, `host.shutdown`, `host.recovered`, … | Host recorder, worker coordinator |
 
 ## Rule of thumb
 

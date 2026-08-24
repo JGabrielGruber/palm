@@ -108,7 +108,7 @@ Shared, non-plugin coordination lives under `palm.common/`:
 | `common/storage/` | `StorageFactory` — lazy backend load, settings-driven options |
 | `common/managers/` | `InstanceManager` — cache, active tracking, summaries, reconciliation |
 | `common/cqrs/` | Command/query buses, projections, rebuild policy |
-| `common/events/` | Outbox, reliable publishing, webhook dispatch |
+| `common/events/` | Outbox, reliable publishing, webhook dispatcher organ |
 | `common/compensation/` | Optional saga-style undo on commit failure |
 | `common/patterns/` | Materialize definitions via `pattern_registry` (not new patterns) |
 | `common/transforms/` | Built-in transform rules, `TransformExecutor`, and `register_transform()` helpers |
@@ -696,7 +696,7 @@ ADR: [docs/adr/004-cqrs-schemas-service-layer.md](docs/adr/004-cqrs-schemas-serv
 | Rebuild policy | `palm/common/cqrs/rebuild.py` | Batch rebuild + skip-if-fresh safeguards for large instance counts |
 | Outbox | `palm/common/events/outbox.py` | Durable critical events; DNA-listed `outbox` drains via `OutboxLoopService` |
 | Compensation | `palm/common/compensation/` | Optional saga-style undo on `wizard.commit.failed` |
-| Webhooks | `palm/common/events/external.py` | POST outbox events to external URLs before mark-published |
+| Webhooks | `palm/common/events/external.py` | Install dispatcher (DNA `webhook`). Recover refines URLs. Production drain does not POST |
 
 ### Projection rebuild safeguards
 
@@ -756,8 +756,6 @@ Host settings:
 |---------|---------|---------|
 | `webhook_urls` | `[]` | Refine the install dispatcher (`PALM_WEBHOOK_URLS`) |
 | `webhook_event_types` | `[]` | Optional filter on those URLs; empty = all types |
-
-Observability: `host.webhook.delivered`, `host.webhook.failed`.
 
 ### Worker coordination
 
