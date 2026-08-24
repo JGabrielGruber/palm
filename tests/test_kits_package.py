@@ -23,7 +23,6 @@ def test_server_kit_protocol_exports() -> None:
 
 
 def test_common_runtimes_no_longer_hosts_server_kit() -> None:
-    import palm.common.runtimes as cr
+    import importlib.util
 
-    assert not hasattr(cr, "ServerRequest")
-    assert not hasattr(cr, "register_doctor_contributor")
+    assert importlib.util.find_spec("palm.common.runtimes") is None

@@ -24,7 +24,7 @@ class PalmProviderApp(ProviderApp):
         "core.resource",
         "core.orchestration",
         "core.utils.recursion",
-        "common.runtimes",
+        "system.runtime",
         "definitions.resource",
         "instances",
         "runtimes.server",

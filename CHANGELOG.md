@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.8 — empty common.runtimes parking lot
+- Drop `palm.common.runtimes` (empty after 0.68.2). Living runtime is `palm.system.runtime`. Server kit stays `palm.kits.server`.
+- Pattern and provider `ready()` stay. Package stamp stays `0.67.0`.
+
 ### 0.68.7 — write-only RunnerApp bag
 - Drop `RunnerApp`, `palm.runners._registry`, and the three runner `app.py` postcards. Autoload still registers `WorkloadRuntime` classes into `workload_runtime_registry`.
 - Pattern and provider `ready()` stay. Package stamp stays `0.67.0`.

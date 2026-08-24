@@ -108,7 +108,7 @@ Providers extend the host without editing `palm.app` internals:
 | Hook | Register via | Consumed by |
 |------|--------------|-------------|
 | `provider_registry` | `registry.py` | `core/resource/engine.py` |
-| `register_runtime_binding` | `ready()` | `common/runtimes/base.py` on `start()` / `stop()` |
+| `register_runtime_binding` | `ready()` | `system.runtime` on `start()` / `stop()` |
 
 Future hooks (reserved): compensation handlers, CQRS projections for resource invocations.
 
@@ -122,7 +122,7 @@ Future hooks (reserved): compensation handlers, CQRS projections for resource in
 |---------|------------|------|
 | `bindings/resource` | `core.resource` | Provider contract, parent-job correlation |
 | `bindings/orchestration` | `core.orchestration` | Child job payloads, local wait |
-| `bindings/runtimes` | `common.runtimes` | `bind_palm_runtime()` for embedded mode |
+| `bindings/runtimes` | `system.runtime` | `bind_palm_runtime()` for embedded mode |
 | `bindings/recursion` | `core.utils.recursion` | Depth and cycle guardrails |
 | `flow/remote` | `runtimes.server` HTTP | Out-of-process Palm via service-domain REST (0.17.2+) |
 

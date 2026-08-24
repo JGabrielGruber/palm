@@ -112,7 +112,6 @@ Shared, non-plugin coordination lives under `palm.common/`:
 | `common/compensation/` | Optional saga-style undo on commit failure |
 | `common/patterns/` | Materialize definitions via `pattern_registry` (not new patterns) |
 | `common/transforms/` | Built-in transform rules, `TransformExecutor`, and `register_transform()` helpers |
-| `common/runtimes/` | **Residual:** SD-012 re-exports + `server/` transport kit (SD-011). Canonical runtime: `palm.system.runtime` |
 
 | System (`palm.system`) | Responsibility |
 |------------------------|----------------|

@@ -8,13 +8,10 @@ from palm.kits.server.diagnostics import build_doctor_report
 
 
 def test_doctor_contributor_registry_is_gone() -> None:
-    assert importlib.util.find_spec("palm.common.runtimes.doctor_contributors") is None
+    # 0.68.2 dropped the doctor registry. 0.68.8 dropped the empty parking lot.
+    assert importlib.util.find_spec("palm.common.runtimes") is None
     assert importlib.util.find_spec("palm.runners.host.doctor") is None
     assert importlib.util.find_spec("palm.runners.neonroot.doctor") is None
-    import palm.common.runtimes as cr
-
-    assert not hasattr(cr, "register_doctor_contributor")
-    assert not hasattr(cr, "collect_doctor_extensions")
 
 
 def test_host_and_neonroot_ready_are_not_doctor_registers() -> None:
