@@ -35,7 +35,7 @@ These still live after 0.67.17. They are **not** unpaid leftover organs.
 | Bare `enable_event_outbox` | Start option still **read** | Host spawn **wrote** it from DNA. `system.outbox.wire` skipped on `enable_event_outbox_off`. | ✅ **0.68.4** composted. Wire skips `capability_off:outbox` when DNA omits. Flag gone. Keep the skip. |
 | Runner `ready()` doctor callbacks | Side-effect boot hook | `HostRunnerApp.ready()` registered `DoctorContributor` side-effects. `WorkloadEngine` already samples runner seats. Vitality does not. | ✅ **0.68.2** composted. Anatomy doctor uses `workloads` from the engine. No Vitality runner probe. |
 | Living docs that promise POST | Lie | Production never HTTP POSTs. `on_before_publish` is a test hook. | ✅ **0.68.3** trimmed. Living tables no longer promise POST. Do not wire production POST. Closed 0.10 chronicle stays. |
-| Twin seats / inventory ids that pin empty work | Costume after leftover | `LocalRunnerApp.ready()` was an empty override after 0.68.2. Same class as unread `enable_compensation` (paid 0.67.15). | ✅ **0.68.5** composted the Local override. ✅ **0.68.6** composted the runner `ready()` call. ✅ **0.68.7** composted the write-only `RunnerApp` bag. Pattern/Provider `ready()` stays. |
+| Twin seats / inventory ids that pin empty work | Costume after leftover | `LocalRunnerApp.ready()` was an empty override after 0.68.2. Same class as unread `enable_compensation` (paid 0.67.15). | ✅ **0.68.5** composted the Local override. ✅ **0.68.6** composted the runner `ready()` call. ✅ **0.68.7** composted the write-only `RunnerApp` bag. ✅ **0.68.9** composted the Pattern MCP second `ready()` call. Pattern/Provider `ready()` stays. |
 | Empty `palm.common.runtimes` parking lot | Package with `__all__ = []` after 0.68.2 | Doctor-contributor registry died; tests imported the package only to freeze absence. | ✅ **0.68.8** composted. Living runtime is `palm.system.runtime`. Closed 0.48 / 0.57 chronicles stay. |
 | `enable_state_snapshot` | **Read** packaging | Installs `StateSnapshotHook`. CLI and settings pass it. Not a membership seed. | **Keep** as packaging unless José later says it is a membership lie. |
 
@@ -86,7 +86,8 @@ Lock 2 is the fork from leftover option B as “whoever drains the shared store 
 | **0.68.6** | Compost the runner `ready()` call. ✅ |
 | **0.68.7** | Compost the write-only `RunnerApp` bag. ✅ |
 | **0.68.8** | Compost empty `palm.common.runtimes`. ✅ |
-| **0.68.9+** | Compost units José includes. |
+| **0.68.9** | Compost the Pattern MCP second `ready()` call. ✅ |
+| **0.68.10+** | Compost units José includes. |
 | **exit** | José · stamp `0.68.0`. |
 
 *Delete the empty work. Keep the honest knob.*
