@@ -1,13 +1,14 @@
-"""0.68.5 — LocalRunnerApp empty ready() override composted."""
+"""0.68.5 — LocalRunnerApp empty ready() override composted.
+
+0.68.7 dropped the RunnerApp bag, so the override cannot return.
+"""
 
 from __future__ import annotations
 
-from palm.runners.host.app import HostRunnerApp
-from palm.runners.local.app import LocalRunnerApp
-from palm.runners.neonroot.app import NeonrootRunnerApp
+import importlib.util
 
 
 def test_local_has_no_ready_override() -> None:
-    assert not hasattr(LocalRunnerApp, "ready")
-    assert not hasattr(HostRunnerApp, "ready")
-    assert not hasattr(NeonrootRunnerApp, "ready")
+    assert importlib.util.find_spec("palm.runners.local.app") is None
+    assert importlib.util.find_spec("palm.runners.host.app") is None
+    assert importlib.util.find_spec("palm.runners.neonroot.app") is None

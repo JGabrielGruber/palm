@@ -5,8 +5,6 @@ from __future__ import annotations
 import importlib.util
 
 from palm.kits.server.diagnostics import build_doctor_report
-from palm.runners.host.app import HostRunnerApp
-from palm.runners.neonroot.app import NeonrootRunnerApp
 
 
 def test_doctor_contributor_registry_is_gone() -> None:
@@ -20,8 +18,11 @@ def test_doctor_contributor_registry_is_gone() -> None:
 
 
 def test_host_and_neonroot_ready_are_not_doctor_registers() -> None:
-    assert not hasattr(HostRunnerApp, "ready")
-    assert not hasattr(NeonrootRunnerApp, "ready")
+    # 0.68.2 dropped the doctor ready() hooks. 0.68.7 dropped the postcard classes.
+    assert importlib.util.find_spec("palm.runners.host.app") is None
+    assert importlib.util.find_spec("palm.runners.neonroot.app") is None
+    assert importlib.util.find_spec("palm.runners.host.doctor") is None
+    assert importlib.util.find_spec("palm.runners.neonroot.doctor") is None
 
 
 def test_anatomy_doctor_has_no_contributor_bags() -> None:

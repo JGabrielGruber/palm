@@ -232,7 +232,8 @@ Instances **pin** a revision and hold resume state.
 | **Runners** | Workload isolation backends (host, neonroot, …) | `palm.runners` |
 | **Storages** | Storage backends (memory, filesystem, postgres, …) | `palm.storages` |
 
-Each plugin family follows an **app + registry** layout.  
+Patterns, providers, and storages follow an **app + registry** layout.  
+Runners autoload packages into `workload_runtime_registry`.  
 Capability is added at the edge. Core contracts stay stable.
 
 **Flagship pattern today:** **wizard** — interactive steps, validation, backtrack, commit, resource and workload leaves.  

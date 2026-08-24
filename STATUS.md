@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.67.0` · **Active theme:** **`0.68` The great cleansing** · **Prior closed:** [**0.67** Dependents require the organ](docs/vision/closed/VISION-0.67.md)  
-**Last Updated:** August 24, 2026 · 0.68.6 drops the runner `ready()` call. Package stays `0.67.0` until 0.68 exit.  
+**Last Updated:** August 24, 2026 · 0.68.7 drops the write-only `RunnerApp` bag. Package stays `0.67.0` until 0.68 exit.  
 **Map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.68](docs/vision/VISION-0.68.md) · closed [VISION-0.67](docs/vision/closed/VISION-0.67.md) · [ADR-036](docs/adr/036-require-capability.md) **Accepted** · [MIGRATION-0.68](docs/migrations/MIGRATION-0.68.md) · [MIGRATION-0.67](docs/migrations/MIGRATION-0.67.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** (face paid; dependents paid) · **SD-021** (profile/env residual) · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-***  
 **Closed seasons:** [docs/vision/closed/](docs/vision/closed/) · [VERSIONING.md](docs/VERSIONING.md) (STATUS is the present)
@@ -9,7 +9,7 @@
 ### Agent resume (after compact)
 
 Read: **this STATUS** → [VISION-0.68](docs/vision/VISION-0.68.md) → [ADR-036](docs/adr/036-require-capability.md) **Accepted**.  
-José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.6** drops the runner `ready()` call. Further units when José names them.
+José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.7** drops the write-only `RunnerApp` bag. Further units when José names them.
 
 | Spirit | Decision |
 |--------|----------|
@@ -35,7 +35,8 @@ Delete empty work after assembly dependents. Keep honest packaging.
 | **0.68.4** | ✅ bare `enable_event_outbox` → DNA skip |
 | **0.68.5** | ✅ empty `LocalRunnerApp.ready()` composted |
 | **0.68.6** | ✅ runner `ready()` call composted |
-| **0.68.7+** | 📋 compost units José includes |
+| **0.68.7** | ✅ write-only `RunnerApp` bag composted |
+| **0.68.8+** | 📋 compost units José includes |
 | **exit** | stamp `0.68.0` · José |
 
 **Named remaining:** none until José includes more. `enable_state_snapshot` stays read packaging. Pattern/Provider `ready()` stays.

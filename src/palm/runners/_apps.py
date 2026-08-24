@@ -1,4 +1,4 @@
-"""Django-style autoloading for WorkloadRuntime runner apps."""
+"""Autoload WorkloadRuntime packages listed in INSTALLED_RUNNERS."""
 
 from __future__ import annotations
 

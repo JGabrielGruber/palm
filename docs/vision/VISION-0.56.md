@@ -110,7 +110,7 @@ palm/common/workload/               # coordination only (no driver clients)
 palm/runners/                       # concrete WorkloadRuntime adapters
   _apps.py                          # INSTALLED_RUNNERS
   host/, neonroot/, ssh/, palm/, k8s/, …
-  # each: runtime.py + app.py + registry.py
+  # each: runtime.py + registry.py
 
 palm/services/execution/workloads/  # product CQRS (ExecutionService.workloads)
   service.py, bindings/cqrs/…
@@ -135,7 +135,7 @@ palm/patterns/… WorkloadLeaf        # BT contract with engine/port
 | `WorkloadRuntime` protocol + registry | Host inventory storage backends |
 | Transition validation | Image builds, registries |
 
-Runners register at bootstrap (`registry.py`, `threading.RLock`), Django-style like providers.
+Runners register at bootstrap (`INSTALLED_RUNNERS` autoload → `registry.py` → `workload_runtime_registry`).
 
 ### 3.2 Layer duties (error-proofing)
 
