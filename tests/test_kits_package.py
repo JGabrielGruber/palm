@@ -26,4 +26,4 @@ def test_common_runtimes_no_longer_hosts_server_kit() -> None:
     import palm.common.runtimes as cr
 
     assert not hasattr(cr, "ServerRequest")
-    assert hasattr(cr, "register_doctor_contributor")
+    assert not hasattr(cr, "register_doctor_contributor")

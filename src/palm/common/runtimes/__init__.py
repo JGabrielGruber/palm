@@ -1,21 +1,10 @@
-"""Shared runtime *helpers* that are not system and not kits.
+"""Shared runtime helpers that are not system and not kits.
 
-- :mod:`palm.common.runtimes.doctor_contributors` — doctor section registry
+The doctor-contributor registry was composted in 0.68.2. Runner seats
+are sampled by :meth:`palm.core.workload.engine.WorkloadEngine.doctor`.
 
-System instance: :mod:`palm.system.runtime`.  
+System instance: :mod:`palm.system.runtime`.
 Server transport kit: :mod:`palm.kits.server`.
 """
 
-from palm.common.runtimes.doctor_contributors import (
-    DoctorContributor,
-    clear_doctor_contributors,
-    collect_doctor_extensions,
-    register_doctor_contributor,
-)
-
-__all__ = [
-    "DoctorContributor",
-    "clear_doctor_contributors",
-    "collect_doctor_extensions",
-    "register_doctor_contributor",
-]
+__all__: list[str] = []

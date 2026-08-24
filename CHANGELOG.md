@@ -4,6 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.2 — runner ready() doctor register
+- Drop `HostRunnerApp` / `NeonrootRunnerApp.ready()` doctor side-effects. `WorkloadEngine.doctor()` already samples runner seats.
+- Drop `palm.common.runtimes.doctor_contributors`, runner `doctor.py` helpers, and anatomy bags `neonroot` / `workload_host`. CLI doctor reads neonroot from `workloads`.
+- Do not add a Vitality runner probe. Package stamp stays `0.67.0`.
+
 ### 0.68.1 — empty projections boot phase
 - Drop `host.projections.attach` and `_attach_projections`. The DNA hand already attaches; host slots alias in product wire.
 - Drop unread `build_host_projections` / `register_host_projections` / `HostProjections`. Pattern extras stay `build_pattern_projections`.

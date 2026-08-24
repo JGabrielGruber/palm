@@ -87,13 +87,21 @@ def test_hermetic_cannot_select_host() -> None:
 
 
 def test_host_doctor_warns_when_enabled() -> None:
-    from palm.runners.host.doctor import host_workload_doctor_issues, host_workload_doctor_section
+    on = WorkloadEngine()
+    on.initialize(runtimes={"host": HostWorkloadRuntime(enabled=True)})
+    try:
+        issues = on.doctor()["issues"]
+        assert any("ENABLED" in i for i in issues)
+    finally:
+        on.shutdown()
 
-    section = host_workload_doctor_section(enabled=True)
-    issues = host_workload_doctor_issues(section)
-    assert any("ENABLED" in i for i in issues)
-    off = host_workload_doctor_section(enabled=False)
-    assert host_workload_doctor_issues(off) == []
+    off = WorkloadEngine()
+    off.initialize(runtimes={"host": HostWorkloadRuntime(enabled=False)})
+    try:
+        issues = off.doctor()["issues"]
+        assert not any("host WorkloadRuntime is ENABLED" in i for i in issues)
+    finally:
+        off.shutdown()
 
 
 def test_host_workspace_ready_and_exec() -> None:

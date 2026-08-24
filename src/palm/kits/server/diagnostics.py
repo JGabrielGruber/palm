@@ -1,11 +1,11 @@
 """Server diagnostics — anatomy packaging for the legacy doctor verb.
 
 0.61.6 / OD-001: this module builds **anatomy packaging** only (storage,
-registries, job counts, contributor sections, host control_plane residual).
-It does **not** invent living seat law. Living eyes live in
-``palm.system.vitality`` and are presented via ``InspectService.top`` /
-``.vitality``. Prefer those paths; call this only as residual packaging
-consumed by :meth:`InspectService.doctor` / CLI health dumps.
+registries, job counts, host control_plane residual). It does **not**
+invent living seat law. Living eyes live in ``palm.system.vitality`` and
+are presented via ``InspectService.top`` / ``.vitality``. Prefer those
+paths; call this only as residual packaging consumed by
+:meth:`InspectService.doctor` / CLI health dumps.
 """
 
 from __future__ import annotations
@@ -13,11 +13,10 @@ from __future__ import annotations
 from typing import Any
 
 from palm import __version__
-from palm.common.runtimes.doctor_contributors import collect_doctor_extensions
-from palm.system.subsystems.planes.wait.plane import WaitPlaneService
-from palm.system.subsystems.planes.wait.present import waiting_on_from_job
 from palm.core.registry import pattern_registry, provider_registry, storage_registry
 from palm.core.transform.registry import transform_registry
+from palm.system.subsystems.planes.wait.plane import WaitPlaneService
+from palm.system.subsystems.planes.wait.present import waiting_on_from_job
 
 # OD-001 residual marker — not living seat law.
 _ANATOMY_ROLE = "anatomy_packaging"
@@ -85,8 +84,7 @@ def build_doctor_report(
             "wait_kinds": wait_kind_counts,
             "verbs": ["start", "continue"],
             "note": (
-                "start = trigger → WorkIntent; continue = WaitPlaneService "
-                "(VISION-0.55.10)"
+                "start = trigger → WorkIntent; continue = WaitPlaneService " "(VISION-0.55.10)"
             ),
         }
 
@@ -146,16 +144,6 @@ def build_doctor_report(
                 if lag > 100:
                     issues.append(f"journal consumer {name!r} lag={lag}")
 
-    # Provider/app doctor sections register downward (e.g. neonroot, host workload).
-    ext_sections, ext_issues = collect_doctor_extensions(runtime)
-    issues.extend(ext_issues)
-    neonroot = ext_sections.get("neonroot")
-    if not isinstance(neonroot, dict):
-        neonroot = {}
-    workload_host = ext_sections.get("workload_host")
-    if not isinstance(workload_host, dict):
-        workload_host = {}
-
     from palm.system.subsystems.planes.workload.bootstrap import workload_doctor_section
 
     try:
@@ -186,11 +174,10 @@ def build_doctor_report(
         "registries": registries,
         "resource_count": resource_count,
         "resource_preflight": resource_preflight,
-        "neonroot": neonroot,
-        "workload_host": workload_host,
         "workloads": workloads,
         # control_plane from host is CS-002 residual — packaging, not living law.
-        "control_plane": cp or {
+        "control_plane": cp
+        or {
             "work_pending": 0,
             "start_plane_running": False,
             "outbox_pending": 0,

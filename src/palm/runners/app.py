@@ -16,7 +16,7 @@ class RunnerApp(ABC):
     default_enabled: ClassVar[bool] = False
 
     def ready(self) -> None:  # noqa: B027
-        """Optional bootstrap: doctor contributors, etc."""
+        """Optional bootstrap hook."""
 
     def register(self) -> None:
         register_runner_app(self)

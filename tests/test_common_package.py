@@ -40,8 +40,8 @@ def test_common_subpackage_imports() -> None:
 
 
 def test_common_runtimes_is_not_system_shim() -> None:
-    """common.runtimes keeps server kit + doctor registry only (SD-012 deleted)."""
+    """common.runtimes is not system runtime and not the server kit (SD-012)."""
     import palm.common.runtimes as cr
 
-    assert hasattr(cr, "register_doctor_contributor")
+    assert not hasattr(cr, "register_doctor_contributor")
     assert not hasattr(cr, "BaseRuntime")

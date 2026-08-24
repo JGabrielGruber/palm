@@ -231,9 +231,7 @@ def _render_control_plane(console: Any, report: dict[str, Any]) -> None:
     cp = report.get("control_plane") if isinstance(report.get("control_plane"), dict) else {}
     if not cp:
         return
-    console.print(
-        "[dim]Host ops / event-plane tables below are packaging residual (CS-002).[/]"
-    )
+    console.print("[dim]Host ops / event-plane tables below are packaging residual (CS-002).[/]")
     ops = cp.get("ops") if isinstance(cp.get("ops"), dict) else {}
     if ops:
         ops_table = Table(title="Ops (packaging residual)", show_lines=True)
@@ -278,28 +276,35 @@ def _render_control_plane(console: Any, report: dict[str, Any]) -> None:
 def _render_neonroot(console: Any, report: dict[str, Any]) -> None:
     from rich.table import Table
 
-    nr = report.get("neonroot") if isinstance(report.get("neonroot"), dict) else {}
-    if not nr:
+    workloads = report.get("workloads") if isinstance(report.get("workloads"), dict) else {}
+    registered = "neonroot" in {str(n) for n in (workloads.get("registered_runtimes") or [])}
+    row = None
+    for item in workloads.get("runtimes") or []:
+        if isinstance(item, dict) and item.get("name") == "neonroot":
+            row = item
+            break
+    if not registered and row is None:
         return
+    health = (
+        row.get("health") if isinstance(row, dict) and isinstance(row.get("health"), dict) else {}
+    )
+    detail = health.get("detail") if isinstance(health.get("detail"), dict) else {}
+    available = health.get("available")
+    if available is True:
+        cli = f"[green]yes[/] {detail.get('version') or detail.get('path') or ''}"
+    elif available is False:
+        cli = f"[yellow]no[/] {detail.get('error') or health.get('message') or ''}"
+    else:
+        cli = "—"
     table = Table(title="NeonRoot (WorkloadRuntime)", show_lines=True)
     table.add_column("Item", style="cyan")
     table.add_column("Value")
     table.add_row(
         "runtime registered",
-        "[green]yes[/]" if nr.get("registered") else "[red]no[/]",
+        "[green]yes[/]" if registered else "[red]no[/]",
     )
-    table.add_row(
-        "CLI available",
-        (
-            f"[green]yes[/] {nr.get('version') or nr.get('path') or ''}"
-            if nr.get("available")
-            else f"[yellow]no[/] {nr.get('error') or ''}"
-        ),
-    )
-    table.add_row("images", ", ".join(nr.get("images_hint") or ()) or "—")
+    table.add_row("CLI available", cli.strip())
     console.print(table)
-    if nr.get("note"):
-        console.print(f"[dim]{nr['note']}[/]")
 
 
 def _render_active_job_context(ctx: CliContext, active: list[Any]) -> None:

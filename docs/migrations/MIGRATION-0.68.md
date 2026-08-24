@@ -3,7 +3,7 @@
 **Theme:** [VISION-0.68](../vision/VISION-0.68.md) · **ADR:** none  
 **Map:** [PALM.md](../PALM.md)
 
-Palm is pre-1.0. Plan `0.68.0`. Package stays `0.67.0` until José exits. **0.68.1** drops the empty projections boot phase. Costume compost may drop further boot phase ids and start-option kwargs.
+Palm is pre-1.0. Plan `0.68.0`. Package stays `0.67.0` until José exits. **0.68.1** drops the empty projections boot phase. **0.68.2** drops the runner `ready()` doctor register. Costume compost may drop further boot phase ids and start-option kwargs.
 
 ## Prefer
 
@@ -21,6 +21,7 @@ Execute will name the cut. Likely:
 | Was | May become |
 |-----|------------|
 | Boot phase `host.projections.attach` | **Gone (0.68.1).** Membership attach is the DNA hand (0.67.9–0.67.10). Inventory retunes onto admission. |
+| Runner `ready()` doctor register | **Gone (0.68.2).** Anatomy doctor samples runners via `workloads` (`WorkloadEngine.doctor`). No global contributor list. |
 | Bare `BaseRuntime.start(enable_event_outbox=…)` | DNA-shaped skip, or remains named [SD-021](../../TECH-DEBT.md#sd-021) if José leaves it. |
 | Living docs that promise webhook POST | Honest: production does not POST. |
 

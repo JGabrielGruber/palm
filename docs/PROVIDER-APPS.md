@@ -96,7 +96,7 @@ providers/<name>/
 | **file** | resource, design | params | provider_registry, design_contributor |
 | **graphql** | — (stub) | — | provider_registry |
 | **postgres** | — (stub) | — | provider_registry |
-| **neonroot** | 0.53 landed as provider; 0.56 isolation is `palm.runners.neonroot` WorkloadRuntime only | — | `workload_runtime_registry` · doctor registered/available/health · hermetic jobs |
+| **neonroot** | 0.53 landed as provider; 0.56 isolation is `palm.runners.neonroot` WorkloadRuntime only | — | `workload_runtime_registry` · `WorkloadEngine.doctor` / `health()` · hermetic jobs |
 | **postgres** / **mongodb** | stubs / untested (PD-022) | — | **Future:** NeonRoot test images + Palm DAG/resource graphs |
 
 ---

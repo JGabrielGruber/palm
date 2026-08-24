@@ -45,8 +45,8 @@ BENCHMARK_ROLE = "tool_present"
 
 DOCTOR_DEMOTE_NOTE = (
     "Living physiology is system vitality (inspect top / vitality). "
-    "Doctor is legacy anatomy packaging — storage, registries, job counts, "
-    "contributor sections — not seat law. Prefer operate_paths for eyes."
+    "Doctor is legacy anatomy packaging — storage, registries, job counts — "
+    "not seat law. Prefer operate_paths for eyes."
 )
 
 
@@ -189,8 +189,7 @@ def present_doctor(
             "source": SOURCE_VITALITY,
             "error": top_error,
             "note": (
-                "Projection sample failed; anatomy packaging still returned. "
-                + DOCTOR_DEMOTE_NOTE
+                "Projection sample failed; anatomy packaging still returned. " + DOCTOR_DEMOTE_NOTE
             ),
         }
 
@@ -204,8 +203,6 @@ def present_doctor(
         "registries",
         "resource_count",
         "resource_preflight",
-        "neonroot",
-        "workload_host",
         "workloads",
         "control_plane",
         "jobs",

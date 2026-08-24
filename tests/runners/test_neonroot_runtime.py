@@ -157,14 +157,10 @@ def test_neonroot_rejects_workspace_kind() -> None:
 def test_neonroot_health_and_doctor_shape() -> None:
     import palm.runners  # noqa: F401
     from palm.core.workload.registry import workload_runtime_registry
-    from palm.runners.neonroot.doctor import neonroot_doctor_section
 
     assert "neonroot" in workload_runtime_registry.names()
     present = NeonrootProbe(available=True, path="/bin/neonroot", version="0.2")
     with patch("palm.runners.neonroot.cli.probe_neonroot", return_value=present):
         h = NeonrootWorkloadRuntime().health()
         assert h.available is True
-        section = neonroot_doctor_section()
-    assert section["role"] == "workload_runtime"
-    assert section["trust"] == "hermetic"
-    assert "health" in section
+        assert h.to_dict()["detail"]["path"] == "/bin/neonroot"
