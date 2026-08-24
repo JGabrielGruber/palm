@@ -52,7 +52,6 @@ def test_runtime_default_place_registry_hands() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition=StructureDefinition(
             id="local.with_place",
             places_required=("manor_a",),

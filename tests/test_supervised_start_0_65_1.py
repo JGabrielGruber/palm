@@ -109,7 +109,7 @@ def test_registered_outbox_starts_without_option() -> None:
 def test_embedded_default_does_not_register_drain() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         assert "work_drain" not in rt.supervisor.names()
@@ -125,7 +125,6 @@ def test_cli_starts_drain_when_ports_bound() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id=LOCAL_CLI_ID,
     )
     try:
@@ -134,7 +133,7 @@ def test_cli_starts_drain_when_ports_bound() -> None:
         assert "work_drain" in rt.supervisor.names()
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
         assert by_id["system.background.start"].outcome == "ok"
-        assert rt.supervisor.status()["running"] == ["work_drain"]
+        assert set(rt.supervisor.status()["running"]) == {"work_drain", "outbox"}
     finally:
         rt.stop()
 

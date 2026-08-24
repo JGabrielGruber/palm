@@ -15,7 +15,6 @@ def test_invoke_resource_refused_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -32,7 +31,6 @@ def test_invoke_resource_refused_when_dna_refuse_blocks() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.embedded",
         structure_surfaces=["rest"],
     )
@@ -49,7 +47,6 @@ def test_invoke_resource_allowed_when_admitted() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
     )
     try:
         assert rt.admission.may_run_business is True
@@ -69,7 +66,6 @@ def test_structure_resource_engine_not_gated_by_port() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

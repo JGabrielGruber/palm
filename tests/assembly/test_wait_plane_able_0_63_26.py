@@ -89,7 +89,6 @@ def test_runtime_wait_plane_able_tracks_admission() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -104,7 +103,7 @@ def test_runtime_wait_plane_able_tracks_admission() -> None:
 def test_runtime_wait_plane_able_when_admitted() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.admission.may_run_business is True
         plane = rt.wait_plane

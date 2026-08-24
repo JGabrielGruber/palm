@@ -52,7 +52,6 @@ def _lean_settings(**overrides: object) -> PalmSettings:
         "storage_backend": "memory",
         "rebuild_projections_on_startup": False,
         "reconcile_instances_on_startup": False,
-        "enable_event_outbox": False,
         "analytics_enabled": True,
     }
     base.update(overrides)
@@ -69,10 +68,7 @@ def test_membership_capabilities_from_settings_defaults_and_flags() -> None:
     assert "outbox" not in caps
     assert "work_drain" not in caps
 
-    full = _lean_settings(enable_event_outbox=True)
-    full_caps = membership_capabilities_from_settings(full)
-    assert "compensation" not in full_caps
-    assert "outbox" not in full_caps
+    assert "enable_event_outbox" not in PalmSettings.model_fields
 
 
 def test_deployment_does_not_write_work_drain_membership() -> None:
@@ -89,7 +85,6 @@ def test_bootstrap_uses_membership_seed_map() -> None:
     settings = PalmSettings(
         load_example_definitions=False,
         storage_backend="memory",
-        enable_event_outbox=False,
         analytics_enabled=False,
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,

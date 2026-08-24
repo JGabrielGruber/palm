@@ -47,7 +47,7 @@ def test_default_registry_emission_window_installed() -> None:
 
 def test_sample_emission_window_after_boot() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         frag = sample_emission_window(rt, SampleContext())
         assert frag.capability_id == CAPABILITY_EMISSION_WINDOW
@@ -114,7 +114,7 @@ def test_invalid_declared_actor_is_unknown() -> None:
 
 def test_project_includes_emission_window_by_default() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         snap = project(rt)
         assert CAPABILITY_SEAT_WALK in snap.fragments
@@ -144,7 +144,7 @@ def test_window_limit_bag() -> None:
 
 def test_projection_still_does_not_start_services() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         assert rt.supervisor.status()["running_count"] == 0

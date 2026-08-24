@@ -22,7 +22,6 @@ def _settings() -> PalmSettings:
         storage_backend="memory",
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
-        enable_event_outbox=False,
     )
 
 
@@ -99,7 +98,6 @@ def test_resume_process_refused_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

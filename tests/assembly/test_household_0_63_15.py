@@ -129,7 +129,7 @@ def test_os_process_fail_closed_without_argv() -> None:
 def test_runtime_structure_default_hands() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.admission.may_run_business is True
         assert isinstance(rt.structure.effects, StructureEffectPort)  # type: ignore[union-attr]

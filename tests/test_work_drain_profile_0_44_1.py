@@ -14,7 +14,6 @@ def test_server_profile_starts_work_drain_without_env() -> None:
         storage_backend="memory",
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
-        enable_event_outbox=False,
     )
     host = ApplicationHost(
         settings=settings,

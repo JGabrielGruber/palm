@@ -15,7 +15,6 @@ def test_resume_job_refused_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -31,7 +30,6 @@ def test_provide_input_refused_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -48,7 +46,6 @@ def test_resume_job_allowed_when_admitted_reaches_orchestrator() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
     )
     try:
         assert rt.admission.may_run_business is True
@@ -67,7 +64,6 @@ def test_orch_resume_not_gated_as_product_door() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

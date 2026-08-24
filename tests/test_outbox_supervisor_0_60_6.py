@@ -8,16 +8,18 @@ from palm.system.subsystems.supervisor import OutboxLoopService
 
 
 def test_embedded_store_does_not_register_outbox() -> None:
-    """Store packaging is not membership. Embedded DNA omits outbox."""
+    """Embedded DNA omits outbox — store skip and loop omit are the same listing."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
-        assert rt.outbox_processor is not None
+        assert rt.outbox_processor is None
         assert rt.supervisor is not None
         assert "outbox" not in rt.supervisor.names()
         assert "work_drain" not in rt.supervisor.names()
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
+        assert by_id["system.outbox.wire"].outcome == "skip"
+        assert by_id["system.outbox.wire"].reason == "capability_off:outbox"
         assert by_id["system.background.start"].outcome == "skip"
         assert by_id["system.background.start"].reason == "none_registered"
     finally:
@@ -29,7 +31,6 @@ def test_cli_dna_starts_outbox_when_store_wired() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=True,
         structure_definition_id="local.cli",
     )
     try:
@@ -49,7 +50,6 @@ def test_outbox_and_work_drain_both_start() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=True,
         structure_definition_id="local.cli",
     )
     try:

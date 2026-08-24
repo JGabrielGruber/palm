@@ -25,7 +25,7 @@ def test_started_runtime_assembly_seat_ok() -> None:
     reset_system_log_for_tests()
     reset_default_probe_catalog_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         result = walk_result(rt)
         by_id = result.by_id()
@@ -48,7 +48,6 @@ def test_assembly_skip_seat_absent_or_degraded() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

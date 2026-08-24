@@ -55,8 +55,6 @@ class PalmSettings(BaseSettings):
     server_port: int = 8080
     # Outbox poll packaging. Loop membership is definition ``outbox``.
     outbox_poll_interval: float = 0.5
-    # Store wire packaging (bare runtime). Host spawn follows DNA listing.
-    enable_event_outbox: bool = True
     # Start-plane packaging (attach). Not work_drain membership.
     work_plane_poll_interval: float = 1.0
     work_plane_batch_size: int = 10
@@ -103,8 +101,9 @@ class PalmSettings(BaseSettings):
         """
         Lightweight settings for unit and integration tests.
 
-        ``full_recovery`` enables event-outbox store wire and projection
-        rebuild paths that dedicated recovery tests assert on.
+        ``full_recovery`` enables projection rebuild and instance reconcile
+        paths that dedicated recovery tests assert on. Outbox store wire
+        follows DNA listing, not this flag.
         """
         return cls(
             load_example_definitions=load_examples,
@@ -113,7 +112,6 @@ class PalmSettings(BaseSettings):
             projection_rebuild_skip_if_fresh=True,
             projection_rebuild_batch_size=50,
             projection_rebuild_max_instances=200,
-            enable_event_outbox=full_recovery,
             worker_ready_timeout=0.5,
             outbox_poll_interval=5.0,
             reconcile_instances_on_startup=full_recovery,

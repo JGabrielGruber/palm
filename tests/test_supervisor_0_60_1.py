@@ -64,7 +64,7 @@ def test_supervisor_unknown_service_raises() -> None:
 def test_system_boot_wires_empty_supervisor() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.is_started
         assert isinstance(rt.supervisor, SystemSupervisor)
@@ -93,7 +93,7 @@ def test_system_boot_wires_empty_supervisor() -> None:
 def test_supervisor_stop_on_runtime_stop_stops_services() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     stopped: list[str] = []
     try:
         assert rt.supervisor is not None

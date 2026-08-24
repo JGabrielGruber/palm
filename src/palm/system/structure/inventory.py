@@ -254,8 +254,8 @@ GATED_PATHS: tuple[dict[str, str], ...] = (
         "id": "host.outbox_composition_seed",
         "slice": "0.65.2",
         "law": (
-            "host system_spawn aligns enable_event_outbox from "
-            "structure definition has_capability('outbox') unless explicit start override"
+            "system.outbox.wire skips when structure definition does not "
+            "has_capability('outbox'); no start-option override"
         ),
     },
     {
@@ -405,28 +405,28 @@ READINESS_EDGES: tuple[dict[str, str], ...] = (
             "catalog + bootstrap single source. work_drain install reads definition "
             "capabilities after load (not composition.has / BootMode)."
         ),
-        "intent": "paid catalog SD-021 — residual only named packaging duals (bare enable_event_outbox)",
+        "intent": "paid catalog SD-021 — outbox store wire is DNA listing (0.68.4)",
         "status": "paid_catalog_0_63_19",
     },
     {
         "id": "outbox.start_option_seed",
         "note": (
-            "0.65.2: host system_spawn sets enable_event_outbox from "
-            "definition has_capability('outbox') when not explicit. "
-            "Bare BaseRuntime.start(enable_event_outbox=) remains packaging "
-            "residual for non-host shells."
+            "0.65.2: host spawn copied DNA into enable_event_outbox. "
+            "0.68.4: system.outbox.wire reads has_capability('outbox') itself. "
+            "Start-option translator is gone."
         ),
-        "intent": "paid host path — DNA chooser; bare runtime seed named residual",
-        "status": "paid_host_0_65_2",
+        "intent": "paid — DNA skip on the wire phase",
+        "status": "paid_0_68_4",
     },
     {
         "id": "runtime.enable_event_outbox_bare",
         "note": (
-            "BaseRuntime / runtime_start_options still accept enable_event_outbox "
-            "for non-host and test shells without a CompositionProfile."
+            "0.68.4: BaseRuntime.start no longer reads enable_event_outbox. "
+            "Omit DNA (default local.embedded) skips store wire as "
+            "capability_off:outbox."
         ),
-        "intent": "name residual — packaging seed for bare start, not dual on host path",
-        "status": "named_0_63_28",
+        "intent": "paid — DNA-shaped skip; closed 0.63 chronicle stays named_0_63_28 history",
+        "status": "paid_0_68_4",
     },
     {
         "id": "place_registry.os_spawn",

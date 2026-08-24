@@ -93,7 +93,7 @@ def test_host_boot_writes_system_log_sequence() -> None:
 def test_system_alone_boot_log() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         events = get_system_log().events()
         assert "boot.start" in events

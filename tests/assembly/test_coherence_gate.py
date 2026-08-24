@@ -67,7 +67,6 @@ def test_submit_flow_fail_closed_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -81,7 +80,7 @@ def test_submit_flow_fail_closed_when_assembly_skipped() -> None:
 def test_submit_flow_ok_when_embedded_ready() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.admission.may_run_business is True
         job = rt.submit_flow(_noop_flow())
@@ -94,7 +93,7 @@ def test_submit_flow_ok_when_embedded_ready() -> None:
 def test_submit_fail_closed_truth_home_down() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.structure is not None
         rt.structure.engine.observe(
@@ -113,7 +112,6 @@ def test_work_plane_and_submit_same_gate() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

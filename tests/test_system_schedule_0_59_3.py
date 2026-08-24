@@ -14,7 +14,7 @@ from palm.system.runtime.base import BaseRuntime
 def test_system_start_walks_full_phase_table() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.is_started
         assert rt._last_boot_walk is not None
@@ -27,7 +27,7 @@ def test_system_start_walks_full_phase_table() -> None:
         assert by_id["system.engines.init"].outcome == "ok"
         assert by_id["system.storage.select"].outcome == "ok"
         assert by_id["system.outbox.wire"].outcome == "skip"
-        assert by_id["system.outbox.wire"].reason == "enable_event_outbox_off"
+        assert by_id["system.outbox.wire"].reason == "capability_off:outbox"
         assert by_id["system.hooks.install"].outcome == "ok"
         assert by_id["system.orchestration.start"].outcome == "ok"
         assert by_id["system.install.bind"].outcome == "ok"
@@ -56,7 +56,7 @@ def test_system_start_walks_full_phase_table() -> None:
         assert any(
             r.event == "phase.skip"
             and r.fields.get("phase") == "system.outbox.wire"
-            and r.fields.get("reason") == "enable_event_outbox_off"
+            and r.fields.get("reason") == "capability_off:outbox"
             for r in slog.recent()
         )
     finally:
@@ -66,7 +66,7 @@ def test_system_start_walks_full_phase_table() -> None:
 def test_system_start_with_outbox_ok() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory", structure_definition_id="local.cli")
     try:
         assert rt.outbox_store is not None
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}

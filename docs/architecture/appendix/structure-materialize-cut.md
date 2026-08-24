@@ -20,7 +20,7 @@ Admission is real. **`work_drain` membership install is real.** Other capabiliti
 |-------|--------|----------|
 | Core structure | Reconciler + `StructureDefinition.capabilities`. Builtin definitions list `work_drain` on cli/server/all_in_one/worker. Omit is enough. | No definition `requires` / start-fact vocabulary. |
 | System structure | Walker `apply_local_capabilities` loops `LOCAL_CAPABILITY_HANDS`. Hand takes `CapabilitySeats`. Assemble fills seats from `ctx` + install board. Journal is an attach hand (not a loop). | Inbound still freelance. |
-| Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. | Bare `enable_event_outbox` is packaging. |
+| Boot / runtime | `system.background.start` starts **registered** drain when start ports are bound. `system.outbox.wire` skips when DNA omits `outbox`. | |
 | Host | Definition seed at spawn. Host schedule ends at ready. Host does not start drain. Status and coordinator read `runtime.work_plane`. Composition does not list `work_drain`. Assemble uses `shell.structure`. Vitality default probes share `attr_resolver` / hub / `first_resolver`. | Inventory still probes structure as eyes. |
 | Product | Admission oath on assist + four execution façades. | Constructors still take a runtime bag. No service takes `ExecutionPort`. |
 | Surfaces | Transport + admission voice. | Not this cut (`SU-*`). |

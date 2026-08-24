@@ -39,7 +39,7 @@ def test_embedded_ready_does_not_fire_schedules() -> None:
     """Ready without work_drain is not schedule membership."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.admission.may_run_business is True
         assert rt.admission.has_capability(CAPABILITY_WORK_DRAIN) is False
@@ -61,7 +61,6 @@ def test_cli_fires_schedules_when_drain_installed() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:
@@ -84,7 +83,6 @@ def test_truth_home_down_does_not_fire_schedules() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:

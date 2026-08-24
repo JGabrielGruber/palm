@@ -167,7 +167,7 @@ class BaseRuntime:
 
     @property
     def outbox_store(self) -> OutboxStore | None:
-        """Durable outbox store when ``enable_event_outbox`` is active."""
+        """Durable outbox store when DNA lists ``outbox``."""
         return self._outbox_store
 
     @property

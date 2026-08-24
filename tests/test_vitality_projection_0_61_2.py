@@ -101,7 +101,7 @@ def test_custom_capability_registration() -> None:
 
 def test_project_started_runtime_seat_walk() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         snap = project(rt)
         assert snap.schema == VITALITY_SNAPSHOT_SCHEMA
@@ -129,7 +129,7 @@ def test_project_started_runtime_seat_walk() -> None:
 
 def test_project_top_view_structural() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         top = project_top(rt)
         assert top["schema"] == VITALITY_SNAPSHOT_SCHEMA
@@ -148,7 +148,7 @@ def test_project_top_view_structural() -> None:
 def test_projection_receives_reports_no_second_walk_in_bag() -> None:
     """seat_walk stores reports in bag; projection does not invent seats."""
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         direct = discover_seats(rt)
         snap = project_seat_walk_only(rt)
@@ -222,7 +222,7 @@ def test_capability_error_becomes_error_fragment() -> None:
 
 def test_snapshot_to_dict_schema() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         d = project(rt).to_dict()
         assert d["schema"] == VITALITY_SNAPSHOT_SCHEMA
@@ -235,7 +235,7 @@ def test_snapshot_to_dict_schema() -> None:
 
 def test_projection_does_not_start_services() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         assert rt.supervisor.status()["running_count"] == 0

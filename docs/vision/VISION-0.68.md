@@ -32,7 +32,7 @@ These still live after 0.67.17. They are **not** unpaid leftover organs.
 | Thing | What it is | Why it still lives | 0.68 motion |
 |-------|------------|--------------------|-------------|
 | `host.projections.attach` / `_attach_projections` | Boot-schedule step whose body is empty | Leftover already attached on the runtime bus. 0.59 dogfood pinned this **phase id**. | ✅ **0.68.1** composted. Inventory pins retuned onto admission. Closed 0.59 chronicle stays. |
-| Bare `enable_event_outbox` | Start option still **read** | Host spawn **writes** it from DNA. `system.outbox.wire` skips on `enable_event_outbox_off`. Bare `BaseRuntime.start(enable_event_outbox=…)` is named [SD-021](../../TECH-DEBT.md#sd-021). | Pay the dual or name it again. Do not drop the skip with no replacement. |
+| Bare `enable_event_outbox` | Start option still **read** | Host spawn **wrote** it from DNA. `system.outbox.wire` skipped on `enable_event_outbox_off`. | ✅ **0.68.4** composted. Wire skips `capability_off:outbox` when DNA omits. Flag gone. Keep the skip. |
 | Runner `ready()` doctor callbacks | Side-effect boot hook | `HostRunnerApp.ready()` registered `DoctorContributor` side-effects. `WorkloadEngine` already samples runner seats. Vitality does not. | ✅ **0.68.2** composted. Anatomy doctor uses `workloads` from the engine. No Vitality runner probe. |
 | Living docs that promise POST | Lie | Production never HTTP POSTs. `on_before_publish` is a test hook. | ✅ **0.68.3** trimmed. Living tables no longer promise POST. Do not wire production POST. Closed 0.10 chronicle stays. |
 | Twin seats / inventory ids that pin empty work | Costume after leftover | Same class as unread `enable_compensation` (paid 0.67.15). | Compost when the seat does no work. |
@@ -80,7 +80,8 @@ Lock 2 is the fork from leftover option B as “whoever drains the shared store 
 | **0.68.1** | Compost empty `host.projections.attach`. ✅ |
 | **0.68.2** | Compost runner `ready()` doctor register. ✅ |
 | **0.68.3** | Trim living POST lies. ✅ |
-| **0.68.4+** | Compost units José includes (SD-021 dual, twin seats). |
+| **0.68.4** | Compost bare `enable_event_outbox` to DNA skip. ✅ |
+| **0.68.5+** | Compost units José includes (twin seats). |
 | **exit** | José · stamp `0.68.0`. |
 
 *Delete the empty work. Keep the honest knob.*

@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.4 — DNA-shaped outbox skip
+- `system.outbox.wire` skips `capability_off:outbox` when DNA omits `outbox`. Drop `enable_event_outbox` from settings, start options, and host spawn.
+- Explicit `host.start(enable_event_outbox=…)` no longer overrides DNA. Keep `enable_state_snapshot`. Package stamp stays `0.67.0`.
+
 ### 0.68.3 — living POST lies
 - Trim living docs that promised webhook POST (`ARCHITECTURE.md` capability table, README / llms “what works today”). Production outbox drain still ACKs without HTTP.
 - Retune the `on_before_publish` test as a hook, not a drain. Do not wire production POST. Package stamp stays `0.67.0`.

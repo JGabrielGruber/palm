@@ -141,7 +141,7 @@ def test_runtime_start_binds_workload_engine() -> None:
     """system.engines.init then assemble — default seat holds live engine."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.structure is not None
         assert isinstance(rt.structure.effects, StructureEffectPort)
@@ -163,7 +163,6 @@ def test_runtime_bind_workload_false() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_bind_workload=False,
     )
     try:
@@ -189,7 +188,7 @@ def test_runtime_workload_place_converges_on_host_path() -> None:
     """End-to-end: host seat + DNA requiring workload: place → ready."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.admission.may_run_business is True
         dna = StructureDefinition(

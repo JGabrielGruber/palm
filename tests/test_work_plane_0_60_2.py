@@ -15,7 +15,6 @@ def test_work_plane_attach_enqueue_tick_hostless() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:
@@ -49,7 +48,7 @@ def test_work_plane_attach_enqueue_tick_hostless() -> None:
 def test_work_plane_depth_guard() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         plane = rt.work_plane
         assert plane is not None
@@ -66,7 +65,7 @@ def test_work_plane_depth_guard() -> None:
 def test_system_schedule_attaches_work_plane() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.work_plane is not None
         assert rt.wait_plane is not None
@@ -85,7 +84,6 @@ def test_supervised_work_drain_background_when_enabled() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:
@@ -94,7 +92,7 @@ def test_supervised_work_drain_background_when_enabled() -> None:
         assert by_id["system.background.start"].outcome == "ok"
         assert rt.work_plane is not None
         assert rt.work_plane.is_running is True
-        assert rt.supervisor.status()["running"] == ["work_drain"]
+        assert set(rt.supervisor.status()["running"]) == {"work_drain", "outbox"}
         assert rt.work_plane.status().get("workers", 1) == 1
     finally:
         rt.stop()
@@ -110,7 +108,6 @@ def test_work_plane_multi_worker_background() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
         work_plane_workers=3,
         work_plane_poll_interval=0.05,

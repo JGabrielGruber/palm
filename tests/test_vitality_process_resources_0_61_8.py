@@ -68,7 +68,7 @@ def test_bag_skip() -> None:
 
 def test_project_includes_process_resources_by_default() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         snap = project(rt)
         assert CAPABILITY_SEAT_WALK in snap.fragments
@@ -89,7 +89,7 @@ def test_project_includes_process_resources_by_default() -> None:
 
 def test_projection_still_does_not_start_services() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         assert rt.supervisor.status()["running_count"] == 0

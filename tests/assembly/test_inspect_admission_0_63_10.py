@@ -12,7 +12,7 @@ def test_present_top_includes_admission() -> None:
     reset_system_log_for_tests()
     reset_default_probe_catalog_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         top = present_top(rt)
         assert "admission" in top
@@ -30,7 +30,6 @@ def test_present_top_admission_fail_closed_when_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

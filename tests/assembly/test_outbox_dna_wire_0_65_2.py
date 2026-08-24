@@ -16,7 +16,6 @@ def _lean(**overrides: object) -> PalmSettings:
         "storage_backend": "memory",
         "rebuild_projections_on_startup": False,
         "reconcile_instances_on_startup": False,
-        "enable_event_outbox": True,
         "analytics_enabled": False,
     }
     base.update(overrides)
@@ -24,9 +23,9 @@ def _lean(**overrides: object) -> PalmSettings:
 
 
 def test_host_outbox_wire_follows_dna_omit() -> None:
-    """Embedded DNA omits outbox → no store, even when settings want the flag."""
+    """Embedded DNA omits outbox → no store."""
     reset_system_log_for_tests()
-    host = ApplicationHost.for_mode(BootMode.safe(), settings=_lean(enable_event_outbox=True))
+    host = ApplicationHost.for_mode(BootMode.safe(), settings=_lean())
     host.start()
     try:
         assert host.admission.definition_id == LOCAL_EMBEDDED_ID
@@ -39,11 +38,11 @@ def test_host_outbox_wire_follows_dna_omit() -> None:
 
 
 def test_host_outbox_wire_when_dna_lists_outbox() -> None:
-    """CLI DNA lists outbox → store wires even when settings disable the flag."""
+    """CLI DNA lists outbox → store wires."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode(
         BootMode.cli(),
-        settings=_lean(enable_event_outbox=False),
+        settings=_lean(),
     )
     host.start()
     try:
@@ -56,21 +55,21 @@ def test_host_outbox_wire_when_dna_lists_outbox() -> None:
         host.shutdown()
 
 
-def test_explicit_start_option_still_overrides_dna() -> None:
-    """Named residual: host.start(enable_event_outbox=…) wins over DNA listing."""
+def test_start_option_does_not_override_dna() -> None:
+    """0.68.4: CLI DNA still wires; there is no enable_event_outbox override."""
     reset_system_log_for_tests()
     host = ApplicationHost.for_mode(BootMode.cli(), settings=_lean())
-    host.start(enable_event_outbox=False)
+    host.start()
     try:
         rt = host.runtime()
-        assert rt.outbox_store is None
-        assert rt.supervisor is None or "outbox" not in rt.supervisor.names()
+        assert rt.outbox_store is not None
+        assert "outbox" in rt.supervisor.names()
     finally:
         host.shutdown()
 
 
 def test_inventory_outbox_host_paid() -> None:
     pretenders = {row["id"]: row["status"] for row in READINESS_EDGES}
-    assert pretenders["outbox.start_option_seed"] == "paid_host_0_65_2"
-    assert pretenders["runtime.enable_event_outbox_bare"] == "named_0_63_28"
+    assert pretenders["outbox.start_option_seed"] == "paid_0_68_4"
+    assert pretenders["runtime.enable_event_outbox_bare"] == "paid_0_68_4"
     assert admission_inventory()["readiness_edge_count"] >= 2

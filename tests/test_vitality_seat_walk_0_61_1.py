@@ -53,7 +53,7 @@ def test_vitality_probes_planes_hub_not_private_plane_list() -> None:
 def test_started_runtime_planes_hub_consumes_members() -> None:
     rt = BaseRuntime()
     try:
-        rt.start(storage_backend="memory", enable_event_outbox=True)
+        rt.start(storage_backend="memory")
         assert rt.planes is not None
         assert rt.planes.names() == ["wait", "session", "work"]
         assert rt.plane("wait") is rt.wait_plane
@@ -83,7 +83,7 @@ def test_system_planes_install_owns_policy() -> None:
     """Planes subsystem install constructs + puts from runtime.install."""
     rt = BaseRuntime()
     try:
-        rt.start(storage_backend="memory", enable_event_outbox=True)
+        rt.start(storage_backend="memory")
         hub = rt.planes
         assert hub is not None
         assert hub.names() == ["wait", "session", "work"]
@@ -227,7 +227,7 @@ def test_boot_context_publishes_seats() -> None:
 
     rt = BaseRuntime()
     try:
-        rt.start(storage_backend="memory", enable_event_outbox=True)
+        rt.start(storage_backend="memory")
         # Seats live on the shell after boot; BootContext is walk-local.
         assert rt.install is not None
         assert rt.planes is not None
@@ -257,7 +257,6 @@ def test_boot_context_engine_seats_and_supervisor_ensure_on() -> None:
             SYSTEM_PHASES,
             build_system_handlers(options={
                 "storage_backend": "memory",
-                "enable_event_outbox": True,
             }),
             ctx=ctx,
         )
@@ -497,7 +496,6 @@ def test_walk_started_base_runtime_seats_present() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=True,
         structure_definition_id="local.cli",
     )
     try:
@@ -556,7 +554,7 @@ def test_walk_started_base_runtime_seats_present() -> None:
 def test_seat_walk_dicts_schema() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         rows = seat_walk(rt)
         assert all(row["schema"] == SEAT_REPORT_SCHEMA for row in rows)
@@ -569,7 +567,7 @@ def test_public_last_boot_walk_property() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
     assert rt.last_boot_walk is None
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.last_boot_walk is not None
         assert len(rt.last_boot_walk) > 0
@@ -583,7 +581,7 @@ def test_public_last_boot_walk_property() -> None:
 def test_detach_wait_plane_becomes_absent() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         before = index_by_seat_id(discover_seats(rt))
         assert before[SEAT_WAIT_PLANE].present is True
@@ -604,7 +602,7 @@ def test_detach_wait_plane_becomes_absent() -> None:
 def test_supervisor_service_discovered_dynamically() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         custom = CallableSystemService("custom_loop", status=lambda: {"ticks": 3})
@@ -622,7 +620,7 @@ def test_supervisor_service_discovered_dynamically() -> None:
 def test_expand_supervisor_services_never() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         reports = discover_seats(
             rt, WalkOptions(expand_supervisor_services="never")
@@ -768,7 +766,7 @@ def test_probe_error_becomes_error_report() -> None:
 def test_walk_does_not_start_supervisor_services() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         assert rt.supervisor.status()["running_count"] == 0

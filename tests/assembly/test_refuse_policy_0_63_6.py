@@ -60,7 +60,6 @@ def test_runtime_membership_from_options() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.embedded",
         structure_surfaces=["rest"],
     )

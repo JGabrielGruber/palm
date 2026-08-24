@@ -29,7 +29,6 @@ def test_start_workload_refused_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
         workload_host_enabled=True,
     )
@@ -48,7 +47,6 @@ def test_start_workload_refused_when_dna_refuse_blocks() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.embedded",
         structure_surfaces=["rest"],
         workload_host_enabled=True,
@@ -66,7 +64,6 @@ def test_start_workload_allowed_when_admitted() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         workload_host_enabled=True,
     )
     try:
@@ -89,7 +86,6 @@ def test_structure_workload_engine_not_gated_by_port() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
         workload_host_enabled=True,
     )

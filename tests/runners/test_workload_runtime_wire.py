@@ -18,7 +18,7 @@ from palm.runtimes.embedded import EmbeddedRuntime
 
 def test_embedded_runtime_wires_workload_engine() -> None:
     rt = EmbeddedRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.workload.is_initialized
         names = {row["name"] for row in rt.workload.runtimes()}
@@ -38,7 +38,7 @@ def test_embedded_runtime_wires_workload_engine() -> None:
 
 def test_host_start_blocked_when_default_settings() -> None:
     rt = EmbeddedRuntime()
-    opts = runtime_start_options(PalmSettings.for_tests(), enable_event_outbox=False)
+    opts = runtime_start_options(PalmSettings.for_tests())
     assert opts.get("workload_host_enabled") is False
     rt.start(**opts)
     try:
@@ -62,7 +62,6 @@ def test_host_enabled_via_start_options() -> None:
     rt = EmbeddedRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         workload_host_enabled=True,
     )
     try:
@@ -86,7 +85,6 @@ def test_doctor_includes_workloads_and_host_warning() -> None:
     rt = EmbeddedRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         workload_host_enabled=True,
     )
     try:

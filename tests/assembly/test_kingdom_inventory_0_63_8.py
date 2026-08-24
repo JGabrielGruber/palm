@@ -30,7 +30,7 @@ def test_admission_inventory_has_walls() -> None:
 def test_admission_inventory_snapshot_live() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         snap = admission_inventory_snapshot(rt)
         assert snap["live"]["is_started"] is True

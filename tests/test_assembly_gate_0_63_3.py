@@ -20,7 +20,6 @@ def test_work_plane_tick_when_admission_ready() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:
@@ -44,7 +43,6 @@ def test_work_plane_fail_closed_when_assembly_skipped() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -71,7 +69,6 @@ def test_work_plane_fail_closed_when_truth_home_down() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:
@@ -102,7 +99,7 @@ def test_install_able_matches_drain_not_ready() -> None:
     """0.67.2 — board able is work_drain membership, not may_run_business."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         able = rt.install.able
         assert able is not None

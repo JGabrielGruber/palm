@@ -34,7 +34,6 @@ def test_definition_id_from_settings() -> None:
         storage_backend="memory",
         structure_definition_id="local.cli",
         rebuild_projections_on_startup=False,
-        enable_event_outbox=False,
         reconcile_instances_on_startup=False,
     )
     assert definition_id_from_settings(s3) == LOCAL_CLI_ID
@@ -46,7 +45,6 @@ def test_settings_definition_wins_over_mode_in_seed() -> None:
         storage_backend="memory",
         structure_definition_id="local.cli",
         rebuild_projections_on_startup=False,
-        enable_event_outbox=False,
         reconcile_instances_on_startup=False,
     )
     host = ApplicationHost.for_mode(BootMode.safe(), settings=settings)
@@ -62,7 +60,6 @@ def test_host_settings_definition_id_loads() -> None:
         storage_backend="memory",
         structure_definition_id="local.cli",
         rebuild_projections_on_startup=False,
-        enable_event_outbox=False,
         reconcile_instances_on_startup=False,
     )
     # safe mode composition is embedded (no surfaces); definition from settings → cli

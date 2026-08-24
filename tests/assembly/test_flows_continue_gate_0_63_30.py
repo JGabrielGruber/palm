@@ -24,7 +24,6 @@ def _settings() -> PalmSettings:
         storage_backend="memory",
         rebuild_projections_on_startup=False,
         reconcile_instances_on_startup=False,
-        enable_event_outbox=False,
     )
 
 
@@ -140,7 +139,6 @@ def test_cancel_job_not_admission_citizen() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:

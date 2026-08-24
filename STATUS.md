@@ -1,15 +1,15 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.67.0` · **Active theme:** **`0.68` The great cleansing** · **Prior closed:** [**0.67** Dependents require the organ](docs/vision/closed/VISION-0.67.md)  
-**Last Updated:** August 24, 2026 · 0.68.3 trims living POST lies. Package stays `0.67.0` until 0.68 exit.  
+**Last Updated:** August 24, 2026 · 0.68.4 DNA-skips outbox store wire. Package stays `0.67.0` until 0.68 exit.  
 **Map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.68](docs/vision/VISION-0.68.md) · closed [VISION-0.67](docs/vision/closed/VISION-0.67.md) · [ADR-036](docs/adr/036-require-capability.md) **Accepted** · [MIGRATION-0.68](docs/migrations/MIGRATION-0.68.md) · [MIGRATION-0.67](docs/migrations/MIGRATION-0.67.md)  
-**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** (face paid; dependents paid) · **SD-021** (bare `enable_event_outbox`) · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-***  
+**Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** (face paid; dependents paid) · **SD-021** (profile/env residual) · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-***  
 **Closed seasons:** [docs/vision/closed/](docs/vision/closed/) · [VERSIONING.md](docs/VERSIONING.md) (STATUS is the present)
 
 ### Agent resume (after compact)
 
 Read: **this STATUS** → [VISION-0.68](docs/vision/VISION-0.68.md) → [ADR-036](docs/adr/036-require-capability.md) **Accepted**.  
-José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.3** trims living POST lies. Further units when José names them.
+José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.4** DNA-skips outbox store wire. Further units when José names them.
 
 | Spirit | Decision |
 |--------|----------|
@@ -32,10 +32,11 @@ Delete empty work after assembly dependents. Keep honest packaging.
 | **0.68.1** | ✅ empty `host.projections.attach` composted |
 | **0.68.2** | ✅ runner `ready()` doctor register composted |
 | **0.68.3** | ✅ living POST lies trimmed |
-| **0.68.4+** | 📋 compost units José includes |
+| **0.68.4** | ✅ bare `enable_event_outbox` → DNA skip |
+| **0.68.5+** | 📋 compost units José includes |
 | **exit** | stamp `0.68.0` · José |
 
-**Named remaining:** bare `enable_event_outbox` · twin seats that pin empty work. `enable_state_snapshot` stays read packaging.
+**Named remaining:** twin seats that pin empty work. `enable_state_snapshot` stays read packaging.
 
 **Floor:** one compost of costume. **Not this theme:** outbox POST (B), [VISION-0.56](docs/vision/VISION-0.56.md) spawn, DNA phenotype retune, dissolve `ServerContext`.
 
@@ -43,7 +44,7 @@ Delete empty work after assembly dependents. Keep honest packaging.
 
 | Seed | Home |
 |------|------|
-| Bare outbox packaging | [SD-021](TECH-DEBT.md#sd-021) — named in 0.68 |
+| Profile / env structure duals | [SD-021](TECH-DEBT.md#sd-021) |
 | Workload place book | [VISION-0.56](docs/vision/VISION-0.56.md) (scout; remainder queued) |
 | Navigator | [VISION-NAVIGATOR](docs/vision/VISION-NAVIGATOR.md) · **SD-022** |
 | Tunnels → Grove | [VISION-TUNNELS](docs/vision/VISION-TUNNELS.md) → [VISION-GROVE](docs/vision/VISION-GROVE.md) |

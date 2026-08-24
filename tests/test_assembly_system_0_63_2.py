@@ -55,7 +55,7 @@ def test_assemble_with_places_auto_ack() -> None:
 def test_runtime_start_publishes_admission() -> None:
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.is_started
         by_id = {w.phase: w for w in (rt._last_boot_walk or [])}
@@ -76,7 +76,6 @@ def test_runtime_assembly_skip_fail_closed() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_skip=True,
     )
     try:
@@ -95,7 +94,6 @@ def test_runtime_custom_dna_id() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.embedded",
         structure_definition_version="9",
     )

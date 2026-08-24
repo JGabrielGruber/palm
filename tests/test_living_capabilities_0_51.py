@@ -61,8 +61,8 @@ def test_lean_test_settings_derive_the_always_on_capabilities() -> None:
 
 
 def test_each_flag_toggles_exactly_its_capability() -> None:
-    assert "outbox" not in _caps(enable_event_outbox=True)
-    assert "outbox" not in _caps(enable_event_outbox=False)
+    assert "enable_event_outbox" not in PalmSettings.model_fields
+    assert "outbox" not in _caps()
     assert "work_drain" not in _caps()
     assert "analytics" not in _caps(analytics_enabled=True)
     assert "analytics" not in _caps(analytics_enabled=False)
@@ -72,7 +72,6 @@ def test_journal_is_not_a_composition_seed() -> None:
     """journal has no enable_* flag and is not a composition seed (0.67.7 DNA + hand)."""
     assert "journal" not in _caps()
     assert "journal" not in _caps(
-        enable_event_outbox=False,
         analytics_enabled=False,
     )
 
@@ -81,7 +80,6 @@ def test_projections_is_not_a_composition_seed() -> None:
     """projections has no enable_* flag and is not a composition seed (0.67.9 DNA + hand)."""
     assert "projections" not in _caps()
     assert "projections" not in _caps(
-        enable_event_outbox=False,
         analytics_enabled=False,
     )
 
@@ -90,7 +88,6 @@ def test_compensation_is_not_a_composition_seed() -> None:
     """compensation is DNA + hand (0.67.11); not a composition seed."""
     assert "compensation" not in _caps()
     assert "compensation" not in _caps(
-        enable_event_outbox=False,
         analytics_enabled=False,
     )
 
@@ -99,7 +96,6 @@ def test_webhook_is_not_a_composition_seed() -> None:
     """webhook is DNA + hand (0.67.13); not a composition seed."""
     assert "webhook" not in _caps()
     assert "webhook" not in _caps(
-        enable_event_outbox=False,
         analytics_enabled=False,
     )
 
@@ -108,7 +104,6 @@ def test_analytics_is_not_a_composition_seed() -> None:
     """analytics is DNA + hand (0.67.16); not a composition seed."""
     assert "analytics" not in _caps()
     assert "analytics" not in _caps(
-        enable_event_outbox=False,
         analytics_enabled=True,
     )
     assert "analytics" not in _caps(analytics_enabled=False)

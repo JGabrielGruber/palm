@@ -73,19 +73,6 @@ def build_host_handlers(
             if "structure_definition" not in options and "structure_definition_id" not in options:
                 merged["structure_definition_id"] = seed["structure_definition_id"]
                 merged["structure_definition"] = seed["structure_definition"]
-        # 0.65.2 — DNA listing decides outbox store wire on the host path.
-        # Explicit host.start(enable_event_outbox=…) still wins (named override).
-        if "enable_event_outbox" not in options:
-            from palm.core.structure import CAPABILITY_OUTBOX, StructureDefinition
-
-            definition = merged.get("structure_definition")
-            if not isinstance(definition, StructureDefinition):
-                from palm.core.structure import resolve_builtin_definition
-
-                definition = resolve_builtin_definition(
-                    str(merged.get("structure_definition_id") or "local.embedded")
-                )
-            merged["enable_event_outbox"] = definition.has_capability(CAPABILITY_OUTBOX)
         # Start ports on the install board from spawn — able is drain-shaped
         # and false until host.ready. Wait uses a ready-only sibling.
         # System background start may start drain; the loop idles until able.

@@ -47,7 +47,7 @@ def test_default_registry_benchmark_installed_off() -> None:
 
 def test_project_does_not_run_benchmark_by_default() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         snap = project(rt)
         assert CAPABILITY_SEAT_WALK in snap.fragments
@@ -60,7 +60,7 @@ def test_project_does_not_run_benchmark_by_default() -> None:
 
 def test_run_benchmark_pulse_diff_shape() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         frag = run_benchmark(rt, recipe=RECIPE_PULSE, iterations=5)
         assert frag.capability_id == CAPABILITY_BENCHMARK
@@ -83,7 +83,7 @@ def test_run_benchmark_pulse_diff_shape() -> None:
 
 def test_log_fill_raises_emission_count() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         frag = run_benchmark(rt, recipe=RECIPE_LOG_FILL, iterations=12)
         assert frag.state == STATE_OK
@@ -105,7 +105,7 @@ def test_log_fill_raises_emission_count() -> None:
 
 def test_idle_recipe_control() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         frag = run_benchmark(rt, recipe=RECIPE_IDLE, iterations=3)
         assert frag.data["recipe_meta"]["ops"] == 0
@@ -125,7 +125,7 @@ def test_diff_load_points_pure() -> None:
 
 def test_extract_load_points_from_project() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         snap = project(rt)
         points = extract_load_points(snap)
@@ -137,7 +137,7 @@ def test_extract_load_points_from_project() -> None:
 
 def test_extra_enable_runs_tool_once() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         snap = project(
             rt,
@@ -161,7 +161,6 @@ def test_work_cycle_enqueues_and_drains() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=True,
         structure_definition_id="local.cli",
     )
     try:
@@ -190,7 +189,6 @@ def test_work_cycle_multi_claimer_drains() -> None:
     rt = BaseRuntime()
     rt.start(
         storage_backend="memory",
-        enable_event_outbox=False,
         structure_definition_id="local.cli",
     )
     try:
@@ -213,7 +211,7 @@ def test_bag_skip_and_unknown_recipe_fallback() -> None:
     assert frag.state == STATE_SKIPPED
 
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         ctx2 = SampleContext()
         ctx2.bag["benchmark_recipe"] = "not_a_recipe"
@@ -228,7 +226,7 @@ def test_bag_skip_and_unknown_recipe_fallback() -> None:
 
 def test_benchmark_does_not_start_services() -> None:
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         assert rt.supervisor is not None
         assert rt.supervisor.status()["running_count"] == 0

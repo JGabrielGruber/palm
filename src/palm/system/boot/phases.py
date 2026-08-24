@@ -139,7 +139,7 @@ SYSTEM_PHASES: tuple[PhaseSpec, ...] = (
         "system.outbox.wire",
         "system",
         "implemented",
-        "OutboxStore + reliable events when enabled",
+        "OutboxStore + reliable events when DNA lists outbox",
         optional=True,
     ),
     PhaseSpec(

@@ -14,7 +14,7 @@ def test_base_runtime_reactive_seats_without_host() -> None:
     """Any started SystemInstance owns work/wait/session + supervisor."""
     reset_system_log_for_tests()
     rt = BaseRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=True)
+    rt.start(storage_backend="memory")
     try:
         assert isinstance(rt.work_plane, WorkPlaneService)
         assert isinstance(rt.wait_plane, WaitPlaneService)
@@ -34,7 +34,7 @@ def test_server_runtime_subclass_inherits_seats() -> None:
 
     reset_system_log_for_tests()
     rt = ServerRuntime()
-    rt.start(storage_backend="memory", enable_event_outbox=False)
+    rt.start(storage_backend="memory")
     try:
         assert rt.work_plane is not None
         assert rt.supervisor is not None

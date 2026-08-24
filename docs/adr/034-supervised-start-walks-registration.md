@@ -54,9 +54,9 @@ The outbox **hand** landed when `composition.has` at spawn, the freelance catalo
 
 ### Negative / residual
 
-- Bare `enable_event_outbox` stays packaging for non-host shells and explicit `host.start` override.  
+- Bare `enable_event_outbox` was packaging (0.65 named). **0.68.4** composted it: wire skips `capability_off:outbox` when DNA omits.  
 - Poll numbers and `outbox_recover_on_startup` stay on the profile.  
-- Webhook stays composition-gated. Journal is later (same membership law).
+- Webhook membership is DNA (0.67.13). Journal is DNA attach (0.67.7).
 
 ### Forbidden
 
