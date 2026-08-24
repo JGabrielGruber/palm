@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.10 — unused host webhook events
+- Drop unused `HostEventType.WEBHOOK_DELIVERED` / `WEBHOOK_FAILED` and dashboard paint for those names. Nothing emitted them.
+- Do not wire production POST. `HttpWebhookDeliverer` stays. Package stamp stays `0.67.0`.
+
 ### 0.68.9 — Pattern MCP second ready() call
 - Drop the extra `app.ready()` loop in `register_pattern_mcp_tools`. Autoload still runs `PatternApp.register` → `ready()`. MCP drains `iter_mcp_contributors`.
 - Pattern and provider `ready()` stay. Package stamp stays `0.67.0`.

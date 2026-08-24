@@ -461,12 +461,10 @@ def _job_throughput_hint(jobs: list[JobStatusReadModel], now: datetime) -> str:
 def _event_type_styled(event_type: str) -> str:
     if event_type in {"host.started", "host.recovered", "host.workers.ready"}:
         return f"[green]{event_type}[/]"
-    if event_type in {"host.shutdown", "host.webhook.failed"}:
+    if event_type == "host.shutdown":
         return f"[red]{event_type}[/]"
     if event_type.startswith("host.command"):
         return f"[cyan]{event_type}[/]"
-    if event_type.startswith("host.webhook"):
-        return f"[magenta]{event_type}[/]"
     return f"[dim]{event_type}[/]"
 
 

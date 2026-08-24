@@ -12,5 +12,3 @@ class HostEventType:
     RUNTIME_REGISTERED = "host.runtime.registered"
     COMMAND_DISPATCHED = "host.command.dispatched"
     WORKERS_READY = "host.workers.ready"
-    WEBHOOK_DELIVERED = "host.webhook.delivered"
-    WEBHOOK_FAILED = "host.webhook.failed"
