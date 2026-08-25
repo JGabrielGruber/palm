@@ -936,10 +936,6 @@ class ApplicationHost:
         """
         return self._observability.control_plane_status()
 
-    def drain_journal_projections(self, *, limit: int = 50, on_entry: Any | None = None) -> int:
-        """Catch-up projections consumer from journal (0.40.3)."""
-        return self._workplane.drain_journal_projections(limit=limit, on_entry=on_entry)
-
     def redrive_journal(
         self,
         *,

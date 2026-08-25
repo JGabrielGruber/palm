@@ -1,45 +1,23 @@
 """
 Named journal consumers (0.40.3).
 
-Standard names for lag observability and catch-up helpers:
+Standard names for lag observability:
 
 - ``work_drain`` — deferred WorkIntent path (offsets for ops; drain still uses store)
-- ``projections`` — rebuild/catch-up projections from journal
 
 Consumers advance **their own** offsets via :meth:`EventJournal.consume`.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import Any
 
-from palm.common.events.journal import EventJournal, JournalEntry
+from palm.common.events.journal import EventJournal
 
 # Canonical names used in host.control_plane_status / doctor
 JOURNAL_CONSUMER_WORK_DRAIN = "work_drain"
-JOURNAL_CONSUMER_PROJECTIONS = "projections"
 
-DEFAULT_JOURNAL_CONSUMERS: tuple[str, ...] = (
-    JOURNAL_CONSUMER_WORK_DRAIN,
-    JOURNAL_CONSUMER_PROJECTIONS,
-)
-
-# Event types typically interesting for each consumer
-PROJECTION_EVENT_TYPES: frozenset[str] = frozenset(
-    {
-        "resource.changed",
-        "flow.session.succeeded",
-        "flow.session.failed",
-        "wizard.commit.succeeded",
-        "wizard.commit.failed",
-        "job.completed",
-        "job.status_changed",
-        "work.intent.enqueued",
-        "work.intent.succeeded",
-        "work.intent.failed",
-    }
-)
+DEFAULT_JOURNAL_CONSUMERS: tuple[str, ...] = (JOURNAL_CONSUMER_WORK_DRAIN,)
 
 
 def journal_consumer_status(
@@ -50,32 +28,6 @@ def journal_consumer_status(
     """Lag snapshot for doctor / control_plane."""
     names = list(consumers) if consumers is not None else list(DEFAULT_JOURNAL_CONSUMERS)
     return journal.status(consumers=names)
-
-
-def consume_for_projections(
-    journal: EventJournal,
-    on_entry: Callable[[JournalEntry], None],
-    *,
-    limit: int = 50,
-    auto_commit: bool = True,
-    event_types: frozenset[str] | None = None,
-    consumer: str = JOURNAL_CONSUMER_PROJECTIONS,
-) -> list[JournalEntry]:
-    """Drain journal for projection catch-up handlers."""
-    types = event_types if event_types is not None else PROJECTION_EVENT_TYPES
-    batch = journal.consume(
-        consumer,
-        limit=limit,
-        event_types=types,
-        auto_commit=False,
-    )
-    applied: list[JournalEntry] = []
-    for entry in batch:
-        on_entry(entry)
-        applied.append(entry)
-        if auto_commit:
-            journal.commit_consumer_offset(consumer, entry.offset)
-    return applied
 
 
 def mark_work_drain_caught_up(journal: EventJournal) -> int:
@@ -92,10 +44,7 @@ def mark_work_drain_caught_up(journal: EventJournal) -> int:
 
 __all__ = [
     "DEFAULT_JOURNAL_CONSUMERS",
-    "JOURNAL_CONSUMER_PROJECTIONS",
     "JOURNAL_CONSUMER_WORK_DRAIN",
-    "PROJECTION_EVENT_TYPES",
-    "consume_for_projections",
     "journal_consumer_status",
     "mark_work_drain_caught_up",
 ]

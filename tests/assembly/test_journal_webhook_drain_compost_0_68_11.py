@@ -20,11 +20,7 @@ def test_webhook_journal_facade_is_gone() -> None:
     assert "consume_for_webhooks" not in inspect.getsource(journal_consumers)
 
 
-def test_projection_journal_drain_and_deliverer_stay() -> None:
-    assert hasattr(ApplicationHost, "drain_journal_projections")
-    assert hasattr(WorkPlaneCoordinator, "drain_journal_projections")
-    assert hasattr(journal_consumers, "consume_for_projections")
-    assert "projections" in journal_consumers.DEFAULT_JOURNAL_CONSUMERS
+def test_work_drain_and_deliverer_stay() -> None:
     assert "work_drain" in journal_consumers.DEFAULT_JOURNAL_CONSUMERS
     assert HttpWebhookDeliverer is not None
     assert WebhookDispatcher is not None

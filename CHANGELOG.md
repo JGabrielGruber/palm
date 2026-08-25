@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### 0.68.12 — unused projection journal facade
+- Drop `drain_journal_projections`, `consume_for_projections`, and the doctor consumer name `"projections"`. Nothing in product called the host method. The body counted journal entries; it did not rebuild.
+- Living projections organ stays. `work_drain` stays. `HttpWebhookDeliverer` stays. Package stamp stays `0.67.0`.
+
 ### 0.68.11 — unused webhook journal facade
 - Drop `drain_journal_webhooks`, `consume_for_webhooks`, and the doctor consumer name `"webhooks"`. Nothing in product called the host method. The body counted journal entries; it did not POST.
 - Do not wire `dispatch`. Projection journal drain stays. `HttpWebhookDeliverer` stays. Package stamp stays `0.67.0`.

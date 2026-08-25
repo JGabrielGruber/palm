@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from palm.common.events.consumers import (
     DEFAULT_JOURNAL_CONSUMERS,
-    JOURNAL_CONSUMER_PROJECTIONS,
     JOURNAL_CONSUMER_WORK_DRAIN,
-    consume_for_projections,
     journal_consumer_status,
     mark_work_drain_caught_up,
 )
@@ -28,13 +26,13 @@ def test_named_consumers_independent_offsets() -> None:
     j.append("job.completed", {"job_id": "j1"})
     j.append("resource.changed", {"resource_ref": "x", "action": "put"})
 
-    seen_p: list[str] = []
-    consume_for_projections(j, lambda e: seen_p.append(e.event_type), limit=10)
-    assert "resource.changed" in seen_p
-    assert j.get_consumer_offset(JOURNAL_CONSUMER_PROJECTIONS) > 0
-
-    # work_drain starts at 0 independently
     assert j.get_consumer_offset(JOURNAL_CONSUMER_WORK_DRAIN) == 0
+    batch = j.consume(JOURNAL_CONSUMER_WORK_DRAIN, limit=10, auto_commit=True)
+    assert any(e.event_type == "resource.changed" for e in batch)
+    assert j.get_consumer_offset(JOURNAL_CONSUMER_WORK_DRAIN) > 0
+
+    # a second consumer name does not share the offset
+    assert j.get_consumer_offset("ops_redrive") == 0
 
     status = journal_consumer_status(j)
     assert status["latest_offset"] >= 3
@@ -68,7 +66,6 @@ def test_doctor_embeds_control_plane() -> None:
                 "journal": {
                     "latest_offset": 2,
                     "consumers": {
-                        "projections": {"offset": 0, "lag": 2},
                         "work_drain": {"offset": 2, "lag": 0},
                     },
                 },

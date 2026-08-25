@@ -12,7 +12,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from palm.app.host.workplane.start_ports import product_start_ports
-from palm.common.events.consumers import consume_for_projections
 from palm.core.structure import CAPABILITY_JOURNAL
 from palm.system.subsystems.planes.work.inbound import InboundBindingService
 from palm.system.subsystems.supervisor import CallableSystemService
@@ -191,21 +190,6 @@ class WorkPlaneCoordinator:
             n += plane.tick_schedules()
         n += plane.tick(limit=limit)
         return n
-
-    def drain_journal_projections(self, *, limit: int = 50, on_entry: Any | None = None) -> int:
-        """Catch-up projections consumer from journal (0.40.3)."""
-        if self._event_journal is None:
-            return 0
-        count = 0
-
-        def _handler(entry: Any) -> None:
-            nonlocal count
-            count += 1
-            if on_entry is not None:
-                on_entry(entry)
-
-        consume_for_projections(self._event_journal, _handler, limit=limit)
-        return count
 
     def redrive_journal(
         self,

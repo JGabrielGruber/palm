@@ -2,10 +2,7 @@
 
 from palm.common.events.consumers import (
     DEFAULT_JOURNAL_CONSUMERS,
-    JOURNAL_CONSUMER_PROJECTIONS,
     JOURNAL_CONSUMER_WORK_DRAIN,
-    PROJECTION_EVENT_TYPES,
-    consume_for_projections,
     journal_consumer_status,
     mark_work_drain_caught_up,
 )
@@ -37,7 +34,6 @@ __all__ = [
     "EventJournal",
     "HttpWebhookDeliverer",
     "INSTANCE_EVENT_TYPES",
-    "JOURNAL_CONSUMER_PROJECTIONS",
     "JOURNAL_CONSUMER_WORK_DRAIN",
     "JOURNAL_EVENT_TYPES",
     "JournalEntry",
@@ -45,14 +41,12 @@ __all__ = [
     "OutboxEntry",
     "OutboxProcessor",
     "OutboxStore",
-    "PROJECTION_EVENT_TYPES",
     "RecordingWebhookDeliverer",
     "ReliableEventPublisher",
     "WebhookDelivery",
     "WebhookDispatcher",
     "WebhookTarget",
     "compact_key_for_resource_changed",
-    "consume_for_projections",
     "event_context_from_job",
     "journal_consumer_status",
     "mark_work_drain_caught_up",
