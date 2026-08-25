@@ -4,6 +4,11 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### Portal dogfood — pt-BR paint skin
+- Empty `/portal/` page keeps the FAB and adds language links (`?lang=en`, `?lang=pt-BR`). Chat chrome is unchanged until a skin opens.
+- Portal paints chrome, action labels, choice labels, and demo questions (operator-entry, todo-builder, coconut-npc). Values, aliases, paths, and ids stay English. Missing keys stay English.
+- Optional typed synonyms (`sim` → `yes`) on the client only. Not a 0.68 compost slice. Package stamp stays `0.67.0`.
+
 ### Portal dogfood — session vs instance slots
 - Portal keeps two slots: `session_id` (system subject) and `instance_id` (continue handle). Start / Menu / Open send `clear: true` so the previous run does not stick.
 - Hello auto-starts operator-entry even when Assist WS already bound a `sess-…`. Continue frames send both ids. Not a 0.68 compost slice. Package stamp stays `0.67.0`.

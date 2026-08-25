@@ -130,6 +130,16 @@ def test_portal_static_index_and_assets(palm_server: ServerRuntime) -> None:
         assert resp.headers.get_content_type() in ("text/html", "application/xhtml+xml")
     assert "Palm Portal" in html
     assert "/portal/portal.js" in html
+    assert "/portal/skins.js" in html
+    assert "?lang=pt-BR" in html
+    assert 'id="landing"' in html
+
+    with urllib.request.urlopen(f"{base}/portal/skins.js", timeout=5) as resp:
+        skins = resp.read().decode()
+        skins_type = resp.headers.get_content_type()
+    assert "javascript" in skins_type or skins_type == "application/octet-stream"
+    assert "PALM_PORTAL_SKINS" in skins
+    assert "pt-BR" in skins
 
     with urllib.request.urlopen(f"{base}/portal/portal.js", timeout=5) as resp:
         js = resp.read().decode()

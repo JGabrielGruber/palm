@@ -1,7 +1,7 @@
 # Palm Engine — Project Status
 
 **Current Version:** `0.67.0` · **Active theme:** **`0.68` The great cleansing** · **Prior closed:** [**0.67** Dependents require the organ](docs/vision/closed/VISION-0.67.md)  
-**Last Updated:** August 25, 2026 · 0.68.12 drops the unused projection journal facade. Package stays `0.67.0` until 0.68 exit.  
+**Last Updated:** August 25, 2026 · Portal pt-BR paint skin on the empty FAB page (not a 0.68 unit). Package stays `0.67.0` until 0.68 exit.  
 **Map:** [docs/PALM.md](docs/PALM.md) · open [VISION-0.68](docs/vision/VISION-0.68.md) · closed [VISION-0.67](docs/vision/closed/VISION-0.67.md) · [ADR-036](docs/adr/036-require-capability.md) **Accepted** · [MIGRATION-0.68](docs/migrations/MIGRATION-0.68.md) · [MIGRATION-0.67](docs/migrations/MIGRATION-0.67.md)  
 **Debt (live):** [TECH-DEBT.md](TECH-DEBT.md) — **SD-020** (face paid; dependents paid) · **SD-021** (profile/env residual) · **SD-022** · residual **SD-019** · **SD-016** / **BI-*** / **SI-*** / **SU-***  
 **Closed seasons:** [docs/vision/closed/](docs/vision/closed/) · [VERSIONING.md](docs/VERSIONING.md) (STATUS is the present)
@@ -9,7 +9,7 @@
 ### Agent resume (after compact)
 
 Read: **this STATUS** → [VISION-0.68](docs/vision/VISION-0.68.md) → [ADR-036](docs/adr/036-require-capability.md) **Accepted**.  
-José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.12** drops the unused projection journal facade. Portal dogfood (two-slot session/instance) is a side bugfix, not a 0.68 unit. Further compost units when José names them.
+José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.12** drops the unused projection journal facade. Portal dogfood (two-slot session/instance + pt-BR paint skin on the empty FAB page) is a side cut, not a 0.68 unit. Further compost units when José names them.
 
 | Spirit | Decision |
 |--------|----------|

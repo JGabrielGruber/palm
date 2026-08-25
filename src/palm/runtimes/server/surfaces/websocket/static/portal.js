@@ -47,6 +47,160 @@
     pending: false,
   };
 
+  function resolvePortalLang() {
+    const raw = (new URLSearchParams(location.search).get("lang") || "").trim();
+    const folded = raw.replace(/_/g, "-").toLowerCase();
+    const skins = window.PALM_PORTAL_SKINS || {};
+    if (raw && skins[raw]) return raw;
+    if (folded === "pt" || folded === "pt-br") return "pt-BR";
+    if (folded === "en" || folded === "en-us" || folded === "en-gb") return "en";
+    for (const id of Object.keys(skins)) {
+      if (id.toLowerCase() === folded) return id;
+    }
+    return "en";
+  }
+
+  const PORTAL_LANG = resolvePortalLang();
+  const PORTAL_SKIN = (window.PALM_PORTAL_SKINS && window.PALM_PORTAL_SKINS[PORTAL_LANG]) || {
+    chrome: {},
+    sections: {},
+    paint: {},
+    prefixes: [],
+    synonyms: {},
+  };
+
+  function chromeText(key, fallback) {
+    const value = PORTAL_SKIN.chrome && PORTAL_SKIN.chrome[key];
+    return value != null && String(value) !== "" ? String(value) : fallback;
+  }
+
+  function paint(text) {
+    if (text == null) return text;
+    const source = String(text);
+    const map = PORTAL_SKIN.paint || {};
+    if (Object.prototype.hasOwnProperty.call(map, source)) return map[source];
+    const trimmed = source.trim();
+    if (trimmed !== source && Object.prototype.hasOwnProperty.call(map, trimmed)) {
+      return source.replace(trimmed, map[trimmed]);
+    }
+    if (source.includes("\n\n")) {
+      const parts = source.split("\n\n");
+      let hit = false;
+      const painted = parts.map((part) => {
+        if (Object.prototype.hasOwnProperty.call(map, part)) {
+          hit = true;
+          return map[part];
+        }
+        const t = part.trim();
+        if (t !== part && Object.prototype.hasOwnProperty.call(map, t)) {
+          hit = true;
+          return map[t];
+        }
+        return part;
+      });
+      if (hit) return painted.join("\n\n");
+    }
+    const prefixes = PORTAL_SKIN.prefixes || [];
+    for (const row of prefixes) {
+      if (!row || row.length < 2) continue;
+      const from = String(row[0]);
+      if (from && source.startsWith(from)) {
+        return String(row[1]) + paint(source.slice(from.length));
+      }
+    }
+    return source;
+  }
+
+  function foldKey(value) {
+    try {
+      return String(value)
+        .normalize("NFD")
+        .replace(/\p{M}/gu, "")
+        .trim()
+        .toLowerCase();
+    } catch (_) {
+      return String(value).trim().toLowerCase();
+    }
+  }
+
+  function applySynonym(raw) {
+    const source = String(raw ?? "");
+    const mapped = (PORTAL_SKIN.synonyms || {})[foldKey(source)];
+    if (!mapped) return source;
+    const payload = state.lastPayload || {};
+    const schema = state.lastInput || payload.input || {};
+    const choices = schema.choices || payload.choices || [];
+    const values = new Set(
+      (Array.isArray(choices) ? choices : []).map((item) => {
+        const value = item && typeof item === "object" && item.value != null ? item.value : item;
+        return String(value).toLowerCase();
+      })
+    );
+    if (values.size && values.has(String(mapped).toLowerCase())) return mapped;
+    if (
+      ["yes", "no", "skip", "exit", "done", "add", "edit", "remove", "start", "leave", "more"].includes(
+        String(mapped).toLowerCase()
+      )
+    ) {
+      return mapped;
+    }
+    return source;
+  }
+
+  function applyChrome() {
+    document.documentElement.lang = PORTAL_LANG === "pt-BR" ? "pt-BR" : "en";
+    document.title = chromeText("documentTitle", document.title);
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (key) el.textContent = chromeText(key, el.textContent);
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (key) el.setAttribute("placeholder", chromeText(key, el.getAttribute("placeholder") || ""));
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-title");
+      if (key) el.setAttribute("title", chromeText(key, el.getAttribute("title") || ""));
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-aria");
+      if (key) el.setAttribute("aria-label", chromeText(key, el.getAttribute("aria-label") || ""));
+    });
+  }
+
+  function setPanelOpen(open) {
+    panel.hidden = !open;
+    document.body.classList.toggle("panel-open", open);
+  }
+
+  function paintSection(section) {
+    const key = String(section || "root");
+    const mapped = PORTAL_SKIN.sections && PORTAL_SKIN.sections[key];
+    return mapped || key;
+  }
+
+  function renderLanding() {
+    const nav = $("skins");
+    if (!nav) return;
+    const skins = window.PALM_PORTAL_SKINS || {};
+    const ids = Object.keys(skins);
+    if (!ids.length) return;
+    nav.innerHTML = "";
+    for (const id of ids) {
+      const skin = skins[id] || {};
+      const link = document.createElement("a");
+      link.className = "skin-card" + (id === PORTAL_LANG ? " active" : "");
+      link.href = `/portal/?lang=${encodeURIComponent(id)}&open=1`;
+      const title = document.createElement("strong");
+      title.textContent = skin.name || id;
+      const blurb = document.createElement("span");
+      blurb.textContent = skin.blurb || "";
+      link.appendChild(title);
+      link.appendChild(blurb);
+      nav.appendChild(link);
+    }
+  }
+
   function isOpenToken(value) {
     return typeof value === "string" && value.startsWith("open:");
   }
@@ -243,19 +397,25 @@
   }
 
   function setStatus(text, ok) {
-    statusEl.textContent = text;
+    statusEl.textContent = paint(text);
     statusEl.style.color = ok ? "#5eead4" : "var(--muted)";
   }
 
   function setMeta(text) {
     if (text) {
-      metaText.textContent = text;
+      metaText.textContent = paint(text);
       return;
     }
     const parts = [];
-    if (state.sessionId) parts.push(`session ${state.sessionId.slice(0, 12)}…`);
-    if (state.instanceId) parts.push(`instance ${state.instanceId.slice(0, 12)}…`);
-    if (state.flowId) parts.push(`flow ${state.flowId}`);
+    if (state.sessionId) {
+      parts.push(`${chromeText("sessionWord", "session")} ${state.sessionId.slice(0, 12)}…`);
+    }
+    if (state.instanceId) {
+      parts.push(`${chromeText("instanceWord", "instance")} ${state.instanceId.slice(0, 12)}…`);
+    }
+    if (state.flowId) {
+      parts.push(`${chromeText("flowWord", "flow")} ${state.flowId}`);
+    }
     metaText.textContent = parts.join(" · ");
   }
 
@@ -272,7 +432,7 @@
   function appendBubble(kind, text, extraClass) {
     const el = document.createElement("div");
     el.className = `bubble ${kind}${extraClass ? ` ${extraClass}` : ""}`;
-    el.textContent = text;
+    el.textContent = kind === "user" ? String(text ?? "") : paint(text);
     log.appendChild(el);
     scrollLogToEnd();
     return el;
@@ -282,10 +442,12 @@
     hideTyping();
     typingEl = document.createElement("div");
     typingEl.className = "bubble typing";
-    typingEl.setAttribute("aria-label", label || "Waiting for response");
+    const shown = paint(label || chromeText("waitingResponse", "Waiting for response"));
+    typingEl.setAttribute("aria-label", shown);
     typingEl.innerHTML =
       '<span class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>' +
-      `<span>${label || "Palm is thinking…"}</span>`;
+      `<span></span>`;
+    typingEl.querySelector("span:last-child").textContent = shown;
     log.appendChild(typingEl);
     scrollLogToEnd();
   }
@@ -313,16 +475,17 @@
       choicesEl.querySelectorAll("button").forEach((b) => {
         b.disabled = true;
       });
-      if (activityLabel) activityLabel.textContent = label || "Palm is thinking…";
+      const thinking = paint(label || chromeText("thinking", "Palm is thinking…"));
+      if (activityLabel) activityLabel.textContent = thinking;
       // Slight delay so fast turns don't flash the indicator
       pendingTimer = setTimeout(() => {
-        if (state.pending) showTyping(label || "Palm is thinking…");
+        if (state.pending) showTyping(label || chromeText("thinking", "Palm is thinking…"));
       }, 120);
     } else {
       meta.classList.remove("busy");
       form.classList.remove("busy");
       btnSend.classList.remove("busy");
-      btnSend.textContent = "Send";
+      btnSend.textContent = chromeText("send", "Send");
       hideTyping();
       // re-enable handled by renderInput
     }
@@ -332,13 +495,13 @@
     if (state.ws && (state.ws.readyState === WebSocket.OPEN || state.ws.readyState === WebSocket.CONNECTING)) {
       return;
     }
-    setStatus("connecting…", false);
+    setStatus(chromeText("statusConnecting", "connecting…"), false);
     const ws = new WebSocket(wsUrl());
     state.ws = ws;
 
     ws.onopen = () => {
       state.connected = true;
-      setStatus("connected", true);
+      setStatus(chromeText("statusConnected", "connected"), true);
       appendBubble("sys", "Connected to Palm Assist");
       if (state.sessionId) {
         send({
@@ -354,12 +517,12 @@
     ws.onclose = () => {
       state.connected = false;
       setPending(false);
-      setStatus("disconnected", false);
+      setStatus(chromeText("statusDisconnected", "disconnected"), false);
       appendBubble("sys", "Disconnected");
     };
 
     ws.onerror = () => {
-      setStatus("error", false);
+      setStatus(chromeText("statusError", "error"), false);
     };
 
     ws.onmessage = (ev) => {
@@ -391,7 +554,7 @@
     messages.push(obj);
     console.log(messages);
     if (obj.op === "dispatch") {
-      setPending(true, "Palm is thinking…");
+      setPending(true, chromeText("thinking", "Palm is thinking…"));
     }
   }
 
@@ -551,7 +714,7 @@
   function renderChoiceChips(choices, { menu } = {}) {
     for (const c of choices) {
       const value = c.value != null ? c.value : c;
-      const label = c.label != null ? c.label : String(value);
+      const label = paint(c.label != null ? c.label : String(value));
       const chip = document.createElement("button");
       chip.type = "button";
       chip.className = "chip";
@@ -568,8 +731,11 @@
     if (visible && menuSearch) {
       menuSearch.placeholder =
         section && section !== "root"
-          ? `Search ${section}…`
-          : "Search menu…";
+          ? chromeText("searchSection", "Search {section}…").replace(
+              "{section}",
+              paintSection(section)
+            )
+          : paint("Search menu…");
     }
   }
 
@@ -579,14 +745,14 @@
     textInput.value = "";
     textInput.disabled = false;
     btnSend.disabled = false;
-    btnSend.textContent = "Send";
+    btnSend.textContent = chromeText("send", "Send");
 
     const schema = payload.input;
     const status = payload.status;
     const menuMode = isMenuPayload(payload);
 
     if (status === "complete" || status === "failed") {
-      textInput.placeholder = "Session finished";
+      textInput.placeholder = paint("Session finished");
       textInput.disabled = true;
     }
 
@@ -605,7 +771,7 @@
         schema.field_type === "resource" ||
         schema.step_kind === "resource");
     if (autoResource && status !== "complete" && status !== "failed") {
-      textInput.placeholder = "Resource running…";
+      textInput.placeholder = paint("Resource running…");
       textInput.disabled = true;
       btnSend.disabled = true;
       return;
@@ -614,17 +780,17 @@
     setMenuSearchVisible(widget === "menu", state.menuSection);
 
     if (widget === "menu" && choices.length) {
-      textInput.placeholder = "Pick a row, or search above…";
+      textInput.placeholder = paint("Pick a row, or search above…");
       renderChoiceChips(choices, { menu: true });
       if (schema && schema.has_more) {
         // Show more is usually an action; keep placeholder note
-        textInput.placeholder = "More rows available — use Show more";
+        textInput.placeholder = paint("More rows available — use Show more");
       }
     } else if (widget === "choice" && choices.length) {
-      textInput.placeholder = "Or type a choice value…";
+      textInput.placeholder = paint("Or type a choice value…");
       renderChoiceChips(choices, { menu: false });
     } else if (widget === "confirm") {
-      textInput.placeholder = "yes / no";
+      textInput.placeholder = paint("yes / no");
       for (const [label, value] of [
         ["Yes", "yes"],
         ["No", "no"],
@@ -632,19 +798,19 @@
         const chip = document.createElement("button");
         chip.type = "button";
         chip.className = "chip";
-        chip.textContent = label;
+        chip.textContent = paint(label);
         chip.onclick = () => submitValue(value);
         choicesEl.appendChild(chip);
       }
     } else if (widget === "collection") {
       const optional = schema?.required === false || schema?.skip_allowed;
       textInput.placeholder = optional
-        ? "Optional — type a value or Skip"
+        ? paint("Optional — type a value or Skip")
         : schema?.collection_phase === "field"
-          ? "Enter value…"
+          ? paint("Enter value…")
           : schema?.collection_phase
             ? `Collection (${schema.collection_phase})…`
-            : "add / done / item text…";
+            : paint("add / done / item text…");
       if (optional) addSkipChip(schema);
       if (schema?.error) {
         const err = document.createElement("div");
@@ -654,7 +820,9 @@
       }
     } else {
       textInput.placeholder =
-        schema?.required === false ? "Optional — type or Skip" : "Type an answer…";
+        schema?.required === false
+          ? paint("Optional — type or Skip")
+          : chromeText("typeAnswer", "Type an answer…");
       if (schema?.required === false || schema?.skip_allowed) {
         addSkipChip(schema);
       }
@@ -698,7 +866,7 @@
       const chip = document.createElement("button");
       chip.type = "button";
       chip.className = "chip secondary";
-      chip.textContent = label;
+      chip.textContent = paint(label);
       chip.onclick = () => runAction(action);
       choicesEl.appendChild(chip);
     }
@@ -740,7 +908,7 @@
     } else {
       frame.params = withContinueParams(frame.params);
     }
-    appendBubbleUser(`[${action.label || "action"}]`);
+    appendBubbleUser(`[${paint(action.label || "action")}]`);
     send(frame);
   }
 
@@ -760,22 +928,22 @@
     const chip = document.createElement("button");
     chip.type = "button";
     chip.className = "chip secondary";
-    chip.textContent = (schema && schema.skip_label) || "Skip";
+    chip.textContent = paint((schema && schema.skip_label) || "Skip");
     chip.onclick = () => submitValue(schema?.skip_value != null ? schema.skip_value : "");
     choicesEl.appendChild(chip);
   }
 
   function submitValue(value) {
     if (state.pending) return;
-    let v = String(value ?? "").trim();
+    let v = applySynonym(String(value ?? "").trim());
     const optional = isOptionalInput(state.lastInput);
-    if (optional && /^(skip|none|n\/a|na|-|pass|empty)$/i.test(v)) {
+    if (optional && /^(skip|none|n\/a|na|-|pass|empty|pular)$/i.test(v)) {
       v = "";
     }
     if (!v && !optional) {
       return;
     }
-    appendBubbleUser(v || "Skip");
+    appendBubbleUser(v || paint("Skip"));
     // Menu open tokens → assist/open (no sticky session)
     if (isOpenToken(v)) {
       clearWalkState();
@@ -794,7 +962,10 @@
 
   function openPalmMenu(section) {
     if (state.pending) return;
-    appendBubble("sys", section ? `Menu · ${section}…` : "Opening Palm menu…");
+    appendBubble(
+      "sys",
+      section ? `Menu · ${paintSection(section)}…` : "Opening Palm menu…"
+    );
     clearWalkState();
     state.menuSection = section || "root";
     setMeta();
@@ -826,7 +997,7 @@
     if (!options.silent) {
       appendBubbleUser(q ? `Search: ${q}` : "Search (clear)");
     } else if (q) {
-      setMeta(`Searching ${section}…`);
+      setMeta(`Searching ${paintSection(section)}…`);
     }
     clearWalkState();
     send(bindClearFrame(null));
@@ -902,12 +1073,12 @@
   }
 
   btnMin.onclick = () => {
-    panel.hidden = true;
+    setPanelOpen(false);
     syncVisualViewport(); // drop keyboard-lock + inline panel geometry
   };
 
   fab.onclick = () => {
-    panel.hidden = !panel.hidden;
+    setPanelOpen(panel.hidden);
     if (!panel.hidden) {
       connect();
       syncVisualViewport();
@@ -952,8 +1123,14 @@
     }, 100);
   });
 
+  applyChrome();
+  renderLanding();
+  if (activityLabel) {
+    activityLabel.textContent = chromeText("thinking", "Palm is thinking…");
+  }
+
   if (new URLSearchParams(location.search).get("open") === "1") {
-    panel.hidden = false;
+    setPanelOpen(true);
     connect();
     syncVisualViewport();
   }

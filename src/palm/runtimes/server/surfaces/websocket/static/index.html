@@ -10,21 +10,40 @@
   <link rel="manifest" href="/portal/manifest.webmanifest" />
 </head>
 <body>
-  <div id="fab" class="fab" title="Open Palm Portal" aria-label="Open Palm Portal">🌴</div>
+  <main id="landing" class="landing">
+    <p class="landing-mark" aria-hidden="true">🌴</p>
+    <h1>Palm Portal</h1>
+    <p class="lede">
+      Choose a language on this empty page. The chat stays behind the palm —
+      each skin opens it with that paint.
+    </p>
+    <nav id="skins" class="skins" aria-label="Portal languages">
+      <a class="skin-card" href="/portal/?lang=en&amp;open=1">
+        <strong>English</strong>
+        <span>Open the portal in English</span>
+      </a>
+      <a class="skin-card" href="/portal/?lang=pt-BR&amp;open=1">
+        <strong>Português (Brasil)</strong>
+        <span>Abrir o portal em português</span>
+      </a>
+    </nav>
+  </main>
+
+  <div id="fab" class="fab" title="Open Palm Portal" aria-label="Open Palm Portal" data-i18n-title="fabTitle" data-i18n-aria="fabTitle">🌴</div>
 
   <div id="panel" class="panel" hidden>
     <header class="panel-header">
       <div class="brand">
         <span class="logo">🌴</span>
         <div>
-          <strong>Palm Portal</strong>
-          <div id="conn-status" class="muted">disconnected</div>
+          <strong data-i18n="brand">Palm Portal</strong>
+          <div id="conn-status" class="muted" data-i18n="statusDisconnected">disconnected</div>
         </div>
       </div>
       <div class="header-actions">
-        <button type="button" id="btn-menu" class="ghost" title="Palm menu">Menu</button>
-        <button type="button" id="btn-start" class="ghost">Start</button>
-        <button type="button" id="btn-min" class="ghost" aria-label="Minimize">—</button>
+        <button type="button" id="btn-menu" class="ghost" title="Palm menu" data-i18n="menu" data-i18n-title="menuTitle">Menu</button>
+        <button type="button" id="btn-start" class="ghost" data-i18n="start">Start</button>
+        <button type="button" id="btn-min" class="ghost" aria-label="Minimize" data-i18n-aria="minimize">—</button>
       </div>
     </header>
 
@@ -33,18 +52,19 @@
 
     <form id="composer" class="composer">
       <div id="menu-search-row" class="menu-search-row" hidden>
-        <input id="menu-search" type="search" autocomplete="off" placeholder="Search this menu…" />
-        <button type="button" id="btn-menu-search" class="ghost">Find</button>
+        <input id="menu-search" type="search" autocomplete="off" placeholder="Search this menu…" data-i18n-placeholder="searchMenu" />
+        <button type="button" id="btn-menu-search" class="ghost" data-i18n="find">Find</button>
       </div>
       <div id="choices" class="choices"></div>
       <div id="field-host" class="field-host"></div>
       <div class="composer-row">
-        <input id="text-input" type="text" autocomplete="off" placeholder="Type an answer…" />
-        <button type="submit" id="btn-send">Send</button>
+        <input id="text-input" type="text" autocomplete="off" placeholder="Type an answer…" data-i18n-placeholder="typeAnswer" />
+        <button type="submit" id="btn-send" data-i18n="send">Send</button>
       </div>
     </form>
   </div>
 
+  <script src="/portal/skins.js"></script>
   <script src="/portal/portal.js"></script>
 </body>
 </html>

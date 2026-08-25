@@ -51,6 +51,61 @@ html.portal-keyboard-lock body {
 
 .muted { color: var(--muted); font-size: 12px; }
 
+.landing {
+  position: relative;
+  z-index: 1;
+  max-width: 36rem;
+  padding: 48px 28px 120px;
+}
+.landing h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+.landing-mark {
+  margin: 0 0 12px;
+  font-size: 2rem;
+}
+.landing .lede {
+  margin: 0 0 28px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 32rem;
+}
+.skins {
+  display: grid;
+  gap: 12px;
+  max-width: 28rem;
+}
+.skin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--panel-border);
+  background: rgba(17, 24, 39, 0.72);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+.skin-card:hover {
+  border-color: rgba(20, 184, 166, 0.55);
+}
+.skin-card.active {
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.35);
+}
+.skin-card strong { font-size: 1.05rem; }
+.skin-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+body.panel-open .landing {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .fab {
   position: fixed;
   right: 22px;
