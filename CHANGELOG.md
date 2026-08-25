@@ -4,6 +4,10 @@ All notable changes to Palm are documented here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+### Portal dogfood — session vs instance slots
+- Portal keeps two slots: `session_id` (system subject) and `instance_id` (continue handle). Start / Menu / Open send `clear: true` so the previous run does not stick.
+- Hello auto-starts operator-entry even when Assist WS already bound a `sess-…`. Continue frames send both ids. Not a 0.68 compost slice. Package stamp stays `0.67.0`.
+
 ### 0.68.12 — unused projection journal facade
 - Drop `drain_journal_projections`, `consume_for_projections`, and the doctor consumer name `"projections"`. Nothing in product called the host method. The body counted journal entries; it did not rebuild.
 - Living projections organ stays. `work_drain` stays. `HttpWebhookDeliverer` stays. Package stamp stays `0.67.0`.

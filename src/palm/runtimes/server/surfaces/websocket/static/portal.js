@@ -1,5 +1,6 @@
 /**
- * Palm Portal dogfood (0.34.5) — floating chat over WebSocket Assist.
+ * Palm Portal dogfood — floating chat over WebSocket Assist.
+ * Session (sess-…) and instance (continue handle) are two slots.
  * Renders payload.input for dynamic widgets; dispatches path/alias/params frames.
  * Menu: debounced typeahead search, open:kind:id chips, header Menu.
  * Mobile: no autofocus (keyboard covers chips); visualViewport sizes panel.
@@ -34,6 +35,7 @@
     ws: null,
     reqId: 0,
     sessionId: null,
+    instanceId: null,
     flowId: null,
     lastInput: null,
     lastPayload: null,
@@ -47,6 +49,70 @@
 
   function isOpenToken(value) {
     return typeof value === "string" && value.startsWith("open:");
+  }
+
+  function isSystemSessionId(value) {
+    return typeof value === "string" && value.startsWith("sess-");
+  }
+
+  function applyBoundSnapshot(bound) {
+    if (!bound || typeof bound !== "object") return;
+    if ("session_id" in bound) {
+      const sid = bound.session_id;
+      state.sessionId = isSystemSessionId(sid) ? String(sid) : null;
+    }
+    if ("instance_id" in bound) {
+      const iid = bound.instance_id;
+      if (iid == null || String(iid).trim() === "") {
+        state.instanceId = null;
+      } else if (!isSystemSessionId(iid)) {
+        state.instanceId = String(iid);
+      }
+    }
+    if ("flow_id" in bound) {
+      state.flowId = bound.flow_id ? String(bound.flow_id) : null;
+    }
+  }
+
+  function applyTurnIds(payload) {
+    if (!payload || typeof payload !== "object") return;
+    const refs = payload.refs && typeof payload.refs === "object" ? payload.refs : {};
+    const sid = payload.session_id || refs.session_id;
+    if (isSystemSessionId(sid)) {
+      state.sessionId = String(sid);
+    }
+    const iid = payload.instance_id || refs.instance_id;
+    if (iid && !isSystemSessionId(iid)) {
+      state.instanceId = String(iid);
+    } else if (sid && !isSystemSessionId(sid) && !payload.instance_id) {
+      // Pre-plane leftover: instance-shaped value on session_id.
+      state.instanceId = String(sid);
+    }
+  }
+
+  function clearWalkState(keepFlowId) {
+    state.sessionId = null;
+    state.instanceId = null;
+    if (!keepFlowId) state.flowId = null;
+  }
+
+  function bindClearFrame(flowId) {
+    return {
+      op: "bind",
+      id: nextId(),
+      clear: true,
+      session_id: null,
+      instance_id: null,
+      flow_id: flowId || null,
+    };
+  }
+
+  function withContinueParams(params) {
+    const out = { ...(params || {}) };
+    if (!out.session_id && state.sessionId) out.session_id = state.sessionId;
+    if (!out.instance_id && state.instanceId) out.instance_id = state.instanceId;
+    if (!out.flow_id && state.flowId) out.flow_id = state.flowId;
+    return out;
   }
 
   function isMenuPayload(payload) {
@@ -181,9 +247,14 @@
     statusEl.style.color = ok ? "#5eead4" : "var(--muted)";
   }
 
-  function setMeta() {
+  function setMeta(text) {
+    if (text) {
+      metaText.textContent = text;
+      return;
+    }
     const parts = [];
     if (state.sessionId) parts.push(`session ${state.sessionId.slice(0, 12)}…`);
+    if (state.instanceId) parts.push(`instance ${state.instanceId.slice(0, 12)}…`);
     if (state.flowId) parts.push(`flow ${state.flowId}`);
     metaText.textContent = parts.join(" · ");
   }
@@ -274,6 +345,7 @@
           op: "bind",
           id: nextId(),
           session_id: state.sessionId,
+          instance_id: state.instanceId,
           flow_id: state.flowId,
         });
       }
@@ -339,11 +411,10 @@
     if (op === "hello") {
       appendBubble("sys", `Palm ${msg.version || "?"} · protocol ${msg.protocol}`);
       if (msg.bound) {
-        if (msg.bound.session_id) state.sessionId = msg.bound.session_id;
-        if (msg.bound.flow_id) state.flowId = msg.bound.flow_id;
+        applyBoundSnapshot(msg.bound);
         setMeta();
       }
-      if (!state.bootstrapped && !state.sessionId) {
+      if (!state.bootstrapped) {
         state.bootstrapped = true;
         appendBubble("sys", "Starting…");
         send({
@@ -358,10 +429,9 @@
     }
     if (op === "pong") return;
     if (op === "bound") {
-      state.sessionId = msg.session_id || null;
-      state.flowId = msg.flow_id || null;
+      applyBoundSnapshot(msg);
       setMeta();
-      appendBubble("sys", "Session bound");
+      appendBubble("sys", msg.session_id ? "Session bound" : "Walk cleared");
       return;
     }
     if (op === "error") {
@@ -379,18 +449,14 @@
     }
     if (op === "turn") {
       setPending(false);
-      if (msg.bound) {
-        if (msg.bound.session_id) state.sessionId = msg.bound.session_id;
-        if (msg.bound.flow_id) state.flowId = msg.bound.flow_id;
-      }
+      if (msg.bound) applyBoundSnapshot(msg.bound);
       renderTurn(msg.payload || {});
       setMeta();
     }
   }
 
   function renderTurn(payload) {
-    if (payload.session_id) state.sessionId = payload.session_id;
-    if (payload.instance_id && !state.sessionId) state.sessionId = payload.instance_id;
+    applyTurnIds(payload);
     const refs = payload.refs || {};
     const path = payload.path;
     if (Array.isArray(path) && path[0] === "flows" && path[1]) {
@@ -467,17 +533,18 @@
       runAction(resume);
       return;
     }
-    if (!state.sessionId) return;
+    if (!state.instanceId && !state.sessionId) return;
     appendBubble("sys", "Running resource step…");
     send({
       op: "dispatch",
       id: nextId(),
       format: "assistant",
       alias: "flows/session-resume",
-      params: {
+      params: withContinueParams({
         session_id: state.sessionId,
+        instance_id: state.instanceId,
         flow_id: state.flowId || undefined,
-      },
+      }),
     });
   }
 
@@ -660,31 +727,18 @@
         !frame.params.session_id &&
         !action.path);
     if (freshStart) {
-      // Menu/open/start must not stick previous session onto params
-      if (!navAlias || alias === "operator-entry/start" || alias === "design-entry/start") {
-        state.sessionId = null;
-        state.flowId = frame.params.flow_id || null;
-      } else {
-        // pure nav: clear bind so next open starts clean
-        state.sessionId = null;
-        state.flowId = null;
-      }
+      // Menu/open/start must not stick previous walk onto params
+      const keepFlow =
+        !navAlias || alias === "operator-entry/start" || alias === "design-entry/start";
+      clearWalkState(keepFlow);
+      if (keepFlow) state.flowId = frame.params.flow_id || null;
       setMeta();
-      send({
-        op: "bind",
-        id: nextId(),
-        session_id: null,
-        flow_id: frame.params.flow_id || null,
-      });
+      send(bindClearFrame(frame.params.flow_id || null));
       delete frame.params.session_id;
+      delete frame.params.instance_id;
       if (navAlias) delete frame.params.flow_id;
     } else {
-      if (!frame.params.session_id && state.sessionId) {
-        frame.params.session_id = state.sessionId;
-      }
-      if (!frame.params.flow_id && state.flowId) {
-        frame.params.flow_id = state.flowId;
-      }
+      frame.params = withContinueParams(frame.params);
     }
     appendBubbleUser(`[${action.label || "action"}]`);
     send(frame);
@@ -724,10 +778,9 @@
     appendBubbleUser(v || "Skip");
     // Menu open tokens → assist/open (no sticky session)
     if (isOpenToken(v)) {
-      state.sessionId = null;
-      state.flowId = null;
+      clearWalkState();
       setMeta();
-      send({ op: "bind", id: nextId(), session_id: null, flow_id: null });
+      send(bindClearFrame(null));
       dispatch({
         alias: "assist/open",
         params: { value: v, format: "assistant", include_input_schema: true },
@@ -735,21 +788,17 @@
       textInput.value = "";
       return;
     }
-    const params = { value: v };
-    if (state.sessionId) params.session_id = state.sessionId;
-    if (state.flowId) params.flow_id = state.flowId;
-    dispatch({ params });
+    dispatch({ params: withContinueParams({ value: v }) });
     textInput.value = "";
   }
 
   function openPalmMenu(section) {
     if (state.pending) return;
     appendBubble("sys", section ? `Menu · ${section}…` : "Opening Palm menu…");
-    state.sessionId = null;
-    state.flowId = null;
+    clearWalkState();
     state.menuSection = section || "root";
     setMeta();
-    send({ op: "bind", id: nextId(), session_id: null, flow_id: null });
+    send(bindClearFrame(null));
     const params = { format: "assistant", include_input_schema: true };
     if (section) params.section = section;
     send({
@@ -779,9 +828,8 @@
     } else if (q) {
       setMeta(`Searching ${section}…`);
     }
-    state.sessionId = null;
-    state.flowId = null;
-    send({ op: "bind", id: nextId(), session_id: null, flow_id: null });
+    clearWalkState();
+    send(bindClearFrame(null));
     const params = {
       format: "assistant",
       include_input_schema: true,
@@ -818,11 +866,10 @@
   btnStart.onclick = () => {
     if (state.pending) return;
     appendBubble("sys", "Starting operator entry…");
-    state.sessionId = null;
-    state.flowId = null;
+    clearWalkState();
     state.bootstrapped = true;
     setMeta();
-    send({ op: "bind", id: nextId(), session_id: null, flow_id: null });
+    send(bindClearFrame(null));
     send({
       op: "dispatch",
       id: nextId(),

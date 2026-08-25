@@ -9,6 +9,9 @@
 
 0.58.17: product door only — :func:`~palm.kits.server.middleware.resolve_session_service`
 + :class:`~palm.services.session.BoundSurface`. No raw ``session_plane`` on this path.
+
+Portal dogfood: ``session_id: null`` drops continue focus unless ``instance_id``
+is in the same message. Dispatch refreshes BoundSurface from the mirrors.
 """
 
 from __future__ import annotations
@@ -336,6 +339,10 @@ def _apply_message_bind_fields(
             conn.bound = None
             conn.session_id = None
             conn.session_created = False
+            # Unbind subject also drops continue focus unless this
+            # message sets instance_id explicitly.
+            if "instance_id" not in message:
+                conn.instance_id = None
         else:
             sid = str(raw_sid).strip()
             if looks_like_system_session_id(sid):
@@ -397,6 +404,41 @@ def _service_bind_into(
         resolve_instance=iid is None,
     )
     conn.apply_bound(bound, created=not existed)
+
+
+def _sync_bound_from_mirrors(
+    conn: _ConnectionState,
+    *,
+    ctx: object | None,
+) -> None:
+    """Keep BoundSurface snapshot aligned with session/instance mirrors."""
+    if conn.bound is not None and str(conn.bound.session_id) != str(conn.session_id or ""):
+        conn.bound = None
+    if conn.bound is not None:
+        conn.bound = conn.bound.with_instance(conn.instance_id)
+    svc = resolve_session_service(ctx)
+    if svc is None or not conn.session_id or not looks_like_system_session_id(
+        conn.session_id
+    ):
+        return
+    if conn.instance_id:
+        try:
+            bound = svc.focus(conn.session_id, conn.instance_id)
+            conn.apply_bound(bound, created=False)
+            return
+        except Exception:
+            logger.debug("ws turn focus skipped", exc_info=True)
+    if conn.bound is None:
+        try:
+            _service_bind_into(
+                conn,
+                conn.session_id,
+                ctx=ctx,
+                create=False,
+                instance_id=conn.instance_id,
+            )
+        except Exception:
+            logger.debug("ws turn rebind skipped", exc_info=True)
 
 
 def _ensure_system_session(
@@ -603,8 +645,13 @@ def _handle_dispatch(
         if looks_like_system_session_id(system_sid):
             state.session_id = str(system_sid).strip()
         instance_id = shaped.get("instance_id")
+        if (not instance_id or looks_like_system_session_id(instance_id)) and isinstance(
+            turn_refs, dict
+        ):
+            instance_id = turn_refs.get("instance_id")
         if instance_id and not looks_like_system_session_id(instance_id):
             state.instance_id = str(instance_id)
+        _sync_bound_from_mirrors(state, ctx=ctx)
         flow = flow_id_from_turn(shaped)
         if flow:
             state.flow_id = str(flow)

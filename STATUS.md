@@ -9,7 +9,7 @@
 ### Agent resume (after compact)
 
 Read: **this STATUS** → [VISION-0.68](docs/vision/VISION-0.68.md) → [ADR-036](docs/adr/036-require-capability.md) **Accepted**.  
-José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.12** drops the unused projection journal facade. Further units when José names them.
+José closed 0.67 (2026-08-21) and opened 0.68 as costume compost. **0.68.12** drops the unused projection journal facade. Portal dogfood (two-slot session/instance) is a side bugfix, not a 0.68 unit. Further compost units when José names them.
 
 | Spirit | Decision |
 |--------|----------|
