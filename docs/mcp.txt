@@ -22,13 +22,13 @@ Palm = **stateful, path-driven workflow engine** with strong interactive wizard 
 | **Paths & Aliases** | Target specific actions (`path=["flows",…]`, `alias="operator-entry/start"`) |
 | **MCP Resources** (`palm://…`) | Read-only catalogs, guides, instance trees |
 | **MCP Tools** | Write/act — create, input, resume, cancel |
-| **Design (0.25+)** | Safe catalog writes — `palm_design_*` propose → impact → commit |
+| **Design (0.25+)** | Prefer `palm_design_publish_flow` / `palm_assist`. Alternate: propose → impact → commit |
 
 **Vocabulary law (0.58):** `session_id` ≠ `instance_id`. Prefer `instance_id` to continue a walk. System journey stays `system/session/{id}`. Detail: skill `session-management` · [VISION-0.58](vision/closed/VISION-0.58.md).
 
 **Golden rules**:
 - **Run a flow** → start with `palm_assist()` unless you have continue `instance_id` or explicit `flow_id`.
-- **Create or change a flow definition** → use `palm_design_*` (see §15), not repo files or `palm_definitions_*` writes.
+- **Create or change a flow definition** → one-shot `palm_design_publish_flow` / `palm_assist` (see §15), not repo files or `palm_definitions_*` writes.
 
 **Operator loop**: definitions → create → inspect → input → wait on children → resume.
 
@@ -168,8 +168,8 @@ Portable skill: `palm://agent/skill` + `palm://agent/references/*` (on-disk: `do
 | Agent skill | `palm://agent/skill` |
 | Skill references | `palm://agent/references/agent-guide`, `…/design-flows`, `…/session-management`, `…/common-flows`, `…/mcp-patterns` |
 | Create/improve flows | `palm://agent/references/design-flows` · `palm_design_*` |
-| Design propose | `palm_design_propose_flow` |
-| Design publish | `palm_design_impact` → `palm_design_commit` |
+| Design propose | `palm_design_propose_flow` (alternate / debug impact) |
+| Design publish | `palm_design_publish_flow` or `palm_assist` (prefer); propose → impact → commit is alternate |
 | Project architecture | `docs/llms.txt` |
 | Flow catalog | `palm://definitions/flows` |
 | Start wizard | `palm_assist()` or `palm_flows_create_session` |
@@ -177,7 +177,7 @@ Portable skill: `palm://agent/skill` + `palm://agent/references/*` (on-disk: `do
 | Current step | `palm_flows_session` (powertool or `format="assistant"`) |
 | Collection UI | `palm_wizard_collection_action` or assist `collection_action` |
 | Health | `palm_system_doctor` |
-| **Create/improve flow** | `palm_design_propose_flow` → `palm_design_impact` → `palm_design_commit` |
+| **Create/improve flow** | `palm_design_publish_flow` or `palm_assist(params={body})` |
 | Design playbook (weak LLMs) | `palm://agent/references/design-flows` |
 | Invoke resource definition | `palm_providers_invoke` |
 | Instance tree | `palm://instances/{id}/tree` |
@@ -293,20 +293,29 @@ Catalog flows are **append-only revisions**. Running instances pin `flow_revisio
 
 **When the user wants a new flow or changes to an existing one** — do **not** edit Python files. Use MCP only.
 
-### New flow — four tools, fixed order
+### New flow — one-shot publish
+
+```text
+palm_design_publish_flow(body={name, pattern, options})
+# or palm_assist(params={body: {name, pattern, options}})
+palm_flows_describe(flow_id="my-flow")    # confirm revision in catalog
+```
+
+Resource: `palm_design_publish_resource` or `palm_assist(params={kind: "resource", body})`.
+
+### Update existing flow
+
+Pass `base_flow_id="existing-id"` on publish (or on `palm_assist`). Revision number increments.
+
+### Alternate (debug / inspect impact only)
 
 ```text
 palm_design_propose_flow(body={name, pattern, options})
 palm_design_impact(proposal_id="prop-...")
 palm_design_commit(proposal_id="prop-...")
-palm_flows_describe(flow_id="my-flow")    # confirm revision in catalog
 ```
 
 Save `proposal_id` from propose. If propose returns `"valid": false`, read `blockers` and fix the body before impact.
-
-### Update existing flow
-
-Add `base_flow_id="existing-id"` to propose. Same impact → commit sequence. Revision number increments.
 
 ### Minimal wizard body
 

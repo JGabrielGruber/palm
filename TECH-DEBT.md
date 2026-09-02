@@ -81,7 +81,7 @@ This file holds **what still needs work** plus a **master index** of all IDs.
 
 | ID | Title | Sev | Effort | Status |
 |----|-------|:---:|:------:|--------|
-| [CS-001](#cs-001) | Layer bulk: `runtimes` + `common` dominate LOC | S2 | — | open (metric) |
+| [CS-001](#cs-001) | Layer bulk: `runtimes` + `common` dominate LOC; `system` exists and is larger than `common` | S2 | — | open (metric) |
 | [CS-002](docs/audit/TECH-DEBT-PAID.md#cs-002) | Triple observability names on host | S2 | M | ✅ paid (0.61.7 demotion; triple aliases residual) |
 | [CS-003](#cs-003) | Core leaves take concrete engines (not protocols) | S2 | M | open |
 | [CS-004](#cs-004) | Definition `from_dict` forever-legacy shapes | S3 | M | open |
@@ -366,16 +366,19 @@ Full intention table: [docs/STUBS.md](docs/STUBS.md).
 
 **Severity:** S2 · **Metric**
 
-Approx. Python LOC under `src/palm/`:
+Approx. Python LOC under `src/palm/` (all `.py` lines, living tree):
 
-| Package | ~LOC |
-|---------|-----:|
-| runtimes (surfaces) | 22700 |
-| common | 20500 |
-| services | 11200 |
+| Package | ~LOC / note |
+|---------|-------------|
+| runtimes (surfaces) | 24500 |
+| common | 15300 · still fat · lazy-exports system types |
+| system | first-class · 133 files · ~630KB · larger than common |
+| services | 13700 |
 | patterns | 9900 |
-| core | 7800 |
-| app | 5000 |
+| core | 9000 |
+| app | 5100 |
+
+`palm.system` exists as first-class and is larger than `common`. `common` is still fat and still lazy-exports system types.
 
 **Use:** Track after system extract; surfaces and common should both fall or reclassify.
 

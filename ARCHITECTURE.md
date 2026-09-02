@@ -388,7 +388,7 @@ Keeping the executor outside core preserves a single orchestration model while a
 3. Restore blackboard from `state_snapshot`
 4. Register job; continue via `provide_input` or orchestration resume
 
-`EmbeddedRuntime.resume_process()`, `PalmKernel.resume_process()`, and CLI `process resume` expose this path. Historical `state_snapshots[]` entries are **not** used for resume today—they are for inspection and future time-travel replay.
+`EmbeddedRuntime.resume_process()`, `PalmKernel.resume_process()`, and CLI `instance resume` expose this path. Historical `state_snapshots[]` entries are **not** used for resume today—they are for inspection and future time-travel replay.
 
 ---
 

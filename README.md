@@ -41,7 +41,14 @@ uv sync --group dev --extra cli
 uv pip install -e ".[cli]"
 ```
 
-Optional extras: `[cli]`, `[test]`, `[dev]`, `[all]`, `[postgres]`, `[mongodb]`.
+| Extra | What |
+|-------|------|
+| `[cli]` | CLI + REPL |
+| `[mcp]` | FastMCP (`palm-mcp`) |
+| `[test]` | test deps |
+| `[dev]` | contributor |
+| `[all]` | cli + test subset (not every extra) |
+| `[postgres]` / `[mongodb]` | empty; name reserved |
 
 ---
 
@@ -79,14 +86,14 @@ Behavior Trees are the control-flow foundation for **business**. Organism topolo
 | **Persistence** | Filesystem backend, `InstanceManager`, durable resume across restarts |
 | **Runtimes** | `EmbeddedRuntime`, `DaemonRuntime`, `ServerRuntime` (HTTP), **CLI + REPL** (host-backed) |
 | **Palm Explorer** | SSR hub at `/explorer` — flows, jobs, instances, **wizard workspace** (HTMX + collection editor), **resources**; `/` redirects here |
-| **Flow REST (0.16)** | `/v1/api/flows/{flow_id}/session/{session_id}/…` — create, inspect, input, backtrack |
+| **Flow REST (0.16)** | Continue: `/v1/api/flows/{flow_id}/instance/{instance_id}/…` · create: `POST …/flows/{flow_id}/create` · Explorer: `/explorer/instances/<instance_id>` |
 | **Definitions REST (0.16)** | `/v1/api/definitions/…` — catalog reads + CRUD writes |
 | **Definition revisions (0.24)** | Append-only flow revisions, `flow_revision` pin, impact query, instance migrate — [MIGRATION-0.24.md](docs/migrations/MIGRATION-0.24.md) |
 | **Design Service (0.25+)** | Propose → impact → commit · **one-shot** `palm_design_publish_*` / `palm_assist(params={body})` — [VISION-0.25.md](docs/vision/closed/VISION-0.25.md) |
 | **Local resources (0.28–0.29)** | `kv` / `file` / tiered backends; coconut-npc cross-session profile |
 | **MCP (0.16–0.31)** | `palm-mcp` · **`palm_assist` meta-tool** · `PALM_MCP_SURFACE=assist` slim catalog · `palm://agent/card` progressive docs — [docs/MCP.md](docs/MCP.md) · [VISION-0.31.md](docs/vision/closed/VISION-0.31.md) |
 | **Dashboard** | `palm status` — projection-backed Rich overview; `--full`, `-r` live refresh |
-| **DX** | Rich examples, `palm doctor`, `palm resource *`, `just` quality recipes |
+| **DX** | Rich examples, `palm doctor`, REPL `resource *` / `assist *`, `just` quality recipes |
 
 ```mermaid
 flowchart LR
@@ -108,11 +115,12 @@ flowchart LR
 ```bash
 pip install palmengine[cli]
 
-palm status              # live projection dashboard (default)
+palm                     # interactive REPL (default)
+palm repl                # same as bare palm
+palm status              # live projection dashboard (command, not default)
 palm doctor              # full health report
 palm version --full      # version + registered plugins
-palm repl                # interactive shell (default: `palm`)
-palm flow start onboard          # recommended — works for all patterns
+palm flow start onboard  # recommended — works for all patterns
 # shortcut: palm start onboard
 ```
 
@@ -239,7 +247,7 @@ export PALM_STORAGE_BACKEND=filesystem
 export PALM_DATA_DIR=./data
 
 # Or per invocation:
-palm --storage-backend filesystem --data-dir ./data wizard start onboard
+palm --storage-backend filesystem --data-dir ./data flow start onboard
 ```
 
 `palm doctor` and REPL startup show whether state will survive restarts.
@@ -279,12 +287,12 @@ The REPL uses smart tab-completion for commands, flow/process names, and instanc
 Process instances snapshot orchestrated work—wizard answers, step, status—and persist through storage so sessions survive restarts.
 
 ```bash
-palm wizard start onboard
+palm flow start onboard
 palm input Ada
 palm instance list                    # note instance id
 
 # Later, or in a new terminal:
-palm process resume <instance_id>
+palm instance resume <instance_id>
 palm input ada@example.com
 # … continue through summary and commit
 ```
@@ -297,10 +305,10 @@ Shared `StorageEngine` across runtime lifetimes is required for cross-process re
 export PALM_STORAGE_BACKEND=filesystem
 export PALM_DATA_DIR=./data   # optional; defaults to ./data
 
-palm wizard start onboard
+palm flow start onboard
 palm input Ada
 # Restart the CLI — instances and definitions persist under ./data/
-palm process resume <instance_id>
+palm instance resume <instance_id>
 ```
 
 ---
@@ -316,7 +324,7 @@ export PALM_ENABLE_STATE_SNAPSHOT=true
 export PALM_SNAPSHOT_ON_STATUS='["WAITING_FOR_INPUT","SUCCEEDED","FAILED"]'
 export PALM_MAX_SNAPSHOTS_PER_INSTANCE=10
 
-palm wizard start onboard
+palm flow start onboard
 palm input Ada
 palm instance snapshots <instance_id>   # inspect captured history
 ```
@@ -385,18 +393,19 @@ Legacy `/wiki/*` and `/docs` redirect to `/explorer`. Implementation: `palm/runt
 
 | Command | Description |
 |---------|-------------|
-| `palm` / `palm repl` | Interactive REPL (host-backed) |
-| `palm status` | Live dashboard — instances, wizards, jobs, host events |
+| `palm` / `palm repl` | Interactive REPL (host-backed; default) |
+| `palm status` | Live dashboard — instances, wizards, jobs, host events (command, not default) |
 | `palm status --full` | Detailed dashboard (active rows, traces) |
 | `palm status -r` | Live refresh every 2s (Ctrl+C to stop) |
 | `palm doctor` | Full health report: plugins, persistence, definitions |
 | `palm version --full` | Version, Python, registered patterns/providers/storages |
-| `palm process list` \| `submit` \| `resume` | Definition catalog and lifecycle |
+| `palm process list` \| `submit` | Definition catalog and process submit |
 | `palm instance list` | Instances via CQRS projection |
+| `palm instance resume <id>` | Resume a persisted instance |
 | `palm instance snapshots <id>` | State snapshot history (when enabled) |
 | `palm flow start <flow>` | Start any flow — **recommended** |
 | `palm start <flow>` | Shortcut for `flow start` |
-| `palm wizard start <flow>` | Wizard-only shortcut (legacy alias) |
+| `resource *` / `assist *` | REPL-only — `palm repl` then `resource list` / `describe` / `invoke` |
 | `palm input` / `palm back` | Drive or rewind an active flow |
 | `palm host all-in-one` | Run ApplicationHost (blocking, signals) |
 | `palm host master` \| `worker` \| `server` | Role-based deployment |
@@ -436,7 +445,7 @@ archive/            # legacy + experimental (not imported)
 3. **Compose with the `palm` provider** — delegate sub-flows locally or via `remote_url`; rely on built-in depth/cycle guardrails.
 4. **Observe `resource.*` events** — completed/failed payloads include correlation (`invoke_depth`, `invoke_chain`, `parent_job_id`).
 5. **Cache reads, not writes** — keep `resource_cache_definitions` on; enable `resource_cache_results` only for idempotent `fetch` actions.
-6. **Discover before invoke** — `palm doctor`, `palm resource list/describe`, and Explorer `/explorer/resources` show actions and schemas.
+6. **Discover before invoke** — `palm doctor`, REPL `resource list` / `describe`, and Explorer `/explorer/resources` show actions and schemas.
 
 ```bash
 palm resource list

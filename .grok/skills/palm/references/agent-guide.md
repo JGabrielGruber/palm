@@ -12,7 +12,7 @@ Palm = stateful, path-driven workflow engine with interactive wizard support.
 - **Instance** — one run / continue handle (`instance_id`); product paths use segment `instance`
 - **BoundSurface / SessionService** — product bind door (not a second resume path)
 - **Assist** — `palm_assist` parametric dispatch (paths, aliases, params)
-- **Design (0.25+)** — safe catalog writes via `palm_design_*` (propose → impact → commit)
+- **Design (0.25+)** — prefer `palm_design_publish_flow` or `palm_assist(params={body})`. Alternate: propose → impact → commit
 - **Resources** — read-only `palm://definitions/*`, `palm://instances/{id}/tree`, skill references
 - **Tools** — write/act: design, create, input, resume, cancel
 
@@ -23,7 +23,7 @@ Palm = stateful, path-driven workflow engine with interactive wizard support.
 | Task | Start here |
 |------|------------|
 | Run an existing flow | `palm_assist()` unless you have continue `instance_id` or explicit `flow_id` |
-| Create or change a flow definition | `palm://agent/references/design-flows` + `palm_design_*` — **not** repo files or `palm_definitions_*` writes |
+| Create or change a flow definition | `palm://agent/references/design-flows` + one-shot publish — **not** repo files or `palm_definitions_*` writes |
 
 ## View modes
 
@@ -46,12 +46,10 @@ Legacy: param name `session_id` may still carry the continue handle when the val
 
 ## Design loop (create or improve flows)
 
-Always run **all steps in order**. Save `proposal_id` from step 1.
+Prefer one-shot, then `palm_flows_describe`. Alternate (debug only): propose → impact → commit.
 
 ```
-palm_design_propose_flow(body={...})              # new flow, or base_flow_id="foo-bar" to revise
-palm_design_impact(proposal_id="prop-...")
-palm_design_commit(proposal_id="prop-...")
+palm_design_publish_flow(body={...})              # or palm_assist(params={body}); base_flow_id to revise
 palm_flows_describe(flow_id="my-flow")          # verify revision published
 ```
 

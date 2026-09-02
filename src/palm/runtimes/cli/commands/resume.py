@@ -8,7 +8,7 @@ from palm.runtimes.cli.tui import actions as tui_actions
 
 
 def cmd_resume(ctx: CliContext, args: list[str]) -> int:
-    """Resume a persisted process instance (``instance resume`` / ``process resume``)."""
+    """Resume a persisted process instance (``instance resume``)."""
     if not args:
         ctx.console.print("[red]Usage:[/] instance resume <instance_id>")
         return 1

@@ -199,7 +199,7 @@ export PALM_DATA_DIR=./data
 export PALM_ENABLE_STATE_SNAPSHOT=true   # optional snapshot history
 
 palm doctor                              # persistence mode + active instance summary
-palm wizard start onboard
+palm flow start onboard
 palm instance list                       # active instances (non-terminal) by default
 palm instance list --all --format json   # scripting output
 palm instance prune --dry-run            # preview terminal cleanup
@@ -221,7 +221,7 @@ Example definitions register on every CLI start:
 ```bash
 palm doctor
 palm process list
-palm wizard start onboard
+palm flow start onboard
 ```
 
 Drive wizards in the REPL or one-shot:
@@ -229,7 +229,7 @@ Drive wizards in the REPL or one-shot:
 ```bash
 palm input <instance_id> <value>
 palm back <instance_id> <step_slug>
-palm process resume <instance_id>
+palm instance resume <instance_id>
 ```
 
 ### Preferred bootstrap (ApplicationHost)
@@ -329,7 +329,7 @@ Palm 0.8 adds optional **schemas** and **named scopes** to execution state. Core
 ### Example flow
 
 ```bash
-palm wizard start schema-onboard
+palm flow start schema-onboard
 # name → age (integer) → role → summary → commit
 palm status <instance_id>   # scope + validation context when waiting
 ```

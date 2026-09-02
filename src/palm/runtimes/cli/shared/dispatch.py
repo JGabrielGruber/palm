@@ -61,8 +61,6 @@ def _invocation_to_line(inv: CliInvocation) -> str | None:
         extra: list[str] = []
         if inv.process_cmd == "submit" and inv.ref:
             extra = [inv.ref]
-        elif inv.process_cmd == "resume" and inv.instance_id:
-            extra = [inv.instance_id]
         return " ".join([phrase, *extra]).strip()
 
     if inv.command == "instance":
@@ -88,10 +86,6 @@ def _invocation_to_line(inv: CliInvocation) -> str | None:
 
     if inv.command == "start" and inv.flow:
         return f"start {inv.flow}"
-
-    if inv.command == "wizard":
-        extra = [inv.flow] if inv.wizard_cmd == "start" and inv.flow else []
-        return " ".join([f"wizard {inv.wizard_cmd}", *extra]).strip()
 
     if inv.command == "input":
         return ("input " + " ".join(inv.input_args or [])).strip()

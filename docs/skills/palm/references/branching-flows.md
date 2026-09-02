@@ -109,10 +109,10 @@ Keys resolve from wizard **answers** (e.g. `mood_line`, `player_name`).
 
 ## MCP workflow
 
+One-shot `palm_design_publish_flow` (or `palm_assist`) then `palm_flows_create_session`. Four-tool is alternate.
+
 ```text
-palm_design_propose_flow(body={...})     # or base_flow_id to revise
-palm_design_impact(proposal_id)
-palm_design_commit(proposal_id)
+palm_design_publish_flow(body={...})     # or palm_assist(params={body}); base_flow_id to revise
 palm_flows_create_session(flow_id="coconut-npc")
 ```
 

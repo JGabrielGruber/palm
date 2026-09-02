@@ -40,7 +40,7 @@ palm flow start coconut-npc
 When the user asks to **create or improve** a flow (not run a built-in one):
 
 1. Read **`palm://agent/references/design-flows`** (step-by-step for weak models).
-2. Propose → impact → commit with `palm_design_*`.
+2. One-shot `palm_design_publish_flow` or `palm_assist(params={body})`. Resource: `palm_design_publish_resource` / `palm_assist(params={kind: "resource", body})`. Alternate (debug impact only): propose → impact → commit.
 3. Run with `palm_flows_create_session(flow_id="<slug>")`.
 
 **Worked example:** `foo-bar` — two text steps, then revision 2 with choice step + summary. Full recipe in design-flows §F.

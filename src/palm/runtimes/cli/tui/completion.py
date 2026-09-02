@@ -71,7 +71,6 @@ def _context_completions(
     flow_start_phrases = (
         ("flow", "start"),
         ("start",),
-        ("wizard", "start"),
     )
     for pattern in flow_start_phrases:
         if _matches_phrase(lower, pattern) and len(words) > len(pattern):
@@ -107,11 +106,8 @@ def _context_completions(
         ("status",),
         ("instance", "status"),
         ("instance", "resume"),
-        ("process", "resume"),
         ("input",),
         ("back",),
-        ("wizard", "status"),
-        ("wizard", "input"),
     )
     for pattern in instance_phrases:
         if _matches_phrase(lower, pattern) and len(words) > len(pattern):

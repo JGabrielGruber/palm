@@ -15,7 +15,8 @@ from palm.app.settings import PalmSettings, SchedulerPolicy
 _CLI_EPILOG = """
 examples:
   palm                          interactive REPL (default)
-  palm status                 live projection dashboard (default)
+  palm repl                   same as bare palm
+  palm status                 live projection dashboard (command, not default)
   palm status --full          detailed dashboard view
   palm status -r              live refresh (2s, Ctrl+C to stop)
   palm doctor                 full engine health report
@@ -24,8 +25,11 @@ examples:
   palm benchmark log_fill --json
   palm flow start onboard
   palm start parallel-demo
-  palm --storage-backend filesystem wizard start onboard
+  palm --storage-backend filesystem --data-dir ./data flow start onboard
+  palm instance resume <instance_id>
   palm instance list --all --format json
+
+  resource * and assist * are REPL-only (palm repl, then the command)
 
 settings precedence (highest last):
   PALM_* environment variables → --config file → CLI flags
@@ -208,11 +212,6 @@ def build_parser() -> argparse.ArgumentParser:
     proc_sub.add_parser("list")
     submit_p = proc_sub.add_parser("submit")
     submit_p.add_argument("ref")
-    resume_p = proc_sub.add_parser(
-        "resume",
-        help="Resume instance (alias: palm instance resume)",
-    )
-    resume_p.add_argument("instance_id")
 
     inst = sub.add_parser("instance", help="Process instance commands")
     inst_sub = inst.add_subparsers(dest="instance_cmd", required=True)
@@ -241,12 +240,6 @@ def build_parser() -> argparse.ArgumentParser:
 
     start_p = sub.add_parser("start", help="Start any flow by name (shortcut)")
     start_p.add_argument("flow")
-
-    wiz = sub.add_parser("wizard", help="Wizard flow commands (shortcut)")
-    wiz_sub = wiz.add_subparsers(dest="wizard_cmd", required=True)
-    wiz_sub.add_parser("list")
-    wiz_start_p = wiz_sub.add_parser("start")
-    wiz_start_p.add_argument("flow")
 
     for name in ("input", "back"):
         p = sub.add_parser(name)

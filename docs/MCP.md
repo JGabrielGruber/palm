@@ -1,17 +1,25 @@
 # Palm MCP — Operator Adapter (0.16 per-domain tools)
 
-**Status:** 0.16+ per-domain tools · **0.31.1 surface profiles** · [FastMCP](https://pypi.org/project/fastmcp/) · ~39 tools (full) · resources + prompts
+**Status:** 0.16+ per-domain tools · **0.31.1 catalog profiles** · [FastMCP](https://pypi.org/project/fastmcp/) · **38 tools** (full) · resources + prompts
 
-Palm MCP is a thin operator adapter for coding agents (Cursor, Grok, Claude, etc.). By default it runs **in-process** via `PalmInProcessBackend` — tools call `palm/services/` (`definitions`, `execution/flows`, `execution/providers`, `system`, `assist`, `design`) on a bootstrapped `ServerContext` with **no HTTP round-trip**. Service-domain CQRS types (definitions impact/migrate, design propose/commit) register via `ServiceCqrsContributor` so standalone MCP parity matches `ApplicationHost` ([ADR-009](adr/009-service-cqrs-contributors.md)). Set `PALM_MCP_IN_PROCESS=0` for REST proxy mode (`palm server` required).
+Palm MCP is a thin operator adapter for coding agents (Cursor, Grok, Claude, etc.). Tools call `palm/services/` (`definitions`, `execution/flows`, `execution/providers`, `system`, `assist`, `design`) on a bootstrapped `ServerContext`. Service-domain CQRS types (definitions impact/migrate, design propose/commit) register via `ServiceCqrsContributor` so standalone MCP parity matches `ApplicationHost` ([ADR-009](adr/009-service-cqrs-contributors.md)).
 
-### MCP surface (0.31.1) — progressive disclosure
+Code default `PALM_MCP_IN_PROCESS` is **false** (unset → REST client). In-process is opt-in `PALM_MCP_IN_PROCESS=1` (`PalmInProcessBackend`, no HTTP round-trip). REST proxy needs `palm host server` (not `palm server`). This repo’s `.grok/config.toml` sets in-process on.
+
+Full catalog: assist 1 + flows 9 + system 9 + definitions 4 + design 10 + providers 1 + pattern 4 = **38**. Design includes exactly two publish tools: `palm_design_publish_flow`, `palm_design_publish_resource` (plus `palm_assist`). There is no third `palm_design_publish_*`. Assist alias `design/publish` is not a separate tool.
+
+Daily workflow: one-shot publish / `palm_assist`, not propose → impact → commit as required.
+
+### MCP catalog profile (0.31.1) — progressive disclosure
 
 | `PALM_MCP_SURFACE` | Tools registered | Use when |
 |--------------------|------------------|----------|
 | **`full`** (default) | All domain + pattern/app tools | Power users, existing configs |
 | **`assist`** | **`palm_assist` only** | Weak LLMs / token-sensitive hosts |
-| **`core`** | assist + system (doctor, waiting, …) | Middle ground |
+| **`core`** | assist + system (doctor, waiting, …) | Middle ground. Profile `core` ≠ locked Core (engines). |
 | **`experimental`** | Same as full (reserved) | Future experiments |
+
+`PALM_MCP_SURFACE` picks **tool groups**. It is not locked Surface (transport).
 
 Resources and prompts still register on all surfaces. Measure catalog size:
 
@@ -86,8 +94,8 @@ flowchart LR
 
 | Mode | Env | Backend | When to use |
 |------|-----|---------|-------------|
-| **In-process** (default) | `PALM_MCP_IN_PROCESS=1` | `PalmInProcessBackend` → `palm.services` | Local agent dev; no `palm server` required |
-| **REST proxy** | `PALM_MCP_IN_PROCESS=0` + `PALM_BASE_URL` | `PalmRestClient` → HTTP `:8080` | Remote Palm, cross-process, CI against live server |
+| **REST proxy** (code default) | unset / `PALM_MCP_IN_PROCESS=0` + `PALM_BASE_URL` | `PalmRestClient` → HTTP `:8080` | Remote Palm, cross-process, CI against live server. Needs `palm host server`. |
+| **In-process** (opt-in) | `PALM_MCP_IN_PROCESS=1` | `PalmInProcessBackend` → `palm.services` | Local agent dev; no HTTP. This repo’s `.grok/config.toml` sets this. |
 
 Tests: `tests/test_mcp_in_process.py` · `tests/test_mcp_design_in_process.py` (design impact/commit) · `tests/test_definitions_cqrs_standalone.py` (bus parity) · `tests/test_mcp_tools.py` (REST mocks).
 
@@ -99,7 +107,7 @@ uv pip install -e ".[mcp]"          # from source
 # pip install "palmengine[mcp]"     # from PyPI
 ```
 
-**Local in-process (default — no REST server):**
+**Local in-process (opt-in — no REST server):**
 
 ```bash
 uv sync --extra mcp
@@ -109,7 +117,7 @@ PALM_MCP_IN_PROCESS=1 uv run --extra mcp palm-mcp   # stdio → services
 **Remote REST proxy (0.14 mode):**
 
 ```bash
-just palm-server                    # terminal 1 — http://127.0.0.1:8080
+just palm-server                    # terminal 1 — `palm host server` · http://127.0.0.1:8080
 PALM_MCP_IN_PROCESS=0 palm-mcp      # terminal 2 — HTTP round-trip
 ```
 
@@ -131,7 +139,7 @@ just mcp-inspector                  # MCP Inspector UI
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `PALM_MCP_IN_PROCESS` | `0` (env); `1` in `.grok/config.toml` | `1` = `PalmInProcessBackend` (services, no HTTP); `0` = `PalmRestClient` |
+| `PALM_MCP_IN_PROCESS` | `false` when unset (REST client); `1` in `.grok/config.toml` | `1` = `PalmInProcessBackend` (services, no HTTP); unset/`0` = `PalmRestClient` |
 | `PALM_BASE_URL` | `http://127.0.0.1:8080` | REST target when in-process is off |
 | `PALM_SUBJECT` | `dev` | `X-Palm-Subject` when auth is enforced |
 | `PALM_LLMS_TXT` | bundled `mcp.txt` in package (override path optional) | `palm://agent/guide` content |
@@ -139,7 +147,7 @@ just mcp-inspector                  # MCP Inspector UI
 
 ### Conventions agents must follow
 
-1. **Instance-continue / session-bind (0.58)** — Prefer `instance_id` for walk continue. System `session_id` (`sess-…`) is the outside subject (BoundSurface / SessionService). Do **not** treat `session_id` ≡ `instance_id`. Use `job_id` only when you lack a continue handle (`palm_system_inspect_job`, `palm_system_job_input`). `palm_system_list_waiting` returns real `instance_id` values (never aliases `job_id`). Legacy param name `session_id` may fill continue when the value is not `sess-…`.
+1. **Instance-continue / session-bind (0.58)** — Prefer `instance_id` for walk continue. System `session_id` (`sess-…` / `sess-svc-…`) is the outside subject (BoundSurface / SessionService). Do **not** treat `session_id` ≡ `instance_id`. `palm_flows_*` kwargs stay `session_id` (do not rename the FastMCP field). That value is the **legacy continue handle**: pass **instance_id**, not system `sess-…`. `palm_wizard_*` and `palm_definitions_migrate_instance` take `instance_id`. Use `job_id` only when you lack a continue handle (`palm_system_inspect_job`, `palm_system_job_input`). `palm_system_list_waiting` returns real `instance_id` values (never aliases `job_id`).
 
 2. **Plain-string input** — Prefer `palm_flows_session_input` + continue id + `input="yes"` or `input="Ada"`. Do **not** wrap answers in JSON objects. Coercion matches Explorer (`yes` → boolean on confirm steps).
 
@@ -283,7 +291,8 @@ Example wizard: `migrate-instance-demo`. Instances pin `flow_revision` at submit
 
 ```
 1. palm://definitions/resources/{ref}  # params schema (read)
-2. palm_invoke_resource(resource_ref, action, params={…})  # definition name, not palm://
+2. palm_providers_invoke(resource_ref, action, params={…})  # definition name, not palm://
+   # History: was palm_invoke_resource → POST /v1/api/providers/{provider}/{resource_ref}/invoke
 ```
 
 ### Tool tiers (quick reference)
@@ -302,8 +311,8 @@ Example wizard: `migrate-instance-demo`. Instances pin `flow_revision` at submit
 | Transport | Entry | Notes |
 |-----------|-------|-------|
 | **stdio** | `palm-mcp` | Default for Cursor/Grok; in-process services when `PALM_MCP_IN_PROCESS=1` |
-| **stdio (remote)** | `palm-mcp` + `PALM_MCP_IN_PROCESS=0` | HTTP proxy to `PALM_BASE_URL` (0.14 behavior) |
-| **streamable-http** | `POST /mcp` | On running `palm server`; reuses server `ServerContext` (in-process) |
+| **stdio (remote)** | `palm-mcp` + `PALM_MCP_IN_PROCESS=0` | HTTP proxy to `PALM_BASE_URL` (0.14 behavior). Needs `palm host server`. |
+| **streamable-http** | `POST /mcp` | On running `palm host server`; reuses server `ServerContext` (in-process) |
 | **sse** | `GET /mcp/sse`, `POST /mcp/messages` | Legacy SSE clients |
 
 Discovery: `GET /v1/surfaces/mcp` → `status: active`, transport endpoints, env hints.
@@ -314,12 +323,15 @@ Install: `pip install "palmengine[mcp]"` · CLI: `palm-mcp`
 
 ## 0.16 tool inventory (current)
 
+**38 tools** (full catalog). Assist alias `design/publish` is not a separate tool.
+
 | Domain | Tools |
 |--------|-------|
+| **Assist** | `palm_assist` |
 | **Flows** | `palm_flows_list`, `palm_flows_describe`, `palm_flows_create_session`, `palm_flows_session`, `palm_flows_session_input`, `palm_flows_session_drive`, `palm_flows_session_resume`, `palm_flows_session_backtrack`, `palm_flows_compose_status` |
 | **System** | `palm_system_list_waiting`, `palm_system_inspect_job`, `palm_system_job_input`, `palm_system_doctor`, `palm_system_cancel_job`, `palm_system_fetch_job`, `palm_system_trace_events`, `palm_system_diff_snapshots`, `palm_processes_submit` |
 | **Definitions** | `palm_definitions_validate_flow`, `palm_definitions_explain_step`, `palm_definitions_analyze_impact`, `palm_definitions_migrate_instance` |
-| **Design (0.25)** | `palm_design_propose_flow`, `palm_design_validate`, `palm_design_impact`, `palm_design_commit`, `palm_design_list_proposals`, `palm_design_get_proposal`, `palm_design_discard` — weak-LLM playbook: `palm://agent/references/design-flows` |
+| **Design (0.25)** | `palm_design_publish_flow`, `palm_design_publish_resource`, `palm_design_propose_flow`, `palm_design_propose_resource`, `palm_design_validate`, `palm_design_impact`, `palm_design_commit`, `palm_design_list_proposals`, `palm_design_get_proposal`, `palm_design_discard` — weak-LLM playbook: `palm://agent/references/design-flows` |
 | **Providers** | `palm_providers_invoke` |
 | **Pattern** | `palm_wizard_collection_action`, `palm_wizard_commit_preview`, `palm_parallel_branch_status`, `palm_pipeline_step_trace` |
 
@@ -462,7 +474,7 @@ Patterns register MCP tools via `register_mcp_contributor()` in `palm/patterns/_
 
 ### Native HTTP transport
 
-When the `mcp` extra is installed, `palm server` exposes **streamable HTTP** MCP at `POST /mcp` (same tool surface as stdio, loopback REST). Discovery reports `status: active` and `endpoint: /mcp`.
+When the `mcp` extra is installed, `palm host server` exposes **streamable HTTP** MCP at `POST /mcp` (same tool surface as stdio, loopback REST). Discovery reports `status: active` and `endpoint: /mcp`.
 
 | Transport | Entry |
 |-----------|-------|

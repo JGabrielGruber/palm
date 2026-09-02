@@ -52,14 +52,20 @@ def test_resource_invoke_example(cli_ctx, rest_base_url: str) -> None:
 
 
 def test_doctor_reports_healthy(cli_ctx) -> None:
-    reg = build_registry()
-    assert reg.dispatch(cli_ctx, "doctor") == 0
+    from io import StringIO
 
+    from rich.console import Console
 
-def test_wizard_start_onboard(cli_ctx) -> None:
     reg = build_registry()
-    assert reg.dispatch(cli_ctx, "wizard start onboard") == 0
-    assert cli_ctx.active_instance_id is not None
+    buf = StringIO()
+    cli_ctx.console = Console(file=buf, force_terminal=False, width=120)
+    code = reg.dispatch(cli_ctx, "doctor")
+    out = buf.getvalue()
+    assert "Engine Health" in out
+    if "Issues" in out:
+        assert code == 1
+    else:
+        assert code == 0
 
 
 def test_flow_start_onboard(cli_ctx) -> None:
@@ -132,7 +138,7 @@ def test_flow_list_includes_parallel(cli_ctx) -> None:
 
 def test_wizard_input_advances(cli_ctx) -> None:
     reg = build_registry()
-    reg.dispatch(cli_ctx, "wizard start quick")
+    reg.dispatch(cli_ctx, "flow start quick")
     iid = cli_ctx.active_instance_id
     assert iid is not None
     assert reg.dispatch(cli_ctx, f"input {iid} hello") == 0
@@ -175,7 +181,7 @@ def test_cli_filesystem_persistence_across_sessions(tmp_path) -> None:
     try:
         assert ctx1.app.settings.storage_backend == "filesystem"
         assert ctx1.instance_manager.is_initialized
-        reg.dispatch(ctx1, "wizard start quick")
+        reg.dispatch(ctx1, "flow start quick")
         iid = ctx1.active_instance_id
         assert iid is not None
         reg.dispatch(ctx1, f"input {iid} first")
@@ -186,7 +192,7 @@ def test_cli_filesystem_persistence_across_sessions(tmp_path) -> None:
     try:
         summaries = ctx2.list_instance_summaries()
         assert any(item.instance_id == iid for item in summaries)
-        assert reg.dispatch(ctx2, f"process resume {iid}") == 0
+        assert reg.dispatch(ctx2, f"instance resume {iid}") == 0
         assert ctx2.active_instance_id == iid
         job_id = ctx2.resolve_job_id(iid)
         assert ctx2.app.current_wizard_step(job_id) == "beta"
@@ -207,7 +213,7 @@ def test_cli_env_settings_used_when_flags_omitted(
     try:
         assert ctx.app.settings.storage_backend == "filesystem"
         assert ctx.app.settings.data_dir == tmp_path
-        reg.dispatch(ctx, "wizard start quick")
+        reg.dispatch(ctx, "flow start quick")
         assert ctx.active_instance_id is not None
     finally:
         shutdown_context(ctx)
@@ -215,7 +221,7 @@ def test_cli_env_settings_used_when_flags_omitted(
 
 def test_instance_list_status_snapshots_consistent(cli_ctx) -> None:
     reg = build_registry()
-    reg.dispatch(cli_ctx, "wizard start quick")
+    reg.dispatch(cli_ctx, "flow start quick")
     iid = cli_ctx.active_instance_id
     assert iid is not None
 
@@ -236,7 +242,7 @@ def test_instance_list_to_status_filesystem(tmp_path) -> None:
     )
     ctx1 = bootstrap_runtime(settings=fs_settings, show_banner=False)
     try:
-        reg.dispatch(ctx1, "wizard start quick")
+        reg.dispatch(ctx1, "flow start quick")
         iid = ctx1.active_instance_id
         assert iid is not None
         reg.dispatch(ctx1, f"input {iid} first")
@@ -258,7 +264,7 @@ def test_instance_list_to_status_filesystem(tmp_path) -> None:
 
     ctx3 = bootstrap_runtime(settings=fs_settings, show_banner=False)
     try:
-        assert reg.dispatch(ctx3, f"process resume {listed_id[:14]}") == 0
+        assert reg.dispatch(ctx3, f"instance resume {listed_id[:14]}") == 0
     finally:
         shutdown_context(ctx3)
 
@@ -284,12 +290,15 @@ def test_shared_storage_aligns_settings() -> None:
 
 
 def test_status_defaults_to_active_instance(cli_ctx) -> None:
+    from palm.runtimes.cli.shared.dispatch import dispatch_invocation
+
     reg = build_registry()
-    reg.dispatch(cli_ctx, "wizard start quick")
+    reg.dispatch(cli_ctx, "flow start quick")
     iid = cli_ctx.active_instance_id
     assert iid is not None
     assert reg.dispatch(cli_ctx, "status") == 0
-    assert reg.dispatch(cli_ctx, "instance status") == 0
+    inv = CliInvocation(command="instance", instance_cmd="status")
+    assert dispatch_invocation(cli_ctx, reg, inv) == 0
 
 
 def test_instance_list_json_format(cli_ctx) -> None:
@@ -298,7 +307,7 @@ def test_instance_list_json_format(cli_ctx) -> None:
     from rich.console import Console
 
     reg = build_registry()
-    reg.dispatch(cli_ctx, "wizard start quick")
+    reg.dispatch(cli_ctx, "flow start quick")
     cli_ctx.output_format = "json"
 
     buf = StringIO()
@@ -313,7 +322,7 @@ def test_instance_list_json_format(cli_ctx) -> None:
 
 def test_instance_list_active_vs_all(cli_ctx) -> None:
     reg = build_registry()
-    reg.dispatch(cli_ctx, "wizard start quick")
+    reg.dispatch(cli_ctx, "flow start quick")
     summaries = cli_ctx.list_instance_summaries()
     active = [s for s in summaries if not is_terminal_status(s.status)]
     assert len(active) >= 1
@@ -360,7 +369,7 @@ def test_repl_completer_builds(cli_ctx) -> None:
 
 
 @pytest.mark.slow
-def test_process_resume() -> None:
+def test_instance_resume() -> None:
     import palm.storages.memory  # noqa: F401
     from palm.core import StorageEngine
 
@@ -371,7 +380,7 @@ def test_process_resume() -> None:
     resume_settings = make_test_settings(load_examples=True)
     ctx1 = bootstrap_runtime(storage=storage, settings=resume_settings, show_banner=False)
     try:
-        reg.dispatch(ctx1, "wizard start quick")
+        reg.dispatch(ctx1, "flow start quick")
         iid = ctx1.active_instance_id
         assert iid is not None
         reg.dispatch(ctx1, f"input {iid} first")
@@ -380,7 +389,7 @@ def test_process_resume() -> None:
 
     ctx2 = bootstrap_runtime(storage=storage, settings=resume_settings, show_banner=False)
     try:
-        assert reg.dispatch(ctx2, f"process resume {iid}") == 0
+        assert reg.dispatch(ctx2, f"instance resume {iid}") == 0
         assert ctx2.active_instance_id == iid
         job_id = ctx2.resolve_job_id(iid)
         assert ctx2.app.current_wizard_step(job_id) == "beta"

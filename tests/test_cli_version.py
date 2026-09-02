@@ -45,7 +45,8 @@ def test_cli_help_lists_commands() -> None:
     )
     assert result.returncode == 0
     assert "doctor" in result.stdout
-    assert "wizard" in result.stdout
+    assert "flow" in result.stdout
+    assert "instance" in result.stdout
     assert "--format" in result.stdout
     assert "--storage-backend" in result.stdout
     assert "README.md" in result.stdout

@@ -120,7 +120,7 @@ Demonstrates **layered state schemas**, **step scopes**, and **schema-aware resu
 palm flow start schema-onboard
 palm instance list
 palm status <instance_id>
-palm process resume <instance_id>
+palm instance resume <instance_id>
 ```
 
 ## Parallel demo (`parallel-demo`)
@@ -204,7 +204,7 @@ Two text steps with backtracking — useful for resume demos.
 ```bash
 palm flow start quick
 palm instance list
-palm process resume <instance_id>
+palm instance resume <instance_id>
 ```
 
 ## Programmatic demo (ApplicationHost)

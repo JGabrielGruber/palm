@@ -12,7 +12,7 @@ def cmd_help(ctx: CliContext, _args: list[str]) -> int:
 [bold cyan]Palm CLI[/] — ApplicationHost + CQRS
 
 [bold]Host & diagnostics[/]
-  status                    Live projection dashboard [green](default)[/]
+  status                    Live projection dashboard
   status --full             Detailed dashboard (active rows, traces)
   status -r [SEC]           Live refresh every SEC seconds (default 2)
   status --brief            Compact engine summary
@@ -22,7 +22,7 @@ def cmd_help(ctx: CliContext, _args: list[str]) -> int:
   benchmark [recipe] [-n N] Vitality load tool (opt-in; Inspect present)
   benchmark log_fill --json Recipe: idle · pulse · walk · log_fill
 
-[bold]Assist[/] [dim](conversational operator guidance — 0.21)[/]
+[bold]Assist[/] [dim](REPL-only — conversational operator guidance — 0.21)[/]
   assist list               Registered assist scenarios
   assist start <scenario>   Start guided session [green](try operator-entry)[/]
   assist input <value>      Answer the current assist prompt
@@ -39,7 +39,7 @@ def cmd_help(ctx: CliContext, _args: list[str]) -> int:
   process list              Catalog of process + flow definitions
   process submit <ref>        Start a process by name or id
 
-[bold]Resources[/] [dim](declarative provider contracts — 0.12)[/]
+[bold]Resources[/] [dim](REPL-only — declarative provider contracts — 0.12)[/]
   resource list             All registered resource definitions
   resource describe <ref>     Inspect provider, action, schemas, params
   resource invoke <ref> [k=v] Invoke definition (state binding via k=v)

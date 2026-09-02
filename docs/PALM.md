@@ -248,7 +248,8 @@ Other patterns exist at different maturity. Maturity is not the same as purpose.
 | Piece | Holds |
 |-------|--------|
 | **`BaseRuntime`** | Engines, start wiring, executor, wait plane attach, outbox hooks |
-| **Parts of `palm.common`** | Wait plane service, work drain, workload bootstrap, runtime hooks, definition executor |
+| **`palm.system`** | Wait plane service, work drain, workload bootstrap, runtime hooks, definition executor |
+| **`palm.common`** | Still fat. Lazy-exports system types. Not the home of wait/work/workload/runtime hooks/`DefinitionExecutor`. |
 | **`RuntimeHost` protocol** | Incomplete: orchestration + event + resource only |
 | **`PalmKernel`** | Storage, instance manager, **runtime registry** — multi-runtime infra, not the effect port table |
 
@@ -307,12 +308,11 @@ Detail: [VISION-GROVE](vision/VISION-GROVE.md) §4 · [ADR-025](adr/025-reactive
 
 **Examples of true shared work:** transform rule packs, schema helpers, persistence repositories used by system and product, CQRS bus **primitives**, small operator view helpers.
 
-**Today (honest):** `palm.common` holds **shared and system together**. That mix is the main structural debt of the middle layer.
+**Today (honest):** wait, work, workload, runtime hooks, and `DefinitionExecutor` live under **`palm.system`**, not `palm.common`. `palm.common` is still fat and still lazy-exports system types. That mix remains structural debt.
 
 | In common today | Likely class |
 |-----------------|--------------|
-| `BaseRuntime`, wait plane, work drain | **System** |
-| Definition executor, plans, hooks | **System** (or system-adjacent) |
+| Lazy-export of system types | **System** (home is `palm.system`) |
 | Transform builtins, some resolvers | **Shared** |
 | CQRS buses | **Shared primitive**; wiring is host/product |
 | Operator presenters | **Shared support** for product/surfaces — watch bulk |

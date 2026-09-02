@@ -100,7 +100,7 @@ Homepage = "https://palmengine.org"
 Documentation = "https://github.com/JGabrielGruber/palmengine#readme"
 Repository = "https://github.com/JGabrielGruber/palmengine"
 Issues = "https://github.com/JGabrielGruber/palmengine/issues"
-Changelog = "https://github.com/JGabrielGruber/palmengine/blob/main/CHANGELOG.md"
+Changelog = "https://github.com/JGabrielGruber/palmengine/blob/master/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/palm"]

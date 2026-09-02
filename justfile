@@ -165,11 +165,11 @@ palm-version:
 
 palm-demo-onboard:
     @echo "Starting onboarding wizard (interactive)…"
-    uv run --extra cli palm wizard start onboard
+    uv run --extra cli palm flow start onboard
 
 palm-demo-approval:
     @echo "Starting approval workflow (interactive)…"
-    uv run --extra cli palm wizard start approval
+    uv run --extra cli palm flow start approval
 
 palm-server *ARGS='':
     uv run --extra cli palm host server {{ARGS}}

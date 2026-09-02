@@ -102,11 +102,13 @@ Use `{{ state.key }}` in step `prompt` / `title` — resolves from wizard answer
 
 ### Resource proposals (0.27.2+)
 
+Prefer one-shot `palm_design_publish_resource` or `palm_assist(alias="design/publish-resource", params={body: …})`.
+
 ```text
-palm_design_propose_resource(body={name, provider, action, resource_id, ...})
-palm_design_impact(proposal_id)
-palm_design_commit(proposal_id)
+palm_design_publish_resource(body={name, provider, action, resource_id, ...})
 ```
+
+Alternate (debug validation/impact only): propose_resource → impact → commit.
 
 Impact lists flows referencing the `resource_ref`. See `coconut-npc` + `palm://agent/references/branching-flows`.
 
@@ -162,16 +164,16 @@ Impact lists flows referencing the `resource_ref`. See `coconut-npc` + `palm://a
 
 ## B. Improve an existing flow (new revision)
 
-Same loop as §A, but pass **`base_flow_id`** on propose:
+Prefer one-shot publish with `base_flow_id` on `palm_design_publish_flow` (or `palm_assist` with `base_flow_id`).
 
 ```text
-palm_design_propose_flow(
+palm_design_publish_flow(
   base_flow_id="foo-bar",
   body={ "name": "foo-bar", "pattern": "wizard", "options": { ... } }
 )
 ```
 
-Then impact → commit. Revision increments (`revision: 2`, `3`, …).
+Alternate: propose with `base_flow_id`, then impact → commit. Revision increments (`revision: 2`, `3`, …).
 
 **Impact note:** finished instances stay on their old revision (`snapshot_only`) — that is normal. New sessions use the latest revision.
 
@@ -183,7 +185,8 @@ Design tools **define** flows. **Running** uses flow session tools:
 
 ```text
 1. palm_flows_create_session(flow_id="foo-bar")
-   → save session_id (same as instance_id)
+   → save the continue handle; pass it as the session_id kwarg on palm_flows_*
+   → that value is instance_id, not system session_id (session ≠ instance). See PALM.md.
 
 2. palm_flows_session(session_id="...", flow_id="foo-bar", format="assistant")
    → read question, choices, mutation block
@@ -216,13 +219,17 @@ If `PALM_MCP_REQUIRE_INPUT_TOKEN=1`, copy `mutation.input_token` from the last i
 
 ---
 
-## D. `palm_assist` aliases (alternative path)
+## D. `palm_assist` aliases
+
+Prefer `palm_assist(params={body})` / alias `design/publish` and `design/publish-resource`.
 
 | Goal | Call |
 |------|------|
-| Propose | `palm_assist(path=["design","propose"], params={body: {...}})` |
-| Impact | `palm_assist(alias="design/impact", params={proposal_id: "prop-..."})` |
-| Commit | `palm_assist(alias="design/commit", params={proposal_id: "prop-..."})` |
+| Publish flow | `palm_assist(params={body: {...}})` or `alias="design/publish"` |
+| Publish resource | `palm_assist(params={kind: "resource", body: {...}})` or `alias="design/publish-resource"` |
+| Propose (alternate) | `palm_assist(path=["design","propose"], params={body: {...}})` |
+| Impact (alternate) | `palm_assist(alias="design/impact", params={proposal_id: "prop-..."})` |
+| Commit (alternate) | `palm_assist(alias="design/commit", params={proposal_id: "prop-..."})` |
 | Run session | `palm_assist(path=["flows","foo-bar","create"])` |
 
 Full alias list: `palm://assist/routes` (domain `design`).
@@ -243,8 +250,8 @@ Full alias list: `palm://assist/routes` (domain `design`).
 
 ## F. Worked example: `foo-bar`
 
-**Publish (revision 1):** propose body with two text steps → impact → commit.
+**Publish (revision 1):** one-shot `palm_design_publish_flow` with two text steps (four-tool is alternate).
 
-**Improve (revision 2):** propose with `base_flow_id="foo-bar"`, add `include_summary`, choice step for `bar`, `min_length` on `foo` → impact → commit.
+**Improve (revision 2):** one-shot publish with `base_flow_id="foo-bar"`, add `include_summary`, choice step for `bar`, `min_length` on `foo` (four-tool is alternate).
 
 **Run:** `palm_flows_create_session(flow_id="foo-bar")` → input `my-foo` → input `beta` → input `yes` at summary → `status: complete`.
